@@ -43,6 +43,8 @@
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Entity.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Speech" />
     <Reference Include="System.Windows.Forms" />
@@ -68,6 +70,9 @@
     <Compile Include="HelpAbout.xaml.cs">
       <DependentUpon>HelpAbout.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Graph.cs" />
+    <Compile Include="Modules\Learner.cs" />
+    <Compile Include="Modules\Sequencer.cs" />
     <Compile Include="Modules\SpeechOut.cs" />
     <Compile Include="Modules\RobotControl.cs" />
     <Compile Include="Modules\Camera.cs" />
@@ -76,7 +81,7 @@
     </Compile>
     <Compile Include="Modules\Fovea.cs" />
     <Compile Include="Modules\SignalOrganizer.cs" />
-    <Compile Include="Modules\KnoledgeBase.cs" />
+    <Compile Include="Modules\KnowledgeBase.cs" />
     <Compile Include="Modules\SpeechIn.cs" />
     <Compile Include="Modules\FindRectangles.cs" />
     <Compile Include="Modules\PointsOfInterest.cs" />

@@ -32,7 +32,7 @@ namespace BrainSimulator
         static bool PtOnScreen(Point p)
         {
             if (p.X < -dp.NeuronDisplaySize) return false;
-            if (p.Y < -dp.NeuronDisplaySize) return false ;
+            if (p.Y < -dp.NeuronDisplaySize) return false;
             if (p.X > theCanvas.ActualWidth + dp.NeuronDisplaySize) return false;
             if (p.Y > theCanvas.ActualHeight + dp.NeuronDisplaySize) return false;
             return true;
@@ -238,7 +238,9 @@ namespace BrainSimulator
                 Canvas.SetLeft(s, p1.X + dp.NeuronDisplaySize / 2);
             }
             s.Stroke = Brushes.Red;
-            s.StrokeThickness = dp.NeuronDisplaySize / 15;
+            s.StrokeThickness = 1;
+            if (dp.NeuronDisplaySize > 15)
+                s.StrokeThickness = dp.NeuronDisplaySize / 15;
             s.MouseDown += theNeuronDisplayView.theCanvas_MouseDown;
             s.MouseUp += theNeuronDisplayView.theCanvas_MouseUp;
             return s;

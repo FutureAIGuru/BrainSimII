@@ -14,6 +14,11 @@ namespace BrainSimulator
         SpeechSynthesizer synth = null;
 
         string toSpeak = ""; //accumulates an array of words to speak
+        string prePend = "";
+        string postPend = "";
+        string insertAnd = "";
+
+        int anyNewWords = 0;
 
         public void SpeechOut(NeuronArea na)
         {
@@ -29,9 +34,7 @@ namespace BrainSimulator
                 synth.SpeakAsync("Speech synthisizer Initialized");
                 synth.SpeakCompleted += Synth_SpeakCompleted;
             }
-            NeuronArea naIn = FindAreaByCommand("SpeechIn");
             NeuronArea naOut = FindAreaByCommand("SpeechOut");
-            bool anyNewWords = false;
             naOut.BeginEnum();
             for (Neuron n = naOut.GetNextNeuron(); n != null; n = naOut.GetNextNeuron())
             {
@@ -44,18 +47,28 @@ namespace BrainSimulator
                     //    toSpeak += " " + dictionary[found].theWord;
                     //    anyNewWords = true;
                     //}
-                    toSpeak += n.Label + " ";
-                    anyNewWords = true;
+                    toSpeak += prePend + n.Label + " ";
+                    prePend = "";
+                    anyNewWords =5;
                 }
             }
             //builds up a phrase to be spoken, and passes it all at once to the synthisizer
             //this is much better than individual words
-            if (!anyNewWords)
+            anyNewWords--;
+            if (anyNewWords == 0)
                 if (toSpeak != "")
                 {
+                    toSpeak = toSpeak.Trim();
+                    if (toSpeak.IndexOf(' ') != -1)
+                        toSpeak = toSpeak.Insert(toSpeak.Trim().LastIndexOf(' '), " "+insertAnd);
+                    toSpeak = toSpeak + " " + postPend;
                     PauseRecognition();
                     synth.SpeakAsync(toSpeak + ".");
                     toSpeak = "";
+                    prePend = "";
+                    postPend = "";
+                    insertAnd = "";
+
                 }
         }
 

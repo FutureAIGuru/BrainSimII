@@ -110,6 +110,7 @@ namespace BrainSimulator
                 n.LastCharge = 0;
                 if (deleteSynapses)
                     n.DeleteAllSynapes();
+                n.Label = "";
             }
             Update();
         }
@@ -126,6 +127,14 @@ namespace BrainSimulator
                 int neuronNewLocation = theSelection.selectedNeuronIndex + offset;
 
                 Neuron nNewLocation = MainWindow.theNeuronArray.neuronArray[neuronNewLocation];
+
+                //copy the neuron attributes and delete them from the old neuron.
+                nNewLocation.Label = n.Label;
+                n.Label = "";
+                nNewLocation.CurrentCharge = n.CurrentCharge;
+                nNewLocation.LastCharge = n.LastCharge;
+                n.SetValue(0);
+
                 //for all the synapses going into or out of the selection area, stretch
                 //for all the synapses entirely within the selection areay, move
                 //don't use a foreach here because the body of the loop may delete a list entry

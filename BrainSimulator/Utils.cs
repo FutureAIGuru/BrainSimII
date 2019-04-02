@@ -60,9 +60,9 @@ namespace BrainSimulator
             }
             return "??";
 
-          PropertyInfo colorProperty = typeof(Colors).GetProperties()
-                .FirstOrDefault(p => Color.AreClose((Color)p.GetValue(null), col));
-            return colorProperty != null ? colorProperty.Name : "unnamed color";
+            //  PropertyInfo colorProperty = typeof(Colors).GetProperties()
+            //        .FirstOrDefault(p => Color.AreClose((Color)p.GetValue(null), col));
+            //    return colorProperty != null ? colorProperty.Name : "unnamed color";
         }
     }
 }

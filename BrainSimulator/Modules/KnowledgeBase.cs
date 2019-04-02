@@ -25,12 +25,17 @@ namespace BrainSimulator
             public List<KBThing> children = new List<KBThing>(); //synapses to
             public List<KBThing> references = new List<KBThing>(); //synapses to
             public List<KBThing> referencedBy = new List<KBThing>(); //synapses from
-            public KBThing next = null;
-            public KBThing previous = null;
+            public KBThing next = null; //next in a sequence of things
+            public KBThing previous = null; //predecessor
             public int neuronIndex;
             public long lastActive = 0;
             public float importance = 0; //will be used to prioitize properties/references?
         }
+        //absolute things...inputs and outputs...external things
+        //group things
+        //specify things (ungroup/new group)
+        //abstract root! 
+
         Dictionary<int, KBThing> KBData = new Dictionary<int, KBThing>();
         long generation = 0;
         //methods...addNew, 

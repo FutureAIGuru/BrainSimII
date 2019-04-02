@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Speech.Recognition;
 using System.Diagnostics;
+using System.Data.Entity.Design.PluralizationServices;
+using System.Globalization;
 
 
 namespace BrainSimulator
@@ -41,9 +43,9 @@ namespace BrainSimulator
 
                 //// Start asynchronous, continuous speech recognition.  
                 recognizer.RecognizeAsync(RecognizeMode.Multiple);
-                Neuron naNew = na.GetNeuronAt(0, 0);
-                naNew.AddSynapse(naNew.Id, 0, this, false); //without a synapse, the neuron is not in use
-                naNew.Label = "++";
+               // Neuron naNew = na.GetNeuronAt(0, 0);
+                //naNew.AddSynapse(naNew.Id, 0, this, false); //without a synapse, the neuron is not in use
+             //   naNew.Label = "++";
             }
 
             //if a word is in the input queue...process one word
@@ -59,24 +61,19 @@ namespace BrainSimulator
                         found = n.Id;
                         break;
                     }
-                    if (!n.InUse()) break; 
-                }
-                if (found == -1)
-                {
-                    Neuron nNew = na.GetFreeNeuron();
-                    if (nNew != null)
+                    if (n.Label == "") //neuron isn't used yet
                     {
-                        neuronArray[nNew.Id].LastCharge = 1;// SetValue(1);
-                        nNew.Label = word;
-                        nNew.AddSynapse(nNew.Id, 0, this, false); //without a synapse, the neuron is not in use
-                        na.GetNeuronAt(0, 0).LastCharge = 1;//;
+                        n.Label = word;
+                        found = n.Id;
+                        break;
                     }
                 }
-                else
+                if (found != -1) //perhaps the array was full
                 {
-                    neuronArray[found].LastCharge = 1;//SetValue(1);
+                    //                neuronArray[found].LastCharge = 1;//SetValue(1);
+                    neuronArray[found].CurrentCharge = 1;//.SetValue(1);
+                    Debug.WriteLine("Fired Neuron for word: " + word);
                 }
-                Debug.WriteLine("Fired Neuron for word: " + word);
 
                 words.RemoveAt(0);
             }
@@ -88,65 +85,104 @@ namespace BrainSimulator
             //recognizer.LoadGrammar(new DictationGrammar());
 
             // create a small custom grammar for testing
-            Choices digit = new Choices("1", "2", "3", "4", "5", "6", "7", "8", "9", "0");
+            Choices digit = new Choices("1", "2", "3", "4", "5", "6", "7", "8", "9", "0","point");
             Choices number = new Choices();
             for (int i = 1; i < 200; i++)
                 number.Add(i.ToString());
             Choices emotion = new Choices("ecstatic", "happy", "so-so", "OK", "sad", "unhappy");
             Choices timeOfDay = new Choices("morning", "afternoon", "evening", "night");
-            Choices color = new Choices("black", "gray", "pink","red","blue","orange");
+            Choices color = new Choices("black", "gray", "pink", "red", "blue", "orange","white");
             Choices shape = new Choices("square", "rectangle", "circle");
-            Choices direction = new Choices ( "right", "left", "forward","backwards" );
+            Choices direction = new Choices("right", "left", "forward", "backwards");
+            Choices size = new Choices("big", "medium", "little");
             Choices motion = new Choices("move", "turn");
-            Choices command = new Choices("Computer", "Computer Say","Computer what can you see?", "Computer What is behind you?","Computer turn around");
-            GrammarBuilder a0 = new GrammarBuilder(command);
-            GrammarBuilder a1 = new GrammarBuilder(command);
-            a1.Append("Good");
-            a1.Append(timeOfDay);
-            GrammarBuilder a2 = new GrammarBuilder(command);
-            a2.Append("this is a");
-            a2.Append(color);
-            a2.Append(shape);
-            GrammarBuilder a3 = new GrammarBuilder(command);
-            a3.Append("How are You");
-            GrammarBuilder a4 = new GrammarBuilder(command);
-            a4.Append(motion);
-            a4.Append(direction);
-            GrammarBuilder a4a = new GrammarBuilder(command);
-            a4a.Append(motion);
-            a4a.Append(direction);
-            a4a.Append(number);
+            Choices sequence = new Choices("pi", "mary");
 
-            GrammarBuilder d1 = new GrammarBuilder(command);
-            d1.Append(digit);
-            GrammarBuilder d2 = new GrammarBuilder(command);
-            d2.Append(digit);
-            d2.Append(digit);
-            GrammarBuilder d3 = new GrammarBuilder(command);
-            d3.Append(digit);
-            d3.Append(digit);
-            d3.Append(digit);
-            GrammarBuilder d4 = new GrammarBuilder(command);
-            d4.Append(digit);
-            d4.Append(digit);
-            d4.Append(digit);
-            d4.Append(digit);
-            GrammarBuilder d5 = new GrammarBuilder(command);
-            d5.Append(digit);
-            d5.Append(digit);
-            d5.Append(digit);
-            d5.Append(digit);
-            d5.Append(digit);
-            GrammarBuilder d6 = new GrammarBuilder(command);
-            d6.Append(digit);
-            d6.Append(digit);
-            d6.Append(digit);
-            d6.Append(digit);
-            d6.Append(digit);
-            d6.Append(digit);
+            Choices command = new Choices("Computer", "Computer Say", "Computer what can you see?", "Computer What is behind you?", "Computer turn around", "Computer what attributes do you know","Computer what is");
+            Choices query = new Choices("what is", "add","name");
+            Choices article = new Choices("a", "an", "the", "some","containing","with","which are");
+            Choices words = new Choices("mary", "had", "a", "little", "lamb");
 
-            Choices choices = new Choices(new GrammarBuilder[] { a0, a1, a2, a3, a4, a4a, d1, d2, d3, d4, d5, d6 });
+            //GrammarBuilder a0 = new GrammarBuilder(command);
+            //GrammarBuilder a1 = new GrammarBuilder(command);
+            //a1.Append("Good");
+            //a1.Append(timeOfDay);
+            //GrammarBuilder a2 = new GrammarBuilder(command);
+            //a2.Append("this is a");
+            //a2.Append(color);
+            //a2.Append(shape);
+            //GrammarBuilder a3 = new GrammarBuilder(command);
+            //a3.Append("How are You");
+            //GrammarBuilder a4 = new GrammarBuilder(command);
+            //a4.Append(motion);
+            //a4.Append(direction);
+            //GrammarBuilder a4a = new GrammarBuilder(command);
+            //a4a.Append(motion);
+            //a4a.Append(direction);
+            //a4a.Append(number);
 
+            //GrammarBuilder d1 = new GrammarBuilder(command);
+            //d1.Append(digit);
+            //GrammarBuilder d2 = new GrammarBuilder(command);
+            //d2.Append(digit);
+            //d2.Append(digit);
+            //GrammarBuilder d3 = new GrammarBuilder(command);
+            //d3.Append(digit);
+            //d3.Append(digit);
+            //d3.Append(digit);
+            //GrammarBuilder d4 = new GrammarBuilder(command);
+            //d4.Append(digit);
+            //d4.Append(digit);
+            //d4.Append(digit);
+            //d4.Append(digit);
+            //GrammarBuilder d5 = new GrammarBuilder(command);
+            //d5.Append(digit);
+            //d5.Append(digit);
+            //d5.Append(digit);
+            //d5.Append(digit);
+            //d5.Append(digit);
+            //GrammarBuilder d6 = new GrammarBuilder(command);
+            //d6.Append(digit);
+            //d6.Append(digit);
+            //d6.Append(digit);
+            //d6.Append(digit);
+            //d6.Append(digit);
+            //d6.Append(digit);
+            //GrammarBuilder d10 = new GrammarBuilder(command);
+            //d10.Append(digit);
+            //d10.Append(digit);
+            //d10.Append(digit);
+            //d10.Append(digit);
+            //d10.Append(digit);
+            //d10.Append(digit);
+            //d10.Append(digit);
+            //d10.Append(digit);
+            //d10.Append(digit);
+            //d10.Append(digit);
+            //            Choices choices = new Choices(new GrammarBuilder[] { a0, a1, a2, a3, a4, a4a, d1, d2, d3, d4, d5, d6, d10 });
+            PluralizationService ps = PluralizationService.CreateService(new CultureInfo("en-us"));
+
+            string[] attribList = new string[] { "attributes", "sequences", "colors", "sizes", "shapes", "digits", "things" };
+            string[] attribList1 = new string[attribList.Length];
+            for(int i = 0; i < attribList.Length; i++)
+                attribList1[i] = ps.Singularize(attribList[i]);
+
+            List<GrammarBuilder> gb = new List<GrammarBuilder>();
+            GrammarBuilder a = new GrammarBuilder("Computer");
+            a.Append(query,0,1);
+            a.Append(article, 0, 1);
+            a.Append(sequence, 0, 1);
+            a.Append(new Choices(attribList), 0, 1);
+            a.Append(new Choices(attribList1), 0, 1);
+            a.Append(article, 0, 1);
+            a.Append(color,0,1);
+            a.Append(shape, 0, 1);
+            a.Append(size, 0, 1);
+            a.Append(digit, 0, 4);
+            a.Append(words, 0, 5);
+            gb.Add(a);
+
+            Choices choices = new Choices(gb.ToArray());
             Grammar gr = new Grammar((GrammarBuilder)choices);
             GrammarBuilder g1 = new GrammarBuilder();
 
@@ -161,13 +197,13 @@ namespace BrainSimulator
             float i = e.Result.Confidence;
             if (i < .5) return;
             string[] tempWords = text.Split(' ');
-            words.Add("start");
+           // words.Add("start");
             foreach (string word in tempWords)
             {
                 if (word.ToLower() != "computer")
-                words.Add(word.ToLower());
+                    words.Add(word.ToLower());
             }
-            words.Add("stop");
+           // words.Add("stop");
             Debug.WriteLine("Words Detected: " + text);
         }
 
@@ -275,15 +311,13 @@ namespace BrainSimulator
             NeuronArea naOut = FindAreaByCommand("SpeechOut");
             if (na == null || naIn == null || naOut == null) return;
 
-            NeuronArea naP = FindAreaByCommand("Phrases");
-            NeuronArea naF = FindAreaByCommand("PhraseFound");
-            NeuronArea naS = FindAreaByCommand("SpeakPhrase");
+            NeuronArea naP = FindAreaByLabel("Phrases");
+            NeuronArea naF = FindAreaByLabel("PhraseFound");
+            NeuronArea naS = FindAreaByLabel("SpeakPhrase");
             if (naP == null || naF == null) return;
 
 
-
             Neuron n1 = na.GetFreeNeuron();
-            int diff = naOut.FirstNeuron - naIn.FirstNeuron;
 
             // Add any new word to the phrase buffer
             naIn.BeginEnum();
@@ -292,7 +326,23 @@ namespace BrainSimulator
                 if (n.LastCharge > .90 && n1 != null)
                 {
                     n1.AddSynapse(n.Id, 1, this, false);
-                    n1.AddSynapse(n.Id + diff, 1, this, false);
+                    //add an output neuron with the same label as the input
+                    naOut.BeginEnum();
+                    for (Neuron nOut = naOut.GetNextNeuron(); nOut != null; nOut = naOut.GetNextNeuron())
+                    {
+                        if (n.Label == "start") naF.ClearNeuronChargeInArea();
+                        if (nOut.Label == n.Label)
+                        {
+                            n1.AddSynapse(nOut.Id, 1, this, false);
+                            break;
+                        }
+                        if (!nOut.InUse())
+                        {
+                            nOut.Label = n.Label;
+                            n1.AddSynapse(nOut.Id, 1, this, false);
+                            break;
+                        }
+                    }
                     break;
                 }
             }
@@ -362,7 +412,6 @@ namespace BrainSimulator
                     }
                 }
                 na.ClearNeuronArea();
-                naF.ClearNeuronChargeInArea();
                 naP.ClearNeuronChargeInArea();
                 naIn.ClearNeuronChargeInArea();
             }

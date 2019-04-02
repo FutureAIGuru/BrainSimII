@@ -194,7 +194,7 @@ namespace BrainSimulator
             Debug.WriteLine("Update Done");
         }
 
-        private void CreateContextMenu(int i, string Label, string CommandLine, Rectangle r, int theColor)
+        private void CreateContextMenu(int i, string Label, string CommandLine, Rectangle r, int theColor) //for a selection
         {
             if (TheMouseMode == MouseMode.select)
             {
@@ -491,7 +491,7 @@ namespace BrainSimulator
         {
             if (MainWindow.theNeuronArray == null) return;
             Debug.WriteLine("theCanvas_MouseUp" + MainWindow.theNeuronArray.Generation);
-            if (e.RightButton == MouseButtonState.Pressed) return;
+            if (e.ChangedButton == MouseButton.Right) return;
 
             //this duplicates the code of pan mode
             if (e.ChangedButton == MouseButton.Middle)

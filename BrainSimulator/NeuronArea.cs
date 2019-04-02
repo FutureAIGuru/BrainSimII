@@ -13,7 +13,7 @@ namespace BrainSimulator
         string commandLine;
         int color;
 
-        public NeuronArea(int firstNeuron1, int lastNeuron1, string theLabel, string theCommandLine,int theColor)
+        public NeuronArea(int firstNeuron1, int lastNeuron1, string theLabel, string theCommandLine, int theColor)
         {
             FirstNeuron = firstNeuron1;
             LastNeuron = lastNeuron1;
@@ -63,6 +63,16 @@ namespace BrainSimulator
         {
             int index = firstNeuron + Y + X * Rows;
             return MainWindow.theNeuronArray.neuronArray[index];
+        }
+        public Neuron GetNeuronAt(string label)
+        {
+            for (int i = 0; i < NeuronCount; i++)
+            {
+                Neuron n = GetNeuronAt(i); 
+                if (n.Label.ToLower() == label.ToLower())
+                    return n;
+            }
+            return null;
         }
 
         public void GetBounds(out int X1, out int Y1, out int X2, out int Y2)
@@ -122,12 +132,13 @@ namespace BrainSimulator
                     count++;
             return count;
         }
-        public void ClearNeuronChargeInArea()
+        public void ClearNeuronChargeInArea(bool CurrentToo = true)
         {
             BeginEnum();
             for (Neuron n = GetNextNeuron(); n != null; n = GetNextNeuron())
             {
-                n.CurrentCharge = n.LastCharge = 0; n.Range = 0;
+                if (CurrentToo) n.CurrentCharge = 0;
+                n.LastCharge = 0; n.Range = 0;
             }
         }
         public string GetParam(string key)

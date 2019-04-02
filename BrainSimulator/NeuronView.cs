@@ -42,7 +42,8 @@ namespace BrainSimulator
             else if (n.Range == 2)
                 c = Utils.FromArgb((int)n.LastChargeInt);
             SolidColorBrush s1 = new SolidColorBrush(c);
-         //   if (n.Label != "" || !n.InUse()) s1.Opacity = .50;
+            //   if (n.Label != "" || !n.InUse()) s1.Opacity = .50;
+            if (!n.InUse()) s1.Opacity = .50;
 
             Shape r = null;
             if (dp.NeuronDisplaySize > 10)
@@ -66,7 +67,7 @@ namespace BrainSimulator
 
             //build the context menu
             ContextMenu cm = new ContextMenu();
-            if (dp.NeuronDisplaySize > 15 && theMouseMode == NeuronArrayView.MouseMode.neuron)
+            if (dp.NeuronDisplaySize > 15)// && theMouseMode == NeuronArrayView.MouseMode.neuron)
             {
                 //this stashes the neuron number in the first (hidden) entry of the menu so if you click
                 //on the context menu and an Update() has removed the existing entry, you can still do the right thing

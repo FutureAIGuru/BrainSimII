@@ -33,6 +33,7 @@ namespace BrainSimulator
         public string Label { get { return label; } set { label = value; } }
 
         public int Range { get => range; set => range = value; }
+        public bool Fired() { return (LastCharge > .9); }
 
         public void SetValue(float value)
         {
@@ -45,7 +46,7 @@ namespace BrainSimulator
         }
         public bool InUse()
         {
-            return (synapses.Count != 0 || synapsesFrom.Count != 0);
+            return (synapses.Count != 0 || synapsesFrom.Count != 0 || Label != "");
         }
 
         public void AddSynapse(int targetNeuron, float weight, NeuronArray theNeuronArray, bool addUndoInfo = true)
@@ -144,9 +145,9 @@ namespace BrainSimulator
         public void Fire2(long generation)
         {
             if (range == 2) return;
-            lastCharge = currentCharge;
             if (range == 0 && currentCharge < 0) currentCharge = 0;
             if (range == 1 && currentCharge < -1) currentCharge = -1;
+            lastCharge = currentCharge;
             if (currentCharge < 990)
             {
                 return;

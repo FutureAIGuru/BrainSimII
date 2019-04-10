@@ -205,6 +205,10 @@ namespace BrainSimulator
                 mi.Header = "Delete";
                 mi.Click += Mi_Click;
                 cm.Items.Add(mi);
+                MenuItem mi0 = new MenuItem();
+                mi0.Header = "Initialize";
+                mi0.Click += Mi_Click;
+                cm.Items.Add(mi0);
                 MenuItem mi1 = new MenuItem();
                 mi1.Header = "Name:";
                 mi1.IsEnabled = false;
@@ -219,6 +223,16 @@ namespace BrainSimulator
                 mi2.IsEnabled = false;
                 cm.Items.Add(mi2);
                 ComboBox cb = new ComboBox();
+                //get list of available NEW modules
+                var listOfBs = (from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
+                                from assemblyType in domainAssembly.GetTypes()
+                                where typeof(ModuleBase).IsAssignableFrom(assemblyType)
+                                select assemblyType).ToArray();
+                foreach (var v in listOfBs)
+                    if (v.Name != "ModuleBase")
+                        cb.Items.Add(v.Name);
+
+                //get list of available OLD modules
                 Type theType = MainWindow.theNeuronArray.GetType();
                 MethodInfo[] Methods = theType.GetMethods(); //this will list the available functions (with some effort)
 
@@ -300,15 +314,15 @@ namespace BrainSimulator
                 string label = "";
                 string commandLine = "";
                 Color color = Colors.Wheat;
-                if (cm.Items[2] is TextBox t)
+                if (cm.Items[3] is TextBox t)
                     label = t.Text;
-                if (cm.Items[4] is ComboBox cb)
+                if (cm.Items[5] is ComboBox cb)
                     commandLine = (string)cb.SelectedValue;
-                if (cm.Items[5] is TextBox t1)
+                if (cm.Items[6] is TextBox t1)
                     commandLine += " " + t1.Text;
-                if (label == "new" && commandLine != "")
+                if ((label == "new"  || label == "") && commandLine != "")
                     label = commandLine;
-                if (cm.Items[6] is ComboBox cb1)
+                if (cm.Items[7] is ComboBox cb1)
                     color = ((SolidColorBrush)((ComboBoxItem)cb1.SelectedValue).Background).Color;
 
                 if (i >= 0)
@@ -316,6 +330,16 @@ namespace BrainSimulator
                     MainWindow.theNeuronArray.areas[i].Label = label;
                     MainWindow.theNeuronArray.areas[i].CommandLine = commandLine;
                     MainWindow.theNeuronArray.areas[i].Color = Utils.ToArgb(color);
+                    //did we change the module type?
+                    string[] Params = commandLine.Split(' ');
+                    if (commandLine.IndexOf("Module") == 0) //take this out when all modules are ported to new class structure
+                    {
+                        Type t1x = Type.GetType("BrainSimulator." + Params[0]);
+                        if (MainWindow.theNeuronArray.areas[i].TheModule == null || MainWindow.theNeuronArray.areas[i].TheModule.GetType() != t1x)
+                        {
+                            MainWindow.theNeuronArray.areas[i].TheModule = (ModuleBase)Activator.CreateInstance(t1x);
+                        }
+                    }
                 }
                 else
                 {
@@ -331,20 +355,34 @@ namespace BrainSimulator
 
         private void Mi_Click(object sender, RoutedEventArgs e)
         {
-            //Handle delete command
+            //Handle delete  & initialize commands
             if (sender is MenuItem mi)
             {
-                int i = (int)mi.Parent.GetValue(AreaNumberProperty);
-                if (i < 0)
+                if ((string)mi.Header == "Delete")
                 {
-                    i = -i - 1;
-                    theSelection.selectedRectangle[i] = null;
-                    deleted = true;
+                    int i = (int)mi.Parent.GetValue(AreaNumberProperty);
+                    if (i < 0)
+                    {
+                        i = -i - 1;
+                        theSelection.selectedRectangle[i] = null;
+                        deleted = true;
+                    }
+                    else
+                    {
+                        MainWindow.theNeuronArray.Areas.RemoveAt(i);
+                        deleted = true;
+                    }
                 }
-                else
+                if ((string)mi.Header == "Initialize")
                 {
-                    MainWindow.theNeuronArray.Areas.RemoveAt(i);
-                    deleted = true;
+                    int i = (int)mi.Parent.GetValue(AreaNumberProperty);
+                    if (i < 0)
+                    {
+                    }
+                    else
+                    {
+                        //put the initialize code here
+                    }
                 }
             }
         }

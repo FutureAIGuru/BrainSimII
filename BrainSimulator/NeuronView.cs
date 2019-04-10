@@ -67,7 +67,7 @@ namespace BrainSimulator
 
             //build the context menu
             ContextMenu cm = new ContextMenu();
-            if (dp.NeuronDisplaySize > 15)// && theMouseMode == NeuronArrayView.MouseMode.neuron)
+            if (dp.NeuronDisplaySize > 25)// && theMouseMode == NeuronArrayView.MouseMode.neuron)
             {
                 //this stashes the neuron number in the first (hidden) entry of the menu so if you click
                 //on the context menu and an Update() has removed the existing entry, you can still do the right thing

@@ -3,15 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media.Media3D;
 
 namespace BrainSimulator
 {
+
+
     public class NeuronArea
     {
         int firstNeuron, lastNeuron = 0;
         string label;
         string commandLine;
         int color;
+        ModuleBase theModule = null;
 
         public NeuronArea(int firstNeuron1, int lastNeuron1, string theLabel, string theCommandLine, int theColor)
         {
@@ -20,7 +25,14 @@ namespace BrainSimulator
             Label = theLabel;
             CommandLine = theCommandLine;
             color = theColor;
+            string[] Params = CommandLine.Split(' ');
+            if (commandLine.IndexOf("Module") == 0) //take this out when all modules are ported to new class structure
+            {
+                Type t = Type.GetType("BrainSimulator." + Params[0]);
+                theModule = (ModuleBase)Activator.CreateInstance(t);
+            }
         }
+
         public NeuronArea() { }
         public int FirstNeuron { get => firstNeuron; set => firstNeuron = value; }
         public int LastNeuron { get => lastNeuron; set => lastNeuron = value; }
@@ -32,6 +44,7 @@ namespace BrainSimulator
         public int Width { get { return 1 + lastNeuron / Rows - firstNeuron / Rows; } }
         public int NeuronCount { get { return Width * Height; } }
         public int Color { get => color; set => color = value; }
+        public ModuleBase TheModule { get => theModule; set => theModule = value; }
 
         //these two emulate a foreach which might be implemented some day
         int currentNeuronInArea = 0;
@@ -68,7 +81,7 @@ namespace BrainSimulator
         {
             for (int i = 0; i < NeuronCount; i++)
             {
-                Neuron n = GetNeuronAt(i); 
+                Neuron n = GetNeuronAt(i);
                 if (n.Label.ToLower() == label.ToLower())
                     return n;
             }
@@ -155,4 +168,5 @@ namespace BrainSimulator
             return "";
         }
     }
+
 }

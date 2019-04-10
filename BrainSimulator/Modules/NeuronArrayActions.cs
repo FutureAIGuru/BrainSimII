@@ -22,14 +22,22 @@ namespace BrainSimulator
                 int commandEnd = na.CommandLine.IndexOf(' ');
                 if (commandEnd > 0)
                     command = na.CommandLine.Substring(0, commandEnd);
-                Object[] parameters = new Object[1];
-                parameters[0] = na;
-                Type theType = this.GetType();
-                //MethodInfo[] Methods = theType.GetMethods(); //this will list the available functions (with some effort)
-                //Type para = theMethod.GetParameters()[0].ParameterType;
-                MethodInfo theMethod = theType.GetMethod(command);
-                if (theMethod != null)
-                    theMethod.Invoke(this, parameters);
+                if (na.TheModule != null)
+                {
+                    na.TheModule.Fire();
+                }
+                else
+                {
+
+                    Object[] parameters = new Object[1];
+                    parameters[0] = na;
+                    Type theType = this.GetType();
+                    //MethodInfo[] Methods = theType.GetMethods(); //this will list the available functions (with some effort)
+                    //Type para = theMethod.GetParameters()[0].ParameterType;
+                    MethodInfo theMethod = theType.GetMethod(command);
+                    if (theMethod != null)
+                        theMethod.Invoke(this, parameters);
+                }
             }
         }
 
@@ -213,7 +221,7 @@ namespace BrainSimulator
         }
 
         //needs a complete match
-        private NeuronArea FindAreaByLabel(string label)
+        public NeuronArea FindAreaByLabel(string label)
         {
             return areas.Find(na => na.Label.Trim() == label);
         }
@@ -241,7 +249,7 @@ namespace BrainSimulator
             }
 
             //make sure every inUse input  has a small-wieght connection to every inUse output.
-            NeuronArea na = new NeuronArea(theArea.FirstNeuron, theArea.LastNeuron, "", "copy",0);
+            NeuronArea na = new NeuronArea(theArea.FirstNeuron, theArea.LastNeuron, "", "copy", 0);
             theArea.BeginEnum();
             for (Neuron n = theArea.GetNextNeuron(); n != null; n = theArea.GetNextNeuron())
             {
@@ -294,7 +302,7 @@ namespace BrainSimulator
             }
         }
 
-        
+
         public void AddToKB(NeuronArea na)
         {
             NeuronArea naProps = FindAreaByCommand("PropertyArea");

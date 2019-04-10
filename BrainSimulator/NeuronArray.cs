@@ -144,7 +144,7 @@ namespace BrainSimulator
             }
         }
 
-        private int GetNeuronIndex(int x, int y)
+        public int GetNeuronIndex(int x, int y)
         {
             return x * rows + y;
         }

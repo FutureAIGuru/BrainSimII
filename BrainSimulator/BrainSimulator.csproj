@@ -15,6 +15,21 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -57,6 +72,12 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="Touchless.Vision">
+      <HintPath>..\WebCamWrapper\bin\Debug\Touchless.Vision.dll</HintPath>
+    </Reference>
+    <Reference Include="WebCamLib">
+      <HintPath>..\WebCamLib\bin\Debug\WebCamLib.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -70,26 +91,25 @@
     <Compile Include="HelpAbout.xaml.cs">
       <DependentUpon>HelpAbout.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Graph.cs" />
-    <Compile Include="Modules\Learner.cs" />
-    <Compile Include="Modules\Sequencer.cs" />
-    <Compile Include="Modules\SpeechOut.cs" />
-    <Compile Include="Modules\RobotControl.cs" />
-    <Compile Include="Modules\Camera.cs" />
+    <Compile Include="Modules\ModuleBase.cs" />
+    <Compile Include="Modules\ModuleGraph.cs" />
+    <Compile Include="Modules\ModuleKnowledgeBase.cs" />
+    <Compile Include="Modules\ModuleMove.cs" />
+    <Compile Include="Modules\ModulePointsOfInterest.cs" />
+    <Compile Include="Modules\ModuleRealityModel.cs" />
+    <Compile Include="Modules\ModuleRectangles.cs" />
+    <Compile Include="Modules\ModuleRobotControl.cs" />
+    <Compile Include="Modules\ModuleSequencer.cs" />
+    <Compile Include="Modules\ModuleSimView.cs" />
+    <Compile Include="Modules\ModuleSpeechIn.cs" />
+    <Compile Include="Modules\ModuleSpeechOut.cs" />
+    <Compile Include="Modules\ModuleTurn.cs" />
     <Compile Include="Modules\CameraHandler.xaml.cs">
       <DependentUpon>CameraHandler.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Fovea.cs" />
-    <Compile Include="Modules\SignalOrganizer.cs" />
-    <Compile Include="Modules\KnowledgeBase.cs" />
-    <Compile Include="Modules\SpeechIn.cs" />
-    <Compile Include="Modules\FindRectangles.cs" />
-    <Compile Include="Modules\PointsOfInterest.cs" />
-    <Compile Include="Modules\BaseModule.cs" />
     <Compile Include="Modules\RealitySimulator.xaml.cs">
       <DependentUpon>RealitySimulator.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\RealityModel.cs" />
     <Compile Include="NeuronArrayViewActions.cs" />
     <Compile Include="NeuronArea.cs" />
     <Compile Include="NeuronArray.cs" />
@@ -184,14 +204,16 @@
     <Resource Include="SplashScreen.gif" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WebCamLib\WebCamLib.vcxproj">
-      <Project>{fd48314a-9615-4ba6-913a-03787fb2dd30}</Project>
-      <Name>WebCamLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WebCamWrapper\WebCamWrapper.csproj">
-      <Project>{cc5d5149-0092-4508-ac34-2abe1468a1c9}</Project>
-      <Name>WebCamWrapper</Name>
-    </ProjectReference>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

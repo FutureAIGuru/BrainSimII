@@ -40,8 +40,8 @@
         </DockPanel>
         <RadioButton x:Name="radioButtonSynapse" Content="Synapse" HorizontalAlignment="Left" Margin="44,94,0,0" VerticalAlignment="Top" Height="15" Checked="radioButton_Checked" />
         <RadioButton x:Name="radioButtonNeuron" Content="Neuron" HorizontalAlignment="Left" Margin="44,114,0,0" VerticalAlignment="Top" Height="15" Checked="radioButton_Checked" />
-        <RadioButton x:Name="radioButtonSelect" Content="Select" HorizontalAlignment="Left" Margin="44,134,0,0" VerticalAlignment="Top" Height="15" IsChecked="True" Checked="radioButton_Checked" />
-        <RadioButton x:Name="radioButtonPan" Content="Pan" HorizontalAlignment="Left" Margin="44,154,0,0" VerticalAlignment="Top"  Checked="radioButton_Checked" />
+        <RadioButton x:Name="radioButtonSelect" Content="Select" HorizontalAlignment="Left" Margin="44,134,0,0" VerticalAlignment="Top" Height="15" Checked="radioButton_Checked" />
+        <RadioButton x:Name="radioButtonPan" Content="Pan" HorizontalAlignment="Left" Margin="44,154,0,0" VerticalAlignment="Top"  IsChecked="True" Checked="radioButton_Checked" />
         <local:NeuronArrayView x:Name="theNeuronArrayView" Margin="152,88,27,34" ClipToBounds="True" />
         <Slider x:Name="slider" Margin="7,0,0,61" ValueChanged="slider_ValueChanged" IsSnapToTickEnabled="True" Value="0" HorizontalAlignment="Left" Width="140" Height="24" VerticalAlignment="Bottom"/>
         <Button x:Name="buttonSingle" Content="Single Step" Margin="39,0,0,108" Click="ButtonSingle_Click" HorizontalAlignment="Left" Width="70" Height="31" VerticalAlignment="Bottom"/>

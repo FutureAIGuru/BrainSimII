@@ -58,8 +58,6 @@ namespace BrainSimulator
 
             thisWindow = this;
 
-
-
             splashScreen.Left = 300;
             splashScreen.Top = 300;
             splashScreen.Show();
@@ -121,6 +119,7 @@ namespace BrainSimulator
         {
             this.Title = "Brain Simulator II " + System.IO.Path.GetFileNameWithoutExtension(currentFileName);
         }
+
         private void LoadFile(string fileName)
         {
             Thread.Sleep(1);
@@ -128,7 +127,7 @@ namespace BrainSimulator
             // Load the data from the XML to the Brainsim Engine.  
             FileStream file = File.Open(fileName, FileMode.Open);
 
-            XmlSerializer reader = new XmlSerializer(typeof(NeuronArray));
+            XmlSerializer reader = new XmlSerializer(typeof(NeuronArray),GetModuleTypes());
             theNeuronArray = (NeuronArray)reader.Deserialize(file);
             file.Close();
 
@@ -185,7 +184,15 @@ namespace BrainSimulator
             //resume the engine
             engineDelay = oldEngineDelay;
         }
-
+        private Type[] GetModuleTypes()
+        {
+            Type[] listOfBs = (from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
+                            from assemblyType in domainAssembly.GetTypes()
+                               where assemblyType.IsSubclassOf(typeof(ModuleBase))
+//                               where typeof(ModuleBase).IsAssignableFrom(assemblyType)
+                               select assemblyType).ToArray();
+            return listOfBs;
+        }
         private void SaveFile(string fileName)
         {
             suspendEngine();
@@ -194,7 +201,7 @@ namespace BrainSimulator
                 if (!theNeuronArray.neuronArray[i].InUse())
                     theNeuronArray.neuronArray[i] = null;
             //Save the data from the Brainsim Engine to the file
-            XmlSerializer writer = new XmlSerializer(typeof(NeuronArray));
+            XmlSerializer writer = new XmlSerializer(typeof(NeuronArray),GetModuleTypes());
             FileStream file = File.Create(fileName);
             writer.Serialize(file, theNeuronArray);
             file.Close();

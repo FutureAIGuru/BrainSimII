@@ -19,7 +19,7 @@ namespace BrainSimulator
             HandleVoiceRequest();
         }
 
-        protected override void Initialize()
+        public override void Initialize()
         {
             Neuron n0 = na.GetNeuronAt(1, 1);
             n0.Label = "'1'";

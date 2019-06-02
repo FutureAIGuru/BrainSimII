@@ -92,6 +92,10 @@
       <DependentUpon>HelpAbout.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\ModuleBase.cs" />
+    <Compile Include="Modules\ModuleCommand.cs" />
+    <Compile Include="Modules\ModuleHebbianAND.cs" />
+    <Compile Include="Modules\ModuleHebbian.cs" />
+    <Compile Include="Modules\ModuleEmpty.cs" />
     <Compile Include="Modules\ModuleGraph.cs" />
     <Compile Include="Modules\ModuleKnowledgeBase.cs" />
     <Compile Include="Modules\ModuleMove.cs" />
@@ -99,7 +103,6 @@
     <Compile Include="Modules\ModuleRealityModel.cs" />
     <Compile Include="Modules\ModuleRectangles.cs" />
     <Compile Include="Modules\ModuleRobotControl.cs" />
-    <Compile Include="Modules\ModuleSequencer.cs" />
     <Compile Include="Modules\ModuleSimView.cs" />
     <Compile Include="Modules\ModuleSpeechIn.cs" />
     <Compile Include="Modules\ModuleSpeechOut.cs" />
@@ -214,6 +217,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Commands.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

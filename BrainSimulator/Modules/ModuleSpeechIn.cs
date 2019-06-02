@@ -52,7 +52,7 @@ namespace BrainSimulator
             }
 
         }
-        protected override void Initialize()
+        public override void Initialize()
         {
             // Create an in-process speech recognizer for the en-US locale.  
             recognizer = new SpeechRecognitionEngine(new System.Globalization.CultureInfo("en-US"));
@@ -90,7 +90,7 @@ namespace BrainSimulator
             Choices sequence = new Choices("pi", "mary");
 
             Choices command = new Choices("Computer", "Computer Say", "Computer what can you see?", "Computer What is behind you?", "Computer turn around", "Computer what attributes do you know", "Computer what is");
-            Choices query = new Choices("what is", "add", "name");
+            Choices query = new Choices("what is", "add", "name", "this is");
             Choices article = new Choices("a", "an", "the", "some", "containing", "with", "which are");
             Choices words = new Choices("mary", "had", "a", "little", "lamb");
 

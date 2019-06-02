@@ -493,7 +493,7 @@ namespace BrainSimulator
         }
 
 
-        protected override void Initialize()
+        public  override void Initialize()
         {
             AddNew(20000, "color");
 

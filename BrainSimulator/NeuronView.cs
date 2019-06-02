@@ -123,6 +123,10 @@ namespace BrainSimulator
                 cm.Items.Add(tb);
                 cm.Closed += Cm_Closed;
                 r.ContextMenu = cm;
+                mi = new MenuItem();
+                mi.Header = "Model: "+n.NeuronModel.ToString();
+                mi.IsEnabled = false;
+                cm.Items.Add(mi);
             }
             r.MouseDown += theNeuronArrayView.theCanvas_MouseDown;
             r.MouseUp += theNeuronArrayView.theCanvas_MouseUp;

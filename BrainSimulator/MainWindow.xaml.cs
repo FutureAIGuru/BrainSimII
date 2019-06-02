@@ -127,7 +127,7 @@ namespace BrainSimulator
             // Load the data from the XML to the Brainsim Engine.  
             FileStream file = File.Open(fileName, FileMode.Open);
 
-            XmlSerializer reader = new XmlSerializer(typeof(NeuronArray),GetModuleTypes());
+            XmlSerializer reader = new XmlSerializer(typeof(NeuronArray), GetModuleTypes());
             theNeuronArray = (NeuronArray)reader.Deserialize(file);
             file.Close();
 
@@ -187,9 +187,9 @@ namespace BrainSimulator
         private Type[] GetModuleTypes()
         {
             Type[] listOfBs = (from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
-                            from assemblyType in domainAssembly.GetTypes()
+                               from assemblyType in domainAssembly.GetTypes()
                                where assemblyType.IsSubclassOf(typeof(ModuleBase))
-//                               where typeof(ModuleBase).IsAssignableFrom(assemblyType)
+                               //                               where typeof(ModuleBase).IsAssignableFrom(assemblyType)
                                select assemblyType).ToArray();
             return listOfBs;
         }
@@ -201,7 +201,7 @@ namespace BrainSimulator
                 if (!theNeuronArray.neuronArray[i].InUse())
                     theNeuronArray.neuronArray[i] = null;
             //Save the data from the Brainsim Engine to the file
-            XmlSerializer writer = new XmlSerializer(typeof(NeuronArray),GetModuleTypes());
+            XmlSerializer writer = new XmlSerializer(typeof(NeuronArray), GetModuleTypes());
             FileStream file = File.Create(fileName);
             writer.Serialize(file, theNeuronArray);
             file.Close();
@@ -500,7 +500,7 @@ namespace BrainSimulator
             engineThread.Abort();
             if (realSim != null)
                 realSim.Close();
-            if (theCameraWindow!= null)
+            if (theCameraWindow != null)
                 theCameraWindow.Close();
         }
 
@@ -542,7 +542,7 @@ namespace BrainSimulator
                     setTitleBar();
                 }
             }
-            catch 
+            catch
             { }
         }
 
@@ -571,6 +571,16 @@ namespace BrainSimulator
                 theNeuronArray.areas.Add(na);
                 tb.Text = "";
             }
+        }
+
+        private void ButtonInit_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (NeuronArea na in theNeuronArray.Areas)
+            {
+                if (na.TheModule != null)
+                    na.TheModule.Initialize();
+            }
+            theNeuronArrayView.Update();
         }
     }
 }

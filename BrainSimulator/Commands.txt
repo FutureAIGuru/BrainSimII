@@ -1,0 +1,25 @@
+﻿
+Visual: blue circle  
+Word: blue circle 
+
+
+Visual: red circle  
+Word: red circle 
+
+
+Visual: blue square 
+Word: blue square 
+
+
+Visual: red square  
+Word: red square 
+
+
+Visual: red blue 
+Word: purple
+
+
+
+
+
+

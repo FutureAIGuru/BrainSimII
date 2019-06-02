@@ -52,7 +52,7 @@ namespace BrainSimulator
         }
 
 
-        protected override void Initialize()
+        public override void Initialize()
         {
             synth = new SpeechSynthesizer();
 

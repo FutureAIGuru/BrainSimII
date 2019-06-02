@@ -223,7 +223,7 @@ namespace BrainSimulator
                 mi2.IsEnabled = false;
                 cm.Items.Add(mi2);
                 ComboBox cb = new ComboBox();
-                //get list of available NEW modules
+                //get list of available NEW modules...these are assignable to a "ModuleBase" 
                 var listOfBs = (from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
                                 from assemblyType in domainAssembly.GetTypes()
                                 where typeof(ModuleBase).IsAssignableFrom(assemblyType)
@@ -245,7 +245,9 @@ namespace BrainSimulator
                         cb.Items.Add(m.Name);
                     }
                 }
+                if (CommandLine != null) CommandLine = "";
                 string cm1 = CommandLine;
+
                 if (cm1.IndexOf(" ") > 0) cm1 = cm1.Substring(0, cm1.IndexOf(" "));
                 cb.SelectedValue = cm1;
                 cb.Width = 200;
@@ -324,7 +326,7 @@ namespace BrainSimulator
                     label = commandLine;
                 if (cm.Items[7] is ComboBox cb1)
                     color = ((SolidColorBrush)((ComboBoxItem)cb1.SelectedValue).Background).Color;
-
+                if (label == " " && commandLine == " ") return;
                 if (i >= 0)
                 {
                     MainWindow.theNeuronArray.areas[i].Label = label;
@@ -382,6 +384,7 @@ namespace BrainSimulator
                     else
                     {
                         //put the initialize code here
+                        MainWindow.theNeuronArray.Areas[i].TheModule.Initialize();
                     }
                 }
             }

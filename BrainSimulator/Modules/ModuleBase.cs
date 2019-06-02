@@ -17,7 +17,7 @@ namespace BrainSimulator
 
         abstract public void Fire();
 
-        virtual protected void Initialize()
+        virtual public void Initialize()
         { }
 
         protected void Init()
@@ -46,6 +46,17 @@ namespace BrainSimulator
             foreach (NeuronArea na1 in theNeuronArray.areas)
             {
                 if (na1.TheModule.GetType() == t)
+                {
+                    return na1.TheModule;
+                }
+            }
+            return null;
+        }
+        protected ModuleBase FindModuleByName(string name)
+        {
+            foreach (NeuronArea na1 in theNeuronArray.areas)
+            {
+                if (na1.Label == name)
                 {
                     return na1.TheModule;
                 }

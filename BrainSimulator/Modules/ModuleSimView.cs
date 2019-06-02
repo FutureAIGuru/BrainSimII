@@ -63,7 +63,7 @@ namespace BrainSimulator
             //            if (naFovea != null)
             ///                FoveaBitmap = bitmap1;
         }
-        protected override void Initialize()
+        public override void Initialize()
         {
             //the simulation view is opened and remains open for the duration of the Application
             //if closed by alt-F4, it cannot be reopened...oh well

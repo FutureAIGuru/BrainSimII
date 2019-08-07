@@ -21,7 +21,7 @@ using System.Reflection;
 namespace BrainSimulator
 {
     /// <summary>
-    /// Interaction logic for NeuronArrayView.xaml
+    /// Interaction logic for NeuronArrayView.xamlf
     /// </summary>
     /// 
 
@@ -209,6 +209,7 @@ namespace BrainSimulator
                 mi0.Header = "Initialize";
                 mi0.Click += Mi_Click;
                 cm.Items.Add(mi0);
+
                 MenuItem mi1 = new MenuItem();
                 mi1.Header = "Name:";
                 mi1.IsEnabled = false;
@@ -269,11 +270,13 @@ namespace BrainSimulator
                 {
                     Color cc = (Color)ColorConverter.ConvertFromString(x1[i1].Name);
                     if (cc == c)
+
                     {
                         sel = i1;
                         break;
                     }
                 }
+                if (theColor == 0) sel = 3;
                 foreach (PropertyInfo s in x1)
                 {
                     ComboBoxItem cbi = new ComboBoxItem()
@@ -298,6 +301,16 @@ namespace BrainSimulator
                 cb.SelectedIndex = sel;
                 cm.Items.Add(cb);
 
+                if (i >= 0)
+                {
+                    var t = MainWindow.theNeuronArray.Areas[i].TheModule.GetType();
+                    Type t1 = Type.GetType(t.ToString() + "Dlg");
+                    if (t1 != null)
+                    {
+                        cm.Items.Add(new MenuItem { Header = "Show Dialog" });
+                        ((MenuItem)cm.Items[cm.Items.Count - 1]).Click += Mi_Click;
+                    }
+                }
                 r.ContextMenu = cm;
                 cm.Closed += Cm_Closed;
             }
@@ -322,7 +335,7 @@ namespace BrainSimulator
                     commandLine = (string)cb.SelectedValue;
                 if (cm.Items[6] is TextBox t1)
                     commandLine += " " + t1.Text;
-                if ((label == "new"  || label == "") && commandLine != "")
+                if ((label == "new" || label == "") && commandLine != "")
                     label = commandLine;
                 if (cm.Items[7] is ComboBox cb1)
                     color = ((SolidColorBrush)((ComboBoxItem)cb1.SelectedValue).Background).Color;
@@ -383,8 +396,18 @@ namespace BrainSimulator
                     }
                     else
                     {
-                        //put the initialize code here
                         MainWindow.theNeuronArray.Areas[i].TheModule.Initialize();
+                    }
+                }
+                if ((string)mi.Header == "Show Dialog")
+                {
+                    int i = (int)mi.Parent.GetValue(AreaNumberProperty);
+                    if (i < 0)
+                    {
+                    }
+                    else
+                    {
+                        MainWindow.theNeuronArray.Areas[i].TheModule.ShowDialog();
                     }
                 }
             }
@@ -455,9 +478,9 @@ namespace BrainSimulator
                         //on a neuron in front of the rectangle ... doesn't work with selection areas (only modules)
                         if (MouseInArea != -1)
                         {
-                            Rectangle r = theCanvas.Children[MouseInArea*2] as Rectangle;
+                            Rectangle r = theCanvas.Children[MouseInArea * 2] as Rectangle;
                             if (r != null)
-                            { if (r.ContextMenu != null) r.ContextMenu.IsOpen=true; }
+                            { if (r.ContextMenu != null) r.ContextMenu.IsOpen = true; }
                         }
                         //need to add case of mouse in selection
                     }

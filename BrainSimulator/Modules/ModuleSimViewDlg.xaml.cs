@@ -10,8 +10,8 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
+
 using System.Windows.Media.Media3D;
 using System.Windows.Threading;
 using System.IO;
@@ -21,9 +21,9 @@ using System.Drawing;
 namespace BrainSimulator
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ModuleSimViewDlg.xaml
     /// </summary>
-    public partial class RealitySimulator : Window
+    public partial class ModuleSimViewDlg : Window
     {
         struct physObject
         {
@@ -34,7 +34,7 @@ namespace BrainSimulator
         }
         List<physObject> objects = new List<physObject>();
 
-        public RealitySimulator()
+        public ModuleSimViewDlg()
         {
             InitializeComponent();
             MyCanvas();
@@ -47,13 +47,21 @@ namespace BrainSimulator
                 if (x > .67) tempColor = Colors.Green;
                 physObject newObject = new physObject
                 {
-                    thePos = new Point3D(rand.NextDouble()*10-5, 0, rand.NextDouble()*10-5),
+                    thePos = new Point3D(rand.NextDouble() * 10 - 5, 0, rand.NextDouble() * 10 - 5),
                     theColor = tempColor,
                     scaleX = .5f,
                     scaleY = .75f
                 };
                 objects.Add(newObject);
             }
+            dt.Interval= new TimeSpan(0,0,10);
+            dt.Tick += Dt_Tick1;
+            dt.Start();
+        }
+
+        private void Dt_Tick1(object sender, EventArgs e)
+        {
+            MyCanvas();
         }
 
         bool viewChanged = true;
@@ -64,8 +72,8 @@ namespace BrainSimulator
 
         public void Move(int x) //you can move forward/back in the direciton you are headed
         {
-            cameraPosition.Z += -x/1000f * Math.Cos(theta);
-            cameraPosition.X += x/1000f * Math.Sin(theta);
+            cameraPosition.Z += -x / 1000f * Math.Cos(theta);
+            cameraPosition.X += x / 1000f * Math.Sin(theta);
             viewChanged = true;
         }
         public void Turn(int x)
@@ -78,16 +86,10 @@ namespace BrainSimulator
 
         public void MyCanvas()
         {
-
-            DrawObject(cameraPosition, cameraDirection,objects);
+            DrawObject(cameraPosition, cameraDirection, objects);
         }
 
-        private void Dt_Tick(object sender, EventArgs e)
-        {
-            //GetBitMap();
-        }
-
-        private void DrawObject(Point3D thePosition, Vector3D theDirection,List<physObject> theObjects)
+        private void DrawObject(Point3D thePosition, Vector3D theDirection, List<physObject> theObjects)
         {
             // Declare scene objects.
             Viewport3D myViewport3D = new Viewport3D();
@@ -124,7 +126,7 @@ namespace BrainSimulator
             myModel3DGroup.Children.Add(ambient);
 
             // Add the geometry model to the model group.
-            for (int i = 0; i < theObjects.Count; i ++)
+            for (int i = 0; i < theObjects.Count; i++)
             {
                 myModel3DGroup.Children.Add(CreateSquare(theObjects[i].thePos, theObjects[i].theColor, theObjects[i].scaleX, theObjects[i].scaleY));
             }
@@ -203,10 +205,10 @@ namespace BrainSimulator
             // Create a collection of vertex positions for the MeshGeometry3D. 
             Point3DCollection myPositionCollection = new Point3DCollection();
             myPositionCollection.Add(new Point3D(-sizeX + offset.X, -sizeY + offset.Y, offset.Z));
-            myPositionCollection.Add(new Point3D( sizeX + offset.X, -sizeY + offset.Y, offset.Z));
-            myPositionCollection.Add(new Point3D( sizeX + offset.X,  sizeY + offset.Y, offset.Z));
-            myPositionCollection.Add(new Point3D( sizeX + offset.X,  sizeY + offset.Y, offset.Z));
-            myPositionCollection.Add(new Point3D(-sizeX + offset.X,  sizeY + offset.Y, offset.Z));
+            myPositionCollection.Add(new Point3D(sizeX + offset.X, -sizeY + offset.Y, offset.Z));
+            myPositionCollection.Add(new Point3D(sizeX + offset.X, sizeY + offset.Y, offset.Z));
+            myPositionCollection.Add(new Point3D(sizeX + offset.X, sizeY + offset.Y, offset.Z));
+            myPositionCollection.Add(new Point3D(-sizeX + offset.X, sizeY + offset.Y, offset.Z));
             myPositionCollection.Add(new Point3D(-sizeX + offset.X, -sizeY + offset.Y, offset.Z));
             myMeshGeometry3D.Positions = myPositionCollection;
 
@@ -292,35 +294,6 @@ namespace BrainSimulator
                 theBitMap2 = new Bitmap(stream);
             MyCanvas();
             viewChanged = false;
-        }
-
-        bool moving = false;
-        System.Windows.Point prevPosition = new System.Windows.Point (-1,-1);
-        private void Window_MouseMove_1(object sender, MouseEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                if (!moving)
-                {
-                    prevPosition = PointToScreen(e.GetPosition(this));
-                    Mouse.Capture(this);
-                    moving = true;
-                }
-                else
-                {
-                    System.Windows.Point currentPosition = PointToScreen(e.GetPosition(this));
-                    Vector v = currentPosition - prevPosition;
-                    this.Left += v.X;
-                    this.Top += v.Y;
-                    prevPosition = currentPosition;
-                }
-            }
-            else
-            {
-                moving = false;
-                Mouse.Capture(null);
-            }
-
         }
     }
 }

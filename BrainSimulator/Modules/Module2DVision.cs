@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BrainSimulator
 {
-    public class ModuleEmpty : ModuleBase
+    public class Module2DVision : ModuleBase
     {
         public override void Fire()
         {

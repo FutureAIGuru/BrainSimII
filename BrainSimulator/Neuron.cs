@@ -15,18 +15,27 @@ namespace BrainSimulator
         internal List<Synapse> synapses = new List<Synapse>();
         internal List<Synapse> synapsesFrom = new List<Synapse>();
 
-        public enum modelType { std, antifeedback, hebbian, refractory, oneTime };
+        public enum modelType { std, color, floatVaule, antifeedback, hebbian, refractory, oneTime };
         modelType neuronModel = modelType.std;
+        public modelType NeuronModel { get => neuronModel; set => neuronModel = value; }
 
-
-
-        int id = -1;
         string label = "";
-        int range = 0; //0= [0,1]  1=[-1,1]
+        public string Label {
+            get { return label; }
+            set { label = value; }
+        }
+
+
+        int range = 0; //0= [0,1]  1=[-1,1] 2=unlimited
+        public int Range {
+            get => range;
+            set => range = value;
+        }
 
         public Neuron() { }
         public Neuron(int id1) { Id = id1; } //id's can get clobbered in save so here's where they can be reset???
 
+        int id = -1;
         public int Id { get => id; set => id = value; }
         public float CurrentCharge { get { return (float)currentCharge / 1000f; } set { this.currentCharge = (int)(value * 1000); } }
         public int CurrentChargeInt { get { return currentCharge; } set { this.currentCharge = value; range = 2; } }
@@ -36,11 +45,7 @@ namespace BrainSimulator
         public List<Synapse> Synapses { get { return synapses; } }
         public List<Synapse> SynapsesFrom { get { return synapsesFrom; } }
 
-        public string Label { get { return label; } set { label = value; } }
-
-        public int Range { get => range; set => range = value; }
-        public modelType NeuronModel { get => neuronModel; set => neuronModel = value; }
-
+                
         public bool Fired() { return (LastCharge > .9); }
 
         public void SetValue(float value)

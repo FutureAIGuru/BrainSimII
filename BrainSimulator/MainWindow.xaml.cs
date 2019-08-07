@@ -502,6 +502,15 @@ namespace BrainSimulator
                 realSim.Close();
             if (theCameraWindow != null)
                 theCameraWindow.Close();
+            foreach (NeuronArea na in theNeuronArray.Areas)
+            {
+                if (na.TheModule != null)
+                {
+                    na.TheModule.CloseDlg();    
+                }
+            }
+
+
         }
 
         private void MenuItem_MoveNeurons(object sender, RoutedEventArgs e)
@@ -578,7 +587,7 @@ namespace BrainSimulator
             foreach (NeuronArea na in theNeuronArray.Areas)
             {
                 if (na.TheModule != null)
-                    na.TheModule.Initialize();
+                    na.TheModule.Init(true);
             }
             theNeuronArrayView.Update();
         }

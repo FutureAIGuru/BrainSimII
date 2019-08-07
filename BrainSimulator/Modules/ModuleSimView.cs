@@ -10,6 +10,14 @@ namespace BrainSimulator
 {
     public class ModuleSimView : ModuleBase
     {
+        //ModuleSimViewDlg dlg = null;
+        //public override  void ShowDialog()
+        //{
+        //   dlg = new ModuleSimViewDlg();
+        //    //dlg.Owner = MainWindow;
+        //    dlg.Show();
+        //}
+
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
@@ -36,18 +44,18 @@ namespace BrainSimulator
             else
                 return;
 
-            na.GetBounds(out int X1, out int Y1, out int X2, out int Y2);
-            float ratio = bitmap1.Width / (X2 - X1);
-            float ratio2 = bitmap1.Height / (Y2 - Y1);
+            if (na.Height == 0 || na.Width == 0) return;
+            float ratio = bitmap1.Width / na.Width;
+            float ratio2 = bitmap1.Height / na.Height;
             if (ratio2 < ratio) ratio = ratio2;
 
-            for (int i = X1; i < X2; i++)
-                for (int j = Y1; j < Y2; j++)
+            for (int i = 0; i < na.Width; i++)
+            {
+                for (int j = 0; j < na.Height; j++)
                 {
-                    int neuronIndex = theNeuronArray.GetNeuronIndex(i, j);
-                    Neuron n = MainWindow.theNeuronArray.neuronArray[neuronIndex];
-                    int x = (int)((i - X1) * ratio);
-                    int y = (int)((j - Y1) * ratio);
+                    Neuron n = na.GetNeuronAt(i, j);
+                    int x = (int)(i * ratio);
+                    int y = (int)(j * ratio);
                     if (x >= bitmap1.Width) break;
                     if (y >= bitmap1.Height) break;
                     System.Drawing.Color c = bitmap1.GetPixel(x, y);
@@ -60,6 +68,9 @@ namespace BrainSimulator
                     else
                         n.SetValueInt(0);
                 }
+            }
+
+
             //            if (naFovea != null)
             ///                FoveaBitmap = bitmap1;
         }

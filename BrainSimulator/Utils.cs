@@ -11,6 +11,7 @@ namespace BrainSimulator
 {
     public static class Utils
     {
+        public static double fieldOfView = Math.PI / 2;
         public static Color FromArgb(int theColor)
         {
             Color c = new Color();
@@ -43,7 +44,7 @@ namespace BrainSimulator
             if (Math.Abs(a - b) < 4) return true;
             return false;
         }
-        public static bool ColorClose (Color c1, Color c2)
+        public static bool ColorClose(Color c1, Color c2)
         {
             if (Close(c1.R, c2.R) && Close(c1.G, c2.G) && Close(c1.B, c2.B)) return true;
             return false;
@@ -52,7 +53,7 @@ namespace BrainSimulator
         public static string GetColorName(Color col)
         {
             PropertyInfo[] p1 = typeof(Colors).GetProperties();
-            foreach(PropertyInfo p in p1)
+            foreach (PropertyInfo p in p1)
             {
                 Color c = (Color)p.GetValue(null);
                 if (ColorClose(c, col))
@@ -64,5 +65,41 @@ namespace BrainSimulator
             //        .FirstOrDefault(p => Color.AreClose((Color)p.GetValue(null), col));
             //    return colorProperty != null ? colorProperty.Name : "unnamed color";
         }
+
+        public static Vector RotateVector(Vector v, double theta)
+        {
+            var ca = Math.Cos(theta);
+            var sa = Math.Sin(theta);
+            return new Vector(ca * v.X - sa * v.Y, sa * v.X + ca * v.Y);
+        }
+
+        public static PolarVector ToPolar(Point p)
+        {
+            PolarVector pv = new PolarVector()
+            {
+                theta = ConvTheta(Math.Atan2(p.Y, p.X)),
+                r = Math.Sqrt(p.X * p.X + p.Y * p.Y)
+            };
+            return pv;
+        }
+        public static Point ToCartesian(PolarVector pv)
+        {
+            Point p = new Point(pv.r * Math.Cos(pv.theta), pv.r * Math.Sin(pv.theta));
+            return p;
+        }
+
+        //This converts an angle from a normal (with 0 pointing in +X) to
+        //robotic (with 0 pointing ahead (+Y))
+        //interestingly, this function is its own inverse
+        public static double ConvTheta(double theta)
+        {
+            return Math.PI / 2 - theta;
+        }
+
+    }
+    public class PolarVector
+    {
+        public double r;
+        public double theta;
     }
 }

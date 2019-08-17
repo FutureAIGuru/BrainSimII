@@ -9,7 +9,6 @@ namespace BrainSimulator
 {
     public class ModuleRobotControl : ModuleBase
     {
-        int min = 750;
         string[] labels = new string[] { "rotate", "shoulder", "elbow", "wrist", "grip", "Rwrist" };
         int[] home = new int[] { 5, 7, 8, 4, 4, 5 };
         int[] curPos = new int[] { 500, 500, 500, 500, 500, 500 };

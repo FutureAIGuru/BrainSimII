@@ -62,15 +62,15 @@ namespace BrainSimulator
         DispatcherTimer dt = new DispatcherTimer();
         double theta = 0;
 
-        public void Move(int x) //you can move forward/back in the direciton you are headed
+        public void Move(float x) //you can move forward/back in the direciton you are headed
         {
-            cameraPosition.Z += -x/1000f * Math.Cos(theta);
-            cameraPosition.X += x/1000f * Math.Sin(theta);
+            cameraPosition.Z += -x * Math.Cos(theta);
+            cameraPosition.X += x* Math.Sin(theta);
             viewChanged = true;
         }
-        public void Turn(int x)
+        public void Turn(float x)
         {
-            theta -= x / 1000f;
+            theta -= x;
             cameraDirection.X = Math.Sin(theta);
             cameraDirection.Z = -Math.Cos(theta);
             viewChanged = true;

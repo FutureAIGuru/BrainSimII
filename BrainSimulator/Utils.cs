@@ -93,8 +93,137 @@ namespace BrainSimulator
         //interestingly, this function is its own inverse
         public static double ConvTheta(double theta)
         {
-            return Math.PI / 2 - theta;
+            theta = Math.PI / 2 - theta;
+            if (theta > Math.PI) theta = -(Math.PI * 2 - theta);
+            if (theta < -Math.PI) theta = (Math.PI * 2 + theta);
+            return theta;
         }
+
+
+        // Calculate the distance between
+        // point pt and the segment p1 --> p2.
+        public static double FindDistanceToSegment(
+            Point pt, Point p1, Point p2, out Point closest)
+        {
+            double dx = p2.X - p1.X;
+            double dy = p2.Y - p1.Y;
+            if ((dx == 0) && (dy == 0))
+            {
+                // It's a point not a line segment.
+                closest = p1;
+                dx = pt.X - p1.X;
+                dy = pt.Y - p1.Y;
+                return Math.Sqrt(dx * dx + dy * dy);
+            }
+
+            // Calculate the t that minimizes the distance.
+            double t = ((pt.X - p1.X) * dx + (pt.Y - p1.Y) * dy) /
+                (dx * dx + dy * dy);
+
+            // See if this represents one of the segment's
+            // end points or a point in the middle.
+            if (t < 0)
+            {
+                closest = new Point(p1.X, p1.Y);
+                dx = pt.X - p1.X;
+                dy = pt.Y - p1.Y;
+            }
+            else if (t > 1)
+            {
+                closest = new Point(p2.X, p2.Y);
+                dx = pt.X - p2.X;
+                dy = pt.Y - p2.Y;
+            }
+            else
+            {
+                closest = new Point(p1.X + t * dx, p1.Y + t * dy);
+                dx = pt.X - closest.X;
+                dy = pt.Y - closest.Y;
+            }
+
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+
+        // Find the point of intersection between
+        // the lines p1 --> p2 and p3 --> p4.
+        public static void FindIntersection(
+            Point p1, Point p2, Point p3, Point p4,
+            out bool lines_intersect, out bool segments_intersect,
+            out Point intersection,
+            out Point close_p1, out Point close_p2,
+            out double collisionAngle)
+        {
+            // Get the segments' parameters.
+            double dx12 = p2.X - p1.X;
+            double dy12 = p2.Y - p1.Y;
+            double dx34 = p4.X - p3.X;
+            double dy34 = p4.Y - p3.Y;
+
+            double theta1 = Math.Atan2(dy12, dx12); //obstacle
+            double theta2 = Math.Atan2(dy34, dx34); //motion attempt
+            collisionAngle = theta2 - theta1;
+
+            // Solve for t1 and t2
+            double denominator = (dy12 * dx34 - dx12 * dy34);
+
+            double t1 =
+                ((p1.X - p3.X) * dy34 + (p3.Y - p1.Y) * dx34)
+                    / denominator;
+            if (double.IsInfinity(t1))
+            {
+                // The lines are parallel (or close enough to it).
+                lines_intersect = false;
+                segments_intersect = false;
+                intersection = new Point(float.NaN, float.NaN);
+                close_p1 = new Point(float.NaN, float.NaN);
+                close_p2 = new Point(float.NaN, float.NaN);
+                return;
+            }
+            lines_intersect = true;
+
+            double t2 =
+                ((p3.X - p1.X) * dy12 + (p1.Y - p3.Y) * dx12)
+                    / -denominator;
+
+            // Find the point of intersection.
+            intersection = new Point(p1.X + dx12 * t1, p1.Y + dy12 * t1);
+
+            // The segments intersect if t1 and t2 are between 0 and 1.
+            segments_intersect =
+                ((t1 >= 0) && (t1 <= 1) &&
+                 (t2 >= 0) && (t2 <= 1));
+
+            // Find the closest points on the segments.
+            if (t1 < 0)
+            {
+                t1 = 0;
+            }
+            else if (t1 > 1)
+            {
+                t1 = 1;
+            }
+
+            if (t2 < 0)
+            {
+                t2 = 0;
+            }
+            else if (t2 > 1)
+            {
+                t2 = 1;
+            }
+
+            close_p1 = new Point(p1.X + dx12 * t1, p1.Y + dy12 * t1);
+            close_p2 = new Point(p3.X + dx34 * t2, p3.Y + dy34 * t2);
+        }
+
+        public static float DistancePointToLine(Point P, Point P1, Point P2)
+        {
+            double distance = Math.Abs((P2.X - P1.X) * (P1.Y - P.Y) - (P1.X - P.X) * (P2.Y - P1.Y)) /
+                    Math.Sqrt(Math.Pow(P2.X - P1.X, 2) + Math.Pow(P2.Y - P1.Y, 2));
+            return (float)distance;
+        }
+
+
 
     }
     public class PolarVector
@@ -102,4 +231,6 @@ namespace BrainSimulator
         public double r;
         public double theta;
     }
+
+
 }

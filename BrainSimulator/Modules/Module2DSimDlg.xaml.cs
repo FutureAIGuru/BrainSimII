@@ -30,7 +30,8 @@ namespace BrainSimulator
 
             Module2DSim parent = (Module2DSim)base.Parent1;
 
-            theCanvas.Children.RemoveRange(1, theCanvas.Children.Count-1);
+            //theCanvas.Children.RemoveRange(1, theCanvas.Children.Count-1);
+            theCanvas.Children.Clear();
             Point windowSize = new Point(theCanvas.ActualWidth, theCanvas.ActualHeight);
             Point windowCenter = new Point(windowSize.X / 2, windowSize.Y / 2);
             float scale = (float)Math.Min(windowSize.X, windowSize.Y) / 12;
@@ -38,8 +39,13 @@ namespace BrainSimulator
             tg.Children.Add(new ScaleTransform(scale, -scale, 0, 0));// windowCenter.X, windowCenter.Y));
             tg.Children.Add(new TranslateTransform(windowCenter.X, windowCenter.Y));
             theCanvas.RenderTransform = tg;
-            
-            
+
+
+            //add a background
+            Rectangle r = new Rectangle() { Height = parent.boundarySize * 2, Width = parent.boundarySize * 2, Stroke = Brushes.AliceBlue,Fill = Brushes.AliceBlue};
+            Canvas.SetLeft(r, -parent.boundarySize);
+            Canvas.SetTop(r, -parent.boundarySize );
+            theCanvas.Children.Add(r);
             //draw the camera track...
             Polyline p = new Polyline();
             p.StrokeThickness = 1 / scale;
@@ -55,18 +61,6 @@ namespace BrainSimulator
             }
             theCanvas.Children.Add(p);
 
-            //draw the antennae...
-            for (int i = 0; i < parent.antennaeActual.Length; i++)
-            theCanvas.Children.Add(new Line
-            {
-                X1 = parent.CameraPosition.X,
-                Y1 = parent.CameraPosition.Y,
-                X2 = parent.antennaeActual[i].X,
-                Y2 = parent.antennaeActual[i].Y,
-                StrokeThickness = 2 / scale,
-                Stroke = Brushes.Black
-            });
- 
             //draw the objects
             for (int i = 0; i < parent.objects.Count; i++)
             {
@@ -80,6 +74,19 @@ namespace BrainSimulator
                     Stroke = new SolidColorBrush(parent.objects[i].theColor)
                 });
             }
+
+            //draw the antennae...
+            for (int i = 0; i < parent.antennaeActual.Length; i++)
+                theCanvas.Children.Add(new Line
+                {
+                    X1 = parent.CameraPosition.X,
+                    Y1 = parent.CameraPosition.Y,
+                    X2 = parent.antennaeActual[i].X,
+                    Y2 = parent.antennaeActual[i].Y,
+                    StrokeThickness = 2 / scale,
+                    Stroke = Brushes.Black
+                });
+
 
             //draw the current field of view
             for (int i = 0; i < parent.currentView.Count; i++)
@@ -115,21 +122,19 @@ namespace BrainSimulator
 
 
             Point position = e.GetPosition(theCanvas);
-            position = (Point)(position - windowCenter);
-            position.X /= scale;
-            position.Y /= scale;
-            Point p1Abs = new Point(parent.objects[4].P1.X , parent.objects[4].P1.Y);
-            Vector v1 = Point.Subtract(p1Abs,parent.CameraPosition);
-            PolarVector pv = Utils.ToPolar((Point)v1);
-            pv.theta += parent.CameraDirection1;
-            Point p1Rel = Utils.ToCartesian(pv);
 
-            MessageBox.Show(
-                "Pressed: " + e.GetPosition(theCanvas).ToString() +
-                "\r\n " + p1Abs.X + "," + p1Abs.Y + " " +
-                "\r\n " + p1Rel.X + "," + p1Rel.Y + " " +
-                "\r\n " + ((Vector)p1Rel).Length
-                );
+            Vector v = position - parent.CameraPosition;
+            float dist = (float)v.Length;
+            double angle = (float)Utils.ToPolar((Point)v).theta;
+            angle = (float) angle - (Math.PI/2 - parent.CameraDirection1);
+            NeuronArea na = MainWindow.theNeuronArray.FindAreaByLabel("ModuleBehavior");
+            na.GetNeuronAt(3,0).SetValue(1);
+            na.GetNeuronAt(4,0).SetValue((float)angle);
+            na.GetNeuronAt(5, 0).SetValue(1);
+            na.GetNeuronAt(6, 0).SetValue(dist);
+
+
+
         }
     }
 }

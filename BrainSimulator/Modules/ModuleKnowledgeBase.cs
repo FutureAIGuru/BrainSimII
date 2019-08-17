@@ -389,7 +389,7 @@ namespace BrainSimulator
         }
         void WhatIsBehindYou() //this is a complete hack and needs replacement
         {
-            int count = 0;
+            //int count = 0;
             //for (int i = 0; i < thingsInReality.Count; i++)
             //{
             //    Thing t = thingsInReality[i];

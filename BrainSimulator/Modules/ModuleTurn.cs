@@ -15,13 +15,13 @@ namespace BrainSimulator
 
             double[] rotation = { -Math.PI / 6, -Math.PI / 12, 0, Math.PI / 12, Math.PI / 6 };
 
-            double direction = 0;
+            float  direction = 0;
 
             for (int i = 0; i < na.Width; i++)
             {
                 if (na.GetNeuronAt(i, 0).LastCharge > 0.9 || na.GetNeuronAt(i,0).LastCharge > 0.9 && i < rotation.Length)
                 {
-                    direction = rotation[i];
+                    direction = (float)rotation[i];
                 }
             }
             if (na.GetNeuronAt(2, 0).LastCharge != 0)
@@ -37,11 +37,11 @@ namespace BrainSimulator
             Module2DSim m2D = (Module2DSim)FindModuleByType(typeof(Module2DSim));
 
             if (m2D != null && direction != 0)
-                m2D.Rotate(1000f * direction);
+                m2D.Rotate(direction);
 
             Module2DModel m2DModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
             if (m2DModel != null && direction != 0)
-                m2DModel.Rotate(1000f * direction);
+                m2DModel.Rotate(direction);
         }
         public override void Initialize()
         {

@@ -92,11 +92,13 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="Touchless.Vision">
-      <HintPath>..\WebCamWrapper\bin\Debug\Touchless.Vision.dll</HintPath>
+    <Reference Include="Touchless.Vision, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\x64\Debug\Touchless.Vision.dll</HintPath>
     </Reference>
-    <Reference Include="WebCamLib">
-      <HintPath>..\WebCamLib\bin\Debug\WebCamLib.dll</HintPath>
+    <Reference Include="WebCamLib, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\x64\Debug\WebCamLib.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />

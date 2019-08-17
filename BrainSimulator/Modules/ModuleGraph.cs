@@ -10,7 +10,6 @@ namespace BrainSimulator
     {
         string[] cols = { "in", "thing", "this", "parent", "child", "attrib", "allAttr", "anyAttr", "match", "next", "nMtch", "head", "alt", "recur", "out", "say", "0" };
         string theInPhrase = "";
-        string theOutPhrase = "";
 
         public override void Fire()
         {

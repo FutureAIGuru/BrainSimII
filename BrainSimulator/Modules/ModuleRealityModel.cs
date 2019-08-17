@@ -152,7 +152,7 @@ namespace BrainSimulator
             outElevation = (float)Math.Asin(cartCoords.Y / outRadius);
         }
 
-        public void Move(int amount)
+        public void Move(float amount)
         {
             //current position is (0,0,0)  Motion makes it (0,0,z)
             //so we need to add z to all the components
@@ -168,7 +168,7 @@ namespace BrainSimulator
                 //                SphericalToCartesian(t.z, 0, 0, out Vector3D position);
 
                 //add
-                position.X -= amount / 1000f;
+                position.X -= amount;
 
                 //convert back
                 CartesianToSpherical(position, out t.z, out t.cx, out t.cy);

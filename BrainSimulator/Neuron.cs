@@ -46,7 +46,10 @@ namespace BrainSimulator
         public List<Synapse> SynapsesFrom { get { return synapsesFrom; } }
 
                 
-        public bool Fired() { return (LastCharge > .9); }
+        public bool Fired()
+        {
+            return (LastCharge > .9);
+        }
 
         public void SetValue(float value)
         {

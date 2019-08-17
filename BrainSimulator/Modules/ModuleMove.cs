@@ -13,8 +13,8 @@ namespace BrainSimulator
         {
             Init();  //be sure to leave this here to enable use of the na variable
             na.GetNeuronAt(0, 2).Range = 2;
-            int[] dist = { 200,100,0,-100,-200};
-            int distance = 0;
+            float[] dist = { .2f,.1f,0,-.1f,-.2f};
+            float distance = 0;
 
 
             for (int i = 0; i < na.Height; i++)
@@ -27,7 +27,7 @@ namespace BrainSimulator
 
             if (na.GetNeuronAt(0,2).LastCharge != 0)
             {
-                distance = (int) (na.GetNeuronAt(0,2).LastCharge * 200);
+                distance = na.GetNeuronAt(0,2).LastCharge;
                 na.GetNeuronAt(0,2).SetValue(0);
             }
 

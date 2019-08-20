@@ -7,27 +7,42 @@ using System.Windows;
 using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace BrainSimulator
 {
-    public class myMenuItem : MenuItem
-    {
-        public int Source, Target;
-        public float Weight;
-    }
-    public class myTextBox : TextBox
-    {
-        public int Source, Target;
-        public float Weight;
-    }
-    public static class SynapseView
+
+    public class SynapseView : DependencyObject
     {
         public static DisplayParams dp;
         static int selectedSynapseSource = -1;
         static int selectedSynapseTarget = -1;
         static NeuronArrayView theNeuronArrayView = null;
         public static Canvas theCanvas;
-        public static NeuronArrayView.MouseMode theMouseMode = NeuronArrayView.MouseMode.pan;
+
+        public static readonly DependencyProperty SourceIDProperty =
+        DependencyProperty.Register("SourceID", typeof(int), typeof(MenuItem));
+        public int SourceID
+        {
+            get { return (int)GetValue(SourceIDProperty); }
+            set { SetValue(SourceIDProperty, value); }
+        }
+        public static readonly DependencyProperty TargetIDProperty =
+                DependencyProperty.Register("TargetID", typeof(int), typeof(MenuItem));
+        public int TargetID
+        {
+            get { return (int)GetValue(TargetIDProperty); }
+            set { SetValue(TargetIDProperty, value); }
+        }
+        public static readonly DependencyProperty WeightValProperty =
+                DependencyProperty.Register("WeightVal", typeof(float), typeof(MenuItem));
+        public float WeightVal
+        {
+            get { return (int)GetValue(WeightValProperty); }
+            set { SetValue(WeightValProperty, value); }
+        }
+
+
 
         static bool PtOnScreen(Point p)
         {
@@ -38,7 +53,7 @@ namespace BrainSimulator
             return true;
         }
 
-        public static Shape SynapseDisplay(int i, Point p1, Synapse s, NeuronArrayView theNeuronArrayView1)
+        public static Shape GetSynapseView(int i, Point p1, Synapse s, NeuronArrayView theNeuronArrayView1)
         {
             theNeuronArrayView = theNeuronArrayView1;
             Point p2 = dp.pointFromNeuron(s.TargetNeuron);
@@ -55,89 +70,63 @@ namespace BrainSimulator
             if (s.Weight < -0.9)
                 l.Stroke = Brushes.Black;
 
-            if (dp.NeuronDisplaySize > 45 && theMouseMode == NeuronArrayView.MouseMode.synapse)
-            {
-                l.ToolTip = i + " " + s.TargetNeuron + " " + s.Weight.ToString("f2");
+            //this is also used to create the context menu on the fly...we could use a registered value
+            l.ToolTip = i + " " + s.TargetNeuron + " " + s.Weight.ToString("f2");
 
-                ContextMenu cm = new ContextMenu();
-
-                myMenuItem mi = new myMenuItem();
-                mi.Header = "Delete";
-                mi.Source = i;
-                mi.Target = s.TargetNeuron;
-                mi.Weight = s.Weight;
-                mi.Click += DeleteSynapse_Click;
-                cm.Items.Add(mi);
-
-                mi = new myMenuItem();
-                mi.Header = "Step & Repeat";
-                mi.Source = i;
-                mi.Target = s.TargetNeuron;
-                mi.Weight = s.Weight;
-                mi.Click += StepAndRepeatSynapse_Click;
-                cm.Items.Add(mi);
-
-                mi = new myMenuItem();
-                mi.Header = "1";
-                mi.Source = i;
-                mi.Target = s.TargetNeuron;
-                mi.Weight = s.Weight;
-                mi.Click += ANDSynapse_Click;
-                cm.Items.Add(mi);
-
-                mi = new myMenuItem();
-                mi.Header = ".5";
-                mi.Source = i;
-                mi.Target = s.TargetNeuron;
-                mi.Weight = s.Weight;
-                mi.Click += ANDSynapse_Click;
-                cm.Items.Add(mi);
-
-                mi = new myMenuItem();
-                mi.Header = ".33";
-                mi.Source = i;
-                mi.Target = s.TargetNeuron;
-                mi.Weight = s.Weight;
-                mi.Click += ANDSynapse_Click;
-                cm.Items.Add(mi);
-
-                mi = new myMenuItem();
-                mi.Header = ".25";
-                mi.Source = i;
-                mi.Target = s.TargetNeuron;
-                mi.Weight = s.Weight;
-                mi.Click += ANDSynapse_Click;
-                cm.Items.Add(mi);
-
-                mi = new myMenuItem();
-                mi.Header = "-1";
-                mi.Source = i;
-                mi.Target = s.TargetNeuron;
-                mi.Weight = s.Weight;
-                mi.Click += ANDSynapse_Click;
-                cm.Items.Add(mi);
-                mi = new myMenuItem();
-
-                mi.Header = "Weight:";
-                mi.IsEnabled = false;
-                mi.Source = i;
-                mi.Target = s.TargetNeuron;
-                mi.Weight = s.Weight;
-                mi.Click += ANDSynapse_Click;
-                cm.Items.Add(mi);
-                myTextBox tb = new myTextBox();
-                tb.Text = s.Weight.ToString("F4");
-                tb.Source = i;
-                tb.Target = s.TargetNeuron;
-                tb.Weight = s.Weight;
-                tb.Width = 200;
-                tb.TextChanged += Tb_TextChanged;
-                cm.Items.Add(tb);
-
-                l.ContextMenu = cm;
-                cm.Closed += Cm_Closed;
-            }
             return l;
+        }
+
+        public static void CreateContextMenu(int i, Synapse s, ContextMenu cm)
+        {
+            cm.SetValue(SourceIDProperty, i);
+            cm.SetValue(TargetIDProperty, s.TargetNeuron);
+            cm.SetValue(WeightValProperty, s.Weight);
+            MenuItem mi = new MenuItem();
+            mi.Header = "Delete";
+            mi.Click += DeleteSynapse_Click;
+            cm.Items.Add(mi);
+
+            mi = new MenuItem();
+            mi.Header = "Step & Repeat";
+            mi.Click += StepAndRepeatSynapse_Click;
+            cm.Items.Add(mi);
+
+            mi = new MenuItem();
+            mi.Header = "1";
+            mi.Click += ANDSynapse_Click;
+            cm.Items.Add(mi);
+
+            mi = new MenuItem();
+            mi.Header = ".5";
+            mi.Click += ANDSynapse_Click;
+            cm.Items.Add(mi);
+
+            mi = new MenuItem();
+            mi.Header = ".33";
+            mi.Click += ANDSynapse_Click;
+            cm.Items.Add(mi);
+
+            mi = new MenuItem();
+            mi.Header = ".25";
+            mi.Click += ANDSynapse_Click;
+            cm.Items.Add(mi);
+
+            mi = new MenuItem();
+            mi.Header = "-1";
+            mi.Click += ANDSynapse_Click;
+            cm.Items.Add(mi);
+            mi = new MenuItem();
+
+            mi.Header = "Weight:";
+            mi.IsEnabled = false;
+            mi.Click += ANDSynapse_Click;
+            cm.Items.Add(mi);
+            TextBox tb = new TextBox();
+            tb.Text = s.Weight.ToString("F4");
+            tb.Width = 200;
+            tb.TextChanged += Tb_TextChanged;
+            cm.Items.Add(tb);
+            cm.Closed += Cm_Closed;
         }
 
         private static void Cm_Closed(object sender, RoutedEventArgs e)
@@ -147,15 +136,15 @@ namespace BrainSimulator
 
         private static void Tb_TextChanged(object sender, TextChangedEventArgs e)
         {
-            myTextBox tb = (myTextBox)sender;
+            TextBox tb = sender as TextBox;
             //find out which neuron this context menu is from
-            ContextMenu cm = (ContextMenu)tb.Parent;
+            ContextMenu cm = tb.Parent as ContextMenu;
             float newWeight = -20;
             float.TryParse(tb.Text, out newWeight);
             if (newWeight == -20) return;
             theNeuronArrayView.lastSynapseWeight = newWeight;
-            Neuron n = MainWindow.theNeuronArray.neuronArray[tb.Source];
-            n.AddSynapse(tb.Target, newWeight, MainWindow.theNeuronArray);
+            Neuron n = MainWindow.theNeuronArray.neuronArray[(int)cm.GetValue(SourceIDProperty)];
+            n.AddSynapse((int)cm.GetValue(TargetIDProperty), newWeight, MainWindow.theNeuronArray);
         }
 
         public static void GetSynapseInfo(object sender)
@@ -179,13 +168,15 @@ namespace BrainSimulator
 
         public static void StepAndRepeatSynapse_Click(object sender, RoutedEventArgs e)
         {
-            myMenuItem mi = (myMenuItem)sender;
-            theNeuronArrayView.StepAndRepeat(mi.Source, mi.Target, mi.Weight);
+            MenuItem mi = sender as MenuItem;
+            ContextMenu cm = mi.Parent as ContextMenu;
+            theNeuronArrayView.StepAndRepeat((int)cm.GetValue(SourceIDProperty), (int)cm.GetValue(TargetIDProperty), (float)cm.GetValue(WeightValProperty));
         }
 
         public static void ANDSynapse_Click(object sender, RoutedEventArgs e)
         {
-            myMenuItem mi = (myMenuItem)sender;
+            MenuItem mi = (MenuItem)sender;
+            ContextMenu cm = mi.Parent as ContextMenu;
             float weight = 0;
             if ((string)mi.Header == "1")
                 weight = 1.0f;
@@ -197,23 +188,25 @@ namespace BrainSimulator
                 weight = 0.25f;
             if ((string)mi.Header == "-1")
                 weight = -1f;
-            MainWindow.theNeuronArray.neuronArray[mi.Source].AddSynapse(mi.Target, weight, MainWindow.theNeuronArray);
+            MainWindow.theNeuronArray.neuronArray[(int)cm.GetValue(SourceIDProperty)].
+                AddSynapse((int)cm.GetValue(TargetIDProperty), weight, MainWindow.theNeuronArray);
             theNeuronArrayView.lastSynapseWeight = weight;
             MainWindow.Update();
         }
 
         public static void DeleteSynapse_Click(object sender, RoutedEventArgs e)
         {
-            myMenuItem mi = (myMenuItem)sender;
+            MenuItem mi = (MenuItem)sender;
+            ContextMenu cm = mi.Parent as ContextMenu;
             string[] s = mi.Name.Split('_');
-            MainWindow.theNeuronArray.neuronArray[mi.Source].DeleteSynapse(mi.Target);
+            MainWindow.theNeuronArray.neuronArray[(int)cm.GetValue(SourceIDProperty)].DeleteSynapse((int)cm.GetValue(TargetIDProperty));
             MainWindow.Update();
         }
 
 
         public static Shape GetSynapseShape(Point p1, Point p2, NeuronArrayView theNeuronDisplayView)
         {
-            //returns a line from the source to the destination 
+            //returns a line from the source to the destination (with a link arrow at larger zooms
             //unless the source and destination are the same in which it returns an arc
             Shape s;
             if (p1 != p2)
@@ -224,7 +217,7 @@ namespace BrainSimulator
                 l.Y1 = p1.Y + dp.NeuronDisplaySize / 2;
                 l.Y2 = p2.Y + dp.NeuronDisplaySize / 2;
                 s = l;
-                if (dp.NeuronDisplaySize > 45)
+                if (dp.ShowSynapseArrows())
                 {
                     Vector offset = new Vector(dp.NeuronDisplaySize / 2, dp.NeuronDisplaySize / 2);
                     s = DrawLinkArrow(p1 + offset, p2 + offset);
@@ -239,11 +232,28 @@ namespace BrainSimulator
             }
             s.Stroke = Brushes.Red;
             s.StrokeThickness = 1;
-            if (dp.NeuronDisplaySize > 15)
+            if (dp.ShowSynapseWideLines())
                 s.StrokeThickness = dp.NeuronDisplaySize / 15;
             s.MouseDown += theNeuronDisplayView.theCanvas_MouseDown;
             s.MouseUp += theNeuronDisplayView.theCanvas_MouseUp;
+            if (dp.ShowSynapseArrowCursor())
+            {
+                s.MouseEnter += S_MouseEnter;
+                s.MouseLeave += S_MouseLeave;
+            }
             return s;
+        }
+
+        private static void S_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (theCanvas.Cursor != Cursors.Hand)// && theNeuronArrayView != null && !theNeuronArrayView.dragging)
+                theCanvas.Cursor = Cursors.Cross;
+        }
+
+        private static void S_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (theCanvas.Cursor != Cursors.Hand)// && theNeuronArrayView != null &&!theNeuronArrayView.dragging)
+                theCanvas.Cursor = Cursors.Arrow;
         }
 
         public static Shape DrawLinkArrow(Point p1, Point p2) //helper to put an arrow in a synapse line

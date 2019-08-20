@@ -99,9 +99,9 @@ namespace BrainSimulator
                 for (int j = 0; j < na.Height; j++)
                 {
                     Neuron n = na.GetNeuronAt(i, j);
-                    n.NeuronModel = Neuron.modelType.std;
+                    n.Model = Neuron.modelType.Std;
                     n.DeleteAllSynapes();
-                    na.GetNeuronAt(i + 1, j).NeuronModel = Neuron.modelType.oneTime;
+                    na.GetNeuronAt(i + 1, j).Model = Neuron.modelType.OneTime;
                 }
 
         }

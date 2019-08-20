@@ -17,7 +17,7 @@ namespace BrainSimulator
             naIn.BeginEnum();
             for (Neuron n = naIn.GetNextNeuron(); n != null; n = naIn.GetNextNeuron())
             {
-                n.Range = 2;
+                n.Model = Neuron.modelType.Color;
                 naIn.GetBounds(out int X1, out int Y1, out int X2, out int Y2);
                 naIn.GetNeuronLocation(n, out int X, out int Y);
                 if (X == 0 || Y == 0 || X == X2 - X1 - 1 || Y == Y2 - Y1 - 1) continue;

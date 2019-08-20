@@ -10,7 +10,7 @@ namespace BrainSimulator
     {
 
         //array of rectangular selection areas
-        public NeuronSelectionRectangle[] selectedRectangle;
+        public List<NeuronSelectionRectangle> selectedRectangles = new List<NeuronSelectionRectangle>();
 
         //step counter 
         int position = -1;
@@ -20,20 +20,6 @@ namespace BrainSimulator
 
         //list to avoid duplicates in enumeration
         List<Neuron> neuronsAlreadyVisited = new List<Neuron>();
-
-        public NeuronSelection()
-        {
-            selectedRectangle = new NeuronSelectionRectangle[5];
-            for (int i = 0; i < 5; i++)
-                selectedRectangle[i] = null;
-
-        }
-
-        public void ClearSelection()
-        {
-            for (int i = 0; i < selectedRectangle.Length; i++)
-                selectedRectangle[i] = null;
-        }
 
 
         public void EnumSelectedNeurons()
@@ -47,18 +33,19 @@ namespace BrainSimulator
             position++;
             int currentStart = 0;
             Neuron n = null;
-            for (int i = 0; i < selectedRectangle.Length; i++)
+            for (int i = 0; i < selectedRectangles.Count; i++)
             {
-                if (selectedRectangle[i] != null)
+                if (selectedRectangles[i] != null)
                 {
-                    while (position < currentStart + selectedRectangle[i].GetLength())
+                    while (position < currentStart + selectedRectangles[i].GetLength())
                     {
                         //the index into the current rectangle
                         int index = position - currentStart;
-                        selectedRectangle[i].GetSelectedArea(out int X1, out int Y1, out int X2, out int Y2);
+                        selectedRectangles[i].GetSelectedArea(out int X1, out int Y1, out int X2, out int Y2);
                         int height = Y2 - Y1;
-                        selectedNeuronIndex = selectedRectangle[i].FirstSelectedNeuron + (index / height) * 
+                        selectedNeuronIndex = selectedRectangles[i].FirstSelectedNeuron + (index / height) * 
                             MainWindow.theNeuronArray.rows + index % height;
+                        if (selectedNeuronIndex > MainWindow.theNeuronArray.arraySize) return null;
                         n = MainWindow.theNeuronArray.neuronArray[selectedNeuronIndex];
                         if (!neuronsAlreadyVisited.Contains(n))
                         {
@@ -70,8 +57,8 @@ namespace BrainSimulator
 
                     }
                 }
-                if (selectedRectangle[i] != null)
-                    currentStart += selectedRectangle[i].GetLength();
+                if (selectedRectangles[i] != null)
+                    currentStart += selectedRectangles[i].GetLength();
             }
             return n;
         }
@@ -80,9 +67,9 @@ namespace BrainSimulator
         public int NeuronInSelection(int neuronIndex)
         {
             int count = 0;
-            for (int i = 0; i < selectedRectangle.Length; i++)
-                if (selectedRectangle[i] != null)
-                    if (selectedRectangle[i].NeuronIsInSelection(neuronIndex))
+            for (int i = 0; i < selectedRectangles.Count; i++)
+                if (selectedRectangles[i] != null)
+                    if (selectedRectangles[i].NeuronIsInSelection(neuronIndex))
                         count++;
             return count;
         }
@@ -103,11 +90,11 @@ namespace BrainSimulator
         {
             X1o = Y1o = int.MaxValue;
             X2o = Y2o = int.MinValue;
-            for (int i = 0; i < selectedRectangle.Length; i++)
+            for (int i = 0; i < selectedRectangles.Count; i++)
             {
-                if (selectedRectangle[i] != null)
+                if (selectedRectangles[i] != null)
                 {
-                    selectedRectangle[i].GetSelectedArea(out int X1, out int Y1, out int X2, out int Y2);
+                    selectedRectangles[i].GetSelectedArea(out int X1, out int Y1, out int X2, out int Y2);
                     if (X1 < X1o) X1o = X1;
                     if (Y1 < Y1o) Y1o = Y1;
                     if (X2 > X2o) X2o = X2;

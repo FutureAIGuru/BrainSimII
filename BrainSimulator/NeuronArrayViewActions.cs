@@ -8,6 +8,12 @@ namespace BrainSimulator
 {
     public partial class NeuronArrayView
     {
+        public void ClearSelection()
+        {
+            theSelection.selectedRectangles.Clear();
+            targetNeuronIndex = -1;
+            Update();
+        }
 
         //first selected neron must be the upper left of the overall selection area
         public void CopyNeurons()
@@ -31,6 +37,7 @@ namespace BrainSimulator
             {
                 myClipBoard.neuronArray[index].CurrentCharge = n.CurrentCharge;
                 myClipBoard.neuronArray[index].Label = n.Label;
+                myClipBoard.neuronArray[index].Model = n.Model;
                 foreach (Synapse s in n.synapses)
                 {
                     int newSynapse = -1;
@@ -39,7 +46,6 @@ namespace BrainSimulator
                 }
                 index++;
             }
-            Update();
         }
         public void CutNeurons()
         {
@@ -123,7 +129,7 @@ namespace BrainSimulator
             theSelection.EnumSelectedNeurons();
             for (Neuron n = theSelection.GetSelectedNeuron(); n != null; n = theSelection.GetSelectedNeuron())
             {
-                int offset = targetNeuronIndex - theSelection.selectedRectangle[0].FirstSelectedNeuron;
+                int offset = targetNeuronIndex - theSelection.selectedRectangles[0].FirstSelectedNeuron;
                 int neuronNewLocation = theSelection.selectedNeuronIndex + offset;
 
                 Neuron nNewLocation = MainWindow.theNeuronArray.neuronArray[neuronNewLocation];
@@ -191,10 +197,10 @@ namespace BrainSimulator
         //the current firing pattern... AND connections to a target array which shows the closest match pattern
         public void Learn()
         {
-            if (theSelection.selectedRectangle[0] == null) return;
+            if (theSelection.selectedRectangles[0] == null) return;
 
             //get the selected rectangle of source neurons
-            theSelection.selectedRectangle[0].GetSelectedArea(out int X1, out int Y1, out int X2, out int Y2);
+            theSelection.selectedRectangles[0].GetSelectedArea(out int X1, out int Y1, out int X2, out int Y2);
             int size = (X2 - X1) * (Y2 - Y1);
             int theSourceNeuron = X1 * dp.NeuronRows + Y1;
             int targetNeuronIndex = (X2 + 2) * dp.NeuronRows + Y1;
@@ -243,10 +249,10 @@ namespace BrainSimulator
 
         public void Hebbian()
         {
-            if (theSelection.selectedRectangle[0] == null) return;
+            if (theSelection.selectedRectangles[0] == null) return;
             //get the selected rectangle of source neurons
             int Y1, X1, Y2, X2;
-            theSelection.selectedRectangle[0].GetSelectedArea(out X1, out Y1, out X2, out Y2);
+            theSelection.selectedRectangles[0].GetSelectedArea(out X1, out Y1, out X2, out Y2);
 
             //add the synapses to the target neuron;
             for (int j = X1; j < X2; j++)

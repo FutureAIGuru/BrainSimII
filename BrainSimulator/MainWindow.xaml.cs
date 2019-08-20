@@ -29,12 +29,11 @@ namespace BrainSimulator
     public partial class MainWindow : Window
     {
 
-        bool hebbianLearning = false;
         static NeuronArrayView arrayView = null;
         public static NeuronArray theNeuronArray = null;
 
-        Thread engineThread = new Thread(new ThreadStart(Engine));
-        private static int engineDelay = 2000;//how long to wait after each cycle of the engine
+        Thread engineThread = new Thread(new ThreadStart(EngineLoop));
+        private static int engineDelay = 500;//how long to wait after each cycle of the engine
 
         //timer to update the neuron values 
         private DispatcherTimer displayUpdateTimer = new DispatcherTimer();
@@ -43,7 +42,7 @@ namespace BrainSimulator
         public static bool crtlPressed = false;
 
         //the name of the currently-loaded network file
-        public string currentFileName = "";
+        public static string currentFileName = "";
 
         public static MainWindow thisWindow;
         Window splashScreen = new SplashScreeen();
@@ -61,8 +60,10 @@ namespace BrainSimulator
             splashScreen.Left = 300;
             splashScreen.Top = 300;
             splashScreen.Show();
-            DispatcherTimer splashHide = new DispatcherTimer();
-            splashHide.Interval = new TimeSpan(0, 0, 3);
+            DispatcherTimer splashHide = new DispatcherTimer
+            {
+                Interval = new TimeSpan(0, 0, 3),
+            };
             splashHide.Tick += SplashHide_Tick;
             splashHide.Start();
 
@@ -87,12 +88,12 @@ namespace BrainSimulator
             Debug.WriteLine("Window_KeyDown");
             if (e.Key == Key.Delete)
             {
-                if (theNeuronArrayView.TheMouseMode == NeuronArrayView.MouseMode.neuron)
+                if (theNeuronArrayView.theSelection.selectedRectangles.Count > 0)
                 {
                     theNeuronArrayView.DeleteNeurons();
                     theNeuronArrayView.Update();
                 }
-                if (theNeuronArrayView.TheMouseMode == NeuronArrayView.MouseMode.synapse)
+                else 
                 {
                     theNeuronArray.UndoSynapse();
                     theNeuronArrayView.Update();
@@ -104,13 +105,22 @@ namespace BrainSimulator
             }
             if (e.Key == Key.Escape)
             {
-                if (theNeuronArrayView.TheMouseMode == NeuronArrayView.MouseMode.select)
+                if (theNeuronArrayView.theSelection.selectedRectangles.Count > 0)
                 {
-                    theNeuronArrayView.theSelection.ClearSelection();
-                    theNeuronArrayView.targetNeuronIndex = -1;
+                    theNeuronArrayView.ClearSelection();
                 }
-                if (theNeuronArrayView.TheMouseMode == NeuronArrayView.MouseMode.synapse)
-                    theNeuronArrayView.CancelSynapseRubberband();
+            }
+            if (crtlPressed && e.Key == Key.C)
+            {
+                theNeuronArrayView.CopyNeurons();
+            }
+            if (crtlPressed && e.Key == Key.V)
+            {
+                theNeuronArrayView.PasteNeurons();
+            }
+            if (crtlPressed && e.Key == Key.X)
+            {
+                theNeuronArrayView.CutNeurons();
             }
         }
 
@@ -122,6 +132,8 @@ namespace BrainSimulator
 
         private void LoadFile(string fileName)
         {
+            theNeuronArrayView.theSelection.selectedRectangles.Clear();
+
             Thread.Sleep(1);
 
             // Load the data from the XML to the Brainsim Engine.  
@@ -169,21 +181,7 @@ namespace BrainSimulator
             SaveFile(currentFileName);
         }
 
-        int oldEngineDelay = engineDelay;
-        private void suspendEngine()
-        {
-            if (engineDelay == 2000) return;
-            //suspend the engine...
-            oldEngineDelay = engineDelay;
-            engineDelay = 2000;
-            while (!engineIsWaiting)
-                Thread.Sleep(100);
-        }
-        private void ResumeEngine()
-        {
-            //resume the engine
-            engineDelay = oldEngineDelay;
-        }
+
         private Type[] GetModuleTypes()
         {
             Type[] listOfBs = (from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
@@ -193,9 +191,10 @@ namespace BrainSimulator
                                select assemblyType).ToArray();
             return listOfBs;
         }
+
         private void SaveFile(string fileName)
         {
-            suspendEngine();
+            SuspendEngine();
             //hide unused neurons to save on storage space
             for (int i = 0; i < theNeuronArray.arraySize; i++)
                 if (!theNeuronArray.neuronArray[i].InUse())
@@ -244,7 +243,6 @@ namespace BrainSimulator
                 Filter = "XML Network Files|*.xml",
                 Title = "Select a Brain Simulator File"
             };
-
 
             // Show the Dialog.  
             // If the user clicked OK in the dialog and  
@@ -314,20 +312,61 @@ namespace BrainSimulator
             theNeuronArrayView.PasteNeurons(true);
             theNeuronArrayView.Update();
         }
-
-
-        private void radioButton_Checked(object sender, RoutedEventArgs e)
+        private void Button_PatternFileLoad_Click(object sender, RoutedEventArgs e)
         {
-            if (theNeuronArrayView == null) return;
-            if (sender == radioButtonPan)
-            { theNeuronArrayView.TheMouseMode = NeuronArrayView.MouseMode.pan; }
-            else if (sender == radioButtonSelect)
-            { theNeuronArrayView.TheMouseMode = NeuronArrayView.MouseMode.select; }
-            else if (sender == radioButtonNeuron)
-            { theNeuronArrayView.TheMouseMode = NeuronArrayView.MouseMode.neuron; }
-            else if (sender == radioButtonSynapse)
-            { theNeuronArrayView.TheMouseMode = NeuronArrayView.MouseMode.synapse; }
+            if (theNeuronArrayView.targetNeuronIndex < 0) return;
+            int firstNeuron = theNeuronArrayView.targetNeuronIndex;
+            OpenFileDialog openFileDialog1 = new OpenFileDialog
+            {
+                Filter = "BMP Files|*.bmp",
+                Title = "Select a Brain Simulator pattern File"
+            };
+
+            // Show the Dialog.  
+            // If the user clicked OK in the dialog and  
+            Nullable<bool> result = openFileDialog1.ShowDialog();
+            if (result ?? true)// System.Windows.Forms.DialogResult.OK)
+            {
+                Bitmap bitmap1 = new Bitmap(openFileDialog1.FileName);
+
+                //for (int i = 0; i < bitmap1.Height; i++)
+                //    for (int j = 0; j < bitmap1.Width; j++)
+                //    {
+                //        int i1 = i / 5;
+                //        int j1 = j / 5;
+                //        int neuronIndex = firstNeuron + i1 + j1 * theNeuronArrayView.dp.NeuronRows;
+                //        if (neuronIndex >= theNeuronArray.arraySize) return;
+                //        Neuron n = theNeuronArray.neuronArray[neuronIndex];
+                //        System.Drawing.Color c = bitmap1.GetPixel(j, i);
+                //        if (c.R != 255 || c.G != 255 || c.B != 255)
+                //        {
+                //            n.CurrentCharge = n.LastCharge = 1;
+                //        }
+                //        else
+                //        {
+                //            n.CurrentCharge = n.LastCharge = 0;
+                //        }
+                //    }
+            }
         }
+
+
+        int oldEngineDelay = engineDelay;
+        private void SuspendEngine()
+        {
+            if (engineDelay == 2000) return;
+            //suspend the engine...
+            oldEngineDelay = engineDelay;
+            engineDelay = 2000;
+            while (!engineIsWaiting)
+                Thread.Sleep(100);
+        }
+        private void ResumeEngine()
+        {
+            //resume the engine
+            engineDelay = oldEngineDelay;
+        }
+
 
         //Set the engine speed
         private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -335,41 +374,34 @@ namespace BrainSimulator
             //            if (theNeuronArray == null) return;
             Slider s = sender as Slider;
             int value = (int)s.Value;
-            if (value == 0)
-            {
-                engineDelay = 2000; //anything over 1000 stops the engine from running
-                displayUpdateTimer.Stop();
-                label.Content = "Brain Simulator Engine Not Running";
-            }
-            else
-            {
-                int Interval = 0;
-                if (value == 1) Interval = 1000;
-                if (value == 2) Interval = 500;
-                if (value == 3) Interval = 250;
-                if (value == 4) Interval = 100;
-                if (value == 5) Interval = 50;
-                if (value == 6) Interval = 10;
-                if (value == 7) Interval = 5;
-                if (value == 8) Interval = 2;
-                if (value == 9) Interval = 1;
-                if (value > 9)
-                    Interval = 0;
-                engineDelay = Interval;
-                if (!engineThread.IsAlive)
-                    engineThread.Start();
-                displayUpdateTimer.Interval = TimeSpan.FromMilliseconds(100);
-                displayUpdateTimer.Start();
-            }
+            int Interval = 0;
+            if (value == 0) Interval = 1000;
+            if (value == 1) Interval = 1000;
+            if (value == 2) Interval = 500;
+            if (value == 3) Interval = 250;
+            if (value == 4) Interval = 100;
+            if (value == 5) Interval = 50;
+            if (value == 6) Interval = 10;
+            if (value == 7) Interval = 5;
+            if (value == 8) Interval = 2;
+            if (value == 9) Interval = 1;
+            if (value > 9)
+                Interval = 0;
+            engineDelay = Interval;
+            if (!engineThread.IsAlive)
+                engineThread.Start();
+            displayUpdateTimer.Interval = TimeSpan.FromMilliseconds(100);
+            displayUpdateTimer.Start();
         }
         bool disaplayUpdating = false;
         private void DisplayUpdate_TimerTick(object sender, EventArgs e)
         {
             if (disaplayUpdating) return;
+            if (theNeuronArray == null) return;
             disaplayUpdating = true;
             if (engineDelay > 1000 || theNeuronArray == null)
             {
-                label.Content = "Brain Simulator Engine Not Running";
+                label.Content = "Not Running   " + theNeuronArray.Generation;
             }
             else
             {
@@ -380,7 +412,7 @@ namespace BrainSimulator
         }
 
         static bool engineIsWaiting = false;
-        private static void Engine()
+        private static void EngineLoop()
         {
             while (true)
             {
@@ -422,7 +454,7 @@ namespace BrainSimulator
 
         private void MainMenu_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (theNeuronArrayView.theSelection.GetSelectedNeuronCount() == 0)
+            if (theNeuronArrayView.theSelection.selectedRectangles.Count > 0)
             {
                 EnableMenuItem(MainMenu.Items, " Cut", false);
             }
@@ -436,57 +468,6 @@ namespace BrainSimulator
             thisWindow.labelDisplayStatus.Content = "Zoom Level: " + zoomLevel + ",  " + firedCount + " Neurons Fired";
         }
 
-        private void MenuItem_Learn_Click(object sender, RoutedEventArgs e)
-        {
-            theNeuronArrayView.Learn();
-        }
-        private void MenuItem_MutualSuppression_Click(object sender, RoutedEventArgs e)
-        {
-            theNeuronArrayView.MutualSuppression();
-        }
-
-        private void MenuItem_Hebbian_Click(object sender, RoutedEventArgs e)
-        {
-            hebbianLearning = !hebbianLearning;
-        }
-
-        private void Button_PatternFileLoad_Click(object sender, RoutedEventArgs e)
-        {
-            if (theNeuronArrayView.targetNeuronIndex < 0) return;
-            int firstNeuron = theNeuronArrayView.targetNeuronIndex;
-            OpenFileDialog openFileDialog1 = new OpenFileDialog
-            {
-                Filter = "BMP Files|*.bmp",
-                Title = "Select a Brain Simulator pattern File"
-            };
-
-            // Show the Dialog.  
-            // If the user clicked OK in the dialog and  
-            Nullable<bool> result = openFileDialog1.ShowDialog();
-            if (result ?? true)// System.Windows.Forms.DialogResult.OK)
-            {
-                Bitmap bitmap1 = new Bitmap(openFileDialog1.FileName);
-
-                //for (int i = 0; i < bitmap1.Height; i++)
-                //    for (int j = 0; j < bitmap1.Width; j++)
-                //    {
-                //        int i1 = i / 5;
-                //        int j1 = j / 5;
-                //        int neuronIndex = firstNeuron + i1 + j1 * theNeuronArrayView.dp.NeuronRows;
-                //        if (neuronIndex >= theNeuronArray.arraySize) return;
-                //        Neuron n = theNeuronArray.neuronArray[neuronIndex];
-                //        System.Drawing.Color c = bitmap1.GetPixel(j, i);
-                //        if (c.R != 255 || c.G != 255 || c.B != 255)
-                //        {
-                //            n.CurrentCharge = n.LastCharge = 1;
-                //        }
-                //        else
-                //        {
-                //            n.CurrentCharge = n.LastCharge = 0;
-                //        }
-                //    }
-            }
-        }
 
         public static void Update()
         {
@@ -497,19 +478,31 @@ namespace BrainSimulator
         static public CameraHandler theCameraWindow = null;
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (MessageBox.Show("Do you want to save changes?", "Save", MessageBoxButton.YesNo) ==MessageBoxResult.Yes)
+            {
+                if (currentFileName != "")
+                    SaveFile(currentFileName);
+                else
+                    buttonSaveAs_Click(null, null);
+            }
+
             engineThread.Abort();
+
+
             if (realSim != null)
                 realSim.Close();
             if (theCameraWindow != null)
                 theCameraWindow.Close();
-            foreach (NeuronArea na in theNeuronArray.Areas)
+            if (theNeuronArray != null)
             {
-                if (na.TheModule != null)
+                foreach (NeuronArea na in theNeuronArray.Areas)
                 {
-                    na.TheModule.CloseDlg();    
+                    if (na.TheModule != null)
+                    {
+                        na.TheModule.CloseDlg();
+                    }
                 }
             }
-
 
         }
 
@@ -556,31 +549,22 @@ namespace BrainSimulator
         }
 
 
-        private void ButtonSingle_Click(object sender, RoutedEventArgs e)
-        {
-            if (theNeuronArray != null)
-            {
-                theNeuronArray.Fire();
-                theNeuronArrayView.UpdateNeuronColors();
-            }
-        }
-
-        private void SelectionName_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                TextBox tb = sender as TextBox;
-                string newLabel = tb.Text;
-                NeuronArea na = new NeuronArea(
-                    theNeuronArrayView.theSelection.selectedRectangle[0].FirstSelectedNeuron,
-                    theNeuronArrayView.theSelection.selectedRectangle[0].LastSelectedNeuron,
-                    newLabel,
-                    "",
-                    0);
-                theNeuronArray.areas.Add(na);
-                tb.Text = "";
-            }
-        }
+        //private void SelectionName_PreviewKeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.Key == Key.Enter)
+        //    {
+        //        TextBox tb = sender as TextBox;
+        //        string newLabel = tb.Text;
+        //        NeuronArea na = new NeuronArea(
+        //            theNeuronArrayView.theSelection.selectedRectangle[0].FirstSelectedNeuron,
+        //            theNeuronArrayView.theSelection.selectedRectangle[0].LastSelectedNeuron,
+        //            newLabel,
+        //            "",
+        //            0);
+        //        theNeuronArray.areas.Add(na);
+        //        tb.Text = "";
+        //    }
+        //}
 
         private void ButtonInit_Click(object sender, RoutedEventArgs e)
         {
@@ -590,6 +574,68 @@ namespace BrainSimulator
                     na.TheModule.Init(true);
             }
             theNeuronArrayView.Update();
+        }
+        private void PlayPause_Click(object sender, RoutedEventArgs e)
+        {
+            if (imagePause.Visibility == Visibility.Visible)
+            {
+                imagePause.Visibility = Visibility.Collapsed;
+                imagePlay.Visibility = Visibility.Visible;
+                SuspendEngine();
+                theNeuronArrayView.UpdateNeuronColors();
+            }
+            else
+            {
+                imagePause.Visibility = Visibility.Visible;
+                imagePlay.Visibility = Visibility.Collapsed;
+                ResumeEngine();
+            }
+        }
+        private void ButtonSingle_Click(object sender, RoutedEventArgs e)
+        {
+            if (theNeuronArray != null)
+            {
+                if (!engineIsWaiting)
+                {
+                    imagePause.Visibility = Visibility.Collapsed;
+                    imagePlay.Visibility = Visibility.Visible;
+                    SuspendEngine();
+                    theNeuronArrayView.UpdateNeuronColors();
+                }
+                else
+                {
+                    theNeuronArray.Fire();
+                    theNeuronArrayView.UpdateNeuronColors();
+                }
+            }
+        }
+
+        private void ButtonPan_Click(object sender, RoutedEventArgs e)
+        {
+            theNeuronArrayView.theCanvas.Cursor = Cursors.Hand;
+        }
+
+        private void ButtonDisplay_Click(object sender, RoutedEventArgs e)
+        {
+            theNeuronArrayView.Origin();
+            double height = theNeuronArrayView.ActualHeight;
+            theNeuronArrayView.Dp.NeuronDisplaySize = (int)height / theNeuronArrayView.Dp.NeuronRows;
+            if (theNeuronArrayView.Dp.NeuronDisplaySize < 1)
+                theNeuronArrayView.Dp.NeuronDisplaySize = 1;
+            Update();
+        }
+
+        private void MenuItemProperties_Click(object sender, RoutedEventArgs e)
+        {
+            PropertiesDlg p = new PropertiesDlg();
+            try
+            {
+                p.ShowDialog();
+            }
+            catch
+            {
+                MessageBox.Show("Properties could not be displayed");
+            }
         }
     }
 }

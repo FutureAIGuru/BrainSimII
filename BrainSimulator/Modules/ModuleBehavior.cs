@@ -73,8 +73,8 @@ namespace BrainSimulator
             na.GetNeuronAt(4, 0).Label = "Angle";
             na.GetNeuronAt(5, 0).Label = "MoveTo";
             na.GetNeuronAt(6, 0).Label = "Distance";
-            na.GetNeuronAt(4, 0).Range = 2;
-            na.GetNeuronAt(6, 0).Range = 2;
+            na.GetNeuronAt(4, 0).Model = Neuron.modelType.FloatValue;
+            na.GetNeuronAt(6, 0).Model = Neuron.modelType.FloatValue;
         }
         public override void ShowDialog() //delete this function if it isn't needed
         {

@@ -177,20 +177,20 @@ namespace BrainSimulator
             for (int j = 0; j < na.Height; j++)
             {
                 Neuron n = na.GetNeuronAt((int)cols.in1, j);
-                n.NeuronModel = Neuron.modelType.std;
+                n.Model = Neuron.modelType.Std;
                 n.DeleteAllSynapes();
 
                 n = na.GetNeuronAt((int)cols.in1D, j);
-                n.NeuronModel = Neuron.modelType.hebbian;
+                n.Model = Neuron.modelType.Hebbian;
                 n.DeleteAllSynapes();
 
                 n = na.GetNeuronAt((int)cols.in2, j);
-                n.NeuronModel = Neuron.modelType.hebbian;
+                n.Model = Neuron.modelType.Hebbian;
                 n.DeleteAllSynapes();
 
                 n = na.GetNeuronAt((int)cols.and, j);
                 n.DeleteAllSynapes();
-                n.NeuronModel = Neuron.modelType.oneTime;
+                n.Model = Neuron.modelType.OneTime;
             }
         }
     }

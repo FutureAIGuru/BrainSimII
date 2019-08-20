@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Media3D;
+using System.Windows.Shapes;
+using System.Windows.Controls;
 
 namespace BrainSimulator
 {
@@ -57,6 +59,21 @@ namespace BrainSimulator
             currentNeuronInArea++;
             return MainWindow.theNeuronArray.neuronArray[neuronIndex];
         }
+
+        public Rectangle GetRectangle(DisplayParams dp)
+        {
+            Rectangle r = new Rectangle();
+            Point p1 = dp.pointFromNeuron(firstNeuron);
+            Point p2 = dp.pointFromNeuron(lastNeuron);
+            p2.X += dp.NeuronDisplaySize;
+            p2.Y += dp.NeuronDisplaySize;
+            r.Width = p2.X - p1.X;
+            r.Height = p2.Y - p1.Y;
+            Canvas.SetTop(r, p1.Y);
+            Canvas.SetLeft(r, p1.X);
+            return r;
+        }
+
 
         public Neuron GetFreeNeuron()
         {
@@ -151,7 +168,7 @@ namespace BrainSimulator
             for (Neuron n = GetNextNeuron(); n != null; n = GetNextNeuron())
             {
                 if (CurrentToo) n.CurrentCharge = 0;
-                n.LastCharge = 0; n.Range = 0;
+                n.LastCharge = 0;
             }
         }
         public string GetParam(string key)

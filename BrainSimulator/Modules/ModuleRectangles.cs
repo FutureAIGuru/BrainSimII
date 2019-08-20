@@ -72,12 +72,13 @@ namespace BrainSimulator
                 cX = cX * 2 - 1;
                 cY = cY * 2 - 1;
                 na.GetNeuronAt(0, 1 + i).SetValueInt(r.color);
+                na.GetNeuronAt(3, 1 + i).Model = Neuron.modelType.Color;
                 na.GetNeuronAt(1, 1 + i).SetValue(sX);
                 na.GetNeuronAt(2, 1 + i).SetValue(sY);
                 na.GetNeuronAt(3, 1 + i).SetValue(cX);
                 na.GetNeuronAt(4, 1 + i).SetValue(cY);
-                na.GetNeuronAt(3, 1 + i).Range = 1;
-                na.GetNeuronAt(4, 1 + i).Range = 1;
+                na.GetNeuronAt(3, 1 + i).Model = Neuron.modelType.FloatValue;
+                na.GetNeuronAt(4, 1 + i).Model = Neuron.modelType.FloatValue;
                 if (Utils.Close(sX, sY, .05f))
                     na.GetNeuronAt(5, 1 + i).SetValue(1);
                 else

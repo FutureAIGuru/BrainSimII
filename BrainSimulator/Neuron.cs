@@ -9,57 +9,49 @@ namespace BrainSimulator
     public class Neuron
     {
 
-        private int currentCharge = 0;
-        private int lastCharge = 0;
-        private int refractoryCount = 0;
-        internal List<Synapse> synapses = new List<Synapse>();
-        internal List<Synapse> synapsesFrom = new List<Synapse>();
 
-        public enum modelType { std, color, floatVaule, antifeedback, hebbian, refractory, oneTime };
-        modelType neuronModel = modelType.std;
-        public modelType NeuronModel { get => neuronModel; set => neuronModel = value; }
+        public enum modelType { Std, Color, FloatValue, Perceptron, Antifeedback, Hebbian, OneTime };
+        modelType model = modelType.Std;
+        public modelType Model { get => model; set => model = value; }
 
         string label = "";
-        public string Label {
-            get { return label; }
-            set { label = value; }
+        public string Label{get { return label; }set { label = value; }}
+        
+        public Neuron() { Model = modelType.Std; }
+        public Neuron(int id1, modelType t = modelType.Std)
+        {
+            Id = id1;
+            Model = t;
         }
-
-
-        int range = 0; //0= [0,1]  1=[-1,1] 2=unlimited
-        public int Range {
-            get => range;
-            set => range = value;
-        }
-
-        public Neuron() { }
-        public Neuron(int id1) { Id = id1; } //id's can get clobbered in save so here's where they can be reset???
 
         int id = -1;
         public int Id { get => id; set => id = value; }
-        public float CurrentCharge { get { return (float)currentCharge / 1000f; } set { this.currentCharge = (int)(value * 1000); } }
-        public int CurrentChargeInt { get { return currentCharge; } set { this.currentCharge = value; range = 2; } }
-        public float LastCharge { get { return (float)lastCharge / 1000f; } set { lastCharge = (int)(value * 1000); } }
-        public int LastChargeInt { get { return lastCharge; } set { lastCharge = value; range = 2; } }
 
+        //the accumulating value of a neuron
+        private int currentCharge = 0;
+        public float CurrentCharge { get { return (float)currentCharge / 1000f; } set { this.currentCharge = (int)(value * 1000); } }
+        //get/set currentcharge as raw integer
+        public int CurrentChargeInt { get { return currentCharge; } set { this.currentCharge = value; } }
+
+        //the ending value of a neuron (possibly after reset)
+        private int lastCharge = 0;
+        public float LastCharge { get { return (float)lastCharge / 1000f; } set { lastCharge = (int)(value * 1000); } }
+
+        //get/set last charge as raw integer
+        public int LastChargeInt { get { return lastCharge; } set { lastCharge = value; } }
+
+        //This is the way to set up a list so it saves and loads properly from an XML file
+        internal List<Synapse> synapses = new List<Synapse>();
+        internal List<Synapse> synapsesFrom = new List<Synapse>();
         public List<Synapse> Synapses { get { return synapses; } }
         public List<Synapse> SynapsesFrom { get { return synapsesFrom; } }
 
-                
-        public bool Fired()
-        {
-            return (LastCharge > .9);
-        }
 
-        public void SetValue(float value)
-        {
-            LastCharge = CurrentCharge = value;
-        }
-        public void SetValueInt(int value)
-        {
-            LastChargeInt = CurrentChargeInt = value;
-            range = 2;
-        }
+        public bool Fired(){return (LastCharge > .9);}
+        public void SetValue(float value){LastCharge = CurrentCharge = value;}
+        public void SetValueInt(int value) { LastChargeInt = CurrentChargeInt = value; }
+
+        //a neuron is defined as in use if it has any synapses connected from/to it or it has a label
         public bool InUse()
         {
             return (synapses.Count != 0 || synapsesFrom.Count != 0 || Label != "");
@@ -125,10 +117,10 @@ namespace BrainSimulator
         public int LastSynapse = -1;
         public void Fire1(NeuronArray theNeuronArray)
         {
-            if (range == 2) return;
-            switch (NeuronModel)
+            switch (Model)
             {
-                case modelType.std:
+                //color floatvalue have not cases so don't actually process
+                case modelType.Std:
                     if (lastCharge < 990) return;
                     Interlocked.Add(ref theNeuronArray.fireCount, 1);
                     foreach (Synapse s in synapses)
@@ -137,7 +129,9 @@ namespace BrainSimulator
                         Interlocked.Add(ref n.currentCharge, (int)(s.Weight * 1000));
                     }
                     break;
-                case modelType.antifeedback:
+
+                case modelType.Antifeedback:
+                    // just like a std neuron but can't stimulate the neuron chich stimulated it
                     if (lastCharge < 990) return;
                     Interlocked.Add(ref theNeuronArray.fireCount, 1);
                     foreach (Synapse s in synapses)
@@ -153,8 +147,9 @@ namespace BrainSimulator
                         }
                     }
                     break;
-                case modelType.hebbian: //as the synapse weights are representative of correlation counts, choose the largest.
 
+                case modelType.Hebbian:
+                    //as the synapse weights are representative of correlation counts, choose the largest.
                     if (lastCharge < 990) return;
                     Interlocked.Add(ref theNeuronArray.fireCount, 1);
                     float maxWeight = 0;
@@ -167,30 +162,26 @@ namespace BrainSimulator
                             if (s.Weight == maxWeight)
                             {
                                 Neuron n = theNeuronArray.neuronArray[s.TargetNeuron];
-                                Interlocked.Add(ref n.currentCharge, 1000);;
+                                Interlocked.Add(ref n.currentCharge, 1000); ;
                             }
                         }
                     }
                     break;
 
-                case modelType.oneTime: //fire if sufficient weights on this cycle or cancel...do not accumulate weight
+                //fire if sufficient weights on this cycle or cancel...do not accumulate weight across multiple cyceles
+                case modelType.OneTime:
                     if (lastCharge < 990) return;
-                        Interlocked.Add(ref theNeuronArray.fireCount, 1);
-                        foreach (Synapse s in synapses)
-                        {
-                            Neuron n = theNeuronArray.neuronArray[s.TargetNeuron];
-                            Interlocked.Add(ref n.currentCharge, (int)(s.Weight * 1000));// (int)(weight * 1000));
-                        }
+                    Interlocked.Add(ref theNeuronArray.fireCount, 1);
+                    foreach (Synapse s in synapses)
+                    {
+                        Neuron n = theNeuronArray.neuronArray[s.TargetNeuron];
+                        Interlocked.Add(ref n.currentCharge, (int)(s.Weight * 1000));// (int)(weight * 1000));
+                    }
                     break;
 
-                case modelType.refractory:
-                    if (refractoryCount != 0)
-                    {
-                        refractoryCount--;
-                        lastCharge = 0;
-                    }
+                case modelType.Perceptron:
+                    //implement this!!!!
                     if (lastCharge < 990) return;
-                    refractoryCount = 4;
                     Interlocked.Add(ref theNeuronArray.fireCount, 1);
                     foreach (Synapse s in synapses)
                     {
@@ -204,19 +195,27 @@ namespace BrainSimulator
         //check for firing
         public void Fire2(long generation)
         {
-            if (range == 2) return;
-            if (refractoryCount > 0) currentCharge = 0;
-            if (range == 0 && currentCharge < 0) currentCharge = 0;
-            if (range == 1 && currentCharge < -1) currentCharge = -1;
-            lastCharge = currentCharge;
-            if (neuronModel == modelType.oneTime) currentCharge = 0;
-            if (currentCharge < 990)
+            switch (Model)
             {
-                return;
+                case modelType.Std:
+                case modelType.Antifeedback:
+                    if (currentCharge < 0) currentCharge = 0;
+                    lastCharge = currentCharge;
+                    if (currentCharge > 990) currentCharge = 0;
+                    break;
+
+                //fire if sufficient weights on this cycle or cancel...do not accumulate weight across multiple cyceles
+                case modelType.OneTime:
+                    lastCharge = currentCharge;
+                    currentCharge = 0;
+                    break;
+
+                case modelType.Perceptron:
+                    break;
+                case modelType.Hebbian: //as the synapse weights are representative of correlation counts, choose the largest.
+                    break;
             }
 
-
-            currentCharge = 0;
         }
 
         public int SynapsesTo(NeuronArray theNeuronArray)

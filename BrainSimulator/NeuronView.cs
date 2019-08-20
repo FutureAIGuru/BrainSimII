@@ -13,14 +13,22 @@ using System.Windows.Media.Imaging;
 
 namespace BrainSimulator
 {
-    public static class NeuronView
+    public  class NeuronView : DependencyObject
     {
         public static DisplayParams dp;
-        public static NeuronArrayView.MouseMode theMouseMode = NeuronArrayView.MouseMode.pan;
         public static Canvas theCanvas;     //reflection of canvas in neuronarrayview
         static NeuronArrayView theNeuronArrayView;
 
-        public static UIElement GetNeuronView(int i, NeuronArrayView theNeuronArrayViewI)
+        public static readonly DependencyProperty NeuronIDProperty =
+                DependencyProperty.Register("NeuronID", typeof(int), typeof(MenuItem));
+        public int NeuronID
+        {
+            get { return (int)GetValue(NeuronIDProperty); }
+            set { SetValue(NeuronIDProperty, value); }
+        }
+        private static float ellipseSize = 0.7f;
+
+        public  static UIElement GetNeuronView(int i, NeuronArrayView theNeuronArrayViewI)
         {
             theNeuronArrayView = theNeuronArrayViewI;
 
@@ -35,22 +43,22 @@ namespace BrainSimulator
             // figure out which color to use
             float value = n.LastCharge;
             Color c = Colors.White;
-            if (n.Range != 2 && value > .99)
+            if (n.Model == Neuron.modelType.Std && value > .99)
                 c = Colors.Orange;
-            else if (n.Range != 2 && value != -1)
+            else if (n.Model == Neuron.modelType.Std && value != -1)
                 c = MapRainbowColor(value, 1, 0);
-            else if (n.Range == 2)
+            else if (n.Model == Neuron.modelType.Color)
                 c = Utils.FromArgb((int)n.LastChargeInt);
             SolidColorBrush s1 = new SolidColorBrush(c);
             //   if (n.Label != "" || !n.InUse()) s1.Opacity = .50;
             if (!n.InUse()) s1.Opacity = .50;
 
             Shape r = null;
-            if (dp.NeuronDisplaySize > 10)
+            if (dp.ShowNeuronCircles())
             {
                 r = new Ellipse();
-                r.Width = dp.NeuronDisplaySize * .8;
-                r.Height = dp.NeuronDisplaySize * .8;
+                r.Width = dp.NeuronDisplaySize * ellipseSize;
+                r.Height = dp.NeuronDisplaySize * ellipseSize;
             }
             else
             {
@@ -59,81 +67,24 @@ namespace BrainSimulator
                 r.Height = dp.NeuronDisplaySize;
             }
             r.Fill = s1;
-            if (dp.NeuronDisplaySize > 15)
+            if (dp.ShowNeuronOutlines())
             {
                 r.Stroke = Brushes.Black;
                 r.StrokeThickness = 1;
             }
 
-            //build the context menu
-            ContextMenu cm = new ContextMenu();
-            if (dp.NeuronDisplaySize > 40)// && theMouseMode == NeuronArrayView.MouseMode.neuron)
-            {
-                //this stashes the neuron number in the first (hidden) entry of the menu so if you click
-                //on the context menu and an Update() has removed the existing entry, you can still do the right thing
-                //Label l = new Label();l.Content = n.Id +":"+n.CurrentCharge + "," + n.LastCharge;
-                //cm.Items.Add(l);
-                MenuItem mi = new MenuItem();
-                mi.Header = i.ToString();
-                mi.Visibility = Visibility.Collapsed;
-                cm.Items.Add(mi);
-                mi = new MenuItem();
-                mi.Header = "Current Charge: " + n.LastCharge.ToString("f2");
-                cm.Items.Add(mi);
-                mi = new MenuItem();
-                mi.Header = "Neuron ID: " + n.Id;
-                cm.Items.Add(mi);
-                cm.Items.Add(new Separator());
-                mi = new MenuItem();
-                mi.Header = "Always Fire";
-                mi.Click += Mi_Click;
-                cm.Items.Add(mi);
-                mi = new MenuItem();
-                mi.Header = "Paste Here";
-                mi.Click += Mi_Click;
-                cm.Items.Add(mi);
-                mi = new MenuItem();
-                mi.Header = "Copy Selection";
-                mi.Click += Mi_Click;
-                cm.Items.Add(mi);
-                mi = new MenuItem();
-                mi.Header = "Move Here";
-                mi.Click += Mi_Click;
-                cm.Items.Add(mi);
-                mi = new MenuItem();
-                mi.Header = "Connect to Here";
-                mi.Click += Mi_Click;
-                cm.Items.Add(mi);
-                mi = new MenuItem();
-                mi.Header = "Connect from Here";
-                mi.Click += Mi_Click;
-                cm.Items.Add(mi);
-                mi = new MenuItem();
-                mi.Header = "Select as Target";
-                mi.Click += Mi_Click;
-                cm.Items.Add(mi);
-                mi = new MenuItem();
-                mi.Header = "Label:";
-                mi.IsEnabled = false;
-                cm.Items.Add(mi);
-                TextBox tb = new TextBox();
-                tb.Text = n.Label;
-                tb.Width = 200;
-                tb.TextChanged += Tb_TextChanged;
-                cm.Items.Add(tb);
-                cm.Closed += Cm_Closed;
-                r.ContextMenu = cm;
-                mi = new MenuItem();
-                mi.Header = "Model: "+n.NeuronModel.ToString();
-                mi.IsEnabled = false;
-                cm.Items.Add(mi);
-            }
             r.MouseDown += theNeuronArrayView.theCanvas_MouseDown;
             r.MouseUp += theNeuronArrayView.theCanvas_MouseUp;
             r.MouseWheel += theNeuronArrayView.theCanvas_MouseWheel;
-
-            Canvas.SetLeft(r, p.X + dp.NeuronDisplaySize * .1);
-            Canvas.SetTop(r, p.Y + dp.NeuronDisplaySize * .1);
+            
+            float offset = (1 - ellipseSize) / 2f;
+            Canvas.SetLeft(r, p.X + dp.NeuronDisplaySize * offset);
+            Canvas.SetTop(r, p.Y + dp.NeuronDisplaySize * offset);
+            if (dp.ShowNeuronArrowCursor())
+            {
+                r.MouseEnter += R_MouseEnter;
+                r.MouseLeave += R_MouseLeave;
+            }
 
 
             if (n.Label != "")
@@ -142,23 +93,127 @@ namespace BrainSimulator
                 l.Content = n.Label;
                 l.FontSize = dp.NeuronDisplaySize * .3;
                 l.Foreground = Brushes.White;
-                Canvas.SetLeft(l, p.X + dp.NeuronDisplaySize * .1);
-                Canvas.SetTop(l, p.Y + dp.NeuronDisplaySize * .1);
-                if (dp.NeuronDisplaySize > 8)
-                    l.ContextMenu = cm;
+                Canvas.SetLeft(l, p.X + dp.NeuronDisplaySize * offset);
+                Canvas.SetTop(l, p.Y + dp.NeuronDisplaySize * offset);
                 Canvas.SetZIndex(l, 100);
+
+                if (dp.ShowNeuronArrowCursor())
+                {
+                    l.MouseEnter += R_MouseEnter;
+                    l.MouseLeave += R_MouseLeave;
+                }
+                l.MouseDown += theNeuronArrayView.theCanvas_MouseDown;
+                l.MouseUp += theNeuronArrayView.theCanvas_MouseUp;
+                l.MouseMove += theNeuronArrayView.theCanvas_MouseMove;
                 theCanvas.Children.Add(l);
                 //return l;
             }
             return r;
         }
+
+        private static void R_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (theCanvas.Cursor != Cursors.Hand && !theNeuronArrayView.dragging && e.LeftButton != MouseButtonState.Pressed)
+                theCanvas.Cursor = Cursors.Cross;
+        }
+
+        private static void R_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (theCanvas.Cursor != Cursors.Hand && !theNeuronArrayView.dragging)
+                theCanvas.Cursor = Cursors.UpArrow;
+        }
+
+        public  static void CreateContextMenu(int i, Neuron n, ContextMenu cm)
+        {
+            cm.SetValue(NeuronIDProperty, n.Id);
+            MenuItem mi = new MenuItem();
+            mi = new MenuItem();
+            mi.Header = "Current Charge: " + n.LastCharge.ToString("f2");
+            cm.Items.Add(mi);
+            mi = new MenuItem();
+            mi.Header = "Neuron ID: " + n.Id;
+            cm.Items.Add(mi);
+            cm.Items.Add(new Separator());
+            mi = new MenuItem();
+            mi.Header = "Always Fire";
+            mi.Click += Mi_Click;
+            cm.Items.Add(mi);
+            mi = new MenuItem();
+            mi.Header = "Clipboard";
+            mi.Click += Mi_Click;
+            mi.Items.Add(new MenuItem() { Header = "Copy Selection" });
+            ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
+            mi.Items.Add(new MenuItem() { Header = "Paste Here" });
+            ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
+            mi.Items.Add(new MenuItem() { Header = "Move Here" });
+            ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
+            mi.Items.Add(new MenuItem() { Header = "Connect to Here" });
+            ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
+            mi.Items.Add(new MenuItem() { Header = "Connect from Here" });
+            ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
+            mi.Items.Add(new MenuItem() { Header = "Select as Target" });
+            ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
+            cm.Items.Add(mi);
+            mi = new MenuItem();
+            mi.Header = "Label:";
+            mi.IsEnabled = false;
+            cm.Items.Add(mi);
+            TextBox tb = new TextBox { Text = n.Label, Width = 200 };
+            tb.TextChanged += Tb_TextChanged;
+            cm.Items.Add(tb);
+            cm.Closed += Cm_Closed;
+            mi = new MenuItem();
+            mi.Header = "Model:";
+            mi.IsEnabled = false;
+            cm.Items.Add(mi);
+            ComboBox cb = new ComboBox()
+            { Width = 100 };
+            foreach (Neuron.modelType model in (Neuron.modelType[])Enum.GetValues(typeof(Neuron.modelType)))
+            { cb.Items.Add(model.ToString()); }
+            cb.SelectedValue = n.Model.ToString();
+            cb.SelectionChanged += Cb_SelectionChanged;
+            cm.Items.Add(cb);
+        }
+
+        //change the model for all selected neurons if this one is in the selection
+        private static void Cb_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox cb = sender as ComboBox;
+            ContextMenu cm = cb.Parent as ContextMenu;
+            int neuronID = (int)cm.GetValue(NeuronIDProperty);
+            Neuron.modelType nm = (Neuron.modelType)System.Enum.Parse(typeof(Neuron.modelType), cb.SelectedItem.ToString());
+            Neuron n = MainWindow.theNeuronArray.neuronArray[neuronID];
+
+            n.Model = nm;
+            bool neuronInSelection = false;
+            foreach (NeuronSelectionRectangle sr in theNeuronArrayView.theSelection.selectedRectangles)
+            {
+                if (sr.NeuronIsInSelection(neuronID))
+                {
+                    neuronInSelection = true;
+                    break;
+                }
+            }
+            if (neuronInSelection)
+            {
+                theNeuronArrayView.theSelection.EnumSelectedNeurons();
+                for (Neuron n1 = theNeuronArrayView.theSelection.GetSelectedNeuron(); n1 != null; n1 = theNeuronArrayView.theSelection.GetSelectedNeuron())
+                    n1.Model = nm;
+                MainWindow.Update();
+            }
+        }
+
         private static void Mi_Click(object sender, RoutedEventArgs e)
         {
             MenuItem mi = sender as MenuItem;
             //find out which neuron this context menu is from
-            ContextMenu cm = (ContextMenu)mi.Parent;
-            int i = -1;
-            int.TryParse(((MenuItem)cm.Items[0]).Header.ToString(), out i);
+            ContextMenu cm = mi.Parent as ContextMenu;
+            if (cm == null)
+            {
+                MenuItem mi2 = mi.Parent as MenuItem;
+                cm = mi2.Parent as ContextMenu;
+            }
+            int i = (int)cm.GetValue(NeuronIDProperty);
             Neuron n = MainWindow.theNeuronArray.neuronArray[i];
             if ((string)mi.Header == "Always Fire")
             {
@@ -204,11 +259,11 @@ namespace BrainSimulator
 
         private static void Tb_TextChanged(object sender, TextChangedEventArgs e)
         {
-            TextBox tb = (TextBox)sender;
+            TextBox tb = sender as TextBox;
             //find out which neuron this context menu is from
-            ContextMenu cm = (ContextMenu)tb.Parent;
-            int i = -1;
-            int.TryParse(((MenuItem)cm.Items[0]).Header.ToString(), out i);
+            ContextMenu cm = tb.Parent as ContextMenu;
+            if (cm == null) return;
+            int i = (int) cm.GetValue(NeuronIDProperty);
             Neuron n = MainWindow.theNeuronArray.neuronArray[i];
             n.Label = tb.Text;
         }

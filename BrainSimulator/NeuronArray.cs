@@ -53,13 +53,13 @@ namespace BrainSimulator
             //}
         }
 
-        public NeuronArray(int theSize, int theRows)
+        public NeuronArray(int theSize, int theRows,Neuron.modelType t=Neuron.modelType.Std)
         {
             arraySize = theSize;
             rows = theRows;
 
             neuronArray = new Neuron[arraySize];
-            Parallel.For(0, arraySize, i => neuronArray[i] = new Neuron(i));
+            Parallel.For(0, arraySize, i => neuronArray[i] = new Neuron(i,t)) ;
         }
 
  
@@ -68,12 +68,16 @@ namespace BrainSimulator
             HandleProgrammedActions();
             lastFireCount = fireCount;
             fireCount = 0;
-            Parallel.For(0, arraySize, i => neuronArray[i].Fire1(this));
-            Parallel.For(0, arraySize, i => neuronArray[i].Fire2(Generation));
-            //foreach (Neuron n in neuronArray)
-            //    n.Fire1(this);
-            //foreach (Neuron n in neuronArray)
-            //    n.Fire2(Generation);
+
+            //when debugging the Fire1 & Fire2 modules disable parallel operation and use the sequential loops below;
+            //Parallel.For(0, arraySize, i => neuronArray[i].Fire1(this));
+            //Parallel.For(0, arraySize, i => neuronArray[i].Fire2(Generation));
+
+            //use these instead
+            foreach (Neuron n in neuronArray)
+                n.Fire1(this);
+            foreach (Neuron n in neuronArray)
+                n.Fire2(Generation);
             Generation++;
         }
 

@@ -21,7 +21,7 @@ namespace BrainSimulator
                 for (int j = 0; j < na.Height; j++)
                 {
                     Neuron n = na.GetNeuronAt(i, j);
-                    n.NeuronModel = Neuron.modelType.oneTime;
+                    n.Model = Neuron.modelType.OneTime;
                     n.DeleteAllSynapes();
                     n.CurrentCharge = 0;
                     n.LastCharge = 0;

@@ -8,12 +8,13 @@
         Title="Create New Neuron Array" Height="287.6" Width="491.2" Loaded="Window_Loaded">
     <Grid Margin="0,0,34.8,2.4">
         <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Height="148" Margin="11,22,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="243"/>
-        <Button x:Name="buttonOK" Content="OK" HorizontalAlignment="Left" Height="27" Margin="102,210,0,0" VerticalAlignment="Top" Width="87" Click="ButtonOK_Click" IsDefault="True"/>
-        <Button x:Name="buttonCancel" Content="Cancel" HorizontalAlignment="Left" Height="27" Margin="259,210,0,0" VerticalAlignment="Top" Width="87" Click="ButtonCancel_Click"/>
-        <TextBox x:Name="textBoxRows" HorizontalAlignment="Left" Height="15" Margin="351,24,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="93" VerticalContentAlignment="Center" TextChanged="TextBoxRows_TextChanged"/>
-        <TextBox x:Name="textBoxColumns" HorizontalAlignment="Left" Height="18" Margin="351,60,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="93" TextChanged="TextBoxColumns_TextChanged"/>
+        <Button x:Name="buttonOK" Content="_OK" IsDefault="True" HorizontalAlignment="Left" Height="27" Margin="102,210,0,0" VerticalAlignment="Top" Width="87" Click="ButtonOK_Click"/>
+        <Button x:Name="buttonCancel" Content="_Cancel" HorizontalAlignment="Left" Height="27" Margin="259,210,0,0" VerticalAlignment="Top" Width="87" Click="ButtonCancel_Click"/>
+        <TextBox x:Name="textBoxRows" HorizontalAlignment="Left" Height="15" Margin="351,24,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="93" VerticalContentAlignment="Center" />
+        <TextBox x:Name="textBoxColumns" HorizontalAlignment="Left" Height="18" Margin="351,60,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="93" />
         <Label x:Name="label" Content="Columns:" HorizontalAlignment="Left" Height="30" Margin="276,55,0,0" VerticalAlignment="Top" Width="70" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
         <Label x:Name="label1" Content="Rows:" HorizontalAlignment="Left" Height="23" Margin="288,21,0,0" VerticalAlignment="Top" Width="58" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
         <CheckBox x:Name="checkBoxSynapses" Content="Create Random Synapses" HorizontalAlignment="Left" Height="19" Margin="276,100,0,0" VerticalAlignment="Top" Width="164"/>
+        <ComboBox x:Name="comboBoxModel" HorizontalAlignment="Left" Height="22" Margin="276,148,0,0" VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.583,1.409" />
     </Grid>
 </Window>

@@ -16,6 +16,8 @@
                     <MenuItem Header="_Save" Click="buttonSave_Click"/>
                     <MenuItem Header="Save _As" Click="buttonSaveAs_Click"/>
                     <Separator />
+                    <MenuItem Header="Properties" Click="MenuItemProperties_Click"/>
+                    <Separator />
                     <MenuItem Header="_Exit" Click="button_Exit_Click"/>
                 </MenuItem>
                 <MenuItem Header="Edit">
@@ -28,27 +30,36 @@
                     <Separator />
                     <MenuItem Header=" Save Selection to File" Click="button_ClipboardSave_Click"/>
                 </MenuItem>
-                <MenuItem Header=" Learn">
-                    <MenuItem Header="Hebbian" Click="MenuItem_Hebbian_Click"/>
-                    <MenuItem Header="One-Shot" Click="MenuItem_Learn_Click"/>
-                    <MenuItem Header="Mutual Suppression" Click="MenuItem_MutualSuppression_Click"/>
-                </MenuItem>
                 <MenuItem Header=" Help">
                     <MenuItem Header="About" Click="Button_HelpAbout_Click"/>
                 </MenuItem>
             </Menu>
         </DockPanel>
-        <RadioButton x:Name="radioButtonSynapse" Content="Synapse" HorizontalAlignment="Left" Margin="44,94,0,0" VerticalAlignment="Top" Height="15" Checked="radioButton_Checked" />
-        <RadioButton x:Name="radioButtonNeuron" Content="Neuron" HorizontalAlignment="Left" Margin="44,114,0,0" VerticalAlignment="Top" Height="15" Checked="radioButton_Checked" />
-        <RadioButton x:Name="radioButtonSelect" Content="Select" HorizontalAlignment="Left" Margin="44,134,0,0" VerticalAlignment="Top" Height="15" Checked="radioButton_Checked" />
-        <RadioButton x:Name="radioButtonPan" Content="Pan" HorizontalAlignment="Left" Margin="44,154,0,0" VerticalAlignment="Top"  IsChecked="True" Checked="radioButton_Checked" />
-        <local:NeuronArrayView x:Name="theNeuronArrayView" Margin="152,88,27,34" ClipToBounds="True" />
-        <Slider x:Name="slider" Margin="7,0,0,61" ValueChanged="slider_ValueChanged" IsSnapToTickEnabled="True" Value="0" HorizontalAlignment="Left" Width="140" Height="24" VerticalAlignment="Bottom"/>
-        <Button x:Name="buttonSingle" Content="Single Step" Margin="39,0,0,108" Click="ButtonSingle_Click" HorizontalAlignment="Left" Width="70" Height="31" VerticalAlignment="Bottom"/>
-        <Label x:Name="label" Content="Label" Margin="7,0,0,0" HorizontalAlignment="Left" Width="200" Height="34" VerticalAlignment="Bottom"/>
-        <Label x:Name="labelDisplayStatus" Content="Initializing
-               " Margin="258,0,0,0" HorizontalAlignment="Left" Width="462" Height="34" VerticalAlignment="Bottom"/>
-        <Button x:Name="buttonInit" Content="Initialize" HorizontalAlignment="Left" Margin="39,306,0,0" VerticalAlignment="Top" Width="75" Click="ButtonInit_Click"/>
+        <local:NeuronArrayView x:Name="theNeuronArrayView" Margin="0,69,-0.4,17.8" ClipToBounds="True" />
+        <Slider x:Name="slider" Margin="225,36,0,0" ValueChanged="slider_ValueChanged" IsSnapToTickEnabled="True" Value="3" HorizontalAlignment="Left" Width="140" ToolTip="Change the engine speed" RenderTransformOrigin="1.814,0.625" Height="24" VerticalAlignment="Top"/>
+        <Button x:Name="buttonSingle" Margin="69,35,0,0" Click="ButtonSingle_Click" HorizontalAlignment="Left" Width="22" Height="22" VerticalAlignment="Top" ToolTip="Run the engine one cycle">
+            <Image x:Name="image" Height="15" Width="18" Source="Icons/Step.png"/>
+        </Button>
+        <Label x:Name="label" Content="Label" Margin="404,31,0,0" HorizontalAlignment="Left" Width="161" Height="30" VerticalAlignment="Top"/>
+        <Label x:Name="labelDisplayStatus" Content="Initializing" Margin="570,31,-0.4,0" Height="30
+               " VerticalAlignment="Top"/>
+        <Button x:Name="buttonInit" HorizontalAlignment="Left" Margin="19,35,0,0" VerticalAlignment="Top" Width="22" Click="ButtonInit_Click" Height="22" ToolTip="Reset all modules">
+            <Image x:Name="image1" Height="15" Width="18" Source="Icons/Rewind.png"/>
+        </Button>
+        <Button x:Name="buttonPlayPause" HorizontalAlignment="Left" Margin="46,35,0,0" VerticalAlignment="Top" Width="22" Height="22" Click="PlayPause_Click" ToolTip="Pause/Continue the neural engine">
+            <StackPanel HorizontalAlignment="Center" Height="15" VerticalAlignment="Top" Width="19">
+                <Image x:Name="imagePause" Height="15" Width="18" Source="Icons/Pause.png" Margin="2,0"/>
+                <Image x:Name="imagePlay" Height="15" Width="18" Source="Icons/Play.png" Visibility="Collapsed"/>
+            </StackPanel>
+        </Button>
+        <Button x:Name="buttonPan" HorizontalAlignment="Left" Height="22" Margin="97,35,0,0" VerticalAlignment="Top" Width="24" Click="ButtonPan_Click" ToolTip="Pan the display with the mouse">
+            <Image x:Name="image2" Height="18" Width="18" Source="Icons/Hand.png"/>
+        </Button>
+        <Button x:Name="button" HorizontalAlignment="Left" Height="22" Margin="132,35,0,0" VerticalAlignment="Top" Width="22" Click="ButtonDisplay_Click" ToolTip="Fit neuron array to screen">
+            <Image x:Name="image3" Height="18" Width="18" Source="Icons/FullScreen.png"/>
+
+        </Button>
+        <Label x:Name="label1" Content="Speed:" HorizontalAlignment="Left" Height="30" Margin="185,31,0,0" VerticalAlignment="Top" Width="56"/>
 
     </Grid>
 </Window>

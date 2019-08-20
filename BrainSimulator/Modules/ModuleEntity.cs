@@ -12,7 +12,6 @@ namespace BrainSimulator
         bool handlingTouch = false;
         bool handlingMemory = false;
         bool handlingVision = false;
-        bool handlingImagination = false;
         bool modelChanged = false;
         bool handlingCollision;
         int delay = 0;

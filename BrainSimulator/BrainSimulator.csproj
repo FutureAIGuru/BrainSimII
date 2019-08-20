@@ -166,6 +166,9 @@
     <Compile Include="NewArrayDlg.xaml.cs">
       <DependentUpon>NewArrayDlg.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PropertiesDlg.xaml.cs">
+      <DependentUpon>PropertiesDlg.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SplashScreeen.xaml.cs">
       <DependentUpon>SplashScreeen.xaml</DependentUpon>
     </Compile>
@@ -213,6 +216,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="NewArrayDlg.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PropertiesDlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -272,6 +279,24 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Commands.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Pause.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Step.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Rewind.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Hand.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\FullScreen.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

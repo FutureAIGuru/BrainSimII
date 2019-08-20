@@ -14,6 +14,8 @@ using System.Windows.Shapes;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Navigation;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace BrainSimulator
 {
@@ -22,27 +24,39 @@ namespace BrainSimulator
     /// </summary>
     public partial class NewArrayDlg : Window
     {
-        string crlf = "\r\n";
+        string crlf = "\r\n\r\n";
         public bool returnValue = false;
-        ulong approxNeuronSize = 200;
         ulong approxSynapseSize = 55;
         ulong assumedSynapseCount = 10;
 
         public NewArrayDlg()
         {
             InitializeComponent();
+            ulong StartBytes = (ulong)System.GC.GetTotalMemory(true);
+            Neuron[] n = new Neuron[100];
+            for (int i = 0; i < 100; i++)
+                n[i] = new Neuron();
+            ulong StopBytes = (ulong)System.GC.GetTotalMemory(true);
+            ulong neuronSize1 = (StopBytes - StartBytes)/100;
+
             ulong availablePhysicalMemory = new Microsoft.VisualBasic.Devices.ComputerInfo().AvailablePhysicalMemory;
             ulong totalPhysicalMemory = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
             long memoryCurrentlyInUse = GC.GetTotalMemory(true);
-            ulong neuronSize = approxNeuronSize + (approxSynapseSize * assumedSynapseCount);
+            //ulong neuronSize = approxNeuronSize + (approxSynapseSize * assumedSynapseCount);
+            ulong neuronSize = neuronSize1 + (approxSynapseSize * assumedSynapseCount);
             ulong maxNeurons = availablePhysicalMemory / neuronSize;
 
-            string text = "Available Physical Memory: " + availablePhysicalMemory.ToString("##,#") + crlf;
+            string text = "";
             text += "Total Pysical Memory: " + totalPhysicalMemory.ToString("##,#") + crlf;
-            text += "Memory Currently in Use: " + memoryCurrentlyInUse.ToString("##,#") + crlf;
+            text += "Available Physical Memory: " + availablePhysicalMemory.ToString("##,#") + crlf;
             text += "Max Neurons Possible in RAM: "+maxNeurons.ToString("##,#") + crlf;
             text += "Assuming average "+assumedSynapseCount+" synapses per neuron" + crlf;
             textBlock.Text = text;
+
+            foreach (Neuron.modelType model in (Neuron.modelType[])Enum.GetValues(typeof(Neuron.modelType)))
+            { comboBoxModel.Items.Add(model.ToString()); }
+            comboBoxModel.SelectedIndex = 0;
+
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -54,16 +68,26 @@ namespace BrainSimulator
         {
             if (!int.TryParse(textBoxColumns.Text, out int cols)) return;
             if (!int.TryParse(textBoxRows.Text, out int rows)) return;
-            MainWindow.theNeuronArray = new NeuronArray(rows * cols, rows);
+            Neuron.modelType t = (Neuron.modelType)System.Enum.Parse(typeof(Neuron.modelType), comboBoxModel.SelectedItem.ToString());
+
+            MainWindow.theNeuronArray = new NeuronArray(rows * cols, rows,t);
             if (checkBoxSynapses.IsChecked ?? true)
             {
                 //allocate randome neurons for testing
+                int rows1 = MainWindow.theNeuronArray.rows;
                 for (int i = 0; i < MainWindow.theNeuronArray.arraySize; i++)
                 {
                     Neuron n = MainWindow.theNeuronArray.neuronArray[i];
+                    int row = i % rows1;
+                    int col = i/ rows1;
+
                     for (int j = 0; j < (int)assumedSynapseCount; j++)
                     {
-                        int dest = rand.Next(MainWindow.theNeuronArray.arraySize - 1);
+                        int newRow = row + rand.Next(10);
+                        int newCol = col + rand.Next(10);
+                        int dest = newCol * rows + newRow;
+                        if (dest >= MainWindow.theNeuronArray.arraySize) dest -= MainWindow.theNeuronArray.arraySize;
+                        if (dest < 0) dest += MainWindow.theNeuronArray.arraySize;
                         float weight = 1 - (float)rand.Next(0, 1000) / 500f;
                         n.AddSynapse(dest, weight, MainWindow.theNeuronArray, false);
                     }
@@ -90,14 +114,5 @@ namespace BrainSimulator
             this.Close();
         }
 
-        private void TextBoxColumns_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
-        private void TextBoxRows_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
     }
 }

@@ -45,9 +45,7 @@ namespace BrainSimulator
         }
         public override void Initialize()
         {
-            na.GetNeuronAt(2, 0).Range = 2;
-            na.GetNeuronAt(0, 0).Range = 0;
-            na.GetNeuronAt(4, 0).Range = 0;
+            na.GetNeuronAt(2, 0).Model = Neuron.modelType.FloatValue;
         }
     }
 }

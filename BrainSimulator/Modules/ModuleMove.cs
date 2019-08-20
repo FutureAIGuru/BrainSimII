@@ -12,7 +12,6 @@ namespace BrainSimulator
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
-            na.GetNeuronAt(0, 2).Range = 2;
             float[] dist = { .2f,.1f,0,-.1f,-.2f};
             float distance = 0;
 
@@ -46,8 +45,7 @@ namespace BrainSimulator
         }
         public override void Initialize()
         {
-            na.GetNeuronAt(0,2).Range = 2;
-            na.GetNeuronAt(0, 4).Range = 0;
+            na.GetNeuronAt(0, 2).Model = Neuron.modelType.FloatValue;
         }
     }
 

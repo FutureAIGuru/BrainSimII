@@ -46,6 +46,10 @@ namespace BrainSimulator
         public override void Initialize()
         {
             na.GetNeuronAt(0, 2).Model = Neuron.modelType.FloatValue;
+            na.GetNeuronAt(0, 0).Label = "^^";
+            na.GetNeuronAt(0, 1).Label = "^";
+            na.GetNeuronAt(0, 3).Label = "v";
+            na.GetNeuronAt(0, 4).Label = "vv";
         }
     }
 

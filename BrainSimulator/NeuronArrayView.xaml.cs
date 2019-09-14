@@ -41,6 +41,7 @@ namespace BrainSimulator
         int firstSelectedNeuron = -1;
         int lastSelectedNeuron = -1;
 
+
         //keeps track of the multiple selection areas
         public NeuronSelection theSelection = new NeuronSelection();
 
@@ -50,6 +51,8 @@ namespace BrainSimulator
         //these are used to handle scaling with the mouse wheel
         DispatcherTimer dt = new DispatcherTimer();
         float scale = 1;
+
+        int Rows { get { return MainWindow.theNeuronArray.rows; } }
 
         //this helper keeps track of the neurons on the screen so they can change color without repainting
         private List<NeuronOnScreen> neuronsOnScreen = new List<NeuronOnScreen>();
@@ -95,7 +98,41 @@ namespace BrainSimulator
             for (int i = 0; i < MainWindow.theNeuronArray.Areas.Count; i++)
             {
                 NeuronArea nr = MainWindow.theNeuronArray.Areas[i];
-                NeuronSelectionRectangle nsr = new NeuronSelectionRectangle(MainWindow.theNeuronArray.rows, nr.FirstNeuron, nr.LastNeuron);
+                Point GetCenter(NeuronArea na)
+                {
+                    Point p1 = dp.pointFromNeuron(na.FirstNeuron);
+                    p1.X += dp.NeuronDisplaySize / 2;
+                    p1.Y += dp.NeuronDisplaySize / 2;
+                    //Point p2 = dp.pointFromNeuron(na.LastNeuron);
+                    //Point retVal = new Point { X = (p1.X + p2.X) / 2, Y = (p1.Y + p2.Y) / 2 };
+                    return p1;
+                }
+
+                //parse parameters
+                string[] commands = nr.CommandLine.Split(' ');
+                for (int j = 1; j < commands.Length - 1; j += 2)
+                {
+                    if (commands[j] == "-o")
+                    {
+                        NeuronArea naTarget = MainWindow.theNeuronArray.FindAreaByLabel(commands[j + 1]);
+                        if (naTarget != null)
+                        {
+                            Shape s = SynapseView.DrawLinkArrow(GetCenter(nr), GetCenter(naTarget));
+                            s.StrokeThickness = dp.NeuronDisplaySize/2;
+                            s.Stroke = new SolidColorBrush(Colors.White);
+                            s.StrokeEndLineCap = PenLineCap.Triangle;
+                            s.StrokeStartLineCap = PenLineCap.Round;
+                            s.Opacity = 1;
+                            theCanvas.Children.Add(s);
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < MainWindow.theNeuronArray.Areas.Count; i++)
+            {
+                NeuronArea nr = MainWindow.theNeuronArray.Areas[i];
+
+                NeuronSelectionRectangle nsr = new NeuronSelectionRectangle(nr.FirstNeuron, nr.Width, nr.Height);
                 Rectangle r = nsr.GetRectangle(dp);
                 r.Fill = new SolidColorBrush(Utils.FromArgb(nr.Color));
                 theCanvas.Children.Add(r);
@@ -105,16 +142,27 @@ namespace BrainSimulator
                 Canvas.SetLeft(tb, Canvas.GetLeft(r));
                 Canvas.SetTop(tb, Canvas.GetTop(r));
                 theCanvas.Children.Add(tb);
-                CreateContextMenu(i, nr.Label, nr.CommandLine, r, nr.Color);
+                CreateContextMenu(i, nr, r);
                 r.MouseLeave += R_MouseLeave;
+
             }
+
             //draw any selection rectangle(s)
             for (int i = 0; i < theSelection.selectedRectangles.Count; i++)
             {
                 Rectangle r = theSelection.selectedRectangles[i].GetRectangle(dp);
                 r.Fill = new SolidColorBrush(Colors.Pink);
+
                 theCanvas.Children.Add(r);
-                CreateContextMenu(-i - 1, "new", "", r, 0);
+                NeuronArea nr = new NeuronArea
+                {
+                    Label = "new",
+                    Width = theSelection.selectedRectangles[i].Width,
+                    Height = theSelection.selectedRectangles[i].Height,
+                    Color = Utils.ToArgb(Colors.Aquamarine),
+                    CommandLine = ""
+                };
+                CreateContextMenu(-i - 1, nr, r);
                 r.MouseLeave += R_MouseLeave;
             }
 
@@ -172,7 +220,7 @@ namespace BrainSimulator
                 theCanvas.Cursor = Cursors.Cross;
         }
 
-        private void CreateContextMenu(int i, string Label, string CommandLine, Rectangle r, int theColor) //for a selection
+        private void CreateContextMenu(int i, NeuronArea nr, Rectangle r) //for a selection
         {
             r.MouseDown += theCanvas_MouseDown;
             ContextMenu cm = new ContextMenu();
@@ -181,24 +229,25 @@ namespace BrainSimulator
             mi.Header = "Delete";
             mi.Click += Mi_Click;
             cm.Items.Add(mi);
-            MenuItem mi0 = new MenuItem();
-            mi0.Header = "Initialize";
-            mi0.Click += Mi_Click;
-            cm.Items.Add(mi0);
+            mi = new MenuItem();
+            mi.Header = "Initialize";
+            mi.Click += Mi_Click;
+            cm.Items.Add(mi);
+            StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
+            sp.Children.Add(new Label { Content = "Width:", VerticalAlignment = VerticalAlignment.Center });
+            sp.Children.Add(new TextBox { Text = nr.Width.ToString(), Width = 60, Name = "AreaWidth", VerticalAlignment = VerticalAlignment.Center });
+            sp.Children.Add(new Label { Content = "Height:" });
+            sp.Children.Add(new TextBox { Text = nr.Height.ToString(), Width = 60, Name = "AreaHeight", VerticalAlignment = VerticalAlignment.Center });
+            cm.Items.Add(sp);
 
-            MenuItem mi1 = new MenuItem();
-            mi1.Header = "Name:";
-            mi1.IsEnabled = false;
-            mi1.Click += Mi_Click;
-            cm.Items.Add(mi1);
-            TextBox tb1 = new TextBox();
-            tb1.Text = Label;
-            tb1.Width = 200;
-            cm.Items.Add(tb1);
-            MenuItem mi2 = new MenuItem();
-            mi2.Header = "Command Line:";
-            mi2.IsEnabled = false;
-            cm.Items.Add(mi2);
+            sp = new StackPanel { Orientation = Orientation.Horizontal };
+            sp.Children.Add(new Label { Content = "Name:" });
+            sp.Children.Add(new TextBox { Text = nr.Label, Width = 140, Name = "AreaName", VerticalAlignment = VerticalAlignment.Center });
+            cm.Items.Add(sp);
+
+            sp = new StackPanel { Orientation = Orientation.Horizontal };
+            sp.Children.Add(new Label { Content = "Type:" });
+            cm.Items.Add(sp);
 
             ComboBox cb = new ComboBox();
             //get list of available NEW modules...these are assignable to a "ModuleBase" 
@@ -211,38 +260,29 @@ namespace BrainSimulator
             foreach (var v in listOfBs)
                 if (v.Name != "ModuleBase")
                     cb.Items.Add(v.Name);
-
-            //get list of available OLD modules
-            //Type theType = MainWindow.theNeuronArray.GetType();
-            //MethodInfo[] Methods = theType.GetMethods(); //this will list the available functions (with some effort)
-
-            //Array.Sort(Methods, delegate (MethodInfo x, MethodInfo y) { return x.Name.CompareTo(y.Name); }); ;
-            //foreach (MethodInfo m in Methods)
-            //{
-            //    ParameterInfo[] p = m.GetParameters();
-            //    if (p.Length == 1 && p[0].Name == "na")
-            //    {
-            //        cb.Items.Add(m.Name);
-            //    }
-            //}
-            if (CommandLine != null) CommandLine = "";
-            string cm1 = CommandLine;
-
-            if (cm1.IndexOf(" ") > 0) cm1 = cm1.Substring(0, cm1.IndexOf(" "));
-            cb.SelectedValue = cm1;
-            cb.Width = 200;
-            cm.Items.Add(cb);
+            if (nr.TheModule != null)
+            {
+                string cm1 = nr.TheModule.GetType().Name.ToString();
+                if (cm1 != "")
+                    cb.SelectedValue = cm1;
+            }
+            cb.Width = 180;
+            cb.Name = "AreaType";
+            sp.Children.Add(cb);
+            //cm.Items.Add(cb);
 
             TextBox tb2 = new TextBox();
             tb2.Text = "";
-            if (CommandLine.IndexOf(" ") > 0) tb2.Text = CommandLine.Substring(CommandLine.IndexOf(" ") + 1);
+            tb2.Name = "CommandParams";
+            if (nr.CommandLine.IndexOf(" ") > 0) tb2.Text = nr.CommandLine.Substring(nr.CommandLine.IndexOf(" ") + 1);
             tb2.Width = 200;
             cm.Items.Add(tb2);
 
             //color picker
-            Color c = Utils.FromArgb(theColor);
+            Color c = Utils.FromArgb(nr.Color);
             cb = new ComboBox();
             cb.Width = 200;
+            cb.Name = "AreaColor";
             PropertyInfo[] x1 = typeof(Colors).GetProperties();
             int sel = -1;
             for (int i1 = 0; i1 < x1.Length; i1++)
@@ -255,7 +295,7 @@ namespace BrainSimulator
                     break;
                 }
             }
-            if (theColor == 0) sel = 3;
+            if (nr.Color == 0) sel = 3;
             foreach (PropertyInfo s in x1)
             {
                 ComboBoxItem cbi = new ComboBoxItem()
@@ -280,7 +320,7 @@ namespace BrainSimulator
             cb.SelectedIndex = sel;
             cm.Items.Add(cb);
 
-            if (i >= 0)
+            if (i >= 0 && MainWindow.theNeuronArray.Areas[i].TheModule != null)
             {
                 var t = MainWindow.theNeuronArray.Areas[i].TheModule.GetType();
                 Type t1 = Type.GetType(t.ToString() + "Dlg");
@@ -294,9 +334,28 @@ namespace BrainSimulator
             cm.Closed += Cm_Closed;
         }
 
+        Control FindByName(Visual v, string name)
+        {
+            foreach (Visual v3 in LogicalTreeHelper.GetChildren(v))
+            {
+                if (v3 is Control c1)
+                {
+                    if (c1.Name == name) return c1;
+                }
+                try
+                {
+                    Control c2 = FindByName(v3, name);
+                    if (c2 != null) return c2;
+                }
+                catch { }
+            }
+            return null;
+        }
         bool deleted = false;
         private void Cm_Closed(object sender, RoutedEventArgs e)
         {
+            if ((Keyboard.GetKeyStates(Key.Escape) & KeyStates.Down) > 0)
+                return;
             if (deleted)
             {
                 deleted = false;
@@ -307,40 +366,68 @@ namespace BrainSimulator
                 string label = "";
                 string commandLine = "";
                 Color color = Colors.Wheat;
-                if (cm.Items[3] is TextBox t)
-                    label = t.Text;
-                if (cm.Items[5] is ComboBox cb)
+                int width = 1, height = 1;
+
+                Control cc = FindByName(cm, "AreaName");
+                if (cc is TextBox tb)
+                    label = tb.Text;
+                cc = FindByName(cm, "AreaWidth");
+                if (cc is TextBox tb1)
+                    int.TryParse(tb1.Text, out width);
+                cc = FindByName(cm, "AreaHeight");
+                if (cc is TextBox tb2)
+                    int.TryParse(tb2.Text, out height);
+                cc = FindByName(cm, "AreaType");
+                if (cc is ComboBox cb && cb.SelectedValue != null)
                     commandLine = (string)cb.SelectedValue;
-                if (cm.Items[6] is TextBox t1)
-                    commandLine += " " + t1.Text;
+                if (commandLine == "") return;//something went wrong
+                cc = FindByName(cm, "CommandParams");
+                if (cc is TextBox tb3)
+                    commandLine += " " + tb3.Text;
                 if ((label == "new" || label == "") && commandLine != "")
                     label = commandLine;
-                if (cm.Items[7] is ComboBox cb1)
+                cc = FindByName(cm, "AreaColor");
+                if (cc is ComboBox cb1)
                     color = ((SolidColorBrush)((ComboBoxItem)cb1.SelectedValue).Background).Color;
                 if (label == " " && commandLine == " ") return;
                 if (i >= 0)
                 {
+                    //update the existing module
                     MainWindow.theNeuronArray.areas[i].Label = label;
                     MainWindow.theNeuronArray.areas[i].CommandLine = commandLine;
                     MainWindow.theNeuronArray.areas[i].Color = Utils.ToArgb(color);
+                    MainWindow.theNeuronArray.areas[i].Width = width;
+                    MainWindow.theNeuronArray.areas[i].Height = height;
                     //did we change the module type?
                     string[] Params = commandLine.Split(' ');
-                    if (commandLine.IndexOf("Module") == 0) //take this out when all modules are ported to new class structure
+                    Type t1x = Type.GetType("BrainSimulator." + Params[0]);
+                    if (t1x != null && (MainWindow.theNeuronArray.areas[i].TheModule == null || MainWindow.theNeuronArray.areas[i].TheModule.GetType() != t1x))
                     {
-                        Type t1x = Type.GetType("BrainSimulator." + Params[0]);
-                        if (MainWindow.theNeuronArray.areas[i].TheModule == null || MainWindow.theNeuronArray.areas[i].TheModule.GetType() != t1x)
-                        {
-                            MainWindow.theNeuronArray.areas[i].TheModule = (ModuleBase)Activator.CreateInstance(t1x);
-                        }
+                        MainWindow.theNeuronArray.areas[i].TheModule = (ModuleBase)Activator.CreateInstance(t1x);
                     }
                 }
                 else
                 {
+                    //convert a selection to a module
                     i = -i - 1;
                     NeuronSelectionRectangle nsr = theSelection.selectedRectangles[i];
                     theSelection.selectedRectangles.RemoveAt(i);
-                    NeuronArea na = new NeuronArea(nsr.FirstSelectedNeuron, nsr.LastSelectedNeuron, label, commandLine, Utils.ToArgb(color));
+                    NeuronArea na = new NeuronArea(nsr.FirstSelectedNeuron, width, height, label, commandLine, Utils.ToArgb(color));
                     MainWindow.theNeuronArray.areas.Add(na);
+                    string[] Params = commandLine.Split(' ');
+                    if (MainWindow.theNeuronArray.areas[i].TheModule != null)
+                    {
+                        //MainWindow.theNeuronArray.areas[i].TheModule.Initialize(); //doesn't work with camera module
+                    }
+                    else
+                    {
+                        Type t1x = Type.GetType("BrainSimulator." + Params[0]);
+                        if (t1x != null && (MainWindow.theNeuronArray.areas[i].TheModule == null || MainWindow.theNeuronArray.areas[i].TheModule.GetType() != t1x))
+                        {
+                            MainWindow.theNeuronArray.areas[i].TheModule = (ModuleBase)Activator.CreateInstance(t1x);
+                          //  MainWindow.theNeuronArray.areas[i].TheModule.Initialize();
+                        }
+                    }
                 }
             }
             Update();
@@ -598,8 +685,10 @@ namespace BrainSimulator
                     Point p2 = new Point(p1.X + dragRectangle.Width - 1, p1.Y + dragRectangle.Height - 1);
                     firstSelectedNeuron = dp.NeuronFromPoint(p1);
                     lastSelectedNeuron = dp.NeuronFromPoint(p2);
+                    int w = 1 + (lastSelectedNeuron - firstSelectedNeuron) / Rows;
+                    int h = 1 + (lastSelectedNeuron - firstSelectedNeuron) % Rows;
                     Debug.Write(firstSelectedNeuron + ", " + lastSelectedNeuron);
-                    NeuronSelectionRectangle rr = new NeuronSelectionRectangle(MainWindow.theNeuronArray.rows, firstSelectedNeuron, lastSelectedNeuron);
+                    NeuronSelectionRectangle rr = new NeuronSelectionRectangle(firstSelectedNeuron, w, h);
                     theSelection.selectedRectangles.Add(rr);
                 }
                 catch
@@ -615,7 +704,7 @@ namespace BrainSimulator
         {
             if (p1.X < dp.DisplayOffset.X) p1.X = dp.DisplayOffset.X;
             if (p1.Y < dp.DisplayOffset.Y) p1.Y = dp.DisplayOffset.Y;
-            float width = dp.NeuronDisplaySize * (MainWindow.theNeuronArray.neuronArray.Length / dp.NeuronRows - 1);
+            float width = dp.NeuronDisplaySize * MainWindow.theNeuronArray.neuronArray.Length / dp.NeuronRows - 1;
             float height = dp.NeuronDisplaySize * dp.NeuronRows - 1;
             if (p1.X > dp.DisplayOffset.X + width) p1.X = dp.DisplayOffset.X + width;
             if (p1.Y > dp.DisplayOffset.Y + height) p1.Y = dp.DisplayOffset.Y + height;
@@ -674,16 +763,6 @@ namespace BrainSimulator
                         }
                     }
                 }
-                //                        //sometimes mouseup events are lost...because the underlying canvas is updated
-                //                        if (!(e.LeftButton == MouseButtonState.Pressed))
-                //                        {
-                //                            FinishSelection();
-                // //                           break;
-                //                        }
-                //                        if (theCanvas.Cursor == Cursors.Cross)
-                //                        {
-                //                            if (dragRectangle == null)
-                //break;
 
                 //handle the creation/updating of a selection rectangle
                 if (e.LeftButton == MouseButtonState.Pressed && dragRectangle != null)
@@ -722,13 +801,13 @@ namespace BrainSimulator
                     int newLast = na.LastNeuron + currentNeuron - firstSelectedNeuron;
                     na.GetAbsNeuronLocation(newFirst, out int xf, out int yf);
                     na.GetAbsNeuronLocation(newLast, out int xl, out int yl);
-                    if (newFirst > 0 && newLast < MainWindow.theNeuronArray.arraySize &&
-                        xf < xl && yf < yl)
+                    if (newFirst >= 0 && newLast < MainWindow.theNeuronArray.arraySize &&
+                        xf <= xl && yf <= yl)
                     {
                         na.FirstNeuron += currentNeuron - firstSelectedNeuron;
-                        na.LastNeuron += currentNeuron - firstSelectedNeuron;
                     }
                     firstSelectedNeuron = currentNeuron;
+                    SortAreas();
                     Update();
                 }
             }
@@ -756,10 +835,12 @@ namespace BrainSimulator
                     if (Yc != Yf)
                     {
                         int newTop = Y1 + Yc - Yf;
-                        if (newTop < Y2)
+                        if (newTop <= Y2)
                         {
                             na.FirstNeuron += Yc - Yf;
+                            na.Height -= Yc - Yf;
                             firstSelectedNeuron = currentNeuron;
+                            SortAreas();
                             Update();
                         }
                     }
@@ -770,10 +851,12 @@ namespace BrainSimulator
                     if (Xc != Xf)
                     {
                         int newLeft = X1 + Xc - Xf;
-                        if (newLeft < X2)
+                        if (newLeft <= X2)
                         {
                             na.FirstNeuron += (Xc - Xf) * MainWindow.theNeuronArray.rows;
+                            na.Width -= Xc - Xf;
                             firstSelectedNeuron = currentNeuron;
+                            SortAreas();
                             Update();
                         }
                     }
@@ -784,9 +867,9 @@ namespace BrainSimulator
                     if (Xc != Xf)
                     {
                         int newRight = X2 + Xc - Xf;
-                        if (newRight > X1)
+                        if (newRight >= X1)
                         {
-                            na.LastNeuron += (Xc - Xf) * MainWindow.theNeuronArray.rows;
+                            na.Width += Xc - Xf;
                             firstSelectedNeuron = currentNeuron;
                             Update();
                         }
@@ -798,9 +881,9 @@ namespace BrainSimulator
                     if (Yc != Yf)
                     {
                         int newBottom = Y2 + Yc - Yf;
-                        if (newBottom > Y1)
+                        if (newBottom >= Y1)
                         {
-                            na.LastNeuron += Yc - Yf;
+                            na.Height += Yc - Yf;
                             firstSelectedNeuron = currentNeuron;
                             Update();
                         }
@@ -835,13 +918,19 @@ namespace BrainSimulator
                 }
         }
 
+        private static void SortAreas()
+        {
+            MainWindow.SuspendEngine();
+            MainWindow.theNeuronArray.Areas.Sort();
+            MainWindow.ResumeEngine();
+        }
 
         private bool SetScrollCursor(Point currentPosition, Rectangle r, double left, double top)
         {
             if (currentPosition.X > left && currentPosition.X < left + r.Width &&
                 currentPosition.Y > top && currentPosition.Y < top + r.Height)
             {
-                double edgeToler = dp.NeuronDisplaySize / 2;
+                double edgeToler = dp.NeuronDisplaySize / 2.5;
                 bool nearTop = currentPosition.Y - top < edgeToler;
                 bool nearBottom = top + r.Height - currentPosition.Y < edgeToler;
                 bool nearLeft = currentPosition.X - left < edgeToler;
@@ -933,7 +1022,7 @@ namespace BrainSimulator
         //UI Cleanup
         //optimize engine for bigger array (GPU) ?
         //Refactor the Main.neuron array
-        //improve the "area" module dropdown to have module names, colors, parameters
+        //improve the "area" module dropdown to have module names, colors, parameters, convert to dialog?
 
         //networks: NAND, counter, closest match, shifter, delay, latch, big random file
         //XML documentation

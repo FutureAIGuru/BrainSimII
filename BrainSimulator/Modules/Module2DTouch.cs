@@ -27,27 +27,28 @@ namespace BrainSimulator
                 float p2IsEndpt = na.GetNeuronAt(6, i).CurrentCharge;
                 float l2 = na.GetNeuronAt(7, i).CurrentCharge;
                 
-                //create the line segment (all relative coordinates)
-                PolarVector antennaPos = new PolarVector()
-                { r = antDist, theta = Math.PI/2 - antAngle };
+                //create the line segment (all coordinates relative to self)
+                PointPlus antennaPos = new PointPlus()
+                { R = antDist, Theta = antAngle };
 
-                lineAngle = (float)Math.PI / 2 - (lineAngle + antAngle);
+                float lineAngleAbs = antAngle-lineAngle;
 
-                PolarVector pv1 = new PolarVector() { r = l1, theta = Math.PI + lineAngle };
-                PolarVector pv2 = new PolarVector() { r = l2, theta = lineAngle };
+                PointPlus pv1 = new PointPlus () { R = l1, Theta = (float)Math.PI + lineAngleAbs };
+                PointPlus pv2 = new PointPlus() { R = l2, Theta = lineAngleAbs };
 
-                Point P1 = (Vector)Utils.ToCartesian(antennaPos) + Utils.ToCartesian(pv1);
-                Point P2 = (Vector)Utils.ToCartesian(antennaPos) + Utils.ToCartesian(pv2);
-                PointPlus P1P = new PointPlus() { P = P1, conf = p1IsEndpt };
-                PointPlus P2P = new PointPlus() { P = P2, conf = p2IsEndpt };
+                Point P1 = antennaPos.P + pv1.V;
+                Point P2 = antennaPos.P+ pv2.V;
+                PointPlus P1P = new PointPlus() { P = P1, Conf = p1IsEndpt };
+                PointPlus P2P = new PointPlus() { P = P2, Conf = p2IsEndpt };
 
-                bool modelChanged = naModel.AddSegment(P1P, P2P);
+                bool modelChanged = naModel.AddSegment(P1P, P2P, System.Windows.Media.Colors.Wheat);
          
             }
         }
         public override void Initialize()
         {
-            na.GetNeuronAt(0, 0).Label = "Touch";
+            na.GetNeuronAt(0, 0).Label = "Right";
+            na.GetNeuronAt(0, 1).Label = "Left";
 
         }
     }

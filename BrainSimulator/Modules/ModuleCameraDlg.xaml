@@ -1,0 +1,12 @@
+﻿<local:ModuleBaseDlg x:Class="BrainSimulator.ModuleCameraDlg"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BrainSimulator"
+        mc:Ignorable="d"
+        Title="Video Camera" Height="450" Width="800" Background="Gray" ShowInTaskbar="False" SizeChanged="TheCanvas_SizeChanged">
+    <Grid Margin="0,0,0,0" >
+        <Image x:Name="image" Margin="20,20,20,20"/>
+    </Grid>
+</local:ModuleBaseDlg>

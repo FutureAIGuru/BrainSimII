@@ -7,23 +7,36 @@ using System.Windows;
 using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
 using System.Windows.Controls;
+using System.Xml.Serialization;
+
 
 namespace BrainSimulator
 {
 
 
-    public class NeuronArea
+    public class NeuronArea : IComparable<NeuronArea>
     {
-        int firstNeuron, lastNeuron = 0;
+        int firstNeuron = 0;//, lastNeuron = 0;
         string label;
         string commandLine;
         int color;
         ModuleBase theModule = null;
+        int width = 0;
+        int height = 0;
+        public int CompareTo (NeuronArea na)
+        { 
+            //two bizarre cases
+            if (na == null) return 1;
+            if (na.firstNeuron == firstNeuron) return 0;
+            if (na.firstNeuron < firstNeuron) return 1;
+            return -1;
+        }
 
-        public NeuronArea(int firstNeuron1, int lastNeuron1, string theLabel, string theCommandLine, int theColor)
+        public NeuronArea(int firstNeuron1, int width, int height, string theLabel, string theCommandLine, int theColor)
         {
             FirstNeuron = firstNeuron1;
-            LastNeuron = lastNeuron1;
+            Width = width;
+            Height = height;
             Label = theLabel;
             CommandLine = theCommandLine;
             color = theColor;
@@ -37,16 +50,18 @@ namespace BrainSimulator
 
         public NeuronArea() { }
         public int FirstNeuron { get => firstNeuron; set => firstNeuron = value; }
-        public int LastNeuron { get => lastNeuron; set => lastNeuron = value; }
+        //public int LastNeuron { get => lastNeuron; set => lastNeuron = value; }
         public string CommandLine { get => commandLine; set => commandLine = value; }
         public string Label { get => label; set => label = value; }
         public int Rows { get { return MainWindow.theNeuronArray.rows; } }
 
-        public int Height { get { return 1 + lastNeuron % Rows - firstNeuron % Rows; } }
-        public int Width { get { return 1 + lastNeuron / Rows - firstNeuron / Rows; } }
+
         public int NeuronCount { get { return Width * Height; } }
         public int Color { get => color; set => color = value; }
         public ModuleBase TheModule { get => theModule; set => theModule = value; }
+        public int Height { get => height; set => height = value; }
+        public int Width { get => width; set => width = value; }
+        public int LastNeuron { get { return firstNeuron + (height - 1) + Rows * (Width - 1); } }
 
         //these two emulate a foreach which might be implemented some day
         int currentNeuronInArea = 0;
@@ -54,7 +69,7 @@ namespace BrainSimulator
         { currentNeuronInArea = 0; }
         public Neuron GetNextNeuron()
         {
-            int neuronIndex = (currentNeuronInArea % Height) + (currentNeuronInArea / Height) * MainWindow.theNeuronArray.rows + firstNeuron;
+            int neuronIndex = (currentNeuronInArea % Height) + (currentNeuronInArea / Height) * Rows + firstNeuron;
             if (currentNeuronInArea >= Height * Width) return null;
             currentNeuronInArea++;
             return MainWindow.theNeuronArray.neuronArray[neuronIndex];
@@ -64,7 +79,7 @@ namespace BrainSimulator
         {
             Rectangle r = new Rectangle();
             Point p1 = dp.pointFromNeuron(firstNeuron);
-            Point p2 = dp.pointFromNeuron(lastNeuron);
+            Point p2 = dp.pointFromNeuron(LastNeuron);
             p2.X += dp.NeuronDisplaySize;
             p2.Y += dp.NeuronDisplaySize;
             r.Width = p2.X - p1.X;
@@ -107,7 +122,7 @@ namespace BrainSimulator
 
         public void GetBounds(out int X1, out int Y1, out int X2, out int Y2)
         {
-            NeuronSelectionRectangle nsr = new NeuronSelectionRectangle(Rows, firstNeuron, lastNeuron);
+            NeuronSelectionRectangle nsr = new NeuronSelectionRectangle(firstNeuron, Width,Height);
             nsr.GetSelectedArea(out X1, out Y1, out X2, out Y2);
         }
         public void GetAbsNeuronLocation(int index, out int X, out int Y)

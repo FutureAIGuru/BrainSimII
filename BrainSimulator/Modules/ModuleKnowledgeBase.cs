@@ -19,15 +19,14 @@ namespace BrainSimulator
             //thing which cause previous
             //useage may be related to weights/ searching
             public string label = ""; //this is just for convenience in debugging and should not be used
-            public KBThing parent = null;
+            public KBThing parent = null; //"is-a"
             public List<KBThing> children = new List<KBThing>(); //synapses to
-            public List<KBThing> references = new List<KBThing>(); //synapses to
+            public List<KBThing> references = new List<KBThing>(); //synapses to //"has-a"
             public List<KBThing> referencedBy = new List<KBThing>(); //synapses from
             public KBThing next = null; //next in a sequence of things
             public KBThing previous = null; //predecessor
             public int neuronIndex;
             public long lastActive = 0;
-            public float importance = 0; //will be used to prioitize properties/references?
         }
         //absolute things...inputs and outputs...external things
         //group things

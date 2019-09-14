@@ -43,15 +43,15 @@ namespace BrainSimulator
             // figure out which color to use
             float value = n.LastCharge;
             Color c = Colors.White;
-            if (n.Model == Neuron.modelType.Std && value > .99)
+            if ((n.Model == Neuron.modelType.Std || n.Model == Neuron.modelType.OneTime) && value > .99)
                 c = Colors.Orange;
-            else if (n.Model == Neuron.modelType.Std && value != -1)
+            else if ((n.Model == Neuron.modelType.Std || n.Model == Neuron.modelType.OneTime) && value != -1)
                 c = MapRainbowColor(value, 1, 0);
             else if (n.Model == Neuron.modelType.Color)
                 c = Utils.FromArgb((int)n.LastChargeInt);
             SolidColorBrush s1 = new SolidColorBrush(c);
             //   if (n.Label != "" || !n.InUse()) s1.Opacity = .50;
-            if (!n.InUse()) s1.Opacity = .50;
+            if (!n.InUse() && n.Model == Neuron.modelType.Std) s1.Opacity = .50;
 
             Shape r = null;
             if (dp.ShowNeuronCircles())
@@ -136,6 +136,10 @@ namespace BrainSimulator
             cm.Items.Add(new Separator());
             mi = new MenuItem();
             mi.Header = "Always Fire";
+            mi.Click += Mi_Click;
+            cm.Items.Add(mi);
+            mi = new MenuItem();
+            mi.Header = "Paste Here";
             mi.Click += Mi_Click;
             cm.Items.Add(mi);
             mi = new MenuItem();
@@ -226,6 +230,7 @@ namespace BrainSimulator
             {
                 theNeuronArrayView.targetNeuronIndex = i;
                 theNeuronArrayView.PasteNeurons();
+                theNeuronArrayView.targetNeuronIndex = -1;
             }
             if ((string)mi.Header == "Move Here")
             {

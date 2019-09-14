@@ -10,7 +10,7 @@ namespace BrainSimulator
     {
         public override void Fire()
         {
-            Init();  //be sure to leave this here to enable use of the na variable
+            Init();  //be sure to leave this here
         }
         public override void Initialize()
         {
@@ -20,6 +20,4 @@ namespace BrainSimulator
             base.ShowDialog();
         }
     }
-
-
 }

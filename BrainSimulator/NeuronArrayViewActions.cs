@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,11 +32,12 @@ namespace BrainSimulator
             index = 0;
 
             theSelection.GetSelectedBoundingRectangle(out int X1o, out int Y1o, out int X2o, out int Y2o);
-            myClipBoard = new NeuronArray((X2o - X1o) * (Y2o - Y1o), (Y2o - Y1o));
+            myClipBoard = new NeuronArray((X2o - X1o+1) * (Y2o - Y1o+1), (Y2o - Y1o+1));
             theSelection.EnumSelectedNeurons();
             for (Neuron n = theSelection.GetSelectedNeuron(); n != null; n = theSelection.GetSelectedNeuron())
             {
                 myClipBoard.neuronArray[index].CurrentCharge = n.CurrentCharge;
+                myClipBoard.neuronArray[index].LastCharge = n.LastCharge;
                 myClipBoard.neuronArray[index].Label = n.Label;
                 myClipBoard.neuronArray[index].Model = n.Model;
                 foreach (Synapse s in n.synapses)
@@ -63,6 +65,8 @@ namespace BrainSimulator
                 int neuron = MapNeuron(targetNeuronIndex, i);
                 MainWindow.theNeuronArray.neuronArray[neuron].CurrentCharge =
                         myClipBoard.neuronArray[i].CurrentCharge;
+                MainWindow.theNeuronArray.neuronArray[neuron].LastCharge =
+                        myClipBoard.neuronArray[i].LastCharge;
                 MainWindow.theNeuronArray.neuronArray[neuron].Label =
                         myClipBoard.neuronArray[i].Label;
                 if (pasteSynapses)
@@ -114,6 +118,7 @@ namespace BrainSimulator
             {
                 n.CurrentCharge = 0;
                 n.LastCharge = 0;
+                n.Model = Neuron.modelType.Std;
                 if (deleteSynapses)
                     n.DeleteAllSynapes();
                 n.Label = "";

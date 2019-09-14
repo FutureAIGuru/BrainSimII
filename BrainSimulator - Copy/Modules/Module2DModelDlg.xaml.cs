@@ -1,0 +1,158 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+using System.Windows.Threading;
+
+namespace BrainSimulator
+{
+    /// <summary>
+    /// Interaction logic for Module2DSimDlg.xaml
+    /// </summary>
+    public partial class Module2DModelDlg : ModuleBaseDlg
+    {
+        public Module2DModelDlg()
+        {
+            InitializeComponent();
+        }
+
+        //this is here so the last change will cause a screen update after 1 second
+        DispatcherTimer dt = null;
+        private void Dt_Tick(object sender, EventArgs e)
+        {
+            dt.Stop(); ;
+            Application.Current.Dispatcher.Invoke((Action)delegate { Draw(); });
+        }
+
+        public override bool Draw()
+        {
+            if (!base.Draw())
+            {
+                if (dt == null)
+                {
+                    dt = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 1) };
+                    dt.Tick += Dt_Tick;
+                }
+                dt.Stop();
+                dt.Start();
+                return false;
+            }
+            Module2DModel parent = (Module2DModel)base.Parent1;
+            theCanvas.Children.Clear();
+            Point windowSize = new Point(theCanvas.ActualWidth, theCanvas.ActualHeight);
+            Point windowCenter = new Point(windowSize.X / 2, windowSize.Y / 2);
+            float scale = (float)Math.Min(windowSize.X, windowSize.Y) / 20;
+            TransformGroup tg = new TransformGroup();
+            tg.Children.Add(new ScaleTransform(scale, -scale, 0, 0));// windowCenter.X, windowCenter.Y));
+            tg.Children.Add(new TranslateTransform(windowCenter.X, windowCenter.Y));
+            theCanvas.RenderTransform = tg;
+
+            //draw an origin point
+            theCanvas.Children.Add(new Line
+            {
+                X1 = -.20,
+                X2 = .20,
+                Y1 = 0,
+                Y2 = 0,
+                StrokeThickness = 1 / scale,
+                Stroke = Brushes.Black
+            });
+            theCanvas.Children.Add(new Line
+            {
+                X1 = 0,
+                X2 = 0,
+                Y1 = -.20,
+                Y2 = .20,
+                StrokeThickness = 1 / scale,
+                Stroke = Brushes.Black
+            });
+
+
+            //draw the objects
+            for (int i = 0; i < parent.objects.Count; i++)
+            {
+                Color theColor = parent.objects[i].theColor;
+                Point P1 = parent.objects[i].P1.P;
+                Point P2 = parent.objects[i].P2.P;
+                Point P1P = P1 + (P2-P1) * .2;
+                Point P2P = P1 + (P2-P1) * .8;
+
+                theCanvas.Children.Add(new Line
+                {
+                    X1 = P1.X,
+                    X2 = P2.X,
+                    Y1 = P1.Y,
+                    Y2 = P2.Y,
+                    StrokeThickness = 4 / scale,
+                    Stroke = new SolidColorBrush(theColor),
+                });
+
+                if (parent.objects[i].P1.conf == 0)
+                {
+                    theCanvas.Children.Add(new Line
+                    {
+                        X1 = P1.X,
+                        X2 = P1P.X,
+                        Y1 = P1.Y,
+                        Y2 = P1P.Y,
+                        StrokeThickness = 4 / scale,
+                        Stroke = new SolidColorBrush(Colors.White),
+                    });
+                }
+                if (parent.objects[i].P2.conf == 0)
+                {
+                    theCanvas.Children.Add(new Line
+                    {
+                        X1 = P2.X,
+                        X2 = P2P.X,
+                        Y1 = P2.Y,
+                        Y2 = P2P.Y,
+                        StrokeThickness = 4 / scale,
+                        Stroke = new SolidColorBrush(Colors.White),
+                    });
+
+                }
+            }
+
+
+
+            if (parent.imagination)
+            {
+                LinearGradientBrush lb = new LinearGradientBrush();
+                lb.StartPoint = new Point(0, 1);
+                lb.EndPoint = new Point(0, 0);
+                lb.GradientStops.Add(new GradientStop(Colors.Transparent, 0.0));
+                lb.GradientStops.Add(new GradientStop(Colors.Transparent, 0.4));
+                lb.GradientStops.Add(new GradientStop(Colors.White, .76));
+                lb.GradientStops.Add(new GradientStop(Colors.White, 1.0));
+                Rectangle r = new Rectangle()
+                {
+                    Width = 40,
+                    Height = 40,
+                    Opacity = .75,
+                    Fill = lb
+                };
+                Canvas.SetTop(r, -20);
+                Canvas.SetLeft(r, -20);
+                theCanvas.Children.Add(r);
+
+            }
+            return true;
+        }
+
+        private void TheCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Draw();
+        }
+
+    }
+}

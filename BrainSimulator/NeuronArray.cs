@@ -10,19 +10,17 @@ namespace BrainSimulator
     {
 
 #if DEBUG
-        public int arraySize = 1000000; // ten thousand neurons to start
-        public int rows = 1000;
-#else
-        public int arraySize = 10000; // a million neurons to start
+        public int arraySize = 10000; // ten thousand neurons to start
         public int rows = 100;
+#else
+        public int arraySize = 1000000; // a million neurons to start
+        public int rows = 1000;
 #endif
         internal List<NeuronArea> areas = new List<NeuronArea>();
         public List<NeuronArea> Areas
         {
             get { return areas; }
         }
-
-      
 
         public Neuron[] neuronArray;
         public long Generation { get; set; } = 0;
@@ -70,14 +68,14 @@ namespace BrainSimulator
             fireCount = 0;
 
             //when debugging the Fire1 & Fire2 modules disable parallel operation and use the sequential loops below;
-            //Parallel.For(0, arraySize, i => neuronArray[i].Fire1(this));
-            //Parallel.For(0, arraySize, i => neuronArray[i].Fire2(Generation));
+            Parallel.For(0, arraySize, i => neuronArray[i].Fire1(this));
+            Parallel.For(0, arraySize, i => neuronArray[i].Fire2(Generation));
 
             //use these instead
-            foreach (Neuron n in neuronArray)
-                n.Fire1(this);
-            foreach (Neuron n in neuronArray)
-                n.Fire2(Generation);
+            //foreach (Neuron n in neuronArray)
+            //    n.Fire1(this);
+            //foreach (Neuron n in neuronArray)
+            //    n.Fire2(Generation);
             Generation++;
         }
 

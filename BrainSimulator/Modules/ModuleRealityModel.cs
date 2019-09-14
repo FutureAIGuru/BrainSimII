@@ -21,7 +21,7 @@ namespace BrainSimulator
         //turn list of objects into presumed image
         //detect existing thing vs new thing vs changing thing
 
-        class Thing
+        class RealThing
         {
             public int thingType;
             public int color;
@@ -31,13 +31,13 @@ namespace BrainSimulator
             public bool allInFieldOfView;
             public float moved;
             public float sizeChanged;
-            public virtual bool Equals(Thing t)
+            public virtual bool Equals(RealThing t)
             {
                 if (thingType == t.thingType && color == t.color) return true;
                 return false;
             }
         }
-        List<Thing> thingsInReality = new List<Thing>();
+        List<RealThing> thingsInReality = new List<RealThing>();
 
         override public void Fire()
         {
@@ -50,7 +50,7 @@ namespace BrainSimulator
                 if (naIn.GetNeuronAt(0, i).LastCharge == 0) break; //end of shapes in visual field
 
 
-                Thing CT = new Thing();
+                RealThing CT = new RealThing();
                 CT.thingType = 0; //we must convert to angular distances
                 CT.z = 5;//we have no idea how far away it is...just its apparent size.
 
@@ -67,7 +67,7 @@ namespace BrainSimulator
                 int foundIndex = -1;
                 for (int j = 0; j < thingsInReality.Count; j++)
                 {
-                    Thing t = thingsInReality[j];
+                    RealThing t = thingsInReality[j];
                     //only care about things which might be fully in visual field
                     //camera field of view is 60-degrees so should be x=[-.1666,.1666] 
 
@@ -117,7 +117,7 @@ namespace BrainSimulator
             na.ClearNeuronChargeInArea();
             for (int i = 0; i < thingsInReality.Count; i++)
             {
-                Thing t = thingsInReality[i];
+                RealThing t = thingsInReality[i];
                 int xVal = (int)((t.cx / 2 + 0.5) * na.Width);
                 while (na.GetNeuronAt(0, xVal).LastChargeInt != 0) xVal++;
                 na.GetNeuronAt(xVal, 0).SetValueInt(t.color);
@@ -157,7 +157,7 @@ namespace BrainSimulator
             //current position is (0,0,0)  Motion makes it (0,0,z)
             //so we need to add z to all the components
             //then we'll be able to ask whether the size change of the object when next view matche up or needs to be adjusted
-            foreach (Thing t in thingsInReality)
+            foreach (RealThing t in thingsInReality)
             {
                 //convert to cartesian
                 float oldZ = t.z;
@@ -196,7 +196,7 @@ namespace BrainSimulator
         {
             //amount is in .001 radians.  
             float factor = (float)Math.PI * 1000f;
-            foreach (Thing t in thingsInReality)
+            foreach (RealThing t in thingsInReality)
             {
                 t.cx += amount / factor;
                 LimitCoordinates(ref t.cx);

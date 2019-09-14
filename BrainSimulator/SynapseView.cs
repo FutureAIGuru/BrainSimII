@@ -265,7 +265,8 @@ namespace BrainSimulator
             PathFigure pathFigure = new PathFigure();
             //            Point p = new Point(p1.X + ((p2.X - p1.X) / 1.35), p1.Y + ((p2.Y - p1.Y) / 1.35));
             Vector v = p2 - p1;
-            v = v / v.Length * (dp.NeuronDisplaySize / 2);
+            //v = v / v.Length * (dp.NeuronDisplaySize / 2);
+            v = v / 2;
             Point p = new Point();
             p = p2 - v;
             pathFigure.StartPoint = p;

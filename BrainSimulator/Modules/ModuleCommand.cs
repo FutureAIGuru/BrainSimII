@@ -18,22 +18,26 @@ namespace BrainSimulator
             Init();  //be sure to leave this here to enable use of the na variable
             if (commands == null) return;
             if (line >= commands.Length) return;
+
             string[] commandLine = commands[line].Split(' ');
+
             if (commandLine.Length > 0 && commandLine[0].IndexOf("//") != 0)
                 for (int i = 0; i < commandLine.Length; i++)
                 {
                     string currentCommand = commandLine[i];
-                    if (currentCommand == "stop")
+                    if (currentCommand == "Stop")
                     {
                         line = commands.Length;
                         return;
                     }
-                    int colonLoc = currentCommand.IndexOf(':');
-                    if (colonLoc != -1)
+                    if (currentCommand == "Wait-for")
                     {
-                        currentModule = currentCommand.Substring(0, colonLoc);
-                        continue;
+                        SetCurrentModule(commandLine[i + 1]);
+                        NeuronArea na1 = theNeuronArray.FindAreaByLabel(currentModule);
+                        Neuron n = na1.GetNeuronAt(commandLine[i + 2]);
+                        if (!n.Fired())return;
                     }
+                    SetCurrentModule(currentCommand);
                     NeuronArea na = theNeuronArray.FindAreaByLabel(currentModule);
                     if (na != null && currentCommand != "")
                     {
@@ -46,6 +50,14 @@ namespace BrainSimulator
                 }
             line++;
 
+        }
+        private void SetCurrentModule(string s)
+        {
+            int colonLoc = s.IndexOf(':');
+            if (colonLoc != -1)
+            {
+                currentModule = s.Substring(0, colonLoc);
+            }
         }
         public override void Initialize()
         {

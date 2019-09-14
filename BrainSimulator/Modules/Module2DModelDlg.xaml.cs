@@ -39,7 +39,7 @@ namespace BrainSimulator
             {
                 if (dt == null)
                 {
-                    dt = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 1) };
+                    dt = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 0,0,100) };
                     dt.Tick += Dt_Tick;
                 }
                 dt.Stop();
@@ -50,8 +50,11 @@ namespace BrainSimulator
             theCanvas.Children.Clear();
             Point windowSize = new Point(theCanvas.ActualWidth, theCanvas.ActualHeight);
             Point windowCenter = new Point(windowSize.X / 2, windowSize.Y / 2);
-            float scale = (float)Math.Min(windowSize.X, windowSize.Y) / 20;
+
+            float scale = (float)Math.Min(windowSize.X, windowSize.Y) / 12;
+            if (scale == 0) return false;
             TransformGroup tg = new TransformGroup();
+            tg.Children.Add(new RotateTransform(90));
             tg.Children.Add(new ScaleTransform(scale, -scale, 0, 0));// windowCenter.X, windowCenter.Y));
             tg.Children.Add(new TranslateTransform(windowCenter.X, windowCenter.Y));
             theCanvas.RenderTransform = tg;
@@ -76,15 +79,34 @@ namespace BrainSimulator
                 Stroke = Brushes.Black
             });
 
-
-            //draw the objects
-            for (int i = 0; i < parent.objects.Count; i++)
+            //draw possible points;
+            foreach (Thing t in parent.GetKBPossiblePoints())
             {
-                Color theColor = parent.objects[i].theColor;
-                Point P1 = parent.objects[i].P1.P;
-                Point P2 = parent.objects[i].P2.P;
-                Point P1P = P1 + (P2-P1) * .2;
-                Point P2P = P1 + (P2-P1) * .8;
+                if (t.V is PointPlus P1 && !float.IsInfinity(P1.X) && !float.IsInfinity(P1.Y))
+                {
+                    theCanvas.Children.Add(new Line
+                    {
+                        X1 = P1.X,
+                        X2 = P1.X,
+                        Y1 = P1.Y,
+                        Y2 = P1.Y,
+                        StrokeThickness = 3 / scale,
+                        StrokeEndLineCap = PenLineCap.Round,
+                        StrokeStartLineCap = PenLineCap.Round,
+                        //                        Stroke = new SolidColorBrush(P1.TheColor)
+                        Stroke = new SolidColorBrush(Colors.Orange)
+                    });
+                }
+            }
+            //draw the objects
+            foreach (Thing t in parent.GetKBSegments())
+            {
+                Segment segment = parent.SegmentFromKBThing(t);
+                Color theColor = segment.theColor;
+                Point P1 = segment.P1.P;
+                Point P2 = segment.P2.P;
+                Point P1P = P1 + (P2 - P1) * .2;
+                Point P2P = P1 + (P2 - P1) * .8;
 
                 theCanvas.Children.Add(new Line
                 {
@@ -96,7 +118,7 @@ namespace BrainSimulator
                     Stroke = new SolidColorBrush(theColor),
                 });
 
-                if (parent.objects[i].P1.conf == 0)
+                if (segment.P1.Conf == 0)
                 {
                     theCanvas.Children.Add(new Line
                     {
@@ -108,7 +130,7 @@ namespace BrainSimulator
                         Stroke = new SolidColorBrush(Colors.White),
                     });
                 }
-                if (parent.objects[i].P2.conf == 0)
+                if (segment.P2.Conf == 0)
                 {
                     theCanvas.Children.Add(new Line
                     {
@@ -123,10 +145,30 @@ namespace BrainSimulator
                 }
             }
 
-
-
-            if (parent.imagination)
+            if (parent.imagining)
             {
+                //draw any imagined objects
+                for (int i = 0; i < parent.imagination.Count; i++)
+                {
+                    Color theColor = parent.imagination[i].theColor;
+                    Point P1 = parent.imagination[i].P1.P;
+                    Point P2 = parent.imagination[i].P2.P;
+                    Point P1P = P1 + (P2 - P1) * .2;
+                    Point P2P = P1 + (P2 - P1) * .8;
+
+                    theCanvas.Children.Add(new Line
+                    {
+                        X1 = P1.X,
+                        X2 = P2.X,
+                        Y1 = P1.Y,
+                        Y2 = P2.Y,
+                        StrokeThickness = 4 / scale,
+                        Stroke = new SolidColorBrush(theColor),
+                        Opacity = .5
+                    });
+                }
+
+
                 LinearGradientBrush lb = new LinearGradientBrush();
                 lb.StartPoint = new Point(0, 1);
                 lb.EndPoint = new Point(0, 0);

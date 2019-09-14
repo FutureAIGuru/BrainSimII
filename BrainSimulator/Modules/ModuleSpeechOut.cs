@@ -63,7 +63,7 @@ namespace BrainSimulator
             ModuleSpeechIn msi = (ModuleSpeechIn)FindModuleByType(typeof(ModuleSpeechIn));
             if (msi != null)
                 msi.PauseRecognition(); //if there is a recognizer active
-            synth.SpeakAsync("Speech synthisizer Initialized");
+           // synth.SpeakAsync("Speech synthisizer Initialized");
 
         }
 

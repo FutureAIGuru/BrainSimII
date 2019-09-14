@@ -11,34 +11,39 @@ namespace BrainSimulator
 {
     public class NeuronSelectionRectangle
     {
-        int firstSelectedNeuron, lastSelectedNeuron;
+        int firstSelectedNeuron;//, lastSelectedNeuron;
   
-        private int rows;
+        int width;
+        int height;
+        public int Rows { get { return MainWindow.theNeuronArray.rows; } }
 
-        public int LastSelectedNeuron { get => lastSelectedNeuron; set => lastSelectedNeuron = value; }
+
         public int FirstSelectedNeuron { get => firstSelectedNeuron; set => firstSelectedNeuron = value; }
+        public int LastSelectedNeuron { get { return FirstSelectedNeuron + (Height - 1) + Rows * (Width - 1); } }
+        public int Width { get => width; set => width = value; }
+        public int Height { get => height; set => height = value; }
 
-        public NeuronSelectionRectangle(int iRows, int iFirstSelectedNeuron, int iLastSelectedNeuron)
+        public NeuronSelectionRectangle(int iFirstSelectedNeuron, int width,int height)//iLastSelectedNeuron)
         {
-            rows = iRows;
             FirstSelectedNeuron = iFirstSelectedNeuron;
-            lastSelectedNeuron = iLastSelectedNeuron;
+            Height = height;
+            Width = width;
         }
 
         public void GetSelectedArea(out int X1, out int Y1, out int X2, out int Y2)
         {
-            Y1 = FirstSelectedNeuron % rows;
-            X1 = FirstSelectedNeuron / rows;
-            Y2 = lastSelectedNeuron % rows+1;
-            X2 = lastSelectedNeuron / rows+1;
+            Y1 = FirstSelectedNeuron % Rows;
+            X1 = FirstSelectedNeuron / Rows;
+            Y2 = Y1 + Height - 1;
+            X2 = X1 + Width - 1;
         }
 
         public bool NeuronIsInSelection(int neuronIndex)
         {
             GetSelectedArea(out int X1, out int Y1, out int X2, out int Y2);
-            int selX = neuronIndex / rows;
-            int selY = neuronIndex % rows;
-            if (selX >= X1 && selX < X2 && selY >= Y1 && selY < Y2)
+            int selX = neuronIndex / Rows;
+            int selY = neuronIndex % Rows;
+            if (selX >= X1 && selX <= X2 && selY >= Y1 && selY <= Y2)
                 return true;
             return false;
         }
@@ -47,7 +52,7 @@ namespace BrainSimulator
         {
             Rectangle r = new Rectangle();
             Point p1 = dp.pointFromNeuron(FirstSelectedNeuron);
-            Point p2 = dp.pointFromNeuron(lastSelectedNeuron);
+            Point p2 = dp.pointFromNeuron(LastSelectedNeuron);
             p2.X += dp.NeuronDisplaySize;
             p2.Y += dp.NeuronDisplaySize;
             r.Width = p2.X - p1.X;
@@ -60,7 +65,7 @@ namespace BrainSimulator
         public int GetLength()
         {
             GetSelectedArea(out int X1, out int Y1, out int X2, out int Y2);
-            return (X2 - X1) * (Y2 - Y1);
+            return (X2 - X1+1) * (Y2 - Y1+1);
         }
     }
 }

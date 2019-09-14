@@ -114,6 +114,9 @@
       <DependentUpon>HelpAbout.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\Module2DModel.cs" />
+    <Compile Include="Modules\ModuleCameraDlg.xaml.cs">
+      <DependentUpon>ModuleCameraDlg.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Module2DModelDlg.xaml.cs">
       <DependentUpon>Module2DModelDlg.xaml</DependentUpon>
     </Compile>
@@ -129,6 +132,11 @@
     <Compile Include="Modules\Module2DTouch.cs" />
     <Compile Include="Modules\Module2DVision.cs" />
     <Compile Include="Modules\ModuleBehavior.cs" />
+    <Compile Include="Modules\Module2DKB.cs" />
+    <Compile Include="Modules\ModuleCamera.cs" />
+    <Compile Include="Modules\ModuleAnd.cs" />
+    <Compile Include="Modules\ModuleWords.cs" />
+    <Compile Include="Modules\ModuleGoToDest.cs" />
     <Compile Include="Modules\ModuleEntity.cs" />
     <Compile Include="Modules\ModuleHebbianAND.cs" />
     <Compile Include="Modules\ModuleHebbian.cs" />
@@ -156,7 +164,7 @@
     <Compile Include="NeuronArrayViewActions.cs" />
     <Compile Include="NeuronArea.cs" />
     <Compile Include="NeuronArray.cs" />
-    <Compile Include="Modules\NeuronArrayActions.cs" />
+    <Compile Include="NeuronArrayActions.cs" />
     <Compile Include="NeuronArrayView.xaml.cs">
       <DependentUpon>NeuronArrayView.xaml</DependentUpon>
     </Compile>
@@ -194,6 +202,10 @@
     <Page Include="Modules\CameraHandler.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\ModuleCameraDlg.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Modules\Module2DModelDlg.xaml">
       <Generator>MSBuild:Compile</Generator>

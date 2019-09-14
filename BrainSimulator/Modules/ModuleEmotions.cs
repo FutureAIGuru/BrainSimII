@@ -14,8 +14,6 @@ namespace BrainSimulator
         }
         public override void Initialize()
         {
-            //if (naIn == null) return; //if naIn is needed?
-
             for (int i = 0; i < na.Width; i++)
             {
                 for (int j = 0; j < na.Height; j++)

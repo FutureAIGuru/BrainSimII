@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows;
 
 namespace BrainSimulator
 {
@@ -11,9 +12,8 @@ namespace BrainSimulator
     {
         bool handlingTouch = false;
         bool handlingMemory = false;
-        bool handlingVision = false;
+        bool handlingCollision = false;
         bool modelChanged = false;
-        bool handlingCollision;
         int delay = 0;
         bool direction = false;
 
@@ -28,8 +28,15 @@ namespace BrainSimulator
 
             if (na.GetNeuronAt("Imagine").Fired())
             {
-                PolarVector pv = new PolarVector() { r = 1, theta = Math.PI / 6 };
-                nmModel.ImagineStart(pv, -(float)Math.PI);
+                PointPlus pv = new PointPlus { R = 0, Theta = 0};
+                nmModel.ImagineStart(pv, 0);
+                Segment phy1 = new Segment
+                {
+                    P1 = new PointPlus() { P = new Point(-.5, .5), Conf = 0 },
+                    P2 = new PointPlus() { P = new Point(.5, .5), Conf = 0 },
+                    theColor = Colors.Blue
+                };
+                nmModel.ImagineObject(phy1);
             }
             if (na.GetNeuronAt("!Imagine").Fired())
                 nmModel.ImagineEnd();
@@ -48,7 +55,7 @@ namespace BrainSimulator
             modelChanged |= naModel.GetNeuronAt("New").Fired();
             modelChanged |= naModel.GetNeuronAt("Change").Fired();
 
-
+            return;
             if (na.GetNeuronAt("Collision").Fired() && !handlingCollision) //collision
             {
                 na.GetNeuronAt("Collision").SetValue(0);
@@ -63,7 +70,6 @@ namespace BrainSimulator
                 naBehavior1.TurnTo(angle);
                 handlingMemory = false;
                 handlingTouch = false;
-                handlingVision = false;
                 handlingCollision = true;
                 delay = 20;
             }
@@ -89,16 +95,15 @@ namespace BrainSimulator
                     float angle = naTouch.GetNeuronAt(3, 0).CurrentCharge;
                     float antAngle = naTouch.GetNeuronAt(1, 0).CurrentCharge;
                     float antDist = naTouch.GetNeuronAt(2, 0).CurrentCharge;
-                    if (antDist < 0.3 && modelChanged)
+                    if (antDist < 0.6 && modelChanged)
                     {
                         angle = (float)Math.PI / 2 - (angle + antAngle);
                         angle = (float)Math.PI / 2 - angle;
-                        if (direction)
-                            angle += (float)Math.PI;
+                      //  if (direction)
+                      //      angle += (float)Math.PI;
                         direction = !direction;
                         naBehavior1.TurnTo(angle);
                         handlingTouch = true;
-                        handlingVision = false;
                         handlingMemory = false;
                         modelChanged = false;
                     }
@@ -109,7 +114,7 @@ namespace BrainSimulator
                     float angle = naTouch.GetNeuronAt(3, 1).CurrentCharge;
                     float antAngle = naTouch.GetNeuronAt(1, 1).CurrentCharge;
                     float antDist = naTouch.GetNeuronAt(2, 1).CurrentCharge;
-                    if (antDist < 0.3 && modelChanged)// && modelChanged > 0)
+                    if (antDist < 0.6 && modelChanged)// && modelChanged > 0)
                     {
                         angle = (float)Math.PI / 2 - (angle + antAngle);
                         angle = (float)Math.PI / 2 - angle;
@@ -118,7 +123,6 @@ namespace BrainSimulator
                         direction = !direction;
                         naBehavior1.TurnTo(angle);
                         handlingTouch = true;
-                        handlingVision = false;
                         handlingMemory = false;
                         modelChanged = false;
                     }
@@ -127,53 +131,52 @@ namespace BrainSimulator
             if (naBehavior1.IsIdle() && naTouch.GetNeuronAt(8, 0).Fired() && naTouch.GetNeuronAt(8, 1).Fired() && handlingTouch && !handlingCollision)
                 handlingTouch = false;
 
-            //unresolved endpoint
+            //////unresolved endpoint
             if (naBehavior1.IsIdle() && !handlingMemory && !handlingTouch && !handlingCollision)
             {
-                PolarVector pv = nmModel.FindLowConfidence();
+                PointPlus pv = nmModel.FindLowConfidence();
                 if (pv != null)
                 {
-                    naBehavior1.TurnTo((float)pv.theta);
+                    naBehavior1.TurnTo((float)pv.Theta);
                     handlingMemory = true;
-                    handlingVision = false;
                     delay = 5;
                 }
             }
 
-            //see something not in model ?
-            if (naBehavior1.IsIdle() && !handlingVision && !handlingTouch && !handlingMemory && !handlingCollision)
-            {
-                NeuronArea naVision = theNeuronArray.FindAreaByLabel("Module2DVision");
-                for (int i = 1; i < naVision.Width - 1; i++)
-                {
-                    int colorVal = naVision.GetNeuronAt(i, 0).CurrentChargeInt;
-                    if (colorVal != 0)
-                    {
-                        double theta = (float)Utils.fieldOfView / (naVision.Width - 1) * i - Utils.fieldOfView / 2;
-                        bool found = nmModel.IsAlreadyInModel((float)theta, Utils.FromArgb(colorVal));
-                        if (!found)
-                        {
-                            naBehavior1.TurnTo((float)theta);
-                            handlingVision = true;
-                            break;
-                        }
-                    }
-                }
-            }
+            ////see something not in model ?
+            //if (naBehavior1.IsIdle() && !handlingVision && !handlingTouch && !handlingMemory && !handlingCollision)
+            //{
+            //    NeuronArea naVision = theNeuronArray.FindAreaByLabel("Module2DVision");
+            //    for (int i = 1; i < naVision.Width - 1; i++)
+            //    {
+            //        int colorVal = naVision.GetNeuronAt(i, 0).CurrentChargeInt;
+            //        if (colorVal != 0)
+            //        {
+            //            double theta = (float)Utils.fieldOfView / (naVision.Width - 1) * i - Utils.fieldOfView / 2;
+            //            bool found = nmModel.IsAlreadyInModel((float)theta, Utils.FromArgb(colorVal));
+            //            if (!found)
+            //            {
+            //                naBehavior1.TurnTo((float)theta);
+            //                handlingVision = true;
+            //                break;
+            //            }
+            //        }
+            //    }
+            //}
 
-            //ramdom
-            if (naBehavior1.IsIdle() && !handlingVision && !handlingTouch && !handlingMemory && !handlingCollision && na.GetNeuronAt("Run").LastCharge == 1)
-            {
-                double val = rand.NextDouble();
-                if (val > 0.9)
-                {
-                    //naBehavior.GetNeuronAt("Random").SetValue(1); //random
-                    double theta = rand.NextDouble();
-                    theta = theta * Math.PI / 2;
-                    theta -= Math.PI / 4;
-                    naBehavior1.TurnTo((float)theta);
-                }
-            }
+            ////ramdom
+            //if (naBehavior1.IsIdle() && !handlingVision && !handlingTouch && !handlingMemory && !handlingCollision && na.GetNeuronAt("Run").LastCharge == 1)
+            //{
+            //    double val = rand.NextDouble();
+            //    if (val > 0.9)
+            //    {
+            //        //naBehavior.GetNeuronAt("Random").SetValue(1); //random
+            //        double theta = rand.NextDouble();
+            //        theta = theta * Math.PI / 2;
+            //        theta -= Math.PI / 4;
+            //        naBehavior1.TurnTo((float)theta);
+            //    }
+            //}
 
             if (naBehavior1.IsIdle() && na.GetNeuronAt("Run").LastCharge == 1)
             {
@@ -194,7 +197,6 @@ namespace BrainSimulator
             na.GetNeuronAt(4, 0).Label = "Run";
             na.GetNeuronAt(5, 0).Label = "Imagine";
             na.GetNeuronAt(6, 0).Label = "!Imagine";
-            handlingVision = false;
             handlingTouch = false;
             handlingMemory = false;
             handlingCollision = false;

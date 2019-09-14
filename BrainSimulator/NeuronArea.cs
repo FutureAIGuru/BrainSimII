@@ -1,4 +1,10 @@
-﻿using System;
+﻿//
+// Copyright (c) Charles Simon. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+//  
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -50,10 +56,9 @@ namespace BrainSimulator
 
         public NeuronArea() { }
         public int FirstNeuron { get => firstNeuron; set => firstNeuron = value; }
-        //public int LastNeuron { get => lastNeuron; set => lastNeuron = value; }
         public string CommandLine { get => commandLine; set => commandLine = value; }
         public string Label { get => label; set => label = value; }
-        public int Rows { get { return MainWindow.theNeuronArray.rows; } }
+        private int Rows { get { return MainWindow.theNeuronArray.rows; } }
 
 
         public int NeuronCount { get { return Width * Height; } }

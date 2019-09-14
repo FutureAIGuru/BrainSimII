@@ -1,4 +1,9 @@
-﻿using System;
+﻿//  
+// Copyright (c) Charles Simon. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+//  
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,7 +49,7 @@ namespace BrainSimulator
             Init();
             if (naIn == null) return;
 
-            for (int i = 1; i < naIn.Rows; i++)
+            for (int i = 1; i < naIn.Height; i++)
             {
                 //are there objects in the visual field?
                 if (naIn.GetNeuronAt(0, i).LastCharge == 0) break; //end of shapes in visual field

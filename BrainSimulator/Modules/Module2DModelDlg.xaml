@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrainSimulator"
         mc:Ignorable="d"
-        Title="Internal Model" Height="450" Width="800" Topmost="True" Background="Gray">
+        Title="Internal Model" Height="450" Width="800" Background="Gray" ShowInTaskbar="False">
     <Canvas Name="theCanvas" SizeChanged="TheCanvas_SizeChanged">
     </Canvas>
 </local:ModuleBaseDlg>

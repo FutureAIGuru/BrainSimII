@@ -1,4 +1,9 @@
-﻿using System;
+﻿//
+// Copyright (c) Charles Simon. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+//  
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -75,27 +80,33 @@ namespace BrainSimulator
             {
                 //allocate randome neurons for testing
                 int rows1 = MainWindow.theNeuronArray.rows;
+                //Parallel.For(0, MainWindow.theNeuronArray.arraySize, i => CreateRandomSynapses(rows1, i));
                 for (int i = 0; i < MainWindow.theNeuronArray.arraySize; i++)
                 {
-                    Neuron n = MainWindow.theNeuronArray.neuronArray[i];
-                    int row = i % rows1;
-                    int col = i/ rows1;
-
-                    for (int j = 0; j < (int)assumedSynapseCount; j++)
-                    {
-                        int newRow = row + rand.Next(10);
-                        int newCol = col + rand.Next(10);
-                        int dest = newCol * rows + newRow;
-                        if (dest >= MainWindow.theNeuronArray.arraySize) dest -= MainWindow.theNeuronArray.arraySize;
-                        if (dest < 0) dest += MainWindow.theNeuronArray.arraySize;
-                        float weight = 1 - (float)rand.Next(0, 1000) / 500f;
-                        n.AddSynapse(dest, weight, MainWindow.theNeuronArray, false);
-                    }
+                    CreateRandomSynapses(rows1, i);
                 }
             }
             returnValue = true;
             Close();
             return;
+        }
+
+        private void CreateRandomSynapses(int rows, int i)
+        {
+            Neuron n = MainWindow.theNeuronArray.neuronArray[i];
+            int row = i % rows;
+            int col = i / rows;
+
+            for (int j = 0; j < (int)assumedSynapseCount; j++)
+            {
+                int newRow = row + rand.Next(10);
+                int newCol = col + rand.Next(10);
+                int dest = newCol * rows + newRow;
+                if (dest >= MainWindow.theNeuronArray.arraySize) dest -= MainWindow.theNeuronArray.arraySize;
+                if (dest < 0) dest += MainWindow.theNeuronArray.arraySize;
+                float weight = 1 - (float)rand.Next(0, 1000) / 500f;
+                n.AddSynapse(dest, weight, MainWindow.theNeuronArray, false);
+            }
         }
 
         private void AddSynapses(int i)

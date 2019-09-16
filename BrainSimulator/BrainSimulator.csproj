@@ -114,6 +114,9 @@
       <DependentUpon>HelpAbout.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\Module2DModel.cs" />
+    <Compile Include="Modules\ModuleCameraDlg.xaml.cs">
+      <DependentUpon>ModuleCameraDlg.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Module2DModelDlg.xaml.cs">
       <DependentUpon>Module2DModelDlg.xaml</DependentUpon>
     </Compile>
@@ -129,6 +132,15 @@
     <Compile Include="Modules\Module2DTouch.cs" />
     <Compile Include="Modules\Module2DVision.cs" />
     <Compile Include="Modules\ModuleBehavior.cs" />
+    <Compile Include="Modules\Module2DKB.cs" />
+    <Compile Include="Modules\ModuleCamera.cs" />
+    <Compile Include="Modules\ModuleAnd.cs" />
+    <Compile Include="Modules\ModuleEmptyDlg.xaml.cs">
+      <DependentUpon>ModuleEmptyDlg.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ModuleView.cs" />
+    <Compile Include="Modules\ModuleWords.cs" />
+    <Compile Include="Modules\ModuleGoToDest.cs" />
     <Compile Include="Modules\ModuleEntity.cs" />
     <Compile Include="Modules\ModuleHebbianAND.cs" />
     <Compile Include="Modules\ModuleHebbian.cs" />
@@ -150,13 +162,15 @@
     <Compile Include="Modules\CameraHandler.xaml.cs">
       <DependentUpon>CameraHandler.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\PointPlus.cs" />
     <Compile Include="Modules\RealitySimulator.xaml.cs">
       <DependentUpon>RealitySimulator.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Thing.cs" />
     <Compile Include="NeuronArrayViewActions.cs" />
-    <Compile Include="NeuronArea.cs" />
+    <Compile Include="Module.cs" />
     <Compile Include="NeuronArray.cs" />
-    <Compile Include="Modules\NeuronArrayActions.cs" />
+    <Compile Include="NeuronArrayActions.cs" />
     <Compile Include="NeuronArrayView.xaml.cs">
       <DependentUpon>NeuronArrayView.xaml</DependentUpon>
     </Compile>
@@ -195,6 +209,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Modules\ModuleCameraDlg.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Modules\Module2DModelDlg.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -202,6 +220,10 @@
     <Page Include="Modules\Module2DSimDlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\ModuleEmptyDlg.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
     <Page Include="Modules\ModuleSimViewDlg.xaml">
       <SubType>Designer</SubType>
@@ -297,6 +319,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\FullScreen.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Networks\AtoD.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

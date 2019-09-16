@@ -1,4 +1,9 @@
-﻿using System;
+﻿//
+// Copyright (c) Charles Simon. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+//  
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,6 +51,10 @@ namespace BrainSimulator
         public override void Initialize()
         {
             na.GetNeuronAt(2, 0).Model = Neuron.modelType.FloatValue;
+            na.GetNeuronAt(0, 0).Label = "<<";
+            na.GetNeuronAt(1, 0).Label = "<";
+            na.GetNeuronAt(3, 0).Label = ">";
+            na.GetNeuronAt(4, 0).Label = ">>";
         }
     }
 }

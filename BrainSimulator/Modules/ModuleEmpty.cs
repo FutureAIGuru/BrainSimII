@@ -1,25 +1,42 @@
-﻿using System;
+﻿//
+// Copyright (c) Charles Simon. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+//  
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Xml.Serialization;
 
 namespace BrainSimulator
 {
     public class ModuleEmpty : ModuleBase
     {
+        //any public variable you create here will automatically be stored with the network
+        //unless you precede it with the [XmlIgnore] directive
+        //[XlmIgnore] 
+        //public theStatus = 1;
+
+        //fill this method in with code which will execute
+        //once for each cycle of the engine
         public override void Fire()
         {
-            Init();  //be sure to leave this here to enable use of the na variable
+            Init();  //be sure to leave this here
+
+            //if you want the dlg to update, use the following code 
+            //because the thread you are in is not the UI thread
+            //if (dlg != null)
+            //     Application.Current.Dispatcher.Invoke((Action)delegate { dlg.Draw(); });
         }
+
+        //fill this method in with code which will execute once
+        //when the module is added, when "initialize" is selected from the context menu,
+        //or when the engine restart button is pressed
         public override void Initialize()
         {
         }
-        public override void ShowDialog() //delete this function if it isn't needed
-        {
-            base.ShowDialog();
-        }
     }
-
-
 }

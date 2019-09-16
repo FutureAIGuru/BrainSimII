@@ -1,4 +1,9 @@
-﻿using System;
+﻿//
+// Copyright (c) Charles Simon. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+//  
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,7 +47,7 @@ namespace BrainSimulator
                         //the index into the current rectangle
                         int index = position - currentStart;
                         selectedRectangles[i].GetSelectedArea(out int X1, out int Y1, out int X2, out int Y2);
-                        int height = Y2 - Y1;
+                        int height = Y2 - Y1+1;
                         selectedNeuronIndex = selectedRectangles[i].FirstSelectedNeuron + (index / height) * 
                             MainWindow.theNeuronArray.rows + index % height;
                         if (selectedNeuronIndex > MainWindow.theNeuronArray.arraySize) return null;
@@ -102,6 +107,5 @@ namespace BrainSimulator
                 }
             }
         }
-
     }
 }

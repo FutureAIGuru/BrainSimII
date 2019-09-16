@@ -1,4 +1,9 @@
-﻿using System;
+﻿//
+// Copyright (c) Charles Simon. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+//  
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -63,7 +68,7 @@ namespace BrainSimulator
             ModuleSpeechIn msi = (ModuleSpeechIn)FindModuleByType(typeof(ModuleSpeechIn));
             if (msi != null)
                 msi.PauseRecognition(); //if there is a recognizer active
-            synth.SpeakAsync("Speech synthisizer Initialized");
+           // synth.SpeakAsync("Speech synthisizer Initialized");
 
         }
 

@@ -1,4 +1,9 @@
-﻿using System.Collections.Generic;
+﻿//
+// Copyright (c) Charles Simon. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+//  
+
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -10,19 +15,17 @@ namespace BrainSimulator
     {
 
 #if DEBUG
-        public int arraySize = 1000000; // ten thousand neurons to start
-        public int rows = 1000;
-#else
-        public int arraySize = 10000; // a million neurons to start
+        public int arraySize = 10000; // ten thousand neurons to start
         public int rows = 100;
+#else
+        public int arraySize = 1000000; // a million neurons to start
+        public int rows = 1000;
 #endif
-        internal List<NeuronArea> areas = new List<NeuronArea>();
-        public List<NeuronArea> Areas
+        internal List<Module> modules = new List<Module>();
+        public List<Module> Modules
         {
-            get { return areas; }
+            get { return modules; }
         }
-
-      
 
         public Neuron[] neuronArray;
         public long Generation { get; set; } = 0;
@@ -70,14 +73,14 @@ namespace BrainSimulator
             fireCount = 0;
 
             //when debugging the Fire1 & Fire2 modules disable parallel operation and use the sequential loops below;
-            //Parallel.For(0, arraySize, i => neuronArray[i].Fire1(this));
-            //Parallel.For(0, arraySize, i => neuronArray[i].Fire2(Generation));
+            Parallel.For(0, arraySize, i => neuronArray[i].Fire1(this));
+            Parallel.For(0, arraySize, i => neuronArray[i].Fire2(Generation));
 
             //use these instead
-            foreach (Neuron n in neuronArray)
-                n.Fire1(this);
-            foreach (Neuron n in neuronArray)
-                n.Fire2(Generation);
+            //foreach (Neuron n in neuronArray)
+            //    n.Fire1(this);
+            //foreach (Neuron n in neuronArray)
+            //    n.Fire2(Generation);
             Generation++;
         }
 
@@ -110,6 +113,7 @@ namespace BrainSimulator
                 synapseUndoInfo.RemoveAt(synapseUndoInfo.Count - 1);
             }
         }
+
         public void CheckSynapseArray()
         {
             for (int i = 0; i < neuronArray.Length; i++)
@@ -152,6 +156,7 @@ namespace BrainSimulator
         {
             return x * rows + y;
         }
+
         public void GetNeuronLocation(int index, out int x, out int y)
         {
             x = index / rows;

@@ -1,4 +1,9 @@
-﻿using System;
+﻿//
+// Copyright (c) Charles Simon. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+//  
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -69,13 +74,14 @@ namespace BrainSimulator
                 l.Stroke = Brushes.Blue;
             if (s.Weight < -0.9)
                 l.Stroke = Brushes.Black;
-
-            //this is also used to create the context menu on the fly...we could use a registered value
-            l.ToolTip = i + " " + s.TargetNeuron + " " + s.Weight.ToString("f2");
+            l.SetValue(SourceIDProperty, i);
+            l.SetValue(TargetIDProperty, s.TargetNeuron);
+            l.SetValue(WeightValProperty, s.Weight);
 
             return l;
         }
 
+        //these aren't added to synapses for performance but are built on the fly if the user right-clicks
         public static void CreateContextMenu(int i, Synapse s, ContextMenu cm)
         {
             cm.SetValue(SourceIDProperty, i);
@@ -265,7 +271,8 @@ namespace BrainSimulator
             PathFigure pathFigure = new PathFigure();
             //            Point p = new Point(p1.X + ((p2.X - p1.X) / 1.35), p1.Y + ((p2.Y - p1.Y) / 1.35));
             Vector v = p2 - p1;
-            v = v / v.Length * (dp.NeuronDisplaySize / 2);
+            //v = v / v.Length * (dp.NeuronDisplaySize / 2);
+            v = v / 2;
             Point p = new Point();
             p = p2 - v;
             pathFigure.StartPoint = p;

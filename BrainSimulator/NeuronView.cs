@@ -1,4 +1,9 @@
-﻿using System;
+﻿//
+// Copyright (c) Charles Simon. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+//  
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,7 +33,7 @@ namespace BrainSimulator
         }
         private static float ellipseSize = 0.7f;
 
-        public  static UIElement GetNeuronView(int i, NeuronArrayView theNeuronArrayViewI)
+        public static UIElement GetNeuronView(int i, NeuronArrayView theNeuronArrayViewI)
         {
             theNeuronArrayView = theNeuronArrayViewI;
 
@@ -43,15 +48,15 @@ namespace BrainSimulator
             // figure out which color to use
             float value = n.LastCharge;
             Color c = Colors.White;
-            if (n.Model == Neuron.modelType.Std && value > .99)
+            if ((n.Model == Neuron.modelType.Std || n.Model == Neuron.modelType.OneTime) && value > .99)
                 c = Colors.Orange;
-            else if (n.Model == Neuron.modelType.Std && value != -1)
+            else if ((n.Model == Neuron.modelType.Std || n.Model == Neuron.modelType.OneTime) && value != -1)
                 c = MapRainbowColor(value, 1, 0);
             else if (n.Model == Neuron.modelType.Color)
                 c = Utils.FromArgb((int)n.LastChargeInt);
             SolidColorBrush s1 = new SolidColorBrush(c);
             //   if (n.Label != "" || !n.InUse()) s1.Opacity = .50;
-            if (!n.InUse()) s1.Opacity = .50;
+            if (!n.InUse() && n.Model == Neuron.modelType.Std) s1.Opacity = .50;
 
             Shape r = null;
             if (dp.ShowNeuronCircles())
@@ -106,7 +111,6 @@ namespace BrainSimulator
                 l.MouseUp += theNeuronArrayView.theCanvas_MouseUp;
                 l.MouseMove += theNeuronArrayView.theCanvas_MouseMove;
                 theCanvas.Children.Add(l);
-                //return l;
             }
             return r;
         }
@@ -123,7 +127,9 @@ namespace BrainSimulator
                 theCanvas.Cursor = Cursors.UpArrow;
         }
 
-        public  static void CreateContextMenu(int i, Neuron n, ContextMenu cm)
+        //for UI performance, the context menu is not attached to a neuron when the neuron is created but
+        //is built on the fly when a neuron is right-clicked.  Hence the public-static
+        public static void CreateContextMenu(int i, Neuron n, ContextMenu cm)
         {
             cm.SetValue(NeuronIDProperty, n.Id);
             MenuItem mi = new MenuItem();
@@ -136,6 +142,10 @@ namespace BrainSimulator
             cm.Items.Add(new Separator());
             mi = new MenuItem();
             mi.Header = "Always Fire";
+            mi.Click += Mi_Click;
+            cm.Items.Add(mi);
+            mi = new MenuItem();
+            mi.Header = "Paste Here";
             mi.Click += Mi_Click;
             cm.Items.Add(mi);
             mi = new MenuItem();
@@ -226,6 +236,7 @@ namespace BrainSimulator
             {
                 theNeuronArrayView.targetNeuronIndex = i;
                 theNeuronArrayView.PasteNeurons();
+                theNeuronArrayView.targetNeuronIndex = -1;
             }
             if ((string)mi.Header == "Move Here")
             {

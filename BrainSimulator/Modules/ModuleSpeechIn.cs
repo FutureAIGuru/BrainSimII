@@ -1,4 +1,9 @@
-﻿using System;
+﻿//
+// Copyright (c) Charles Simon. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+//  
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -54,6 +59,15 @@ namespace BrainSimulator
         }
         public override void Initialize()
         {
+            na.BeginEnum();
+            for (Neuron n = na.GetNextNeuron(); n != null; n = na.GetNextNeuron())
+                n.Label = "";
+
+            if (recognizer != null)
+            {
+                recognizer.RecognizeAsyncStop();
+                recognizer.Dispose();
+            }
             // Create an in-process speech recognizer for the en-US locale.  
             recognizer = new SpeechRecognitionEngine(new System.Globalization.CultureInfo("en-US"));
 
@@ -70,24 +84,24 @@ namespace BrainSimulator
             recognizer.RecognizeAsync(RecognizeMode.Multiple);
         }
 
-        private static Grammar CreateGrammar()
+        private Grammar CreateGrammar()
         {
+
             //// Create and load a dictation grammar.  This is for many words and doesn't work very well
             //recognizer.LoadGrammar(new DictationGrammar());
 
             // create a small custom grammar for testing
             Choices digit = new Choices("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "point");
-            Choices number = new Choices();
-            for (int i = 1; i < 200; i++)
-                number.Add(i.ToString());
+            //Choices number = new Choices();
+            //for (int i = 1; i < 200; i++)
+            //    number.Add(i.ToString());
             Choices emotion = new Choices("ecstatic", "happy", "so-so", "OK", "sad", "unhappy");
             Choices timeOfDay = new Choices("morning", "afternoon", "evening", "night");
-            Choices color = new Choices("black", "gray", "pink", "red", "blue", "orange", "white");
-            Choices shape = new Choices("square", "rectangle", "circle");
+            Choices color = new Choices("black", "gray", "pink", "red", "blue", "green", "orange", "white");
+            Choices shape = new Choices("square", "rectangle", "circle", "line");
             Choices direction = new Choices("right", "left", "forward", "backwards");
             Choices size = new Choices("big", "medium", "little");
-            Choices motion = new Choices("move", "turn");
-            Choices sequence = new Choices("pi", "mary");
+            Choices action = new Choices("move", "turn");
 
             Choices command = new Choices("Computer", "Computer Say", "Computer what can you see?", "Computer What is behind you?", "Computer turn around", "Computer what attributes do you know", "Computer what is");
             Choices query = new Choices("what is", "add", "name", "this is");
@@ -103,22 +117,35 @@ namespace BrainSimulator
 
             List<GrammarBuilder> gb = new List<GrammarBuilder>();
             GrammarBuilder a = new GrammarBuilder("Computer");
-            a.Append(query, 0, 1);
-            a.Append(article, 0, 1);
-            a.Append(sequence, 0, 1);
-            a.Append(new Choices(attribList), 0, 1);
-            a.Append(new Choices(attribList1), 0, 1);
-            a.Append(article, 0, 1);
-            a.Append(color, 0, 1);
-            a.Append(shape, 0, 1);
-            a.Append(size, 0, 1);
+            //a.Append(query, 0, 1);
+            //a.Append(action, 0, 1);
+            //a.Append(direction, 0, 1);
+            //a.Append(article, 0, 1);
+            //a.Append(sequence, 0, 1);
+            //a.Append(new Choices(attribList), 0, 1);
+            //a.Append(new Choices(attribList1), 0, 1);
+            //a.Append(article, 0, 1);
+            //a.Append(color, 0, 1);
+            //a.Append(shape, 0, 1);
+            //a.Append(size, 0, 1);
             a.Append(digit, 0, 4);
-            a.Append(words, 0, 5);
+            //a.Append(words, 0, 5);
             gb.Add(a);
+
+            //get the words from the grammar and label neurons
+            string c = a.DebugShowPhrases;
+            c = c.Replace((char)0x2018, ' ');
+            c = c.Replace((char)0x2019, ' ');
+            string[] c1 = c.Split(new string[] { "[", ",", "]", " " }, StringSplitOptions.RemoveEmptyEntries);
+            c1 = c1.Distinct().ToArray();
+
+            int i1 = 1;
+            na.BeginEnum();
+            for (Neuron n = na.GetNextNeuron(); n != null && i1 < c1.Length; i1++, n = na.GetNextNeuron())
+                n.Label = c1[i1].ToLower();
 
             Choices choices = new Choices(gb.ToArray());
             Grammar gr = new Grammar((GrammarBuilder)choices);
-            GrammarBuilder g1 = new GrammarBuilder();
 
             return gr;
         }

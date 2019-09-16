@@ -1,4 +1,9 @@
-﻿using System;
+﻿//
+// Copyright (c) Charles Simon. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+//  
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,8 +19,6 @@ namespace BrainSimulator
         }
         public override void Initialize()
         {
-            //if (naIn == null) return; //if naIn is needed?
-
             for (int i = 0; i < na.Width; i++)
             {
                 for (int j = 0; j < na.Height; j++)

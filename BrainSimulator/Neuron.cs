@@ -1,4 +1,9 @@
-﻿using System;
+﻿//
+// Copyright (c) Charles Simon. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+//  
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -57,8 +62,9 @@ namespace BrainSimulator
             return (synapses.Count != 0 || synapsesFrom.Count != 0 || Label != "");
         }
 
-        public void AddSynapse(int targetNeuron, float weight, NeuronArray theNeuronArray, bool addUndoInfo = true)
+        public void AddSynapse(int targetNeuron, float weight, NeuronArray theNeuronArray=null, bool addUndoInfo = true)
         {
+            if (theNeuronArray == null) theNeuronArray = MainWindow.theNeuronArray;
             if (targetNeuron > theNeuronArray.arraySize) return;
             Synapse s = FindSynapse(targetNeuron);
             if (s == null)
@@ -112,14 +118,15 @@ namespace BrainSimulator
             Synapse s = synapsesFrom.Find(s1 => s1.TargetNeuron == fromNeuron);
             return s;
         }
+        public int LastSynapse = -1;
+
 
         //process the synapses
-        public int LastSynapse = -1;
         public void Fire1(NeuronArray theNeuronArray)
         {
             switch (Model)
             {
-                //color floatvalue have not cases so don't actually process
+                //color and floatvalue have no cases so don't actually process
                 case modelType.Std:
                     if (lastCharge < 990) return;
                     Interlocked.Add(ref theNeuronArray.fireCount, 1);
@@ -127,24 +134,6 @@ namespace BrainSimulator
                     {
                         Neuron n = theNeuronArray.neuronArray[s.TargetNeuron];
                         Interlocked.Add(ref n.currentCharge, (int)(s.Weight * 1000));
-                    }
-                    break;
-
-                case modelType.Antifeedback:
-                    // just like a std neuron but can't stimulate the neuron chich stimulated it
-                    if (lastCharge < 990) return;
-                    Interlocked.Add(ref theNeuronArray.fireCount, 1);
-                    foreach (Synapse s in synapses)
-                    {
-                        if (s.TargetNeuron == LastSynapse)
-                        { LastSynapse = -1; }
-                        else
-                        {
-                            Neuron n = theNeuronArray.neuronArray[s.TargetNeuron];
-                            Interlocked.Add(ref n.currentCharge, (int)(s.Weight * 1000));
-                            if (n.currentCharge > 990 && s.Weight > 0.5f && n.Id != Id)
-                                n.LastSynapse = Id;
-                        }
                     }
                     break;
 
@@ -164,6 +153,24 @@ namespace BrainSimulator
                                 Neuron n = theNeuronArray.neuronArray[s.TargetNeuron];
                                 Interlocked.Add(ref n.currentCharge, 1000); ;
                             }
+                        }
+                    }
+                    break;
+
+                case modelType.Antifeedback:
+                    // just like a std neuron but can't stimulate the neuron chich stimulated it
+                    if (lastCharge < 990) return;
+                    Interlocked.Add(ref theNeuronArray.fireCount, 1);
+                    foreach (Synapse s in synapses)
+                    {
+                        if (s.TargetNeuron == LastSynapse)
+                        { LastSynapse = -1; }
+                        else
+                        {
+                            Neuron n = theNeuronArray.neuronArray[s.TargetNeuron];
+                            Interlocked.Add(ref n.currentCharge, (int)(s.Weight * 1000));
+                            if (n.currentCharge > 990 && s.Weight > 0.5f && n.Id != Id)
+                                n.LastSynapse = Id;
                         }
                     }
                     break;
@@ -204,7 +211,7 @@ namespace BrainSimulator
                     if (currentCharge > 990) currentCharge = 0;
                     break;
 
-                //fire if sufficient weights on this cycle or cancel...do not accumulate weight across multiple cyceles
+                //fire if sufficient weights on this cycle or cancel...do not accumulate weight across multiple cycles
                 case modelType.OneTime:
                     lastCharge = currentCharge;
                     currentCharge = 0;

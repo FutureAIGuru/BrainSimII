@@ -1,4 +1,9 @@
-﻿using System;
+﻿//
+// Copyright (c) Charles Simon. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+//  
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,15 +24,14 @@ namespace BrainSimulator
             //thing which cause previous
             //useage may be related to weights/ searching
             public string label = ""; //this is just for convenience in debugging and should not be used
-            public KBThing parent = null;
+            public KBThing parent = null; //"is-a"
             public List<KBThing> children = new List<KBThing>(); //synapses to
-            public List<KBThing> references = new List<KBThing>(); //synapses to
+            public List<KBThing> references = new List<KBThing>(); //synapses to //"has-a"
             public List<KBThing> referencedBy = new List<KBThing>(); //synapses from
             public KBThing next = null; //next in a sequence of things
             public KBThing previous = null; //predecessor
             public int neuronIndex;
             public long lastActive = 0;
-            public float importance = 0; //will be used to prioitize properties/references?
         }
         //absolute things...inputs and outputs...external things
         //group things
@@ -221,7 +225,7 @@ namespace BrainSimulator
         {
             //vision is transient so we'll delete the existing visible things
             DeleteThings(500);
-            NeuronArea naRectangles = theNeuronArray.FindAreaByLabel("Rectangles");
+            Module naRectangles = theNeuronArray.FindAreaByLabel("Rectangles");
             if (naRectangles == null) return;
             for (int i = 1; i < naRectangles.Height; i++)
             {
@@ -252,7 +256,7 @@ namespace BrainSimulator
         private void HandleSpeechIn()
         {
             //string input = na.GetParam("-i");
-            NeuronArea naSpeechIn = theNeuronArray.FindAreaByLabel("SpeechIn");
+            Module naSpeechIn = theNeuronArray.FindAreaByLabel("SpeechIn");
             if (naSpeechIn == null) return;
             //new word?
             Neuron nNewWord = naSpeechIn.GetNeuronAt(0, 0);
@@ -317,7 +321,7 @@ namespace BrainSimulator
                 theOutPhrase = theOutPhrase.Substring(sp + 1);
             }
 
-            NeuronArea na = theNeuronArray.FindAreaByLabel("SpeechOut");
+            Module na = theNeuronArray.FindAreaByLabel("SpeechOut");
             if (na == null) return;
             int found = -1;
             na.BeginEnum();
@@ -358,7 +362,7 @@ namespace BrainSimulator
         private void HandleMotion()
         {
             if (motionCounter == 0) return;
-            NeuronArea naTurn = theNeuronArray.FindAreaByLabel("Move");
+            Module naTurn = theNeuronArray.FindAreaByLabel("Move");
             if (naTurn == null) return;
             if (motionCounter > 0)
             {
@@ -374,7 +378,7 @@ namespace BrainSimulator
         private void HandleTurning()
         {
             if (turnCounter == 0) return;
-            NeuronArea naTurn = theNeuronArray.FindAreaByLabel("Turn");
+            Module naTurn = theNeuronArray.FindAreaByLabel("Turn");
             if (naTurn == null) return;
             if (turnCounter > 0)
             {

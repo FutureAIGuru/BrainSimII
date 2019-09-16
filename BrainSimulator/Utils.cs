@@ -1,4 +1,9 @@
-﻿using System;
+﻿//
+// Copyright (c) Charles Simon. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+//  
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -6,12 +11,25 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Xml.Serialization;
 
 namespace BrainSimulator
 {
+    public class Segment
+    {
+        public PointPlus P1;
+        public PointPlus P2;
+        public Color theColor;
+        public PointPlus MidPoint()
+        {
+            return new PointPlus { X = (P1.X + P2.X) / 2, Y = (P1.Y + P2.Y) / 2 };
+        }
+    }
+
+
+
     public static class Utils
     {
-        public static double fieldOfView = Math.PI / 2;
         public static Color FromArgb(int theColor)
         {
             Color c = new Color();
@@ -60,45 +78,7 @@ namespace BrainSimulator
                     return p.Name;
             }
             return "??";
-
-            //  PropertyInfo colorProperty = typeof(Colors).GetProperties()
-            //        .FirstOrDefault(p => Color.AreClose((Color)p.GetValue(null), col));
-            //    return colorProperty != null ? colorProperty.Name : "unnamed color";
         }
-
-        public static Vector RotateVector(Vector v, double theta)
-        {
-            var ca = Math.Cos(theta);
-            var sa = Math.Sin(theta);
-            return new Vector(ca * v.X - sa * v.Y, sa * v.X + ca * v.Y);
-        }
-
-        public static PolarVector ToPolar(Point p)
-        {
-            PolarVector pv = new PolarVector()
-            {
-                theta = ConvTheta(Math.Atan2(p.Y, p.X)),
-                r = Math.Sqrt(p.X * p.X + p.Y * p.Y)
-            };
-            return pv;
-        }
-        public static Point ToCartesian(PolarVector pv)
-        {
-            Point p = new Point(pv.r * Math.Cos(pv.theta), pv.r * Math.Sin(pv.theta));
-            return p;
-        }
-
-        //This converts an angle from a normal (with 0 pointing in +X) to
-        //robotic (with 0 pointing ahead (+Y))
-        //interestingly, this function is its own inverse
-        public static double ConvTheta(double theta)
-        {
-            theta = Math.PI / 2 - theta;
-            if (theta > Math.PI) theta = -(Math.PI * 2 - theta);
-            if (theta < -Math.PI) theta = (Math.PI * 2 + theta);
-            return theta;
-        }
-
 
         // Calculate the distance between
         // point pt and the segment p1 --> p2.
@@ -143,6 +123,7 @@ namespace BrainSimulator
 
             return Math.Sqrt(dx * dx + dy * dy);
         }
+
 
         // Find the point of intersection between
         // the lines p1 --> p2 and p3 --> p4.
@@ -223,13 +204,26 @@ namespace BrainSimulator
             return (float)distance;
         }
 
-
-
-    }
-    public class PolarVector
-    {
-        public double r;
-        public double theta;
+        //find a point which is dist off the end of a line segment
+        public static PointPlus ExtendSegment(Point P1, Point P2, float dist, bool firstPt)
+        {
+            if (firstPt)
+            {
+                Vector v = P2 - P1;
+                double changeLength = (v.Length + dist) / v.Length;
+                v = Vector.Multiply(changeLength, v);
+                PointPlus newPoint = new PointPlus { P = P2 - v };
+                return newPoint;
+            }
+            else
+            {
+                Vector v = P1 - P2;
+                double changeLength = (v.Length + dist) / v.Length;
+                v = Vector.Multiply(changeLength, v);
+                PointPlus newPoint = new PointPlus { P = P1 - v };
+                return newPoint;
+            }
+        }
     }
 
 

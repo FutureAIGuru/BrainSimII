@@ -1,4 +1,9 @@
-﻿using System;
+﻿//
+// Copyright (c) Charles Simon. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+//  
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -61,7 +66,7 @@ namespace BrainSimulator
                 //calculate the details for the rectangle
                 //ranges...center:[-1,1] (zero center) bounds of the input rectangle so it works better in the reality model
                 //         size: [0,1] as percent of visual field (width)
-                naIn.GetBounds(out int X1, out int Y1, out int X2, out int Y2);
+                //naIn.GetBounds(out int X1, out int Y1, out int X2, out int Y2);
                 float width = naIn.Width;
                 float sX = (r.maxX - r.minX) / width;
                 float sY = (r.maxY - r.minY) / width;

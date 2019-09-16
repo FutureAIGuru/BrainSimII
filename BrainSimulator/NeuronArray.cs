@@ -21,10 +21,10 @@ namespace BrainSimulator
         public int arraySize = 1000000; // a million neurons to start
         public int rows = 1000;
 #endif
-        internal List<NeuronArea> areas = new List<NeuronArea>();
-        public List<NeuronArea> Areas
+        internal List<Module> modules = new List<Module>();
+        public List<Module> Modules
         {
-            get { return areas; }
+            get { return modules; }
         }
 
         public Neuron[] neuronArray;
@@ -113,6 +113,7 @@ namespace BrainSimulator
                 synapseUndoInfo.RemoveAt(synapseUndoInfo.Count - 1);
             }
         }
+
         public void CheckSynapseArray()
         {
             for (int i = 0; i < neuronArray.Length; i++)
@@ -155,6 +156,7 @@ namespace BrainSimulator
         {
             return x * rows + y;
         }
+
         public void GetNeuronLocation(int index, out int x, out int y)
         {
             x = index / rows;

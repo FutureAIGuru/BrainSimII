@@ -38,12 +38,12 @@ namespace BrainSimulator
                     if (currentCommand == "Wait-for")
                     {
                         SetCurrentModule(commandLine[i + 1]);
-                        NeuronArea na1 = theNeuronArray.FindAreaByLabel(currentModule);
+                        Module na1 = theNeuronArray.FindAreaByLabel(currentModule);
                         Neuron n = na1.GetNeuronAt(commandLine[i + 2]);
                         if (!n.Fired())return;
                     }
                     SetCurrentModule(currentCommand);
-                    NeuronArea na = theNeuronArray.FindAreaByLabel(currentModule);
+                    Module na = theNeuronArray.FindAreaByLabel(currentModule);
                     if (na != null && currentCommand != "")
                     {
                         Neuron n = na.GetNeuronAt(currentCommand);

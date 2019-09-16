@@ -16,7 +16,7 @@ namespace BrainSimulator
 {
     public class NeuronSelectionRectangle
     {
-        int firstSelectedNeuron;//, lastSelectedNeuron;
+        int firstSelectedNeuron;
   
         int width;
         int height;
@@ -28,13 +28,14 @@ namespace BrainSimulator
         public int Width { get => width; set => width = value; }
         public int Height { get => height; set => height = value; }
 
-        public NeuronSelectionRectangle(int iFirstSelectedNeuron, int width,int height)//iLastSelectedNeuron)
+        public NeuronSelectionRectangle(int iFirstSelectedNeuron, int width,int height)
         {
             FirstSelectedNeuron = iFirstSelectedNeuron;
             Height = height;
             Width = width;
         }
 
+        //in neuron numbers
         public void GetSelectedArea(out int X1, out int Y1, out int X2, out int Y2)
         {
             Y1 = FirstSelectedNeuron % Rows;
@@ -43,16 +44,7 @@ namespace BrainSimulator
             X2 = X1 + Width - 1;
         }
 
-        public bool NeuronIsInSelection(int neuronIndex)
-        {
-            GetSelectedArea(out int X1, out int Y1, out int X2, out int Y2);
-            int selX = neuronIndex / Rows;
-            int selY = neuronIndex % Rows;
-            if (selX >= X1 && selX <= X2 && selY >= Y1 && selY <= Y2)
-                return true;
-            return false;
-        }
-
+        //in pixels
         public Rectangle GetRectangle(DisplayParams dp)
         {
             Rectangle r = new Rectangle();
@@ -65,6 +57,16 @@ namespace BrainSimulator
             Canvas.SetTop(r, p1.Y);
             Canvas.SetLeft(r, p1.X);
             return r;
+        }
+
+        public bool NeuronIsInSelection(int neuronIndex)
+        {
+            GetSelectedArea(out int X1, out int Y1, out int X2, out int Y2);
+            int selX = neuronIndex / Rows;
+            int selY = neuronIndex % Rows;
+            if (selX >= X1 && selX <= X2 && selY >= Y1 && selY <= Y2)
+                return true;
+            return false;
         }
 
         public int GetLength()

@@ -14,79 +14,12 @@ using System.Xml.Serialization;
 
 namespace BrainSimulator
 {
-    public class PointPlus
-    {
-        private Point p;
-        private float r;
-        private float theta;
-        private bool polarDirty = false;
-        private bool xyDirty = false;
-
-        [XmlIgnore]
-        public Point P
-        {
-            get { if (xyDirty) UpdateXY(); return p; }
-            set { polarDirty = true; p = value; }
-        }
-        public float X { get { if (xyDirty) UpdateXY(); return (float)p.X; } set { p.X = value; polarDirty = true; } }
-        public float Y { get { if (xyDirty) UpdateXY(); return (float)p.Y; } set { p.Y = value; polarDirty = true; } }
-        [XmlIgnore]
-        public Vector V { get => (Vector)P; }
-        [XmlIgnore]
-        public float Degrees { get => (float)(Theta * 180 / Math.PI); }
-        public float Conf { get; set; }
-        [XmlIgnore]
-        public float R { get { if (polarDirty) UpdatePolar(); return r; } set { r = value; xyDirty = true; } }
-        [XmlIgnore]
-        public float Theta
-        {
-            get { if (polarDirty) UpdatePolar(); return theta; }
-            set
-            {//keep theta within the range +/- PI
-                theta = value;
-                if (theta > Math.PI) theta -= 2 * (float)Math.PI;
-                if (theta < -Math.PI) theta += 2 * (float)Math.PI;
-                xyDirty = true;
-            }
-        }
-
-        private void UpdateXY()
-        {
-            p.X = r * Math.Cos(theta);
-            p.Y = r * Math.Sin(theta);
-            xyDirty = false;
-        }
-
-        public void UpdatePolar()
-        {
-            theta = (float)Math.Atan2(p.Y, p.X);
-            r = (float)Math.Sqrt(p.X * p.X + p.Y * p.Y);
-            polarDirty = false;
-        }
-        public bool Near(PointPlus PP, float toler)
-        {
-            if ((Math.Abs(PP.R - R) < 1 && Math.Abs(PP.Theta - Theta) < .1) ||
-                ((Math.Abs(PP.X - X) < toler && Math.Abs(PP.Y - Y) < toler)))
-                return true;
-            return false;
-        }
-    }
-
-    public class Segment
-    {
-        public PointPlus P1;
-        public PointPlus P2;
-        public Color theColor;
-        public PointPlus MidPoint()
-        {
-            return new PointPlus { X = (P1.X + P2.X) / 2, Y = (P1.Y + P2.Y) / 2 };
-        }
-    }
-
     public class Module2DModel : ModuleBase
     {
         private List<Thing> KBSegments;
         private List<Thing> KBPossiblePoints;
+
+        //these are public to let the dialog box use the info
         public List<Thing> GetKBSegments() { return KBSegments; }
         public List<Thing> GetKBPossiblePoints() { return KBPossiblePoints; }
 
@@ -99,7 +32,7 @@ namespace BrainSimulator
 
         public void GetSegmentsFromKB()
         {
-            NeuronArea naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
+            Module naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
             if (naKB == null) return;
             if (naKB.TheModule is Module2DKB kb)
             {
@@ -149,7 +82,7 @@ namespace BrainSimulator
 
         private void AddSegmentToKB(PointPlus P1, PointPlus P2, Color theColor)
         {
-            NeuronArea naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
+            Module naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
             if (naKB == null) return;
             if (naKB.TheModule is Module2DKB kb)
             {
@@ -165,7 +98,7 @@ namespace BrainSimulator
         //get input from vision...less accurate
         public void AddPosiblePointToKB(PointPlus P, Color theColor)
         {
-            NeuronArea naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
+            Module naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
             if (naKB == null) return;
             if (naKB.TheModule is Module2DKB kb)
             {
@@ -212,7 +145,7 @@ namespace BrainSimulator
             bool found = false;
             bool modelChanged = false;
             if (P1.Conf == 0 && P2.Conf == 0) return false;
-            NeuronArea naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
+            Module naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
             if (naKB == null) return false;
             if (naKB.TheModule is Module2DKB kb)
             {
@@ -224,7 +157,7 @@ namespace BrainSimulator
                 { t2.V = P2; found = true; }
                 if (found)
                 {
-                    if (theNeuronArray.FindAreaByLabel("ModuleBehavior") is NeuronArea naBehavior)
+                    if (theNeuronArray.FindAreaByLabel("ModuleBehavior") is Module naBehavior)
                     { naBehavior.GetNeuronAt("EndPt").SetValue(1); }
                 }
                 Segment s = SegmentFromKBThing(t1);
@@ -484,7 +417,7 @@ namespace BrainSimulator
 
         public void MarkVisibleObjects()
         {
-            NeuronArea naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
+            Module naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
             if (naKB == null) return;
             Module2DKB kb = (Module2DKB)naKB.TheModule;
             Thing tVisible = kb.Labeled("Visible");
@@ -493,7 +426,7 @@ namespace BrainSimulator
             for (int i = 0; i < KBSegments.Count; i++)
                 KBSegments[i].RemoveReference(tVisible);
 
-            NeuronArea naVision = theNeuronArray.FindAreaByLabel("Module2DVision");
+            Module naVision = theNeuronArray.FindAreaByLabel("Module2DVision");
             int possibleViewAngles = naVision.Width;
             float deltaTheta = Module2DVision.fieldOfView / possibleViewAngles;
             for (int i = 0; i < possibleViewAngles; i++)
@@ -519,7 +452,7 @@ namespace BrainSimulator
         {
             obstacle = null;
             float closestDistance = 100;
-            NeuronArea naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
+            Module naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
             if (naKB == null) return null;
             Module2DKB kb = (Module2DKB)naKB.TheModule;
             bool ok = true;

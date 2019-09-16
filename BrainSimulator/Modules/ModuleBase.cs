@@ -17,9 +17,9 @@ namespace BrainSimulator
     abstract public class ModuleBase
     {
         protected NeuronArray theNeuronArray { get => MainWindow.theNeuronArray; }
-        protected NeuronArea na = null;
-        protected NeuronArea naIn = null;
-        protected NeuronArea naOut = null;
+        protected Module na = null;
+        protected Module naIn = null;
+        protected Module naOut = null;
         public bool initialized = false;
 
         protected ModuleBaseDlg dlg = null;
@@ -44,7 +44,7 @@ namespace BrainSimulator
             if (na  == null)
             {
                 //figure out which area is this one
-                foreach (NeuronArea na1 in theNeuronArray.areas)
+                foreach (Module na1 in theNeuronArray.modules)
                 {
                     if (na1.TheModule == this)
                     {
@@ -143,7 +143,7 @@ namespace BrainSimulator
 
         protected ModuleBase FindModuleByType(Type t)
         {
-            foreach (NeuronArea na1 in theNeuronArray.areas)
+            foreach (Module na1 in theNeuronArray.modules)
             {
                 if (na1.TheModule != null && na1.TheModule.GetType() == t)
                 {
@@ -154,7 +154,7 @@ namespace BrainSimulator
         }
         protected ModuleBase FindModuleByName(string name)
         {
-            foreach (NeuronArea na1 in theNeuronArray.areas)
+            foreach (Module na1 in theNeuronArray.modules)
             {
                 if (na1.Label == name)
                 {

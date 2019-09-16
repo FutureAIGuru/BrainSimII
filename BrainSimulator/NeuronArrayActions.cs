@@ -21,7 +21,7 @@ namespace BrainSimulator
         private void HandleProgrammedActions()
         {
             //areas.Sort(); //this controls the execution order of the modules
-            foreach (NeuronArea na in areas)
+            foreach (Module na in modules)
             {
                 if (na.CommandLine == null) continue;
                 string command = na.CommandLine;
@@ -62,14 +62,14 @@ namespace BrainSimulator
         }
         List<KBItem> KBContent = new List<KBItem>();
 
-        public void KB(NeuronArea na)
+        public void KB(Module na)
         {
             //parse command string and get input values
             string[] parameters = na.CommandLine.Split(' ');
             KBItem currentValues = new KBItem();
             currentValues.entries = new List<Entry>();
             Entry newEntry = new Entry();
-            NeuronArea naOutput = null;
+            Module naOutput = null;
             for (int i = 0; i < parameters.Length; i++)
             {
                 string param = parameters[i];
@@ -84,7 +84,7 @@ namespace BrainSimulator
                         compareType = 2;
                         goto case "-i";
                     case "-i": //normal bit match
-                        NeuronArea naI = FindAreaByLabel(parameters[i + 1]);
+                        Module naI = FindAreaByLabel(parameters[i + 1]);
                         if (naI == null) break;
                         newEntry.name = naI.Label;
                         newEntry.neuronValues = new float[naI.NeuronCount];
@@ -220,36 +220,35 @@ namespace BrainSimulator
         }
 
         //looks for a beginning match only
-        private NeuronArea FindAreaByCommand(string command)
+        private Module FindAreaByCommand(string command)
         {
-            return areas.Find(na => na.CommandLine.IndexOf(command) == 0);
+            return modules.Find(na => na.CommandLine.IndexOf(command) == 0);
         }
 
         //needs a complete match
-        public NeuronArea FindAreaByLabel(string label)
+        public Module FindAreaByLabel(string label)
         {
-            return areas.Find(na => na.Label.Trim() == label);
+            return modules.Find(na => na.Label.Trim() == label);
         }
 
         //these must be vertically-oriented single-column areas
         private int GetPropertyNeuronIndex(string command, float value)
         {
-            NeuronArea na = FindAreaByCommand(command);
+            Module na = FindAreaByCommand(command);
             if (na == null) return -1;
             //scale the value
             int height = na.LastNeuron - na.FirstNeuron;
             int offset = (int)((float)height * value);
             return na.FirstNeuron + offset;
         }
-
-
+        
 
         //loads an image from a file...analogous to the simView
         int fileCounter = 0;
         int countDown = 0;
         List<string> dirs = null;
         Bitmap bitmap1;
-        public void LoadImage(NeuronArea na)
+        public void LoadImage(Module na)
         {
             if (countDown == 0)
             {

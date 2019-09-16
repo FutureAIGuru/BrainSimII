@@ -33,7 +33,7 @@ namespace BrainSimulator
         }
         private static float ellipseSize = 0.7f;
 
-        public  static UIElement GetNeuronView(int i, NeuronArrayView theNeuronArrayViewI)
+        public static UIElement GetNeuronView(int i, NeuronArrayView theNeuronArrayViewI)
         {
             theNeuronArrayView = theNeuronArrayViewI;
 
@@ -111,7 +111,6 @@ namespace BrainSimulator
                 l.MouseUp += theNeuronArrayView.theCanvas_MouseUp;
                 l.MouseMove += theNeuronArrayView.theCanvas_MouseMove;
                 theCanvas.Children.Add(l);
-                //return l;
             }
             return r;
         }
@@ -128,7 +127,9 @@ namespace BrainSimulator
                 theCanvas.Cursor = Cursors.UpArrow;
         }
 
-        public  static void CreateContextMenu(int i, Neuron n, ContextMenu cm)
+        //for UI performance, the context menu is not attached to a neuron when the neuron is created but
+        //is built on the fly when a neuron is right-clicked.  Hence the public-static
+        public static void CreateContextMenu(int i, Neuron n, ContextMenu cm)
         {
             cm.SetValue(NeuronIDProperty, n.Id);
             MenuItem mi = new MenuItem();

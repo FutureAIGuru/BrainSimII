@@ -11,9 +11,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Xml.Serialization;
 
 namespace BrainSimulator
 {
+    public class Segment
+    {
+        public PointPlus P1;
+        public PointPlus P2;
+        public Color theColor;
+        public PointPlus MidPoint()
+        {
+            return new PointPlus { X = (P1.X + P2.X) / 2, Y = (P1.Y + P2.Y) / 2 };
+        }
+    }
+
+
+
     public static class Utils
     {
         public static Color FromArgb(int theColor)
@@ -114,11 +128,11 @@ namespace BrainSimulator
         // Find the point of intersection between
         // the lines p1 --> p2 and p3 --> p4.
         public static void FindIntersection(
-        Point p1, Point p2, Point p3, Point p4,
-        out bool lines_intersect, out bool segments_intersect,
-        out Point intersection,
-        out Point close_p1, out Point close_p2,
-        out double collisionAngle)
+            Point p1, Point p2, Point p3, Point p4,
+            out bool lines_intersect, out bool segments_intersect,
+            out Point intersection,
+            out Point close_p1, out Point close_p2,
+            out double collisionAngle)
         {
             // Get the segments' parameters.
             double dx12 = p2.X - p1.X;
@@ -190,6 +204,7 @@ namespace BrainSimulator
             return (float)distance;
         }
 
+        //find a point which is dist off the end of a line segment
         public static PointPlus ExtendSegment(Point P1, Point P2, float dist, bool firstPt)
         {
             if (firstPt)

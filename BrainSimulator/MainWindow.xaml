@@ -21,7 +21,6 @@
                     <MenuItem Header="_Exit" Click="button_Exit_Click"/>
                 </MenuItem>
                 <MenuItem Header="Edit">
-                    <MenuItem Header=" Undo" Click="button_Undo_Click"/>
                     <MenuItem Header=" Cut"  Click="MenuItem_CutNeurons" />
                     <MenuItem Header=" Copy"  Click="MenuItem_CopyNeurons" />
                     <MenuItem Header=" Paste"  Click="MenuItem_PasteNeurons" />

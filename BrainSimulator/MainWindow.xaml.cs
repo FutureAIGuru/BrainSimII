@@ -33,8 +33,8 @@ namespace BrainSimulator
     /// </summary>
     public partial class MainWindow : Window
     {
-
-        static NeuronArrayView arrayView = null;
+        //Globals
+        public static NeuronArrayView arrayView = null;
         public static NeuronArray theNeuronArray = null;
 
         Thread engineThread = new Thread(new ThreadStart(EngineLoop));
@@ -78,7 +78,7 @@ namespace BrainSimulator
         {
             splashScreen.Close();
             ((DispatcherTimer)sender).Stop();
-            if (theNeuronArray != null) foreach (NeuronArea na in theNeuronArray.Areas)
+            if (theNeuronArray != null) foreach (Module na in theNeuronArray.Modules)
                 {
                     if (na.TheModule != null)
                     {
@@ -135,12 +135,16 @@ namespace BrainSimulator
             {
                 theNeuronArrayView.CutNeurons();
             }
+            if (crtlPressed && e.Key == Key.Z)
+            {
+                theNeuronArray.UndoSynapse();
+                theNeuronArrayView.Update();
+            }
         }
-
 
         private void setTitleBar()
         {
-            this.Title = "Brain Simulator II " + System.IO.Path.GetFileNameWithoutExtension(currentFileName);
+           Title = "Brain Simulator II " + System.IO.Path.GetFileNameWithoutExtension(currentFileName);
         }
 
         private void LoadFile(string fileName)
@@ -169,17 +173,19 @@ namespace BrainSimulator
             theNeuronArrayView.Update();
             setTitleBar();
             Task.Delay(1000).ContinueWith(t => ShowDialogs());
-            foreach(NeuronArea na in theNeuronArray.areas)
+            foreach(Module na in theNeuronArray.modules)
             {
                 if (na.TheModule != null)
                     na.TheModule.SetUpAfterLoad();
             }
+            NeuronArrayView.SortAreas();
         }
 
+        //
         private void ShowDialogs()
         {
             SuspendEngine();
-            foreach (NeuronArea na in theNeuronArray.areas)
+            foreach (Module na in theNeuronArray.modules)
             {
                 if (na.TheModule != null)
                 {
@@ -199,11 +205,10 @@ namespace BrainSimulator
                 Filter = "XML Network Files|*.xml",
                 Title = "Select a Brain Simulator File"
             };
-
             // Show the Dialog.  
             // If the user clicked OK in the dialog and  
             Nullable<bool> result = openFileDialog1.ShowDialog();
-            if (result ?? false)// System.Windows.Forms.DialogResult.OK)
+            if (result ?? false)
             {
                 currentFileName = openFileDialog1.FileName;
                 Properties.Settings.Default["CurrentFile"] = currentFileName;
@@ -244,7 +249,7 @@ namespace BrainSimulator
             string tempFile = System.IO.Path.GetTempFileName();
             FileStream file = File.Create(tempFile);
 
-            foreach (NeuronArea na in theNeuronArray.areas)
+            foreach (Module na in theNeuronArray.modules)
             {
                 if (na.TheModule != null)
                     na.TheModule.SetUpBeforeSave();
@@ -342,17 +347,7 @@ namespace BrainSimulator
         {
             Properties.Settings.Default.Save();
         }
-        private void button_Undo_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-        private void button_NameSelection_Click(object sender, RoutedEventArgs e)
-        {
-            if (theNeuronArrayView.theSelection.GetSelectedNeuronCount() > 0)
-            {
-
-            }
-        }
+    
         private void button_PatternLoad_Click(object sender, RoutedEventArgs e)
         {
             if (theNeuronArrayView.targetNeuronIndex < 0) return;
@@ -571,7 +566,7 @@ namespace BrainSimulator
                     theCameraWindow.Close();
                 if (theNeuronArray != null)
                 {
-                    foreach (NeuronArea na in theNeuronArray.Areas)
+                    foreach (Module na in theNeuronArray.Modules)
                     {
                         if (na.TheModule != null)
                         {
@@ -629,7 +624,7 @@ namespace BrainSimulator
         private void ButtonInit_Click(object sender, RoutedEventArgs e)
         {
             SuspendEngine();
-            foreach (NeuronArea na in theNeuronArray.Areas)
+            foreach (Module na in theNeuronArray.Modules)
             {
                 if (na.TheModule != null)
                     na.TheModule.Init(true);

@@ -225,7 +225,7 @@ namespace BrainSimulator
         {
             //vision is transient so we'll delete the existing visible things
             DeleteThings(500);
-            NeuronArea naRectangles = theNeuronArray.FindAreaByLabel("Rectangles");
+            Module naRectangles = theNeuronArray.FindAreaByLabel("Rectangles");
             if (naRectangles == null) return;
             for (int i = 1; i < naRectangles.Height; i++)
             {
@@ -256,7 +256,7 @@ namespace BrainSimulator
         private void HandleSpeechIn()
         {
             //string input = na.GetParam("-i");
-            NeuronArea naSpeechIn = theNeuronArray.FindAreaByLabel("SpeechIn");
+            Module naSpeechIn = theNeuronArray.FindAreaByLabel("SpeechIn");
             if (naSpeechIn == null) return;
             //new word?
             Neuron nNewWord = naSpeechIn.GetNeuronAt(0, 0);
@@ -321,7 +321,7 @@ namespace BrainSimulator
                 theOutPhrase = theOutPhrase.Substring(sp + 1);
             }
 
-            NeuronArea na = theNeuronArray.FindAreaByLabel("SpeechOut");
+            Module na = theNeuronArray.FindAreaByLabel("SpeechOut");
             if (na == null) return;
             int found = -1;
             na.BeginEnum();
@@ -362,7 +362,7 @@ namespace BrainSimulator
         private void HandleMotion()
         {
             if (motionCounter == 0) return;
-            NeuronArea naTurn = theNeuronArray.FindAreaByLabel("Move");
+            Module naTurn = theNeuronArray.FindAreaByLabel("Move");
             if (naTurn == null) return;
             if (motionCounter > 0)
             {
@@ -378,7 +378,7 @@ namespace BrainSimulator
         private void HandleTurning()
         {
             if (turnCounter == 0) return;
-            NeuronArea naTurn = theNeuronArray.FindAreaByLabel("Turn");
+            Module naTurn = theNeuronArray.FindAreaByLabel("Turn");
             if (naTurn == null) return;
             if (turnCounter > 0)
             {

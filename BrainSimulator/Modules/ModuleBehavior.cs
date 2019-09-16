@@ -52,11 +52,11 @@ namespace BrainSimulator
                 {
                     case TheBehavior.Rest: break;
                     case TheBehavior.Move:
-                        NeuronArea naMove = theNeuronArray.FindAreaByLabel("ModuleMove");
+                        Module naMove = theNeuronArray.FindAreaByLabel("ModuleMove");
                         naMove.GetNeuronAt(0, 2).SetValue(currentBehavior.param1);
                         break;
                     case TheBehavior.Turn:
-                        NeuronArea naTurn = theNeuronArray.FindAreaByLabel("ModuleTurn");
+                        Module naTurn = theNeuronArray.FindAreaByLabel("ModuleTurn");
                         naTurn.GetNeuronAt(2, 0).SetValue(currentBehavior.param1);
                         break;
                 }
@@ -64,7 +64,7 @@ namespace BrainSimulator
                 {
                     handlingConf = false;
                     na.GetNeuronAt("Done").CurrentCharge = 1;
-                    NeuronArea naEntity = theNeuronArray.FindAreaByLabel("ModuleEntity");
+                    Module naEntity = theNeuronArray.FindAreaByLabel("ModuleEntity");
                     try
                     {
                         naEntity.GetNeuronAt("Idle").SetValue(1);
@@ -140,7 +140,7 @@ namespace BrainSimulator
         bool handlingConf = false;
         private void Conf()
         {
-            NeuronArea naModel = theNeuronArray.FindAreaByLabel("Module2DModel");
+            Module naModel = theNeuronArray.FindAreaByLabel("Module2DModel");
             if (naModel == null) return;
             Module2DModel nmModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
 

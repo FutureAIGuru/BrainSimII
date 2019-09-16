@@ -16,7 +16,7 @@ namespace BrainSimulator
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
-            NeuronArea naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
+            Module naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
             if (naKB == null) return;
             Module2DKB kb = (Module2DKB)naKB.TheModule;
             Thing tVisible = kb.Labeled("Visible");

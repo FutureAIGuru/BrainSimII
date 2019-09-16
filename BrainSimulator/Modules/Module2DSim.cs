@@ -217,7 +217,7 @@ namespace BrainSimulator
                     out Point Intersection, out Point close_1, out Point close_p2, out double collisionAngle);
                 if (segments_intersect)
                 {//we're against an obstacle
-                    NeuronArea naBehavior = theNeuronArray.FindAreaByLabel("ModuleBehavior");
+                    Module naBehavior = theNeuronArray.FindAreaByLabel("ModuleBehavior");
                     if (naBehavior != null)
                     {
                         try
@@ -236,7 +236,7 @@ namespace BrainSimulator
         //aroma is a field strength at a given position
         private void HandleAroma()
         {
-            NeuronArea naSmell = theNeuronArray.FindAreaByLabel("Module2DSmell");
+            Module naSmell = theNeuronArray.FindAreaByLabel("Module2DSmell");
             //find the aroma value
             if (naSmell != null)
             {
@@ -252,7 +252,7 @@ namespace BrainSimulator
         //this is a debug feature which copies the complete simulation to the internal model
         public void SetModel()
         {
-            NeuronArea naModel = theNeuronArray.FindAreaByLabel("Module2DModel");
+            Module naModel = theNeuronArray.FindAreaByLabel("Module2DModel");
             Module2DModel nmModel = (Module2DModel)naModel.TheModule;
             for (int i = 0; i < objects.Count; i++)
             {
@@ -283,7 +283,7 @@ namespace BrainSimulator
 
             antennaeActual[index] = antennaPositionAbs;
             //this all works in absolute coordinates
-            NeuronArea naTouch = theNeuronArray.FindAreaByLabel("Module2DTouch");
+            Module naTouch = theNeuronArray.FindAreaByLabel("Module2DTouch");
             if (naTouch == null) return;
             naTouch.GetNeuronAt(0, index).SetValue(0);
             naTouch.GetNeuronAt(8, index).CurrentCharge = 1;
@@ -359,7 +359,7 @@ namespace BrainSimulator
         //do ray tracing to create the view the Entitiy would see
         private void HandleVision(int row)
         {
-            NeuronArea naVision = theNeuronArray.FindAreaByLabel("Module2DVision");
+            Module naVision = theNeuronArray.FindAreaByLabel("Module2DVision");
             if (naVision == null) return;
 
             if (row == 0)   

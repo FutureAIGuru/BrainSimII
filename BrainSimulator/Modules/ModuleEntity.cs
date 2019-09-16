@@ -25,8 +25,8 @@ namespace BrainSimulator
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
-            NeuronArea naBehavior = theNeuronArray.FindAreaByLabel("ModuleBehavior");
-            NeuronArea naModel = theNeuronArray.FindAreaByLabel("Module2DModel");
+            Module naBehavior = theNeuronArray.FindAreaByLabel("ModuleBehavior");
+            Module naModel = theNeuronArray.FindAreaByLabel("Module2DModel");
             Module2DModel nmModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
             ModuleBehavior naBehavior1 = (ModuleBehavior)FindModuleByType(typeof(ModuleBehavior));
             if (naBehavior == null) return;
@@ -91,7 +91,7 @@ namespace BrainSimulator
             { handlingCollision = false; }
 
             //touch?
-            NeuronArea naTouch = theNeuronArray.FindAreaByLabel("Module2DTouch");
+            Module naTouch = theNeuronArray.FindAreaByLabel("Module2DTouch");
             if (naBehavior1.IsIdle() && !handlingTouch && !handlingCollision)
             {
                 if (naTouch.GetNeuronAt(0, 0).Fired())

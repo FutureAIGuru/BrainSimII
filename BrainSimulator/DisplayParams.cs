@@ -73,15 +73,18 @@ namespace BrainSimulator
             }
         }
 
+        //return the upper left of the neuron on the canvas
         public Point pointFromNeuron(int index)
         {
-            //return the upper left of the neuron on the canvas
             Point p = new Point(DisplayOffset.X, DisplayOffset.Y);
             p.Y += index % NeuronRows * NeuronDisplaySize;
             p.X += index / NeuronRows * NeuronDisplaySize;
             return p;
         }
-        public int NeuronFromPoint(Point p)  //the point is the canvas position
+
+        //return the neuron ID for this point
+        //the point is a canvas position
+        public int NeuronFromPoint(Point p)
         {
             p -= (Vector)DisplayOffset;
             int x = (int)p.X / NeuronDisplaySize;

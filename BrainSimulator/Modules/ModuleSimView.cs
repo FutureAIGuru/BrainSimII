@@ -15,13 +15,6 @@ namespace BrainSimulator
 {
     public class ModuleSimView : ModuleBase
     {
-        //ModuleSimViewDlg dlg = null;
-        //public override  void ShowDialog()
-        //{
-        //   dlg = new ModuleSimViewDlg();
-        //    //dlg.Owner = MainWindow;
-        //    dlg.Show();
-        //}
 
         public override void Fire()
         {

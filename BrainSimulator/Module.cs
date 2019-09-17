@@ -56,17 +56,17 @@ namespace BrainSimulator
         }
 
         public Module() { }
-        public int FirstNeuron { get => firstNeuron; set => firstNeuron = value; }
-        public string CommandLine { get => commandLine; set => commandLine = value; }
         public string Label { get => label; set => label = value; }
-        private int Rows { get { return MainWindow.theNeuronArray.rows; } }
-
-
-        public int NeuronCount { get { return Width * Height; } }
-        public int Color { get => color; set => color = value; }
-        public ModuleBase TheModule { get => theModule; set => theModule = value; }
+        public int FirstNeuron { get => firstNeuron; set => firstNeuron = value; }
         public int Height { get => height; set => height = value; }
         public int Width { get => width; set => width = value; }
+        public int Color { get => color; set => color = value; }
+
+        public string CommandLine { get => commandLine; set => commandLine = value; }
+        private int Rows { get { return MainWindow.theNeuronArray.rows; } }
+
+        public int NeuronCount { get { return Width * Height; } }
+        public ModuleBase TheModule { get => theModule; set => theModule = value; }
         public int LastNeuron { get { return firstNeuron + (height - 1) + Rows * (Width - 1); } }
 
         //these two emulate a foreach which might be implemented some day

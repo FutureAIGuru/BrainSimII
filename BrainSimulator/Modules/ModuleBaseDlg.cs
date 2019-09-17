@@ -9,21 +9,41 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
+
 
 namespace BrainSimulator
 {
     public class ModuleBaseDlg : Window
     {
-        public ModuleBase Parent1;
+        public ModuleBase ParentModule;
         private DateTime dt;
+        private DispatcherTimer timer;
 
         virtual public bool Draw()
         {
             //only actually update the screen every 100ms
             TimeSpan ts = DateTime.Now - dt;
-            if (ts < new TimeSpan(0, 0, 0, 0, 100)) return false;
+            if (ts < new TimeSpan(0, 0, 0, 0, 100))
+            {
+                //if we're not drawing this time, start a timer which will do a final draw
+                //after a 1/4 second of anactivity
+                timer = new DispatcherTimer();
+                timer.Interval = new TimeSpan(0, 0, 0, 0, 250);
+                timer.Tick += new EventHandler(Timer_Tick);
+                timer.Start();
+                return false;
+            }
             dt = DateTime.Now;
+            if (timer != null) timer.Stop();
             return true;
+        }
+
+        //this picks up a final draw after 1/4 second 
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            timer.Stop();
+            Application.Current.Dispatcher.Invoke((Action)delegate { Draw(); });
         }
     }
 }

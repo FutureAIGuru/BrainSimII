@@ -30,7 +30,7 @@ namespace BrainSimulator
     public partial class NeuronArrayView : UserControl
     {
 
-        private DisplayParams dp = new DisplayParams(); //refactor these back to private
+        private DisplayParams dp = new DisplayParams();
 
         Point lastPosition = new Point(0, 0); //temp position used for calculating pan positions
         Point lastPosition1 = new Point(0, 0); //temp position used for calculating pan positions
@@ -656,9 +656,7 @@ namespace BrainSimulator
 
         public static void SortAreas()
         {
-            MainWindow.SuspendEngine();
             MainWindow.theNeuronArray.Modules.Sort();
-            MainWindow.ResumeEngine();
         }
 
         private bool SetScrollCursor(Point currentPosition, Rectangle r, double left, double top)

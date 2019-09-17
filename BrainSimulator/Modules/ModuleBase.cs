@@ -79,7 +79,7 @@ namespace BrainSimulator
             if (dlg != null) dlg.Close();
             dlg = (ModuleBaseDlg)Activator.CreateInstance(t1);
             if (dlg == null) return;
-            dlg.Parent1 = (ModuleBase)this;
+            dlg.ParentModule = (ModuleBase)this;
             dlg.Closed += Dlg_Closed;
             dlg.LocationChanged += Dlg_LocationChanged;
             dlg.SizeChanged += Dlg_SizeChanged;

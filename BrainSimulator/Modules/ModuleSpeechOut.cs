@@ -46,13 +46,14 @@ namespace BrainSimulator
                     if (toSpeak.IndexOf(' ') != -1)
                         toSpeak = toSpeak.Insert(toSpeak.Trim().LastIndexOf(' '), " " + insertAnd);
                     toSpeak = toSpeak + " " + postPend;
-                    //PauseRecognition();
+                    ModuleSpeechIn msi = (ModuleSpeechIn)FindModuleByType(typeof(ModuleSpeechIn));
+                    if (msi != null)
+                        msi.PauseRecognition(); //if there is a recognizer active
                     synth.SpeakAsync(toSpeak + ".");
                     toSpeak = "";
                     prePend = "";
                     postPend = "";
                     insertAnd = "";
-
                 }
         }
 
@@ -65,11 +66,17 @@ namespace BrainSimulator
             synth.SetOutputToDefaultAudioDevice();
             synth.SpeakCompleted += Synth_SpeakCompleted;
             synth.SelectVoice("Microsoft Zira Desktop");
-            ModuleSpeechIn msi = (ModuleSpeechIn)FindModuleByType(typeof(ModuleSpeechIn));
-            if (msi != null)
-                msi.PauseRecognition(); //if there is a recognizer active
-           // synth.SpeakAsync("Speech synthisizer Initialized");
 
+            //temporarily assign output vocabulary to be identical to input vocabulary
+            Module msi = theNeuronArray.FindAreaByLabel("ModuleSpeechIn");
+            if (msi != null)
+            {
+                for (int i = 0; i < na.NeuronCount && i < msi.NeuronCount; i++)
+                {
+                    na.GetNeuronAt(i).Label = msi.GetNeuronAt(i).Label;
+                    msi.GetNeuronAt(i).AddSynapse(na.GetNeuronAt(i).Id,1,theNeuronArray);
+                }
+            }
         }
 
 

@@ -144,7 +144,7 @@ namespace BrainSimulator
 
         private void setTitleBar()
         {
-           Title = "Brain Simulator II " + System.IO.Path.GetFileNameWithoutExtension(currentFileName);
+            Title = "Brain Simulator II " + System.IO.Path.GetFileNameWithoutExtension(currentFileName);
         }
 
         private void LoadFile(string fileName)
@@ -173,12 +173,15 @@ namespace BrainSimulator
             theNeuronArrayView.Update();
             setTitleBar();
             Task.Delay(1000).ContinueWith(t => ShowDialogs());
-            foreach(Module na in theNeuronArray.modules)
+            foreach (Module na in theNeuronArray.modules)
             {
                 if (na.TheModule != null)
                     na.TheModule.SetUpAfterLoad();
             }
+            if (theNeuronArray.displayParams != null)
+                theNeuronArrayView.Dp = theNeuronArray.displayParams;
             NeuronArrayView.SortAreas();
+            Update();
         }
 
         //
@@ -262,8 +265,8 @@ namespace BrainSimulator
             //Save the data from the Brainsim Engine to the file
             try
             {
+                theNeuronArray.displayParams = theNeuronArrayView.Dp;
                 XmlSerializer writer = new XmlSerializer(typeof(NeuronArray), GetModuleTypes());
-                //FileStream file = File.Create(tempFile);
                 writer.Serialize(file, theNeuronArray);
                 file.Close();
                 currentFileName = fileName;
@@ -347,7 +350,7 @@ namespace BrainSimulator
         {
             Properties.Settings.Default.Save();
         }
-    
+
         private void button_PatternLoad_Click(object sender, RoutedEventArgs e)
         {
             if (theNeuronArrayView.targetNeuronIndex < 0) return;
@@ -623,6 +626,7 @@ namespace BrainSimulator
 
         private void ButtonInit_Click(object sender, RoutedEventArgs e)
         {
+            if (theNeuronArray == null)return;
             SuspendEngine();
             foreach (Module na in theNeuronArray.Modules)
             {

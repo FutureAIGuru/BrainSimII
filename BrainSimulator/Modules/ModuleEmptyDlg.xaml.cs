@@ -28,7 +28,9 @@ namespace BrainSimulator
         }
         public override bool Draw()
         {
-            base.Draw();
+            //this has a timer so that no matter how often you might call draw, the dialog
+            //only updates 10x per second
+            if (!base.Draw()) return false;
 
             //use a line like this to gain access to the parent's public variables
             //ModuleEmpty parent = (ModuleEmpty)base.Parent1;

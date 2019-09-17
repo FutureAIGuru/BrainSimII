@@ -8,6 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace BrainSimulator
 {
@@ -29,9 +30,12 @@ namespace BrainSimulator
 
         public Neuron[] neuronArray;
         public long Generation { get; set; } = 0;
+        public DisplayParams displayParams;
 
         //keeps track of the number of neurons which fired in this generation
+        [XmlIgnore]
         public long fireCount = 0;
+        [XmlIgnore]
         public long lastFireCount = 0;
 
         //this list keeps track of changing synapses
@@ -42,8 +46,7 @@ namespace BrainSimulator
             public bool newSynapse;
         }
         List<SynapseUndo> synapseUndoInfo = new List<SynapseUndo>();
-
-
+        
         public NeuronArray()
         {
             neuronArray = new Neuron[arraySize];
@@ -56,7 +59,7 @@ namespace BrainSimulator
             //}
         }
 
-        public NeuronArray(int theSize, int theRows,Neuron.modelType t=Neuron.modelType.Std)
+        public NeuronArray(int theSize, int theRows, Neuron.modelType t = Neuron.modelType.Std)
         {
             arraySize = theSize;
             rows = theRows;
@@ -83,7 +86,6 @@ namespace BrainSimulator
             //    n.Fire2(Generation);
             Generation++;
         }
-
 
         public void AddSynapseUndo(int source, int target, float weight, bool newSynapse)
         {

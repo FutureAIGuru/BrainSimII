@@ -313,13 +313,13 @@
     <Resource Include="Icons\FullScreen.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Networks\AtoD.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\WebCamWrapper\WebCamWrapper.csproj">
       <Project>{cc5d5149-0092-4508-ac34-2abe1468a1c9}</Project>
       <Name>WebCamWrapper</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Networks\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

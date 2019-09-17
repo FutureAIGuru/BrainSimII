@@ -21,12 +21,24 @@ namespace BrainSimulator
     public class ModuleCamera : ModuleBase
     {
         Camera theCamera;
+        bool running = false; //this is needed to force a camera initialize even if the module as a whole has been initialized
         DispatcherTimer dt;
+        private CameraFrameSource _frameSource;
+        private static System.Drawing.Bitmap _latestFrame;
+
+
+        [XmlIgnore]
+         System.Drawing.Bitmap theBitMap1 = null;
+        [XmlIgnore]
+         System.Drawing.Bitmap theBitMap2 = null;
+        [XmlIgnore]
+        public BitmapImage theDlgBitMap = null;
+
 
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
-
+            if (!running) Initialize();
             if (theBitMap1 == null) return;
             na.GetBounds(out int X1, out int Y1, out int X2, out int Y2);
             float ratio = theBitMap1.Width / (X2 - X1);
@@ -55,22 +67,44 @@ namespace BrainSimulator
             if (dlg != null)
                 Application.Current.Dispatcher.Invoke((Action)delegate { dlg.Draw();});
         }
+
         public override void Initialize()
         {
-            //MainWindow.theCameraWindow = new CameraHandler();
-            //MainWindow.theCameraWindow.Show();
             if (CameraService.AvailableCameras.Count > 0)
                 theCamera = CameraService.AvailableCameras[0];
+            else
+            {
+                MessageBox.Show("No camera found");
+                return;
+            }
             startCapturing();
             for (int i = 0; i < na.NeuronCount; i++)
+            {
                 na.GetNeuronAt(i).Model = Neuron.modelType.Color;
+                na.GetNeuronAt(i).SetValue(0);
+            }
+            Application.Current.Dispatcher.Invoke((Action)delegate { StartTimer(); });
+            running = true;
+        }
+
+        private void StartTimer()
+        {
             dt = new DispatcherTimer();
             dt.Interval = new TimeSpan(0, 0, 0, 0, 100);
             dt.Tick += Dt_Tick;
             dt.Start();
+
         }
-        private CameraFrameSource _frameSource;
-        private static System.Drawing.Bitmap _latestFrame;
+        private void Dt_Tick(object sender, EventArgs e)
+        {
+            if (_latestFrame == null) return;
+            theDlgBitMap = Convert(_latestFrame);
+            if (theBitMap1 == null)
+                theBitMap1 = (System.Drawing.Bitmap)_latestFrame.Clone();
+            else if (theBitMap2 == null)
+                theBitMap2 = (System.Drawing.Bitmap)_latestFrame.Clone();
+        }
+
         private Camera CurrentCamera
         {
             get
@@ -78,21 +112,25 @@ namespace BrainSimulator
                 return theCamera;// comboBoxCameras.SelectedItem as Camera;
             }
         }
+
         private void startCapturing()
         {
             try
             {
                 Camera c = theCamera;
-                setFrameSource(new CameraFrameSource(c));
-                _frameSource.Camera.CaptureWidth = 640;//640;
-                _frameSource.Camera.CaptureHeight = 360;// 480;
-                _frameSource.Camera.Fps = 50;
-                _frameSource.NewFrame += OnImageCaptured;
-                _frameSource.StartFrameCapture();
+                if (_frameSource == null)
+                {
+                    setFrameSource(new CameraFrameSource(c));
+                    _frameSource.Camera.CaptureWidth = 640;//640;
+                    _frameSource.Camera.CaptureHeight = 360;// 480;
+                    _frameSource.Camera.Fps = 50;
+                    _frameSource.NewFrame += OnImageCaptured;
+                    _frameSource.StartFrameCapture();
+                }
             }
             catch (Exception ex)
             {
-               // MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -121,30 +159,5 @@ namespace BrainSimulator
 
             _frameSource = cameraFrameSource;
         }
-
-        public override void ShowDialog() //delete this function if it isn't needed
-        {
-            base.ShowDialog();
-        }
-        [XmlIgnore]
-        public System.Drawing.Bitmap theBitMap1 = null;
-        [XmlIgnore]
-        public System.Drawing.Bitmap theBitMap2 = null;
-        [XmlIgnore]
-        public BitmapImage theDlgBitMap = null;
-
-        private void Dt_Tick(object sender, EventArgs e)
-        {
-            theDlgBitMap= Convert(_latestFrame);
-            //if (_latestFrame == null) return;
-            if (theBitMap1 == null)
-                theBitMap1 = (System.Drawing.Bitmap)_latestFrame.Clone();
-            else if (theBitMap2 == null)
-                theBitMap2 = (System.Drawing.Bitmap)_latestFrame.Clone();
-
-        }
-
     }
-
-
 }

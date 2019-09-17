@@ -50,7 +50,7 @@ namespace BrainSimulator
                 return false;
             }
 
-            Module2DSim parent = (Module2DSim)base.Parent1;
+            Module2DSim parent = (Module2DSim)base.ParentModule;
 
             //theCanvas.Children.RemoveRange(1, theCanvas.Children.Count-1);
             theCanvas.Children.Clear();
@@ -157,7 +157,7 @@ namespace BrainSimulator
 
         private void TheCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Module2DSim parent = (Module2DSim)base.Parent1;
+            Module2DSim parent = (Module2DSim)base.ParentModule;
 
             Point windowSize = new Point(theCanvas.ActualWidth, theCanvas.ActualHeight);
             Point windowCenter = new Point(windowSize.X / 2, windowSize.Y / 2);
@@ -192,7 +192,7 @@ namespace BrainSimulator
 
         private void TheCanvas_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Module2DSim parent = (Module2DSim)base.Parent1;
+            Module2DSim parent = (Module2DSim)base.ParentModule;
             parent.SetModel();
         }
     }

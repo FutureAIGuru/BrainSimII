@@ -32,24 +32,14 @@ namespace BrainSimulator
             InitializeComponent();
         }
 
-        //this is here so the last change will cause a screen update after 1 second
-        DispatcherTimer dt = null;
-        private void Dt_Tick(object sender, EventArgs e)
-        {
-            Application.Current.Dispatcher.Invoke((Action)delegate { Draw(); });
-        }
-
         public override bool Draw()
         {
-            base.Draw();
-            ModuleCamera parent = (ModuleCamera)base.Parent1;
+            if (!base.Draw()) return false;
+            ModuleCamera parent = (ModuleCamera)base.ParentModule;
             if (parent.theDlgBitMap != null)
             {
                 image.Source = parent.theDlgBitMap;
             }
-            //dt = new DispatcherTimer() { Interval = new TimeSpan(0,0, 0,  1) };
-            //dt.Tick += Dt_Tick;
-            //dt.Start();
             return true;
         }
 

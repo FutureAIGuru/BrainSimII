@@ -30,28 +30,10 @@ namespace BrainSimulator
             InitializeComponent();
         }
 
-        //this is here so the last change will cause a screen update after 1 second
-        DispatcherTimer dt = null;
-        private void Dt_Tick(object sender, EventArgs e)
-        {
-            dt.Stop(); ;
-            Application.Current.Dispatcher.Invoke((Action)delegate { Draw(); });
-        }
-
         public override bool Draw()
         {
-            if (!base.Draw())
-            {
-                if (dt == null)
-                {
-                    dt = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 0,0,100) };
-                    dt.Tick += Dt_Tick;
-                }
-                dt.Stop();
-                dt.Start();
-                return false;
-            }
-            Module2DModel parent = (Module2DModel)base.Parent1;
+            if (!base.Draw()) return false;
+            Module2DModel parent = (Module2DModel)base.ParentModule;
             theCanvas.Children.Clear();
             Point windowSize = new Point(theCanvas.ActualWidth, theCanvas.ActualHeight);
             Point windowCenter = new Point(windowSize.X / 2, windowSize.Y / 2);

@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows;
 using System.Xml.Serialization;
 
-namespace BrainSimulator
+namespace BrainSimulator.Modules
 {
     public class Module2DModel : ModuleBase
     {
@@ -24,6 +24,17 @@ namespace BrainSimulator
         public List<Thing> GetKBPossiblePoints() { return KBPossiblePoints; }
 
 
+        public override string ShortDescription { get => "Maintains an internal representation of surroung things"; }
+        public override string LongDescription
+        {
+            get =>
+                "This module receives input from the Touch and Vision modules and merges the information to maintain a representation of "+
+                "physical objects in the entity's environment. It also supports imaingation via the temporary addition of imagined objects "+"" +
+                "and the temporary change in point of view.\r\n" +
+                "\r\n" +
+                "";
+        }
+
         public Module2DModel()
         {
             KBSegments = new List<Thing>();
@@ -32,7 +43,7 @@ namespace BrainSimulator
 
         public void GetSegmentsFromKB()
         {
-            Module naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
+            ModuleView naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
             if (naKB == null) return;
             if (naKB.TheModule is Module2DKB kb)
             {
@@ -61,6 +72,8 @@ namespace BrainSimulator
             return s;
         }
 
+        //this is legacy to convert a Thing (new) to a Segment (old) 
+        //eventually, we should be able to get rid of segments.
         public void SegmentToKBThing(Segment s, Thing t)
         {
             bool p1Handled = false;
@@ -82,7 +95,7 @@ namespace BrainSimulator
 
         private void AddSegmentToKB(PointPlus P1, PointPlus P2, Color theColor)
         {
-            Module naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
+            ModuleView naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
             if (naKB == null) return;
             if (naKB.TheModule is Module2DKB kb)
             {
@@ -98,7 +111,7 @@ namespace BrainSimulator
         //get input from vision...less accurate
         public void AddPosiblePointToKB(PointPlus P, Color theColor)
         {
-            Module naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
+            ModuleView naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
             if (naKB == null) return;
             if (naKB.TheModule is Module2DKB kb)
             {
@@ -138,6 +151,8 @@ namespace BrainSimulator
         }
 
         //get input from touch... accurate locations
+        //this contains a lot of commented-out code which used to merge information
+        //it will need to be re-implemented to handle upgrades 
         public bool AddSegment(PointPlus P1, PointPlus P2, Color theColor)
         {
             if (KBSegments is null) return false;
@@ -145,7 +160,7 @@ namespace BrainSimulator
             bool found = false;
             bool modelChanged = false;
             if (P1.Conf == 0 && P2.Conf == 0) return false;
-            Module naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
+            ModuleView naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
             if (naKB == null) return false;
             if (naKB.TheModule is Module2DKB kb)
             {
@@ -157,7 +172,7 @@ namespace BrainSimulator
                 { t2.V = P2; found = true; }
                 if (found)
                 {
-                    if (theNeuronArray.FindAreaByLabel("ModuleBehavior") is Module naBehavior)
+                    if (theNeuronArray.FindAreaByLabel("ModuleBehavior") is ModuleView naBehavior)
                     { naBehavior.GetNeuronAt("EndPt").SetValue(1); }
                 }
                 Segment s = SegmentFromKBThing(t1);
@@ -291,6 +306,7 @@ namespace BrainSimulator
             return modelChanged;
         }
 
+        //returns a point with low confidence which an entity might use to explore and improve the confidence in the point
         public PointPlus FindLowConfidence()
         {
             PointPlus pv = null;
@@ -351,6 +367,7 @@ namespace BrainSimulator
             return false;
         }
 
+        //not presently used
         public bool SetColor(float theta, Color theColor)
         {
             int nearest = -1;
@@ -386,6 +403,7 @@ namespace BrainSimulator
             return false;
         }
 
+        //TODO: see if this is useful
         public Segment FindGreen()
         {
             foreach (Thing t in KBSegments)
@@ -397,6 +415,7 @@ namespace BrainSimulator
             return null;
         }
 
+        //find the nearest Setment to the entity
         public Segment GetNearestObject()
         {
             double closestDistance = 100;
@@ -415,9 +434,10 @@ namespace BrainSimulator
             return foundObject;
         }
 
+        //maintain a list of objects in the current visual field
         public void MarkVisibleObjects()
         {
-            Module naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
+            ModuleView naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
             if (naKB == null) return;
             Module2DKB kb = (Module2DKB)naKB.TheModule;
             Thing tVisible = kb.Labeled("Visible");
@@ -426,7 +446,7 @@ namespace BrainSimulator
             for (int i = 0; i < KBSegments.Count; i++)
                 KBSegments[i].RemoveReference(tVisible);
 
-            Module naVision = theNeuronArray.FindAreaByLabel("Module2DVision");
+            ModuleView naVision = theNeuronArray.FindAreaByLabel("Module2DVision");
             int possibleViewAngles = naVision.Width;
             float deltaTheta = Module2DVision.fieldOfView / possibleViewAngles;
             for (int i = 0; i < possibleViewAngles; i++)
@@ -452,7 +472,7 @@ namespace BrainSimulator
         {
             obstacle = null;
             float closestDistance = 100;
-            Module naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
+            ModuleView naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
             if (naKB == null) return null;
             Module2DKB kb = (Module2DKB)naKB.TheModule;
             bool ok = true;
@@ -477,9 +497,13 @@ namespace BrainSimulator
             return null;
         }
 
+/*********************************
+ * Imagination functionality
+******************************** */
         public bool imagining = false;
         PointPlus imaginationOffset;
         float imaginationDirection;
+        //this will all need to be converted to run with KB Things instead of segments
         public List<Segment> imagination = new List<Segment>();
 
         public void ImagineObject(Segment obj)
@@ -523,7 +547,6 @@ namespace BrainSimulator
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
-
         }
 
         public override void Initialize()
@@ -531,7 +554,6 @@ namespace BrainSimulator
             GetSegmentsFromKB();
             na.GetNeuronAt(0, 0).Label = "New";
             na.GetNeuronAt(1, 0).Label = "Change";
-            na.GetNeuronAt(2, 0).Label = "Color";
 
             if (dlg != null)
                 Application.Current.Dispatcher.Invoke((Action)delegate { dlg.Draw(); });

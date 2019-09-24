@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Speech.Synthesis;
 
-namespace BrainSimulator
+namespace BrainSimulator.Modules
 {
     public class ModuleSpeechOut : ModuleBase
     {
@@ -68,7 +68,7 @@ namespace BrainSimulator
             synth.SelectVoice("Microsoft Zira Desktop");
 
             //temporarily assign output vocabulary to be identical to input vocabulary
-            Module msi = theNeuronArray.FindAreaByLabel("ModuleSpeechIn");
+            ModuleView msi = theNeuronArray.FindAreaByLabel("ModuleSpeechIn");
             if (msi != null)
             {
                 for (int i = 0; i < na.NeuronCount && i < msi.NeuronCount; i++)

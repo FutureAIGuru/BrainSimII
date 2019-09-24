@@ -9,15 +9,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BrainSimulator
+namespace BrainSimulator.Modules
 {
     public class ModuleGoToDest : ModuleBase
     {
+        public override string ShortDescription { get => "Demo module to show use of imagination"; }
+        public override string LongDescription
+        {
+            get =>
+                "The module accepts a destination and determines a path to get there. It works by successively " +
+                "trying different endpoints it can current reach to see if there is one which can directly reach " +
+                "the destination. This is a demonstration of the use of various other modules."+
+                "";
+        }
+
         List<PointPlus> pointsToTry = new List<PointPlus>();
         PointPlus pvTry = null;
         bool tryAgain = false;
         PointPlus pvTarget = null;
         int countDown = 0;
+
+        public ModuleGoToDest()
+        {
+            minWidth = 3;
+        }
 
         public override void Fire()
         {
@@ -39,9 +54,9 @@ namespace BrainSimulator
             ///2) go to dest
             ///else recursive?
             ///
-            Module naBehavior = MainWindow.theNeuronArray.FindAreaByLabel("ModuleBehavior");
+            ModuleView naBehavior = MainWindow.theNeuronArray.FindAreaByLabel("ModuleBehavior");
             ModuleBehavior nmBehavior = (ModuleBehavior)naBehavior.TheModule;
-            Module naModel = theNeuronArray.FindAreaByLabel("Module2DModel");
+            ModuleView naModel = theNeuronArray.FindAreaByLabel("Module2DModel");
             Module2DModel nmModel = (Module2DModel)naModel.TheModule;
         
             if (!nmBehavior.IsIdle()) return;
@@ -57,13 +72,12 @@ namespace BrainSimulator
                 if (pv1 != null)
                 {
                     pvTry.Theta = -pvTry.Theta;
-                    naBehavior.GetNeuronAt("TurnTo").SetValue(1);
-                    naBehavior.GetNeuronAt("Theta").SetValue((float)pvTry.Theta);
-                    naBehavior.GetNeuronAt("MoveTo").SetValue(1);
-                    naBehavior.GetNeuronAt("R").SetValue((float)pvTry.R);
+                    SetNeuronValue("ModuleBehavior", "TurnTo", 1);
+                    SetNeuronValue("ModuleBehavior", "Theta", (float)pvTry.Theta);
+                    SetNeuronValue("ModuleBehavior", "MoveTo", 1);
+                    SetNeuronValue("ModuleBehavior", "R", (float)pvTry.R);
                     
                     //we made a partial move...update the target
-                    
                     pointsToTry.Clear();
                     tryAgain = true;
                 }
@@ -85,19 +99,19 @@ namespace BrainSimulator
             }
 
 
-            if (na.GetNeuronAt("Go").CurrentCharge == 0 && !tryAgain) return;
-            if (naBehavior.GetNeuronAt("Done").CurrentCharge != 0) return;
+            if (GetNeuronValue(null,"Go") == 0 && !tryAgain) return;
+            if (GetNeuronValue("ModuleBehavior","Done") != 0) return;
 
             if (!tryAgain)
             {
                 pvTarget = new PointPlus
                 {
-                    R = na.GetNeuronAt("R").CurrentCharge,
-                    Theta = na.GetNeuronAt("Theta").CurrentCharge
+                    R = GetNeuronValue(null,"R"),
+                    Theta = GetNeuronValue(null,"Theta")
                 };
-                na.GetNeuronAt("Go").SetValue(0);
-                na.GetNeuronAt("R").SetValue(0);
-                na.GetNeuronAt("Theta").SetValue(0);
+                SetNeuronValue(null, "Go", 0);
+                SetNeuronValue(null, "Ro", 0);
+                SetNeuronValue(null, "Theta", 0);
             }
             if (pvTarget.R == 0)
                 pvTarget = nmModel.FindGreen().MidPoint();
@@ -107,10 +121,10 @@ namespace BrainSimulator
             
                 if (pv1 != null)
                 {
-                    naBehavior.GetNeuronAt("TurnTo").SetValue(1);
-                    naBehavior.GetNeuronAt("Theta").SetValue((float)-pv1.Theta);
-                    naBehavior.GetNeuronAt("MoveTo").SetValue(1);
-                    naBehavior.GetNeuronAt("R").SetValue((float)pv1.R);
+                    SetNeuronValue("ModuleBehavior", "TurnTo", 1);
+                    SetNeuronValue("ModuleBehavior", "Theta", (float)-pv1.Theta);
+                    SetNeuronValue("ModuleBehavior", "MoveTo", 1);
+                    SetNeuronValue("ModuleBehavior", "R", (float)pv1.R);
                     tryAgain = false;
                     pvTry = null;
                 }
@@ -134,12 +148,5 @@ namespace BrainSimulator
             na.GetNeuronAt(2, 0).Label = "R";
             na.GetNeuronAt(2, 0).Model = Neuron.modelType.FloatValue;
         }
-
-        public override void ShowDialog() //delete this function if it isn't needed
-        {
-            base.ShowDialog();
-        }
     }
-
-
 }

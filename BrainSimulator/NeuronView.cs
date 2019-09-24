@@ -132,11 +132,14 @@ namespace BrainSimulator
         public static void CreateContextMenu(int i, Neuron n, ContextMenu cm)
         {
             cm.SetValue(NeuronIDProperty, n.Id);
+            cm.Closed += Cm_Closed;
+
+            StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
+                sp.Children.Add(new Label { Content = "Charge: ", Padding = new Thickness(0) });
+                sp.Children.Add(new TextBox { Text = n.CurrentCharge.ToString("f2"), Width = 60, Name = "CurrentCharge", VerticalAlignment = VerticalAlignment.Center });
+            cm.Items.Add(sp);
+
             MenuItem mi = new MenuItem();
-            mi = new MenuItem();
-            mi.Header = "Current Charge: " + n.LastCharge.ToString("f2");
-            cm.Items.Add(mi);
-            mi = new MenuItem();
             mi.Header = "Neuron ID: " + n.Id;
             cm.Items.Add(mi);
             cm.Items.Add(new Separator());
@@ -164,32 +167,52 @@ namespace BrainSimulator
             mi.Items.Add(new MenuItem() { Header = "Select as Target" });
             ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
             cm.Items.Add(mi);
-            mi = new MenuItem();
-            mi.Header = "Label:";
-            mi.IsEnabled = false;
-            cm.Items.Add(mi);
-            TextBox tb = new TextBox { Text = n.Label, Width = 200 };
-            tb.TextChanged += Tb_TextChanged;
-            cm.Items.Add(tb);
-            cm.Closed += Cm_Closed;
-            mi = new MenuItem();
-            mi.Header = "Model:";
-            mi.IsEnabled = false;
-            cm.Items.Add(mi);
+            sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
+            sp.Children.Add(new Label { Content = "Label: ",Padding=new Thickness(0)});
+            sp.Children.Add(new TextBox { Text = n.Label, Width = 150, Name = "Label", VerticalAlignment = VerticalAlignment.Center });
+            cm.Items.Add(sp);
+
+            sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
+            sp.Children.Add(new Label { Content = "Model: ", Padding = new Thickness(0)});
             ComboBox cb = new ComboBox()
             { Width = 100 };
             foreach (Neuron.modelType model in (Neuron.modelType[])Enum.GetValues(typeof(Neuron.modelType)))
-            { cb.Items.Add(model.ToString()); }
+            {
+                cb.Items.Add(model.ToString());
+            }
             cb.SelectedValue = n.Model.ToString();
             cb.SelectionChanged += Cb_SelectionChanged;
-            cm.Items.Add(cb);
+            sp.Children.Add(cb);
+            cm.Items.Add(sp);
+        }
+
+        private static void Cm_Closed(object sender, RoutedEventArgs e)
+        {
+
+            if (sender is ContextMenu cm)
+            {
+
+                int neuronID = (int)cm.GetValue(NeuronIDProperty);
+                Neuron n = MainWindow.theNeuronArray.neuronArray[neuronID];
+                Control cc = Utils.FindByName(cm, "Label");
+                if (cc is TextBox tb)
+                    n.Label = tb.Text;
+                cc = Utils.FindByName(cm, "CurrentCharge");
+                if (cc is TextBox tb1)
+                {
+                    float.TryParse(tb1.Text, out float newCharge);
+                    n.SetValue(newCharge);
+                }
+            }
+            MainWindow.Update();
         }
 
         //change the model for all selected neurons if this one is in the selection
         private static void Cb_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox cb = sender as ComboBox;
-            ContextMenu cm = cb.Parent as ContextMenu;
+            StackPanel sp = cb.Parent as StackPanel;
+            ContextMenu cm = sp.Parent as ContextMenu;
             int neuronID = (int)cm.GetValue(NeuronIDProperty);
             Neuron.modelType nm = (Neuron.modelType)System.Enum.Parse(typeof(Neuron.modelType), cb.SelectedItem.ToString());
             Neuron n = MainWindow.theNeuronArray.neuronArray[neuronID];
@@ -263,11 +286,7 @@ namespace BrainSimulator
             }
         }
 
-        private static void Cm_Closed(object sender, RoutedEventArgs e)
-        {
-            MainWindow.Update();
-        }
-
+ 
         private static void Tb_TextChanged(object sender, TextChangedEventArgs e)
         {
             TextBox tb = sender as TextBox;

@@ -1,10 +1,10 @@
-﻿<local:ModuleBaseDlg x:Class="BrainSimulator.Module2DSimDlg"
+﻿<local:ModuleBaseDlg x:Class="BrainSimulator.Modules.Module2DSimDlg"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BrainSimulator"
+        xmlns:local="clr-namespace:BrainSimulator.Modules"
         mc:Ignorable="d"
         Title="2D Environment Simulation" Height="450" Width="800" Background="Gray" ShowInTaskbar="False">
-    <Canvas Name="theCanvas" SizeChanged="TheCanvas_SizeChanged" MouseLeftButtonDown="TheCanvas_MouseLeftButtonDown" MouseRightButtonDown="TheCanvas_MouseRightButtonDown"/>
+    <Canvas Name="theCanvas" SizeChanged="TheCanvas_SizeChanged" MouseLeftButtonDown="TheCanvas_MouseLeftButtonDown"/>
 </local:ModuleBaseDlg>

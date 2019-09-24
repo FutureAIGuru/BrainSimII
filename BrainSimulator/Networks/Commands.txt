@@ -1,0 +1,33 @@
+
+ModuleBehavior: Scan
+Wait-for ModuleBehavior: Done
+Stop
+//the command above halst the execution of the script file
+ModuleBehavior: Conf
+Wait-for ModuleBehavior: Done
+ModuleBehavior: Conf
+Wait-for ModuleBehavior: Done
+ModuleBehavior: Conf
+Wait-for ModuleBehavior: Done
+ModuleBehavior: Conf
+Wait-for ModuleBehavior: Done
+ModuleBehavior: Conf
+Wait-for ModuleBehavior: Done
+ModuleBehavior: Conf
+Wait-for ModuleBehavior: Done
+ModuleBehavior: Conf
+Wait-for ModuleBehavior: Done
+ModuleBehavior: Conf
+Wait-for ModuleBehavior: Done
+ModuleBehavior: Conf
+Wait-for ModuleBehavior: Done
+ModuleBehavior: Conf
+Wait-for ModuleBehavior: Done
+ModuleBehavior: Conf
+Wait-for ModuleBehavior: Done
+
+
+
+
+
+

@@ -21,12 +21,10 @@ using System.Diagnostics;
 using System.Windows.Threading;
 using System.Collections;
 using System.Reflection;
-
+using BrainSimulator.Modules;
 
 namespace BrainSimulator
 {
-
-
     public partial class NeuronArrayView : UserControl
     {
 
@@ -93,7 +91,7 @@ namespace BrainSimulator
             //draw the module rectangles
             for (int i = 0; i < MainWindow.theNeuronArray.Modules.Count; i++)
             {
-                Module nr = MainWindow.theNeuronArray.Modules[i];
+                ModuleView nr = MainWindow.theNeuronArray.Modules[i];
                 NeuronSelectionRectangle nsr = new NeuronSelectionRectangle(nr.FirstNeuron, nr.Width, nr.Height);
                 Rectangle r = nsr.GetRectangle(dp);
                 r.Fill = new SolidColorBrush(Utils.FromArgb(nr.Color));
@@ -116,7 +114,7 @@ namespace BrainSimulator
                 r.Fill = new SolidColorBrush(Colors.Pink);
 
                 theCanvas.Children.Add(r);
-                Module nr = new Module
+                ModuleView nr = new ModuleView
                 {
                     Label = "new",
                     Width = theSelection.selectedRectangles[i].Width,
@@ -180,8 +178,8 @@ namespace BrainSimulator
         {
             for (int i = 0; i < MainWindow.theNeuronArray.Modules.Count; i++)
             {
-                Module nr = MainWindow.theNeuronArray.Modules[i];
-                Point GetCenter(Module na)
+                ModuleView nr = MainWindow.theNeuronArray.Modules[i];
+                Point GetCenter(ModuleView na)
                 {
                     Point p1 = dp.pointFromNeuron(na.FirstNeuron);
                     p1.X += dp.NeuronDisplaySize / 2;
@@ -195,7 +193,7 @@ namespace BrainSimulator
                 {
                     if (commands[j] == "-o")
                     {
-                        Module naTarget = MainWindow.theNeuronArray.FindAreaByLabel(commands[j + 1]);
+                        ModuleView naTarget = MainWindow.theNeuronArray.FindAreaByLabel(commands[j + 1]);
                         if (naTarget != null)
                         {
                             Shape s = SynapseView.DrawLinkArrow(GetCenter(nr), GetCenter(naTarget));
@@ -447,7 +445,7 @@ namespace BrainSimulator
 
         }
 
-        Module na = null;
+        ModuleView na = null;
         public void theCanvas_MouseMove(object sender, MouseEventArgs e)
         {
             if (MainWindow.theNeuronArray == null) return;
@@ -564,6 +562,8 @@ namespace BrainSimulator
                 na.GetAbsNeuronLocation(firstSelectedNeuron, out int Xf, out int Yf);
                 na.GetAbsNeuronLocation(currentNeuron, out int Xc, out int Yc);
                 na.GetAbsNeuronLocation(na.LastNeuron, out int Xl, out int Yl);
+                int minHeight = na.TheModule.MinHeight;
+                int minWidth = na.TheModule.MinWidth;
 
                 //move the top?
                 if (theCanvas.Cursor == Cursors.ScrollN || theCanvas.Cursor == Cursors.ScrollNE || theCanvas.Cursor == Cursors.ScrollNW)
@@ -573,9 +573,14 @@ namespace BrainSimulator
                         int newTop = Y1 + Yc - Yf;
                         if (newTop <= Y2)
                         {
-                            na.FirstNeuron += Yc - Yf;
                             na.Height -= Yc - Yf;
-                            firstSelectedNeuron = currentNeuron;
+                            if (na.Height < minHeight)
+                                na.Height = minHeight;
+                            else
+                            {
+                                na.FirstNeuron += Yc - Yf;
+                                firstSelectedNeuron = currentNeuron;
+                            }
                             SortAreas();
                             Update();
                         }
@@ -589,9 +594,14 @@ namespace BrainSimulator
                         int newLeft = X1 + Xc - Xf;
                         if (newLeft <= X2)
                         {
-                            na.FirstNeuron += (Xc - Xf) * MainWindow.theNeuronArray.rows;
                             na.Width -= Xc - Xf;
-                            firstSelectedNeuron = currentNeuron;
+                            if (na.Width < minWidth)
+                                na.Width = minWidth;
+                            else
+                            {
+                                na.FirstNeuron += (Xc - Xf) * MainWindow.theNeuronArray.rows;
+                                firstSelectedNeuron = currentNeuron;
+                            }
                             SortAreas();
                             Update();
                         }
@@ -606,7 +616,10 @@ namespace BrainSimulator
                         if (newRight >= X1)
                         {
                             na.Width += Xc - Xf;
-                            firstSelectedNeuron = currentNeuron;
+                            if (na.Width < minWidth)
+                                na.Width = minWidth;
+                            else
+                                firstSelectedNeuron = currentNeuron;
                             Update();
                         }
                     }
@@ -620,7 +633,10 @@ namespace BrainSimulator
                         if (newBottom >= Y1)
                         {
                             na.Height += Yc - Yf;
-                            firstSelectedNeuron = currentNeuron;
+                            if (na.Height < minHeight)
+                                na.Height = minHeight;
+                            else
+                                firstSelectedNeuron = currentNeuron;
                             Update();
                         }
                     }

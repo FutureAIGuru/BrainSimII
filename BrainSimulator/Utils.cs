@@ -10,8 +10,10 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Xml.Serialization;
+using BrainSimulator.Modules;
 
 namespace BrainSimulator
 {
@@ -30,6 +32,30 @@ namespace BrainSimulator
 
     public static class Utils
     {
+        //this searches a control tree to find a control by name so you can retrieve its value
+        public static Control FindByName(Visual v, string name)
+        {
+            foreach (Object o in LogicalTreeHelper.GetChildren(v))
+            {
+                if (o is Visual v3)
+                {
+                    if (v3 is Control c1)
+                    {
+                        if (c1.Name == name) return c1;
+                    }
+                    try
+                    {
+                        Control c2 = FindByName(v3, name);
+                        if (c2 != null) return c2;
+                    }
+                    catch { }
+                }
+            }
+            return null;
+        }
+
+
+
         public static Color FromArgb(int theColor)
         {
             Color c = new Color();

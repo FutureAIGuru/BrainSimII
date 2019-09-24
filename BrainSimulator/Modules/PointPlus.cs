@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.Windows;
 
-namespace BrainSimulator
+namespace BrainSimulator.Modules
 {
         public class PointPlus
         {

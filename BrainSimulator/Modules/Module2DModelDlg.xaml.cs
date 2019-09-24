@@ -18,7 +18,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace BrainSimulator
+namespace BrainSimulator.Modules
 {
     /// <summary>
     /// Interaction logic for Module2DSimDlg.xaml

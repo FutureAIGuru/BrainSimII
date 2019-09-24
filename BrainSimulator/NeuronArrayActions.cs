@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Reflection;
+using BrainSimulator.Modules;
 
 
 namespace BrainSimulator
@@ -20,27 +21,11 @@ namespace BrainSimulator
     {
         private void HandleProgrammedActions()
         {
-            foreach (Module na in modules)
+            foreach (ModuleView na in modules)
             {
-                if (na.CommandLine == null) continue;
-                string command = na.CommandLine;
-                int commandEnd = na.CommandLine.IndexOf(' ');
-                if (commandEnd > 0)
-                    command = na.CommandLine.Substring(0, commandEnd);
                 if (na.TheModule != null)
                 {
                     na.TheModule.Fire();
-                }
-                else
-                {
-                    Object[] parameters = new Object[1];
-                    parameters[0] = na;
-                    Type theType = this.GetType();
-                    //MethodInfo[] Methods = theType.GetMethods(); //this will list the available functions (with some effort)
-                    //Type para = theMethod.GetParameters()[0].ParameterType;
-                    MethodInfo theMethod = theType.GetMethod(command);
-                    if (theMethod != null)
-                        theMethod.Invoke(this, parameters);
                 }
             }
         }
@@ -219,35 +204,24 @@ namespace BrainSimulator
         //}
 
         //looks for a beginning match only
-        private Module FindAreaByCommand(string command)
+        private ModuleView FindAreaByCommand(string command)
         {
             return modules.Find(na => na.CommandLine.IndexOf(command) == 0);
         }
 
         //needs a complete match
-        public Module FindAreaByLabel(string label)
+        public ModuleView FindAreaByLabel(string label)
         {
             return modules.Find(na => na.Label.Trim() == label);
         }
 
-        //these must be vertically-oriented single-column areas
-        private int GetPropertyNeuronIndex(string command, float value)
-        {
-            Module na = FindAreaByCommand(command);
-            if (na == null) return -1;
-            //scale the value
-            int height = na.LastNeuron - na.FirstNeuron;
-            int offset = (int)((float)height * value);
-            return na.FirstNeuron + offset;
-        }
-        
 
-        //loads an image from a file...analogous to the simView
+        //[DO NOT USE} loads an image from a file...will be converted to a module
         int fileCounter = 0;
         int countDown = 0;
         List<string> dirs = null;
         Bitmap bitmap1;
-        public void LoadImage(Module na)
+        public void LoadImage(ModuleView na)
         {
             if (countDown == 0)
             {

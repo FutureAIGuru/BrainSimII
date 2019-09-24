@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Media.Media3D;
 
 
-namespace BrainSimulator
+namespace BrainSimulator.Modules
 {
     public class ModuleRealityModel : ModuleBase
     {

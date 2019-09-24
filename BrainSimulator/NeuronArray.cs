@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using BrainSimulator.Modules;
 
 namespace BrainSimulator
 {
@@ -22,8 +23,8 @@ namespace BrainSimulator
         public int arraySize = 1000000; // a million neurons to start
         public int rows = 1000;
 #endif
-        internal List<Module> modules = new List<Module>();
-        public List<Module> Modules
+        internal List<ModuleView> modules = new List<ModuleView>();
+        public List<ModuleView> Modules
         {
             get { return modules; }
         }

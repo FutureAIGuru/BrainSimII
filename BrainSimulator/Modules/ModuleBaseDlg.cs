@@ -12,7 +12,7 @@ using System.Windows;
 using System.Windows.Threading;
 
 
-namespace BrainSimulator
+namespace BrainSimulator.Modules
 {
     public class ModuleBaseDlg : Window
     {
@@ -31,7 +31,7 @@ namespace BrainSimulator
                 timer = new DispatcherTimer();
                 timer.Interval = new TimeSpan(0, 0, 0, 0, 250);
                 timer.Tick += new EventHandler(Timer_Tick);
-                timer.Start();
+                //timer.Start();
                 return false;
             }
             dt = DateTime.Now;
@@ -42,7 +42,10 @@ namespace BrainSimulator
         //this picks up a final draw after 1/4 second 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            timer.Stop();
+            Application.Current.Dispatcher.Invoke((Action)delegate {
+                timer.Stop();
+            });
+
             Application.Current.Dispatcher.Invoke((Action)delegate { Draw(); });
         }
     }

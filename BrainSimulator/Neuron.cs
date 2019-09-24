@@ -62,6 +62,13 @@ namespace BrainSimulator
             return (synapses.Count != 0 || synapsesFrom.Count != 0 || Label != "");
         }
 
+        public void Reset()
+        {
+            Label = "";
+            model = modelType.Std;
+            SetValue(0);
+        }
+
         public void AddSynapse(int targetNeuron, float weight, NeuronArray theNeuronArray=null, bool addUndoInfo = true)
         {
             if (theNeuronArray == null) theNeuronArray = MainWindow.theNeuronArray;
@@ -182,7 +189,7 @@ namespace BrainSimulator
                     foreach (Synapse s in synapses)
                     {
                         Neuron n = theNeuronArray.neuronArray[s.TargetNeuron];
-                        Interlocked.Add(ref n.currentCharge, (int)(s.Weight * 1000));// (int)(weight * 1000));
+                        Interlocked.Add(ref n.currentCharge, (int)(s.Weight * 1000));
                     }
                     break;
 

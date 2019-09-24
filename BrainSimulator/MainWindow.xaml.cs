@@ -1,9 +1,9 @@
-﻿using Microsoft.Win32;
-//
+﻿//
 // Copyright (c) Charles Simon. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +25,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.IO.MemoryMappedFiles;
 using System.Drawing;
+using BrainSimulator.Modules;
 
 namespace BrainSimulator
 {
@@ -78,7 +79,7 @@ namespace BrainSimulator
         {
             splashScreen.Close();
             ((DispatcherTimer)sender).Stop();
-            if (theNeuronArray != null) foreach (Module na in theNeuronArray.Modules)
+            if (theNeuronArray != null) foreach (ModuleView na in theNeuronArray.Modules)
                 {
                     if (na.TheModule != null)
                     {
@@ -108,8 +109,11 @@ namespace BrainSimulator
                 }
                 else
                 {
-                    theNeuronArray.UndoSynapse();
-                    theNeuronArrayView.Update();
+                    if (theNeuronArray != null)
+                    {
+                        theNeuronArray.UndoSynapse();
+                        theNeuronArrayView.Update();
+                    }
                 }
             }
             if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
@@ -137,8 +141,11 @@ namespace BrainSimulator
             }
             if (crtlPressed && e.Key == Key.Z)
             {
-                theNeuronArray.UndoSynapse();
-                theNeuronArrayView.Update();
+                if (theNeuronArray != null)
+                {
+                    theNeuronArray.UndoSynapse();
+                    theNeuronArrayView.Update();
+                }
             }
         }
 
@@ -151,10 +158,9 @@ namespace BrainSimulator
         {
 
             theNeuronArrayView.theSelection.selectedRectangles.Clear();
+            CloseAllModuleDialogs();
 
-            Thread.Sleep(1);
-
-            // Load the data from the XML to the Brainsim Engine.  
+                        // Load the data from the XML to the Brainsim Engine.  
             FileStream file = File.Open(fileName, FileMode.Open);
 
             XmlSerializer reader = new XmlSerializer(typeof(NeuronArray), GetModuleTypes());
@@ -173,13 +179,14 @@ namespace BrainSimulator
             theNeuronArrayView.Update();
             setTitleBar();
             Task.Delay(1000).ContinueWith(t => ShowDialogs());
-            foreach (Module na in theNeuronArray.modules)
+            foreach (ModuleView na in theNeuronArray.modules)
             {
                 if (na.TheModule != null)
                     na.TheModule.SetUpAfterLoad();
             }
             if (theNeuronArray.displayParams != null)
                 theNeuronArrayView.Dp = theNeuronArray.displayParams;
+
             NeuronArrayView.SortAreas();
             Update();
         }
@@ -188,9 +195,9 @@ namespace BrainSimulator
         private void ShowDialogs()
         {
             SuspendEngine();
-            foreach (Module na in theNeuronArray.modules)
+            foreach (ModuleView na in theNeuronArray.modules)
             {
-                if (na.TheModule != null)
+                if (na.TheModule != null && na.TheModule.dlgIsOpen)
                 {
                     Application.Current.Dispatcher.Invoke((Action)delegate
                     {
@@ -252,7 +259,7 @@ namespace BrainSimulator
             string tempFile = System.IO.Path.GetTempFileName();
             FileStream file = File.Create(tempFile);
 
-            foreach (Module na in theNeuronArray.modules)
+            foreach (ModuleView na in theNeuronArray.modules)
             {
                 if (na.TheModule != null)
                     na.TheModule.SetUpBeforeSave();
@@ -521,13 +528,43 @@ namespace BrainSimulator
 
         private void MainMenu_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (theNeuronArrayView.theSelection.selectedRectangles.Count > 0)
+            if (theNeuronArray == null)
+            {
+                EnableMenuItem(MainMenu.Items, "_Save", false);
+                EnableMenuItem(MainMenu.Items, "Save _As", false);
+                EnableMenuItem(MainMenu.Items, "_Insert", false);
+                EnableMenuItem(MainMenu.Items, "_Properties", false);
+            }
+            else
+            {
+                EnableMenuItem(MainMenu.Items, "_Save", true);
+                EnableMenuItem(MainMenu.Items, "Save _As", true);
+                EnableMenuItem(MainMenu.Items, "_Insert", true);
+                EnableMenuItem(MainMenu.Items, "_Properties", true);
+            }
+            if (theNeuronArrayView.theSelection.selectedRectangles.Count == 0)
             {
                 EnableMenuItem(MainMenu.Items, " Cut", false);
+                EnableMenuItem(MainMenu.Items, " Copy", false);
+                EnableMenuItem(MainMenu.Items, " Delete", false);
+                EnableMenuItem(MainMenu.Items, " Move", false);
             }
             else
             {
                 EnableMenuItem(MainMenu.Items, " Cut", true);
+                EnableMenuItem(MainMenu.Items, " Copy", true);
+                EnableMenuItem(MainMenu.Items, " Delete", true);
+                EnableMenuItem(MainMenu.Items, " Move", true);
+            }
+            if (theNeuronArrayView.myClipBoard == null)
+            {
+                EnableMenuItem(MainMenu.Items, " Paste", false);
+                EnableMenuItem(MainMenu.Items, " Save Selection to File", false);
+            }
+            else
+            {
+                EnableMenuItem(MainMenu.Items, " Paste", true);
+                EnableMenuItem(MainMenu.Items, " Save Selection to File", true);
             }
         }
         static public void UpdateDisplayLabel(int zoomLevel, int firedCount)
@@ -541,40 +578,45 @@ namespace BrainSimulator
             arrayView.Update();
         }
 
-        static public RealitySimulator realSim = null;
-        static public CameraHandler theCameraWindow = null;
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            MessageBoxResult mbResult = System.Windows.MessageBox.Show(this, "Do you want to save changes?", "Save", MessageBoxButton.YesNoCancel,
+            if (theNeuronArray != null)
+            {
+                MessageBoxResult mbResult = System.Windows.MessageBox.Show(this, "Do you want to save changes?", "Save", MessageBoxButton.YesNoCancel,
                 MessageBoxImage.Asterisk, MessageBoxResult.No);
-            if (mbResult == MessageBoxResult.Yes)
-            {
-                if (currentFileName != "")
-                    SaveFile(currentFileName);
+                if (mbResult == MessageBoxResult.Yes)
+                {
+                    if (currentFileName != "")
+                        SaveFile(currentFileName);
+                    else
+                        buttonSaveAs_Click(null, null);
+                }
+                if (mbResult == MessageBoxResult.Cancel)
+                {
+                    e.Cancel = true;
+                }
                 else
-                    buttonSaveAs_Click(null, null);
-            }
-            if (mbResult == MessageBoxResult.Cancel)
-            {
-                e.Cancel = true;
+                {
+                    engineThread.Abort();
+
+                    CloseAllModuleDialogs();
+                }
             }
             else
             {
                 engineThread.Abort();
+            }
+        }
 
-
-                if (realSim != null)
-                    realSim.Close();
-                if (theCameraWindow != null)
-                    theCameraWindow.Close();
-                if (theNeuronArray != null)
+        private static void CloseAllModuleDialogs()
+        {
+            if (theNeuronArray != null)
+            {
+                foreach (ModuleView na in theNeuronArray.Modules)
                 {
-                    foreach (Module na in theNeuronArray.Modules)
+                    if (na.TheModule != null)
                     {
-                        if (na.TheModule != null)
-                        {
-                            na.TheModule.CloseDlg();
-                        }
+                        na.TheModule.CloseDlg();
                     }
                 }
             }
@@ -606,7 +648,7 @@ namespace BrainSimulator
             dlg.ShowDialog();
         }
 
-
+        //this reloads the file which was being used on the previous run of the program
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             try
@@ -622,13 +664,11 @@ namespace BrainSimulator
             { }
         }
 
-
-
         private void ButtonInit_Click(object sender, RoutedEventArgs e)
         {
-            if (theNeuronArray == null)return;
+            if (theNeuronArray == null) return;
             SuspendEngine();
-            foreach (Module na in theNeuronArray.Modules)
+            foreach (ModuleView na in theNeuronArray.Modules)
             {
                 if (na.TheModule != null)
                     na.TheModule.Init(true);
@@ -636,6 +676,7 @@ namespace BrainSimulator
             theNeuronArrayView.Update();
             ResumeEngine();
         }
+
         private void PlayPause_Click(object sender, RoutedEventArgs e)
         {
             if (imagePause.Visibility == Visibility.Visible)
@@ -652,6 +693,7 @@ namespace BrainSimulator
                 ResumeEngine();
             }
         }
+
         private void ButtonSingle_Click(object sender, RoutedEventArgs e)
         {
             if (theNeuronArray != null)

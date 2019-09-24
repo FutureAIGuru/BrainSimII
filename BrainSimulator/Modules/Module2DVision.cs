@@ -9,28 +9,49 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using static System.Math;
 
-namespace BrainSimulator
+namespace BrainSimulator.Modules
 {
     public class Module2DVision : ModuleBase
     {
-        public static float fieldOfView = (float)Math.PI / 3;
+        public static float fieldOfView = (float)PI / 3;
         public static float eyeOffset = .2f;
+        public override string ShortDescription { get => "Retinae"; }
+        public override string LongDescription
+        {
+            get =>
+                "This module has 2 rows of neurons representing the retinal views of the right and left eyes. It receives input from the 2DSim module "+
+                "and finds points of interest which are color boundaries. Based on the difference in position of these boudaries in the two eyes, " +
+                "it estimates the distance (depth perception) of the point and passes this information to the model. As depths are approximate, "+
+                "it enters these ae 'possible' points.\r\n" +
+                "";
+        }
 
+
+        public Module2DVision()
+        {
+            minWidth = 10;
+        }
+
+        //this converts the position of a retinal neuron to its angular position
         public static double GetDirectionOfNeuron(float index, int numPixels)
         {
             float i1 = ((float)numPixels / 2 - index) - .5f;
             float thetaPerPixel = fieldOfView / (numPixels - 1);
-            double a = toDegrees(thetaPerPixel);
+            double a = toDegrees(thetaPerPixel); //for debug
             double retVal = thetaPerPixel * i1;
             a = toDegrees(retVal);
             return retVal;
         }
+
         public static double toDegrees(double theta)
         {
-            return 180 * theta / Math.PI;
+            return 180 * theta / PI;
         }
 
+        //these arrays are used to determine if any data has changed
+        //this is presently used to reduce computation but in future development can be used to detect object motion
         List<int> lastValuesL = null;
         List<int> lastValuesR = null;
         public override void Fire()
@@ -64,17 +85,6 @@ namespace BrainSimulator
                     start = GetPointsWithDepth(nmModel, start);
                 nmModel.MarkVisibleObjects();
             }
-
-            //for (int i = 0; i < na.Width; i++)
-            //{
-            //    Color theColor = Utils.FromArgb(na.GetNeuronAt(i, 0).CurrentChargeInt);
-            //    if (theColor != Colors.Black)
-            //    {
-            //        naModel.SetColor((float)GetDirectionOfNeuron(i), theColor);
-            //    }
-            //}
-
-
         }
 
         private int GetPointsWithDepth(Module2DModel naModel, int start)
@@ -96,7 +106,9 @@ namespace BrainSimulator
                 int color4 = color3;
                 if (color3 == color1)
                 {
-                    for (j = j; j < na.Width; j++)
+                    //because the eyes are parallel, a transition in the right eye will always be in the same place
+                    //or to the right of the position in the left eye;
+                    for (; j < na.Width; j++)
                     {
                         color4 = na.GetNeuronAt(j, 0).CurrentChargeInt;
                         if (color3 != color4) break;
@@ -106,26 +118,25 @@ namespace BrainSimulator
                     {
                         //we have an equivelant transition in the other eye...how far away is it?
                         //using law of sines
-                        //(if the field-of-view and eye separation were constant, this could all be a lookup table)
+                        //(if the field-of-view and eye separation were constants, this could all be a lookup table)
                         double thetaA = GetDirectionOfNeuron(l - 0.5f, na.Width);
                         double a = toDegrees(thetaA);
-                        thetaA = Math.PI / 2 - thetaA; //get angle to axis
+                        thetaA = PI / 2 - thetaA; //get angle to axis
                         a = toDegrees(thetaA);
                         double thetaB = GetDirectionOfNeuron(j - 0.5f, na.Width);
-                        thetaB = Math.PI / 2 - thetaB;
-                        thetaB = Math.PI - thetaB; //to get an inside angle
+                        thetaB = PI / 2 - thetaB;
+                        thetaB = PI - thetaB; //to get an inside angle
                         a = toDegrees(thetaB);
-                        double thetaC = Math.PI - thetaA - thetaB;
+                        double thetaC = PI - thetaA - thetaB;
                         a = toDegrees(thetaC);
-
-                        double A = Math.Sin(thetaA) * (2 * eyeOffset) / Math.Sin(thetaC);
+                        double A = Sin(thetaA) * (2 * eyeOffset) / Sin(thetaC);
                         Color c = Utils.FromArgb(color1);
                         if (c == Colors.Black)
                             c = Utils.FromArgb(color2);
-                        thetaA -= Math.PI / 2;
+                        thetaA -= PI / 2;
                         PointPlus P = new PointPlus { Theta = (float)-thetaA, R = (float)A};  //relative to left eye
                         P.Y -= eyeOffset;
-                        if (P.R < 5 && P.R > 1) //innacuracy if too close or too far
+                        if (P.R < 5 && P.R > 1) //inaccuracy if too close or too far
                             naModel.AddPosiblePointToKB(P,c);
                         return l;
                     }
@@ -147,11 +158,5 @@ namespace BrainSimulator
             lastValuesL = null;
             lastValuesR = null;
         }
-        public override void ShowDialog() //delete this function if it isn't needed
-        {
-            base.ShowDialog();
-        }
     }
-
-
 }

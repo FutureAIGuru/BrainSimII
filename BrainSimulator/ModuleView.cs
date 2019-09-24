@@ -1,282 +1,213 @@
-﻿using System;
+﻿//
+// Copyright (c) Charles Simon. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+//  
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
+using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
+using System.Windows.Controls;
+using System.Xml.Serialization;
+
 
 namespace BrainSimulator
 {
-    class ModuleView :DependencyObject
+    
+    public partial class ModuleView : DependencyObject, IComparable<ModuleView>
     {
-        public static readonly DependencyProperty AreaNumberProperty =
-    DependencyProperty.Register("AreaNumber", typeof(int), typeof(MenuItem));
-        public int AreaNumber
+        int firstNeuron = 0;//, lastNeuron = 0;
+        string label;
+        string commandLine;
+        int color;
+        Modules.ModuleBase theModule = null;
+        int width = 0;
+        int height = 0;
+
+        //here is where we sort the array of modules so they execute top-to-bottom & left-to-right.
+        public int CompareTo(ModuleView na)
         {
-            get { return (int)GetValue(AreaNumberProperty); }
-            set { SetValue(AreaNumberProperty, value); }
+            //two bizarre cases
+            if (na == null) return 1;
+            if (na.firstNeuron == firstNeuron) return 0;
+            if (na.firstNeuron < firstNeuron) return 1;
+            return -1;
         }
 
-        public static void CreateContextMenu(int i, Module nr, Rectangle r) //for a selection
+        public ModuleView(int firstNeuron1, int width, int height, string theLabel, string theCommandLine, int theColor)
         {
-            ContextMenu cm = new ContextMenu();
-            cm.SetValue(AreaNumberProperty, i);
-            MenuItem mi = new MenuItem();
-            mi.Header = "Delete";
-            mi.Click += Mi_Click;
-            cm.Items.Add(mi);
-            mi = new MenuItem();
-            mi.Header = "Initialize";
-            mi.Click += Mi_Click;
-            cm.Items.Add(mi);
-            StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
-            sp.Children.Add(new Label { Content = "Width:", VerticalAlignment = VerticalAlignment.Center });
-            sp.Children.Add(new TextBox { Text = nr.Width.ToString(), Width = 60, Name = "AreaWidth", VerticalAlignment = VerticalAlignment.Center });
-            sp.Children.Add(new Label { Content = "Height:" });
-            sp.Children.Add(new TextBox { Text = nr.Height.ToString(), Width = 60, Name = "AreaHeight", VerticalAlignment = VerticalAlignment.Center });
-            cm.Items.Add(sp);
-
-            sp = new StackPanel { Orientation = Orientation.Horizontal };
-            sp.Children.Add(new Label { Content = "Name:" });
-            sp.Children.Add(new TextBox { Text = nr.Label, Width = 140, Name = "AreaName", VerticalAlignment = VerticalAlignment.Center });
-            cm.Items.Add(sp);
-
-            sp = new StackPanel { Orientation = Orientation.Horizontal };
-            sp.Children.Add(new Label { Content = "Type:" });
-            cm.Items.Add(sp);
-
-            ComboBox cb = new ComboBox();
-            //get list of available NEW modules...these are assignable to a "ModuleBase" 
-            var listOfBs = (from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
-                            from assemblyType in domainAssembly.GetTypes()
-                            where typeof(ModuleBase).IsAssignableFrom(assemblyType)
-                            orderby assemblyType.Name
-                            select assemblyType
-                            ).ToArray();
-            foreach (var v in listOfBs)
-                if (v.Name != "ModuleBase")
-                    cb.Items.Add(v.Name);
-            if (nr.TheModule != null)
+            FirstNeuron = firstNeuron1;
+            Width = width;
+            Height = height;
+            Label = theLabel;
+            CommandLine = theCommandLine;
+            color = theColor;
+            string[] Params = CommandLine.Split(' ');
+            if (commandLine.IndexOf("Module") == 0) //take this out when all modules are ported to new class structure
             {
-                string cm1 = nr.TheModule.GetType().Name.ToString();
-                if (cm1 != "")
-                    cb.SelectedValue = cm1;
+                Type t = Type.GetType("BrainSimulator.Modules." + Params[0]);
+                theModule = (Modules.ModuleBase)Activator.CreateInstance(t);
             }
-            cb.Width = 180;
-            cb.Name = "AreaType";
-            sp.Children.Add(cb);
-            //cm.Items.Add(cb);
-
-            TextBox tb2 = new TextBox();
-            tb2.Text = "";
-            tb2.Name = "CommandParams";
-            if (nr.CommandLine.IndexOf(" ") > 0) tb2.Text = nr.CommandLine.Substring(nr.CommandLine.IndexOf(" ") + 1);
-            tb2.Width = 200;
-            cm.Items.Add(tb2);
-
-            //color picker
-            Color c = Utils.FromArgb(nr.Color);
-            cb = new ComboBox();
-            cb.Width = 200;
-            cb.Name = "AreaColor";
-            PropertyInfo[] x1 = typeof(Colors).GetProperties();
-            int sel = -1;
-            for (int i1 = 0; i1 < x1.Length; i1++)
-            {
-                Color cc = (Color)ColorConverter.ConvertFromString(x1[i1].Name);
-                if (cc == c)
-
-                {
-                    sel = i1;
-                    break;
-                }
-            }
-            if (nr.Color == 0) sel = 3;
-            foreach (PropertyInfo s in x1)
-            {
-                ComboBoxItem cbi = new ComboBoxItem()
-                {
-                    Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(s.Name)),
-                    Content = s.Name
-                };
-                Rectangle r1 = new Rectangle()
-                {
-                    Width = 20,
-                    Height = 20,
-                    Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString(s.Name)),
-                    Margin = new Thickness(0, 0, 140, 0),
-                };
-                Grid g = new Grid();
-                g.Children.Add(r1);
-                g.Children.Add(new Label() { Content = s.Name, Margin = new Thickness(25, 0, 0, 0) });
-                cbi.Content = g;
-                cbi.Width = 200;
-                cb.Items.Add(cbi);
-            }
-            cb.SelectedIndex = sel;
-            cm.Items.Add(cb);
-
-            if (i >= 0 && MainWindow.theNeuronArray.Modules[i].TheModule != null)
-            {
-                var t = MainWindow.theNeuronArray.Modules[i].TheModule.GetType();
-                Type t1 = Type.GetType(t.ToString() + "Dlg");
-                if (t1 != null)
-                {
-                    cm.Items.Add(new MenuItem { Header = "Show Dialog" });
-                    ((MenuItem)cm.Items[cm.Items.Count - 1]).Click += Mi_Click;
-                }
-            }
-            r.ContextMenu = cm;
-            cm.Closed += Cm_Closed;
         }
 
-        static Control  FindByName(Visual v, string name)
+        public ModuleView() { }
+        public string Label { get => label; set => label = value; }
+        public int FirstNeuron { get => firstNeuron; set => firstNeuron = value; }
+        public int Height { get => height; set => height = value; }
+        public int Width { get => width; set => width = value; }
+        public int Color { get => color; set => color = value; }
+
+        public string CommandLine { get => commandLine; set => commandLine = value; }
+        private int Rows { get { return MainWindow.theNeuronArray.rows; } }
+
+        public int NeuronCount { get { return Width * Height; } }
+        public Modules.ModuleBase TheModule { get => theModule; set => theModule = value; }
+        public int LastNeuron { get { return firstNeuron + (height - 1) + Rows * (Width - 1); } }
+
+
+        //these two emulate a foreach which might be implemented some day
+        int currentNeuronInArea = 0;
+        public void BeginEnum()
+        { currentNeuronInArea = 0; }
+        public Neuron GetNextNeuron()
         {
-            foreach (Visual v3 in LogicalTreeHelper.GetChildren(v))
+            int neuronIndex = (currentNeuronInArea % Height) + (currentNeuronInArea / Height) * Rows + firstNeuron;
+            if (currentNeuronInArea >= Height * Width) return null;
+            currentNeuronInArea++;
+            return MainWindow.theNeuronArray.neuronArray[neuronIndex];
+        }
+
+        public Rectangle GetRectangle(DisplayParams dp)
+        {
+            Rectangle r = new Rectangle();
+            Point p1 = dp.pointFromNeuron(firstNeuron);
+            Point p2 = dp.pointFromNeuron(LastNeuron);
+            p2.X += dp.NeuronDisplaySize;
+            p2.Y += dp.NeuronDisplaySize;
+            r.Width = p2.X - p1.X;
+            r.Height = p2.Y - p1.Y;
+            Canvas.SetTop(r, p1.Y);
+            Canvas.SetLeft(r, p1.X);
+            return r;
+        }
+
+
+        public Neuron GetFreeNeuron()
+        {
+            BeginEnum();
+            for (Neuron n = GetNextNeuron(); n != null; n = GetNextNeuron())
+                if (!n.InUse())
+                    return n;
+            return null;
+        }
+        //this gets the neuron with an index relative to the area itself
+        public Neuron GetNeuronAt(int index)
+        {
+            int neuronIndex = (index % Height) + (index / Height) * Rows + firstNeuron;
+            return MainWindow.theNeuronArray.neuronArray[neuronIndex];
+        }
+        public Neuron GetNeuronAt(int X, int Y)
+        {
+            if (X >= Width) return null;
+            if (Y >= Height) return null;
+            int index = firstNeuron + Y + X * Rows;
+            return MainWindow.theNeuronArray.neuronArray[index];
+        }
+        public Neuron GetNeuronAt(string label)
+        {
+            for (int i = 0; i < NeuronCount; i++)
             {
-                if (v3 is Control c1)
-                {
-                    if (c1.Name == name) return c1;
-                }
-                try
-                {
-                    Control c2 = FindByName(v3, name);
-                    if (c2 != null) return c2;
-                }
-                catch { }
+                Neuron n = GetNeuronAt(i);
+                if (n.Label.ToLower() == label.ToLower())
+                    return n;
             }
             return null;
         }
-        static bool deleted = false;
-        private static void Cm_Closed(object sender, RoutedEventArgs e)
-        {
-            if ((Keyboard.GetKeyStates(Key.Escape) & KeyStates.Down) > 0)
-                return;
-            if (deleted)
-            {
-                deleted = false;
-            }
-            else if (sender is ContextMenu cm)
-            {
-                int i = (int)cm.GetValue(AreaNumberProperty);
-                string label = "";
-                string commandLine = "";
-                Color color = Colors.Wheat;
-                int width = 1, height = 1;
 
-                Control cc = FindByName(cm, "AreaName");
-                if (cc is TextBox tb)
-                    label = tb.Text;
-                cc = FindByName(cm, "AreaWidth");
-                if (cc is TextBox tb1)
-                    int.TryParse(tb1.Text, out width);
-                cc = FindByName(cm, "AreaHeight");
-                if (cc is TextBox tb2)
-                    int.TryParse(tb2.Text, out height);
-                cc = FindByName(cm, "AreaType");
-                if (cc is ComboBox cb && cb.SelectedValue != null)
-                    commandLine = (string)cb.SelectedValue;
-                if (commandLine == "") return;//something went wrong
-                cc = FindByName(cm, "CommandParams");
-                if (cc is TextBox tb3)
-                    commandLine += " " + tb3.Text;
-                if ((label == "new" || label == "") && commandLine != "")
-                    label = commandLine;
-                cc = FindByName(cm, "AreaColor");
-                if (cc is ComboBox cb1)
-                    color = ((SolidColorBrush)((ComboBoxItem)cb1.SelectedValue).Background).Color;
-                if (label == " " && commandLine == " ") return;
-                if (i >= 0)
-                {
-                    //update the existing module
-                    MainWindow.theNeuronArray.modules[i].Label = label;
-                    MainWindow.theNeuronArray.modules[i].CommandLine = commandLine;
-                    MainWindow.theNeuronArray.modules[i].Color = Utils.ToArgb(color);
-                    MainWindow.theNeuronArray.modules[i].Width = width;
-                    MainWindow.theNeuronArray.modules[i].Height = height;
-                    //did we change the module type?
-                    string[] Params = commandLine.Split(' ');
-                    Type t1x = Type.GetType("BrainSimulator." + Params[0]);
-                    if (t1x != null && (MainWindow.theNeuronArray.modules[i].TheModule == null || MainWindow.theNeuronArray.modules[i].TheModule.GetType() != t1x))
-                    {
-                        MainWindow.theNeuronArray.modules[i].TheModule = (ModuleBase)Activator.CreateInstance(t1x);
-                    }
-                }
-                else
-                {
-                    //convert a selection to a module
-                    i = -i - 1;
-                    NeuronSelectionRectangle nsr = MainWindow.arrayView.theSelection.selectedRectangles[i];
-                    MainWindow.arrayView.theSelection.selectedRectangles.RemoveAt(i);
-                    Module na = new Module(nsr.FirstSelectedNeuron, width, height, label, commandLine, Utils.ToArgb(color));
-                    MainWindow.theNeuronArray.modules.Add(na);
-                    string[] Params = commandLine.Split(' ');
-                    if (MainWindow.theNeuronArray.modules[i].TheModule != null)
-                    {
-                        //MainWindow.theNeuronArray.areas[i].TheModule.Initialize(); //doesn't work with camera module
-                    }
-                    else
-                    {
-                        Type t1x = Type.GetType("BrainSimulator." + Params[0]);
-                        if (t1x != null && (MainWindow.theNeuronArray.modules[i].TheModule == null || MainWindow.theNeuronArray.modules[i].TheModule.GetType() != t1x))
-                        {
-                            MainWindow.theNeuronArray.modules[i].TheModule = (ModuleBase)Activator.CreateInstance(t1x);
-                            //  MainWindow.theNeuronArray.areas[i].TheModule.Initialize();
-                        }
-                    }
-                }
-            }
-            MainWindow.Update();
+        public void GetBounds(out int X1, out int Y1, out int X2, out int Y2)
+        {
+            NeuronSelectionRectangle nsr = new NeuronSelectionRectangle(firstNeuron, Width,Height);
+            nsr.GetSelectedArea(out X1, out Y1, out X2, out Y2);
+        }
+        public void GetAbsNeuronLocation(int index, out int X, out int Y)
+        {
+            X = index / Rows;
+            Y = index % Rows;
         }
 
-        private static void Mi_Click(object sender, RoutedEventArgs e)
+        public void GetNeuronLocation(Neuron n, out int X, out int Y)
         {
-            //Handle delete  & initialize commands
-            if (sender is MenuItem mi)
+            GetAbsNeuronLocation(n.Id, out int X1, out int Y1);
+            GetAbsNeuronLocation(FirstNeuron, out int X2, out int Y2);
+            X = X1 - X2;
+            Y = Y1 - Y2;
+        }
+        public void GetNeuronLocation(int nIndex, out int X, out int Y)
+        {
+            GetAbsNeuronLocation(nIndex, out int X1, out int Y1);
+            GetAbsNeuronLocation(FirstNeuron, out int X2, out int Y2);
+            X = X1 - X2;
+            Y = Y1 - Y2;
+        }
+
+        public void ClearAllNeurons()
+        {
+            BeginEnum();
+            for (Neuron n = GetNextNeuron(); n != null; n = GetNextNeuron())
+                n.LastCharge = n.CurrentCharge = 0;
+        }
+
+        public void ClearNeuronArea()
+        {
+            BeginEnum();
+            for (Neuron n = GetNextNeuron(); n != null; n = GetNextNeuron())
+                n.DeleteAllSynapes();
+        }
+        public int NeuronsInUseInArea()
+        {
+            int count = 0;
+            BeginEnum();
+            for (Neuron n = GetNextNeuron(); n != null; n = GetNextNeuron())
+                if (n.InUse())
+                    count++;
+            return count;
+        }
+        public int NeuronsFiredInArea()
+        {
+            int count = 0;
+            BeginEnum();
+            for (Neuron n = GetNextNeuron(); n != null; n = GetNextNeuron())
+                if (n.LastCharge > .9)
+                    count++;
+            return count;
+        }
+        public void ClearNeuronChargeInArea(bool CurrentToo = true)
+        {
+            BeginEnum();
+            for (Neuron n = GetNextNeuron(); n != null; n = GetNextNeuron())
             {
-                if ((string)mi.Header == "Delete")
+                if (CurrentToo) n.CurrentCharge = 0;
+                n.LastCharge = 0;
+            }
+        }
+        public string GetParam(string key)
+        {
+            string[] parameters = CommandLine.Split(' ');
+            for (int i = 0; i < parameters.Length - 1; i++)
+            {
+                string param = parameters[i];
+                if (param == key)
                 {
-                    int i = (int)mi.Parent.GetValue(AreaNumberProperty);
-                    if (i < 0)
-                    {
-                        i = -i - 1;
-                        MainWindow.arrayView.theSelection.selectedRectangles[i] = null;
-                        deleted = true;
-                    }
-                    else
-                    {
-                        MainWindow.theNeuronArray.Modules.RemoveAt(i);
-                        deleted = true;
-                    }
-                }
-                if ((string)mi.Header == "Initialize")
-                {
-                    int i = (int)mi.Parent.GetValue(AreaNumberProperty);
-                    if (i < 0)
-                    {
-                    }
-                    else
-                    {
-                        MainWindow.theNeuronArray.Modules[i].TheModule.Initialize();
-                    }
-                }
-                if ((string)mi.Header == "Show Dialog")
-                {
-                    int i = (int)mi.Parent.GetValue(AreaNumberProperty);
-                    if (i < 0)
-                    {
-                    }
-                    else
-                    {
-                        MainWindow.theNeuronArray.Modules[i].TheModule.ShowDialog();
-                    }
+                    return parameters[i + 1];
                 }
             }
+            return "";
         }
     }
+
 }

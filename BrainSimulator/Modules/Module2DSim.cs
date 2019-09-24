@@ -9,11 +9,11 @@ using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
 
-namespace BrainSimulator
+namespace BrainSimulator.Modules
 {
     public class Module2DSim : ModuleBase
     {
-        //here's how we'll define objects in the simulated environment
+        //here's how we'll define a few physical objects in the simulated environment
         public class physObject
         {
             public Point P1;
@@ -23,6 +23,16 @@ namespace BrainSimulator
             public float Temperature = 0;
         }
         public List<physObject> objects = new List<physObject>();
+
+        public override string ShortDescription { get => "A simulated 2D environment with obstacles"; }
+        public override string LongDescription
+        {
+            get => 
+                "This module no neurons of its own but fires neurons in various sensory modules if they are in the network. It has methods (Move and Turn and potentially others "+
+                "which can be called by other modules to move its point of view around the simulation. " +
+                "Clicking in the dialog box can direct the entity to that location."+
+                ""
+                ; }
 
         [XmlIgnore]
         public List<Point> CameraTrack = new List<Point>();
@@ -46,10 +56,16 @@ namespace BrainSimulator
 
         Random rand = new Random();
 
+
+        public Module2DSim()
+        {
+        }
+
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
-       }
+        }
+
         public override void Initialize()
         {
             CameraTrack.Clear();
@@ -217,16 +233,8 @@ namespace BrainSimulator
                     out Point Intersection, out Point close_1, out Point close_p2, out double collisionAngle);
                 if (segments_intersect)
                 {//we're against an obstacle
-                    Module naBehavior = theNeuronArray.FindAreaByLabel("ModuleBehavior");
-                    if (naBehavior != null)
-                    {
-                        try
-                        {
-                            naBehavior.GetNeuronAt("Coll").CurrentCharge = 1;
-                            naBehavior.GetNeuronAt("CollAngle").SetValue((float)collisionAngle);
-                        }
-                        catch { }
-                    }
+                    SetNeuronValue("ModuleBehavior", "Coll", 1);
+                    SetNeuronValue("ModuleBehavior", "CollAngle", (float)collisionAngle);
                     return true;
                 }
             }
@@ -236,7 +244,7 @@ namespace BrainSimulator
         //aroma is a field strength at a given position
         private void HandleAroma()
         {
-            Module naSmell = theNeuronArray.FindAreaByLabel("Module2DSmell");
+            ModuleView naSmell = theNeuronArray.FindAreaByLabel("Module2DSmell");
             //find the aroma value
             if (naSmell != null)
             {
@@ -244,23 +252,23 @@ namespace BrainSimulator
                 for (int i = 0; i < antennaeActual.Length; i++)
                 {
                     sumGreen = GetColorWeightAtPoint(antennaeActual[i], Colors.Green);
-                    naSmell.GetNeuronAt(i, 0).SetValue((float)sumGreen);
+                    SetNeuronValue("Module2DSmell", i,0, (float)sumGreen);
                 }
             }
         }
 
         //this is a debug feature which copies the complete simulation to the internal model
-        public void SetModel()
-        {
-            Module naModel = theNeuronArray.FindAreaByLabel("Module2DModel");
-            Module2DModel nmModel = (Module2DModel)naModel.TheModule;
-            for (int i = 0; i < objects.Count; i++)
-            {
-                PointPlus p1 = new PointPlus { Conf = 1, P = objects[i].P1 };
-                PointPlus p2 = new PointPlus { Conf = 1, P = objects[i].P2 };
-                nmModel.AddSegment(p1, p2, objects[i].theColor);
-            }
-        }
+        //public void SetModel()
+        //{
+        //    BrnSimModule naModel = theNeuronArray.FindAreaByLabel("Module2DModel");
+        //    Module2DModel nmModel = (Module2DModel)naModel.TheModule;
+        //    for (int i = 0; i < objects.Count; i++)
+        //    {
+        //        PointPlus p1 = new PointPlus { Conf = 1, P = objects[i].P1 };
+        //        PointPlus p2 = new PointPlus { Conf = 1, P = objects[i].P2 };
+        //        nmModel.AddSegment(p1, p2, objects[i].theColor);
+        //    }
+        //}
 
         //touch is the intersection of an antenna with an obstacle
         public void HandleTouch()
@@ -274,7 +282,6 @@ namespace BrainSimulator
                 pv.Theta = CameraDirection1 + pv.Theta;
                 Point antennaPositionAbs = CameraPosition + (Vector)pv.P;
                 CheckAntenna(antennaPositionAbs, i);
-
             }
         }
 
@@ -282,12 +289,10 @@ namespace BrainSimulator
         {
 
             antennaeActual[index] = antennaPositionAbs;
-            //this all works in absolute coordinates
-            Module naTouch = theNeuronArray.FindAreaByLabel("Module2DTouch");
-            if (naTouch == null) return;
-            naTouch.GetNeuronAt(0, index).SetValue(0);
-            naTouch.GetNeuronAt(8, index).CurrentCharge = 1;
+            SetNeuronValue("Module2DTouch", 0, index, 0);
+            SetNeuronValue("Module2DTouch", 8, index, 2);
 
+            //this all works in absolute coordinates
             for (int i = 0; i < objects.Count; i++)
             {
                 Point P1 = objects[i].P1;
@@ -320,17 +325,19 @@ namespace BrainSimulator
                     PointPlus antennaPositionRel = new PointPlus { P = (Point)(Intersection - CameraPosition) };
                     antennaPositionRel.Theta = antennaPositionRel.Theta-CameraDirection1;
 
+                    float[] neuronValues = new float[9];
                     //everything from here out is  coordinates relative to self
                     //neurons:  0:touch   1:antAngle  2:antDistance 3: sensedLineAngle 4: conf1 5: len1 6: conf2 7: len2 8: Release
-                    naTouch.GetNeuronAt(0, index).SetValue(1);
-                    naTouch.GetNeuronAt(1, index).CurrentCharge = antennaPositionRel.Theta;
-                    naTouch.GetNeuronAt(2, index).CurrentCharge = antennaPositionRel.R;
-                    naTouch.GetNeuronAt(3, index).CurrentCharge = (float)collisionAngle;
-                    naTouch.GetNeuronAt(4, index).CurrentCharge = (float)p1IsEndpt;
-                    naTouch.GetNeuronAt(5, index).CurrentCharge = (float)l1;
-                    naTouch.GetNeuronAt(6, index).CurrentCharge = (float)p2IsEndpt;
-                    naTouch.GetNeuronAt(7, index).CurrentCharge = (float)l2;
-                    naTouch.GetNeuronAt(8, index).CurrentCharge = 0;
+                    neuronValues[0] = 1;
+                    neuronValues[1] = antennaPositionRel.Theta;
+                    neuronValues[2] = antennaPositionRel.R;
+                    neuronValues[3] = (float)collisionAngle;
+                    neuronValues[4] = (float)p1IsEndpt;
+                    neuronValues[5] = (float)l1;
+                    neuronValues[6] = (float)p2IsEndpt;
+                    neuronValues[7] = (float)l2;
+                    neuronValues[8] = 0;
+                    SetNeuronVector("Module2DTouch", true, index, neuronValues);
 
                     antennaeActual[index] = Intersection;
                     break;
@@ -359,17 +366,17 @@ namespace BrainSimulator
         //do ray tracing to create the view the Entitiy would see
         private void HandleVision(int row)
         {
-            Module naVision = theNeuronArray.FindAreaByLabel("Module2DVision");
-            if (naVision == null) return;
+            int retinaWidth = GetModuleWidth("Module2DVision");
 
             if (row == 0)   
                 currentView0.Clear();
             else
                 currentView1.Clear();
 
-            for (int i = 0; i < naVision.Width; i++)
+            int[] pixels = new int[retinaWidth];
+            for (int i = 0; i < retinaWidth; i++)
             {
-                double theta = Module2DVision.GetDirectionOfNeuron(i, naVision.Width);
+                double theta = Module2DVision.GetDirectionOfNeuron(i, retinaWidth);
                 theta = CameraDirection1 + theta;
                 //create a segment from the view direction for this pixel
                 Point p2 = CameraPosition + new Vector(Math.Cos(theta) * 100, Math.Sin(theta) * 100);
@@ -390,13 +397,14 @@ namespace BrainSimulator
                         }
                     }
                 }
-                naVision.GetNeuronAt(i, row).SetValueInt(Utils.ToArgb(theColor));
+                pixels[i] = Utils.ToArgb(theColor);
                 Point p3 = new Point(CameraPosition.X + p2.X / 100, CameraPosition.Y + p2.Y / 100);
                 if (row == 0)
                     currentView0.Add(new physObject() { P1 = p3, P2 = new Point(0, 0), theColor = theColor });
                 else
                     currentView1.Add(new physObject() { P1 = p3, P2 = new Point(0, 0), theColor = theColor });
             }
+            SetNeuronVector("Module2DVision", true, row, pixels);
         }
 
         public double GetColorWeightAtPoint(Point point, Color theColor)

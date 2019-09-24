@@ -14,17 +14,27 @@ using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using System.Windows;
 
-namespace BrainSimulator
+namespace BrainSimulator.Modules
 {
-        public class Module2DKB : ModuleBase
+    public class Module2DKB : ModuleBase
     {
         private List<Thing> KB = new List<Thing>();
         public List<SThing> KB1 = new List<SThing>();
+        public override string ShortDescription { get => "Knowledge Base for storing linked knowledge data"; }
+        public override string LongDescription { get => "This module uses no neurons but can be called directly by other modules.\n\r"+
+"Within the KB, everything is a 'Thing' (see the source code for the 'Thing' object). Things may have parents, children, " +
+"references to other Things, and a 'value' which can be " +
+"any .NET object (with Color and Point being implemented). " +
+"It can search by value with an optional tolerance. A reference to another thing is done with a 'Link' " +
+"which is a thing with an attached weight which can be examined and/or modified.\n\r " +
+"Note that the Knowledge Base is a bit like a neural network its own right if we consider a node to be a neuron " +
+"and a link to be a synapse.";  }
 
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
         }
+
         public Thing AddThing(string label, Thing[] parents, object value = null, Thing[] references = null)
         {
             Thing newThing = new Thing { Label = label, V = value };
@@ -52,12 +62,14 @@ namespace BrainSimulator
             foreach (Thing t1 in t.Parents)
                 t1.Children.Remove(t);
             foreach (Link l1 in t.References)
-                l1.T.ReferencedBy.RemoveAll (v=>v.T == t);
+                l1.T.ReferencedBy.RemoveAll(v => v.T == t);
             foreach (Link l1 in t.ReferencedBy)
-                l1.T.References.RemoveAll(v=>v.T==t);
+                l1.T.References.RemoveAll(v => v.T == t);
             KB.Remove(t);
         }
 
+        //returns a thing with the given label
+        //2nd paramter defines KB to search
         public Thing Labeled(string label, List<Thing> KBt = null)
         {
             KBt = KBt ?? KB;
@@ -65,7 +77,13 @@ namespace BrainSimulator
             retVal = KBt.Find(t => t.Label == label);
             return retVal;
         }
-        public Thing Valued(object value, List<Thing> KBt = null,float toler = 0)
+
+        //returns the first thing it encounters which with a given value or null if none is found
+        //the 2nd paramter defines the KB to search (e.g. list of children)
+        //if it is null, it searches the entire KB,
+        //the 3re paramter defines the tolerance for spatial matches
+        //if it is null, an exact match is required
+        public Thing Valued(object value, List<Thing> KBt = null, float toler = 0)
         {
             KBt = KBt ?? KB;
             foreach (Thing t in KBt)
@@ -85,6 +103,7 @@ namespace BrainSimulator
             return null;
         }
 
+        //returns a list of all things which share the given parent thing
         public List<Thing> HavingParent(Thing parent)
         {
             if (parent == null) return null;
@@ -92,6 +111,7 @@ namespace BrainSimulator
             return parent.Children;
         }
 
+        //these two functions transform the KB into an structure which can be serialized/deserialized
         public override void SetUpBeforeSave()
         {
             base.SetUpBeforeSave();
@@ -110,7 +130,7 @@ namespace BrainSimulator
                 foreach (Link l in t.References)
                 {
                     Thing t1 = l.T;
-                    st.references.Add(new Point(KB.FindIndex(x => x == t1),l.weight));
+                    st.references.Add(new Point(KB.FindIndex(x => x == t1), l.weight));
                 }
                 KB1.Add(st);
             }
@@ -136,7 +156,7 @@ namespace BrainSimulator
                 }
                 foreach (Point p in KB1[i].references)
                 {
-                    KB[i].References.Add(new Link { T = KB[(int)p.X],weight=(float)p.Y });
+                    KB[i].References.Add(new Link { T = KB[(int)p.X], weight = (float)p.Y });
                 }
             }
 
@@ -155,7 +175,7 @@ namespace BrainSimulator
 
         public override void Initialize()
         {
-            //create an intial structure
+            //create an intial structure with some test data
             KB.Clear();
             KB1.Clear();
             AddThing("ROOT", new Thing[] { });
@@ -170,10 +190,6 @@ namespace BrainSimulator
             AddThing("Visible", new Thing[] { Labeled("ROOT") });
             AddThing("Partial", new Thing[] { Labeled("ROOT") });
             AddThing("Word", new Thing[] { Labeled("ROOT") });
-        }
-        public override void ShowDialog() //delete this function if it isn't needed
-        {
-            base.ShowDialog();
         }
     }
 

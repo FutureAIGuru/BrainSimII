@@ -13,7 +13,7 @@ using System.Diagnostics;
 using System.Data.Entity.Design.PluralizationServices;
 using System.Globalization;
 
-namespace BrainSimulator
+namespace BrainSimulator.Modules
 {
     public class ModuleSpeechIn : ModuleBase
     {

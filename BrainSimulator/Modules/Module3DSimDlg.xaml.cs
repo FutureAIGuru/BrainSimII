@@ -15,20 +15,15 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Windows.Media.Media3D;
 using System.Windows.Threading;
+using System.Windows.Media.Media3D;
 using System.IO;
 using System.Drawing;
 
-
-namespace BrainSimulator
+namespace BrainSimulator.Modules
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class RealitySimulator : Window
+    public partial class Module3DSimDlg : ModuleBaseDlg
     {
         struct physObject
         {
@@ -39,10 +34,10 @@ namespace BrainSimulator
         }
         List<physObject> objects = new List<physObject>();
 
-        public RealitySimulator()
+
+        public Module3DSimDlg()
         {
             InitializeComponent();
-            MyCanvas();
             Random rand = new Random();
             for (int i = 0; i < 20; i++)
             {
@@ -52,7 +47,7 @@ namespace BrainSimulator
                 if (x > .67) tempColor = Colors.Green;
                 physObject newObject = new physObject
                 {
-                    thePos = new Point3D(rand.NextDouble()*10-5, 0, rand.NextDouble()*10-5),
+                    thePos = new Point3D(rand.NextDouble() * 10 - 5, 0, rand.NextDouble() * 10 - 5),
                     theColor = tempColor,
                     scaleX = .5f,
                     scaleY = .75f
@@ -60,39 +55,25 @@ namespace BrainSimulator
                 objects.Add(newObject);
             }
         }
-
-        bool viewChanged = true;
-        Point3D cameraPosition = new Point3D(0, 0, 0);
-        Vector3D cameraDirection = new Vector3D(0, 0, -1);
-        DispatcherTimer dt = new DispatcherTimer();
-        double theta = 0;
-
-        public void Move(float x) //you can move forward/back in the direciton you are headed
+        public override bool Draw()
         {
-            cameraPosition.Z += -x * Math.Cos(theta);
-            cameraPosition.X += x* Math.Sin(theta);
-            viewChanged = true;
-        }
-        public void Turn(float x)
-        {
-            theta -= x;
-            cameraDirection.X = Math.Sin(theta);
-            cameraDirection.Z = -Math.Cos(theta);
-            viewChanged = true;
+
+            MyCanvas();
+            return true;
         }
 
+        private void TheCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Draw();
+        }
         public void MyCanvas()
         {
+            Module3DSim parent = (Module3DSim)base.ParentModule;
 
-            DrawObject(cameraPosition, cameraDirection,objects);
+            DrawObject(parent.cameraPosition, parent.cameraDirection, objects);
         }
 
-        private void Dt_Tick(object sender, EventArgs e)
-        {
-            //GetBitMap();
-        }
-
-        private void DrawObject(Point3D thePosition, Vector3D theDirection,List<physObject> theObjects)
+        private void DrawObject(Point3D thePosition, Vector3D theDirection, List<physObject> theObjects)
         {
             // Declare scene objects.
             Viewport3D myViewport3D = new Viewport3D();
@@ -129,52 +110,10 @@ namespace BrainSimulator
             myModel3DGroup.Children.Add(ambient);
 
             // Add the geometry model to the model group.
-            for (int i = 0; i < theObjects.Count; i ++)
+            for (int i = 0; i < theObjects.Count; i++)
             {
                 myModel3DGroup.Children.Add(CreateSquare(theObjects[i].thePos, theObjects[i].theColor, theObjects[i].scaleX, theObjects[i].scaleY));
             }
-            //myModel3DGroup.Children.Add(CreateSquare(new Point3D(0, 0, -5), Colors.Red, 0.2, .4));
-            //myModel3DGroup.Children.Add(CreateSquare(new Point3D(3, 0.5, -7), Colors.Orange));
-            //myModel3DGroup.Children.Add(CreateSquare(new Point3D(-2, -0.5, -5), Colors.Gray));
-            //myModel3DGroup.Children.Add(CreateSquare(new Point3D(-4, -0.5, -2), Colors.LightGray));
-            //myModel3DGroup.Children.Add(CreateSquare(new Point3D(-6, 0.5, -2), Colors.DimGray));
-            //myModel3DGroup.Children.Add(CreateSquare(new Point3D(5, 0, 0), Colors.Lavender, .1, .4));
-            //myModel3DGroup.Children.Add(CreateSquare(new Point3D(5, 0, 1), Colors.LawnGreen, .2, .3));
-            //myModel3DGroup.Children.Add(CreateSquare(new Point3D(5, 0, 2), Colors.LemonChiffon, .3, .2));
-            //myModel3DGroup.Children.Add(CreateSquare(new Point3D(5, 0, 3), Colors.LightBlue, .4, .1));
-            //myModel3DGroup.Children.Add(CreateSquare(new Point3D(5, 0, 4), Colors.LightCoral));
-            //myModel3DGroup.Children.Add(CreateSquare(new Point3D(5, 0, 5), Colors.Green));
-            //myModel3DGroup.Children.Add(CreateSquare(new Point3D(0, 0, 5), Colors.Pink));
-            //myModel3DGroup.Children.Add(CreateSquare(new Point3D(-5, 0, 5), Colors.DarkBlue));
-
-
-            //// Apply multiple transformations to the object. In this sample, a rotation and scale 
-            //// transform is applied.
-
-            //// Create and apply a transformation that rotates the object.
-            //RotateTransform3D myRotateTransform3D = new RotateTransform3D();
-            //AxisAngleRotation3D myAxisAngleRotation3d = new AxisAngleRotation3D();
-            //myAxisAngleRotation3d.Axis = new Vector3D(0, 3, 0);
-            //myAxisAngleRotation3d.Angle = 0; //rotate the rectangle within the space
-            //myRotateTransform3D.Rotation = myAxisAngleRotation3d;
-
-            //// Add the rotation transform to a Transform3DGroup
-            //Transform3DGroup myTransform3DGroup = new Transform3DGroup();
-            //myTransform3DGroup.Children.Add(myRotateTransform3D);
-
-            //// Create and apply a scale transformation that stretches the object along the local x-axis  
-            //// by 200 percent and shrinks it along the local y-axis by 50 percent.
-            //ScaleTransform3D myScaleTransform3D = new ScaleTransform3D();
-            //myScaleTransform3D.ScaleX = 1;
-            //myScaleTransform3D.ScaleY = 1;
-            //myScaleTransform3D.ScaleZ = 1;
-
-            //// Add the scale transform to the Transform3DGroup.
-            //myTransform3DGroup.Children.Add(myScaleTransform3D);
-
-            //Vector3D offset = new Vector3D(0, 0, 0);
-            //TranslateTransform3D myTranslateTransform3D = new TranslateTransform3D(offset);
-            //myTransform3DGroup.Children.Add(myTranslateTransform3D);
 
             // Add the group of models to the ModelVisual3d.
             myModelVisual3D.Content = myModel3DGroup;
@@ -208,10 +147,10 @@ namespace BrainSimulator
             // Create a collection of vertex positions for the MeshGeometry3D. 
             Point3DCollection myPositionCollection = new Point3DCollection();
             myPositionCollection.Add(new Point3D(-sizeX + offset.X, -sizeY + offset.Y, offset.Z));
-            myPositionCollection.Add(new Point3D( sizeX + offset.X, -sizeY + offset.Y, offset.Z));
-            myPositionCollection.Add(new Point3D( sizeX + offset.X,  sizeY + offset.Y, offset.Z));
-            myPositionCollection.Add(new Point3D( sizeX + offset.X,  sizeY + offset.Y, offset.Z));
-            myPositionCollection.Add(new Point3D(-sizeX + offset.X,  sizeY + offset.Y, offset.Z));
+            myPositionCollection.Add(new Point3D(sizeX + offset.X, -sizeY + offset.Y, offset.Z));
+            myPositionCollection.Add(new Point3D(sizeX + offset.X, sizeY + offset.Y, offset.Z));
+            myPositionCollection.Add(new Point3D(sizeX + offset.X, sizeY + offset.Y, offset.Z));
+            myPositionCollection.Add(new Point3D(-sizeX + offset.X, sizeY + offset.Y, offset.Z));
             myPositionCollection.Add(new Point3D(-sizeX + offset.X, -sizeY + offset.Y, offset.Z));
             myMeshGeometry3D.Positions = myPositionCollection;
 
@@ -246,11 +185,12 @@ namespace BrainSimulator
             myGeometryModel.BackMaterial = myMaterial;
             return myGeometryModel;
         }
+
         public Bitmap theBitMap1 = null;
         public Bitmap theBitMap2 = null;
+
         public void GetBitMap()
         {
-            if (!viewChanged) return;
             System.Windows.Size size = new System.Windows.Size(ActualWidth, ActualHeight);
             Measure(size);
             Arrange(new Rect(size));
@@ -264,27 +204,6 @@ namespace BrainSimulator
                 PixelFormats.Default);
             renderBitmap.Render(this);
 
-            //System.Drawing.Rectangle bounds = new System.Drawing.Rectangle(0, 0, (int)size.Width, (int)size.Height);// this.Bounds;
-            //using ( theBitMap = new Bitmap(bounds.Width, bounds.Height))
-            //{
-            //    using (Graphics g = Graphics.FromImage(theBitMap))
-            //    {
-            //        g.CopyFromScreen(new System.Drawing.Point(bounds.Left, bounds.Top), System.Drawing.Point.Empty, bounds.Size);
-            //    }
-            //    //bitmap.Save("C://test.jpg", ImageFormat.Jpeg);
-            //}
-
-            //test by saving the bitmap to a file
-            //using (FileStream outStream = new FileStream("E:\\Charlie\\Documents\\Brainsim\\test.bmp", FileMode.Create))
-            //{
-            //    // Use png encoder for our data
-            //    PngBitmapEncoder encoder1 = new PngBitmapEncoder();
-            //    // push the rendered bitmap to it
-            //    encoder1.Frames.Add(BitmapFrame.Create(renderBitmap));
-            //    // save the data to the stream
-            //    encoder1.Save(outStream);
-            //}
-
             //Convert the RenderBitmap to a real bitmap
             MemoryStream stream = new MemoryStream();
             BitmapEncoder encoder = new BmpBitmapEncoder();
@@ -295,37 +214,9 @@ namespace BrainSimulator
                 theBitMap1 = new Bitmap(stream);
             else if (theBitMap2 == null)
                 theBitMap2 = new Bitmap(stream);
-            MyCanvas();
-            viewChanged = false;
+            //MyCanvas();
+            ((Module3DSim)ParentModule).renderDone = true;
         }
 
-        bool moving = false;
-        System.Windows.Point prevPosition = new System.Windows.Point (-1,-1);
-        private void Window_MouseMove_1(object sender, MouseEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                if (!moving)
-                {
-                    prevPosition = PointToScreen(e.GetPosition(this));
-                    Mouse.Capture(this);
-                    moving = true;
-                }
-                else
-                {
-                    System.Windows.Point currentPosition = PointToScreen(e.GetPosition(this));
-                    Vector v = currentPosition - prevPosition;
-                    this.Left += v.X;
-                    this.Top += v.Y;
-                    prevPosition = currentPosition;
-                }
-            }
-            else
-            {
-                moving = false;
-                Mouse.Capture(null);
-            }
-
-        }
     }
 }

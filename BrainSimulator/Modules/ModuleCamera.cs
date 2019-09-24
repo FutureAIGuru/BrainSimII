@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 
 
-namespace BrainSimulator
+namespace BrainSimulator.Modules
 {
     public class ModuleCamera : ModuleBase
     {
@@ -46,7 +46,7 @@ namespace BrainSimulator
             if (ratio2 < ratio) ratio = ratio2;
 
             for (int i = 0; i < na.Width; i++)
-                for (int j = 0; j < na.Width; j++)
+                for (int j = 0; j < na.Height; j++)
                 {
                     Neuron n = na.GetNeuronAt(i,j);
                     int x = (int)(i* ratio);

@@ -1,0 +1,18 @@
+﻿<local:ModuleBaseDlg x:Class="BrainSimulator.Modules.ModuleCommandDlg"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BrainSimulator.Modules"
+        mc:Ignorable="d"
+        Title="Command Module Dialog" Height="294" Width="326" Background="Gray" ShowInTaskbar="False">
+    <Grid Name="theGrid" SizeChanged="TheCanvas_SizeChanged" >
+        <TextBox x:Name="textBox" Margin="10,41,10,73" TextWrapping="Wrap" Text="TextBox" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"/>
+        <TextBox x:Name="textBoxPath" Height="19" Margin="10,10,87,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top"/>
+        <Button x:Name="buttonBrowse" Content="Browse" Height="19" Margin="0,10,18,0" VerticalAlignment="Top" Click="ButtonBrowse_Click" HorizontalAlignment="Right" Width="56" />
+        <StackPanel Height="23" Margin="60,0,58,20" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" RenderTransformOrigin="0.497,0.026">
+            <Button x:Name="buttonLoad" Content="Load" Height="24" Width="100" VerticalAlignment="Bottom" Click="ButtonLoad_Click" />
+            <Button x:Name="buttonSave" Content="Save" Height="24" Width="100" VerticalAlignment="Bottom" Click="ButtonSave_Click"/>
+        </StackPanel>
+    </Grid>
+</local:ModuleBaseDlg>

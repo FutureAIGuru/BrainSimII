@@ -9,15 +9,41 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Xml.Serialization;
+using System.Windows;
 
-namespace BrainSimulator
+namespace BrainSimulator.Modules
 {
     public class ModuleCommand : ModuleBase
     {
-        string textFile = "";
-        string[] commands;
-        int line = 0;
+        public override string ShortDescription { get => "Reads neuron firing instructions from a file"; }
+        public override string LongDescription
+        {
+            get =>
+                "For testing purposes, this module reads a script file with a direction to fire specific neurons in the network. " +
+                "You can edit the script file in the dialog box. \r\n\r\n" +
+                "Format / commands:\r\n" +
+                "In general, the format to fire a neuron is '[moduleLable:] [neuronLabel]...[neuronLabel]\r\n" +
+                "Every line in the file represents an engine cycle so commands on the same line execute in the same cycle.\r\n" +
+                "Commands may be entered on full lines if they contain '//'\r\n" +
+                "The 'WaitFor' command which pauses execution until the specified neuron fires.\r\n" +
+                "The 'Stop' command aborts execution at the line in the file...useful for executing just the first lines of a file.";
+        }
+        
+        public string textFile = ""; //path to the text file
+        [XmlIgnore]
+        public string[] commands;
+
+        [XmlIgnore]
+        public int line = 0;
+
         string currentModule = "";
+
+        public ModuleCommand()
+        {
+
+        }
+
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
@@ -38,12 +64,12 @@ namespace BrainSimulator
                     if (currentCommand == "Wait-for")
                     {
                         SetCurrentModule(commandLine[i + 1]);
-                        Module na1 = theNeuronArray.FindAreaByLabel(currentModule);
+                        ModuleView na1 = theNeuronArray.FindAreaByLabel(currentModule);
                         Neuron n = na1.GetNeuronAt(commandLine[i + 2]);
                         if (!n.Fired())return;
                     }
                     SetCurrentModule(currentCommand);
-                    Module na = theNeuronArray.FindAreaByLabel(currentModule);
+                    ModuleView na = theNeuronArray.FindAreaByLabel(currentModule);
                     if (na != null && currentCommand != "")
                     {
                         Neuron n = na.GetNeuronAt(currentCommand);
@@ -54,8 +80,10 @@ namespace BrainSimulator
                     }
                 }
             line++;
-
+            if (dlg != null)
+                Application.Current.Dispatcher.Invoke((Action)delegate { dlg.Draw(); });
         }
+
         private void SetCurrentModule(string s)
         {
             int colonLoc = s.IndexOf(':');
@@ -64,17 +92,24 @@ namespace BrainSimulator
                 currentModule = s.Substring(0, colonLoc);
             }
         }
+
         public override void Initialize()
         {
-            textFile = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            textFile += @"\BrainSim\commands.txt";
+            //textFile = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            //textFile += @"\BrainSim\commands.txt";
             if (File.Exists(textFile))
             {
                 commands = File.ReadAllLines(textFile);
             }
+            if (dlg != null)
+                Application.Current.Dispatcher.Invoke((Action)delegate { dlg.Draw(); });
             line = 0;
         }
+
+        public override void ShowDialog()
+        {
+            base.ShowDialog();
+            Initialize();
+        }
     }
-
-
 }

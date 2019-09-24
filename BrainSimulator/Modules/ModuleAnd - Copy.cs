@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BrainSimulator
+namespace BrainSimulator.Modules
 {
     public class ModuleAND : ModuleBase
     {

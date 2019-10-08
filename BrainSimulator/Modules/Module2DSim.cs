@@ -54,6 +54,9 @@ namespace BrainSimulator.Modules
         //the size of the universe
         public double boundarySize = 5.5;
 
+        [XmlIgnore]
+        public float BodyRadius = .2f;
+
         Random rand = new Random();
 
 
@@ -61,9 +64,23 @@ namespace BrainSimulator.Modules
         {
         }
 
+        float antennaTheta1 = 0;
+        float antennaTheta2 = 0;
+
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
+
+            //antenna motion
+            antennaeRelative = new Vector[] {
+                new Vector(.4, .4) + new Vector(.1*rand.NextDouble()*Math.Cos(antennaTheta1),.1*Math.Sin(antennaTheta1)),
+                new Vector(.4, -.4)+ new Vector(.1*rand.NextDouble()*Math.Cos(antennaTheta2),.1*Math.Sin(antennaTheta2))
+            };
+            antennaTheta1 += .3f;
+            antennaTheta2 += .35f;
+            HandleTouch();
+            if (dlg != null)
+                Application.Current.Dispatcher.Invoke((Action)delegate { dlg.Draw(); });
         }
 
         public override void Initialize()
@@ -73,7 +90,7 @@ namespace BrainSimulator.Modules
             CameraTrack.Add(CameraPosition);
             CameraDirection1 = 0;
 
-            antennaeRelative = new Vector[] { new Vector(.5, .5), new Vector(.5, -.5) };
+            antennaeRelative = new Vector[] { new Vector(.4, .4), new Vector(.4, -.4) };
             antennaeActual = new Point[2];
             for (int i = 0; i < antennaeRelative.Length; i++)
                 antennaeActual[i] = CameraPosition + antennaeRelative[i];
@@ -229,14 +246,21 @@ namespace BrainSimulator.Modules
                 Point P1 = objects[i].P1;
                 Point P2 = objects[i].P2;
                 physObject ph = objects[i];
-                Utils.FindIntersection(P1, P2, CameraPosition, newPosition, out bool linesintersect, out bool segments_intersect,
-                    out Point Intersection, out Point close_1, out Point close_p2, out double collisionAngle);
-                if (segments_intersect)
-                {//we're against an obstacle
+                double dist = Utils.FindDistanceToSegment(newPosition, ph.P1, ph.P2,out Point closest);
+                if (dist < BodyRadius)
+                {
                     SetNeuronValue("ModuleBehavior", "Coll", 1);
-                    SetNeuronValue("ModuleBehavior", "CollAngle", (float)collisionAngle);
+//                    SetNeuronValue("ModuleBehavior", "CollAngle", (float)collisionAngle);
                     return true;
                 }
+                //Utils.FindIntersection(P1, P2, CameraPosition, newPosition, out bool linesintersect, out bool segments_intersect,
+                //    out Point Intersection, out Point close_1, out Point close_p2, out double collisionAngle);
+                //if (segments_intersect)
+                //{//we're against an obstacle
+                //    SetNeuronValue("ModuleBehavior", "Coll", 1);
+                //    SetNeuronValue("ModuleBehavior", "CollAngle", (float)collisionAngle);
+                //    return true;
+                //}
             }
             return false;
         }
@@ -257,7 +281,7 @@ namespace BrainSimulator.Modules
             }
         }
 
-        //this is a debug feature which copies the complete simulation to the internal model
+        //this is a debug feature which could copy the complete simulation to the internal model
         //public void SetModel()
         //{
         //    BrnSimModule naModel = theNeuronArray.FindAreaByLabel("Module2DModel");

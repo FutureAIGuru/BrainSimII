@@ -36,6 +36,10 @@ namespace BrainSimulator.Modules
             dt.Stop(); ;
             Application.Current.Dispatcher.Invoke((Action)delegate { Draw(); });
         }
+
+        float zoom = 1 / 12f;
+        Vector pan = new Vector(0, 0);
+
         public override bool Draw()
         {
             if (!base.Draw())
@@ -56,7 +60,8 @@ namespace BrainSimulator.Modules
             theCanvas.Children.Clear();
             Point windowSize = new Point(theCanvas.ActualWidth, theCanvas.ActualHeight);
             Point windowCenter = new Point(windowSize.X / 2, windowSize.Y / 2);
-            float scale = (float)Math.Min(windowSize.X, windowSize.Y) / 12;
+            windowCenter += pan;
+            float scale = (float)Math.Min(windowSize.X, windowSize.Y) * zoom;
             if (scale == 0) return false;
 
             TransformGroup tg = new TransformGroup();
@@ -100,19 +105,49 @@ namespace BrainSimulator.Modules
                 });
             }
 
-            //draw the antennae...
+            //draw the arms...
             if (parent.antennaeActual.Length == 2)
             {
                 for (int i = 0; i < parent.antennaeActual.Length; i++)
-                    theCanvas.Children.Add(new Line
+                {
+                    PointPlus c = new PointPlus
                     {
-                        X1 = parent.CameraPosition.X,
-                        Y1 = parent.CameraPosition.Y,
-                        X2 = parent.antennaeActual[i].X,
-                        Y2 = parent.antennaeActual[i].Y,
-                        StrokeThickness = 2 / scale,
-                        Stroke = Brushes.Black
-                    });
+                        P = (Point)(parent.antennaeActual[i] - parent.CameraPosition)
+                    };
+                    double sa = .45; //arm lengths
+                    double sb = .3; //arm lengths
+                    float a = (float)(Math.Acos((sb * sb + c.R * c.R - sa * sa) / (2 * sb * c.R)));
+                    if (!Double.IsNaN(a))
+
+                            {
+                        PointPlus pa = new PointPlus
+                        {
+                            R = (float)sb,
+                            Theta = c.Theta
+                        };
+                        if (i == 0) pa.Theta += a;
+                        else pa.Theta -= a;
+                        pa.P = (Point)(pa.P + (Vector)parent.CameraPosition);
+                        theCanvas.Children.Add(new Line
+                        {
+                            X1 = parent.CameraPosition.X,
+                            Y1 = parent.CameraPosition.Y,
+                            X2 = pa.P.X,
+                            Y2 = pa.P.Y,
+                            StrokeThickness = 2 / scale,
+                            Stroke = Brushes.Black
+                        });
+                        theCanvas.Children.Add(new Line
+                        {
+                            X1 = pa.P.X,
+                            Y1 = pa.P.Y,
+                            X2 = parent.antennaeActual[i].X,
+                            Y2 = parent.antennaeActual[i].Y,
+                            StrokeThickness = 2 / scale,
+                            Stroke = Brushes.Black
+                        });
+                    }
+                }
             }
 
             //draw the current field of view
@@ -144,18 +179,29 @@ namespace BrainSimulator.Modules
                     Stroke = new SolidColorBrush(parent.currentView1[i].theColor)
                 });
             }
-
+            //draw the body...it's a transparent gif
+            Image body = new Image()
+            {
+                Source = new BitmapImage(new Uri("/Icons/entity.png",UriKind.Relative)),
+                Width=2*parent.BodyRadius,
+                Height= 2 * parent.BodyRadius
+            };
+            TransformGroup tg1 = new TransformGroup();
+            tg1.Children.Add(new TranslateTransform(-parent.BodyRadius, -parent.BodyRadius));
+            tg1.Children.Add(new RotateTransform(90+parent.CameraDirection1 * 180 / Math.PI));
+            body.RenderTransform = tg1;
+            Canvas.SetLeft(body, parent.CameraPosition.X);
+            Canvas.SetTop(body, parent.CameraPosition.Y);
+            theCanvas.Children.Add(body);
             return true;
         }
-
 
         private void TheCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             Draw();
         }
 
-
-        private void TheCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void TheCanvas_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             Module2DSim parent = (Module2DSim)base.ParentModule;
 
@@ -188,6 +234,26 @@ namespace BrainSimulator.Modules
                     naBehavior.GetNeuronAt("R").SetValue(dist);
                 }
             }
+        }
+
+        private void TheCanvas_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            zoom += e.Delta / 12000f;
+            if (zoom < 0.001) zoom = 0.001f;
+            Draw();
+        }
+
+        Point prevPos = new Point(0, 0);
+        private void TheCanvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            Point currentPosition = e.GetPosition(this);
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                Vector move = new Vector();
+                move = (currentPosition - prevPos);
+                pan += move; 
+            }
+            prevPos = currentPosition;
         }
     }
 }

@@ -6,5 +6,5 @@
         xmlns:local="clr-namespace:BrainSimulator.Modules"
         mc:Ignorable="d"
         Title="2D Environment Simulation" Height="450" Width="800" Background="Gray" ShowInTaskbar="False">
-    <Canvas Name="theCanvas" SizeChanged="TheCanvas_SizeChanged" MouseLeftButtonDown="TheCanvas_MouseLeftButtonDown"/>
+    <Canvas Background="Transparent" Name="theCanvas" SizeChanged="TheCanvas_SizeChanged" MouseRightButtonDown="TheCanvas_MouseRightButtonDown" MouseWheel="TheCanvas_MouseWheel" MouseMove="TheCanvas_MouseMove"/>
 </local:ModuleBaseDlg>

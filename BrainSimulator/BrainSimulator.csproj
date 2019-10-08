@@ -113,7 +113,6 @@
     <Compile Include="Modules\Module3DSimDlg.xaml.cs">
       <DependentUpon>Module3DSimDlg.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\ModuleAnd - Copy.cs" />
     <Compile Include="Modules\ModuleCameraDlg.xaml.cs">
       <DependentUpon>ModuleCameraDlg.xaml</DependentUpon>
     </Compile>
@@ -298,7 +297,9 @@
       <Name>WebCamWrapper</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Icons\Entity.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Networks\2DEntity-Test.xml">
       <SubType>Designer</SubType>

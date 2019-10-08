@@ -13,19 +13,20 @@ using System.Windows;
 
 namespace BrainSimulator
 {
-
+    //a link is a weighted link to a thing
     public class Link
     {
         public Thing T;
         public float weight = 1;
     }
 
+    //a thing is anything, physical object, attribute, word, action, etc.
     public class Thing
     {
-        private string label = ""; //this is just for convenience in debugging and should not be used
-        private List<Thing> parents = new List<Thing>(); //"is-a"?
+        private string label = ""; //this is just for convenience in debugging 
+        private List<Thing> parents = new List<Thing>(); //"is-a", others?
         private List<Thing> children = new List<Thing>(); //synapses to
-        private List<Link> references = new List<Link>(); //synapses to //"has-a"?
+        private List<Link> references = new List<Link>(); //synapses to "has", "is", others
         private List<Link> referencedBy = new List<Link>(); //synapses from
         object value;
 

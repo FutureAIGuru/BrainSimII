@@ -102,6 +102,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DisplayParams.cs" />
+    <Compile Include="FiringHistoryWindow.xaml.cs">
+      <DependentUpon>FiringHistoryWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FiringHistory.cs" />
     <Compile Include="HelpAbout.xaml.cs">
       <DependentUpon>HelpAbout.xaml</DependentUpon>
     </Compile>
@@ -167,6 +171,10 @@
     <Compile Include="Synapse.cs" />
     <Compile Include="SynapseView.cs" />
     <Compile Include="Utils.cs" />
+    <Page Include="FiringHistoryWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="HelpAbout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -304,6 +312,15 @@
     <Resource Include="Networks\2DEntity-Test.xml">
       <SubType>Designer</SubType>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Record.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Close.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\ClearHistory.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

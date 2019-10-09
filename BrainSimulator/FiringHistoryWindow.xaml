@@ -1,0 +1,25 @@
+﻿<Window x:Class="BrainSimulator.FiringHistoryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BrainSimulator"
+        mc:Ignorable="d"
+        Title="Neuron Firing History" Height="404" Width="800" Loaded="Window_Loaded">
+    <Grid SizeChanged="Grid_SizeChanged">
+        <ScrollViewer x:Name="scroller" Margin="0,0,0,0" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Auto">
+            <Canvas x:Name="theCanvas" Background="Gray" HorizontalAlignment="Left" Width="792"  Margin="0,0,0,0" MouseWheel="TheCanvas_MouseWheel">
+            </Canvas>
+        </ScrollViewer>
+        <Canvas x:Name="theCanvas2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,0" >
+        </Canvas>
+        <StackPanel Margin="0,10,10,0" HorizontalAlignment="Right" Height="22" VerticalAlignment="Top" Orientation="Horizontal" Width="46">
+            <Button x:Name="Clear" Width="22" Height="22" VerticalAlignment="Top" Click="Clear_Click" ToolTip="Remove firing history">
+                <Image Height="15" Width="18" Source="Icons/ClearHistory.png"/>
+            </Button>
+            <Button x:Name="Cancel" Width="22" Height="22" VerticalAlignment="Top" Click="RemoveTags_Click" ToolTip="Remove all neuron recording tags">
+                <Image Height="15" Width="18" Source="Icons/Close.png"/>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

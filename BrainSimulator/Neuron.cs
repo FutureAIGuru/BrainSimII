@@ -21,6 +21,7 @@ namespace BrainSimulator
 
         string label = "";
         public string Label{get { return label; }set { label = value; }}
+        private bool keepHistory = false;
         
         public Neuron() { Model = modelType.Std; }
         public Neuron(int id1, modelType t = modelType.Std)
@@ -51,6 +52,7 @@ namespace BrainSimulator
         public List<Synapse> Synapses { get { return synapses; } }
         public List<Synapse> SynapsesFrom { get { return synapsesFrom; } }
 
+        public bool KeepHistory { get => keepHistory; set => keepHistory = value; }
 
         public bool Fired(){return (LastCharge > .9);}
         public void SetValue(float value){LastCharge = CurrentCharge = value;}
@@ -215,7 +217,12 @@ namespace BrainSimulator
                 case modelType.Antifeedback:
                     if (currentCharge < 0) currentCharge = 0;
                     lastCharge = currentCharge;
-                    if (currentCharge > 990) currentCharge = 0;
+                    if (currentCharge > 990)
+                    {
+                        currentCharge = 0;
+                        if (KeepHistory)
+                            FiringHistory.AddFiring(Id, generation);
+                    }
                     break;
 
                 //fire if sufficient weights on this cycle or cancel...do not accumulate weight across multiple cycles

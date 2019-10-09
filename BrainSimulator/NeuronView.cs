@@ -18,7 +18,7 @@ using System.Windows.Media.Imaging;
 
 namespace BrainSimulator
 {
-    public  class NeuronView : DependencyObject
+    public class NeuronView : DependencyObject
     {
         public static DisplayParams dp;
         public static Canvas theCanvas;     //reflection of canvas in neuronarrayview
@@ -81,7 +81,7 @@ namespace BrainSimulator
             r.MouseDown += theNeuronArrayView.theCanvas_MouseDown;
             r.MouseUp += theNeuronArrayView.theCanvas_MouseUp;
             r.MouseWheel += theNeuronArrayView.theCanvas_MouseWheel;
-            
+
             float offset = (1 - ellipseSize) / 2f;
             Canvas.SetLeft(r, p.X + dp.NeuronDisplaySize * offset);
             Canvas.SetTop(r, p.Y + dp.NeuronDisplaySize * offset);
@@ -135,8 +135,8 @@ namespace BrainSimulator
             cm.Closed += Cm_Closed;
 
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
-                sp.Children.Add(new Label { Content = "Charge: ", Padding = new Thickness(0) });
-                sp.Children.Add(new TextBox { Text = n.CurrentCharge.ToString("f2"), Width = 60, Name = "CurrentCharge", VerticalAlignment = VerticalAlignment.Center });
+            sp.Children.Add(new Label { Content = "Charge: ", Padding = new Thickness(0) });
+            sp.Children.Add(new TextBox { Text = n.LastCharge.ToString("f2"), Width = 60, Name = "CurrentCharge", VerticalAlignment = VerticalAlignment.Center });
             cm.Items.Add(sp);
 
             MenuItem mi = new MenuItem();
@@ -168,12 +168,12 @@ namespace BrainSimulator
             ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
             cm.Items.Add(mi);
             sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
-            sp.Children.Add(new Label { Content = "Label: ",Padding=new Thickness(0)});
+            sp.Children.Add(new Label { Content = "Label: ", Padding = new Thickness(0) });
             sp.Children.Add(new TextBox { Text = n.Label, Width = 150, Name = "Label", VerticalAlignment = VerticalAlignment.Center });
             cm.Items.Add(sp);
 
             sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
-            sp.Children.Add(new Label { Content = "Model: ", Padding = new Thickness(0)});
+            sp.Children.Add(new Label { Content = "Model: ", Padding = new Thickness(0) });
             ComboBox cb = new ComboBox()
             { Width = 100 };
             foreach (Neuron.modelType model in (Neuron.modelType[])Enum.GetValues(typeof(Neuron.modelType)))
@@ -184,10 +184,28 @@ namespace BrainSimulator
             cb.SelectionChanged += Cb_SelectionChanged;
             sp.Children.Add(cb);
             cm.Items.Add(sp);
+            CheckBox cbHistory = new CheckBox
+            {
+                IsChecked = n.KeepHistory,
+                Content = "Record Firing History",
+                Name = "History",
+            };
+            cbHistory.Checked += CbHistory_Checked;
+            cbHistory.Unchecked += CbHistory_Checked;
+            cm.Items.Add(cbHistory);
+        }
+
+        private static void CbHistory_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckBox cb = sender as CheckBox;
+            ContextMenu cm = cb.Parent as ContextMenu;
+            cm.IsOpen = false;
         }
 
         private static void Cm_Closed(object sender, RoutedEventArgs e)
         {
+            if ((Keyboard.GetKeyStates(Key.Escape) & KeyStates.Down) > 0)
+                return;
 
             if (sender is ContextMenu cm)
             {
@@ -203,8 +221,32 @@ namespace BrainSimulator
                     float.TryParse(tb1.Text, out float newCharge);
                     n.SetValue(newCharge);
                 }
+                cc = Utils.FindByName(cm, "History");
+                if (cc is CheckBox cb1)
+                {
+                    n.KeepHistory = (bool)cb1.IsChecked;
+                    if (!n.KeepHistory)
+                    {
+                        FiringHistory.DeleteHistory(n.Id);
+                        if (FiringHistory.history.Count == 0 && MainWindow.fwWindow != null && MainWindow.fwWindow.IsVisible)
+                        {
+                            MainWindow.fwWindow.Close();
+                            MainWindow.fwWindow = null;
+                        }
+                    }
+                    else  //make sure a window is open
+                    {
+                        OpenHistoryWindow();
+                    }
+                }
             }
             MainWindow.Update();
+        }
+        public static void OpenHistoryWindow()
+        {
+            if (MainWindow.fwWindow == null || !MainWindow.fwWindow.IsVisible)
+                MainWindow.fwWindow = new FiringHistoryWindow();
+            MainWindow.fwWindow.Show();
         }
 
         //change the model for all selected neurons if this one is in the selection
@@ -286,14 +328,14 @@ namespace BrainSimulator
             }
         }
 
- 
+
         private static void Tb_TextChanged(object sender, TextChangedEventArgs e)
         {
             TextBox tb = sender as TextBox;
             //find out which neuron this context menu is from
             ContextMenu cm = tb.Parent as ContextMenu;
             if (cm == null) return;
-            int i = (int) cm.GetValue(NeuronIDProperty);
+            int i = (int)cm.GetValue(NeuronIDProperty);
             Neuron n = MainWindow.theNeuronArray.neuronArray[i];
             n.Label = tb.Text;
         }

@@ -37,6 +37,7 @@ namespace BrainSimulator
         //Globals
         public static NeuronArrayView arrayView = null;
         public static NeuronArray theNeuronArray = null;
+        public static FiringHistoryWindow fwWindow = null;
 
         Thread engineThread = new Thread(new ThreadStart(EngineLoop));
         private static int engineDelay = 500;//how long to wait after each cycle of the engine
@@ -74,20 +75,46 @@ namespace BrainSimulator
             splashHide.Start();
 
         }
-
+        
         private void SplashHide_Tick(object sender, EventArgs e)
         {
+            Application.Current.MainWindow = this;
             splashScreen.Close();
             ((DispatcherTimer)sender).Stop();
-            if (theNeuronArray != null) foreach (ModuleView na in theNeuronArray.Modules)
+            if (theNeuronArray != null)
+            {
+                foreach (ModuleView na in theNeuronArray.Modules)
                 {
                     if (na.TheModule != null)
                     {
                         na.TheModule.SetDlgOwner(this);
                     }
                 }
-            Application.Current.MainWindow = this;
+            }
+            OpenHistoryWindow();
         }
+
+        public static void CloseHistoryWindow()
+        {
+            if (fwWindow != null)
+                fwWindow.Close();
+        }
+
+        private void OpenHistoryWindow()
+        {
+            if (Application.Current.MainWindow != this) return;
+            if (theNeuronArray != null)
+            {
+                bool history = false;
+                foreach (Neuron n in theNeuronArray.neuronArray)
+                {
+                    if (n.KeepHistory) history = true;
+                }
+                if (history)
+                    NeuronView.OpenHistoryWindow();
+            }
+        }
+
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
         {
@@ -156,11 +183,13 @@ namespace BrainSimulator
 
         private void LoadFile(string fileName)
         {
+            CloseAllModuleDialogs();
+            CloseHistoryWindow();
 
             theNeuronArrayView.theSelection.selectedRectangles.Clear();
             CloseAllModuleDialogs();
 
-                        // Load the data from the XML to the Brainsim Engine.  
+            // Load the data from the XML to the Brainsim Engine.  
             FileStream file = File.Open(fileName, FileMode.Open);
 
             XmlSerializer reader = new XmlSerializer(typeof(NeuronArray), GetModuleTypes());
@@ -173,8 +202,11 @@ namespace BrainSimulator
 
             //Update all the synapses to ensure that the synapse-from lists are correct
             foreach (Neuron n in theNeuronArray.neuronArray)
+            {
                 foreach (Synapse s in n.Synapses)
                     n.AddSynapse(s.TargetNeuron, s.Weight, theNeuronArray, false);
+            }
+
             theNeuronArray.CheckSynapseArray();
             theNeuronArrayView.Update();
             setTitleBar();
@@ -189,6 +221,7 @@ namespace BrainSimulator
 
             NeuronArrayView.SortAreas();
             Update();
+            OpenHistoryWindow();
         }
 
         //
@@ -467,7 +500,9 @@ namespace BrainSimulator
             displayUpdateTimer.Interval = TimeSpan.FromMilliseconds(100);
             displayUpdateTimer.Start();
         }
+
         bool disaplayUpdating = false;
+
         private void DisplayUpdate_TimerTick(object sender, EventArgs e)
         {
             if (disaplayUpdating) return;
@@ -608,7 +643,7 @@ namespace BrainSimulator
             }
         }
 
-        private static void CloseAllModuleDialogs()
+        public static void CloseAllModuleDialogs()
         {
             if (theNeuronArray != null)
             {

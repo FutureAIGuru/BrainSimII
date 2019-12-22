@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using static System.Math;
+using System.Windows;
 
 namespace BrainSimulator.Modules
 {
@@ -21,9 +22,9 @@ namespace BrainSimulator.Modules
         public override string LongDescription
         {
             get =>
-                "This module has 2 rows of neurons representing the retinal views of the right and left eyes. It receives input from the 2DSim module "+
+                "This module has 2 rows of neurons representing the retinal views of the right and left eyes. It receives input from the 2DSim module " +
                 "and finds points of interest which are color boundaries. Based on the difference in position of these boudaries in the two eyes, " +
-                "it estimates the distance (depth perception) of the point and passes this information to the model. As depths are approximate, "+
+                "it estimates the distance (depth perception) of the point and passes this information to the model. As depths are approximate, " +
                 "it enters these ae 'possible' points.\r\n" +
                 "";
         }
@@ -37,11 +38,9 @@ namespace BrainSimulator.Modules
         //this converts the position of a retinal neuron to its angular position
         public static double GetDirectionOfNeuron(float index, int numPixels)
         {
-            float i1 = ((float)numPixels / 2 - index) - .5f;
+            float i1 = ((float)(numPixels - 1) / 2 - index);
             float thetaPerPixel = fieldOfView / (numPixels - 1);
-            double a = toDegrees(thetaPerPixel); //for debug
             double retVal = thetaPerPixel * i1;
-            a = toDegrees(retVal);
             return retVal;
         }
 
@@ -51,7 +50,7 @@ namespace BrainSimulator.Modules
         }
 
         //these arrays are used to determine if any data has changed
-        //this is presently used to reduce computation but in future development can be used to detect object motion
+        //this is presently used to reduce computation but in future development can also be used to detect object motion
         List<int> lastValuesL = null;
         List<int> lastValuesR = null;
         public override void Fire()
@@ -75,76 +74,125 @@ namespace BrainSimulator.Modules
                 if (lastValuesR[i] != na.GetNeuronAt(i, 0).CurrentChargeInt) retinaChanged = true;
                 lastValuesR[i] = na.GetNeuronAt(i, 0).CurrentChargeInt;
             }
-            if (!retinaChanged) return;
+            SetCenterColor();
 
-            Module2DModel nmModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
-            if (nmModel != null)
+            if (retinaChanged)
             {
-                int start = 0;
-                while (start != -1)
-                    start = GetPointsWithDepth(nmModel, start);
-                nmModel.MarkVisibleObjects();
+                FindPointsOfInterest();
             }
         }
 
-        private int GetPointsWithDepth(Module2DModel naModel, int start)
+        void SetCenterColor()
         {
-            //find a color transition in left eye
-            int color1 = na.GetNeuronAt(start, 1).CurrentChargeInt;
-            int color2 = color1;
-            int l;
-            for (l = start + 1; l < na.Width; l++)
+            int c1 = GetNeuronValueInt(null, na.Width / 2, 0);
+            int c2 = GetNeuronValueInt(null, na.Width / 2, 1);
+            Module2DKBN nmKB = (Module2DKBN)FindModuleByType(typeof(Module2DKBN));
+            if (nmKB != null && nmKB.Labeled("Color") != null)
             {
-                color2 = na.GetNeuronAt(l, 1).CurrentChargeInt;
-                if (color2 != color1) break;
-            }
-            if (color1 != color2)
-            {
-                //There was a transision in the left eye, is there a similar transision in the right eye
-                int j = l - 1;
-                int color3 = na.GetNeuronAt(j, 0).CurrentChargeInt;
-                int color4 = color3;
-                if (color3 == color1)
+                List<Thing> colors = nmKB.Labeled("Color").Children;
+                //if (c1 != 0)
                 {
-                    //because the eyes are parallel, a transition in the right eye will always be in the same place
-                    //or to the right of the position in the left eye;
-                    for (; j < na.Width; j++)
-                    {
-                        color4 = na.GetNeuronAt(j, 0).CurrentChargeInt;
-                        if (color3 != color4) break;
+                    nmKB.Fire(nmKB.Valued(c1, colors));
+                }
+                //if (c2 != 0)
+                {
+                    nmKB.Fire(nmKB.Valued(c2, colors));
+                }
+            }
+        }
 
-                    }
-                    if (color4 == color2 && color1 == color3)
+        struct Boundary
+        {
+            public int colorL;
+            public int colorR;
+            public int direction;
+        }
+        List<Boundary> LBoundaries = new List<Boundary>();
+        List<Boundary> RBoundaries = new List<Boundary>();
+
+        private void FindBoundaries(int eye, List<Boundary> boundaries)
+        {
+            int color1 = na.GetNeuronAt(0, eye).CurrentChargeInt;
+            int color2 = color1;
+            for (int i = 1; i < na.Width; i++)
+            {
+                color2 = na.GetNeuronAt(i, eye).CurrentChargeInt;
+                if (color2 != color1)
+                {
+                    Boundary b = new Boundary()
                     {
-                        //we have an equivelant transition in the other eye...how far away is it?
-                        //using law of sines
-                        //(if the field-of-view and eye separation were constants, this could all be a lookup table)
-                        double thetaA = GetDirectionOfNeuron(l - 0.5f, na.Width);
-                        double a = toDegrees(thetaA);
-                        thetaA = PI / 2 - thetaA; //get angle to axis
-                        a = toDegrees(thetaA);
-                        double thetaB = GetDirectionOfNeuron(j - 0.5f, na.Width);
-                        thetaB = PI / 2 - thetaB;
-                        thetaB = PI - thetaB; //to get an inside angle
-                        a = toDegrees(thetaB);
-                        double thetaC = PI - thetaA - thetaB;
-                        a = toDegrees(thetaC);
-                        double A = Sin(thetaA) * (2 * eyeOffset) / Sin(thetaC);
-                        Color c = Utils.FromArgb(color1);
-                        if (c == Colors.Black)
-                            c = Utils.FromArgb(color2);
-                        thetaA -= PI / 2;
-                        PointPlus P = new PointPlus { Theta = (float)-thetaA, R = (float)A};  //relative to left eye
-                        P.Y -= eyeOffset;
-                        if (P.R < 5 && P.R > 1) //inaccuracy if too close or too far
-                            naModel.AddPosiblePointToKB(P,c);
-                        return l;
+                        colorL = color1,
+                        colorR = color2,
+                        direction = i
+                    };
+                    boundaries.Add(b);
+                    color1 = color2;
+                }
+            }
+        }
+
+        private void FindPointsOfInterest()
+        {
+            Module2DModel nmModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
+            if (nmModel == null) return;
+            LBoundaries.Clear();
+            RBoundaries.Clear();
+            FindBoundaries(0, LBoundaries);
+            FindBoundaries(1, RBoundaries);
+            int start = 0;
+
+            for (int i = 0; i < LBoundaries.Count; i++)
+            {
+                for (int j = start; j < RBoundaries.Count; j++)
+                {
+                    if (LBoundaries[i].colorL == RBoundaries[j].colorL &&
+                        LBoundaries[i].colorR == RBoundaries[j].colorR &&
+                        LBoundaries[i].direction >= RBoundaries[j].direction)
+                    {
+                        PointPlus P = FindDepth(LBoundaries[i].direction, RBoundaries[j].direction);
+
+                        PointPlus P1 = FindDepth(LBoundaries[i].direction, RBoundaries[j].direction + 2);
+                        PointPlus P2 = FindDepth(LBoundaries[i].direction, RBoundaries[j].direction - 3);
+
+                        nmModel.AddPosiblePointToKB(P, LBoundaries[i].colorL, LBoundaries[i].colorR, angularResolution, Math.Min(P1.R, P2.R), Math.Max(P1.R, P2.R));
+                        start = j + 1;
+                        break;
                     }
                 }
             }
-            return -1;
         }
 
+        private PointPlus FindDepth(int l, int r)
+        {
+            double thetaA = GetDirectionOfNeuron(r - 0.5f, na.Width);
+            thetaA = PI / 2 - thetaA; //get angle to axis
+            double thetaB = GetDirectionOfNeuron(l - 0.5f, na.Width);
+            thetaB = PI / 2 - thetaB;
+            thetaB = PI - thetaB; //to get an inside angle
+            double thetaC = PI - thetaA - thetaB;
+            double A = Sin(thetaA) * (2 * eyeOffset) / Sin(thetaC);
+            thetaA -= PI / 2;
+            PointPlus P = new PointPlus { Theta = (float)-thetaA, R = (float)A };  //relative to left eye
+            P.Y -= eyeOffset; //correct to be centered between eyes
+
+            //alternate:
+            PointPlus p1L = new PointPlus() { Y = -eyeOffset, X = 0 };
+            PointPlus p1R = new PointPlus() { Y = +eyeOffset, X = 0 };
+            float thetaL = (float)GetDirectionOfNeuron(r, na.Width);
+            PointPlus p2L = new PointPlus() { R = 20, Theta = thetaL };
+            p2L.P = p2L.P + (Vector)p1L.P;
+
+            float thetaR = (float)GetDirectionOfNeuron(l, na.Width);
+            PointPlus p2R = new PointPlus() { R = 20, Theta = thetaR };
+            p2R.P = p2R.P + (Vector)p1R.P;
+
+            Utils.FindIntersection(p1L.P, p2L.P, p1R.P, p2R.P, out bool lines_intersect, out bool segments_intersect, out Point intersection, out Point clost_p1, out Point close_p2, out double collisionAngle);
+            PointPlus retVal = new PointPlus() { P = intersection };
+            return retVal;
+        }
+
+        float angularResolution = 0;
+        List<float> depthValues;
         public override void Initialize()
         {
             for (int i = 0; i < na.Width; i++)
@@ -157,6 +205,8 @@ namespace BrainSimulator.Modules
             na.GetNeuronAt(na.Width / 2, 0).Label = "  ||";
             lastValuesL = null;
             lastValuesR = null;
+
+            angularResolution = (float)(GetDirectionOfNeuron(0, na.Width) - GetDirectionOfNeuron(1, na.Width));
         }
     }
 }

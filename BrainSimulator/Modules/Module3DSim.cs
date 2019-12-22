@@ -36,8 +36,7 @@ namespace BrainSimulator.Modules
             SetNeuronValues();
             //if you want the dlg to update, use the following code 
             //because the thread you are in is not the UI thread
-            //if (dlg != null)
-            //     Application.Current.Dispatcher.Invoke((Action)delegate { dlg.Draw(); });
+            //UpdateDialog();
         }
 
         //fill this method in with code which will execute once
@@ -108,8 +107,7 @@ namespace BrainSimulator.Modules
             cameraPosition.Z += -x * Math.Cos(theta);
             cameraPosition.X += x * Math.Sin(theta);
             renderStarted = true;
-            if (dlg != null)
-                Application.Current.Dispatcher.Invoke((Action)delegate { dlg.Draw(); });
+            UpdateDialog();
         }
         public void Rotate(double deltaTheta)
         {
@@ -117,8 +115,7 @@ namespace BrainSimulator.Modules
             cameraDirection.X = Math.Sin(theta);
             cameraDirection.Z = -Math.Cos(theta);
             renderStarted = true;
-            if (dlg != null)
-                Application.Current.Dispatcher.Invoke((Action)delegate { dlg.Draw(); });
+            UpdateDialog();
         }
     }
 }

@@ -153,46 +153,56 @@ namespace BrainSimulator.Modules
             //draw the current field of view
             for (int i = 0; i < parent.currentView0.Count; i++)
             {
-                theCanvas.Children.Add(new Line
+                try //TODO lock the list
                 {
-                    X1 = parent.currentView0[i].P1.X,
-                    X2 = 1 / scale + parent.currentView0[i].P1.X,
-                    Y1 = parent.currentView0[i].P1.Y,
-                    Y2 = 1 / scale + parent.currentView0[i].P1.Y,
-                    StrokeThickness = 3 / scale,
-                    StrokeEndLineCap = PenLineCap.Round,
-                    StrokeStartLineCap = PenLineCap.Round,
-                    Stroke = new SolidColorBrush(parent.currentView0[i].theColor)
-                });
+                    theCanvas.Children.Add(new Line
+                    {
+                        X1 = parent.currentView0[i].P1.X,
+                        Y1 = parent.currentView0[i].P1.Y,
+                        X2 = parent.currentView0[i].P1.X,
+                        Y2 = parent.currentView0[i].P1.Y,
+                        StrokeThickness = 3/ scale,
+                        StrokeEndLineCap = PenLineCap.Round,
+                        StrokeStartLineCap = PenLineCap.Round,
+                        Stroke = new SolidColorBrush(parent.currentView0[i].theColor)
+                    });
+                }
+                catch { }
             }
             for (int i = 0; i < parent.currentView1.Count; i++)
             {
-                theCanvas.Children.Add(new Line
+                try //another thread might mess the array up TODO, lock the object list
                 {
-                    X1 = parent.currentView1[i].P1.X,
-                    X2 = 1 / scale + parent.currentView1[i].P1.X,
-                    Y1 = parent.currentView1[i].P1.Y,
-                    Y2 = 1 / scale + parent.currentView1[i].P1.Y,
-                    StrokeThickness = 3 / scale,
-                    StrokeEndLineCap = PenLineCap.Round,
-                    StrokeStartLineCap = PenLineCap.Round,
-                    Stroke = new SolidColorBrush(parent.currentView1[i].theColor)
-                });
+                    theCanvas.Children.Add(new Line
+                    {
+                        X1 = parent.currentView1[i].P1.X,
+                        Y1 = parent.currentView1[i].P1.Y,
+                        X2 = parent.currentView1[i].P1.X,
+                        Y2 = parent.currentView1[i].P1.Y,
+                        StrokeThickness = 3 / scale,
+                        StrokeEndLineCap = PenLineCap.Round,
+                        StrokeStartLineCap = PenLineCap.Round,
+                        Stroke = new SolidColorBrush(parent.currentView1[i].theColor)
+                    });
+                }
+                catch { }
             }
-            //draw the body...it's a transparent gif
+            
+            ////draw the body...it's a transparent gif
             Image body = new Image()
             {
-                Source = new BitmapImage(new Uri("/Icons/entity.png",UriKind.Relative)),
-                Width=2*parent.BodyRadius,
-                Height= 2 * parent.BodyRadius
+                Source = new BitmapImage(new Uri("/Icons/entity.png", UriKind.Relative)),
+                Width = 2 * parent.BodyRadius,
+                Height = 2 * parent.BodyRadius
             };
             TransformGroup tg1 = new TransformGroup();
             tg1.Children.Add(new TranslateTransform(-parent.BodyRadius, -parent.BodyRadius));
-            tg1.Children.Add(new RotateTransform(90+parent.CameraDirection1 * 180 / Math.PI));
+            tg1.Children.Add(new RotateTransform(90 + parent.CameraDirection1 * 180 / Math.PI));
             body.RenderTransform = tg1;
             Canvas.SetLeft(body, parent.CameraPosition.X);
             Canvas.SetTop(body, parent.CameraPosition.Y);
             theCanvas.Children.Add(body);
+
             return true;
         }
 

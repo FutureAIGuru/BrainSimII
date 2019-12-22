@@ -74,15 +74,15 @@ namespace BrainSimulator
                 if (v.Name != "ModuleBase")
                 {
                     Type t = Type.GetType(v.FullName);
-                    ModuleBase m = (ModuleBase)Activator.CreateInstance(t);
-                    string toolTip = "";
-                    toolTip = m.ShortDescription;
+                    //ModuleBase m = (ModuleBase)Activator.CreateInstance(t);
+                    //string toolTip = "";
+                    //toolTip = m.ShortDescription;
                     if (v.Name != "ModuleBase")
                     {
                         ComboBoxItem cbi = new ComboBoxItem
                         {
                             Content = v.Name,
-                            ToolTip = toolTip
+                      //      ToolTip = toolTip
                         };
                         //cb.Items.Add(cbi);
                         cb.Items.Add(v.Name);
@@ -226,27 +226,32 @@ namespace BrainSimulator
                     i = -i - 1;
                     NeuronSelectionRectangle nsr = MainWindow.arrayView.theSelection.selectedRectangles[i];
                     MainWindow.arrayView.theSelection.selectedRectangles.RemoveAt(i);
-                    ModuleView na = new ModuleView(nsr.FirstSelectedNeuron, width, height, label, commandLine, Utils.ToArgb(color));
-                    if (na.Width < na.theModule.MinWidth) na.Width = na.theModule.MinWidth;
-                    if (na.Height < na.theModule.MinHeight) na.Height = na.theModule.MinHeight;
-                    MainWindow.theNeuronArray.modules.Add(na);
-                    string[] Params = commandLine.Split(' ');
-                    if (MainWindow.theNeuronArray.modules[i].TheModule != null)
-                    {
-                        //MainWindow.theNeuronArray.areas[i].TheModule.Initialize(); //doesn't work with camera module
-                    }
-                    else
-                    {
-                        Type t1x = Type.GetType("BrainSimulator.Modules." + Params[0]);
-                        if (t1x != null && (MainWindow.theNeuronArray.modules[i].TheModule == null || MainWindow.theNeuronArray.modules[i].TheModule.GetType() != t1x))
-                        {
-                            na.TheModule = (ModuleBase)Activator.CreateInstance(t1x);
-                            //  MainWindow.theNeuronArray.areas[i].TheModule.Initialize();
-                        }
-                    }
+                    CreateModule(label, commandLine, color,nsr.FirstSelectedNeuron, width, height);
                 }
             }
             MainWindow.Update();
+        }
+
+        public static void CreateModule(string label, string commandLine, Color color,int firstNeuron, int width, int height)
+        {
+            ModuleView na = new ModuleView(firstNeuron, width, height, label, commandLine, Utils.ToArgb(color));
+            if (na.Width < na.theModule.MinWidth) na.Width = na.theModule.MinWidth;
+            if (na.Height < na.theModule.MinHeight) na.Height = na.theModule.MinHeight;
+            MainWindow.theNeuronArray.modules.Add(na);
+            string[] Params = commandLine.Split(' ');
+            if (na.TheModule != null)
+            {
+                //MainWindow.theNeuronArray.areas[i].TheModule.Initialize(); //doesn't work with camera module
+            }
+            else
+            {
+                Type t1x = Type.GetType("BrainSimulator.Modules." + Params[0]);
+                if (t1x != null && (na.TheModule == null || na.TheModule.GetType() != t1x))
+                {
+                    na.TheModule = (ModuleBase)Activator.CreateInstance(t1x);
+                    //  MainWindow.theNeuronArray.areas[i].TheModule.Initialize();
+                }
+            }
         }
 
         private static void Mi_Click(object sender, RoutedEventArgs e)

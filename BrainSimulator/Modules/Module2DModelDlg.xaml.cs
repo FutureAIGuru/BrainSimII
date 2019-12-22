@@ -67,26 +67,30 @@ namespace BrainSimulator.Modules
             });
 
             //draw possible points;
-            foreach (Thing t in parent.GetKBPossiblePoints())
+            try
             {
-                if (t.V is PointPlus P1 && !float.IsInfinity(P1.X) && !float.IsInfinity(P1.Y))
+                foreach (Thing t in parent.GetKBPossiblePoints() ?? Enumerable.Empty<Thing>())
                 {
-                    theCanvas.Children.Add(new Line
+                    if (t.V is PointPlus P1 && !float.IsInfinity(P1.X) && !float.IsInfinity(P1.Y))
                     {
-                        X1 = P1.X,
-                        X2 = P1.X,
-                        Y1 = P1.Y,
-                        Y2 = P1.Y,
-                        StrokeThickness = 3 / scale,
-                        StrokeEndLineCap = PenLineCap.Round,
-                        StrokeStartLineCap = PenLineCap.Round,
-                        //                        Stroke = new SolidColorBrush(P1.TheColor)
-                        Stroke = new SolidColorBrush(Colors.Orange)
-                    });
+                        theCanvas.Children.Add(new Line
+                        {
+                            X1 = P1.X,
+                            X2 = P1.X,
+                            Y1 = P1.Y,
+                            Y2 = P1.Y,
+                            StrokeThickness = 3 / scale,
+                            StrokeEndLineCap = PenLineCap.Round,
+                            StrokeStartLineCap = PenLineCap.Round,
+                            // Stroke = new SolidColorBrush(P1.TheColor)
+                            Stroke = new SolidColorBrush(Colors.Orange)
+                        });
+                    }
                 }
             }
+            catch { }
             //draw the objects
-            foreach (Thing t in parent.GetKBSegments())
+            foreach (Thing t in parent.GetKBSegments() ?? Enumerable.Empty<Thing>())
             {
                 Segment segment = parent.SegmentFromKBThing(t);
                 Color theColor = segment.theColor;
@@ -105,7 +109,7 @@ namespace BrainSimulator.Modules
                     Stroke = new SolidColorBrush(theColor),
                 });
 
-                if (segment.P1.Conf == 0)
+                if (segment.P1.Conf != 0)
                 {
                     theCanvas.Children.Add(new Line
                     {
@@ -117,7 +121,7 @@ namespace BrainSimulator.Modules
                         Stroke = new SolidColorBrush(Colors.White),
                     });
                 }
-                if (segment.P2.Conf == 0)
+                if (segment.P2.Conf != 0)
                 {
                     theCanvas.Children.Add(new Line
                     {

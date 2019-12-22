@@ -130,8 +130,8 @@ namespace BrainSimulator.Modules
                 }
                 else
                 {
-                    PointPlus pvTry1 = Utils.ExtendSegment(obstacle.P1.P, obstacle.P2.P, 0.2f, true);
-                    PointPlus pvTry2 = Utils.ExtendSegment(obstacle.P1.P, obstacle.P2.P, 0.2f, false);
+                    PointPlus pvTry1 = Utils.ExtendSegment(obstacle.P1.P, obstacle.P2.P, 0.4f, true);
+                    PointPlus pvTry2 = Utils.ExtendSegment(obstacle.P1.P, obstacle.P2.P, 0.4f, false);
                     pointsToTry.Add(pvTry1);
                     pointsToTry.Add(pvTry2);
                     pointsToTry.Add(new PointPlus { X = 1, Y = 1 });

@@ -71,5 +71,10 @@ namespace BrainSimulator.Modules
                 return true;
             return false;
         }
+        public override string ToString()
+        {
+            string s = "R: "+R.ToString("F3") + ", Theta: " + Degrees.ToString("F3")+ "°";
+            return s;
+        }
     }
 }

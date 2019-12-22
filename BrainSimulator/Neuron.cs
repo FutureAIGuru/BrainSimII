@@ -20,9 +20,9 @@ namespace BrainSimulator
         public modelType Model { get => model; set => model = value; }
 
         string label = "";
-        public string Label{get { return label; }set { label = value; }}
+        public string Label { get { return label; } set { label = value; } }
         private bool keepHistory = false;
-        
+
         public Neuron() { Model = modelType.Std; }
         public Neuron(int id1, modelType t = modelType.Std)
         {
@@ -30,12 +30,19 @@ namespace BrainSimulator
             Model = t;
         }
 
+        private long lastFired = 0;
+
+
         int id = -1;
         public int Id { get => id; set => id = value; }
 
         //the accumulating value of a neuron
         private int currentCharge = 0;
-        public float CurrentCharge { get { return (float)currentCharge / 1000f; } set { this.currentCharge = (int)(value * 1000); } }
+        public float CurrentCharge
+        {
+            get { return (float)currentCharge / 1000f; }
+            set { this.currentCharge = (int)(value * 1000); }
+        }
         //get/set currentcharge as raw integer
         public int CurrentChargeInt { get { return currentCharge; } set { this.currentCharge = value; } }
 
@@ -53,9 +60,10 @@ namespace BrainSimulator
         public List<Synapse> SynapsesFrom { get { return synapsesFrom; } }
 
         public bool KeepHistory { get => keepHistory; set => keepHistory = value; }
+        public long LastFired { get => lastFired; set => lastFired = value; }
 
-        public bool Fired(){return (LastCharge > .9);}
-        public void SetValue(float value){LastCharge = CurrentCharge = value;}
+        public bool Fired() { return (LastCharge > .9); }
+        public void SetValue(float value) { CurrentCharge = value; }
         public void SetValueInt(int value) { LastChargeInt = CurrentChargeInt = value; }
 
         //a neuron is defined as in use if it has any synapses connected from/to it or it has a label
@@ -71,7 +79,7 @@ namespace BrainSimulator
             SetValue(0);
         }
 
-        public void AddSynapse(int targetNeuron, float weight, NeuronArray theNeuronArray=null, bool addUndoInfo = true)
+        public void AddSynapse(int targetNeuron, float weight, NeuronArray theNeuronArray = null, bool addUndoInfo = true)
         {
             if (theNeuronArray == null) theNeuronArray = MainWindow.theNeuronArray;
             if (targetNeuron > theNeuronArray.arraySize) return;
@@ -105,9 +113,22 @@ namespace BrainSimulator
 
         public void DeleteAllSynapes()
         {
+            //delete synapses out
+            foreach (Synapse s in Synapses)
+            {
+                Neuron n = MainWindow.theNeuronArray.neuronArray[s.TargetNeuron];
+                n.synapsesFrom.Remove(n.FindSynapseFrom(Id));
+            }
             synapses.Clear();
+
+            //delete synapses in
+            //should delete the synapses at the source
+            foreach (Synapse s in SynapsesFrom)
+            {
+                Neuron nTarget = MainWindow.theNeuronArray.neuronArray[s.TargetNeuron];
+                nTarget.synapses.Remove(nTarget.FindSynapse(Id));
+            }
             synapsesFrom.Clear();
-            //should delete the synapses at the source!
         }
 
         public void DeleteSynapse(int targetNeuron)
@@ -222,6 +243,7 @@ namespace BrainSimulator
                         currentCharge = 0;
                         if (KeepHistory)
                             FiringHistory.AddFiring(Id, generation);
+                        LastFired = generation;
                     }
                     break;
 

@@ -116,7 +116,7 @@ namespace BrainSimulator
                 if (sender is Label l)
                 {
                     int old = theCanvas2.Children.IndexOf(l);
-                    Debug.WriteLine("Line " + newPos + "   " + l.Content + "  " + old);
+                    //Debug.WriteLine("Line " + newPos + "   " + l.Content + "  " + old);
                     FiringHistory.NeuronHistory temp = FiringHistory.history[old];
                     if (newPos > old) newPos--;
                     if (newPos >= 0 && newPos < FiringHistory.history.Count)
@@ -130,7 +130,7 @@ namespace BrainSimulator
                 }
             }
             dragging = false;
-            Draw();
+            ReallyDraw();
         }
 
         bool dragging = false;
@@ -199,8 +199,8 @@ namespace BrainSimulator
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            this.Top = Owner.Height - this.ActualHeight - 10;
-            this.Left = Owner.Width - this.ActualWidth - 10;
+            this.Top = Owner.Top + Owner.Height - this.ActualHeight - 5;
+            this.Left = Owner.Left + Owner.Width - this.ActualWidth - 5;
         }
     }
 }

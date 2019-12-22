@@ -5,13 +5,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Speech.Recognition;
-using System.Diagnostics;
 using System.Data.Entity.Design.PluralizationServices;
+using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
+using System.Speech.Recognition;
+using System.Speech.Recognition.SrgsGrammar;
 
 namespace BrainSimulator.Modules
 {
@@ -25,6 +24,7 @@ namespace BrainSimulator.Modules
         public override void Fire()
         {
             Init();
+            if (recognizer == null) StartRecognizer();
 
             //if a word is in the input queue...process one word
             if (words.Count > 0)
@@ -50,7 +50,7 @@ namespace BrainSimulator.Modules
                 if (found != -1) //perhaps the array was full
                 {
                     n.CurrentCharge = 1;
-                    Debug.WriteLine("Fired Neuron for word: " + word);
+                    //Debug.WriteLine("Fired Neuron for word: " + word);
                 }
 
                 words.RemoveAt(0);
@@ -68,11 +68,15 @@ namespace BrainSimulator.Modules
                 recognizer.RecognizeAsyncStop();
                 recognizer.Dispose();
             }
+            StartRecognizer();
+        }
+
+        private void StartRecognizer()
+        {
             // Create an in-process speech recognizer for the en-US locale.  
             recognizer = new SpeechRecognitionEngine(new System.Globalization.CultureInfo("en-US"));
 
-            Grammar gr = CreateGrammar();
-            recognizer.LoadGrammar(gr);
+            CreateGrammar();
 
             // Add a handler for the speech recognized event.  
             recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(recognizer_SpeechRecognized);
@@ -84,53 +88,87 @@ namespace BrainSimulator.Modules
             recognizer.RecognizeAsync(RecognizeMode.Multiple);
         }
 
-        private Grammar CreateGrammar()
+        private void CreateGrammar()
         {
 
-            //// Create and load a dictation grammar.  This is for many words and doesn't work very well
+            //// Create and load a dictation grammar.  This handles for many words and doesn't work very well
             //recognizer.LoadGrammar(new DictationGrammar());
 
             // create a small custom grammar for testing
-            Choices digit = new Choices("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "point");
+            Choices reward = new Choices("good", "no");
+            Choices color = new Choices("black", "red", "blue", "green", "orange", "white");
+            Choices size = new Choices("big", "medium", "little", "long", "short");
+            Choices distance = new Choices("near", "nearer", "nearest", "far", "farther", "farest");
+            Choices attrib = new Choices(new GrammarBuilder[] { color, distance, size });
+            Choices shape = new Choices("dot", "line");
+
+            Choices attribs = new Choices("color", "size", "distance", "shape");
+
+            Choices action = new Choices("go", "stop", "turn", "move");
+            Choices direction = new Choices("right", "left", "forward", "backwards", "around");
+
+            Choices command = new Choices("this is", "this is a", "this is the", "this is an");
+            Choices query = new Choices("what can you see", "what is behind you", "what is this");
+
+            GrammarBuilder attribQuery = new GrammarBuilder();
+            attribQuery.Append("what");
+            attribQuery.Append(attribs);
+            attribQuery.Append("is this");
+
+
+            GrammarBuilder say = new GrammarBuilder();
+            say.Append("say");
+            say.AppendDictation();
+
+            GrammarBuilder declaration = new GrammarBuilder();
+            declaration.Append(command);
+            declaration.Append(attrib, 0, 4);
+            declaration.Append(shape, 0, 1);
+
+            GrammarBuilder actionCommand = new GrammarBuilder();
+            actionCommand.Append(action);
+            actionCommand.Append(direction,0,1);
+
+            Choices commands = new Choices(reward,say, attribQuery, declaration, actionCommand, query);
+
+            //some words we might need some day
+            //Choices article = new Choices("a", "an", "the", "some", "containing", "with", "which are");
+            //Choices emotion = new Choices("ecstatic", "happy", "so-so", "OK", "sad", "unhappy");
+            //Choices timeOfDay = new Choices("morning", "afternoon", "evening", "night");
+
+
+            //someday we'll need numbers
             //Choices number = new Choices();
             //for (int i = 1; i < 200; i++)
             //    number.Add(i.ToString());
-            Choices emotion = new Choices("ecstatic", "happy", "so-so", "OK", "sad", "unhappy");
-            Choices timeOfDay = new Choices("morning", "afternoon", "evening", "night");
-            Choices color = new Choices("black", "gray", "pink", "red", "blue", "green", "orange", "white");
-            Choices shape = new Choices("square", "rectangle", "circle", "line");
-            Choices direction = new Choices("right", "left", "forward", "backwards");
-            Choices size = new Choices("big", "medium", "little");
-            Choices action = new Choices("move", "turn");
+            //Choices digit = new Choices("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "point");
+            
 
-            Choices command = new Choices("Computer", "Computer Say", "Computer what can you see?", "Computer What is behind you?", "Computer turn around", "Computer what attributes do you know", "Computer what is");
-            Choices query = new Choices("what is", "add", "name", "this is");
-            Choices article = new Choices("a", "an", "the", "some", "containing", "with", "which are");
-            Choices words = new Choices("mary", "had", "a", "little", "lamb");
+            //how to add singular/plural to choices
+            //PluralizationService ps = PluralizationService.CreateService(new CultureInfo("en-us"));
+            //string[] attribList = new string[] { "attributes", "sequences", "colors", "sizes", "shapes", "digits", "things" };
+            //string[] attribList1 = new string[attribList.Length];
+            //for (int i = 0; i < attribList.Length; i++)
+            //    attribList1[i] = ps.Singularize(attribList[i]);
 
-            PluralizationService ps = PluralizationService.CreateService(new CultureInfo("en-us"));
 
-            string[] attribList = new string[] { "attributes", "sequences", "colors", "sizes", "shapes", "digits", "things" };
-            string[] attribList1 = new string[attribList.Length];
-            for (int i = 0; i < attribList.Length; i++)
-                attribList1[i] = ps.Singularize(attribList[i]);
+            GrammarBuilder a = new GrammarBuilder();
+            a.Append("Sallie", 1, 1);
+            a.Append(commands);
 
-            List<GrammarBuilder> gb = new List<GrammarBuilder>();
-            GrammarBuilder a = new GrammarBuilder("Computer");
-            //a.Append(query, 0, 1);
-            //a.Append(action, 0, 1);
-            //a.Append(direction, 0, 1);
-            //a.Append(article, 0, 1);
-            //a.Append(sequence, 0, 1);
-            //a.Append(new Choices(attribList), 0, 1);
-            //a.Append(new Choices(attribList1), 0, 1);
-            //a.Append(article, 0, 1);
-            //a.Append(color, 0, 1);
-            //a.Append(shape, 0, 1);
-            //a.Append(size, 0, 1);
-            a.Append(digit, 0, 4);
-            //a.Append(words, 0, 5);
-            gb.Add(a);
+
+
+            //how to specify a custom pronunciation with SRGS--these don't integrate with the rest of the grammar
+            //SrgsItem cItem = new SrgsItem();
+            //SrgsToken cWord = new SrgsToken("computer"); 
+            //cWord.Pronunciation = "kəmpjutər";
+            //cItem.Add(cWord);
+            //SrgsRule srgsRule = new SrgsRule("custom", cItem);
+            //SrgsDocument tokenPron = new SrgsDocument(srgsRule);
+            //tokenPron.PhoneticAlphabet = SrgsPhoneticAlphabet.Ipa;
+            //Grammar g_Custom = new Grammar(tokenPron);
+            //recognizer.LoadGrammar(g_Custom);
+
 
             //get the words from the grammar and label neurons
             string c = a.DebugShowPhrases;
@@ -139,15 +177,15 @@ namespace BrainSimulator.Modules
             string[] c1 = c.Split(new string[] { "[", ",", "]", " " }, StringSplitOptions.RemoveEmptyEntries);
             c1 = c1.Distinct().ToArray();
 
-            int i1 = 1;
-            na.BeginEnum();
-            for (Neuron n = na.GetNextNeuron(); n != null && i1 < c1.Length; i1++, n = na.GetNextNeuron())
-                n.Label = c1[i1].ToLower();
+            //int i1 = 1;
+            //na.BeginEnum();
+            //for (Neuron n = na.GetNextNeuron(); n != null && i1 < c1.Length; i1++, n = na.GetNextNeuron())
+            //    n.Label = c1[i1].ToLower();
 
-            Choices choices = new Choices(gb.ToArray());
-            Grammar gr = new Grammar((GrammarBuilder)choices);
-
-            return gr;
+            Grammar gr = new Grammar(a);
+            recognizer.LoadGrammar(gr);
+            gr = new Grammar(reward);
+            recognizer.LoadGrammar(gr);
         }
 
         // Handle the SpeechRecognized event.  
@@ -155,17 +193,50 @@ namespace BrainSimulator.Modules
         void recognizer_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
             string text = e.Result.Text;
-            float i = e.Result.Confidence;
-            if (i < .5) return;
+
+            string debug = "";
+            foreach (RecognizedWordUnit w in e.Result.Words)
+                debug += w.Text + "(" + w.Confidence + ") ";
+            bool anyLowConfidence = false;
+            float minConfidence = .91f;
+            if (text.IndexOf("Sallie say") == 0)
+                minConfidence = .6f;
+            foreach (RecognizedWordUnit word in e.Result.Words)
+            {
+                if (word.Confidence < minConfidence) anyLowConfidence = true;
+            }
+            if (e.Result.Confidence < .9 || e.Result.Words[0].Confidence < .94 || anyLowConfidence)
+            {
+                //System.Media.SystemSounds.Asterisk.Play();
+                Debug.WriteLine("Words Detected: " + debug + " IGNORED");
+                return;
+            }
+            Debug.WriteLine("Words Detected: " + debug);
+
+            //use this to work with pronunciations instead of words
+            //foreach (RecognizedWordUnit word in e.Result.Words)
+            //{
+            //    words.Add(word.Pronunciation);
+            //}
+            //return;
+
             string[] tempWords = text.Split(' ');
-            // words.Add("start");
             foreach (string word in tempWords)
             {
-                if (word.ToLower() != "computer")
+                if (word.ToLower() != "sallie")
                     words.Add(word.ToLower());
             }
-            // words.Add("stop");
-            Debug.WriteLine("Words Detected: " + text);
+            ModuleHearWords nmHear = (ModuleHearWords)FindModuleByType(typeof(ModuleHearWords));
+            if (nmHear != null)
+            {
+                String phrase = e.Result.Text;
+                if (e.Result.Words.Count != 1)
+                {
+                    int i = phrase.IndexOf(' ');
+                    phrase = phrase.Substring(i+1);
+                }
+                nmHear.HearPhrase(phrase);
+            }
         }
 
         public void PauseRecognition()

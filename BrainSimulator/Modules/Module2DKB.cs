@@ -13,30 +13,47 @@ using System.Windows.Media;
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using System.Windows;
+using System.Diagnostics;
 
 namespace BrainSimulator.Modules
 {
     public class Module2DKB : ModuleBase
     {
-        private List<Thing> KB = new List<Thing>();
+        protected List<Thing> KB = new List<Thing>();
         public List<SThing> KB1 = new List<SThing>();
         public override string ShortDescription { get => "Knowledge Base for storing linked knowledge data"; }
-        public override string LongDescription { get => "This module uses no neurons but can be called directly by other modules.\n\r"+
+        public override string LongDescription
+        {
+            get => "This module uses no neurons but can be called directly by other modules.\n\r" +
 "Within the KB, everything is a 'Thing' (see the source code for the 'Thing' object). Things may have parents, children, " +
 "references to other Things, and a 'value' which can be " +
 "any .NET object (with Color and Point being implemented). " +
 "It can search by value with an optional tolerance. A reference to another thing is done with a 'Link' " +
 "which is a thing with an attached weight which can be examined and/or modified.\n\r " +
 "Note that the Knowledge Base is a bit like a neural network its own right if we consider a node to be a neuron " +
-"and a link to be a synapse.";  }
+"and a link to be a synapse.";
+        }
 
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
         }
 
-        public Thing AddThing(string label, Thing[] parents, object value = null, Thing[] references = null)
+        private string ArrayToString(Thing[] list)
         {
+            string retVal = "";
+            if (list == null) return ".";
+            foreach (Thing t in list)
+            {
+                if (t == null) retVal += ".,";
+                else retVal += t.ToString() + ",";
+            }
+            return retVal;
+        }
+
+        public virtual Thing AddThing(string label, Thing[] parents, object value = null, Thing[] references = null)
+        {
+            Debug.WriteLine("AddThing: " + label + " (" + ArrayToString(parents) + ") (" + ArrayToString(references) + ")");
             Thing newThing = new Thing { Label = label, V = value };
             references = references ?? new Thing[0];
             for (int i = 0; i < parents.Length; i++)
@@ -56,7 +73,7 @@ namespace BrainSimulator.Modules
             return newThing;
         }
 
-        public void DeleteThing(Thing t)
+        public virtual void DeleteThing(Thing t)
         {
             if (t.Children.Count != 0) return; //can't delete something with children...must delete all children first.
             foreach (Thing t1 in t.Parents)
@@ -69,12 +86,14 @@ namespace BrainSimulator.Modules
         }
 
         //returns a thing with the given label
-        //2nd paramter defines KB to search
+        //2nd paramter defines KB to search, null=search entire knowledge base
         public Thing Labeled(string label, List<Thing> KBt = null)
         {
             KBt = KBt ?? KB;
             Thing retVal = null;
             retVal = KBt.Find(t => t.Label == label);
+            if (retVal != null) retVal.useCount++;
+
             return retVal;
         }
 
@@ -83,19 +102,25 @@ namespace BrainSimulator.Modules
         //if it is null, it searches the entire KB,
         //the 3re paramter defines the tolerance for spatial matches
         //if it is null, an exact match is required
-        public Thing Valued(object value, List<Thing> KBt = null, float toler = 0)
+        public virtual Thing Valued(object value, List<Thing> KBt = null, float toler = 0)
         {
             KBt = KBt ?? KB;
             foreach (Thing t in KBt)
             {
+                if (t == null) continue;
                 if (t.V is PointPlus p1 && value is PointPlus p2)
                 {
-                    if (p1.Near(p2, toler)) return t;
+                    if (p1.Near(p2, toler))
+                    {
+                        t.useCount++;
+                        return t;
+                    }
                 }
                 else
                 {
                     if (t.V != null && t.V.Equals(value))
                     {
+                        t.useCount++;
                         return t;
                     }
                 }
@@ -104,7 +129,7 @@ namespace BrainSimulator.Modules
         }
 
         //returns a list of all things which share the given parent thing
-        public List<Thing> HavingParent(Thing parent)
+        public virtual List<Thing> HavingParent(Thing parent)
         {
             if (parent == null) return null;
 
@@ -121,7 +146,8 @@ namespace BrainSimulator.Modules
                 SThing st = new SThing()
                 {
                     label = t.Label,
-                    V = t.V
+                    V = t.V,
+                    useCount = t.useCount
                 };
                 foreach (Thing t1 in t.Parents)
                 {
@@ -130,6 +156,7 @@ namespace BrainSimulator.Modules
                 foreach (Link l in t.References)
                 {
                     Thing t1 = l.T;
+                    if (l.hits != 0 && l.misses != 0) l.weight = l.hits / (float)l.misses;
                     st.references.Add(new Point(KB.FindIndex(x => x == t1), l.weight));
                 }
                 KB1.Add(st);
@@ -144,7 +171,8 @@ namespace BrainSimulator.Modules
                 Thing t = new Thing()
                 {
                     Label = st.label,
-                    V = st.V
+                    V = st.V,
+                    useCount = st.useCount
                 };
                 KB.Add(t);
             }
@@ -156,7 +184,15 @@ namespace BrainSimulator.Modules
                 }
                 foreach (Point p in KB1[i].references)
                 {
-                    KB[i].References.Add(new Link { T = KB[(int)p.X], weight = (float)p.Y });
+                    int hits = 0;
+                    int misses = 0;
+                    float weight = (float)p.Y;
+                    if (weight != 0 && weight != 1)
+                    {
+                        hits = (int)(1000 / weight);
+                        misses = 1000 - hits;
+                    }
+                    KB[i].References.Add(new Link { T = KB[(int)p.X], weight = weight, hits = hits, misses = misses });
                 }
             }
 
@@ -173,25 +209,42 @@ namespace BrainSimulator.Modules
             }
         }
 
+        public List<Thing> GetChildren(Thing t)
+        {
+            if (t == null) return new List<Thing>();
+            return t.Children;
+        }
+
+
         public override void Initialize()
         {
             //create an intial structure with some test data
             KB.Clear();
             KB1.Clear();
             AddThing("ROOT", new Thing[] { });
-            AddThing("Color", new Thing[] { Labeled("ROOT") });
-            AddThing("Red", new Thing[] { Labeled("Color") }, Colors.Red);
-            AddThing("Green", new Thing[] { Labeled("Color") }, Colors.Green);
-            AddThing("Blue", new Thing[] { Labeled("Color") }, Colors.Blue);
-            AddThing("Shape", new Thing[] { Labeled("ROOT") });
+            AddThing("Sense", new Thing[] { Labeled("ROOT") });
+            AddThing("Color", new Thing[] { Labeled("Sense") });
+            AddThing("Shape", new Thing[] { Labeled("Sense") });
             AddThing("Point", new Thing[] { Labeled("Shape") });
-            AddThing("PossiblePoint", new Thing[] { Labeled("Point") });
+            AddThing("Dot", new Thing[] { Labeled("Shape") });
+            AddThing("TempP", new Thing[] { Labeled("Point") });
             AddThing("Segment", new Thing[] { Labeled("Shape") });
-            AddThing("Visible", new Thing[] { Labeled("ROOT") });
-            AddThing("Partial", new Thing[] { Labeled("ROOT") });
-            AddThing("Word", new Thing[] { Labeled("ROOT") });
+            AddThing("Word", new Thing[] { Labeled("Sense") });
+            AddThing("Phrase", new Thing[] { Labeled("Sense") });
+            AddThing("NoWord", new Thing[] { Labeled("Word") });
+            AddThing("Action", new Thing[] { Labeled("ROOT") });
+            AddThing("NoAction", new Thing[] { Labeled("Action") });
+            AddThing("Go", new Thing[] { Labeled("Action") });
+            AddThing("Stop", new Thing[] { Labeled("Action") });
+            AddThing("RTurn", new Thing[] { Labeled("Action") });
+            AddThing("LTurn", new Thing[] { Labeled("Action") });
+            AddThing("UTurn", new Thing[] { Labeled("Action") });
+            AddThing("Say", new Thing[] { Labeled("Action") });
+            AddThing("Attn", new Thing[] { Labeled("Action") });
+            AddThing("Situation", new Thing[] { Labeled("ROOT") });
+            AddThing("Outcome", new Thing[] { Labeled("ROOT") });
+            AddThing("Positive", new Thing[] { Labeled("Outcome") });
+            AddThing("Negative", new Thing[] { Labeled("Outcome") });
         }
     }
-
-
 }

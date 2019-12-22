@@ -31,7 +31,7 @@ namespace BrainSimulator.Modules
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
-            float[] dist = { .2f,.1f,0,-.1f,-.2f};
+            float[] dist = { .1f,.025f,0,-.025f,-.1f};
             float distance = 0;
 
 

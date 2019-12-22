@@ -88,6 +88,34 @@ namespace BrainSimulator
             Generation++;
         }
 
+        //fires all the modules
+        private void HandleProgrammedActions()
+        {
+            lock (modules)
+            {
+                foreach (ModuleView na in modules)
+                {
+                    if (na.TheModule != null)
+                    {
+                        na.TheModule.Fire();
+                    }
+                }
+            }
+        }
+
+        //looks for a beginning match only
+        private ModuleView FindAreaByCommand(string command)
+        {
+            return modules.Find(na => na.CommandLine.IndexOf(command) == 0);
+        }
+
+        //needs a complete match
+        public ModuleView FindAreaByLabel(string label)
+        {
+            return modules.Find(na => na.Label.Trim() == label);
+        }
+
+
         public void AddSynapseUndo(int source, int target, float weight, bool newSynapse)
         {
             SynapseUndo s;

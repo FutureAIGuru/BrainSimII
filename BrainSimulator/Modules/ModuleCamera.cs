@@ -64,8 +64,7 @@ namespace BrainSimulator.Modules
                         n.SetValueInt(0);
                 }
             theBitMap1 = null;
-            if (dlg != null)
-                Application.Current.Dispatcher.Invoke((Action)delegate { dlg.Draw();});
+            UpdateDialog();
         }
 
         public override void Initialize()

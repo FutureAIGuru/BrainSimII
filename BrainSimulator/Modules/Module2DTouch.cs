@@ -57,8 +57,8 @@ namespace BrainSimulator.Modules
 
                 Point P1 = antennaPos.P + pv1.V;
                 Point P2 = antennaPos.P + pv2.V;
-                PointPlus P1P = new PointPlus() { P = P1, Conf = p1IsEndpt };
-                PointPlus P2P = new PointPlus() { P = P2, Conf = p2IsEndpt };
+                PointPlus P1P = new PointPlus() { P = P1, Conf = 1-p1IsEndpt };
+                PointPlus P2P = new PointPlus() { P = P2, Conf = 1-p2IsEndpt };
 
                 bool modelChanged = naModel.AddSegment(P1P, P2P, System.Windows.Media.Colors.Wheat);
 

@@ -58,10 +58,10 @@ namespace BrainSimulator
         private List<NeuronOnScreen> neuronsOnScreen = new List<NeuronOnScreen>();
         public class NeuronOnScreen
         {
-            public int neuronIndex; public UIElement graphic; public float prevValue;
-            public NeuronOnScreen(int index, UIElement e, float value)
+            public int neuronIndex; public UIElement graphic; public float prevValue; public Label label;
+            public NeuronOnScreen(int index, UIElement e, float value, Label Label)
             {
-                neuronIndex = index; graphic = e; prevValue = value;
+                neuronIndex = index; graphic = e; prevValue = value; label = Label;
             }
         };
 
@@ -80,7 +80,7 @@ namespace BrainSimulator
 
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
-            Debug.WriteLine("Update " + MainWindow.theNeuronArray.Generation);
+            //Debug.WriteLine("Update " + MainWindow.theNeuronArray.Generation);
             dp.NeuronRows = MainWindow.theNeuronArray.rows;
             theCanvas.Children.Clear();
             neuronsOnScreen.Clear();
@@ -157,21 +157,23 @@ namespace BrainSimulator
             {
                 for (int i = 0; i < MainWindow.theNeuronArray.neuronArray.Length; i++)
                 {
-                    UIElement l = NeuronView.GetNeuronView(i, this);
+                    UIElement l = NeuronView.GetNeuronView(i, this, out Label lbl);
                     if (l != null)
                     {
                         int element = theCanvas.Children.Add(l);
                         //if (l is Ellipse e && e.Fill.Opacity != 0)
                         if (l is Ellipse || l is Rectangle)
-                            neuronsOnScreen.Add(new NeuronOnScreen(i, l, 0));
-                        else if (l is Label)
-                            neuronsOnScreen.Add(new NeuronOnScreen(i, l, 0));
+                            neuronsOnScreen.Add(new NeuronOnScreen(i, l, 0,lbl));
+                        if (lbl != null)
+                        {
+                            theCanvas.Children.Add(lbl);
+                        }
                     }
                 }
             }
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
-            Debug.WriteLine("Update Done " + elapsedMs + "ms");
+            //Debug.WriteLine("Update Done " + elapsedMs + "ms");
         }
 
         private void DrawModuleConnectors()
@@ -222,15 +224,32 @@ namespace BrainSimulator
             for (int i = 0; i < neuronsOnScreen.Count; i++)
             {
                 NeuronOnScreen a = neuronsOnScreen[i];
+                Neuron n = MainWindow.theNeuronArray.neuronArray[a.neuronIndex];
                 if (a.graphic is Shape e)
                 {
-                    Neuron n = MainWindow.theNeuronArray.neuronArray[a.neuronIndex];
-                    if (n.LastCharge != a.prevValue)
+                    if (n.LastCharge != a.prevValue || 
+                        (a.label != null && n.Label != (string)a.label.Content) ||
+                        (a.label == null && n.Label != ""))
                     {
-                        if (NeuronView.GetNeuronView(a.neuronIndex, this) is Shape l)
+                        UIElement el = NeuronView.GetNeuronView(a.neuronIndex, this, out Label lbl);
+                        if (el is Shape l1)
                         {
-                            e.Fill = l.Fill;
+                            e.Fill = l1.Fill;
                             neuronsOnScreen[i].prevValue = n.LastCharge;
+                        }
+                        if (a.label != null && (string)a.label.Content != n.Label)
+                        {
+                            a.label.Content = n.Label;
+                        }
+                        if (a.label == null && n.Label != "")
+                        {
+                            a.label = lbl;
+                            theCanvas.Children.Add(lbl);
+                        }
+                        if (a.label != null && n.Label == "")
+                        {
+                            theCanvas.Children.Remove(a.label);
+                            a.label = null;
                         }
                     }
                 }
@@ -255,7 +274,7 @@ namespace BrainSimulator
         public void theCanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (MainWindow.theNeuronArray == null) return;
-            Debug.WriteLine("theCanvas_MouseDown" + MainWindow.theNeuronArray.Generation);
+            //Debug.WriteLine("theCanvas_MouseDown" + MainWindow.theNeuronArray.Generation);
             Point currentPosition = e.GetPosition(theCanvas);
             LimitMousePostion(ref currentPosition);
             mouseDownNeuronIndex = dp.NeuronFromPoint(currentPosition);
@@ -278,7 +297,7 @@ namespace BrainSimulator
                         Neuron n1 = MainWindow.theNeuronArray.neuronArray[mouseDownNeuronIndex];
                         NeuronView.CreateContextMenu(mouseDownNeuronIndex, n1, s.ContextMenu);
                     }
-                    if (s.ContextMenu == null && s is Path) // a synapse
+                    if (s.ContextMenu == null && (s is Path || s is Line)) // a synapse
                     {
                         int source = (int)s.GetValue(SynapseView.SourceIDProperty);
                         int target = (int)s.GetValue(SynapseView.TargetIDProperty);
@@ -350,7 +369,7 @@ namespace BrainSimulator
         public void theCanvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (MainWindow.theNeuronArray == null) return;
-            Debug.WriteLine("theCanvas_MouseUp" + MainWindow.theNeuronArray.Generation);
+            //Debug.WriteLine("theCanvas_MouseUp" + MainWindow.theNeuronArray.Generation);
             if (e.ChangedButton == MouseButton.Right) return;
             Point currentPosition = e.GetPosition(theCanvas);
             LimitMousePostion(ref currentPosition);
@@ -672,7 +691,10 @@ namespace BrainSimulator
 
         public static void SortAreas()
         {
-            MainWindow.theNeuronArray.Modules.Sort();
+            lock (MainWindow.theNeuronArray.Modules)
+            {
+                MainWindow.theNeuronArray.Modules.Sort();
+            }
         }
 
         private bool SetScrollCursor(Point currentPosition, Rectangle r, double left, double top)

@@ -27,12 +27,14 @@ namespace BrainSimulator.Modules
         public override string ShortDescription { get => "A simulated 2D environment with obstacles"; }
         public override string LongDescription
         {
-            get => 
-                "This module no neurons of its own but fires neurons in various sensory modules if they are in the network. It has methods (Move and Turn and potentially others "+
+            get =>
+                "This module uses no neurons of its own but fires neurons in various sensory modules if they are in the network. It has methods (Move and Turn and potentially others " +
                 "which can be called by other modules to move its point of view around the simulation. " +
-                "Clicking in the dialog box can direct the entity to that location."+
+                "The mouse wheel can zoom the display and the left mouse button can drag (pan). " +
+                "Right-clicking in the dialog box can direct the entity to that location." +
                 ""
-                ; }
+                ;
+        }
 
         [XmlIgnore]
         public List<Point> CameraTrack = new List<Point>();
@@ -59,7 +61,6 @@ namespace BrainSimulator.Modules
 
         Random rand = new Random();
 
-
         public Module2DSim()
         {
         }
@@ -79,8 +80,12 @@ namespace BrainSimulator.Modules
             antennaTheta1 += .3f;
             antennaTheta2 += .35f;
             HandleTouch();
-            if (dlg != null)
-                Application.Current.Dispatcher.Invoke((Action)delegate { dlg.Draw(); });
+
+            CreateRandomTrainingCase();
+            DoTrainingAction();
+            CheckForTrainingResult();
+
+            UpdateDialog();
         }
 
         public override void Initialize()
@@ -89,6 +94,10 @@ namespace BrainSimulator.Modules
             CameraPosition = new Point(0, 0);
             CameraTrack.Add(CameraPosition);
             CameraDirection1 = 0;
+
+            na.GetNeuronAt(0).Label = "Actions";
+            na.GetNeuronAt(1).Label = "Colors";
+            na.GetNeuronAt(2).Label = "Train";
 
             antennaeRelative = new Vector[] { new Vector(.4, .4), new Vector(.4, -.4) };
             antennaeActual = new Point[2];
@@ -107,7 +116,7 @@ namespace BrainSimulator.Modules
             physObject newObject = new physObject
             {
                 P1 = new Point(1.5, 3),
-                P2 = new Point(2.5,1.5),
+                P2 = new Point(2.5, 1.5),
                 theColor = Colors.Red,
                 Aroma = -1,
                 Temperature = 10,
@@ -120,15 +129,6 @@ namespace BrainSimulator.Modules
                 theColor = Colors.Red,
                 Aroma = -1,
                 Temperature = 10,
-            };
-            objects.Add(newObject);
-            newObject = new physObject
-            {
-                P1 = new Point(3.5, -.5),
-                P2 = new Point(2.5, -4),
-                theColor = Colors.Blue,
-                Aroma = -1,
-                Temperature = -10,
             };
             objects.Add(newObject);
             newObject = new physObject
@@ -150,6 +150,17 @@ namespace BrainSimulator.Modules
             };
             objects.Add(newObject);
 
+            newObject = new physObject
+            {
+                P1 = new Point(3.5, -.5),
+                P2 = new Point(2.5, -4),
+                theColor = Colors.Blue,
+                Aroma = -1,
+                Temperature = -10,
+            };
+            objects.Add(newObject);
+
+
             ////add some random obstacles
             //for (int i = 0; i < 5; i++)
             //{
@@ -166,9 +177,9 @@ namespace BrainSimulator.Modules
             //    };
             //    objects.Add(newobject);
             //}
+
             HandleVision();
-            if (dlg != null)
-                Application.Current.Dispatcher.Invoke((Action)delegate { dlg.Draw(); });
+            UpdateDialog();
         }
         public float randCoord()
         {
@@ -195,12 +206,11 @@ namespace BrainSimulator.Modules
             HandleTouch();
             HandleVision();
             HandleAroma();
-            if (dlg != null)
-                Application.Current.Dispatcher.Invoke((Action)delegate { dlg.Draw(); });
+            UpdateDialog();
         }
 
         //returning true said there no collision and it is OK to move there...in the event of a collision, the move is cancelled
-        public bool Move(float motion) //move fwd (in inches)
+        public bool Move(float motion) //move fwd +, rev -
         {
             Point newPosition = new Point()
             {
@@ -212,7 +222,7 @@ namespace BrainSimulator.Modules
             //collision is actual intersection of desired motion path and obstacle as opposed to a touch
             //which is an intersection between an antenna and does not impede motion
             bool collision = CheckForCollisions(newPosition);
-            
+
             //update position and add track...only if moving is OK
             Vector v1 = newPosition - CameraPosition;
             if (!collision)
@@ -246,21 +256,15 @@ namespace BrainSimulator.Modules
                 Point P1 = objects[i].P1;
                 Point P2 = objects[i].P2;
                 physObject ph = objects[i];
-                double dist = Utils.FindDistanceToSegment(newPosition, ph.P1, ph.P2,out Point closest);
+                double dist = Utils.FindDistanceToSegment(newPosition, ph.P1, ph.P2, out Point closest);
                 if (dist < BodyRadius)
                 {
                     SetNeuronValue("ModuleBehavior", "Coll", 1);
-//                    SetNeuronValue("ModuleBehavior", "CollAngle", (float)collisionAngle);
+                    PointPlus collPt = new PointPlus { P = (Point)(closest - newPosition) };
+                    collPt.Theta -= CameraDirection1;
+                    SetNeuronValue("ModuleBehavior", "CollAngle", collPt.Theta);
                     return true;
                 }
-                //Utils.FindIntersection(P1, P2, CameraPosition, newPosition, out bool linesintersect, out bool segments_intersect,
-                //    out Point Intersection, out Point close_1, out Point close_p2, out double collisionAngle);
-                //if (segments_intersect)
-                //{//we're against an obstacle
-                //    SetNeuronValue("ModuleBehavior", "Coll", 1);
-                //    SetNeuronValue("ModuleBehavior", "CollAngle", (float)collisionAngle);
-                //    return true;
-                //}
             }
             return false;
         }
@@ -276,25 +280,13 @@ namespace BrainSimulator.Modules
                 for (int i = 0; i < antennaeActual.Length; i++)
                 {
                     sumGreen = GetColorWeightAtPoint(antennaeActual[i], Colors.Green);
-                    SetNeuronValue("Module2DSmell", i,0, (float)sumGreen);
+                    SetNeuronValue("Module2DSmell", i, 0, (float)sumGreen);
                 }
             }
         }
 
-        //this is a debug feature which could copy the complete simulation to the internal model
-        //public void SetModel()
-        //{
-        //    BrnSimModule naModel = theNeuronArray.FindAreaByLabel("Module2DModel");
-        //    Module2DModel nmModel = (Module2DModel)naModel.TheModule;
-        //    for (int i = 0; i < objects.Count; i++)
-        //    {
-        //        PointPlus p1 = new PointPlus { Conf = 1, P = objects[i].P1 };
-        //        PointPlus p2 = new PointPlus { Conf = 1, P = objects[i].P2 };
-        //        nmModel.AddSegment(p1, p2, objects[i].theColor);
-        //    }
-        //}
 
-        //touch is the intersection of an antenna with an obstacle
+        //touch is the intersection of an arm with an obstacle
         public void HandleTouch()
         {
             //antenna[0] is left [1] is right
@@ -347,7 +339,7 @@ namespace BrainSimulator.Modules
                     }
 
                     PointPlus antennaPositionRel = new PointPlus { P = (Point)(Intersection - CameraPosition) };
-                    antennaPositionRel.Theta = antennaPositionRel.Theta-CameraDirection1;
+                    antennaPositionRel.Theta = antennaPositionRel.Theta - CameraDirection1;
 
                     float[] neuronValues = new float[9];
                     //everything from here out is  coordinates relative to self
@@ -387,12 +379,13 @@ namespace BrainSimulator.Modules
             HandleVision(1);
             CameraPosition = oldCamerPosition;
         }
+
         //do ray tracing to create the view the Entitiy would see
         private void HandleVision(int row)
         {
             int retinaWidth = GetModuleWidth("Module2DVision");
 
-            if (row == 0)   
+            if (row == 0)
                 currentView0.Clear();
             else
                 currentView1.Clear();
@@ -402,8 +395,8 @@ namespace BrainSimulator.Modules
             {
                 double theta = Module2DVision.GetDirectionOfNeuron(i, retinaWidth);
                 theta = CameraDirection1 + theta;
-                //create a segment from the view direction for this pixel
-                Point p2 = CameraPosition + new Vector(Math.Cos(theta) * 100, Math.Sin(theta) * 100);
+                //create a segment from the view direction for this pixel (length 100 assumes the size of the universe)
+                Point p2 = CameraPosition + new Vector(Math.Cos(theta) * 100.0, Math.Sin(theta) * 100.0);
                 Color theColor = Colors.Pink;
                 double closestDistance = 20;
                 for (int j = 0; j < objects.Count; j++)
@@ -422,13 +415,113 @@ namespace BrainSimulator.Modules
                     }
                 }
                 pixels[i] = Utils.ToArgb(theColor);
-                Point p3 = new Point(CameraPosition.X + p2.X / 100, CameraPosition.Y + p2.Y / 100);
+                Point p3 = CameraPosition + new Vector(Math.Cos(theta), Math.Sin(theta));
                 if (row == 0)
-                    currentView0.Add(new physObject() { P1 = p3, P2 = new Point(0, 0), theColor = theColor });
+                    currentView0.Add(new physObject() { P1 = p3, P2 = CameraPosition, theColor = theColor });
+                //currentView0.Add(new physObject() { P1 = p3, P2 = new Point(0, 0), theColor = theColor });
                 else
-                    currentView1.Add(new physObject() { P1 = p3, P2 = new Point(0, 0), theColor = theColor });
+                    currentView1.Add(new physObject() { P1 = p3, P2 = CameraPosition, theColor = theColor });
             }
             SetNeuronVector("Module2DVision", true, row, pixels);
+        }
+
+        //Training samples are triples... a spoken phrase, an anction, and an outcome (separated by colons)
+        //TODO delete the outcome? It is always positive by implication
+        string[] TrainingSamples = new string[]
+        {
+            "what is this:Say:Positive",
+            "go:Go:Positive",
+            "stop:Stop:Positive",
+            "say:Say:Positive",
+            "sallie:Attn:Positive",
+            "turn around:UTurn:Positive",
+            "turn around:UTurn:Positive",
+            "turn left:LTurn:Positive",
+            "turn right:RTurn:Positive",
+            "this is [color]:NoAction:Positive"
+,        };
+
+        private void CreateRandomTrainingCase()
+        {
+            if (GetNeuronValue(null, "Actions") == 1 && actionTrainingState == -1)
+            {
+                int index = (int)(rand.NextDouble() * TrainingSamples.Length);
+                trainingAction = TrainingSamples[index];
+                actionTrainingState = 15;
+            }
+        }
+
+        string trainingAction = ""; //gets the training case from the array of training samples
+        string[] trainingCase;
+        int actionTrainingState = -1;
+        // -1: idle  15: just started 10:phrase out completed (max phrase is 5 wds)
+        int colorTrainingDelay = -1;
+        private void DoTrainingAction()
+        {
+            if (trainingAction == "") return;
+            //handle color replacement
+            //TODO handle other replacements
+            if (trainingAction.IndexOf("[color]") !=-1)
+                {
+                int retinaWidth = GetModuleWidth("Module2DVision");
+                int cL = GetNeuronValueInt("Module2DVision", retinaWidth / 2, 0);
+                int cR = GetNeuronValueInt("Module2DVision", retinaWidth / 2, 1);
+                if (cL != cR) return;
+                string colorName = Utils.GetColorName(Utils.FromArgb(cL)).ToLower();
+                trainingAction = trainingAction.Replace("[color]", colorName);
+            }
+
+            trainingCase = trainingAction.Split(':');
+            if (trainingCase.Length != 3) return;
+            SimulatePhrase(trainingCase[0]);
+            trainingAction = "";
+            actionTrainingState -= 4 - (trainingCase[0].Length - trainingCase[0].Replace(" ", "").Length);
+        }
+        private void CheckForTrainingResult()
+        {
+            if (actionTrainingState == -1) return;
+            Module2DKBN nmKB = (Module2DKBN)FindModuleByType(typeof(Module2DKBN));
+            if (nmKB == null) return;
+            actionTrainingState--;
+            if (actionTrainingState <= 4 || !na.GetNeuronAt("Train").Fired()) return;
+            List<Thing> actions = nmKB.GetChildren(nmKB.Labeled("Action"));
+            bool bResponded = false;
+            foreach (Thing action in actions)
+            {
+                if (nmKB.FiredOutput(action, 2))
+                {
+                    if (action.Label == trainingCase[1])
+                    {
+                        SimulatePhrase("good");
+                        bResponded = true;
+                        break;
+                    }
+                    else
+                    {
+                        SimulatePhrase("no");
+                        bResponded = true;
+                        break;
+                    }
+                }
+            }
+            if (bResponded)
+            {
+                actionTrainingState = 5;
+                return;
+            }
+            ////we "timed out" with no response to the stimulus
+            //if (actionTrainingDelay == 4)
+            //{
+            //    SimulatePhrase("no");
+            //}
+        }
+
+
+        private void SimulatePhrase(string Phrase)
+        {
+            ModuleHearWords nmWords = (ModuleHearWords)FindModuleByType(typeof(ModuleHearWords));
+            if (nmWords != null)
+                nmWords.HearPhrase(Phrase);
         }
 
         public double GetColorWeightAtPoint(Point point, Color theColor)

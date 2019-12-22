@@ -67,8 +67,7 @@ namespace BrainSimulator.Modules
 
             Initialize();
 
-            if (dlg != null)
-                Application.Current.Dispatcher.Invoke((Action)delegate { dlg.Draw(); });
+            UpdateDialog();
 
             if (dlg == null && dlgIsOpen)
             {
@@ -95,6 +94,7 @@ namespace BrainSimulator.Modules
             if (dlg == null) return;
             dlg.ParentModule = (ModuleBase)this;
             dlg.Closed += Dlg_Closed;
+            dlg.Closing += Dlg_Closing;
             dlg.LocationChanged += Dlg_LocationChanged;
             dlg.SizeChanged += Dlg_SizeChanged;
             if (dlgPos != new Point(0, 0))
@@ -148,8 +148,22 @@ namespace BrainSimulator.Modules
 
         private void Dlg_Closed(object sender, EventArgs e)
         {
-            dlg = null;
             dlgIsOpen = false;
+        }
+
+        private void Dlg_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            dlg = null;
+        }
+
+
+        public void UpdateDialog()
+        {
+            if (dlg != null)
+                Application.Current.Dispatcher.InvokeAsync(new Action(() =>
+                {
+                    dlg?.Draw();
+                }));
         }
 
         //this is called to allow for any data massaging needed before saving the file
@@ -179,6 +193,21 @@ namespace BrainSimulator.Modules
                 {
                     return na1.TheModule;
                 }
+            }
+            return null;
+        }
+
+        protected Neuron GetNeuron(string moduleName, string neuronLabel)
+        {
+            ModuleView naModule;
+            if (moduleName != null)
+                naModule = theNeuronArray.FindAreaByLabel(moduleName);
+            else
+                naModule = na;
+            if (naModule != null)
+            {
+                Neuron n = naModule.GetNeuronAt(neuronLabel);
+                return n;
             }
             return null;
         }
@@ -222,7 +251,29 @@ namespace BrainSimulator.Modules
             return retVal;
         }
 
-        protected bool SetNeuronValue(string moduleName, int x, int y, float value)
+        protected bool SetNeuronValue(string moduleName, int n, float value, string label = null)
+        {
+            bool retVal = false;
+            ModuleView naModule;
+            if (moduleName != null)
+                naModule = theNeuronArray.FindAreaByLabel(moduleName);
+            else
+                naModule = na;
+            if (naModule != null)
+            {
+                Neuron n1 = naModule.GetNeuronAt(n);
+                if (n1 != null)
+                {
+                    if (label == null)
+                        n1.SetValue(value);
+                    else
+                        n1.Label = label;
+                    retVal = true;
+                }
+            }
+            return retVal;
+        }
+        protected bool SetNeuronValue(string moduleName, int x, int y, float value, string label = null)
         {
             bool retVal = false;
             ModuleView naModule;
@@ -235,12 +286,16 @@ namespace BrainSimulator.Modules
                 Neuron n = naModule.GetNeuronAt(x, y);
                 if (n != null)
                 {
-                    n.SetValue(value);
+                    if (label == null)
+                        n.SetValue(value);
+                    else
+                        n.Label = label;
                     retVal = true;
                 }
             }
             return retVal;
         }
+
         protected float GetNeuronValue(string moduleName, int x, int y)
         {
             float retVal = 0;
@@ -255,6 +310,25 @@ namespace BrainSimulator.Modules
                 if (n != null)
                 {
                     retVal = n.CurrentCharge;
+                }
+            }
+            return retVal;
+        }
+
+        protected int GetNeuronValueInt(string moduleName, int x, int y)
+        {
+            int retVal = 0;
+            ModuleView naModule;
+            if (moduleName != null)
+                naModule = theNeuronArray.FindAreaByLabel(moduleName);
+            else
+                naModule = na;
+            if (naModule != null)
+            {
+                Neuron n = naModule.GetNeuronAt(x, y);
+                if (n != null)
+                {
+                    retVal = n.CurrentChargeInt;
                 }
             }
             return retVal;

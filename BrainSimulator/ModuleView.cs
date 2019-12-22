@@ -81,7 +81,15 @@ namespace BrainSimulator
             currentNeuronInArea++;
             return MainWindow.theNeuronArray.neuronArray[neuronIndex];
         }
-
+        public int GetNeuronOffset(Neuron n)
+        {
+            int id = n.Id;
+            id -= firstNeuron;
+            int col = id / Rows;
+            int row = id % Rows;
+            id = col * height + row;
+            return id;
+        }
         public Rectangle GetRectangle(DisplayParams dp)
         {
             Rectangle r = new Rectangle();
@@ -108,9 +116,11 @@ namespace BrainSimulator
         //this gets the neuron with an index relative to the area itself
         public Neuron GetNeuronAt(int index)
         {
+            if (index > NeuronCount) return null;
             int neuronIndex = (index % Height) + (index / Height) * Rows + firstNeuron;
             return MainWindow.theNeuronArray.neuronArray[neuronIndex];
         }
+
         public Neuron GetNeuronAt(int X, int Y)
         {
             if (X >= Width) return null;

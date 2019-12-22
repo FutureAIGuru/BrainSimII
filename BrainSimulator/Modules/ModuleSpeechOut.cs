@@ -31,6 +31,13 @@ namespace BrainSimulator.Modules
             {
                 if (n.LastCharge > .9)
                 {
+                    if (n.Label == "")
+                    {
+                        ModuleView msi = theNeuronArray.FindAreaByLabel("ModuleSpeechIn");
+                        int i = na.GetNeuronOffset(n);
+                        if (msi != null)
+                            na.GetNeuronAt(i).Label = msi.GetNeuronAt(i).Label;
+                    }
                     toSpeak += prePend + n.Label + " ";
                     prePend = "";
                     anyNewWords = 5;
@@ -50,13 +57,22 @@ namespace BrainSimulator.Modules
                     if (msi != null)
                         msi.PauseRecognition(); //if there is a recognizer active
                     synth.SpeakAsync(toSpeak + ".");
+
+                    //use this when we want to work with phonetics instead of words
+                    //string[] words = toSpeak.Split(' ');
+                    //PromptBuilder pb = new PromptBuilder();
+                    //foreach (string p in words)
+                    //    if (p != "")
+                    //        pb.AppendTextWithPronunciation("NotUsed", p);
+                    //pb.AppendText("."); //this improves the prosidy
+                    //synth.SpeakAsync(pb);
+
                     toSpeak = "";
                     prePend = "";
                     postPend = "";
                     insertAnd = "";
                 }
         }
-
 
         public override void Initialize()
         {
@@ -73,8 +89,8 @@ namespace BrainSimulator.Modules
             {
                 for (int i = 0; i < na.NeuronCount && i < msi.NeuronCount; i++)
                 {
-                    na.GetNeuronAt(i).Label = msi.GetNeuronAt(i).Label;
-                    msi.GetNeuronAt(i).AddSynapse(na.GetNeuronAt(i).Id,1,theNeuronArray);
+                    //na.GetNeuronAt(i).Label = msi.GetNeuronAt(i).Label;
+                    //msi.GetNeuronAt(i).AddSynapse(na.GetNeuronAt(i).Id,1,theNeuronArray);
                 }
             }
         }

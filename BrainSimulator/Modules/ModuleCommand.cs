@@ -61,12 +61,17 @@ namespace BrainSimulator.Modules
                         line = commands.Length;
                         return;
                     }
+                    if (currentCommand == "Loop")
+                    {
+                        line = 0;
+                        return;
+                    }
                     if (currentCommand == "Wait-for")
                     {
                         SetCurrentModule(commandLine[i + 1]);
                         ModuleView na1 = theNeuronArray.FindAreaByLabel(currentModule);
                         Neuron n = na1.GetNeuronAt(commandLine[i + 2]);
-                        if (!n.Fired())return;
+                        if (n != null && !n.Fired())return;
                     }
                     SetCurrentModule(currentCommand);
                     ModuleView na = theNeuronArray.FindAreaByLabel(currentModule);
@@ -80,8 +85,7 @@ namespace BrainSimulator.Modules
                     }
                 }
             line++;
-            if (dlg != null)
-                Application.Current.Dispatcher.Invoke((Action)delegate { dlg.Draw(); });
+            UpdateDialog();
         }
 
         private void SetCurrentModule(string s)
@@ -95,14 +99,12 @@ namespace BrainSimulator.Modules
 
         public override void Initialize()
         {
-            //textFile = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            //textFile += @"\BrainSim\commands.txt";
+         
             if (File.Exists(textFile))
             {
                 commands = File.ReadAllLines(textFile);
             }
-            if (dlg != null)
-                Application.Current.Dispatcher.Invoke((Action)delegate { dlg.Draw(); });
+            UpdateDialog();
             line = 0;
         }
 

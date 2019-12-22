@@ -39,7 +39,7 @@ namespace BrainSimulator
         public static NeuronArray theNeuronArray = null;
         public static FiringHistoryWindow fwWindow = null;
 
-        Thread engineThread = new Thread(new ThreadStart(EngineLoop));
+        Thread engineThread = new Thread(new ThreadStart(EngineLoop)) { Name = "EngineThread" };
         private static int engineDelay = 500;//how long to wait after each cycle of the engine
 
         //timer to update the neuron values 
@@ -55,6 +55,18 @@ namespace BrainSimulator
         Window splashScreen = new SplashScreeen();
         public MainWindow()
         {
+            //this puts up a dialog on unhandled exceptions
+            AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) =>
+                {
+                    string message = eventArgs.ExceptionObject.ToString();
+                    System.Windows.Forms.Clipboard.SetText(message);
+                    int i = message.IndexOf("stack trace");
+                    if (i > 0)
+                        message = message.Substring(0, i + 16);
+                    message += "\r\nPROGRAM WILL EXIT  (stack trace copied to clipboard)";
+                    MessageBox.Show(message);
+                    Application.Current.Shutdown(255);
+                };
             InitializeComponent();
             displayUpdateTimer.Tick += DisplayUpdate_TimerTick;
             arrayView = theNeuronArrayView;
@@ -118,7 +130,7 @@ namespace BrainSimulator
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
         {
-            Debug.WriteLine("Window_KeyUp");
+            //Debug.WriteLine("Window_KeyUp");
             if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
             {
                 crtlPressed = false;
@@ -126,7 +138,7 @@ namespace BrainSimulator
         }
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            Debug.WriteLine("Window_KeyDown");
+            //Debug.WriteLine("Window_KeyDown");
             if (e.Key == Key.Delete)
             {
                 if (theNeuronArrayView.theSelection.selectedRectangles.Count > 0)
@@ -181,7 +193,7 @@ namespace BrainSimulator
             Title = "Brain Simulator II " + System.IO.Path.GetFileNameWithoutExtension(currentFileName);
         }
 
-        private void LoadFile(string fileName)
+        private bool LoadFile(string fileName)
         {
             CloseAllModuleDialogs();
             CloseHistoryWindow();
@@ -189,39 +201,48 @@ namespace BrainSimulator
             theNeuronArrayView.theSelection.selectedRectangles.Clear();
             CloseAllModuleDialogs();
 
-            // Load the data from the XML to the Brainsim Engine.  
-            FileStream file = File.Open(fileName, FileMode.Open);
-
-            XmlSerializer reader = new XmlSerializer(typeof(NeuronArray), GetModuleTypes());
-            theNeuronArray = (NeuronArray)reader.Deserialize(file);
-            file.Close();
-
-            for (int i = 0; i < theNeuronArray.arraySize; i++)
-                if (theNeuronArray.neuronArray[i] == null)
-                    theNeuronArray.neuronArray[i] = new Neuron(i);
-
-            //Update all the synapses to ensure that the synapse-from lists are correct
-            foreach (Neuron n in theNeuronArray.neuronArray)
+            try
             {
-                foreach (Synapse s in n.Synapses)
-                    n.AddSynapse(s.TargetNeuron, s.Weight, theNeuronArray, false);
-            }
+                // Load the data from the XML to the Brainsim Engine.  
+                FileStream file = File.Open(fileName, FileMode.Open);
 
-            theNeuronArray.CheckSynapseArray();
-            theNeuronArrayView.Update();
-            setTitleBar();
-            Task.Delay(1000).ContinueWith(t => ShowDialogs());
-            foreach (ModuleView na in theNeuronArray.modules)
+                XmlSerializer reader = new XmlSerializer(typeof(NeuronArray), GetModuleTypes());
+                theNeuronArray = (NeuronArray)reader.Deserialize(file);
+                file.Close();
+
+                for (int i = 0; i < theNeuronArray.arraySize; i++)
+                    if (theNeuronArray.neuronArray[i] == null)
+                        theNeuronArray.neuronArray[i] = new Neuron(i);
+
+                //Update all the synapses to ensure that the synapse-from lists are correct
+                foreach (Neuron n in theNeuronArray.neuronArray)
+                {
+                    foreach (Synapse s in n.Synapses)
+                        n.AddSynapse(s.TargetNeuron, s.Weight, theNeuronArray, false);
+                }
+
+                theNeuronArray.CheckSynapseArray();
+                theNeuronArrayView.Update();
+                setTitleBar();
+                Task.Delay(1000).ContinueWith(t => ShowDialogs());
+                foreach (ModuleView na in theNeuronArray.modules)
+                {
+                    if (na.TheModule != null)
+                        na.TheModule.SetUpAfterLoad();
+                }
+                if (theNeuronArray.displayParams != null)
+                    theNeuronArrayView.Dp = theNeuronArray.displayParams;
+
+                NeuronArrayView.SortAreas();
+            }
+            catch (Exception e1)
             {
-                if (na.TheModule != null)
-                    na.TheModule.SetUpAfterLoad();
+                MessageBox.Show("File Load failed because:\r\n " + e1.Message+ "\r\nAnd:\r\n"+e1.InnerException.Message);
+                return false;
             }
-            if (theNeuronArray.displayParams != null)
-                theNeuronArrayView.Dp = theNeuronArray.displayParams;
-
-            NeuronArrayView.SortAreas();
             Update();
             OpenHistoryWindow();
+            return true;
         }
 
         //
@@ -254,9 +275,13 @@ namespace BrainSimulator
             if (result ?? false)
             {
                 currentFileName = openFileDialog1.FileName;
+                bool loadSuccessful = LoadFile(currentFileName);
+                if (!loadSuccessful)
+                {
+                    currentFileName = "";
+                }
                 Properties.Settings.Default["CurrentFile"] = currentFileName;
                 Properties.Settings.Default.Save();
-                LoadFile(currentFileName);
             }
         }
 
@@ -419,6 +444,8 @@ namespace BrainSimulator
             theNeuronArrayView.PasteNeurons(true);
             theNeuronArrayView.Update();
         }
+
+        //this should be a module
         private void Button_PatternFileLoad_Click(object sender, RoutedEventArgs e)
         {
             if (theNeuronArrayView.targetNeuronIndex < 0) return;
@@ -458,10 +485,9 @@ namespace BrainSimulator
         }
 
         static int oldEngineDelay = 0;
-        public static
-            void SuspendEngine()
+        public static void SuspendEngine()
         {
-            if (engineDelay == 2000) return;
+            if (engineDelay == 2000) return; //already suspended
             //suspend the engine...
             oldEngineDelay = engineDelay;
             engineDelay = 2000;
@@ -472,6 +498,26 @@ namespace BrainSimulator
         {
             //resume the engine
             engineDelay = oldEngineDelay;
+        }
+
+        static bool engineIsWaiting = false;
+        private static void EngineLoop()
+        {
+            while (true)
+            {
+                if (engineDelay > 1000)
+                {
+                    engineIsWaiting = true;
+                    Thread.Sleep(100); //check the engineDelay every 100 ms.
+                }
+                else
+                {
+                    engineIsWaiting = false;
+                    if (theNeuronArray != null)
+                        theNeuronArray.Fire();
+                    Thread.Sleep(Math.Abs(engineDelay));
+                }
+            }
         }
 
 
@@ -501,8 +547,10 @@ namespace BrainSimulator
             displayUpdateTimer.Start();
         }
 
-        bool disaplayUpdating = false;
+       
 
+
+        bool disaplayUpdating = false;
         private void DisplayUpdate_TimerTick(object sender, EventArgs e)
         {
             if (disaplayUpdating) return;
@@ -520,25 +568,6 @@ namespace BrainSimulator
             disaplayUpdating = false;
         }
 
-        static bool engineIsWaiting = false;
-        private static void EngineLoop()
-        {
-            while (true)
-            {
-                if (engineDelay > 1000)
-                {
-                    engineIsWaiting = true;
-                    Thread.Sleep(100); //check the engineDelay every 100 ms.
-                }
-                else
-                {
-                    engineIsWaiting = false;
-                    if (theNeuronArray != null)
-                        theNeuronArray.Fire();
-                    Thread.Sleep(Math.Abs(engineDelay));
-                }
-            }
-        }
 
         //Enable/disable menu item specified by "Entry"...pass in the Menu.Items as the root to search
         private void EnableMenuItem(ItemCollection mm, string Entry, bool enabled)
@@ -561,6 +590,7 @@ namespace BrainSimulator
             return;
         }
 
+        //this enables and disables various menu entries based on circumstances
         private void MainMenu_MouseEnter(object sender, MouseEventArgs e)
         {
             if (theNeuronArray == null)
@@ -602,6 +632,7 @@ namespace BrainSimulator
                 EnableMenuItem(MainMenu.Items, " Save Selection to File", true);
             }
         }
+
         static public void UpdateDisplayLabel(int zoomLevel, int firedCount)
         {
             thisWindow.labelDisplayStatus.Content = "Zoom Level: " + zoomLevel + ",  " + firedCount + " Neurons Fired";
@@ -632,6 +663,7 @@ namespace BrainSimulator
                 }
                 else
                 {
+                    SuspendEngine();
                     engineThread.Abort();
 
                     CloseAllModuleDialogs();
@@ -691,7 +723,9 @@ namespace BrainSimulator
                 currentFileName = (string)Properties.Settings.Default["CurrentFile"];
                 if (currentFileName != "")
                 {
-                    LoadFile(currentFileName);
+                    bool loadSuccessful = LoadFile(currentFileName);
+                    if (!loadSuccessful)
+                        currentFileName = "";
                     setTitleBar();
                 }
             }

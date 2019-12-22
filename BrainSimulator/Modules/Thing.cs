@@ -18,6 +18,25 @@ namespace BrainSimulator
     {
         public Thing T;
         public float weight = 1;
+        public int hits = 0;
+        public int misses = 0;
+
+        public override string ToString()
+        {
+            return T.Label + ":" + weight;
+        }
+        //This is the (temporary) algorithm calculating the weight based on hits or misses
+        public float Value()
+        {
+            float retVal = weight;
+            if (hits != 0 && misses != 0)
+            {
+                float denom = misses;
+                if (denom == 0) denom = .1f;
+                retVal = hits / denom;
+            }
+            return retVal;
+        }
     }
 
     //a thing is anything, physical object, attribute, word, action, etc.
@@ -30,12 +49,23 @@ namespace BrainSimulator
         private List<Link> referencedBy = new List<Link>(); //synapses from
         object value;
 
+        public int useCount = 0;
         public object V { get => value; set => this.value = value; }
         public string Label { get => label; set => label = value; }
         public List<Thing> Parents { get => parents; }
         public List<Thing> Children { get => children; set => children = value; }
         public List<Link> References { get => references; set => references = value; }
         public List<Link> ReferencedBy { get => referencedBy; set => referencedBy = value; }
+        public int currentReference = 0;
+
+
+        public override string ToString()
+        {
+            string retVal = label;
+            return retVal;
+        }
+
+        //add a reference from this thing to the specified thing
 
         public void AddReference(Thing t, float weight = 1)
         {
@@ -46,14 +76,33 @@ namespace BrainSimulator
             t.ReferencedBy.Add(new Link { T = this, weight = weight });
         }
 
-        //(send a negative value to decrease a reference)
-        public void AdjustReference(Thing t, float incr = 1)
+        //(send a negative value to decrease a reference weight)
+        public float AdjustReference(Thing t, float incr = 1)
         {
             //change any exisiting link or add a new one
             Link existingLink = References.Find(v => v.T == t);
             if (existingLink == null)
-            { AddReference(t, incr); }
-            else { existingLink.weight += incr; }
+            {
+                AddReference(t, incr);
+                return incr;
+            }
+            else
+            {
+                Link reverseLink = existingLink.T.referencedBy.Find(v => v.T == this);
+                existingLink.weight += incr;
+                if (incr > 0) existingLink.hits++;
+                if (incr < 0) existingLink.misses++;
+                reverseLink.weight = existingLink.weight;
+                reverseLink.hits = existingLink.hits;
+                reverseLink.misses = existingLink.misses;
+                if (existingLink.weight < 0)
+                {
+                    //RemoveReference(existingLink.T);
+                    return -1;
+                }
+                return existingLink.weight;
+            }
+
         }
 
         public void RemoveReference(Thing t)
@@ -72,6 +121,102 @@ namespace BrainSimulator
             Parents.Remove(t);
             t.Children.Remove(this);
         }
+
+        public float Distance(Thing t, bool ordered = false)
+        {
+            float retVal = 0;
+            if (t == this) return -1;
+
+            if (ordered)
+            {
+                for (int i = 0; i < Math.Min(References.Count, t.references.Count); i++)
+                {
+                    Link l = References[i];
+                    Link lt = t.References[i];
+                    if (l.T == lt.T) retVal++;
+                }
+                if (References.Count > 0)
+                    retVal /= Math.Max(References.Count, t.References.Count);
+            }
+            else
+            {
+                for (int i = 0; i < References.Count; i++)
+                {
+                    Link l = References[i];
+                    if (t.References.Find(x => x.T == l.T) != null) retVal++;
+                }
+                if (References.Count > 0)
+                    retVal /= Math.Max(References.Count, t.References.Count);
+            }
+            return retVal;
+        }
+        public Thing IsSibling(Thing t)
+        {
+            foreach (Thing parent in parents)
+            {
+                if (t.parents.Contains(parent))
+                    return parent;
+            }
+            return null;
+        }
+        private static int CompareByWeight(Link l1, Link l2)
+        {
+            return (l1.weight > l2.weight) ? -1 : 1;
+        }
+        public List<Link> FindSimilar(List<Thing> KB, bool ordered, int maxCount = 10)
+        {
+            List<Link> retVal = new List<Link>();
+            foreach (Thing t in KB)
+            {
+                float distance = Distance(t, ordered);
+                if (distance > 0 && t != this)
+                    retVal.Add(new Link { weight = distance, T = t });
+            }
+            retVal.Sort(CompareByWeight);
+            if (retVal.Count > maxCount)
+                retVal.RemoveRange(maxCount, retVal.Count - maxCount);
+            return retVal;
+        }
+
+        public enum ReferenceDirection { reference, referenceBy };
+
+        public Thing MostLikelyReference(ReferenceDirection rd, Thing parent = null)
+        {
+            Link retVal = null;
+            if (rd == ReferenceDirection.reference)
+            {
+                foreach (Link l in References)
+                {
+                    if (l.weight <= 0) continue;
+                    if (parent != null && l.T.parents[0] != parent) continue;
+                    float strength = l.weight;
+                    if (l.hits > 0 && l.misses > 0)
+                    {
+                        strength *= (float)l.hits / (float)l.misses; //TODO subject to revision
+                    }
+                    if (retVal == null || retVal.weight < strength)
+                        retVal = l;
+                }
+            }
+            else
+            {
+                foreach (Link l in ReferencedBy)
+                {
+                    if (l.weight <= 0) continue;
+                    if (parent != null && l.T.parents[0] != parent) continue;
+                    float strength = l.weight;
+                    if (l.hits > 0 && l.misses > 0)
+                    {
+                        strength *= (float)l.hits / (float)l.misses; //TODO subject to revision
+                    }
+                    if (retVal == null || retVal.weight < strength)
+                        retVal = l;
+                }
+
+            }
+            if (retVal == null) return null;
+            return retVal.T;
+        }
     }
 
     //this is a modification of Thing which is used to store and retrieve the KB in XML
@@ -84,5 +229,6 @@ namespace BrainSimulator
         //x is the index of the link, y is the confidence
         object value;
         public object V { get => value; set => this.value = value; }
+        public int useCount;
     }
 }

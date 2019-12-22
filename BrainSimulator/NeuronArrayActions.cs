@@ -21,11 +21,14 @@ namespace BrainSimulator
     {
         private void HandleProgrammedActions()
         {
-            foreach (ModuleView na in modules)
+            lock (modules)
             {
-                if (na.TheModule != null)
+                foreach (ModuleView na in modules)
                 {
-                    na.TheModule.Fire();
+                    if (na.TheModule != null)
+                    {
+                        na.TheModule.Fire();
+                    }
                 }
             }
         }
@@ -214,7 +217,6 @@ namespace BrainSimulator
         {
             return modules.Find(na => na.Label.Trim() == label);
         }
-
 
         //[DO NOT USE} loads an image from a file...will be converted to a module
         int fileCounter = 0;

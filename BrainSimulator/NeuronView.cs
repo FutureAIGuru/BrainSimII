@@ -33,8 +33,9 @@ namespace BrainSimulator
         }
         private static float ellipseSize = 0.7f;
 
-        public static UIElement GetNeuronView(int i, NeuronArrayView theNeuronArrayViewI)
+        public static UIElement GetNeuronView(int i, NeuronArrayView theNeuronArrayViewI, out Label l)
         {
+            l = null;
             theNeuronArrayView = theNeuronArrayViewI;
 
             Neuron n = MainWindow.theNeuronArray.neuronArray[i];
@@ -94,9 +95,9 @@ namespace BrainSimulator
 
             if (n.Label != "")
             {
-                Label l = new Label();
+                l = new Label();
                 l.Content = n.Label;
-                l.FontSize = dp.NeuronDisplaySize * .3;
+                l.FontSize = dp.NeuronDisplaySize * .25;
                 l.Foreground = Brushes.White;
                 Canvas.SetLeft(l, p.X + dp.NeuronDisplaySize * offset);
                 Canvas.SetTop(l, p.Y + dp.NeuronDisplaySize * offset);
@@ -110,7 +111,7 @@ namespace BrainSimulator
                 l.MouseDown += theNeuronArrayView.theCanvas_MouseDown;
                 l.MouseUp += theNeuronArrayView.theCanvas_MouseUp;
                 l.MouseMove += theNeuronArrayView.theCanvas_MouseMove;
-                theCanvas.Children.Add(l);
+                //theCanvas.Children.Add(l);
             }
             return r;
         }
@@ -129,11 +130,12 @@ namespace BrainSimulator
 
         //for UI performance, the context menu is not attached to a neuron when the neuron is created but
         //is built on the fly when a neuron is right-clicked.  Hence the public-static
+        static bool cmCancelled = false;
         public static void CreateContextMenu(int i, Neuron n, ContextMenu cm)
         {
             cm.SetValue(NeuronIDProperty, n.Id);
             cm.Closed += Cm_Closed;
-
+            cmCancelled = false;
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
             sp.Children.Add(new Label { Content = "Charge: ", Padding = new Thickness(0) });
             sp.Children.Add(new TextBox { Text = n.LastCharge.ToString("f2"), Width = 60, Name = "CurrentCharge", VerticalAlignment = VerticalAlignment.Center });
@@ -206,7 +208,11 @@ namespace BrainSimulator
         {
             if ((Keyboard.GetKeyStates(Key.Escape) & KeyStates.Down) > 0)
                 return;
-
+            if (cmCancelled)
+            {
+                cmCancelled = false;
+                return;
+            }
             if (sender is ContextMenu cm)
             {
 
@@ -237,6 +243,22 @@ namespace BrainSimulator
                     else  //make sure a window is open
                     {
                         OpenHistoryWindow();
+                    }
+                    //if there is a selection, set all the keepHistory values to match
+                    bool neuronInSelection = false;
+                    foreach (NeuronSelectionRectangle sr in theNeuronArrayView.theSelection.selectedRectangles)
+                    {
+                        if (sr.NeuronIsInSelection(neuronID))
+                        {
+                            neuronInSelection = true;
+                            break;
+                        }
+                    }
+                    if (neuronInSelection)
+                    {
+                        theNeuronArrayView.theSelection.EnumSelectedNeurons();
+                        for (Neuron n1 = theNeuronArrayView.theSelection.GetSelectedNeuron(); n1 != null; n1 = theNeuronArrayView.theSelection.GetSelectedNeuron())
+                            n1.KeepHistory = (bool)cb1.IsChecked;
                     }
                 }
             }
@@ -307,6 +329,7 @@ namespace BrainSimulator
             {
                 theNeuronArrayView.targetNeuronIndex = i;
                 theNeuronArrayView.MoveNeurons();
+                cmCancelled = true;
             }
             if ((string)mi.Header == "Copy Selection")
             {

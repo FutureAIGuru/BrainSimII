@@ -112,6 +112,10 @@
     <Compile Include="ModuleDescription.xaml.cs">
       <DependentUpon>ModuleDescription.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Module2DKBN.cs" />
+    <Compile Include="Modules\Module2DKBNDlg.xaml.cs">
+      <DependentUpon>Module2DKBNDlg.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Module2DModel.cs" />
     <Compile Include="Modules\Module3DSim.cs" />
     <Compile Include="Modules\Module3DSimDlg.xaml.cs">
@@ -139,7 +143,16 @@
     <Compile Include="Modules\ModuleBehavior.cs" />
     <Compile Include="Modules\Module2DKB.cs" />
     <Compile Include="Modules\ModuleCamera.cs" />
+    <Compile Include="Modules\ModuleHearWords.cs" />
+    <Compile Include="Modules\ModuleImageFile.cs" />
+    <Compile Include="Modules\ModuleKBDebug.cs" />
+    <Compile Include="Modules\ModuleKBDebugDlg.xaml.cs">
+      <DependentUpon>ModuleKBDebugDlg.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\ModuleMotor.cs" />
+    <Compile Include="Modules\ModuleNull.cs" />
     <Compile Include="Modules\ModuleRealityModel.cs" />
+    <Compile Include="Modules\ModuleSpeakWords.cs" />
     <Compile Include="ModuleViewMenu.cs" />
     <Compile Include="Modules\ModuleGoToDest.cs" />
     <Compile Include="Modules\ModuleGraph.cs" />
@@ -152,7 +165,6 @@
     <Compile Include="NeuronArrayViewActions.cs" />
     <Compile Include="ModuleView.cs" />
     <Compile Include="NeuronArray.cs" />
-    <Compile Include="NeuronArrayActions.cs" />
     <Compile Include="NeuronArrayView.xaml.cs">
       <DependentUpon>NeuronArrayView.xaml</DependentUpon>
     </Compile>
@@ -195,6 +207,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Modules\Module2DKBNDlg.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Modules\Module3DSimDlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -212,6 +228,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Modules\ModuleCommandDlg.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\ModuleKBDebugDlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

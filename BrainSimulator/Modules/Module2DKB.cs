@@ -19,8 +19,10 @@ namespace BrainSimulator.Modules
 {
     public class Module2DKB : ModuleBase
     {
-        protected List<Thing> KB = new List<Thing>();
+        protected List<Thing> UKS = new List<Thing>();
+
         public List<SThing> KB1 = new List<SThing>();
+
         public override string ShortDescription { get => "Knowledge Base for storing linked knowledge data"; }
         public override string LongDescription
         {
@@ -41,7 +43,7 @@ namespace BrainSimulator.Modules
 
         private string ArrayToString(Thing[] list)
         {
-            string retVal = "";
+            string retVal = ",";
             if (list == null) return ".";
             foreach (Thing t in list)
             {
@@ -69,7 +71,7 @@ namespace BrainSimulator.Modules
                 newThing.AddReference(references[i]);
             }
 
-            KB.Add(newThing);
+            UKS.Add(newThing);
             return newThing;
         }
 
@@ -82,14 +84,14 @@ namespace BrainSimulator.Modules
                 l1.T.ReferencedBy.RemoveAll(v => v.T == t);
             foreach (Link l1 in t.ReferencedBy)
                 l1.T.References.RemoveAll(v => v.T == t);
-            KB.Remove(t);
+            UKS.Remove(t);
         }
 
         //returns a thing with the given label
         //2nd paramter defines KB to search, null=search entire knowledge base
         public Thing Labeled(string label, List<Thing> KBt = null)
         {
-            KBt = KBt ?? KB;
+            KBt = KBt ?? UKS;
             Thing retVal = null;
             retVal = KBt.Find(t => t.Label == label);
             if (retVal != null) retVal.useCount++;
@@ -104,7 +106,7 @@ namespace BrainSimulator.Modules
         //if it is null, an exact match is required
         public virtual Thing Valued(object value, List<Thing> KBt = null, float toler = 0)
         {
-            KBt = KBt ?? KB;
+            KBt = KBt ?? UKS;
             foreach (Thing t in KBt)
             {
                 if (t == null) continue;
@@ -141,7 +143,7 @@ namespace BrainSimulator.Modules
         {
             base.SetUpBeforeSave();
             KB1.Clear();
-            foreach (Thing t in KB)
+            foreach (Thing t in UKS)
             {
                 SThing st = new SThing()
                 {
@@ -151,13 +153,13 @@ namespace BrainSimulator.Modules
                 };
                 foreach (Thing t1 in t.Parents)
                 {
-                    st.parents.Add(KB.FindIndex(x => x == t1));
+                    st.parents.Add(UKS.FindIndex(x => x == t1));
                 }
                 foreach (Link l in t.References)
                 {
                     Thing t1 = l.T;
                     if (l.hits != 0 && l.misses != 0) l.weight = l.hits / (float)l.misses;
-                    st.references.Add(new Point(KB.FindIndex(x => x == t1), l.weight));
+                    st.references.Add(new Point(UKS.FindIndex(x => x == t1), l.weight));
                 }
                 KB1.Add(st);
             }
@@ -165,7 +167,7 @@ namespace BrainSimulator.Modules
         public override void SetUpAfterLoad()
         {
             base.SetUpAfterLoad();
-            KB.Clear();
+            UKS.Clear();
             foreach (SThing st in KB1)
             {
                 Thing t = new Thing()
@@ -174,13 +176,13 @@ namespace BrainSimulator.Modules
                     V = st.V,
                     useCount = st.useCount
                 };
-                KB.Add(t);
+                UKS.Add(t);
             }
             for (int i = 0; i < KB1.Count; i++)
             {
                 foreach (int p in KB1[i].parents)
                 {
-                    KB[i].Parents.Add(KB[p]);
+                    UKS[i].Parents.Add(UKS[p]);
                 }
                 foreach (Point p in KB1[i].references)
                 {
@@ -192,12 +194,12 @@ namespace BrainSimulator.Modules
                         hits = (int)(1000 / weight);
                         misses = 1000 - hits;
                     }
-                    KB[i].References.Add(new Link { T = KB[(int)p.X], weight = weight, hits = hits, misses = misses });
+                    UKS[i].References.Add(new Link { T = UKS[(int)p.X], weight = weight, hits = hits, misses = misses });
                 }
             }
 
             //rebuild all the reverse linkages
-            foreach (Thing t in KB)
+            foreach (Thing t in UKS)
             {
                 foreach (Thing t1 in t.Parents)
                     t1.Children.Add(t);
@@ -215,36 +217,40 @@ namespace BrainSimulator.Modules
             return t.Children;
         }
 
+        public void AddThing (string label, string parentLabel)
+        {
+            AddThing(label, new Thing[] { Labeled(parentLabel) });
+        }
 
         public override void Initialize()
         {
             //create an intial structure with some test data
-            KB.Clear();
+            UKS.Clear();
             KB1.Clear();
             AddThing("ROOT", new Thing[] { });
-            AddThing("Sense", new Thing[] { Labeled("ROOT") });
-            AddThing("Color", new Thing[] { Labeled("Sense") });
-            AddThing("Shape", new Thing[] { Labeled("Sense") });
-            AddThing("Point", new Thing[] { Labeled("Shape") });
-            AddThing("Dot", new Thing[] { Labeled("Shape") });
-            AddThing("TempP", new Thing[] { Labeled("Point") });
-            AddThing("Segment", new Thing[] { Labeled("Shape") });
-            AddThing("Word", new Thing[] { Labeled("Sense") });
-            AddThing("Phrase", new Thing[] { Labeled("Sense") });
-            AddThing("NoWord", new Thing[] { Labeled("Word") });
-            AddThing("Action", new Thing[] { Labeled("ROOT") });
-            AddThing("NoAction", new Thing[] { Labeled("Action") });
-            AddThing("Go", new Thing[] { Labeled("Action") });
-            AddThing("Stop", new Thing[] { Labeled("Action") });
-            AddThing("RTurn", new Thing[] { Labeled("Action") });
-            AddThing("LTurn", new Thing[] { Labeled("Action") });
-            AddThing("UTurn", new Thing[] { Labeled("Action") });
-            AddThing("Say", new Thing[] { Labeled("Action") });
-            AddThing("Attn", new Thing[] { Labeled("Action") });
-            AddThing("Situation", new Thing[] { Labeled("ROOT") });
-            AddThing("Outcome", new Thing[] { Labeled("ROOT") });
-            AddThing("Positive", new Thing[] { Labeled("Outcome") });
-            AddThing("Negative", new Thing[] { Labeled("Outcome") });
+            AddThing("Sense", "ROOT");
+            AddThing("Color","Sense");
+            AddThing("Shape","Sense");
+            AddThing("Point","Shape");
+            AddThing("Dot","Shape");
+            AddThing("TempP","Point");
+            AddThing("Segment","Shape");
+            AddThing("Word","Sense");
+            AddThing("Phrase","Sense");
+            AddThing("NoWord","Word");
+            AddThing("Action","ROOT");
+            AddThing("NoAction","Action");
+            AddThing("Go","Action");
+            AddThing("Stop","Action");
+            AddThing("RTurn","Action");
+            AddThing("LTurn","Action");
+            AddThing("UTurn","Action");
+            AddThing("Say","Action");
+            AddThing("Attn","Action");
+            AddThing("Situation","ROOT");
+            AddThing("Outcome","ROOT");
+            AddThing("Positive","Outcome");
+            AddThing("Negative","Outcome");
         }
     }
 }

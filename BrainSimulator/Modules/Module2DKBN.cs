@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) [Name]. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
@@ -63,22 +63,22 @@ namespace BrainSimulator.Modules
         //this is needed for the dialog treeview
         public List<Thing> GetTheKB()
         {
-            return KB;
+            return UKS;
         }
 
         //execute the debugging commands if the associated neuron fired
         private void ShowReferences()
         {
-            for (int i = firstThing; i < na.NeuronCount && i < KB.Count; i++)
+            for (int i = firstThing; i < na.NeuronCount && i < UKS.Count; i++)
             {
                 Neuron n = na.GetNeuronAt(i);
                 if (NeuronFired("Parent"))
                 {
                     if (n.Fired())
                     {
-                        foreach (Thing t in KB[i].Parents)
+                        foreach (Thing t in UKS[i].Parents)
                         {
-                            int j = KB.IndexOf(t);
+                            int j = UKS.IndexOf(t);
                             if (j >= 0)
                             {
                                 SetNeuronValue("KBOut", j, 1);
@@ -90,9 +90,9 @@ namespace BrainSimulator.Modules
                 {
                     if (n.Fired())
                     {
-                        foreach (Link l in KB[i].References)
+                        foreach (Link l in UKS[i].References)
                         {
-                            int j = KB.IndexOf(l.T);
+                            int j = UKS.IndexOf(l.T);
                             if (j >= 0)
                             {
 
@@ -106,13 +106,13 @@ namespace BrainSimulator.Modules
                     if (n.Fired())
                     {
                         Link Max = new Link { weight = -1 };
-                        foreach (Link l in KB[i].References)
+                        foreach (Link l in UKS[i].References)
                         {
                             if (l.Value() > Max.weight) Max = l;
                         }
                         if (Max.weight > -1)
                         {
-                            int j = KB.IndexOf(Max.T);
+                            int j = UKS.IndexOf(Max.T);
                             if (j >= 0)
                             {
                                 SetNeuronValue("KBOut", j, 1);
@@ -213,7 +213,7 @@ namespace BrainSimulator.Modules
         //return neuron associated with KB thing
         public Neuron GetNeuron(Thing t)
         {
-            int i = KB.IndexOf(t);
+            int i = UKS.IndexOf(t);
             if (i == -1) return null;
             return na.GetNeuronAt(i);
         }
@@ -221,7 +221,7 @@ namespace BrainSimulator.Modules
         //fire the neuron associated with a KB thing
         public void Fire(Thing t, bool fireInput = true) //false fires the neuron in the output array
         {
-            int i = KB.IndexOf(t);
+            int i = UKS.IndexOf(t);
             if (i == -1) return;
             if (fireInput)
                 SetNeuronValue(null, i, 1);
@@ -232,7 +232,7 @@ namespace BrainSimulator.Modules
         //did the neuron associated with a thing fire?  Might change to indicate how long ago
         public bool Fired(Thing t, long pastCycles)
         {
-            int i = KB.IndexOf(t);
+            int i = UKS.IndexOf(t);
             Neuron n = na.GetNeuronAt(i);
             if (n == null) return false;
             long timeSinceLastFire = MainWindow.theNeuronArray.Generation - n.LastFired;
@@ -243,7 +243,7 @@ namespace BrainSimulator.Modules
         //did the output neuron associated with a thing fire?  Might change to indicate how long ago
         public bool FiredOutput(Thing t, long pastCycles)
         {
-            int i = KB.IndexOf(t);
+            int i = UKS.IndexOf(t);
             ModuleView naModule = theNeuronArray.FindAreaByLabel("KBOut");
             Neuron n = naModule.GetNeuronAt(i);
             if (n == null) return false;
@@ -522,14 +522,14 @@ namespace BrainSimulator.Modules
 
         public override Thing AddThing(string label, Thing[] parents, object value = null, Thing[] references = null)
         {
-            int i = KB.Count;
+            int i = UKS.Count;
             Thing retVal = base.AddThing(label, parents, value, references);
             UpdateNeuronLabels();
             return retVal;
         }
         public override void DeleteThing(Thing t)
         {
-            int i = KB.IndexOf(t);
+            int i = UKS.IndexOf(t);
             base.DeleteThing(t);
             //because we removed a node, any external synapses to related neurons need to be adjusted to point to the right place
             //on any neurons which might have shifted.
@@ -560,10 +560,10 @@ namespace BrainSimulator.Modules
         {
             base.Initialize();
             //since we are inserting at 0, these are in reverse order
-            KB.Insert(0, new Thing { Label = "Sleep" });
-            KB.Insert(0, new Thing { Label = "Max" });
-            KB.Insert(0, new Thing { Label = "Ref" });
-            KB.Insert(0, new Thing { Label = "Parent" });
+            UKS.Insert(0, new Thing { Label = "Sleep" });
+            UKS.Insert(0, new Thing { Label = "Max" });
+            UKS.Insert(0, new Thing { Label = "Ref" });
+            UKS.Insert(0, new Thing { Label = "Parent" });
             firstThing = 4;
             situationCount = 0;
             phraseCount = 0;
@@ -584,13 +584,13 @@ namespace BrainSimulator.Modules
         private void UpdateNeuronLabels()
         {
             if (na == null) return;
-            for (int i = 0; i < na.NeuronCount && i < KB.Count; i++)
+            for (int i = 0; i < na.NeuronCount && i < UKS.Count; i++)
             {
-                if (KB[i] == null) continue;
-                na.GetNeuronAt(i).Label = KB[i].Label;
-                SetNeuronValue("KBOut", i, 0f, KB[i].Label);
+                if (UKS[i] == null) continue;
+                na.GetNeuronAt(i).Label = UKS[i].Label;
+                SetNeuronValue("KBOut", i, 0f, UKS[i].Label);
             }
-            for (int i = KB.Count; i < na.NeuronCount; i++)
+            for (int i = UKS.Count; i < na.NeuronCount; i++)
             {
                 na.GetNeuronAt(i).Label = "";
                 SetNeuronValue("KBOut", i, 0f, "");

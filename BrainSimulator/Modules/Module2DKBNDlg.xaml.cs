@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) [Name]. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
@@ -39,12 +39,13 @@ namespace BrainSimulator.Modules
         List<string> expandedItems = new List<string>();
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            string root = textBox1.Text;
             Module2DKBN parent = (Module2DKBN)base.ParentModule;
             expandedItems.Clear();
-            FindExpandedItems(theTreeView.Items, "ROOT");
+            FindExpandedItems(theTreeView.Items,root);
             theTreeView.Items.Clear();
             List<Thing> KB = parent.GetTheKB();
-            Thing t = parent.Labeled("ROOT");
+            Thing t = parent.Labeled(root);
             if (t != null)
             {
                 TreeViewItem tvi = new TreeViewItem { Header = t.Label };
@@ -180,5 +181,7 @@ namespace BrainSimulator.Modules
         {
             dt.Stop();
         }
+
+      
     }
 }

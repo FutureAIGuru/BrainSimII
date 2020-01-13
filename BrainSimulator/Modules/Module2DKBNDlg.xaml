@@ -5,11 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrainSimulator.Modules"
         mc:Ignorable="d"
-        Title="Module2DKBNDlg Module Dialog" Height="450" Width="800" Background="Gray" ShowInTaskbar="False">
+        Title="Universal Knowledge Store" Height="450" Width="800" Background="Gray" ShowInTaskbar="False">
     <Grid >
         <TreeView x:Name="theTreeView" SizeChanged="TheTreeView_SizeChanged" Margin="0,0,0,51">
         </TreeView>
-        <Button x:Name="button" Content="Refresh" HorizontalAlignment="Left" Margin="61,0,0,10" Width="79" Height="36" RenderTransformOrigin="0.519,5.667" VerticalAlignment="Bottom" Click="Button_Click" />
-        <CheckBox x:Name="checkBox" Content="Auto-Refresh" HorizontalAlignment="Left" Margin="217,0,0,21" Width="169" Height="19" VerticalAlignment="Bottom" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
+        <Button x:Name="button" Content="Refresh" HorizontalAlignment="Left" Margin="20,0,0,10" Width="79" Height="36" RenderTransformOrigin="0.519,5.667" VerticalAlignment="Bottom" Click="Button_Click" />
+        <CheckBox x:Name="checkBox" Content="Auto-Refresh" HorizontalAlignment="Left" Margin="116,0,0,16" Width="99" Height="19" VerticalAlignment="Bottom" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
+        <TextBox x:Name="textBox1" HorizontalAlignment="Left" Margin="226,0,0,16" TextWrapping="Wrap" Text="ROOT" Width="100" Height="19" VerticalAlignment="Bottom" />
     </Grid>
 </local:ModuleBaseDlg>

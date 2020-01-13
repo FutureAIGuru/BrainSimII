@@ -42,22 +42,25 @@ namespace BrainSimulator
     //a thing is anything, physical object, attribute, word, action, etc.
     public class Thing
     {
-        private string label = ""; //this is just for convenience in debugging 
         private List<Thing> parents = new List<Thing>(); //"is-a", others?
         private List<Thing> children = new List<Thing>(); //synapses to
         private List<Link> references = new List<Link>(); //synapses to "has", "is", others
         private List<Link> referencedBy = new List<Link>(); //synapses from
-        object value;
 
+        private string label = ""; //this is just for convenience in debugging 
+        object value;
         public int useCount = 0;
+        public int currentReference = 0;
+
+
+
         public object V { get => value; set => this.value = value; }
         public string Label { get => label; set => label = value; }
         public List<Thing> Parents { get => parents; }
         public List<Thing> Children { get => children; set => children = value; }
         public List<Link> References { get => references; set => references = value; }
         public List<Link> ReferencedBy { get => referencedBy; set => referencedBy = value; }
-        public int currentReference = 0;
-
+        
 
         public override string ToString()
         {

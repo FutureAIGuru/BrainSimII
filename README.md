@@ -16,7 +16,7 @@ Modules:
 A module is a rectangular array of neurons which is controlled by code. While the neurons are still functional, the code can easily perform calculations which would be tedious in the basic neuron models. Each module can have a custom dialog box and there is a custom add-in file for Visual Studio which makes creating new modules easy. If you create public properties in a module, they will automatically be non-volatile and will be saved and restored with the network.
 
 Networks: 
-A design of neurons, synapses, and modules is saved and restored as a unit. You can create as many different networks as you like…they are like documents which can be opened, edited, saved, branched, etc. They save the state of any public variables along with the position and content of the dialog box.
+A design of neurons, synapses, and modules is saved and restored as a unit. You can create as many different networks as you like…they are like documents which can be opened, edited, saved, branched, etc. They also save the state of any public variables in the modules so memory content is preserved from run to run along with the position and content of any dialog boxs.
 
 Again, thanks for your interest!
 Charlie Simon, original creator of the Brain Simulator

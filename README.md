@@ -13,7 +13,10 @@ Neurons and Synapses:
 Neurons are tiny blocks of code interconnected by synapses. A synapse is owned by a neuron and connects to a target neuron with a weight. A neuron has a single function...it can fire. When it fires, it sends a single-value signal to every neuron in its list of synapse targets...and the message is the weight of the synapse. There are several neuron models.
 
 Modules:
-A module is a rectangular array of neurons which is controlled by code. While the neurons are still functional, the code can easily perform calculations which would be tedious in the basic neuron models. Each module can have a custom dialog box and there is a custom add-in file for Visual Studio which makes creating new modules easy.
+A module is a rectangular array of neurons which is controlled by code. While the neurons are still functional, the code can easily perform calculations which would be tedious in the basic neuron models. Each module can have a custom dialog box and there is a custom add-in file for Visual Studio which makes creating new modules easy. If you create public properties in a module, they will automatically be non-volatile and will be saved and restored with the network.
+
+Networks: 
+A design of neurons, synapses, and modules is saved and restored as a unit. You can create as many different networks as you like…they are like documents which can be opened, edited, saved, branched, etc. They save the state of any public variables along with the position and content of the dialog box.
 
 Again, thanks for your interest!
 Charlie Simon, original creator of the Brain Simulator

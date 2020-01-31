@@ -19,9 +19,12 @@ namespace BrainSimulator.Modules
 {
     public class Module2DKB : ModuleBase
     {
+        //This is the actual Universal Knowledge Store
         protected List<Thing> UKS = new List<Thing>();
 
-        public List<SThing> KB1 = new List<SThing>();
+        //This is a temporary copy of the UKS which used during the save and restore process to 
+        //break circular links by storing index values instead of actual links Note the use of SThing instead of Thing
+        public List<SThing> UKSTemp = new List<SThing>();
 
         public override string ShortDescription { get => "Knowledge Base for storing linked knowledge data"; }
         public override string LongDescription
@@ -74,7 +77,6 @@ namespace BrainSimulator.Modules
             UKS.Add(newThing);
             return newThing;
         }
-
         public virtual void DeleteThing(Thing t)
         {
             if (t.Children.Count != 0) return; //can't delete something with children...must delete all children first.
@@ -142,7 +144,7 @@ namespace BrainSimulator.Modules
         public override void SetUpBeforeSave()
         {
             base.SetUpBeforeSave();
-            KB1.Clear();
+            UKSTemp.Clear();
             foreach (Thing t in UKS)
             {
                 SThing st = new SThing()
@@ -161,14 +163,14 @@ namespace BrainSimulator.Modules
                     if (l.hits != 0 && l.misses != 0) l.weight = l.hits / (float)l.misses;
                     st.references.Add(new Point(UKS.FindIndex(x => x == t1), l.weight));
                 }
-                KB1.Add(st);
+                UKSTemp.Add(st);
             }
         }
         public override void SetUpAfterLoad()
         {
             base.SetUpAfterLoad();
             UKS.Clear();
-            foreach (SThing st in KB1)
+            foreach (SThing st in UKSTemp)
             {
                 Thing t = new Thing()
                 {
@@ -178,13 +180,13 @@ namespace BrainSimulator.Modules
                 };
                 UKS.Add(t);
             }
-            for (int i = 0; i < KB1.Count; i++)
+            for (int i = 0; i < UKSTemp.Count; i++)
             {
-                foreach (int p in KB1[i].parents)
+                foreach (int p in UKSTemp[i].parents)
                 {
                     UKS[i].Parents.Add(UKS[p]);
                 }
-                foreach (Point p in KB1[i].references)
+                foreach (Point p in UKSTemp[i].references)
                 {
                     int hits = 0;
                     int misses = 0;
@@ -217,28 +219,18 @@ namespace BrainSimulator.Modules
             return t.Children;
         }
 
-        public void AddThing (string label, string parentLabel)
+        public Thing AddThing (string label, string parentLabel)
         {
-            AddThing(label, new Thing[] { Labeled(parentLabel) });
+            return AddThing(label, new Thing[] { Labeled(parentLabel) });
         }
 
         public override void Initialize()
         {
             //create an intial structure with some test data
             UKS.Clear();
-            KB1.Clear();
-            AddThing("ROOT", new Thing[] { });
-            AddThing("Sense", "ROOT");
-            AddThing("Color","Sense");
-            AddThing("Shape","Sense");
-            AddThing("Point","Shape");
-            AddThing("Dot","Shape");
-            AddThing("TempP","Point");
-            AddThing("Segment","Shape");
-            AddThing("Word","Sense");
-            AddThing("Phrase","Sense");
-            AddThing("NoWord","Word");
-            AddThing("Action","ROOT");
+            UKSTemp.Clear();
+            AddThing("Thing", new Thing[] { });
+            AddThing("Action","Thing");
             AddThing("NoAction","Action");
             AddThing("Go","Action");
             AddThing("Stop","Action");
@@ -247,8 +239,22 @@ namespace BrainSimulator.Modules
             AddThing("UTurn","Action");
             AddThing("Say","Action");
             AddThing("Attn","Action");
-            AddThing("Situation","ROOT");
-            AddThing("Outcome","ROOT");
+            AddThing("Sense", "Thing");
+            AddThing("Visual", "Sense");
+            AddThing("Color", "Visual");
+            AddThing("Shape", "Visual");
+            AddThing("Point", "Shape");
+            AddThing("Dot", "Shape");
+            AddThing("TempP", "Point");
+            AddThing("Segment", "Shape");
+            AddThing("Audible", "Sense");
+            AddThing("Word", "Audible");
+            AddThing("Phrase", "Audible");
+            AddThing("ShortTerm", "Phrase");
+            AddThing("phTemp", "ShortTerm");
+            AddThing("NoWord", "Word");
+            AddThing("Situation","Thing");
+            AddThing("Outcome","Thing");
             AddThing("Positive","Outcome");
             AddThing("Negative","Outcome");
         }

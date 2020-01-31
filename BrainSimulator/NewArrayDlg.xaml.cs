@@ -88,6 +88,7 @@ namespace BrainSimulator
                     CreateRandomSynapses(rows1, i);
                 }
             }
+            MainWindow.arrayView.Dp.NeuronDisplaySize = 62;
             returnValue = true;
             Close();
             return;

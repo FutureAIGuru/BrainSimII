@@ -132,11 +132,14 @@ namespace BrainSimulator.Modules
             tvi.Items.Add(tviRefLabel);
             foreach (Link reference in t.References)
             {
-                TreeViewItem tviRef = new TreeViewItem { Header = reference.weight.ToString() + " : " +
+                TreeViewItem tviRef = new TreeViewItem {
+                    Header =
+                    reference.T.Label + " : " +
+                    //reference.weight.ToString() + " : " +
                     reference.hits + " : -" +
                     reference.misses+ " : " +
-                    ((float)reference.hits / (float)reference.misses).ToString("f3") + " : " +
-                    reference.T.Label };
+                    ((float)reference.hits / (float)reference.misses).ToString("f3") 
+                };
                 tviRefLabel.Items.Add(tviRef);
             }
         }
@@ -149,11 +152,14 @@ namespace BrainSimulator.Modules
             tvi.Items.Add(tviRefLabel);
             foreach (Link referencedBy in t.ReferencedBy)
             {
-                TreeViewItem tviRef = new TreeViewItem { Header = referencedBy.weight.ToString("f4") + " : " +
+                TreeViewItem tviRef = new TreeViewItem {
+                    Header =
+                    referencedBy.T.Label + " : " +
+                    //reference.weight.ToString() + " : " +
                     referencedBy.hits + " : -" +
                     referencedBy.misses + " : " +
-                    ((float)referencedBy.hits/(float)referencedBy.misses).ToString("f3") + " : " +
-                    referencedBy.T.Label };
+                    ((float)referencedBy.hits / (float)referencedBy.misses).ToString("f3")
+                };
                 tviRefLabel.Items.Add(tviRef);
             }
         }

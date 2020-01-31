@@ -229,7 +229,7 @@ namespace BrainSimulator
         public string label = ""; //this is just for convenience in debugging and should not be used
         public List<int> parents = new List<int>(); //"is-a"?
         public List<Point> references = new List<Point>(); //we're casting this as a point because it is small in xml
-        //x is the index of the link, y is the confidence
+        //x is the index of the link, y is the weight
         object value;
         public object V { get => value; set => this.value = value; }
         public int useCount;

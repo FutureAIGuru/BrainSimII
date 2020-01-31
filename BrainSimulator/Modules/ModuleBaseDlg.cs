@@ -19,12 +19,12 @@ namespace BrainSimulator.Modules
         public ModuleBase ParentModule;
         private DateTime dt;
         private DispatcherTimer timer;
-
+        public int UpdateMS = 100;
         virtual public bool Draw()
         {
             //only actually update the screen every 100ms
             TimeSpan ts = DateTime.Now - dt;
-            if (ts < new TimeSpan(0, 0, 0, 0, 100))
+            if (ts < new TimeSpan(0, 0, 0, 0, UpdateMS))
             {
                 //if we're not drawing this time, start a timer which will do a final draw
                 //after a 1/4 second of anactivity

@@ -291,7 +291,7 @@ namespace BrainSimulator
                 }
                 else if (sender is Shape s)
                 {
-                    if (s.ContextMenu == null && s is Ellipse) // a neuron
+                    if (s is Ellipse) // a neuron (this will update every time
                     {
                         s.ContextMenu = new ContextMenu();
                         Neuron n1 = MainWindow.theNeuronArray.neuronArray[mouseDownNeuronIndex];
@@ -720,7 +720,12 @@ namespace BrainSimulator
             }
             return false;
         }
-
+        public void Zoom(int change)
+        {
+            dp.NeuronDisplaySize += change;
+            if (dp.NeuronDisplaySize < 1) dp.NeuronDisplaySize = 1;
+            Update();
+        }
         public void theCanvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             //zoom in-out the display

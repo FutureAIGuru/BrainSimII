@@ -90,6 +90,22 @@ namespace BrainSimulator.Modules
 
         public override void Initialize()
         {
+            TrainingSamples = new string[]
+            {
+            //"what color is this:Say:Positive",
+            //"what is this:Say:Positive",
+            //"go:Go:Positive",
+            //"stop:Stop:Positive",
+            ////"sallie:Attn:Positive",
+            ////"turn around:UTurn:Positive",
+            //"turn left:LTurn:Positive",
+            //"turn right:RTurn:Positive",
+            //"This is [color]:NoAction:Positive",
+            "[color]:NoAction:Positive"
+        };
+
+
+            index = 0;
             CameraTrack.Clear();
             CameraPosition = new Point(0, 0);
             CameraTrack.Add(CameraPosition);
@@ -429,40 +445,44 @@ namespace BrainSimulator.Modules
         //TODO delete the outcome? It is always positive by implication
         string[] TrainingSamples = new string[]
         {
-            "what is this:Say:Positive",
-            "go:Go:Positive",
-            "stop:Stop:Positive",
-            "say:Say:Positive",
-            "sallie:Attn:Positive",
-            "turn around:UTurn:Positive",
-            "turn around:UTurn:Positive",
-            "turn left:LTurn:Positive",
-            "turn right:RTurn:Positive",
-            "this is [color]:NoAction:Positive"
+            //what color is this:Say:Positive",
+            //this color is black:Say:Positive"
+            //"what is this:Say:Positive",
+            //"go:Go:Positive",
+            //"stop:Stop:Positive",
+            //"say:Say:Positive",
+            //"sallie:Attn:Positive",
+            //"turn around:UTurn:Positive",
+            //"turn around:UTurn:Positive",
+            //"turn left:LTurn:Positive",
+            //"turn right:RTurn:Positive",
+            "This is [color]:NoAction:Positive",
+            "This is [color]:NoAction:Positive"
 ,        };
-
+        int index = 1;
         private void CreateRandomTrainingCase()
         {
-            if (GetNeuronValue(null, "Actions") == 1 && actionTrainingState == -1)
+            if (GetNeuronValue(null, "Actions") == 1 && actionTrainingState < 0)
             {
                 int index = (int)(rand.NextDouble() * TrainingSamples.Length);
                 trainingAction = TrainingSamples[index];
                 actionTrainingState = 15;
+                //index = index == 0 ? 1 : 0;
             }
         }
 
         string trainingAction = ""; //gets the training case from the array of training samples
         string[] trainingCase;
         int actionTrainingState = -1;
+
         // -1: idle  15: just started 10:phrase out completed (max phrase is 5 wds)
-        int colorTrainingDelay = -1;
         private void DoTrainingAction()
         {
             if (trainingAction == "") return;
             //handle color replacement
             //TODO handle other replacements
-            if (trainingAction.IndexOf("[color]") !=-1)
-                {
+            if (trainingAction.IndexOf("[color]") != -1)
+            {
                 int retinaWidth = GetModuleWidth("Module2DVision");
                 int cL = GetNeuronValueInt("Module2DVision", retinaWidth / 2, 0);
                 int cR = GetNeuronValueInt("Module2DVision", retinaWidth / 2, 1);

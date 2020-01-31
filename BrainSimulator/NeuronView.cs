@@ -49,9 +49,9 @@ namespace BrainSimulator
             // figure out which color to use
             float value = n.LastCharge;
             Color c = Colors.White;
-            if ((n.Model == Neuron.modelType.Std || n.Model == Neuron.modelType.OneTime) && value > .99)
+            if ((n.Model == Neuron.modelType.Std ||n.Model == Neuron.modelType.LIF || n.Model == Neuron.modelType.OneTime) && value > .99)
                 c = Colors.Orange;
-            else if ((n.Model == Neuron.modelType.Std || n.Model == Neuron.modelType.OneTime) && value != -1)
+            else if ((n.Model == Neuron.modelType.Std || n.Model == Neuron.modelType.LIF || n.Model == Neuron.modelType.OneTime) && value != -1)
                 c = MapRainbowColor(value, 1, 0);
             else if (n.Model == Neuron.modelType.Color)
                 c = Utils.FromArgb((int)n.LastChargeInt);
@@ -140,6 +140,13 @@ namespace BrainSimulator
             sp.Children.Add(new Label { Content = "Charge: ", Padding = new Thickness(0) });
             sp.Children.Add(new TextBox { Text = n.LastCharge.ToString("f2"), Width = 60, Name = "CurrentCharge", VerticalAlignment = VerticalAlignment.Center });
             cm.Items.Add(sp);
+            if (n.Model == Neuron.modelType.LIF)
+            {
+                sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
+                sp.Children.Add(new Label { Content = "Leak Rate: ", Padding = new Thickness(0) });
+                sp.Children.Add(new TextBox { Text = n.LeakRate.ToString("f2"), Width = 60, Name = "LeakRate", VerticalAlignment = VerticalAlignment.Center });
+                cm.Items.Add(sp);
+            }
 
             MenuItem mi = new MenuItem();
             mi.Header = "Neuron ID: " + n.Id;
@@ -178,11 +185,16 @@ namespace BrainSimulator
             sp.Children.Add(new Label { Content = "Model: ", Padding = new Thickness(0) });
             ComboBox cb = new ComboBox()
             { Width = 100 };
-            foreach (Neuron.modelType model in (Neuron.modelType[])Enum.GetValues(typeof(Neuron.modelType)))
+            for (int index = 0; index < Enum.GetValues(typeof(Neuron.modelType)).Length; index++)
             {
-                cb.Items.Add(model.ToString());
+                Neuron.modelType model = (Neuron.modelType)index;
+                cb.Items.Add(new ListBoxItem() {
+                    Content = model.ToString(),
+                    ToolTip = Neuron.modelToolTip[index],
+                    Width = 100,
+                });
             }
-            cb.SelectedValue = n.Model.ToString();
+            cb.SelectedIndex = (int)n.Model;
             cb.SelectionChanged += Cb_SelectionChanged;
             sp.Children.Add(cb);
             cm.Items.Add(sp);
@@ -207,7 +219,9 @@ namespace BrainSimulator
         private static void Cm_Closed(object sender, RoutedEventArgs e)
         {
             if ((Keyboard.GetKeyStates(Key.Escape) & KeyStates.Down) > 0)
-                return;
+            {
+                    return;
+            }
             if (cmCancelled)
             {
                 cmCancelled = false;
@@ -226,6 +240,12 @@ namespace BrainSimulator
                 {
                     float.TryParse(tb1.Text, out float newCharge);
                     n.SetValue(newCharge);
+                }
+                cc = Utils.FindByName(cm, "LeakRate");
+                if (cc is TextBox tb2)
+                {
+                    float.TryParse(tb2.Text, out float leakRate);
+                    n.LeakRate = leakRate;
                 }
                 cc = Utils.FindByName(cm, "History");
                 if (cc is CheckBox cb1)
@@ -278,7 +298,8 @@ namespace BrainSimulator
             StackPanel sp = cb.Parent as StackPanel;
             ContextMenu cm = sp.Parent as ContextMenu;
             int neuronID = (int)cm.GetValue(NeuronIDProperty);
-            Neuron.modelType nm = (Neuron.modelType)System.Enum.Parse(typeof(Neuron.modelType), cb.SelectedItem.ToString());
+            ListBoxItem lbi = (ListBoxItem)cb.SelectedItem;
+            Neuron.modelType nm = (Neuron.modelType)System.Enum.Parse(typeof(Neuron.modelType), lbi.Content.ToString());
             Neuron n = MainWindow.theNeuronArray.neuronArray[neuronID];
 
             n.Model = nm;
@@ -298,6 +319,7 @@ namespace BrainSimulator
                     n1.Model = nm;
                 MainWindow.Update();
             }
+            cm.IsOpen = false;
         }
 
         private static void Mi_Click(object sender, RoutedEventArgs e)

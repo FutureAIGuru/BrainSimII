@@ -1,4 +1,4 @@
-﻿ <Window x:Class="BrainSimulator.MainWindow"
+﻿<Window x:Class="BrainSimulator.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -35,14 +35,14 @@
             </Menu>
         </DockPanel>
         <local:NeuronArrayView x:Name="theNeuronArrayView" Margin="0,69,-0.4,17.8" ClipToBounds="True" />
-        <Slider x:Name="slider" Margin="225,36,0,0" ValueChanged="slider_ValueChanged" IsSnapToTickEnabled="True" Value="3" HorizontalAlignment="Left" Width="140" ToolTip="Change the engine speed" RenderTransformOrigin="1.814,0.625" Height="24" VerticalAlignment="Top"/>
-        <Button x:Name="buttonSingle" Margin="69,35,0,0" Click="ButtonSingle_Click" HorizontalAlignment="Left" Width="22" Height="22" VerticalAlignment="Top" ToolTip="Run the engine one cycle">
+        <Slider x:Name="slider" Margin="253,37,0,0" ValueChanged="slider_ValueChanged" IsSnapToTickEnabled="True" Value="3" HorizontalAlignment="Left" Width="140" ToolTip="Change the engine speed" RenderTransformOrigin="1.814,0.625" Height="24" VerticalAlignment="Top"/>
+        <Button x:Name="buttonSingle" Margin="71,35,0,0" Click="ButtonSingle_Click" HorizontalAlignment="Left" Width="22" Height="22" VerticalAlignment="Top" ToolTip="Run the engine one cycle">
             <Image x:Name="image" Height="15" Width="18" Source="Icons/Step.png"/>
         </Button>
         <Label x:Name="label" Content="Label" Margin="404,31,0,0" HorizontalAlignment="Left" Width="161" Height="30" VerticalAlignment="Top"/>
         <Label x:Name="labelDisplayStatus" Content="Initializing" Margin="570,31,-0.4,0" Height="30
                " VerticalAlignment="Top"/>
-        <Button x:Name="buttonInit" HorizontalAlignment="Left" Margin="19,35,0,0" VerticalAlignment="Top" Width="22" Click="ButtonInit_Click" Height="22" ToolTip="Reset all modules">
+        <Button x:Name="buttonInit" HorizontalAlignment="Left" Margin="22,35,0,0" VerticalAlignment="Top" Width="22" Click="ButtonInit_Click" Height="22" ToolTip="Reset all modules">
             <Image x:Name="image1" Height="15" Width="18" Source="Icons/Rewind.png"/>
         </Button>
         <Button x:Name="buttonPlayPause" HorizontalAlignment="Left" Margin="46,35,0,0" VerticalAlignment="Top" Width="22" Height="22" Click="PlayPause_Click" ToolTip="Pause/Continue the neural engine">
@@ -51,14 +51,19 @@
                 <Image x:Name="imagePlay" Height="15" Width="18" Source="Icons/Play.png" Visibility="Collapsed"/>
             </StackPanel>
         </Button>
-        <Button x:Name="buttonPan" HorizontalAlignment="Left" Height="22" Margin="97,35,0,0" VerticalAlignment="Top" Width="24" Click="ButtonPan_Click" ToolTip="Pan the display with the mouse">
+        <Button x:Name="buttonPan" HorizontalAlignment="Left" Height="22" Margin="132,35,0,0" VerticalAlignment="Top" Width="22" Click="ButtonPan_Click" ToolTip="Pan the display with the mouse">
             <Image x:Name="image2" Height="18" Width="18" Source="Icons/Hand.png"/>
         </Button>
-        <Button x:Name="button" HorizontalAlignment="Left" Height="22" Margin="132,35,0,0" VerticalAlignment="Top" Width="22" Click="ButtonDisplay_Click" ToolTip="Fit neuron array to screen">
+        <!--<Button x:Name="button" HorizontalAlignment="Left" Height="22" Margin="132,35,0,0" VerticalAlignment="Top" Width="22" Click="ButtonDisplay_Click" ToolTip="Fit neuron array to screen">
             <Image x:Name="image3" Height="18" Width="18" Source="Icons/FullScreen.png"/>
-
+        </Button>-->
+        <Button x:Name="buttonZoomOut" HorizontalAlignment="Left" Height="22" Margin="182,35,0,0" VerticalAlignment="Top" Width="22" ToolTip="Zoom Out" Click="ButtonZoomOut_Click">
+            <Image x:Name="image4" Height="18" Width="18" Source="Icons/ZoomOut.png"/>
         </Button>
-        <Label x:Name="label1" Content="Speed:" HorizontalAlignment="Left" Height="30" Margin="185,31,0,0" VerticalAlignment="Top" Width="56"/>
+        <Button x:Name="buttonZoomIn" HorizontalAlignment="Left" Height="22" Margin="157,35,0,0" VerticalAlignment="Top" Width="22" ToolTip="Zoom In" Click="ButtonZoomIn_Click">
+            <Image x:Name="image5" Height="18" Width="18" Source="Icons/ZoomIn.png"/>
+        </Button>
+        <Label x:Name="label1" Content="Speed:" HorizontalAlignment="Left" Height="30" Margin="213,32,0,0" VerticalAlignment="Top" Width="56"/>
 
     </Grid>
 </Window>

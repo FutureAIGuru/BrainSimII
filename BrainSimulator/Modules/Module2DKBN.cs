@@ -16,9 +16,9 @@ namespace BrainSimulator.Modules
 {
     public class Module2DKBN : Module2DKB
     {
-        long immediateMemory = 2; //items are more-or-less simultaneous
+        public long immediateMemory = 2; //items are more-or-less simultaneous
         long shortTermMemory = 6; //items are close in time
-        public override string ShortDescription => "A Knowledge Graph KB module expanded with a neuron arraysfor intputs and outputs. ";
+        public override string ShortDescription => "A Knowledge Graph KB module expanded with a neuron arraysfor intputs and outputs.";
         public override string LongDescription => "This is like a KB module but expanded to be accessible via neuron firings instead of just programmatically. " + base.LongDescription;
 
         int situationCount = 0; //sequence # for labelling situation entries
@@ -34,9 +34,9 @@ namespace BrainSimulator.Modules
         {
             base.Fire();
 
-            LearnWordLinks();
+            //LearnWordLinks();
 
-            ShowReferences();
+            //ShowReferences();
 
             LearnActions();
 
@@ -127,6 +127,9 @@ namespace BrainSimulator.Modules
         {
             List<Thing> words = GetChildren(Labeled("Word"));
             List<Thing> phrases = GetChildren(Labeled("Phrase"));
+            Thing shortTerm = Labeled("phTemp");
+            if (shortTerm == null) return;
+
             bool paused = true;
             foreach (Thing word in words)
             {
@@ -134,7 +137,9 @@ namespace BrainSimulator.Modules
                 {
                     if (shortTermMemoryList.Count == 0 || word != shortTermMemoryList.LastOrDefault()) //can't duplicate a word in a phrase 
                         shortTermMemoryList.Add(word);
+                    shortTerm.AddReference(word);
                     paused = false;
+                    word.useCount++;
                 }
             }
             if (paused && shortTermMemoryList.Count > 0)
@@ -142,32 +147,22 @@ namespace BrainSimulator.Modules
                 //TODO see if a sibling phrase already exists
 
                 //our word input has paused.  See if the current phrase is already stored and add it if not
-                bool phraseFound = false;
-
-                foreach (Thing phrase in phrases)
+                Thing possibleNewPhrase = AddThing("ph" + phraseCount++, new Thing[] { Labeled("Phrase") }, null, shortTermMemoryList.ToArray());
+                List<Link> exitingPhrase = possibleNewPhrase.FindSimilar(phrases, true, 1);
+                if (exitingPhrase.Count == 1 && exitingPhrase[0].weight == 1)
                 {
-                    for (int i = 0; i < phrase.References.Count && i < shortTermMemoryList.Count; i++)
-                    {
-                        if (phrase.References[i].T != shortTermMemoryList[i])
-                        {
-                            break;
-                        }
-                        else if (i == phrase.References.Count - 1)
-                        {
-                            Fire(phrase);
-                            phrase.useCount++;
-                            phraseFound = true;
-                        }
-                    }
-                    if (phraseFound)
-                        break;
+                    //existing phrase
+                    DeleteThing(possibleNewPhrase);
+                    Fire(exitingPhrase[0].T);
                 }
-                if (!phraseFound)
+                else
                 {
-                    Fire(AddThing("ph" + phraseCount++, new Thing[] { Labeled("Phrase") }, null, shortTermMemoryList.ToArray()));
+                    //new phrase
+                    Fire(possibleNewPhrase);
                 }
 
                 shortTermMemoryList.Clear();
+                shortTerm.References.Clear();
             }
         }
 
@@ -182,32 +177,13 @@ namespace BrainSimulator.Modules
                     List<Thing> colors = GetChildren(Labeled("Color"));
                     foreach (Thing t in colors)
                     {
-                        if (t != null && t != word)
-                        {
-                            if (Fired(t, immediateMemory))
-                                word.AdjustReference(t, 1);
-                            //                                t.AdjustReference(word, 1);
-                            else
-                                word.AdjustReference(t, -1);
-                            //                                t.AdjustReference(word, -1);
-                        }
+                        if (Fired(t, immediateMemory))
+                            word.AdjustReference(t, 1); //Hit
+                        else
+                            word.AdjustReference(t, -1); //Miss
                     }
                 }
-                //the following makes reduces weights on connection with only firing at the source
-                //else
-                //{
-                //    for (int i = firstThing; i < KB.Count; i++)
-                //    {
-                //        Thing t = KB[i];
-                //        if (t != null && t != word)
-                //        {
-                //            if (Fired(t, immediateMemory))
-                //                t.AdjustReference(word, -1);
-                //        }
-                //    }
-                //}
             }
-
         }
 
         //return neuron associated with KB thing
@@ -227,6 +203,7 @@ namespace BrainSimulator.Modules
                 SetNeuronValue(null, i, 1);
             else
                 SetNeuronValue("KBOut", i, 1);
+            t.useCount++;
         }
 
         //did the neuron associated with a thing fire?  Might change to indicate how long ago
@@ -455,7 +432,8 @@ namespace BrainSimulator.Modules
                     if (Fired(color, immediateMemory)) //a sensory thing fired
                     {
                         //do we have a word associated?
-                        Thing word = color.MostLikelyReference(Thing.ReferenceDirection.referenceBy,Labeled("Word"));
+                        Thing word = color.MostLikelyReference(Thing.ReferenceDirection.referenceBy, Labeled("Word"));
+
                         { Fire(word, false); };
                         word = word;
                     }

@@ -89,52 +89,56 @@ namespace BrainSimulator.Modules
                 }
             }
             catch { }
-            //draw the objects
-            foreach (Thing t in parent.GetKBSegments() ?? Enumerable.Empty<Thing>())
+            //draw the objects'
+            try
             {
-                Segment segment = parent.SegmentFromKBThing(t);
-                Color theColor = segment.theColor;
-                Point P1 = segment.P1.P;
-                Point P2 = segment.P2.P;
-                Point P1P = P1 + (P2 - P1) * .2;
-                Point P2P = P1 + (P2 - P1) * .8;
-
-                theCanvas.Children.Add(new Line
+                foreach (Thing t in parent.GetKBSegments() ?? Enumerable.Empty<Thing>())
                 {
-                    X1 = P1.X,
-                    X2 = P2.X,
-                    Y1 = P1.Y,
-                    Y2 = P2.Y,
-                    StrokeThickness = 4 / scale,
-                    Stroke = new SolidColorBrush(theColor),
-                });
+                    Segment segment = parent.SegmentFromKBThing(t);
+                    Color theColor = segment.theColor;
+                    Point P1 = segment.P1.P;
+                    Point P2 = segment.P2.P;
+                    Point P1P = P1 + (P2 - P1) * .2;
+                    Point P2P = P1 + (P2 - P1) * .8;
 
-                if (segment.P1.Conf != 0)
-                {
                     theCanvas.Children.Add(new Line
                     {
                         X1 = P1.X,
-                        X2 = P1P.X,
+                        X2 = P2.X,
                         Y1 = P1.Y,
-                        Y2 = P1P.Y,
+                        Y2 = P2.Y,
                         StrokeThickness = 4 / scale,
-                        Stroke = new SolidColorBrush(Colors.White),
-                    });
-                }
-                if (segment.P2.Conf != 0)
-                {
-                    theCanvas.Children.Add(new Line
-                    {
-                        X1 = P2.X,
-                        X2 = P2P.X,
-                        Y1 = P2.Y,
-                        Y2 = P2P.Y,
-                        StrokeThickness = 4 / scale,
-                        Stroke = new SolidColorBrush(Colors.White),
+                        Stroke = new SolidColorBrush(theColor),
                     });
 
+                    if (segment.P1.Conf != 0)
+                    {
+                        theCanvas.Children.Add(new Line
+                        {
+                            X1 = P1.X,
+                            X2 = P1P.X,
+                            Y1 = P1.Y,
+                            Y2 = P1P.Y,
+                            StrokeThickness = 4 / scale,
+                            Stroke = new SolidColorBrush(Colors.White),
+                        });
+                    }
+                    if (segment.P2.Conf != 0)
+                    {
+                        theCanvas.Children.Add(new Line
+                        {
+                            X1 = P2.X,
+                            X2 = P2P.X,
+                            Y1 = P2.Y,
+                            Y2 = P2P.Y,
+                            StrokeThickness = 4 / scale,
+                            Stroke = new SolidColorBrush(Colors.White),
+                        });
+
+                    }
                 }
             }
+            catch{}
 
             if (parent.imagining)
             {

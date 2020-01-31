@@ -149,6 +149,7 @@
     <Compile Include="Modules\ModuleKBDebugDlg.xaml.cs">
       <DependentUpon>ModuleKBDebugDlg.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\ModuleLearning.cs" />
     <Compile Include="Modules\ModuleMotor.cs" />
     <Compile Include="Modules\ModuleNull.cs" />
     <Compile Include="Modules\ModuleRealityModel.cs" />
@@ -276,6 +277,8 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="Tools\BrainSimulator Module Dlg.zip" />
+    <None Include="Tools\BrainSimulator Module.zip" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -341,6 +344,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\ClearHistory.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\ZoomIn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\ZoomOut.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Tools\VS Templates Readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

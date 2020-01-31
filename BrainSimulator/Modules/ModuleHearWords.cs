@@ -33,6 +33,7 @@ namespace BrainSimulator.Modules
                     }
                     else if (n.Label == "")
                     {
+                        //the word has not been heard before, add it
                         n.Label = word;
                         n.CurrentCharge = 1;
                         //connection to KB 
@@ -49,6 +50,7 @@ namespace BrainSimulator.Modules
                             Neuron n1 = nmKB.GetNeuron(w);
                             if (n1 != null)
                                 n.AddSynapse(n1.Id, 1);
+                            //TODO: add a synapse to the speakwords module as well
                         }
                         break;
                     }

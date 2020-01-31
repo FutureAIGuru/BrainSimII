@@ -117,11 +117,14 @@ namespace BrainSimulator.Modules
                 dlg.Width = 350;
                 dlg.Height = 300;
             }
+            //we need to set the dialog owner so it will display properly
             //this hack is here because a file might load and create dialogs prior to the mainwindow opening
             //so the same functionality is called from within FileLoad
             Window mainWindow = Application.Current.MainWindow;
             if (mainWindow.GetType() == typeof(MainWindow))
                 dlg.Owner = Application.Current.MainWindow;
+            else
+                mainWindow = mainWindow;
 
             dlg.Show();
             dlgIsOpen = true;

@@ -15,7 +15,18 @@ namespace BrainSimulator
     {
 
 
-        public enum modelType { Std, Color, FloatValue, Perceptron, Antifeedback, Hebbian, OneTime };
+        public enum modelType { Std, Color, FloatValue, Antifeedback, OneTime, LIF };
+
+        //this is only used in NeuronView but is here so you can add the tooltip when you add a neuron type and 
+        //the tooltip will automatically appear in the neuron type selector combobox
+        public static string[] modelToolTip = { "Integrate & Fire",
+            "RGB value (no processing)",
+            "Real value (no procesing",
+            "Std but cannot stimulate input neurons",
+            "Does not accumulate across cycles",
+            "Leaky Integrate & Fire",
+        };
+
         modelType model = modelType.Std;
         public modelType Model { get => model; set => model = value; }
 
@@ -59,6 +70,7 @@ namespace BrainSimulator
         public List<Synapse> Synapses { get { return synapses; } }
         public List<Synapse> SynapsesFrom { get { return synapsesFrom; } }
 
+        public float LeakRate = 0.1f; //used only by LIF model
         public bool KeepHistory { get => keepHistory; set => keepHistory = value; }
         public long LastFired { get => lastFired; set => lastFired = value; }
 
@@ -150,15 +162,15 @@ namespace BrainSimulator
         }
         public int LastSynapse = -1;
 
-
         //process the synapses
         public void Fire1(NeuronArray theNeuronArray)
         {
             switch (Model)
             {
                 //color and floatvalue have no cases so don't actually process
+                case modelType.LIF:
                 case modelType.Std:
-                    if (lastCharge < 990) return;
+                    if (lastCharge <= 990) return;
                     Interlocked.Add(ref theNeuronArray.fireCount, 1);
                     foreach (Synapse s in synapses)
                     {
@@ -167,28 +179,8 @@ namespace BrainSimulator
                     }
                     break;
 
-                case modelType.Hebbian:
-                    //as the synapse weights are representative of correlation counts, choose the largest.
-                    if (lastCharge < 990) return;
-                    Interlocked.Add(ref theNeuronArray.fireCount, 1);
-                    float maxWeight = 0;
-                    if (synapses.Count > 0)
-                        maxWeight = synapses.Max(t => t.Weight);
-                    if (maxWeight > 0)
-                    {
-                        foreach (Synapse s in synapses)
-                        {
-                            if (s.Weight == maxWeight)
-                            {
-                                Neuron n = theNeuronArray.neuronArray[s.TargetNeuron];
-                                Interlocked.Add(ref n.currentCharge, 1000); ;
-                            }
-                        }
-                    }
-                    break;
-
                 case modelType.Antifeedback:
-                    // just like a std neuron but can't stimulate the neuron chich stimulated it
+                    // just like a std neuron but can't stimulate the neuron which stimulated it
                     if (lastCharge < 990) return;
                     Interlocked.Add(ref theNeuronArray.fireCount, 1);
                     foreach (Synapse s in synapses)
@@ -216,16 +208,6 @@ namespace BrainSimulator
                     }
                     break;
 
-                case modelType.Perceptron:
-                    //implement this!!!!
-                    if (lastCharge < 990) return;
-                    Interlocked.Add(ref theNeuronArray.fireCount, 1);
-                    foreach (Synapse s in synapses)
-                    {
-                        Neuron n = theNeuronArray.neuronArray[s.TargetNeuron];
-                        Interlocked.Add(ref n.currentCharge, (int)(s.Weight * 1000));
-                    }
-                    break;
             }
 
         }
@@ -234,6 +216,24 @@ namespace BrainSimulator
         {
             switch (Model)
             {
+                case modelType.LIF:
+                    if (currentCharge < 0) currentCharge = 0;
+                    lastCharge = currentCharge;
+                    if (currentCharge > 990)
+                    {
+                        currentCharge = 0;
+                        if (KeepHistory)
+                            FiringHistory.AddFiring(Id, generation);
+                        LastFired = generation;
+                    }
+                    if (currentCharge > 100)
+                    {
+                        currentCharge = (int)(currentCharge * (1 - LeakRate));
+                    }
+                    else
+                        currentCharge = 0;
+                    break;
+
                 case modelType.Std:
                 case modelType.Antifeedback:
                     if (currentCharge < 0) currentCharge = 0;
@@ -250,13 +250,15 @@ namespace BrainSimulator
                 //fire if sufficient weights on this cycle or cancel...do not accumulate weight across multiple cycles
                 case modelType.OneTime:
                     lastCharge = currentCharge;
+                    if (currentCharge > 990)
+                    {
+                        if (KeepHistory)
+                            FiringHistory.AddFiring(Id, generation);
+                        LastFired = generation;
+                    }
                     currentCharge = 0;
                     break;
 
-                case modelType.Perceptron:
-                    break;
-                case modelType.Hebbian: //as the synapse weights are representative of correlation counts, choose the largest.
-                    break;
             }
 
         }

@@ -15,7 +15,7 @@ namespace BrainSimulator.Modules
     public class ModuleSpeechOut : ModuleBase
     {
         SpeechSynthesizer synth = null;
-
+        
         string toSpeak = ""; //accumulates an array of words to speak
         string prePend = "";
         string postPend = "";
@@ -26,6 +26,7 @@ namespace BrainSimulator.Modules
         public override void Fire()
         {
             Init();
+            if (synth == null) Initialize();
             na.BeginEnum();
             for (Neuron n = na.GetNextNeuron(); n != null; n = na.GetNextNeuron())
             {

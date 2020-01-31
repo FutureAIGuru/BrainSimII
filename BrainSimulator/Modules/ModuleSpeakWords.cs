@@ -33,6 +33,7 @@ namespace BrainSimulator.Modules
             Module2DKBN nmKB = (Module2DKBN)FindModuleByType(typeof(Module2DKBN));
             List<Thing> words = nmKB.GetChildren(nmKB.Labeled("Word"));
             bool paused = true;
+            //TODO: replace this direct access into the KB with synapses...then we can eliminate the storage of the words in the things values.
             foreach(Thing word in words)
             {
                 if (nmKB.FiredOutput(word,2))

@@ -654,6 +654,7 @@ namespace BrainSimulator.Modules
 
         public void Rotate(float theta)
         {
+            if (KBPossiblePoints == null) return;
             //move all the objects in the model
             foreach (Thing t in KBPossiblePoints)
             {

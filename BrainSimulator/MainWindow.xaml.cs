@@ -445,7 +445,7 @@ namespace BrainSimulator
             theNeuronArrayView.Update();
         }
 
-        //this should be a module
+        //this should be a module It's not currently used
         private void Button_PatternFileLoad_Click(object sender, RoutedEventArgs e)
         {
             if (theNeuronArrayView.targetNeuronIndex < 0) return;
@@ -546,9 +546,6 @@ namespace BrainSimulator
             displayUpdateTimer.Interval = TimeSpan.FromMilliseconds(100);
             displayUpdateTimer.Start();
         }
-
-       
-
 
         bool disaplayUpdating = false;
         private void DisplayUpdate_TimerTick(object sender, EventArgs e)
@@ -729,6 +726,7 @@ namespace BrainSimulator
                     setTitleBar();
                 }
             }
+            //various errors might have happened so we'll just ignore them all and start with a fresh file 
             catch (Exception e1)
             { }
         }
@@ -808,6 +806,16 @@ namespace BrainSimulator
             {
                 MessageBox.Show("Properties could not be displayed");
             }
+        }
+
+        private void ButtonZoomOut_Click(object sender, RoutedEventArgs e)
+        {
+            theNeuronArrayView.Zoom(-3);
+        }
+
+        private void ButtonZoomIn_Click(object sender, RoutedEventArgs e)
+        {
+            theNeuronArrayView.Zoom(3);
         }
     }
 }

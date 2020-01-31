@@ -57,7 +57,10 @@ namespace BrainSimulator.Modules
                     history.Add(tempString);
                 }
             }
-            while (history.Count > maxLength) history.RemoveAt(0);
+            lock (history)
+            {
+                while (history.Count > maxLength) history.RemoveAt(0);
+            }
             UpdateDialog();
         }
 

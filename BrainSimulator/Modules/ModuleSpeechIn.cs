@@ -129,7 +129,11 @@ namespace BrainSimulator.Modules
             actionCommand.Append(action);
             actionCommand.Append(direction,0,1);
 
-            Choices commands = new Choices(reward,say, attribQuery, declaration, actionCommand, query);
+            Choices digit = new Choices("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "point");
+            GrammarBuilder number = new GrammarBuilder();
+            number.Append(digit, 1, 5);
+
+            Choices commands = new Choices(reward,say, attribQuery, declaration, actionCommand, query, number);
 
             //some words we might need some day
             //Choices article = new Choices("a", "an", "the", "some", "containing", "with", "which are");
@@ -141,7 +145,6 @@ namespace BrainSimulator.Modules
             //Choices number = new Choices();
             //for (int i = 1; i < 200; i++)
             //    number.Add(i.ToString());
-            //Choices digit = new Choices("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "point");
             
 
             //how to add singular/plural to choices

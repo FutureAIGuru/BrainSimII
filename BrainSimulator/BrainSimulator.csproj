@@ -354,6 +354,21 @@
   <ItemGroup>
     <Resource Include="Tools\VS Templates Readme.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Networks\BasicNeurons.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Networks\Commands.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Networks\CameraTest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Networks\SpeechInOutTest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Networks\Sallie.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

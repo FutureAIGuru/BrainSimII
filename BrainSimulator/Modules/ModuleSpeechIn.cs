@@ -134,6 +134,13 @@ namespace BrainSimulator.Modules
             number.Append(digit, 1, 5);
 
             Choices commands = new Choices(reward,say, attribQuery, declaration, actionCommand, query, number);
+            Choices attentionWord = new Choices("Sallie", "Computer");
+
+            GrammarBuilder a = new GrammarBuilder();
+            a.Append(attentionWord, 1, 1);
+            a.Append(commands);
+
+
 
             //some words we might need some day
             //Choices article = new Choices("a", "an", "the", "some", "containing", "with", "which are");
@@ -145,7 +152,7 @@ namespace BrainSimulator.Modules
             //Choices number = new Choices();
             //for (int i = 1; i < 200; i++)
             //    number.Add(i.ToString());
-            
+
 
             //how to add singular/plural to choices
             //PluralizationService ps = PluralizationService.CreateService(new CultureInfo("en-us"));
@@ -154,10 +161,6 @@ namespace BrainSimulator.Modules
             //for (int i = 0; i < attribList.Length; i++)
             //    attribList1[i] = ps.Singularize(attribList[i]);
 
-
-            GrammarBuilder a = new GrammarBuilder();
-            a.Append("Sallie", 1, 1);
-            a.Append(commands);
 
 
 
@@ -226,7 +229,7 @@ namespace BrainSimulator.Modules
             string[] tempWords = text.Split(' ');
             foreach (string word in tempWords)
             {
-                if (word.ToLower() != "sallie")
+                if (word.ToLower() != "sallie" && word.ToLower() != "computer")
                     words.Add(word.ToLower());
             }
             ModuleHearWords nmHear = (ModuleHearWords)FindModuleByType(typeof(ModuleHearWords));

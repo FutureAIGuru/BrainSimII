@@ -332,11 +332,6 @@
     <Resource Include="Icons\Entity.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Networks\2DEntity-Test.xml">
-      <SubType>Designer</SubType>
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Icons\Record.png" />
   </ItemGroup>
   <ItemGroup>

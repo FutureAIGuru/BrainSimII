@@ -73,6 +73,7 @@ namespace BrainSimulator
         {
             MainWindow.CloseAllModuleDialogs();
             MainWindow.CloseHistoryWindow();
+            MainWindow.arrayView.ClearSelection();
             if (!int.TryParse(textBoxColumns.Text, out int cols)) return;
             if (!int.TryParse(textBoxRows.Text, out int rows)) return;
             Neuron.modelType t = (Neuron.modelType)System.Enum.Parse(typeof(Neuron.modelType), comboBoxModel.SelectedItem.ToString());
@@ -89,6 +90,7 @@ namespace BrainSimulator
                 }
             }
             MainWindow.arrayView.Dp.NeuronDisplaySize = 62;
+            MainWindow.arrayView.Dp.DisplayOffset = new Point(0,0);
             returnValue = true;
             Close();
             return;

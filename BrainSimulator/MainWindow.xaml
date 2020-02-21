@@ -57,10 +57,10 @@
         <!--<Button x:Name="button" HorizontalAlignment="Left" Height="22" Margin="132,35,0,0" VerticalAlignment="Top" Width="22" Click="ButtonDisplay_Click" ToolTip="Fit neuron array to screen">
             <Image x:Name="image3" Height="18" Width="18" Source="Icons/FullScreen.png"/>
         </Button>-->
-        <Button x:Name="buttonZoomOut" HorizontalAlignment="Left" Height="22" Margin="182,35,0,0" VerticalAlignment="Top" Width="22" ToolTip="Zoom Out" Click="ButtonZoomOut_Click">
+        <Button x:Name="buttonZoomOut" HorizontalAlignment="Left" Height="22" Margin="182,35,0,0" VerticalAlignment="Top" Width="22" ToolTip="Zoom Out" PreviewMouseLeftButtonDown="ButtonZoomOut_PreviewMouseLeftButtonDown">
             <Image x:Name="image4" Height="18" Width="18" Source="Icons/ZoomOut.png"/>
         </Button>
-        <Button x:Name="buttonZoomIn" HorizontalAlignment="Left" Height="22" Margin="157,35,0,0" VerticalAlignment="Top" Width="22" ToolTip="Zoom In" Click="ButtonZoomIn_Click">
+        <Button x:Name="buttonZoomIn" HorizontalAlignment="Left" Height="22" Margin="157,35,0,0" VerticalAlignment="Top" Width="22" ToolTip="Zoom In" PreviewMouseLeftButtonDown="ButtonZoomIn_PreviewMouseLeftButtonDown">
             <Image x:Name="image5" Height="18" Width="18" Source="Icons/ZoomIn.png"/>
         </Button>
         <Label x:Name="label1" Content="Speed:" HorizontalAlignment="Left" Height="30" Margin="213,32,0,0" VerticalAlignment="Top" Width="56"/>

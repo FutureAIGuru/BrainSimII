@@ -114,12 +114,14 @@ namespace BrainSimulator.Modules
                     {
                         P = (Point)(parent.antennaeActual[i] - parent.CameraPosition)
                     };
-                    double sa = .45; //arm lengths
-                    double sb = .3; //arm lengths
+                    double sa = c.R * .85; //lower arm lengths
+                    //double sb = (c.R-sa) * 4; //upper arm lengths
+                    //double sa = .45; // lower arm lengths
+                    double sb = .3; // upper arm lengths
                     float a = (float)(Math.Acos((sb * sb + c.R * c.R - sa * sa) / (2 * sb * c.R)));
                     if (!Double.IsNaN(a))
 
-                            {
+                    {
                         PointPlus pa = new PointPlus
                         {
                             R = (float)sb,
@@ -161,7 +163,7 @@ namespace BrainSimulator.Modules
                         Y1 = parent.currentView0[i].P1.Y,
                         X2 = parent.currentView0[i].P1.X,
                         Y2 = parent.currentView0[i].P1.Y,
-                        StrokeThickness = 3/ scale,
+                        StrokeThickness = 3 / scale,
                         StrokeEndLineCap = PenLineCap.Round,
                         StrokeStartLineCap = PenLineCap.Round,
                         Stroke = new SolidColorBrush(parent.currentView0[i].theColor)
@@ -187,7 +189,7 @@ namespace BrainSimulator.Modules
                 }
                 catch { }
             }
-            
+
             ////draw the body...it's a transparent gif
             Image body = new Image()
             {
@@ -261,7 +263,7 @@ namespace BrainSimulator.Modules
             {
                 Vector move = new Vector();
                 move = (currentPosition - prevPos);
-                pan += move; 
+                pan += move;
             }
             prevPos = currentPosition;
         }

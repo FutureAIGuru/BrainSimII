@@ -46,6 +46,23 @@ namespace BrainSimulator
 
         private void btnDialogOk_Click(object sender, RoutedEventArgs e)
         {
+            int.TryParse(txtColumns.Text, out int newColumns);
+            int oldColumns = MainWindow.theNeuronArray.arraySize / MainWindow.theNeuronArray.rows;
+
+            if (newColumns != oldColumns)
+            {
+                MainWindow.SuspendEngine();
+                int oldArraySize = MainWindow.theNeuronArray.arraySize;
+                int newArraySize = oldArraySize / oldColumns * newColumns;
+                Array.Resize(ref  MainWindow.theNeuronArray.neuronArray, newArraySize);
+                for (int i = oldArraySize;i < newArraySize; i++)
+                {
+                    MainWindow.theNeuronArray.neuronArray[i] = new Neuron();
+                }
+                MainWindow.theNeuronArray.arraySize = newArraySize;
+                MainWindow.ResumeEngine();
+            }
+            MainWindow.Update();
             Close();
         }
     }

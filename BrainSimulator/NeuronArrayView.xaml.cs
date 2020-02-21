@@ -163,7 +163,7 @@ namespace BrainSimulator
                         int element = theCanvas.Children.Add(l);
                         //if (l is Ellipse e && e.Fill.Opacity != 0)
                         if (l is Ellipse || l is Rectangle)
-                            neuronsOnScreen.Add(new NeuronOnScreen(i, l, 0,lbl));
+                            neuronsOnScreen.Add(new NeuronOnScreen(i, l, 0, lbl));
                         if (lbl != null)
                         {
                             theCanvas.Children.Add(lbl);
@@ -171,9 +171,10 @@ namespace BrainSimulator
                     }
                 }
             }
+            UpdateScrollbars();
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
-            //Debug.WriteLine("Update Done " + elapsedMs + "ms");
+            Debug.WriteLine("Update Done " + elapsedMs + "ms");
         }
 
         private void DrawModuleConnectors()
@@ -227,7 +228,7 @@ namespace BrainSimulator
                 Neuron n = MainWindow.theNeuronArray.neuronArray[a.neuronIndex];
                 if (a.graphic is Shape e)
                 {
-                    if (n.LastCharge != a.prevValue || 
+                    if (n.LastCharge != a.prevValue ||
                         (a.label != null && n.Label != (string)a.label.Content) ||
                         (a.label == null && n.Label != ""))
                     {
@@ -291,7 +292,7 @@ namespace BrainSimulator
                 }
                 else if (sender is Shape s)
                 {
-                    if (s is Ellipse) // a neuron (this will update every time
+                    if (s is Ellipse || s is Rectangle) // a neuron (this will update every time
                     {
                         s.ContextMenu = new ContextMenu();
                         Neuron n1 = MainWindow.theNeuronArray.neuronArray[mouseDownNeuronIndex];
@@ -306,7 +307,8 @@ namespace BrainSimulator
                         s.ContextMenu = new ContextMenu();
                         SynapseView.CreateContextMenu(source, s1, s.ContextMenu);
                     }
-                    s.ContextMenu.IsOpen = true;
+                    if (s.ContextMenu != null)
+                        s.ContextMenu.IsOpen = true;
                     e.Handled = true;
                 }
                 else
@@ -722,12 +724,14 @@ namespace BrainSimulator
         }
         public void Zoom(int change)
         {
+            dp.DisplayOffset = (Point)(((Vector)dp.DisplayOffset) * (dp.NeuronDisplaySize + change) / dp.NeuronDisplaySize);
             dp.NeuronDisplaySize += change;
             if (dp.NeuronDisplaySize < 1) dp.NeuronDisplaySize = 1;
             Update();
         }
         public void theCanvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
+            if (!MainWindow.crtlPressed) return;
             //zoom in-out the display
             float oldNeuronDisplaySize = dp.NeuronDisplaySize;
             dp.NeuronDisplaySize += e.Delta / 60;
@@ -786,6 +790,43 @@ namespace BrainSimulator
         private void TheCanvas_MouseLeave(object sender, MouseEventArgs e)
         {
             theCanvas.Cursor = Cursors.Arrow;
+        }
+
+        private void UpdateScrollbars()
+        {
+            NeuronArray theNeuronArray = MainWindow.theNeuronArray;
+            double totalWidth = theNeuronArray.arraySize / theNeuronArray.rows * dp.NeuronDisplaySize;
+            double visibleWidth = theCanvas.ActualWidth;
+            scrollBarH.Minimum = -visibleWidth + dp.NeuronDisplaySize ;
+            scrollBarH.Maximum = totalWidth -dp.NeuronDisplaySize;
+            scrollBarH.Value = -dp.DisplayOffset.X;
+            scrollBarH.ViewportSize = visibleWidth;
+            scrollBarH.SmallChange = dp.NeuronDisplaySize * 1.1;
+            scrollBarH.LargeChange = visibleWidth;
+
+            double totalHeight= theNeuronArray.rows * dp.NeuronDisplaySize;
+            double visibleHeight = theCanvas.ActualHeight;
+            scrollBarV.Minimum = -visibleHeight +dp.NeuronDisplaySize;
+            scrollBarV.Maximum = totalHeight - dp.NeuronDisplaySize;
+            scrollBarV.Value = -dp.DisplayOffset.Y;
+            scrollBarV.ViewportSize = visibleHeight;
+            scrollBarV.SmallChange = dp.NeuronDisplaySize * 1.1;
+            scrollBarV.LargeChange = visibleHeight;
+        }
+
+        private void ScrollBarV_Scroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
+        {
+            Point p = dp.DisplayOffset;
+            p.Y = -e.NewValue;
+            dp.DisplayOffset = p;
+            Update();
+        }
+        private void ScrollBarH_Scroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
+        {
+            Point p = dp.DisplayOffset;
+            p.X = -e.NewValue;
+            dp.DisplayOffset = p;
+            Update();
         }
 
         //problem of processing order in neuron areas

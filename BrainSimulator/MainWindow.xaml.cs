@@ -87,7 +87,7 @@ namespace BrainSimulator
             splashHide.Start();
 
         }
-        
+
         private void SplashHide_Tick(object sender, EventArgs e)
         {
             Application.Current.MainWindow = this;
@@ -237,7 +237,7 @@ namespace BrainSimulator
             }
             catch (Exception e1)
             {
-                MessageBox.Show("File Load failed because:\r\n " + e1.Message+ "\r\nAnd:\r\n"+e1.InnerException.Message);
+                MessageBox.Show("File Load failed because:\r\n " + e1.Message + "\r\nAnd:\r\n" + e1.InnerException.Message);
                 return false;
             }
             Update();
@@ -807,15 +807,40 @@ namespace BrainSimulator
                 MessageBox.Show("Properties could not be displayed");
             }
         }
-
-        private void ButtonZoomOut_Click(object sender, RoutedEventArgs e)
+        DispatcherTimer zoomInOutTimer;
+        int zoomAomunt = 0;
+        private void ButtonZoomIn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            theNeuronArrayView.Zoom(-3);
+            StartZoom(3);
+        }
+        private void ButtonZoomOut_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            StartZoom(-3);
+        }
+        private void StartZoom(int amount)
+        {
+            zoomInOutTimer = new DispatcherTimer();
+            zoomInOutTimer.Interval = new TimeSpan(0, 0, 0, 0, 250);
+            zoomInOutTimer.Tick += ZoomInOutTimer_Tick;
+            CaptureMouse();
+            zoomAomunt = amount;
+            theNeuronArrayView.Zoom(zoomAomunt);
+            zoomInOutTimer.Start();
         }
 
-        private void ButtonZoomIn_Click(object sender, RoutedEventArgs e)
+        private void ZoomInOutTimer_Tick(object sender, EventArgs e)
         {
-            theNeuronArrayView.Zoom(3);
+            if (Mouse.LeftButton == MouseButtonState.Pressed)
+            {
+                theNeuronArrayView.Zoom(zoomAomunt);
+            }
+            else
+            {
+                zoomInOutTimer.Stop();
+                ReleaseMouseCapture();
+            }
         }
+
+
     }
 }

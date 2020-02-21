@@ -74,8 +74,8 @@ namespace BrainSimulator.Modules
 
             //antenna motion
             antennaeRelative = new Vector[] {
-                new Vector(.4, .4) + new Vector(.1*rand.NextDouble()*Math.Cos(antennaTheta1),.1*Math.Sin(antennaTheta1)),
-                new Vector(.4, -.4)+ new Vector(.1*rand.NextDouble()*Math.Cos(antennaTheta2),.1*Math.Sin(antennaTheta2))
+                new Vector(.8, .8) + new Vector(.8*rand.NextDouble()*Math.Cos(antennaTheta1),.8*Math.Sin(antennaTheta1)),
+                new Vector(.8, -.8)+ new Vector(.8*rand.NextDouble()*Math.Cos(antennaTheta2),.8*Math.Sin(antennaTheta2))
             };
             antennaTheta1 += .3f;
             antennaTheta2 += .35f;

@@ -56,6 +56,27 @@ namespace BrainSimulator.Modules
             return retVal;
         }
 
+        public Thing ThingExists(Thing[] parents, Thing[] references = null)
+        {
+            Thing found = null;
+            List<Thing> things = GetChildren(parents[0]);
+            foreach(Thing t in things)
+            {
+                bool referenceMissing = false;
+                foreach (Thing t1 in references)
+                {
+                    if (t.References.Find(x => x.T == t1) == null)
+                    {
+                        referenceMissing = true;
+                        break;
+                    }
+                }
+                if (!referenceMissing)
+                    return t;
+            }
+
+            return found;
+        }
         public virtual Thing AddThing(string label, Thing[] parents, object value = null, Thing[] references = null)
         {
             Debug.WriteLine("AddThing: " + label + " (" + ArrayToString(parents) + ") (" + ArrayToString(references) + ")");

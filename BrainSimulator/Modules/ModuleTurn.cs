@@ -43,9 +43,9 @@ namespace BrainSimulator.Modules
                     direction = (float)rotation[i];
                 }
             }
-            if (na.GetNeuronAt(2, 0).LastCharge != 0)
+            if (na.GetNeuronAt(2, 0).CurrentCharge!= 0)
             {
-                direction = na.GetNeuronAt(2, 0).LastCharge;
+                direction = na.GetNeuronAt(2, 0).CurrentCharge;
                 na.GetNeuronAt(2, 0).SetValue(0);
             }
 

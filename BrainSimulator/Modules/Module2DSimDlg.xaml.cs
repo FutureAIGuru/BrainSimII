@@ -80,12 +80,12 @@ namespace BrainSimulator.Modules
             Polyline p = new Polyline();
             p.StrokeThickness = 1 / scale;
             p.Stroke = Brushes.Pink;
-            for (int i = 0; i < parent.CameraTrack.Count; i++)
+            for (int i = 0; i < parent.entityTrack.Count; i++)
             {
                 p.Points.Add(
                     new Point(
-                        parent.CameraTrack[i].X,
-                        parent.CameraTrack[i].Y
+                        parent.entityTrack[i].X,
+                        parent.entityTrack[i].Y
                         )
                         );
             }
@@ -106,13 +106,13 @@ namespace BrainSimulator.Modules
             }
 
             //draw the arms...
-            if (parent.antennaeActual.Length == 2)
+            if (parent.armActual.Length == 2)
             {
-                for (int i = 0; i < parent.antennaeActual.Length; i++)
+                for (int i = 0; i < parent.armActual.Length; i++)
                 {
                     PointPlus c = new PointPlus
                     {
-                        P = (Point)(parent.antennaeActual[i] - parent.CameraPosition)
+                        P = (Point)(parent.armActual[i] - parent.entityPosition)
                     };
                     double sa = c.R * .85; //lower arm lengths
                     //double sb = (c.R-sa) * 4; //upper arm lengths
@@ -129,11 +129,11 @@ namespace BrainSimulator.Modules
                         };
                         if (i == 0) pa.Theta += a;
                         else pa.Theta -= a;
-                        pa.P = (Point)(pa.P + (Vector)parent.CameraPosition);
+                        pa.P = (Point)(pa.P + (Vector)parent.entityPosition);
                         theCanvas.Children.Add(new Line
                         {
-                            X1 = parent.CameraPosition.X,
-                            Y1 = parent.CameraPosition.Y,
+                            X1 = parent.entityPosition.X,
+                            Y1 = parent.entityPosition.Y,
                             X2 = pa.P.X,
                             Y2 = pa.P.Y,
                             StrokeThickness = 2 / scale,
@@ -143,8 +143,8 @@ namespace BrainSimulator.Modules
                         {
                             X1 = pa.P.X,
                             Y1 = pa.P.Y,
-                            X2 = parent.antennaeActual[i].X,
-                            Y2 = parent.antennaeActual[i].Y,
+                            X2 = parent.armActual[i].X,
+                            Y2 = parent.armActual[i].Y,
                             StrokeThickness = 2 / scale,
                             Stroke = Brushes.Black
                         });
@@ -199,10 +199,10 @@ namespace BrainSimulator.Modules
             };
             TransformGroup tg1 = new TransformGroup();
             tg1.Children.Add(new TranslateTransform(-parent.BodyRadius, -parent.BodyRadius));
-            tg1.Children.Add(new RotateTransform(90 + parent.CameraDirection1 * 180 / Math.PI));
+            tg1.Children.Add(new RotateTransform(90 + parent.entityDirection1 * 180 / Math.PI));
             body.RenderTransform = tg1;
-            Canvas.SetLeft(body, parent.CameraPosition.X);
-            Canvas.SetTop(body, parent.CameraPosition.Y);
+            Canvas.SetLeft(body, parent.entityPosition.X);
+            Canvas.SetTop(body, parent.entityPosition.Y);
             theCanvas.Children.Add(body);
 
             return true;
@@ -224,10 +224,10 @@ namespace BrainSimulator.Modules
 
             Point position = e.GetPosition(theCanvas);
 
-            PointPlus v = new PointPlus { P = (Point)(position - parent.CameraPosition) };
+            PointPlus v = new PointPlus { P = (Point)(position - parent.entityPosition) };
             float dist = (float)v.R;
             double angle = (float)v.Theta;
-            double deltaAngle = angle - parent.CameraDirection1;
+            double deltaAngle = angle - parent.entityDirection1;
             ModuleView naGoToDest = MainWindow.theNeuronArray.FindAreaByLabel("ModuleGoToDest");
             if (naGoToDest != null)
             {

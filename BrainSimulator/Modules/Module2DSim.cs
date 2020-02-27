@@ -37,21 +37,21 @@ namespace BrainSimulator.Modules
         }
 
         [XmlIgnore]
-        public List<Point> CameraTrack = new List<Point>();
+        public List<Point> entityTrack = new List<Point>();
         [XmlIgnore]
         public List<physObject> currentView0 = new List<physObject>();
         [XmlIgnore]
         public List<physObject> currentView1 = new List<physObject>();
 
-        //where the antenna tips are relative to self
-        public Vector[] antennaeRelative = { new Vector(.5, .5) };
+        //where the arm tips are relative to self
+        public Vector[] armRelative = { new Vector(.5, .5) };
 
         [XmlIgnore]
-        public Point[] antennaeActual = { new Point(0, 0) };
+        public Point[] armActual = { new Point(0, 0) };
 
         //where we are in the world
-        public Point CameraPosition = new Point(0, 0);
-        public float CameraDirection1 = (float)Math.PI / 2;
+        public Point entityPosition = new Point(0, 0);
+        public float entityDirection1 = (float)Math.PI / 2;
 
         //the size of the universe
         public double boundarySize = 5.5;
@@ -65,20 +65,44 @@ namespace BrainSimulator.Modules
         {
         }
 
-        float antennaTheta1 = 0;
-        float antennaTheta2 = 0;
+        float armTheta1 = 0;
+        float armTheta2 = 0;
 
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
 
-            //antenna motion
-            antennaeRelative = new Vector[] {
-                new Vector(.8, .8) + new Vector(.8*rand.NextDouble()*Math.Cos(antennaTheta1),.8*Math.Sin(antennaTheta1)),
-                new Vector(.8, -.8)+ new Vector(.8*rand.NextDouble()*Math.Cos(antennaTheta2),.8*Math.Sin(antennaTheta2))
+            ModuleView naArmL = theNeuronArray.FindAreaByLabel("ModuleArmL");
+            ModuleView naArmR = theNeuronArray.FindAreaByLabel("ModuleArmR");
+
+            if (naArmL == null || naArmR == null)
+            {
+                //random arm motion if no arm modules are loaded
+                armRelative = new Vector[] {
+                new Vector(.5, .5) + new Vector(.25*rand.NextDouble()*Math.Cos(armTheta1),.25*Math.Sin(armTheta1)),
+                new Vector(.5, -.5)+ new Vector(.25*rand.NextDouble()*Math.Cos(armTheta2),.25*Math.Sin(armTheta2))
             };
-            antennaTheta1 += .3f;
-            antennaTheta2 += .35f;
+                armTheta1 += .3f;
+                armTheta2 += .35f;
+            }
+            else
+            {
+                float armLX = GetNeuronValue("ModuleArmL", "X");
+                float armLY = GetNeuronValue("ModuleArmL", "Y");
+                float armRX = GetNeuronValue("ModuleArmR", "X");
+                float armRY = GetNeuronValue("ModuleArmR", "Y");
+                if (armLX != armRelative[0].X ||
+                    armLY != armRelative[0].Y ||
+                    armRX != armRelative[1].X ||
+                    armRY != armRelative[1].Y
+                    )
+                {
+                    armRelative = new Vector[] {
+                        new Vector(armLX,armLY),
+                        new Vector(armRX,armRY)
+                    };
+                }
+            }
             HandleTouch();
 
             CreateRandomTrainingCase();
@@ -106,19 +130,19 @@ namespace BrainSimulator.Modules
 
 
             index = 0;
-            CameraTrack.Clear();
-            CameraPosition = new Point(0, 0);
-            CameraTrack.Add(CameraPosition);
-            CameraDirection1 = 0;
+            entityTrack.Clear();
+            entityPosition = new Point(0, 0);
+            entityTrack.Add(entityPosition);
+            entityDirection1 = 0;
 
             na.GetNeuronAt(0).Label = "Actions";
             na.GetNeuronAt(1).Label = "Colors";
             na.GetNeuronAt(2).Label = "Train";
 
-            antennaeRelative = new Vector[] { new Vector(.4, .4), new Vector(.4, -.4) };
-            antennaeActual = new Point[2];
-            for (int i = 0; i < antennaeRelative.Length; i++)
-                antennaeActual[i] = CameraPosition + antennaeRelative[i];
+            armRelative = new Vector[] { new Vector(.4, .4), new Vector(.4, -.4) };
+            armActual = new Point[2];
+            for (int i = 0; i < armRelative.Length; i++)
+                armActual[i] = entityPosition + armRelative[i];
 
             objects.Clear();
 
@@ -129,10 +153,11 @@ namespace BrainSimulator.Modules
             objects.Add(new physObject() { P1 = new Point(-boundarySize, boundarySize), P2 = new Point(boundarySize, boundarySize), theColor = Colors.Black });
 
             //create a few  obstacles for testing
-            physObject newObject = new physObject
+            physObject newObject = null;
+            newObject = new physObject
             {
-                P1 = new Point(1.5, 3),
-                P2 = new Point(2.5, 1.5),
+                P1 = new Point(2, .75),
+                P2 = new Point(2, 0),
                 theColor = Colors.Red,
                 Aroma = -1,
                 Temperature = 10,
@@ -140,41 +165,41 @@ namespace BrainSimulator.Modules
             objects.Add(newObject);
             newObject = new physObject
             {
-                P1 = new Point(.5, -2),
-                P2 = new Point(-1, -2),
-                theColor = Colors.Red,
-                Aroma = -1,
-                Temperature = 10,
-            };
-            objects.Add(newObject);
-            newObject = new physObject
-            {
-                P1 = new Point(-2, 1),
-                P2 = new Point(-2.5, -1.5),
-                theColor = Colors.Green,
-                Aroma = -1,
-                Temperature = -10,
-            };
-            objects.Add(newObject);
-            newObject = new physObject
-            {
-                P1 = new Point(.75, 3),
-                P2 = new Point(-.85, 3),
-                theColor = Colors.Orange,
-                Aroma = 1,
-                Temperature = 5,
-            };
-            objects.Add(newObject);
-
-            newObject = new physObject
-            {
-                P1 = new Point(3.5, -.5),
-                P2 = new Point(2.5, -4),
+                P1 = new Point(2.5, 0.5),
+                P2 = new Point(2.5, -.5),
                 theColor = Colors.Blue,
                 Aroma = -1,
                 Temperature = -10,
             };
             objects.Add(newObject);
+            //newObject = new physObject
+            //{
+            //    P1 = new Point(.5, -2),
+            //    P2 = new Point(-1, -2),
+            //    theColor = Colors.Red,
+            //    Aroma = -1,
+            //    Temperature = 10,
+            //};
+            //objects.Add(newObject);
+            //newObject = new physObject
+            //{
+            //    P1 = new Point(-2, 1),
+            //    P2 = new Point(-2.5, -1.5),
+            //    theColor = Colors.Green,
+            //    Aroma = -1,
+            //    Temperature = -10,
+            //};
+            //objects.Add(newObject);
+            //newObject = new physObject
+            //{
+            //    P1 = new Point(.75, 3),
+            //    P2 = new Point(-.85, 3),
+            //    theColor = Colors.Orange,
+            //    Aroma = 1,
+            //    Temperature = 5,
+            //};
+            //objects.Add(newObject);
+
 
 
             ////add some random obstacles
@@ -216,9 +241,9 @@ namespace BrainSimulator.Modules
         //these are called to move and rotate the entity within the simulator
         public void Rotate(double theta) //(in radian CW) 
         {
-            CameraDirection1 -= (float)theta;
-            if (CameraDirection1 > Math.PI) CameraDirection1 -= (float)Math.PI * 2;
-            if (CameraDirection1 < -Math.PI) CameraDirection1 += (float)Math.PI * 2;
+            entityDirection1 -= (float)theta;
+            if (entityDirection1 > Math.PI) entityDirection1 -= (float)Math.PI * 2;
+            if (entityDirection1 < -Math.PI) entityDirection1 += (float)Math.PI * 2;
             HandleTouch();
             HandleVision();
             HandleAroma();
@@ -230,21 +255,21 @@ namespace BrainSimulator.Modules
         {
             Point newPosition = new Point()
             {
-                X = CameraPosition.X + motion * Math.Cos(CameraDirection1),
-                Y = CameraPosition.Y + motion * Math.Sin(CameraDirection1)
+                X = entityPosition.X + motion * Math.Cos(entityDirection1),
+                Y = entityPosition.Y + motion * Math.Sin(entityDirection1)
             };
 
-            //check for collisions  ollision can impede motion
+            //check for collisions  collision can impede motion
             //collision is actual intersection of desired motion path and obstacle as opposed to a touch
-            //which is an intersection between an antenna and does not impede motion
+            //which is an intersection between an arm and does not impede motion
             bool collision = CheckForCollisions(newPosition);
 
             //update position and add track...only if moving is OK
-            Vector v1 = newPosition - CameraPosition;
+            Vector v1 = newPosition - entityPosition;
             if (!collision)
             {
-                CameraPosition = newPosition;
-                CameraTrack.Add(CameraPosition);
+                entityPosition = newPosition;
+                entityTrack.Add(entityPosition);
             }
 
             HandleTouch();
@@ -277,7 +302,7 @@ namespace BrainSimulator.Modules
                 {
                     SetNeuronValue("ModuleBehavior", "Coll", 1);
                     PointPlus collPt = new PointPlus { P = (Point)(closest - newPosition) };
-                    collPt.Theta -= CameraDirection1;
+                    collPt.Theta -= entityDirection1;
                     SetNeuronValue("ModuleBehavior", "CollAngle", collPt.Theta);
                     return true;
                 }
@@ -292,10 +317,10 @@ namespace BrainSimulator.Modules
             //find the aroma value
             if (naSmell != null)
             {
-                double sumGreen = GetColorWeightAtPoint(CameraPosition, Colors.Green);
-                for (int i = 0; i < antennaeActual.Length; i++)
+                double sumGreen = GetColorWeightAtPoint(entityPosition, Colors.Green);
+                for (int i = 0; i < armActual.Length; i++)
                 {
-                    sumGreen = GetColorWeightAtPoint(antennaeActual[i], Colors.Green);
+                    sumGreen = GetColorWeightAtPoint(armActual[i], Colors.Green);
                     SetNeuronValue("Module2DSmell", i, 0, (float)sumGreen);
                 }
             }
@@ -305,22 +330,21 @@ namespace BrainSimulator.Modules
         //touch is the intersection of an arm with an obstacle
         public void HandleTouch()
         {
-            //antenna[0] is left [1] is right
-            antennaeActual = new Point[antennaeRelative.Length];
-            //is there an object intersecting the antennaew
-            for (int i = 0; i < antennaeRelative.Length; i++)
+            //arm[0] is left [1] is right
+            armActual = new Point[armRelative.Length];
+            //is there an object intersecting the arm?
+            for (int i = 0; i < armRelative.Length; i++)
             {
-                PointPlus pv = new PointPlus { P = (Point)antennaeRelative[i] };
-                pv.Theta = CameraDirection1 + pv.Theta;
-                Point antennaPositionAbs = CameraPosition + (Vector)pv.P;
-                CheckAntenna(antennaPositionAbs, i);
+                PointPlus pv = new PointPlus { P = (Point)armRelative[i] };
+                pv.Theta = entityDirection1 + pv.Theta;
+                Point armPositionAbs = entityPosition + (Vector)pv.P;
+                HandleTouch(armPositionAbs, i);
             }
         }
 
-        private void CheckAntenna(Point antennaPositionAbs, int index)
+        private void HandleTouch(Point armPositionAbs, int index)
         {
-
-            antennaeActual[index] = antennaPositionAbs;
+            armActual[index] = armPositionAbs;
             SetNeuronValue("Module2DTouch", 0, index, 0);
             SetNeuronValue("Module2DTouch", 8, index, 2);
 
@@ -330,7 +354,7 @@ namespace BrainSimulator.Modules
                 Point P1 = objects[i].P1;
                 Point P2 = objects[i].P2;
                 physObject ph = objects[i];
-                Utils.FindIntersection(P1, P2, CameraPosition, antennaPositionAbs, out bool linesintersect, out bool segments_intersect,
+                Utils.FindIntersection(P1, P2, entityPosition, armPositionAbs, out bool linesintersect, out bool segments_intersect,
                     out Point Intersection, out Point close_p1, out Point close_p2, out double collisionAngle);
 
                 if (segments_intersect)
@@ -354,15 +378,15 @@ namespace BrainSimulator.Modules
                         l2 = (float)dist2.Length;
                     }
 
-                    PointPlus antennaPositionRel = new PointPlus { P = (Point)(Intersection - CameraPosition) };
-                    antennaPositionRel.Theta = antennaPositionRel.Theta - CameraDirection1;
+                    PointPlus armPositionRel = new PointPlus { P = (Point)(Intersection - entityPosition) };
+                    armPositionRel.Theta = armPositionRel.Theta - entityDirection1;
 
                     float[] neuronValues = new float[9];
                     //everything from here out is  coordinates relative to self
-                    //neurons:  0:touch   1:antAngle  2:antDistance 3: sensedLineAngle 4: conf1 5: len1 6: conf2 7: len2 8: Release
+                    //neurons:  0:touch   1:armAngle  2:armDistance 3: sensedLineAngle 4: conf1 5: len1 6: conf2 7: len2 8: Release
                     neuronValues[0] = 1;
-                    neuronValues[1] = antennaPositionRel.Theta;
-                    neuronValues[2] = antennaPositionRel.R;
+                    neuronValues[1] = armPositionRel.Theta;
+                    neuronValues[2] = armPositionRel.R;
                     neuronValues[3] = (float)collisionAngle;
                     neuronValues[4] = (float)p1IsEndpt;
                     neuronValues[5] = (float)l1;
@@ -371,7 +395,7 @@ namespace BrainSimulator.Modules
                     neuronValues[8] = 0;
                     SetNeuronVector("Module2DTouch", true, index, neuronValues);
 
-                    antennaeActual[index] = Intersection;
+                    armActual[index] = Intersection;
                     break;
                 }
             }
@@ -380,20 +404,20 @@ namespace BrainSimulator.Modules
         //do offsets to handle two eyes
         private void HandleVision()
         {
-            Point oldCamerPosition = CameraPosition;
-            Double offsetDirection = CameraDirection1 + Math.PI / 2;
+            Point oldCamerPosition = entityPosition;
+            Double offsetDirection = entityDirection1 + Math.PI / 2;
             Vector offset = new Vector(Math.Cos(offsetDirection), Math.Sin(offsetDirection));
             offset = Vector.Multiply(Module2DVision.eyeOffset, offset);
-            CameraPosition += offset;
+            entityPosition += offset;
             HandleVision(0);
 
-            CameraPosition = oldCamerPosition;
-            offsetDirection = CameraDirection1 - Math.PI / 2;
+            entityPosition = oldCamerPosition;
+            offsetDirection = entityDirection1 - Math.PI / 2;
             offset = new Vector(Math.Cos(offsetDirection), Math.Sin(offsetDirection));
             offset = Vector.Multiply(Module2DVision.eyeOffset, offset);
-            CameraPosition += offset;
+            entityPosition += offset;
             HandleVision(1);
-            CameraPosition = oldCamerPosition;
+            entityPosition = oldCamerPosition;
         }
 
         //do ray tracing to create the view the Entitiy would see
@@ -410,19 +434,19 @@ namespace BrainSimulator.Modules
             for (int i = 0; i < retinaWidth; i++)
             {
                 double theta = Module2DVision.GetDirectionOfNeuron(i, retinaWidth);
-                theta = CameraDirection1 + theta;
+                theta = entityDirection1 + theta;
                 //create a segment from the view direction for this pixel (length 100 assumes the size of the universe)
-                Point p2 = CameraPosition + new Vector(Math.Cos(theta) * 100.0, Math.Sin(theta) * 100.0);
+                Point p2 = entityPosition + new Vector(Math.Cos(theta) * 100.0, Math.Sin(theta) * 100.0);
                 Color theColor = Colors.Pink;
                 double closestDistance = 20;
                 for (int j = 0; j < objects.Count; j++)
                 {
-                    Utils.FindIntersection(CameraPosition, p2, objects[j].P1, objects[j].P2,
+                    Utils.FindIntersection(entityPosition, p2, objects[j].P1, objects[j].P2,
                         out bool lines_intersect, out bool segments_intersect,
                         out Point intersection, out Point close_p1, out Point closep2, out double collisionAngle);
                     if (segments_intersect)
                     {
-                        double distance = Point.Subtract(intersection, CameraPosition).Length;
+                        double distance = Point.Subtract(intersection, entityPosition).Length;
                         if (distance < closestDistance)
                         {
                             closestDistance = distance;
@@ -431,12 +455,12 @@ namespace BrainSimulator.Modules
                     }
                 }
                 pixels[i] = Utils.ToArgb(theColor);
-                Point p3 = CameraPosition + new Vector(Math.Cos(theta), Math.Sin(theta));
+                Point p3 = entityPosition + new Vector(Math.Cos(theta), Math.Sin(theta));
                 if (row == 0)
-                    currentView0.Add(new physObject() { P1 = p3, P2 = CameraPosition, theColor = theColor });
+                    currentView0.Add(new physObject() { P1 = p3, P2 = entityPosition, theColor = theColor });
                 //currentView0.Add(new physObject() { P1 = p3, P2 = new Point(0, 0), theColor = theColor });
                 else
-                    currentView1.Add(new physObject() { P1 = p3, P2 = CameraPosition, theColor = theColor });
+                    currentView1.Add(new physObject() { P1 = p3, P2 = entityPosition, theColor = theColor });
             }
             SetNeuronVector("Module2DVision", true, row, pixels);
         }
@@ -551,10 +575,9 @@ namespace BrainSimulator.Modules
             {
                 if (objects[i].theColor == theColor)
                 {
-                    Point closest;
                     Point P1 = objects[i].P1;
                     Point P2 = objects[i].P2;
-                    double distance = Utils.FindDistanceToSegment(point, P1, P2, out closest);
+                    double distance = Utils.FindDistanceToSegment(point, P1, P2, out Point closest);
                     sum += 1 / (distance * distance);
                 }
             }

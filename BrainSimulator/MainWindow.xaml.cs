@@ -46,7 +46,8 @@ namespace BrainSimulator
         private DispatcherTimer displayUpdateTimer = new DispatcherTimer();
 
         // if the control key is pressed...used for adding multiple selection areas
-        public static bool crtlPressed = false;
+        public static bool ctrlPressed = false;
+        public static bool shiftPressed = false;
 
         //the name of the currently-loaded network file
         public static string currentFileName = "";
@@ -133,7 +134,13 @@ namespace BrainSimulator
             //Debug.WriteLine("Window_KeyUp");
             if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
             {
-                crtlPressed = false;
+                ctrlPressed = false;
+            }
+            if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
+            {
+                shiftPressed = false;
+                if (Mouse.LeftButton != MouseButtonState.Pressed)   
+                    theNeuronArrayView.theCanvas.Cursor = Cursors.Cross;
             }
         }
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -157,7 +164,12 @@ namespace BrainSimulator
             }
             if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
             {
-                crtlPressed = true;
+                ctrlPressed = true;
+            }
+            if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
+            {
+                shiftPressed = true;
+                theNeuronArrayView.theCanvas.Cursor = Cursors.Hand;
             }
             if (e.Key == Key.Escape)
             {
@@ -166,19 +178,19 @@ namespace BrainSimulator
                     theNeuronArrayView.ClearSelection();
                 }
             }
-            if (crtlPressed && e.Key == Key.C)
+            if (ctrlPressed && e.Key == Key.C)
             {
                 theNeuronArrayView.CopyNeurons();
             }
-            if (crtlPressed && e.Key == Key.V)
+            if (ctrlPressed && e.Key == Key.V)
             {
                 theNeuronArrayView.PasteNeurons();
             }
-            if (crtlPressed && e.Key == Key.X)
+            if (ctrlPressed && e.Key == Key.X)
             {
                 theNeuronArrayView.CutNeurons();
             }
-            if (crtlPressed && e.Key == Key.Z)
+            if (ctrlPressed && e.Key == Key.Z)
             {
                 if (theNeuronArray != null)
                 {
@@ -841,6 +853,9 @@ namespace BrainSimulator
             }
         }
 
-
+        private void Window_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Activate();
+        }
     }
 }

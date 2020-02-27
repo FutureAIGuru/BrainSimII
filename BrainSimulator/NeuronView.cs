@@ -138,7 +138,10 @@ namespace BrainSimulator
             cmCancelled = false;
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
             sp.Children.Add(new Label { Content = "Charge: ", Padding = new Thickness(0) });
-            sp.Children.Add(new TextBox { Text = n.LastCharge.ToString("f2"), Width = 60, Name = "CurrentCharge", VerticalAlignment = VerticalAlignment.Center });
+            if (n.Model != Neuron.modelType.FloatValue)
+                sp.Children.Add(new TextBox { Text = n.LastCharge.ToString("f2"), Width = 60, Name = "CurrentCharge", VerticalAlignment = VerticalAlignment.Center });
+            else
+                sp.Children.Add(new TextBox { Text = n.CurrentCharge.ToString("f2"), Width = 60, Name = "CurrentCharge", VerticalAlignment = VerticalAlignment.Center });
             cm.Items.Add(sp);
             if (n.Model == Neuron.modelType.LIF)
             {

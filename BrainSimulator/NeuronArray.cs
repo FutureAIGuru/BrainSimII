@@ -91,10 +91,11 @@ namespace BrainSimulator
         //fires all the modules
         private void HandleProgrammedActions()
         {
-            lock (modules)
+            //lock (modules)
             {
-                foreach (ModuleView na in modules)
+                for (int i = 0; i < modules.Count; i++)// each (ModuleView na in modules)
                 {
+                    ModuleView na = modules[i];
                     if (na.TheModule != null)
                     {
                         na.TheModule.Fire();

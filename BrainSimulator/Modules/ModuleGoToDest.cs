@@ -110,7 +110,7 @@ namespace BrainSimulator.Modules
                     Theta = GetNeuronValue(null,"Theta")
                 };
                 SetNeuronValue(null, "Go", 0);
-                SetNeuronValue(null, "Ro", 0);
+                SetNeuronValue(null, "R", 0);
                 SetNeuronValue(null, "Theta", 0);
             }
             if (pvTarget.R == 0)

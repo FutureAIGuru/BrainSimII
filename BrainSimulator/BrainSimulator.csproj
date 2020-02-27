@@ -121,6 +121,7 @@
     <Compile Include="Modules\Module3DSimDlg.xaml.cs">
       <DependentUpon>Module3DSimDlg.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\ModuleArm.cs" />
     <Compile Include="Modules\ModuleCameraDlg.xaml.cs">
       <DependentUpon>ModuleCameraDlg.xaml</DependentUpon>
     </Compile>

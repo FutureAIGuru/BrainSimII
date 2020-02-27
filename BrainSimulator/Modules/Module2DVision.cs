@@ -140,22 +140,33 @@ namespace BrainSimulator.Modules
             FindBoundaries(0, LBoundaries);
             FindBoundaries(1, RBoundaries);
             int start = 0;
+            Thing prevPoint = null;
 
             for (int i = 0; i < LBoundaries.Count; i++)
             {
                 for (int j = start; j < RBoundaries.Count; j++)
                 {
+                    //does the same boundary appear in both eyes? 
+                    //are the colors the same and does it appear further right in the left eye?
                     if (LBoundaries[i].colorL == RBoundaries[j].colorL &&
                         LBoundaries[i].colorR == RBoundaries[j].colorR &&
                         LBoundaries[i].direction >= RBoundaries[j].direction)
                     {
+                        //this determines the depth using the difference in the angualar direction that the boundary
+                        //appears in the two eyes
                         PointPlus P = FindDepth(LBoundaries[i].direction, RBoundaries[j].direction);
 
+                        //these determine the accuracy of the depth calculation by calculating depth for greater & smaller differences
                         PointPlus P1 = FindDepth(LBoundaries[i].direction, RBoundaries[j].direction + 2);
                         PointPlus P2 = FindDepth(LBoundaries[i].direction, RBoundaries[j].direction - 3);
 
-                        nmModel.AddPosiblePointToKB(P, LBoundaries[i].colorL, LBoundaries[i].colorR, angularResolution, Math.Min(P1.R, P2.R), Math.Max(P1.R, P2.R));
+                        Thing newPoint = nmModel.AddPosiblePointToKB(P, LBoundaries[i].colorL, LBoundaries[i].colorR, angularResolution, Math.Min(P1.R, P2.R), Math.Max(P1.R, P2.R));
                         start = j + 1;
+                        if (prevPoint != null && newPoint != null && prevPoint != newPoint)
+                        {
+                            nmModel.AddSegmentToKB(prevPoint, newPoint, LBoundaries[i].colorL);
+                        }
+                        prevPoint = newPoint;
                         break;
                     }
                 }

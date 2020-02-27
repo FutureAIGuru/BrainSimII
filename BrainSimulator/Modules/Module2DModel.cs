@@ -99,7 +99,7 @@ namespace BrainSimulator.Modules
         int sCount = 0;
         int cCount = 0;
         int ppCount = 0;
-        private void AddSegmentToKB(PointPlus P1, PointPlus P2, int theColor)
+        public void AddSegmentToKB(PointPlus P1, PointPlus P2, int theColor)
         {
             ModuleView naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
             if (naKB == null) return;
@@ -113,14 +113,90 @@ namespace BrainSimulator.Modules
                 kb.AddThing("s" + sCount++, new Thing[] { kb.Labeled("Segment") }, null, new Thing[] { p1, p2, color });
             }
         }
+        public void AddSegmentToKB(Thing P1, Thing P2, int theColor)
+        {
+            ModuleView naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
+            if (naKB == null) return;
+            if (theColor == 0) return; //don't handle black objects
+            if (naKB.TheModule is Module2DKB kb)
+            {
+                Thing color = kb.Valued(theColor);
+                if (color == null)
+                    color = kb.AddThing("c" + cCount++, new Thing[] { kb.Labeled("Color") }, theColor);
+                if (kb.ThingExists(new Thing[] { kb.Labeled("Segment") }, new Thing[] { P1, P2, color }) == null)
+                {
+                    Thing t1 = kb.ThingExists(new Thing[] { kb.Labeled("Segment") }, new Thing[] { P1, color });
+                    Thing t2 = kb.ThingExists(new Thing[] { kb.Labeled("Segment") }, new Thing[] { P2, color });
+                    //if the segment appears longer, it used to be occluded
+                    if (t1 != null)
+                    {
+                        if (t1.References[0].T == P1) t1.References[1].T = P2;
+                        if (t1.References[1].T == P1) t1.References[0].T = P2;
+                    }
+                    else if (t2 != null)
+                    {
+                        float length = SegmentLength(t2);
+                        Thing tTemp = Clone(t2);
+                        if (tTemp.References[0].T == P2) tTemp.References[1].T = P1;
+                        if (tTemp.References[1].T == P2) tTemp.References[0].T = P1;
+                        float l2 = SegmentLength(tTemp);
+                        if (l2 > length)
+                        {
+                            if (t2.References[0].T == P2) t2.References[1].T = P1;
+                            if (t2.References[1].T == P2) t2.References[0].T = P1;
+                        }
+                    }
+                    else
+                    {
+                        kb.AddThing("s" + sCount++, new Thing[] { kb.Labeled("Segment") }, null, new Thing[] { P1, P2, color });
+                    }
+                    UpdateDialog();
+                }
+            }
+        }
+        //this should move to the thing
+        private Thing Clone(Thing t)
+        {
+            Thing t1 = new Thing()
+            {
+                V = t.V,
+                Label = t.Label,
+            };
+            foreach (Thing t2 in t.Parents)
+                t1.Parents.Add(t2);
+            foreach (Thing t2 in t.Children)
+                t1.Children.Add(t2);
+            foreach (Link l in t.References)
+            {
+                Link l1 = new Link { T = l.T, hits = l.hits, misses = l.misses, weight = l.weight };
+                t1.References.Add(l1);
+            }
+            foreach (Link l in t.ReferencedBy)
+            {
+                Link l1 = new Link { T = l.T, hits = l.hits, misses = l.misses, weight = l.weight };
+                t1.ReferencedBy.Add(l1);
+            }
+            return t1;
+        }
+        private float SegmentLength(Thing t)
+        {
+            if (t == null || t.Parents[0].Label != "Segment") return -1;
+            PointPlus p1 = (PointPlus)t.References[0].T.V;
+            PointPlus p2 = (PointPlus)t.References[1].T.V;
+            Vector v1 = (Vector)p1.P;
+            Vector v2 = (Vector)p2.P;
+            float length = (float)(v1 - v2).Length;
+            return length;
+        }
 
         //get input from vision...less accurate
-        public void AddPosiblePointToKB(PointPlus P, int leftColor, int rightColor, float angularResolution, float minDepth, float maxDepth)
+        public Thing AddPosiblePointToKB(PointPlus P, int leftColor, int rightColor, float angularResolution, float minDepth, float maxDepth)
         {
             //TODO implement occlusion detection
-            if (leftColor != 0 && rightColor != 0) return;
+            //if (leftColor != 0 && rightColor != 0) return;
             GetSegmentsFromKB();
-            if (KBPossiblePoints == null) return; //this is a startup issue 
+            if (KBPossiblePoints == null) return null; //this is a startup issue 
+            Thing newThing = null;
             ModuleView naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
             if (naKB?.TheModule is Module2DKBN kb)
             {
@@ -150,7 +226,7 @@ namespace BrainSimulator.Modules
                     {
                         float allowedAngularError = 20 / P.R;
                         if (allowedAngularError < 8) allowedAngularError = 8;
-                        if (Math.Abs(P.Theta - pp.Theta) < allowedAngularError * angularResolution) //tighten to this depends on distance
+                        if (Math.Abs(P.Theta - pp.Theta) < allowedAngularError * angularResolution) //tighten so this depends on distance
                         {
                             if (pp.R < maxDepth + .5 && pp.R > minDepth - .5)
                             //if (pp.R < maxDepth && pp.R > minDepth )
@@ -162,48 +238,48 @@ namespace BrainSimulator.Modules
                                     P.Conf = P.R;
                                     t.V = P;
                                 }
-                                return;
+                                return t;
                             }
-                            else  //there are many issues which could cause a miss (occlusion, etc. ) so we default to ignoring the point
-                                return;
+                            //else  //there are many issues which could cause a miss (occlusion, etc. ) so we default to ignoring the point
+                            //    return t;
                         }
                     }
                 }
 
                 //The point appears to be not previously seen...take care of adding it
-                
+
                 //will there be two points with the same color which might be merged into a possible segment?
                 bool segmentAdded = false;
-                foreach (Thing t1 in KBPossiblePoints)
-                {
-                    if (t1.V is PointPlus pp && t1.References.Count > 1)
-                    {
-                        //this joins points which have the same color
-                        int refLeftColor = (int)t1.References[0].T.V;
-                        int refRightColor = (int)t1.References[1].T.V;
-                        float angularWidth = P.Theta - pp.Theta;
-                        if (leftColor == refRightColor && leftColor != 0 && angularWidth < 0)
-                        {
-                            AddSegmentToKB(P, pp, leftColor);
-                            kb.DeleteThing(t1);
-                            segmentAdded = true;
-                            break;
-                        }
-                        if (rightColor == refLeftColor && rightColor != 0 && angularWidth > 0)
-                        {
-                            AddSegmentToKB(P, pp, refLeftColor);
-                            kb.DeleteThing(t1);
-                            segmentAdded = true;
-                            break;
-                        }
+                //foreach (Thing t1 in KBPossiblePoints)
+                //{
+                //    if (t1.V is PointPlus pp && t1.References.Count > 1)
+                //    {
+                //        //this joins points which have the same color
+                //        int refLeftColor = (int)t1.References[0].T.V;
+                //        int refRightColor = (int)t1.References[1].T.V;
+                //        float angularWidth = P.Theta - pp.Theta;
+                //        if (leftColor == refRightColor && leftColor != 0 && angularWidth < 0)
+                //        {
+                //            AddSegmentToKB(P, pp, leftColor);
+                //            kb.DeleteThing(t1);
+                //            segmentAdded = true;
+                //            break;
+                //        }
+                //        if (rightColor == refLeftColor && rightColor != 0 && angularWidth > 0)
+                //        {
+                //            AddSegmentToKB(P, pp, refLeftColor);
+                //            kb.DeleteThing(t1);
+                //            segmentAdded = true;
+                //            break;
+                //        }
 
-                    }
-                }
+                //    }
+                //}
 
                 //This point is not part of a segment...add it as a temporary point
                 if (!segmentAdded)
                 {
-                    Thing newThing = kb.AddThing("pp" + ppCount++, new Thing[] { kb.Labeled("TempP") }, P);
+                    newThing = kb.AddThing("pp" + ppCount++, new Thing[] { kb.Labeled("TempP") }, P);
                     if (newThing != null)
                     {
                         //add references to colors...ref 0 left, ref 1 right
@@ -219,6 +295,7 @@ namespace BrainSimulator.Modules
                 }
             }
             UpdateDialog();
+            return newThing;
         }
 
         //get input from touch... accurate locations
@@ -628,6 +705,7 @@ namespace BrainSimulator.Modules
             GetSegmentsFromKB();
 
             Module2DKBN kbn = (Module2DKBN)FindModuleByType(typeof(Module2DKBN));
+            if (kbn == null) return;
             while (KBSegments.Count > 0)
             {
                 kbn.DeleteThing(KBSegments[0]);
@@ -663,18 +741,12 @@ namespace BrainSimulator.Modules
                     P.Theta += theta;
                 }
             }
-            //rotate all the objects in the model
-            foreach (Thing t in KBSegments)
-            {
-                Segment s = SegmentFromKBThing(t);
-                s.P1.Theta += theta;
-                s.P2.Theta += theta;
-            }
             UpdateDialog();
         }
 
         public void Move(float motion)
         {
+            if (KBPossiblePoints == null) return;
             //move all the objects in the model
             foreach (Thing t in KBPossiblePoints)
             {
@@ -682,13 +754,6 @@ namespace BrainSimulator.Modules
                 {
                     P.X -= motion;
                 }
-            }
-            //move all the objects in the model
-            foreach (Thing t in KBSegments)
-            {
-                Segment s = SegmentFromKBThing(t);
-                s.P1.X -= motion;
-                s.P2.X -= motion;
             }
             UpdateDialog();
         }

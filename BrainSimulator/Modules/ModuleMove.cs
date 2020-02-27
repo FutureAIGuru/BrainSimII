@@ -43,9 +43,9 @@ namespace BrainSimulator.Modules
                 }
             }
 
-            if (na.GetNeuronAt(0,2).LastCharge != 0)
+            if (na.GetNeuronAt(0,2).CurrentCharge!= 0)
             {
-                distance = na.GetNeuronAt(0,2).LastCharge;
+                distance = na.GetNeuronAt(0,2).CurrentCharge;
                 na.GetNeuronAt(0,2).SetValue(0);
             }
 

@@ -248,7 +248,10 @@ namespace BrainSimulator.Modules
                 Neuron n = naModule.GetNeuronAt(neuronLabel);
                 if (n != null)
                 {
-                    retVal = n.LastCharge;
+                    if (n.Model == Neuron.modelType.FloatValue)
+                        retVal = n.CurrentCharge;
+                    else
+                        retVal = n.LastCharge;
                 }
             }
             return retVal;

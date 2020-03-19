@@ -26,11 +26,11 @@ namespace BrainSimulator.Modules
         {
             InitializeComponent();
         }
-        public override bool Draw()
+        public override bool Draw(bool checkDrawTimer)
         {
             //this has a timer so that no matter how often you might call draw, the dialog
             //only updates 10x per second
-            if (!base.Draw()) return false;
+            if (!base.Draw(checkDrawTimer)) return false;
             Button_Click(null, null);
             return true;
         }
@@ -96,8 +96,11 @@ namespace BrainSimulator.Modules
                 if (child.References.Count > 0)
                 {
                     header +=  " (";
-                    foreach(Link L in child.References)
+                    Module2DKBN parent = (Module2DKBN)base.ParentModule;
+                    Thing best = parent.FindBestReference(child);
+                    foreach (Link L in child.References)
                     {
+                        if (L.T == best) header += "*";
                         if (L.weight < 0)header += "-";
                         header += L.T.Label + ", ";
                     }
@@ -166,7 +169,7 @@ namespace BrainSimulator.Modules
 
         private void TheTreeView_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Draw();
+            Draw(true);
         }
 
         DispatcherTimer dt;
@@ -180,7 +183,7 @@ namespace BrainSimulator.Modules
 
         private void Dt_Tick(object sender, EventArgs e)
         {
-            Draw();
+            Draw(true);
         }
 
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)

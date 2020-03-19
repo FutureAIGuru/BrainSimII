@@ -240,6 +240,16 @@ namespace BrainSimulator.Modules
             return t.Children;
         }
 
+        public IEnumerable<Thing> GetAllChildren(Thing T)
+        {
+            foreach (Thing t in T.Children)
+            {
+                foreach (Thing t1 in GetAllChildren(t))
+                    yield return t1;
+                yield return t;
+            }
+        }
+
         public Thing AddThing (string label, string parentLabel)
         {
             return AddThing(label, new Thing[] { Labeled(parentLabel) });
@@ -252,13 +262,21 @@ namespace BrainSimulator.Modules
             UKSTemp.Clear();
             AddThing("Thing", new Thing[] { });
             AddThing("Action","Thing");
-            AddThing("NoAction","Action");
+            AddThing("NoAction", "Action");
+            AddThing("Done", "Action"); //is fired by external neurons when an action is complete
+            AddThing("Stop", "Action");  //TODO Remove duplicate
+            AddThing("Utterance", "Action");
+            AddThing("SpeakPhn", "Action");
+            AddThing("Vowel", "SpeakPhn");
+            AddThing("Consonant", "SpeakPhn");
+            AddThing("End", "Action");
             AddThing("Go","Action");
             AddThing("Stop","Action");
             AddThing("RTurn","Action");
             AddThing("LTurn","Action");
             AddThing("UTurn","Action");
-            AddThing("Say","Action");
+            AddThing("Say", "Action");
+            AddThing("SayRnd", "Action");
             AddThing("Attn","Action");
             AddThing("Sense", "Thing");
             AddThing("Visual", "Sense");
@@ -266,15 +284,20 @@ namespace BrainSimulator.Modules
             AddThing("Shape", "Visual");
             AddThing("Point", "Shape");
             AddThing("Dot", "Shape");
-            AddThing("TempP", "Point");
             AddThing("Segment", "Shape");
             AddThing("Audible", "Sense");
             AddThing("Word", "Audible");
+            AddThing("Phoneme", "Audible");
             AddThing("Phrase", "Audible");
+            AddThing("PhraseISpoke", "Audible");
             AddThing("ShortTerm", "Phrase");
             AddThing("phTemp", "ShortTerm");
             AddThing("NoWord", "Word");
-            AddThing("Situation","Thing");
+            AddThing("Situation", "Thing");
+            AddThing("Landmark", "Situation");
+            AddThing("SPoint", "Landmark");
+            AddThing("SSegment", "Landmark");
+            AddThing("Verbal", "Situation");
             AddThing("Outcome","Thing");
             AddThing("Positive","Outcome");
             AddThing("Negative","Outcome");

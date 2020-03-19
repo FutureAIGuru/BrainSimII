@@ -28,11 +28,11 @@ namespace BrainSimulator.Modules
         {
             InitializeComponent();
         }
-        public override bool Draw()
+        public override bool Draw(bool checkDrawTimer)
         {
             //this has a timer so that no matter how often you might call draw, the dialog
             //only updates 10x per second
-            if (!base.Draw()) return false;
+            if (!base.Draw(checkDrawTimer)) return false;
 
             //use a line like this to gain access to the parent's public variables
             ModuleCommand parent = (ModuleCommand)base.ParentModule;
@@ -54,7 +54,7 @@ namespace BrainSimulator.Modules
 
         private void TheCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Draw();
+            Draw(true);
         }
 
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
@@ -93,7 +93,7 @@ namespace BrainSimulator.Modules
                 parent.commands = File.ReadAllLines(textBoxPath.Text);
                 parent.textFile = textBoxPath.Text;
                 parent.line = 0;
-                Draw();
+                Draw(true);
             }
         }
     }

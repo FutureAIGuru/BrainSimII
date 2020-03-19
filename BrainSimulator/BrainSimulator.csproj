@@ -144,6 +144,7 @@
     <Compile Include="Modules\ModuleBehavior.cs" />
     <Compile Include="Modules\Module2DKB.cs" />
     <Compile Include="Modules\ModuleCamera.cs" />
+    <Compile Include="Modules\ModuleNavigate.cs" />
     <Compile Include="Modules\ModuleHearWords.cs" />
     <Compile Include="Modules\ModuleImageFile.cs" />
     <Compile Include="Modules\ModuleKBDebug.cs" />
@@ -154,6 +155,10 @@
     <Compile Include="Modules\ModuleMotor.cs" />
     <Compile Include="Modules\ModuleNull.cs" />
     <Compile Include="Modules\ModuleRealityModel.cs" />
+    <Compile Include="Modules\ModuleSpeakPhonemes.cs" />
+    <Compile Include="Modules\ModuleSpeakPhonemesDlg.xaml.cs">
+      <DependentUpon>ModuleSpeakPhonemesDlg.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\ModuleSpeakWords.cs" />
     <Compile Include="ModuleViewMenu.cs" />
     <Compile Include="Modules\ModuleGoToDest.cs" />
@@ -175,6 +180,9 @@
     <Compile Include="NeuronView.cs" />
     <Compile Include="NewArrayDlg.xaml.cs">
       <DependentUpon>NewArrayDlg.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NotesDialog.xaml.cs">
+      <DependentUpon>NotesDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="PropertiesDlg.xaml.cs">
       <DependentUpon>PropertiesDlg.xaml</DependentUpon>
@@ -237,11 +245,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Modules\ModuleSpeakPhonemesDlg.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="NeuronArrayView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="NewArrayDlg.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NotesDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

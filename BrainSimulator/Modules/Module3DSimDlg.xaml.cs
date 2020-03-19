@@ -55,7 +55,7 @@ namespace BrainSimulator.Modules
                 objects.Add(newObject);
             }
         }
-        public override bool Draw()
+        public override bool Draw(bool checkDrawTimer)
         {
 
             MyCanvas();
@@ -64,7 +64,7 @@ namespace BrainSimulator.Modules
 
         private void TheCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Draw();
+            Draw(true);
         }
         public void MyCanvas()
         {
@@ -214,9 +214,12 @@ namespace BrainSimulator.Modules
                 theBitMap1 = new Bitmap(stream);
             else if (theBitMap2 == null)
                 theBitMap2 = new Bitmap(stream);
-            //MyCanvas();
             ((Module3DSim)ParentModule).renderDone = true;
         }
 
+        private void ModuleBaseDlg_MouseEnter(object sender, MouseEventArgs e)
+        {
+            this.Activate();
+        }
     }
 }

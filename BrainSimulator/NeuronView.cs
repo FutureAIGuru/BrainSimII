@@ -54,7 +54,7 @@ namespace BrainSimulator
             else if ((n.Model == Neuron.modelType.Std || n.Model == Neuron.modelType.LIF || n.Model == Neuron.modelType.OneTime) && value != -1)
                 c = MapRainbowColor(value, 1, 0);
             else if (n.Model == Neuron.modelType.Color)
-                c = Utils.FromArgb((int)n.LastChargeInt);
+                c = Utils.IntToColor((int)n.LastChargeInt);
             SolidColorBrush s1 = new SolidColorBrush(c);
             //   if (n.Label != "" || !n.InUse()) s1.Opacity = .50;
             if (!n.InUse() && n.Model == Neuron.modelType.Std) s1.Opacity = .50;
@@ -124,7 +124,7 @@ namespace BrainSimulator
 
         private static void R_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (theCanvas.Cursor != Cursors.Hand && !theNeuronArrayView.dragging)
+            if (theCanvas.Cursor != Cursors.Hand && !theNeuronArrayView.dragging && e.LeftButton != MouseButtonState.Pressed)
                 theCanvas.Cursor = Cursors.UpArrow;
         }
 

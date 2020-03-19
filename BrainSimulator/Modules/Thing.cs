@@ -72,9 +72,11 @@ namespace BrainSimulator
 
         public void AddReference(Thing t, float weight = 1)
         {
+            if (t == null) return; //do not add null references
             //change any 
-            References.RemoveAll(v => v.T == t);
-            t.ReferencedBy.RemoveAll(v => v.T == this);
+            //To prevent duplicates
+            //References.RemoveAll(v => v.T == t);
+            //t.ReferencedBy.RemoveAll(v => v.T == this);
             References.Add(new Link { T = t, weight = weight });
             t.ReferencedBy.Add(new Link { T = this, weight = weight });
         }
@@ -180,6 +182,31 @@ namespace BrainSimulator
                 retVal.RemoveRange(maxCount, retVal.Count - maxCount);
             return retVal;
         }
+
+        public Thing Clone(Thing t)
+        {
+            Thing t1 = new Thing()
+            {
+                V = t.V,
+                Label = t.Label,
+            };
+            foreach (Thing t2 in t.Parents)
+                t1.Parents.Add(t2);
+            foreach (Thing t2 in t.Children)
+                t1.Children.Add(t2);
+            foreach (Link l in t.References)
+            {
+                Link l1 = new Link { T = l.T, hits = l.hits, misses = l.misses, weight = l.weight };
+                t1.References.Add(l1);
+            }
+            foreach (Link l in t.ReferencedBy)
+            {
+                Link l1 = new Link { T = l.T, hits = l.hits, misses = l.misses, weight = l.weight };
+                t1.ReferencedBy.Add(l1);
+            }
+            return t1;
+        }
+
 
         public enum ReferenceDirection { reference, referenceBy };
 

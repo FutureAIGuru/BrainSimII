@@ -1,0 +1,15 @@
+﻿<Window x:Class="BrainSimulator.NotesDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BrainSimulator"
+        mc:Ignorable="d"
+        Title="Network Notes" Height="412.5" Width="753.5">
+    <Grid>
+        <Button x:Name="OKbutton" Content="OK" HorizontalAlignment="Left" Height="32" Margin="431,0,0,35" VerticalAlignment="Bottom" Width="95" Click="OKbutton_Click"/>
+        <Button x:Name="Cancel" Content="Cancel" HorizontalAlignment="Left" Height="32" Margin="314,0,0,35" VerticalAlignment="Bottom" Width="95" RenderTransformOrigin="-0.653,0.51" Click="Cancel_Click"/>
+        <CheckBox x:Name="checkBox" Content="Don't show this on startup" HorizontalAlignment="Left" Height="32" Margin="81,0,0,35" VerticalAlignment="Bottom" Width="218"/>
+        <TextBox x:Name="textBox" SpellCheck.IsEnabled="True" VerticalScrollBarVisibility="Auto" Margin="30,30,30,94" TextWrapping="Wrap" Text="Network Notes:" AcceptsReturn="True"/>
+    </Grid>
+</Window>

@@ -17,15 +17,15 @@ namespace BrainSimulator
         private Point displayOffset = new Point(0, 0); //the pan position
         private int neuronRows = -1;     //this number lets us display a one-dimensional array as a 2D array
 
-        public bool ShowSynapseArrows() { return neuronDisplaySize > 55; }
-        public bool ShowSynapseWideLines() { return neuronDisplaySize > 55; }
-        public bool ShowSynapseArrowCursor() { return neuronDisplaySize > 44; }
-        public bool ShowSynapses() { return neuronDisplaySize > 44; }
+        public bool ShowSynapseArrows() { return neuronDisplaySize > 35; }
+        public bool ShowSynapseWideLines() { return neuronDisplaySize > 40; }
+        public bool ShowSynapseArrowCursor() { return neuronDisplaySize > 35; }
+        public bool ShowSynapses() { return neuronDisplaySize > 15; }
 
         public bool ShowNeuronArrowCursor() { return neuronDisplaySize > 10; }
         public bool ShowNeuronOutlines() { return neuronDisplaySize > 15; }
         public bool ShowNeuronCircles() { return neuronDisplaySize > 10; }
-        public bool ShowNeurons() { return neuronDisplaySize > 5; }
+        public bool ShowNeurons() { return neuronDisplaySize > 0; }
      
 
         public int NeuronDisplaySize

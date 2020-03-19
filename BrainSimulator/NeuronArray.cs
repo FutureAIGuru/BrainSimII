@@ -31,7 +31,16 @@ namespace BrainSimulator
 
         public Neuron[] neuronArray;
         public long Generation { get; set; } = 0;
+
         public DisplayParams displayParams;
+
+        //notes about this network
+        public string networkNotes = "Purpose:\n\r\n\rThings to try:\n\r\n\rCurrent state of development:\n\r\n\rNotes:\n\r\n\r";
+        public bool hideNotes = false;
+
+        //this has nothing to do with the NeuronArray but is here so it will be saved and restored with the network
+        private int engineSpeed = 250;
+        public int EngineSpeed { get => engineSpeed; set => engineSpeed = value; }
 
         //keeps track of the number of neurons which fired in this generation
         [XmlIgnore]
@@ -77,12 +86,12 @@ namespace BrainSimulator
             fireCount = 0;
 
             //when debugging the Fire1 & Fire2 modules disable parallel operation and use the sequential loops below;
-            Parallel.For(0, arraySize, i => neuronArray[i].Fire1(this));
+            Parallel.For(0, arraySize, i => neuronArray[i].Fire1(this,Generation));
             Parallel.For(0, arraySize, i => neuronArray[i].Fire2(Generation));
 
             //use these instead
             //foreach (Neuron n in neuronArray)
-            //    n.Fire1(this);
+            //    n.Fire1(this,Generation);
             //foreach (Neuron n in neuronArray)
             //    n.Fire2(Generation);
             Generation++;

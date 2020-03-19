@@ -18,7 +18,7 @@ using System.Xml.Serialization;
 
 namespace BrainSimulator
 {
-    
+
     public partial class ModuleView : DependencyObject, IComparable<ModuleView>
     {
         int firstNeuron = 0;//, lastNeuron = 0;
@@ -28,6 +28,13 @@ namespace BrainSimulator
         Modules.ModuleBase theModule = null;
         int width = 0;
         int height = 0;
+
+        public IEnumerable<Neuron> Neurons()
+        {
+            for (int i = 0; i < NeuronCount; i++)
+                yield return GetNeuronAt(i);
+        }
+
 
         //here is where we sort the array of modules so they execute top-to-bottom & left-to-right.
         public int CompareTo(ModuleView na)
@@ -83,7 +90,11 @@ namespace BrainSimulator
         }
         public int GetNeuronOffset(Neuron n)
         {
-            int id = n.Id;
+            return GetNeuronOffset(n.Id);
+        }
+
+        public int GetNeuronOffset(int id)
+        {
             id -= firstNeuron;
             int col = id / Rows;
             int row = id % Rows;
@@ -141,7 +152,7 @@ namespace BrainSimulator
 
         public void GetBounds(out int X1, out int Y1, out int X2, out int Y2)
         {
-            NeuronSelectionRectangle nsr = new NeuronSelectionRectangle(firstNeuron, Width,Height);
+            NeuronSelectionRectangle nsr = new NeuronSelectionRectangle(firstNeuron, Width, Height);
             nsr.GetSelectedArea(out X1, out Y1, out X2, out Y2);
         }
         public void GetAbsNeuronLocation(int index, out int X, out int Y)
@@ -157,6 +168,7 @@ namespace BrainSimulator
             X = X1 - X2;
             Y = Y1 - Y2;
         }
+
         public void GetNeuronLocation(int nIndex, out int X, out int Y)
         {
             GetAbsNeuronLocation(nIndex, out int X1, out int Y1);
@@ -165,19 +177,7 @@ namespace BrainSimulator
             Y = Y1 - Y2;
         }
 
-        public void ClearAllNeurons()
-        {
-            BeginEnum();
-            for (Neuron n = GetNextNeuron(); n != null; n = GetNextNeuron())
-                n.LastCharge = n.CurrentCharge = 0;
-        }
-
-        public void ClearNeuronArea()
-        {
-            BeginEnum();
-            for (Neuron n = GetNextNeuron(); n != null; n = GetNextNeuron())
-                n.DeleteAllSynapes();
-        }
+      
         public int NeuronsInUseInArea()
         {
             int count = 0;
@@ -187,6 +187,7 @@ namespace BrainSimulator
                     count++;
             return count;
         }
+
         public int NeuronsFiredInArea()
         {
             int count = 0;

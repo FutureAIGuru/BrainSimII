@@ -45,7 +45,8 @@ namespace BrainSimulator.Modules
         abstract public void Fire();
 
         virtual public void Initialize()
-        { }
+        {
+        }
 
         public void Init(bool forceInit = false)
         {
@@ -80,6 +81,13 @@ namespace BrainSimulator.Modules
         {
             if (dlg != null)
                 dlg.Close();
+        }
+
+        //used by mainwindow to determine whether or not activation is needed
+        public void Activate()
+        {
+            if (dlg == null) return;
+            dlg.Activate();
         }
 
         public virtual void ShowDialog()
@@ -165,7 +173,7 @@ namespace BrainSimulator.Modules
             if (dlg != null)
                 Application.Current.Dispatcher.InvokeAsync(new Action(() =>
                 {
-                    dlg?.Draw();
+                    dlg?.Draw(true);
                 }));
         }
 
@@ -445,5 +453,36 @@ namespace BrainSimulator.Modules
             if (naModule != null) retVal = naModule.Height;
             return retVal;
         }
+
+        protected void ClearNeurons()
+        {
+            foreach (Neuron n in na.Neurons())
+            {
+                n.Label = "";
+                n.Model = Neuron.modelType.Std;
+                n.SetValue(0);
+            }
+        }
+        protected Neuron AddLabel(string newLabel)
+        {
+            foreach (Neuron n in na.Neurons())
+            {
+                if (n == null) return null;
+                if (n.Label == newLabel) return n;
+                if (n.Label == "")
+                {
+                    n.Label = newLabel;
+                    return n;
+                }
+            }
+            return null;
+        }
+        protected void AddLabels(string[] labels)
+        {
+            foreach (string label in labels)
+                AddLabel(label);
+        }
+
+
     }
 }

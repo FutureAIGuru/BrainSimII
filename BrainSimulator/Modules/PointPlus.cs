@@ -19,7 +19,7 @@ namespace BrainSimulator.Modules
     {
         private Point p;
         private float r;
-        private float theta;
+        private Angle theta;
         private bool polarDirty = false;
         private bool xyDirty = false;
 
@@ -39,7 +39,7 @@ namespace BrainSimulator.Modules
         [XmlIgnore]
         public float R { get { if (polarDirty) UpdatePolar(); return r; } set { r = value; xyDirty = true; } }
         [XmlIgnore]
-        public float Theta
+        public Angle Theta
         {
             get { if (polarDirty) UpdatePolar(); return theta; }
             set
@@ -50,7 +50,6 @@ namespace BrainSimulator.Modules
                 xyDirty = true;
             }
         }
-
         private void UpdateXY()
         {
             p.X = r * Math.Cos(theta);
@@ -66,15 +65,39 @@ namespace BrainSimulator.Modules
         }
         public bool Near(PointPlus PP, float toler)
         {
-            if ((Math.Abs(PP.R - R) < 1 && Math.Abs(PP.Theta - Theta) < .1) ||
-                ((Math.Abs(PP.X - X) < toler && Math.Abs(PP.Y - Y) < toler)))
+            //if ((Math.Abs(PP.R - R) < 1 && Math.Abs(PP.Theta - Theta) < .1) ||
+            //    ((Math.Abs(PP.X - X) < toler && Math.Abs(PP.Y - Y) < toler)))
+            if (Math.Abs(PP.X - X) <= toler && Math.Abs(PP.Y - Y) <= toler)   
                 return true;
             return false;
         }
         public override string ToString()
         {
-            string s = "R: "+R.ToString("F3") + ", Theta: " + Degrees.ToString("F3")+ "°";
+            string s = "R: "+R.ToString("F3") + ", Theta: " + Degrees.ToString("F3")+ "° (" + X.ToString("F2") +","+Y.ToString("F2")+")";
             return s;
         }
     }
+
+    //this little helper adds the convenience of displaying angles also in degrees even though they are stored in radians
+    //it's really just an extension of float
+    public class Angle
+    {
+        private readonly float theAngle;
+        public Angle(float angle) { this.theAngle = angle; }
+        public static implicit operator float(Angle a) => a.theAngle;
+        public static implicit operator Angle(float a) => new Angle(a);
+        public static implicit operator Angle(double a) => new Angle((float)a);
+        public override string ToString()
+        {
+            float degrees = theAngle * 180 / (float)Math.PI;
+            string s = theAngle.ToString("F3") + " " + degrees.ToString("F3") + "°";
+            return s;
+        }
+        public int CompareTo(Angle a)
+        {
+            return theAngle.CompareTo(a.theAngle);
+        }
+
+    }
+
 }

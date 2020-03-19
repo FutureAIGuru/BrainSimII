@@ -108,7 +108,7 @@ namespace BrainSimulator
             cm.Items.Add(tb2);
 
             //color picker
-            Color c = Utils.FromArgb(nr.Color);
+            Color c = Utils.IntToColor(nr.Color);
             cb = new ComboBox();
             cb.Width = 200;
             cb.Name = "AreaColor";
@@ -209,7 +209,7 @@ namespace BrainSimulator
                     //update the existing module
                     MainWindow.theNeuronArray.modules[i].Label = label;
                     MainWindow.theNeuronArray.modules[i].CommandLine = commandLine;
-                    MainWindow.theNeuronArray.modules[i].Color = Utils.ToArgb(color);
+                    MainWindow.theNeuronArray.modules[i].Color = Utils.ColorToInt(color);
                     MainWindow.theNeuronArray.modules[i].Width = width;
                     MainWindow.theNeuronArray.modules[i].Height = height;
                     //did we change the module type?
@@ -234,7 +234,7 @@ namespace BrainSimulator
 
         public static void CreateModule(string label, string commandLine, Color color,int firstNeuron, int width, int height)
         {
-            ModuleView na = new ModuleView(firstNeuron, width, height, label, commandLine, Utils.ToArgb(color));
+            ModuleView na = new ModuleView(firstNeuron, width, height, label, commandLine, Utils.ColorToInt(color));
             if (na.Width < na.theModule.MinWidth) na.Width = na.theModule.MinWidth;
             if (na.Height < na.theModule.MinHeight) na.Height = na.theModule.MinHeight;
             MainWindow.theNeuronArray.modules.Add(na);
@@ -271,8 +271,11 @@ namespace BrainSimulator
                     else
                     {
                         ModuleView mv = MainWindow.theNeuronArray.Modules[i];
-                        for (int j = 0; j < mv.NeuronCount; j++)
-                            mv.GetNeuronAt(j).Reset();
+                        foreach (Neuron n in mv.Neurons())
+                        {
+                            n.Reset();
+                            n.DeleteAllSynapes();
+                        }
                         MainWindow.theNeuronArray.Modules.RemoveAt(i);
                         deleted = true;
                     }

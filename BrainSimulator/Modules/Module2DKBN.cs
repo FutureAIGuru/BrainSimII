@@ -17,17 +17,18 @@ namespace BrainSimulator.Modules
     public class Module2DKBN : Module2DKB
     {
         public long immediateMemory = 2; //items are more-or-less simultaneous
-        long shortTermMemory = 6; //items are close in time
-        public override string ShortDescription => "A Knowledge Graph KB module expanded with a neuron arraysfor intputs and outputs.";
+        long shortTermMemory = 10; //items are close in time
+        public override string ShortDescription => "A Knowledge Graph KB module expanded with a neuron arrays for intputs and outputs.";
         public override string LongDescription => "This is like a KB module but expanded to be accessible via neuron firings instead of just programmatically. " + base.LongDescription;
 
         int situationCount = 0; //sequence # for labelling situation entries
         int phraseCount = 0; //sequence # for labelling phrases
-        Thing activeSequence = null;
+        int wordCount = 0; //sequence # for labelling wordss
+        List<Thing> activeSequences = new List<Thing>();
         int firstThing; //this temporarily allows embedding of a few command neurons in the KB neuron array
 
         List<Thing> shortTermMemoryList = new List<Thing>(); //order of words recently received in order to match existing phrases
-        Random r = new Random(); //used to randomize trial of actions
+        Random rand = new Random(); //used to randomize trial of actions
 
         //once for each cycle of the engine
         public override void Fire()
@@ -44,11 +45,12 @@ namespace BrainSimulator.Modules
 
             DoActions();
 
-            PlayActiveSequence();
+            PlayActiveSequences();
 
-            HandleSpeech();
+            HandleTalking();
 
             Dream();
+
         }
 
 
@@ -65,6 +67,286 @@ namespace BrainSimulator.Modules
         {
             return UKS;
         }
+
+
+        //this returns the most recent firing regardless of how long ago it was
+        Thing MostRecentFired(Thing t)
+        {
+            if (t == null) return null;
+            Thing retVal = null;
+            long firedAt = 0;
+            foreach (Thing child in t.Children)
+            {
+                int i = UKS.IndexOf(child);
+                Neuron n = na.GetNeuronAt(i);
+                if (n != null)
+                {
+                    if (n.LastFired > firedAt)
+                    {
+                        retVal = child;
+                        firedAt = n.LastFired;
+                    }
+                }
+            }
+            return retVal;
+        }
+
+        List<Thing> AnyChildrenFired(Thing t, long maxCycles = 1, long minCycles = 1, bool checkDescendents = false)
+        {
+            List<Thing> retVal = new List<Thing>();
+            if (t == null) return retVal;
+            foreach (Thing child in t.Children)
+            {
+                if (Fired(child, maxCycles, true, minCycles))
+                    retVal.Add(child);
+                if (Fired(child, maxCycles, false, minCycles))
+                    retVal.Add(child);
+                if (checkDescendents)
+                    retVal.AddRange(AnyChildrenFired(child, maxCycles, minCycles));
+            }
+            return retVal;
+        }
+
+        public override Thing Valued(object value, List<Thing> KBt = null, float toler = 0)
+        {
+            Thing retVal = base.Valued(value, KBt, toler);
+            if (retVal != null)
+            {
+                Fire(retVal);
+            }
+            return retVal;
+        }
+
+
+        private void UpdateNeuronLabels()
+        {
+            if (na == null) return;
+            for (int i = 0; i < na.NeuronCount && i < UKS.Count; i++)
+            {
+                if (UKS[i] == null) continue;
+                na.GetNeuronAt(i).Label = UKS[i].Label;
+                SetNeuronValue("KBOut", i, 0f, UKS[i].Label);
+            }
+            for (int i = UKS.Count; i < na.NeuronCount; i++)
+            {
+                na.GetNeuronAt(i).Label = "";
+                SetNeuronValue("KBOut", i, 0f, "");
+            }
+        }
+
+
+        public override Thing AddThing(string label, Thing[] parents, object value = null, Thing[] references = null)
+        {
+            int i = UKS.Count;
+            Thing retVal = base.AddThing(label, parents, value, references);
+            UpdateNeuronLabels();
+            return retVal;
+        }
+
+        public override void DeleteThing(Thing t)
+        {
+            int i = UKS.IndexOf(t);
+            base.DeleteThing(t);
+            //because we removed a node, any external synapses to related neurons need to be adjusted to point to the right place
+            //on any neurons which might have shifted.
+            if (i > -1)
+            {
+                for (int j = i + 1; j < na.NeuronCount; j++)
+                {
+                    Neuron targetNeuron = na.GetNeuronAt(j - 1);
+                    Neuron sourceNeuron = na.GetNeuronAt(j);
+                    MainWindow.thisWindow.theNeuronArrayView.MoveOneNeuron(sourceNeuron, targetNeuron);
+                }
+                //repeat this process for the output array
+                ModuleView naModule = theNeuronArray.FindAreaByLabel("KBOut");
+                if (naModule != null)
+                {
+                    for (int j = i + 1; j < naModule.NeuronCount; j++)
+                    {
+                        Neuron targetNeuron = naModule.GetNeuronAt(j - 1);
+                        Neuron sourceNeuron = naModule.GetNeuronAt(j);
+                        MainWindow.thisWindow.theNeuronArrayView.MoveOneNeuron(sourceNeuron, targetNeuron);
+                    }
+                }
+            }
+            UpdateNeuronLabels();
+        }
+
+        //fill this method in with code which will execute once
+        //when the module is added, when "initialize" is selected from the context menu,
+        //or when the engine restart button is pressed
+        public override void Initialize()
+        {
+            base.Initialize();
+            foreach (Neuron n in na.Neurons())
+            {
+                n.DeleteAllSynapes();
+            }
+            ModuleView na1 = theNeuronArray.FindAreaByLabel("KBOut");
+            if (na1 != null)
+                foreach (Neuron n in na1.Neurons())
+                {
+                    n.DeleteAllSynapes();
+                }
+
+            //since we are inserting at 0, these are in reverse order
+            UKS.Insert(0, new Thing { Label = "Sleep" });
+            UKS.Insert(0, new Thing { Label = "Max" });
+            UKS.Insert(0, new Thing { Label = "Ref" });
+            UKS.Insert(0, new Thing { Label = "Parent" });
+            firstThing = 4;
+            situationCount = 0;
+            phraseCount = 0;
+
+            //add connections from speakPhonemes to this module
+
+            ModuleView naPhonemes = theNeuronArray.FindAreaByLabel("ModuleSpeakPhonemes");
+            if (naPhonemes != null)
+            {
+                Thing parent = Labeled("Vowel");
+                foreach (Neuron n in naPhonemes.Neurons())
+                {
+                    if (n.Label == "Conson.") parent = Labeled("Consonant");
+                    if (n.Label.Length == 1)
+                    {
+                        string label = "spk" + n.Label;
+                        Thing pn = AddThing(label, new Thing[] { parent });
+                        Neuron n1 = GetNeuron(pn, false);
+                        if (n1 != null)
+                        {
+                            n1.AddSynapse(n.Id, 1);
+                        }
+                    }
+                }
+            }
+
+            UpdateNeuronLabels();
+        }
+
+
+        //return neuron associated with KB thing
+        public Neuron GetNeuron(Thing t, bool input = true)
+        {
+            int i = UKS.IndexOf(t);
+            if (i == -1) return null;
+            if (input)
+            {
+                return na.GetNeuronAt(i);
+            }
+            else
+            {
+                ModuleView na1 = theNeuronArray.FindAreaByLabel("KBOut");
+                if (na1 == null) return null;
+                return na1.GetNeuronAt(i);
+            }
+        }
+
+        //fire the neuron associated with a KB thing
+        public void Fire(Thing t, bool fireInput = true) //false fires the neuron in the output array
+        {
+            int i = UKS.IndexOf(t);
+            if (i == -1) return;
+            if (fireInput)
+                SetNeuronValue(null, i, 1);
+            else
+                SetNeuronValue("KBOut", i, 1);
+
+            t.useCount++;
+        }
+        private ModuleView GetOutputModue()
+        {
+            return theNeuronArray.FindAreaByLabel("KBOut");
+        }
+
+        //did the neuron associated with a thing fire?  
+        //firing at least minPastCycles but not more than maxPastCycles ago
+        public bool Fired(Thing t, long maxPastCycles = 1, bool firedInput = true, long minPastCycles = 0)
+        {
+            int i = UKS.IndexOf(t);
+            ModuleView naModule = na;
+            if (!firedInput)
+            {
+                naModule = GetOutputModue();
+                if (naModule == null) return false;
+            }
+            Neuron n = naModule.GetNeuronAt(i);
+            if (n == null) return false;
+            long timeSinceLastFire = MainWindow.theNeuronArray.Generation - n.LastFired;
+            bool retVal = timeSinceLastFire <= maxPastCycles;
+            if (retVal)
+                retVal = timeSinceLastFire >= minPastCycles;
+            return retVal;
+        }
+
+        public void Play(Thing t)
+        {
+            if (!activeSequences.Contains(t))
+                activeSequences.Add(t);
+        }
+
+
+        //this handles playing sequences of actions (like saying a phrase)
+        //These are fired one-per-cycle until the end of the sequence
+        //If a reference has a weight of -1, the system waits until it fires.
+        private void PlayActiveSequences()
+        {
+            for (int i = 0; i >= 0 && i < activeSequences.Count; i++)
+            {
+                Thing activeSequence = activeSequences[i];
+                if (activeSequence.References[activeSequence.currentReference].weight == -1)
+                { //wait for firing of the specified thing
+                    if (Fired(activeSequence.References[activeSequence.currentReference].T))
+                    {
+                        activeSequence.currentReference++;
+                    }
+                }
+                else
+                {
+                    //fire the specified thing
+                    Fire(activeSequence.References[activeSequence.currentReference++].T, false);
+                }
+                if (activeSequence.currentReference == activeSequence.References.Count)
+                {
+                    activeSequence.currentReference = 0;
+                    activeSequences.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+
+        public Thing FindBestReference(Thing t,Thing parent = null)
+        {
+            if (t == null) return null;
+            Thing retVal = null;
+            float bestWeight = -100;
+            foreach (Link l in t.References)
+            {
+                if (parent == null || l.T.Parents[0] == parent)
+                {
+                    if (l.weight > bestWeight)
+                    {
+                        retVal = l.T;
+                        bestWeight = l.weight;
+                    }
+                }
+            }
+            return retVal;
+        }
+
+        //we'll want to change this to consider use-count and recency
+        private void Forget(Thing t, int countToSave = 3)
+        {
+            if (t == null) return;
+            while (t.Children.Count > countToSave)
+            {
+                DeleteThing(t.Children[0]);
+            }
+        }
+
+
+        /// <summary>
+        /// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// </summary>
 
         //execute the debugging commands if the associated neuron fired
         private void ShowReferences()
@@ -123,30 +405,98 @@ namespace BrainSimulator.Modules
             }
         }
 
+        private void BuildAssociation(Thing source, Thing dest, int maxCycles = 1, int minCycles = 0, int delta = 0)
+        {
+            if (source == null || dest == null) return;
+            List<Thing> sources = AnyChildrenFired(source, maxCycles, minCycles, true);
+            List<Thing> dests = AnyChildrenFired(dest, maxCycles + delta, minCycles + delta, true);
+            foreach (Thing t in sources)
+                foreach (Thing t1 in dests)
+                    t.AdjustReference(t1);
+        }
+
+
+
         private void CheckForPhrase()
         {
-            List<Thing> words = GetChildren(Labeled("Word"));
+            //associate phonemes I've heard with phonemes I spoke 2 gens earlier
+            BuildAssociation(Labeled("Phoneme"), Labeled("SpeakPhn"), 1, 1, 2);
+            List<Thing> phonemes = AnyChildrenFired(Labeled("Phoneme"), 1, 0, true);
             List<Thing> phrases = GetChildren(Labeled("Phrase"));
             Thing shortTerm = Labeled("phTemp");
             if (shortTerm == null) return;
 
             bool paused = true;
-            foreach (Thing word in words)
+            foreach (Thing phoneme in phonemes)
             {
-                if (Fired(word, immediateMemory))
-                {
-                    if (shortTermMemoryList.Count == 0 || word != shortTermMemoryList.LastOrDefault()) //can't duplicate a word in a phrase 
-                        shortTermMemoryList.Add(word);
-                    shortTerm.AddReference(word);
-                    paused = false;
-                    word.useCount++;
-                }
+                if (shortTermMemoryList.Count == 0 || phoneme != shortTermMemoryList.LastOrDefault()) //can't duplicate a word in a phrase 
+                    shortTermMemoryList.Add(phoneme);
+                shortTerm.AddReference(phoneme);
+                paused = false;
+                phoneme.useCount++;
             }
             if (paused && shortTermMemoryList.Count > 0)
             {
-                //TODO see if a sibling phrase already exists
+                //is this a phrase I just said or is it outside input?
+                if (AnyChildrenFired(Labeled("SpeakPhn"), shortTermMemory, 0, true).Count > 0)
+                {
+                    Forget(Labeled("PhraseISpoke"), 10);
+                    shortTermMemoryList.Clear();
+                    shortTerm.References.Clear();
+                    return;
+                }
 
-                //our word input has paused.  See if the current phrase is already stored and add it if not
+                //find any known words in the phrase
+                List<Thing> words = GetChildren(Labeled("Word"));
+                foreach (Thing word in words)
+                {
+                    if (word.References.Count > 0)
+                    {
+                        for (int i = 0; i < shortTermMemoryList.Count; i++)
+                        {
+                            bool match = true;
+                            int k = i;
+                            foreach (Link l in word.References)
+                            {
+                                if (k >= shortTermMemoryList.Count || shortTermMemoryList[k++] != l.T)
+                                {
+                                    match = false;
+                                    break;
+                                }
+                            }
+                            if (match)
+                            {
+                                word.useCount++;
+                                shortTermMemoryList[i] = word;
+                                shortTermMemoryList.RemoveRange(i + 1, word.References.Count - 1);
+                            }
+                        }
+                    }
+                }
+
+                //anything which wasn't a word, convert to a word
+                List<Thing> phonemesInWord = new List<Thing>();
+                for (int i = 0; i < shortTermMemoryList.Count; i++)
+                {
+                    if (shortTermMemoryList[i].Parents[0] == Labeled("Word"))
+                    {
+                        if (phonemesInWord.Count > 0)
+                        {
+                            Thing newWord = AddThing("w" + wordCount++, new Thing[] { Labeled("Word") }, null, phonemesInWord.ToArray());
+                            phonemesInWord.Clear();
+                        }
+                    }
+                    else
+                    {
+                        phonemesInWord.Add(shortTermMemoryList[i]);
+                    }
+                }
+                if (phonemesInWord.Count > 0)
+                {
+                    Thing newWord = AddThing("w" + wordCount++, new Thing[] { Labeled("Word") }, null, phonemesInWord.ToArray());
+                }
+
+                //Now add the phrase to the knowledge store
                 Thing possibleNewPhrase = AddThing("ph" + phraseCount++, new Thing[] { Labeled("Phrase") }, null, shortTermMemoryList.ToArray());
                 List<Link> exitingPhrase = possibleNewPhrase.FindSimilar(phrases, true, 1);
                 if (exitingPhrase.Count == 1 && exitingPhrase[0].weight == 1)
@@ -163,7 +513,176 @@ namespace BrainSimulator.Modules
 
                 shortTermMemoryList.Clear();
                 shortTerm.References.Clear();
+                Fire(Labeled("Say"));
             }
+        }
+
+
+        private void HandleTalking()
+        {
+            //hack to prevent mixed phrases
+            if (activeSequences.Count != 0) return;
+            if (Fired(Labeled("Say"), immediateMemory))
+            {
+                List<Thing> phrasesToSay = AnyChildrenFired(Labeled("Phrase"));
+                if (phrasesToSay.Count != 0)
+                {
+                    Thing newUtterance = AddThing("uu" + situationCount++, new Thing[] { Labeled("Utterance") }, null, null);
+                    foreach (Link l in phrasesToSay[0].References)
+                    {
+                        //if the link is to a word, get the pronunciation of the word
+                        if (l.T.Parents[0] == Labeled("Word"))
+                        {
+                            foreach (Link l1 in l.T.References)
+                                newUtterance.AddReference(l1.T);
+                            //newUtterance.AddReference(FindBestReference(l1.T));
+                        }
+                        else
+                            //if the link is to a phoneme, add it
+                            newUtterance.AddReference(l.T);
+                    }
+                    ModuleSpeakPhonemes nm = (ModuleSpeakPhonemes)FindModuleByType(typeof(ModuleSpeakPhonemes));
+
+                    //what's the closest phrase we can say based on the phonemes we've learned to say so we can speak the phrase
+                    foreach (Link l in newUtterance.References)
+                    {
+                        Thing t = l.T;
+                        if (t.References.Count == 0)
+                        {
+                            //we've heard a phoneme we haven't learned how to speak
+                            float bestDist = 100;
+                            Thing closest = null;
+                            foreach (Thing t1 in Labeled("Phoneme").Children)
+                            {
+                                if (t1.References.Count > 0)
+                                {
+                                    char p1 = t.Label[2];
+                                    char p2 = t1.Label[2];
+                                    float dist = nm.PhonemeDistance(p1, p2);
+                                    if (dist > -1 && dist < bestDist)
+                                    {
+                                        closest = t1;
+                                        bestDist = dist;
+                                    }
+                                }
+                            }
+                            l.T = FindBestReference(closest);
+                        }
+                        else
+                        {
+                            l.T = FindBestReference(t);
+                        }
+                    }
+                    newUtterance.AddReference(Labeled("End"));
+                    activeSequences.Add(newUtterance);
+                }
+            }
+            if (Fired(Labeled("SayRnd"), immediateMemory))
+            {
+                //say a random utterance  (there is a hack to handle combiners which is needed to work with TTS)
+                List<Thing> vowels = Labeled("Vowel").Children;
+                List<Thing> consonants = Labeled("Consonant").Children;
+                Thing consonant = consonants[rand.Next(consonants.Count - 2)];
+                Thing vowel1 = vowels[rand.Next(vowels.Count)];
+                Thing combiner = Labeled("spk\u0361");
+
+                int useCombiner = rand.Next(20);
+
+                int repeatCount = rand.Next(3);
+                repeatCount++;
+
+                Thing newUtterance = AddThing("uu" + situationCount++, new Thing[] { Labeled("Utterance") }, null, null);
+                for (int i = 0; i < repeatCount; i++)
+                {
+                    if (useCombiner < ModuleSpeakPhonemes.combiners.Count)
+                    {
+                        string s = ModuleSpeakPhonemes.combiners[useCombiner];
+                        if (useCombiner == 0)
+                        {
+                            newUtterance.AddReference(Labeled("spk" + s[0]));
+                            newUtterance.AddReference(combiner);
+                            newUtterance.AddReference(Labeled("spk" + s[2]));
+                            newUtterance.AddReference(vowel1);
+                        }
+                        else
+                        {
+                            newUtterance.AddReference(consonant);
+                            newUtterance.AddReference(Labeled("spk" + s[0]));
+                            newUtterance.AddReference(combiner);
+                            newUtterance.AddReference(Labeled("spk" + s[2]));
+                        }
+                    }
+                    else
+                    {
+                        newUtterance.AddReference(consonant);
+                        newUtterance.AddReference(vowel1);
+                    }
+                }
+                newUtterance.AddReference(Labeled("End"));
+                Forget(Labeled("Utterance"));
+                activeSequences.Add(newUtterance);
+                Fire(newUtterance);
+            }
+
+            /*//TODO select a phrase to say
+            //things you can say are children of "Say".  They can contain sequences of words OR word-parameters which are affected by the situation
+            List<Thing> sayPhrases = Labeled("Say").Children;
+            Thing bestPhrase = null;
+            foreach (Thing phrase in sayPhrases)
+            {
+                if (Fired(phrase, immediateMemory))
+                {
+                    bestPhrase = phrase;
+                    activeSequences.Add(new Thing())
+                    {
+                        References = bestPhrase.References
+                    };
+                    return;
+                }
+            }
+            if (bestPhrase == null)
+            {
+                //no good phrase exists, try to create a new one
+                //did anything fire we know words for?
+                List<Thing> colors = Labeled("Color").Children; //change this to all sensory inputs
+                foreach (Thing color in colors)
+                {
+                    if (Fired(color, immediateMemory)) //a sensory thing fired
+                    {
+                        //do we have a word associated?
+                        Thing word = color.MostLikelyReference(Thing.ReferenceDirection.referenceBy, Labeled("Word"));
+
+                        { Fire(word, false);
+                        };
+                        word = word;
+                    }
+                }
+
+                //}
+                return;
+            if (lastPhraseHeard != null)
+            {
+                List<Link> similarPhrases = lastPhraseHeard.FindSimilar(Labeled("Phrase").Children, false, 5);
+                if (similarPhrases.Count > 0)
+                {
+                    activeSequence = new Thing()
+                    {
+                        References = new List<Link>(similarPhrases[0].T.References)
+                    };
+                }
+                else
+                {
+                    List<Thing> allPhrases = Labeled("Say").Children;
+                    Thing randomPhrase = allPhrases[r.Next(0, allPhrases.Count)];
+                    {
+                        activeSequence = new Thing()
+                        {
+                            References = new List<Link>(randomPhrase.References)
+                        };
+                    }
+                }
+            }
+            */
         }
 
         //this learns associations between words and situations
@@ -186,48 +705,6 @@ namespace BrainSimulator.Modules
             }
         }
 
-        //return neuron associated with KB thing
-        public Neuron GetNeuron(Thing t)
-        {
-            int i = UKS.IndexOf(t);
-            if (i == -1) return null;
-            return na.GetNeuronAt(i);
-        }
-
-        //fire the neuron associated with a KB thing
-        public void Fire(Thing t, bool fireInput = true) //false fires the neuron in the output array
-        {
-            int i = UKS.IndexOf(t);
-            if (i == -1) return;
-            if (fireInput)
-                SetNeuronValue(null, i, 1);
-            else
-                SetNeuronValue("KBOut", i, 1);
-            t.useCount++;
-        }
-
-        //did the neuron associated with a thing fire?  Might change to indicate how long ago
-        public bool Fired(Thing t, long pastCycles)
-        {
-            int i = UKS.IndexOf(t);
-            Neuron n = na.GetNeuronAt(i);
-            if (n == null) return false;
-            long timeSinceLastFire = MainWindow.theNeuronArray.Generation - n.LastFired;
-            bool retVal = timeSinceLastFire < pastCycles;
-            return retVal;
-        }
-
-        //did the output neuron associated with a thing fire?  Might change to indicate how long ago
-        public bool FiredOutput(Thing t, long pastCycles)
-        {
-            int i = UKS.IndexOf(t);
-            ModuleView naModule = theNeuronArray.FindAreaByLabel("KBOut");
-            Neuron n = naModule.GetNeuronAt(i);
-            if (n == null) return false;
-            long timeSinceLastFire = MainWindow.theNeuronArray.Generation - n.LastFired;
-            bool retVal = timeSinceLastFire < pastCycles;
-            return retVal;
-        }
 
         //if a reward/punishment has been given, save the inputs and action
         private void LearnActions()
@@ -243,6 +720,7 @@ namespace BrainSimulator.Modules
                     List<Thing> situations = GetChildren(Labeled("Situation"));
                     foreach (Thing learned in situations)
                     {
+                        //TODO we now have other types of situations...need to detect
                         if (learned.References.Count > 0 && learned.References[0].T == lastPhraseHeard)  //TODO remove hard-coding of phrase as first reference
                         {
                             learned.AdjustReference(lastActionPerformed, positive);
@@ -385,7 +863,7 @@ namespace BrainSimulator.Modules
                         //try a random action
                         if (actionsNotYetTried.Count > 0)
                         {
-                            int i = (int)(r.NextDouble() * actionsNotYetTried.Count);
+                            int i = (int)(rand.NextDouble() * actionsNotYetTried.Count);
                             Fire(actionsNotYetTried[i], false);
                             lastActionPerformed = actionsNotYetTried[i];
                         }
@@ -399,82 +877,8 @@ namespace BrainSimulator.Modules
                     }
                 }
             }
-
-
         }
 
-        private void HandleSpeech()
-        {
-            if (!FiredOutput(Labeled("Say"), immediateMemory)) return;
-            //TODO select a phrase to say
-            //things you can say are children of "Say".  They can contain sequences of words OR word-parameters which are affected by the situation
-            List<Thing> sayPhrases = Labeled("Say").Children;
-            Thing bestPhrase = null;
-            foreach (Thing phrase in sayPhrases)
-            {
-                if (Fired(phrase, immediateMemory))
-                {
-                    bestPhrase = phrase;
-                    activeSequence = new Thing()
-                    {
-                        References = bestPhrase.References
-                    };
-                    return;
-                }
-            }
-            if (bestPhrase == null)
-            {
-                //no good phrase exists, try to create a new one
-                //did anything fire we know words for?
-                List<Thing> colors = Labeled("Color").Children; //change this to all sensory inputs
-                foreach (Thing color in colors)
-                {
-                    if (Fired(color, immediateMemory)) //a sensory thing fired
-                    {
-                        //do we have a word associated?
-                        Thing word = color.MostLikelyReference(Thing.ReferenceDirection.referenceBy, Labeled("Word"));
-
-                        { Fire(word, false); };
-                        word = word;
-                    }
-                }
-
-            }
-            return;
-            if (lastPhraseHeard != null)
-            {
-                List<Link> similarPhrases = lastPhraseHeard.FindSimilar(Labeled("Phrase").Children, false, 5);
-                if (similarPhrases.Count > 0)
-                {
-                    activeSequence = new Thing()
-                    {
-                        References = new List<Link>(similarPhrases[0].T.References)
-                    };
-                }
-                else
-                {
-                    List<Thing> allPhrases = Labeled("Say").Children;
-                    Thing randomPhrase = allPhrases[r.Next(0, allPhrases.Count)];
-                    {
-                        activeSequence = new Thing()
-                        {
-                            References = new List<Link>(randomPhrase.References)
-                        };
-                    }
-                }
-            }
-        }
-
-        //this handle playing a single sequence of actions (like saying a phrase)
-        private void PlayActiveSequence()
-        {
-            if (activeSequence == null) return;
-            Fire(activeSequence.References[activeSequence.currentReference++].T, false);
-            if (activeSequence.currentReference == activeSequence.References.Count)
-            {
-                activeSequence = null;
-            }
-        }
 
         //handle  housekeeping
         private void Dream()
@@ -494,84 +898,6 @@ namespace BrainSimulator.Modules
 
                     }
                 }
-            }
-        }
-
-
-        public override Thing AddThing(string label, Thing[] parents, object value = null, Thing[] references = null)
-        {
-            int i = UKS.Count;
-            Thing retVal = base.AddThing(label, parents, value, references);
-            UpdateNeuronLabels();
-            return retVal;
-        }
-        public override void DeleteThing(Thing t)
-        {
-            int i = UKS.IndexOf(t);
-            base.DeleteThing(t);
-            //because we removed a node, any external synapses to related neurons need to be adjusted to point to the right place
-            //on any neurons which might have shifted.
-            if (i > -1)
-            {
-                for (int j = i + 1; j < na.NeuronCount; j++)
-                {
-                    Neuron targetNeuron = na.GetNeuronAt(j - 1);
-                    Neuron sourceNeuron = na.GetNeuronAt(j);
-                    MainWindow.thisWindow.theNeuronArrayView.MoveOneNeuron(sourceNeuron, targetNeuron);
-                }
-                //repeat this process for the output array
-                ModuleView naModule = theNeuronArray.FindAreaByLabel("KBOut");
-                for (int j = i + 1; j < naModule.NeuronCount; j++)
-                {
-                    Neuron targetNeuron = naModule.GetNeuronAt(j - 1);
-                    Neuron sourceNeuron = naModule.GetNeuronAt(j);
-                    MainWindow.thisWindow.theNeuronArrayView.MoveOneNeuron(sourceNeuron, targetNeuron);
-                }
-            }
-            UpdateNeuronLabels();
-        }
-
-        //fill this method in with code which will execute once
-        //when the module is added, when "initialize" is selected from the context menu,
-        //or when the engine restart button is pressed
-        public override void Initialize()
-        {
-            base.Initialize();
-            //since we are inserting at 0, these are in reverse order
-            UKS.Insert(0, new Thing { Label = "Sleep" });
-            UKS.Insert(0, new Thing { Label = "Max" });
-            UKS.Insert(0, new Thing { Label = "Ref" });
-            UKS.Insert(0, new Thing { Label = "Parent" });
-            firstThing = 4;
-            situationCount = 0;
-            phraseCount = 0;
-            UpdateNeuronLabels();
-        }
-
-        public override Thing Valued(object value, List<Thing> KBt = null, float toler = 0)
-        {
-            Thing retVal = base.Valued(value, KBt, toler);
-            if (retVal != null)
-            {
-                Fire(retVal);
-            }
-            return retVal;
-        }
-
-
-        private void UpdateNeuronLabels()
-        {
-            if (na == null) return;
-            for (int i = 0; i < na.NeuronCount && i < UKS.Count; i++)
-            {
-                if (UKS[i] == null) continue;
-                na.GetNeuronAt(i).Label = UKS[i].Label;
-                SetNeuronValue("KBOut", i, 0f, UKS[i].Label);
-            }
-            for (int i = UKS.Count; i < na.NeuronCount; i++)
-            {
-                na.GetNeuronAt(i).Label = "";
-                SetNeuronValue("KBOut", i, 0f, "");
             }
         }
     }

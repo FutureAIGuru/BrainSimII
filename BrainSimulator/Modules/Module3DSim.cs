@@ -91,7 +91,7 @@ namespace BrainSimulator.Modules
                     System.Drawing.Color c = bitmap1.GetPixel(x, y);
                     System.Windows.Media.Color c1 = new System.Windows.Media.Color
                     { A = c.A, R = c.R, G = c.G, B = c.B };
-                    int theColor = Utils.ToArgb(c1);
+                    int theColor = Utils.ColorToInt(c1);
 
                     if (theColor != 0 && theColor != 8421504)
                         n.SetValueInt(theColor);

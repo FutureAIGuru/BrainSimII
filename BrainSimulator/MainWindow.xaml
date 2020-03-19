@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Brain Simulator II" Height="520.771" Width="756.667" KeyUp="Window_KeyUp" KeyDown="Window_KeyDown" Closing="Window_Closing" Loaded="Window_Loaded" WindowState="Maximized" MouseEnter="Window_MouseEnter" >
     <Grid Margin="0,0,3.4,1.2">
-        <DockPanel VerticalAlignment="Top">
+        <DockPanel VerticalAlignment="Top" Margin="0,1,-1.4,0">
             <Menu DockPanel.Dock="Top" x:Name="MainMenu" MouseEnter="MainMenu_MouseEnter" Height="26" Margin="0,0" VerticalAlignment="Top" >
                 <MenuItem Header="_File">
                     <MenuItem Header="_New" Click="button_FileNew_Click"/>
@@ -17,6 +17,7 @@
                     <MenuItem Header="Save _As" Click="buttonSaveAs_Click"/>
                     <Separator />
                     <MenuItem Header="_Properties" Click="MenuItemProperties_Click"/>
+                    <MenuItem Header="_Notes" Click="MenuItemNotes_Click" />
                     <Separator />
                     <MenuItem Header="_Exit" Click="button_Exit_Click"/>
                 </MenuItem>
@@ -35,12 +36,12 @@
             </Menu>
         </DockPanel>
         <local:NeuronArrayView x:Name="theNeuronArrayView" Margin="0,69,-0.4,17.8" ClipToBounds="True" />
-        <Slider x:Name="slider" Margin="253,37,0,0" ValueChanged="slider_ValueChanged" IsSnapToTickEnabled="True" Value="3" HorizontalAlignment="Left" Width="140" ToolTip="Change the engine speed" RenderTransformOrigin="1.814,0.625" Height="24" VerticalAlignment="Top"/>
+        <Slider x:Name="slider" Margin="332,39,0,0" ValueChanged="slider_ValueChanged" IsSnapToTickEnabled="True" Value="5" HorizontalAlignment="Left" Width="140" ToolTip="Change the engine speed" RenderTransformOrigin="1.814,0.625" Height="24" VerticalAlignment="Top"/>
         <Button x:Name="buttonSingle" Margin="71,35,0,0" Click="ButtonSingle_Click" HorizontalAlignment="Left" Width="22" Height="22" VerticalAlignment="Top" ToolTip="Run the engine one cycle">
             <Image x:Name="image" Height="15" Width="18" Source="Icons/Step.png"/>
         </Button>
-        <Label x:Name="label" Content="Label" Margin="404,31,0,0" HorizontalAlignment="Left" Width="161" Height="30" VerticalAlignment="Top"/>
-        <Label x:Name="labelDisplayStatus" Content="Initializing" Margin="570,31,-0.4,0" Height="30
+        <Label x:Name="label" Content="Label" Margin="483,33,0,0" HorizontalAlignment="Left" Width="161" Height="30" VerticalAlignment="Top"/>
+        <Label x:Name="labelDisplayStatus" Content="Initializing" Margin="649,33,-80.4,0" Height="30
                " VerticalAlignment="Top"/>
         <Button x:Name="buttonInit" HorizontalAlignment="Left" Margin="22,35,0,0" VerticalAlignment="Top" Width="22" Click="ButtonInit_Click" Height="22" ToolTip="Reset all modules">
             <Image x:Name="image1" Height="15" Width="18" Source="Icons/Rewind.png"/>
@@ -63,7 +64,8 @@
         <Button x:Name="buttonZoomIn" HorizontalAlignment="Left" Height="22" Margin="157,35,0,0" VerticalAlignment="Top" Width="22" ToolTip="Zoom In (Shift+mouse wheel" PreviewMouseLeftButtonDown="ButtonZoomIn_PreviewMouseLeftButtonDown">
             <Image x:Name="image5" Height="18" Width="18" Source="Icons/ZoomIn.png"/>
         </Button>
-        <Label x:Name="label1" Content="Speed:" HorizontalAlignment="Left" Height="30" Margin="213,32,0,0" VerticalAlignment="Top" Width="56"/>
+        <Label x:Name="label1" Content="Speed:" HorizontalAlignment="Left" Height="30" Margin="292,34,0,0" VerticalAlignment="Top" Width="56"/>
+        <CheckBox x:Name="checkBox" Content="Synapses" HorizontalAlignment="Left" Height="21" Margin="215,40,0,0" VerticalAlignment="Top" Width="72" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
 
     </Grid>
 </Window>

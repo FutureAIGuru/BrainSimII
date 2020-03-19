@@ -60,7 +60,7 @@ namespace BrainSimulator.Modules
                 PointPlus P1P = new PointPlus() { P = P1, Conf = 1-p1IsEndpt };
                 PointPlus P2P = new PointPlus() { P = P2, Conf = 1-p2IsEndpt };
 
-                bool modelChanged = naModel.AddSegment(P1P, P2P, System.Windows.Media.Colors.Wheat);
+               // bool modelChanged = naModel.AddSegmentFromTouch(P1P, P2P);
 
             }
         }

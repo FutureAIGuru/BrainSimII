@@ -37,7 +37,7 @@ namespace BrainSimulator.Modules
         {
             Init();  //be sure to leave this here to enable use of the na variable
             float a0 = GetNeuronValue(null,0,0);
-            float a1 = na.GetNeuronAt(1, 0).CurrentCharge;
+            float a1 = GetNeuronValue(null, 1, 0);
 
             if (a0 == last0 && a1 == last1) return;
 
@@ -47,13 +47,15 @@ namespace BrainSimulator.Modules
             float diff = a0 - a1;
             if (ave > average)
             {
-                increasing = true; na.GetNeuronAt(2, 0).SetValue(1);
-                na.GetNeuronAt(3, 0).SetValue(diff);
+                increasing = true;
+                SetNeuronValue(null, 2, 0, 1);
+                SetNeuronValue(null, 3, 0, diff);
             }
             else 
             {
-                increasing = false; na.GetNeuronAt(2, 0).SetValue(0);
-                na.GetNeuronAt(3, 0).SetValue(diff);
+                increasing = false; 
+                SetNeuronValue(null, 2, 0, 0);
+                SetNeuronValue(null, 3, 0, diff);
             }
 
             average = ave;

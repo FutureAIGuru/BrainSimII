@@ -29,9 +29,9 @@ namespace BrainSimulator.Modules
             InitializeComponent();
         }
 
-        public override bool Draw()
+        public override bool Draw(bool checkDrawTimer)
         {
-            if (!base.Draw()) return false;
+            if (!base.Draw(checkDrawTimer)) return false;
             ModuleCamera parent = (ModuleCamera)base.ParentModule;
             if (parent.theDlgBitMap != null)
             {
@@ -42,7 +42,7 @@ namespace BrainSimulator.Modules
 
         private void TheCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Draw();
+            Draw(true);
         }
 
     }

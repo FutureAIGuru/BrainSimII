@@ -18,20 +18,25 @@ namespace BrainSimulator.Modules
     {
         public ModuleBase ParentModule;
         private DateTime dt;
-        private DispatcherTimer timer;
+        private System.Timers.Timer timer;
         public int UpdateMS = 100;
-        virtual public bool Draw()
+        virtual public bool Draw(bool checkDrawTimer)
         {
+            if (!checkDrawTimer) return true;
             //only actually update the screen every 100ms
             TimeSpan ts = DateTime.Now - dt;
-            if (ts < new TimeSpan(0, 0, 0, 0, UpdateMS))
+            if (ts < new TimeSpan(0, 0, 0, 0, 100))
             {
                 //if we're not drawing this time, start a timer which will do a final draw
-                //after a 1/4 second of anactivity
-                timer = new DispatcherTimer();
-                timer.Interval = new TimeSpan(0, 0, 0, 0, 250);
-                timer.Tick += new EventHandler(Timer_Tick);
-                //timer.Start();
+                //after a 1/4 second of inactivity
+                if (timer == null)
+                {
+                    timer = new System.Timers.Timer(250);
+                    timer.Elapsed += Timer_Elapsed;
+                    timer.AutoReset = false;
+                }
+                timer.Stop();
+                timer.Start();
                 return false;
             }
             dt = DateTime.Now;
@@ -40,13 +45,13 @@ namespace BrainSimulator.Modules
         }
 
         //this picks up a final draw after 1/4 second 
-        private void Timer_Tick(object sender, EventArgs e)
+        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            Application.Current.Dispatcher.Invoke((Action)delegate {
-                timer.Stop();
+            timer.Stop();
+            Application.Current.Dispatcher.Invoke((Action)delegate
+            {
+                Draw(false);
             });
-
-            Application.Current.Dispatcher.Invoke((Action)delegate { Draw(); });
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BrainSimulator.Modules
 {
@@ -51,8 +52,6 @@ namespace BrainSimulator.Modules
                 if (GetNeuronValue(null, "TurnTo") == 1) TurnTo();
                 if (GetNeuronValue(null, "MoveTo") == 1) MoveTo();
                 if (GetNeuronValue(null, "Scan") == 1) Scan();
-                if (GetNeuronValue(null, "Conf") == 1) Conf();
-                if (GetNeuronValue(null, "EndPt") == 1) ConfEnd();
                 if (GetNeuronValue(null, "Coll") == 1) Collision();
             }
             catch { return; }
@@ -71,16 +70,16 @@ namespace BrainSimulator.Modules
                         SetNeuronValue("ModuleTurn", 2, 0, currentBehavior.param1);
                         break;
                 }
-                if (pending.Count == 0)
-                {
-                    handlingConf = false;
-                    SetNeuronValue(null, "Done", 1);
-                }
+            }
+            if (pending.Count == 0)
+            {
+                SetNeuronValue(null, "Done", 1);
             }
 
         }
         public override void Initialize()
         {
+            pending.Clear();
             na.GetNeuronAt(0, 0).Label = "Stop";
             na.GetNeuronAt(1, 0).Label = "Done";
             na.GetNeuronAt(2, 0).Label = "TurnTo";
@@ -90,11 +89,18 @@ namespace BrainSimulator.Modules
             na.GetNeuronAt(5, 0).Model = Neuron.modelType.FloatValue;
             na.GetNeuronAt(5, 0).Label = "R";
             na.GetNeuronAt(6, 0).Label = "Scan";
-            na.GetNeuronAt(7, 0).Label = "Conf";
-            na.GetNeuronAt(8, 0).Label = "EndPt";
             na.GetNeuronAt(9, 0).Label = "Coll";
             na.GetNeuronAt(10, 0).Label = "CollAngle";
             na.GetNeuronAt(10, 0).Model = Neuron.modelType.FloatValue;
+
+            //Connect Neurons to the KB
+            Neuron nKBDone = GetNeuron("Module2DKB", "Done");
+            if (nKBDone != null)
+                na.GetNeuronAt("Done").AddSynapse(nKBDone.Id, 1);
+            Neuron nKBStop = GetNeuron("KBOut", "Stop");
+            if (nKBStop != null)
+                nKBStop.AddSynapse(na.GetNeuronAt("Stop").Id, 1);
+
         }
 
         public override void ShowDialog() //delete this function if it isn't needed
@@ -103,13 +109,12 @@ namespace BrainSimulator.Modules
         }
 
         //Several Behaviors...
+
         public void Stop()
         {
             pending.Clear();
             SetNeuronValue(null, "Done", 1);
         }
-
-
 
         //Random (not currently used)
         public void RandomBehavior()
@@ -131,73 +136,68 @@ namespace BrainSimulator.Modules
             pending.Add(newBehavoir);
         }
 
-        private void Scan()
+        public void Scan()
         {
-            for (int i = 0; i < 24; i++)
-            {
-                TurnTo((float)Math.PI / 12);
-            }
+            SetNeuronValue(null, "Done", 0); 
+
+            TurnTo((float)Math.PI / 24);
+            TurnTo((float)Math.PI / 24);
+            TurnTo((float)Math.PI / 24);
+            TurnTo((float)Math.PI / -24);
+            TurnTo((float)Math.PI / -24);
+            TurnTo((float)Math.PI / -24);
+            TurnTo((float)Math.PI / -24);
+            TurnTo((float)Math.PI / -24);
+            TurnTo((float)Math.PI / -24);
+            TurnTo((float)Math.PI / 24);
+            TurnTo((float)Math.PI / 24);
+            TurnTo((float)Math.PI / 24);
         }
 
-        bool handlingConf = false;
-        private void Conf()
+        public bool IsMoving()
         {
-            ModuleView naModel = theNeuronArray.FindAreaByLabel("Module2DModel");
-            if (naModel == null) return;
-            Module2DModel nmModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
-
-            PointPlus pv = nmModel.FindLowConfidence();
-            if (pv != null)
-            {
-                TurnTo((float)-pv.Theta);
-                MoveTo((float)pv.R - .3f);
-                TurnTo((float)Math.PI / 2);
-                TurnTo((float)-Math.PI);
-                handlingConf = false;
-            }
-        }
-
-
-        private void ConfEnd()
-        {
-            if (handlingConf)
-                Stop();
+            return pending.Count > 0 && pending[0].theBehavior == TheBehavior.Move;
         }
 
         private void Collision()
         {
-            pending.Clear();
-            float collisionAngle = na.GetNeuronAt("CollAngle").CurrentCharge;
-            TurnTo(-collisionAngle - (float)Math.PI / 2);
-            MoveTo(.2f);
-            TurnTo(+collisionAngle + (float)Math.PI / 2);
+            //SetNeuronValue(null, "Done", 0);
+            //pending.Clear();
+            //float collisionAngle = na.GetNeuronAt("CollAngle").CurrentCharge;
+            //TurnTo(-collisionAngle - (float)Math.PI / 2);
+            //MoveTo(.2f);
+            //TurnTo(+collisionAngle + (float)Math.PI / 2);
         }
 
         //TurnTo
         public void TurnTo()
         {
             if (pending.Count > 0) return;
-            float theta = GetNeuronValue(null,"Theta");
+            float theta = GetNeuronValue(null, "Theta");
             if (theta == 0) return;
             TurnTo(theta);
         }
         public void TurnTo(float theta)
         {
+            SetNeuronValue(null, "Done", 0);
+
+            //don't bother turing more than 180-degrees, turn the other way
             while (theta > Math.PI) theta -= (float)Math.PI * 2;
             while (theta < -Math.PI) theta += (float)Math.PI * 2;
+            float deltaTheta = (float)Math.PI / 6;
 
             while (Math.Abs(theta) > 0.001)
             {
                 float theta1 = 0;
                 if (theta > 0)
                 {
-                    if (theta > Math.PI / 6) theta1 = (float)Math.PI / 6;
+                    if (theta > deltaTheta) theta1 = deltaTheta;
                     else theta1 = theta;
                     theta = theta - theta1;
                 }
                 else
                 {
-                    if (theta < -Math.PI / 6) theta1 = -(float)Math.PI / 6;
+                    if (theta < -deltaTheta) theta1 = -deltaTheta;
                     else theta1 = theta;
                     theta = theta - theta1;
                 }
@@ -220,18 +220,23 @@ namespace BrainSimulator.Modules
         }
         public void MoveTo(float dist)
         {
+            SetNeuronValue(null, "Done", 0);
+                        
             while (Math.Abs(dist) > 0.001)
             {
+                behavior newBehavior = new behavior(){theBehavior= TheBehavior.Rest};
+                pending.Add(newBehavior);
+                pending.Add(newBehavior);
                 float dist1 = 0;
                 if (dist > .2f) dist1 = .2f;
                 else dist1 = dist;
                 dist = dist - dist1;
-                behavior newBehavoir = new behavior()
+                newBehavior  = new behavior()
                 {
                     theBehavior = TheBehavior.Move,
                     param1 = dist1
                 };
-                pending.Add(newBehavoir);
+                pending.Add(newBehavior);
             }
         }
     }

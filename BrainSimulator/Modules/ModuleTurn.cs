@@ -32,7 +32,7 @@ namespace BrainSimulator.Modules
         {
             Init();  //be sure to leave this here to enable use of the na variable
 
-            double[] rotation = { -Math.PI / 6, -Math.PI / 72, 0, Math.PI / 72, Math.PI / 6 };
+            double[] rotation = { -Math.PI / 2, -Math.PI / 24, 0, Math.PI / 24, Math.PI / 2 };
 
             float direction = 0;
 

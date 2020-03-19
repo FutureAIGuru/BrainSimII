@@ -67,31 +67,6 @@ namespace BrainSimulator.Modules
             }
         }
 
-        //fill this method in with code which will execute once
-        //when the module is added, when "initialize" is selected from the context menu,
-        //or when the engine restart button is pressed
-        //move this to the neuronarray
-        public Neuron AddLabel(string newLabel)
-        {
-            na.BeginEnum();
-            for (Neuron n = na.GetNextNeuron(); n != null; n=na.GetNextNeuron())
-            {
-                if (n == null) return null;
-                if (n.Label == newLabel) return n;
-                if (n.Label == "")
-                {
-                    n.Label = newLabel;
-                    return n;
-                }
-            }
-            return null;
-        }
-        private void AddLabels (string[] labels)
-        {
-            foreach (string label in labels)
-                AddLabel(label);
-        }
-
         public override void Initialize()
         {
             na.GetNeuronAt(0, 0).Model = Neuron.modelType.FloatValue;

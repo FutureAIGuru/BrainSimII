@@ -44,7 +44,7 @@ namespace BrainSimulator.Modules
         public List<physObject> currentView1 = new List<physObject>();
 
         //where the arm tips are relative to self
-        public Vector[] armRelative = { new Vector(.5, .5) };
+        public Vector[] armRelative = { new Vector(.5, .5), new Vector(.5, -.5) };
 
         [XmlIgnore]
         public Point[] armActual = { new Point(0, 0) };
@@ -54,7 +54,7 @@ namespace BrainSimulator.Modules
         public float entityDirection1 = (float)Math.PI / 2;
 
         //the size of the universe
-        public double boundarySize = 5.5;
+        public double boundarySize = 5;
 
         [XmlIgnore]
         public float BodyRadius = .2f;
@@ -152,73 +152,53 @@ namespace BrainSimulator.Modules
             objects.Add(new physObject() { P1 = new Point(-boundarySize, -boundarySize), P2 = new Point(-boundarySize, boundarySize), theColor = Colors.Black });
             objects.Add(new physObject() { P1 = new Point(-boundarySize, boundarySize), P2 = new Point(boundarySize, boundarySize), theColor = Colors.Black });
 
-            //create a few  obstacles for testing
-            physObject newObject = null;
-            newObject = new physObject
+            void TransformPoint(ref int x, ref int y)
             {
-                P1 = new Point(2, .75),
-                P2 = new Point(2, 0),
-                theColor = Colors.Red,
-                Aroma = -1,
-                Temperature = 10,
-            };
-            objects.Add(newObject);
-            newObject = new physObject
+                //the middle of the area
+                int mx = na.Width / 2; int my = na.Height / 2;
+                x -= mx;
+                y -= my;
+                int temp = x;
+                x = y;
+                y = temp; ;
+
+                y = -y;
+                x = -x;
+            }
+
+            int colorCount = 0;
+            Color[] theColors = new Color[] {
+                Colors.Red,Colors.Blue,Colors.Orange,Colors.Magenta,Colors.Pink,
+                Colors.PeachPuff,Colors.Lime,Colors.MediumAquamarine,Colors.LightBlue,Colors.Yellow,
+                Colors.GreenYellow,Colors.Cyan,Colors.DarkBlue,Colors.DarkGreen,Colors.LawnGreen,
+                Colors.BlueViolet,Colors.DarkRed,Colors.DarkSeaGreen,Colors.LightCoral,Colors.Lavender,Colors.DarkOrange};
+
+            Color currentColor = Colors.Blue;
+
+            foreach (Neuron n in na.Neurons())
             {
-                P1 = new Point(2.5, 0.5),
-                P2 = new Point(2.5, -.5),
-                theColor = Colors.Blue,
-                Aroma = -1,
-                Temperature = -10,
-            };
-            objects.Add(newObject);
-            //newObject = new physObject
-            //{
-            //    P1 = new Point(.5, -2),
-            //    P2 = new Point(-1, -2),
-            //    theColor = Colors.Red,
-            //    Aroma = -1,
-            //    Temperature = 10,
-            //};
-            //objects.Add(newObject);
-            //newObject = new physObject
-            //{
-            //    P1 = new Point(-2, 1),
-            //    P2 = new Point(-2.5, -1.5),
-            //    theColor = Colors.Green,
-            //    Aroma = -1,
-            //    Temperature = -10,
-            //};
-            //objects.Add(newObject);
-            //newObject = new physObject
-            //{
-            //    P1 = new Point(.75, 3),
-            //    P2 = new Point(-.85, 3),
-            //    theColor = Colors.Orange,
-            //    Aroma = 1,
-            //    Temperature = 5,
-            //};
-            //objects.Add(newObject);
-
-
-
-            ////add some random obstacles
-            //for (int i = 0; i < 5; i++)
-            //{
-            //    float coord = (float)(rand.NextDouble() * 2 * boundarySize - boundarySize);
-            //    Point p1 = new Point(randCoord(), randCoord());
-            //    Point p2 = new Point(p1.X + randCoord(2f), p1.Y + randCoord(2f));
-            //    physObject newobject = new physObject()
-            //    {
-            //        P1 = p1,
-            //        P2 = p2,
-            //        theColor = randColor(),
-            //        Aroma = 1,
-            //        Temperature = 5,
-            //    };
-            //    objects.Add(newobject);
-            //}
-
+                na.GetNeuronLocation(n, out int x1, out int y1);
+                TransformPoint(ref x1, ref y1);
+                foreach(Synapse s in n.Synapses)
+                {
+                    na.GetNeuronLocation(s.TargetNeuron,out int x2, out int y2);
+                    TransformPoint(ref x2, ref y2);
+                    physObject newObject = new physObject
+                    {
+                        P1 = new Point(x1-0.5,y1-0.5),
+                        P2 = new Point(x2-0.5,y2-0.5),
+//                        theColor = currentColor,
+                        theColor = theColors[colorCount],
+                        Aroma = -1,
+                        Temperature = 10,
+                    };
+                    objects.Add(newObject);
+                                      colorCount = (colorCount+1) % theColors.Length;
+                    int currentColorInt = Utils.ColorToInt(currentColor);
+                    currentColorInt--;
+                    currentColor = Utils.IntToColor(currentColorInt);
+                }
+            }
             HandleVision();
             UpdateDialog();
         }
@@ -276,15 +256,7 @@ namespace BrainSimulator.Modules
             HandleVision();
             HandleAroma();
 
-            Application.Current.Dispatcher.Invoke((Action)delegate
-            {
-                //because of multi-theading, dlg may be null by the time we need to use it.
-                try
-                {
-                    dlg.Draw();
-                }
-                catch { }
-            });
+            UpdateDialog();
             return !collision;
         }
 
@@ -454,7 +426,7 @@ namespace BrainSimulator.Modules
                         }
                     }
                 }
-                pixels[i] = Utils.ToArgb(theColor);
+                pixels[i] = Utils.ColorToInt(theColor);
                 Point p3 = entityPosition + new Vector(Math.Cos(theta), Math.Sin(theta));
                 if (row == 0)
                     currentView0.Add(new physObject() { P1 = p3, P2 = entityPosition, theColor = theColor });
@@ -511,7 +483,7 @@ namespace BrainSimulator.Modules
                 int cL = GetNeuronValueInt("Module2DVision", retinaWidth / 2, 0);
                 int cR = GetNeuronValueInt("Module2DVision", retinaWidth / 2, 1);
                 if (cL != cR) return;
-                string colorName = Utils.GetColorName(Utils.FromArgb(cL)).ToLower();
+                string colorName = Utils.GetColorName(Utils.IntToColor(cL)).ToLower();
                 trainingAction = trainingAction.Replace("[color]", colorName);
             }
 
@@ -532,7 +504,7 @@ namespace BrainSimulator.Modules
             bool bResponded = false;
             foreach (Thing action in actions)
             {
-                if (nmKB.FiredOutput(action, 2))
+                if (nmKB.Fired(action, 2,false))
                 {
                     if (action.Label == trainingCase[1])
                     {
@@ -582,6 +554,25 @@ namespace BrainSimulator.Modules
                 }
             }
             return sum;
+        }
+
+        //for debugging it is handy to bypass the exploration to establish the internal model...just set it
+        public void SetModel()
+        {
+            MainWindow.SuspendEngine();
+            Initialize();
+            Module2DModel nmModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
+            //clear out any existing 
+            nmModel.Initialize();
+
+            for (int i = 0; i < objects.Count; i++)
+            {
+                PointPlus P1 = new PointPlus() { P = objects[i].P1 };
+                PointPlus P2 = new PointPlus() { P = objects[i].P2 };
+                int theColor = Utils.ColorToInt(objects[i].theColor);
+                nmModel.AddSegmentFromVision(P1, P2, theColor);
+            }
+            MainWindow.ResumeEngine();
         }
     }
 }

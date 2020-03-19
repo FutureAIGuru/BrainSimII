@@ -28,7 +28,7 @@ namespace BrainSimulator.Modules
             nDisable.Label = "Disable";
             nEnable.AddSynapse(nDisable.Id, -1);
             nDisable.AddSynapse(nDisable.Id, 1);
-            nDisable.CurrentCharge = 1;
+            //nDisable.CurrentCharge = 1;
             for (int i = 2; i < na.NeuronCount; i++)
             {
                 Neuron n = na.GetNeuronAt(i);

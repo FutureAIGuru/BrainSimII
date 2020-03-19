@@ -30,6 +30,7 @@ namespace BrainSimulator
             if (MainWindow.theNeuronArray == null)
             { Close();return; }
             txtFileName.Text = MainWindow.currentFileName;
+            txtFileName.ToolTip = MainWindow.currentFileName;
             txtRows.Text = MainWindow.theNeuronArray.rows.ToString();
             txtColumns.Text = (MainWindow.theNeuronArray.arraySize / MainWindow.theNeuronArray.rows).ToString();
             txtNeurons.Text = MainWindow.theNeuronArray.arraySize.ToString();

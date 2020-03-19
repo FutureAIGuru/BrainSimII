@@ -15,22 +15,23 @@ namespace BrainSimulator
     {
 
 
-        public enum modelType { Std, Color, FloatValue, Antifeedback, OneTime, LIF };
+        public enum modelType { Std, Color, FloatValue, Antifeedback, OneTime, LIF, Random };
 
         //this is only used in NeuronView but is here so you can add the tooltip when you add a neuron type and 
         //the tooltip will automatically appear in the neuron type selector combobox
         public static string[] modelToolTip = { "Integrate & Fire",
             "RGB value (no processing)",
             "Real value (no procesing",
-            "Std but cannot stimulate input neurons",
+            "Integrate & Fire but cannot stimulate input neurons",
             "Does not accumulate across cycles",
             "Leaky Integrate & Fire",
+            "Fires at random intervals"
         };
 
         modelType model = modelType.Std;
         public modelType Model { get => model; set => model = value; }
 
-        string label = "";
+        string label = ""; //for convenience only...not used in computation
         public string Label { get { return label; } set { label = value; } }
         private bool keepHistory = false;
 
@@ -41,8 +42,12 @@ namespace BrainSimulator
             Model = t;
         }
 
-        private long lastFired = 0;
+        float scaleFactor = 10000f;
+        int threshold = 10000;
 
+        private long lastFired = 0;
+        private long nextFiring = 0; //used by random neurons
+        private Random rand = new Random();
 
         int id = -1;
         public int Id { get => id; set => id = value; }
@@ -51,15 +56,15 @@ namespace BrainSimulator
         private int currentCharge = 0;
         public float CurrentCharge
         {
-            get { return (float)currentCharge / 1000f; }
-            set { this.currentCharge = (int)(value * 1000); }
+            get { return (float)currentCharge / scaleFactor; }
+            set { this.currentCharge = (int)(value * scaleFactor); }
         }
         //get/set currentcharge as raw integer
         public int CurrentChargeInt { get { return currentCharge; } set { this.currentCharge = value; } }
 
         //the ending value of a neuron (possibly after reset)
         private int lastCharge = 0;
-        public float LastCharge { get { return (float)lastCharge / 1000f; } set { lastCharge = (int)(value * 1000); } }
+        public float LastCharge { get { return (float)lastCharge / scaleFactor; } set { lastCharge = (int)(value * scaleFactor); } }
 
         //get/set last charge as raw integer
         public int LastChargeInt { get { return lastCharge; } set { lastCharge = value; } }
@@ -163,25 +168,37 @@ namespace BrainSimulator
         public int LastSynapse = -1;
 
         //process the synapses
-        public void Fire1(NeuronArray theNeuronArray)
+        public void Fire1(NeuronArray theNeuronArray,long generation)
         {
             switch (Model)
             {
-                //color and floatvalue have no cases so don't actually process
+                //color and floatvalue have no cases so don't actually process TODO Change to allow diff
+                case modelType.Random:
+                    if (nextFiring == 0)
+                    {
+                        nextFiring = generation+ rand.Next(10, 30);
+                    }
+                    if (nextFiring == generation)
+                    {
+                        currentCharge = threshold;
+                        nextFiring = 0;
+                    }
+                    goto case modelType.Std; //continue processing as normal
+
                 case modelType.LIF:
                 case modelType.Std:
-                    if (lastCharge <= 990) return;
+                    if (lastCharge < threshold) return;
                     Interlocked.Add(ref theNeuronArray.fireCount, 1);
                     foreach (Synapse s in synapses)
                     {
                         Neuron n = theNeuronArray.neuronArray[s.TargetNeuron];
-                        Interlocked.Add(ref n.currentCharge, (int)(s.Weight * 1000));
+                        Interlocked.Add(ref n.currentCharge, (int)(s.Weight * threshold));
                     }
                     break;
 
                 case modelType.Antifeedback:
                     // just like a std neuron but can't stimulate the neuron which stimulated it
-                    if (lastCharge < 990) return;
+                    if (lastCharge < threshold) return;
                     Interlocked.Add(ref theNeuronArray.fireCount, 1);
                     foreach (Synapse s in synapses)
                     {
@@ -190,7 +207,7 @@ namespace BrainSimulator
                         else
                         {
                             Neuron n = theNeuronArray.neuronArray[s.TargetNeuron];
-                            Interlocked.Add(ref n.currentCharge, (int)(s.Weight * 1000));
+                            Interlocked.Add(ref n.currentCharge, (int)(s.Weight * threshold));
                             if (n.currentCharge > 990 && s.Weight > 0.5f && n.Id != Id)
                                 n.LastSynapse = Id;
                         }
@@ -199,12 +216,12 @@ namespace BrainSimulator
 
                 //fire if sufficient weights on this cycle or cancel...do not accumulate weight across multiple cyceles
                 case modelType.OneTime:
-                    if (lastCharge < 990) return;
+                    if (lastCharge < threshold) return;
                     Interlocked.Add(ref theNeuronArray.fireCount, 1);
                     foreach (Synapse s in synapses)
                     {
                         Neuron n = theNeuronArray.neuronArray[s.TargetNeuron];
-                        Interlocked.Add(ref n.currentCharge, (int)(s.Weight * 1000));
+                        Interlocked.Add(ref n.currentCharge, (int)(s.Weight * threshold));
                     }
                     break;
 
@@ -234,6 +251,7 @@ namespace BrainSimulator
                         currentCharge = 0;
                     break;
 
+                case modelType.Random:
                 case modelType.Std:
                 case modelType.Antifeedback:
                     if (currentCharge < 0) currentCharge = 0;

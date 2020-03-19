@@ -30,9 +30,10 @@ namespace BrainSimulator.Modules
             InitializeComponent();
         }
 
-        public override bool Draw()
+        public override bool Draw(bool checkDrawTimer)
         {
-            if (!base.Draw()) return false;
+            if (!base.Draw(checkDrawTimer)) return false;
+
             Module2DModel parent = (Module2DModel)base.ParentModule;
             theCanvas.Children.Clear();
             Point windowSize = new Point(theCanvas.ActualWidth, theCanvas.ActualHeight);
@@ -69,7 +70,7 @@ namespace BrainSimulator.Modules
             //draw possible points;
             try
             {
-                foreach (Thing t in parent.GetKBPossiblePoints() ?? Enumerable.Empty<Thing>())
+                foreach (Thing t in parent.GetKBPoints() ?? Enumerable.Empty<Thing>())
                 {
                     if (t.V is PointPlus P1 && !float.IsInfinity(P1.X) && !float.IsInfinity(P1.Y))
                     {
@@ -94,8 +95,8 @@ namespace BrainSimulator.Modules
             {
                 foreach (Thing t in parent.GetKBSegments() ?? Enumerable.Empty<Thing>())
                 {
-                    Segment segment = parent.SegmentFromKBThing(t);
-                    Color theColor = segment.theColor;
+                    Segment segment = Module2DModel.SegmentFromKBThing(t);
+                    Color theColor = Utils.IntToColor(segment.theColor);
                     Point P1 = segment.P1.P;
                     Point P2 = segment.P2.P;
                     Point P1P = P1 + (P2 - P1) * .2;
@@ -145,7 +146,7 @@ namespace BrainSimulator.Modules
                 //draw any imagined objects
                 for (int i = 0; i < parent.imagination.Count; i++)
                 {
-                    Color theColor = parent.imagination[i].theColor;
+                    Color theColor = Utils.IntToColor(parent.imagination[i].theColor);
                     Point P1 = parent.imagination[i].P1.P;
                     Point P2 = parent.imagination[i].P2.P;
                     Point P1P = P1 + (P2 - P1) * .2;
@@ -188,7 +189,7 @@ namespace BrainSimulator.Modules
 
         private void TheCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Draw();
+            Draw(true);
         }
 
     }

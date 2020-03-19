@@ -18,7 +18,7 @@ namespace BrainSimulator
         {
             theSelection.selectedRectangles.Clear();
             targetNeuronIndex = -1;
-            Update();
+            //Update();
         }
 
         //first selected neron must be the upper left of the overall selection area
@@ -161,6 +161,15 @@ namespace BrainSimulator
             //copy the neuron attributes and delete them from the old neuron.
             nNewLocation.Label = n.Label;
             n.Label = "";
+
+            nNewLocation.Model = n.Model;
+            n.Model = Neuron.modelType.Std;
+
+            nNewLocation.LeakRate= n.LeakRate;
+            n.LeakRate = 0.1f;
+
+            n.KeepHistory = false;
+
             nNewLocation.CurrentCharge = n.CurrentCharge;
             nNewLocation.LastCharge = n.LastCharge;
             n.SetValue(0);

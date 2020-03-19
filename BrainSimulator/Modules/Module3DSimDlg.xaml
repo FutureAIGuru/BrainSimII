@@ -5,6 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrainSimulator.Modules"
         mc:Ignorable="d"
-        Title="Module3DSimDlg Module Dialog" Height="450" Width="800" Background="Gray" ShowInTaskbar="False">
+        Title="Module3DSimDlg Module Dialog" Height="450" Width="800" Background="Gray" ShowInTaskbar="False" MouseEnter="ModuleBaseDlg_MouseEnter">
     <Grid Name="theGrid" SizeChanged="TheCanvas_SizeChanged" />
 </local:ModuleBaseDlg>

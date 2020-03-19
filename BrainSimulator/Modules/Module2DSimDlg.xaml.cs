@@ -29,30 +29,13 @@ namespace BrainSimulator.Modules
         {
             InitializeComponent();
         }
-        //this is here so the last change will cause a screen update after 1 second
-        DispatcherTimer dt = null;
-        private void Dt_Tick(object sender, EventArgs e)
-        {
-            dt.Stop(); ;
-            Application.Current.Dispatcher.Invoke((Action)delegate { Draw(); });
-        }
 
         float zoom = 1 / 12f;
         Vector pan = new Vector(0, 0);
 
-        public override bool Draw()
+        public override bool Draw(bool checkDrawTimer)
         {
-            if (!base.Draw())
-            {
-                if (dt == null)
-                {
-                    dt = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 0, 0, 100) };
-                    dt.Tick += Dt_Tick;
-                }
-                dt.Stop();
-                dt.Start();
-                return false;
-            }
+            if (!base.Draw(checkDrawTimer)) return false;
 
             Module2DSim parent = (Module2DSim)base.ParentModule;
 
@@ -66,7 +49,7 @@ namespace BrainSimulator.Modules
 
             TransformGroup tg = new TransformGroup();
             tg.Children.Add(new RotateTransform(90));
-            tg.Children.Add(new ScaleTransform(scale, -scale, 0, 0));// windowCenter.X, windowCenter.Y));
+            tg.Children.Add(new ScaleTransform(scale, -scale, 0, 0));
             tg.Children.Add(new TranslateTransform(windowCenter.X, windowCenter.Y));
             theCanvas.RenderTransform = tg;
 
@@ -76,6 +59,7 @@ namespace BrainSimulator.Modules
             Canvas.SetLeft(r, -parent.boundarySize);
             Canvas.SetTop(r, -parent.boundarySize);
             theCanvas.Children.Add(r);
+
             //draw the camera track...
             Polyline p = new Polyline();
             p.StrokeThickness = 1 / scale;
@@ -210,7 +194,7 @@ namespace BrainSimulator.Modules
 
         private void TheCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Draw();
+            Draw(true);
         }
 
         private void TheCanvas_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -252,7 +236,7 @@ namespace BrainSimulator.Modules
         {
             zoom += e.Delta / 12000f;
             if (zoom < 0.001) zoom = 0.001f;
-            Draw();
+            Draw(true);
         }
 
         Point prevPos = new Point(0, 0);
@@ -266,6 +250,12 @@ namespace BrainSimulator.Modules
                 pan += move;
             }
             prevPos = currentPosition;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Module2DSim parent = (Module2DSim)base.ParentModule;
+            parent.SetModel();
         }
     }
 }

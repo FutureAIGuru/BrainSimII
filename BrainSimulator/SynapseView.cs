@@ -252,13 +252,13 @@ namespace BrainSimulator
 
         private static void S_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (theCanvas.Cursor != Cursors.Hand)// && theNeuronArrayView != null && !theNeuronArrayView.dragging)
+            if (theCanvas.Cursor == Cursors.Arrow)// && theNeuronArrayView != null && !theNeuronArrayView.dragging)
                 theCanvas.Cursor = Cursors.Cross;
         }
 
         private static void S_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (theCanvas.Cursor != Cursors.Hand)// && theNeuronArrayView != null &&!theNeuronArrayView.dragging)
+            if (e.RightButton != MouseButtonState.Pressed && e.LeftButton != MouseButtonState.Pressed && theCanvas.Cursor != Cursors.Hand)
                 theCanvas.Cursor = Cursors.Arrow;
         }
 

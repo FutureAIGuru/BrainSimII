@@ -11,12 +11,13 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using static System.Math;
 using System.Windows;
+using System.Diagnostics;
 
 namespace BrainSimulator.Modules
 {
     public class Module2DVision : ModuleBase
     {
-        public static float fieldOfView = (float)PI / 3;
+        public static float fieldOfView = (float)PI / 2;
         public static float eyeOffset = .2f;
         public override string ShortDescription { get => "Retinae"; }
         public override string LongDescription
@@ -56,6 +57,8 @@ namespace BrainSimulator.Modules
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
+            if (depthValues.Count == 0) Initialize();
+            bool retinaChanged = false;
             if (lastValuesL == null || lastValuesL.Count != na.Width)
             {
                 lastValuesL = new List<int>();
@@ -65,8 +68,8 @@ namespace BrainSimulator.Modules
                     lastValuesL.Add(-1);
                     lastValuesR.Add(-1);
                 }
+                retinaChanged = true;
             }
-            bool retinaChanged = false;
             for (int i = 0; i < lastValuesL.Count; i++)
             {
                 if (lastValuesL[i] != na.GetNeuronAt(i, 1).CurrentChargeInt) retinaChanged = true;
@@ -74,11 +77,11 @@ namespace BrainSimulator.Modules
                 if (lastValuesR[i] != na.GetNeuronAt(i, 0).CurrentChargeInt) retinaChanged = true;
                 lastValuesR[i] = na.GetNeuronAt(i, 0).CurrentChargeInt;
             }
-            SetCenterColor();
 
             if (retinaChanged)
             {
                 FindPointsOfInterest();
+                SetCenterColor();
             }
         }
 
@@ -135,39 +138,38 @@ namespace BrainSimulator.Modules
         {
             Module2DModel nmModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
             if (nmModel == null) return;
+
             LBoundaries.Clear();
             RBoundaries.Clear();
             FindBoundaries(0, LBoundaries);
             FindBoundaries(1, RBoundaries);
-            int start = 0;
-            Thing prevPoint = null;
+            //PointPlus prevPoint = null;
 
-            for (int i = 0; i < LBoundaries.Count; i++)
+            //find matching areas within the visual field
+            for (int i = 0; i < LBoundaries.Count-1; i++)
             {
-                for (int j = start; j < RBoundaries.Count; j++)
+                //the color of area is the color to the right of the left boundary
+                int areaColorL = LBoundaries[i].colorR;
+                for (int j = 0; j < RBoundaries.Count-1; j++)
                 {
+                    int areaColorR = RBoundaries[j].colorR;
                     //does the same boundary appear in both eyes? 
-                    //are the colors the same and does it appear further right in the left eye?
-                    if (LBoundaries[i].colorL == RBoundaries[j].colorL &&
-                        LBoundaries[i].colorR == RBoundaries[j].colorR &&
-                        LBoundaries[i].direction >= RBoundaries[j].direction)
+                    //TODO: This doesn't handle the case where more than one area of the same color is in the visual field
+                    if (areaColorL == areaColorR && areaColorL != 0)
                     {
-                        //this determines the depth using the difference in the angualar direction that the boundary
-                        //appears in the two eyes
-                        PointPlus P = FindDepth(LBoundaries[i].direction, RBoundaries[j].direction);
+                        PointPlus leftPoint = FindDepth(LBoundaries[i].direction, RBoundaries[j].direction);
+                        PointPlus leftPointError = FindDepth(LBoundaries[i].direction-1, RBoundaries[j].direction);
+                        float error = leftPointError.R- leftPoint.R ;
+                        if (error < 0) break;
+                        leftPoint.Conf = error;
 
-                        //these determine the accuracy of the depth calculation by calculating depth for greater & smaller differences
-                        PointPlus P1 = FindDepth(LBoundaries[i].direction, RBoundaries[j].direction + 2);
-                        PointPlus P2 = FindDepth(LBoundaries[i].direction, RBoundaries[j].direction - 3);
+                        PointPlus rightPoint = FindDepth(LBoundaries[i + 1].direction, RBoundaries[j + 1].direction);
+                        PointPlus rightPointError = FindDepth(LBoundaries[i + 1].direction-1, RBoundaries[j + 1].direction);
+                        error = leftPointError.R - leftPoint.R;
+                        if (error < 0) break;
+                        rightPoint.Conf = error;
 
-                        Thing newPoint = nmModel.AddPosiblePointToKB(P, LBoundaries[i].colorL, LBoundaries[i].colorR, angularResolution, Math.Min(P1.R, P2.R), Math.Max(P1.R, P2.R));
-                        start = j + 1;
-                        if (prevPoint != null && newPoint != null && prevPoint != newPoint)
-                        {
-                            nmModel.AddSegmentToKB(prevPoint, newPoint, LBoundaries[i].colorL);
-                        }
-                        prevPoint = newPoint;
-                        break;
+                        nmModel.AddSegmentFromVision(leftPoint,rightPoint,areaColorR);
                     }
                 }
             }
@@ -175,25 +177,26 @@ namespace BrainSimulator.Modules
 
         private PointPlus FindDepth(int l, int r)
         {
-            double thetaA = GetDirectionOfNeuron(r - 0.5f, na.Width);
+            //calculation using trig
+            Angle thetaA = GetDirectionOfNeuron(r - 0.5f, na.Width);
             thetaA = PI / 2 - thetaA; //get angle to axis
-            double thetaB = GetDirectionOfNeuron(l - 0.5f, na.Width);
+            Angle thetaB = GetDirectionOfNeuron(l - 0.5f, na.Width);
             thetaB = PI / 2 - thetaB;
             thetaB = PI - thetaB; //to get an inside angle
-            double thetaC = PI - thetaA - thetaB;
+            Angle thetaC = PI - thetaA - thetaB;
             double A = Sin(thetaA) * (2 * eyeOffset) / Sin(thetaC);
             thetaA -= PI / 2;
             PointPlus P = new PointPlus { Theta = (float)-thetaA, R = (float)A };  //relative to left eye
             P.Y -= eyeOffset; //correct to be centered between eyes
 
-            //alternate:
+            //alternate using vectors
             PointPlus p1L = new PointPlus() { Y = -eyeOffset, X = 0 };
             PointPlus p1R = new PointPlus() { Y = +eyeOffset, X = 0 };
-            float thetaL = (float)GetDirectionOfNeuron(r, na.Width);
+            Angle thetaL = (float)GetDirectionOfNeuron(r, na.Width);
             PointPlus p2L = new PointPlus() { R = 20, Theta = thetaL };
             p2L.P = p2L.P + (Vector)p1L.P;
 
-            float thetaR = (float)GetDirectionOfNeuron(l, na.Width);
+            Angle thetaR = (float)GetDirectionOfNeuron(l, na.Width);
             PointPlus p2R = new PointPlus() { R = 20, Theta = thetaR };
             p2R.P = p2R.P + (Vector)p1R.P;
 
@@ -203,7 +206,7 @@ namespace BrainSimulator.Modules
         }
 
         float angularResolution = 0;
-        List<float> depthValues;
+        List<float> depthValues = new List<float>();
         public override void Initialize()
         {
             for (int i = 0; i < na.Width; i++)
@@ -218,6 +221,9 @@ namespace BrainSimulator.Modules
             lastValuesR = null;
 
             angularResolution = (float)(GetDirectionOfNeuron(0, na.Width) - GetDirectionOfNeuron(1, na.Width));
+            depthValues.Clear();
+            for (int i = 1; i < na.Width / 4; i++)
+                depthValues.Add(FindDepth(na.Width / 2, na.Width / 2 + i).R);
         }
     }
 }

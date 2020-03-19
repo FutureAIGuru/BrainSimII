@@ -48,12 +48,19 @@ namespace BrainSimulator
         // if the control key is pressed...used for adding multiple selection areas
         public static bool ctrlPressed = false;
         public static bool shiftPressed = false;
+        public static bool showSynapses = false;
 
         //the name of the currently-loaded network file
         public static string currentFileName = "";
 
         public static MainWindow thisWindow;
         Window splashScreen = new SplashScreeen();
+
+        //for autorepeat on the zoom in-out buttons
+        DispatcherTimer zoomInOutTimer;
+        int zoomAomunt = 0;
+
+
         public MainWindow()
         {
             //this puts up a dialog on unhandled exceptions
@@ -143,6 +150,7 @@ namespace BrainSimulator
                     theNeuronArrayView.theCanvas.Cursor = Cursors.Cross;
             }
         }
+
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             //Debug.WriteLine("Window_KeyDown");
@@ -176,6 +184,7 @@ namespace BrainSimulator
                 if (theNeuronArrayView.theSelection.selectedRectangles.Count > 0)
                 {
                     theNeuronArrayView.ClearSelection();
+                    Update();
                 }
             }
             if (ctrlPressed && e.Key == Key.C)
@@ -213,6 +222,7 @@ namespace BrainSimulator
             theNeuronArrayView.theSelection.selectedRectangles.Clear();
             CloseAllModuleDialogs();
 
+            SuspendEngine();
             try
             {
                 // Load the data from the XML to the Brainsim Engine.  
@@ -254,6 +264,9 @@ namespace BrainSimulator
             }
             Update();
             OpenHistoryWindow();
+            if (!theNeuronArray.hideNotes)
+                MenuItemNotes_Click(null, null);
+            ResumeEngine();
             return true;
         }
 
@@ -339,7 +352,7 @@ namespace BrainSimulator
             for (int i = 0; i < theNeuronArray.arraySize; i++)
                 if (!theNeuronArray.neuronArray[i].InUse() && theNeuronArray.neuronArray[i].Model == Neuron.modelType.Std)
                     theNeuronArray.neuronArray[i] = null;
-            //Save the data from the Brainsim Engine to the file
+            //Save the data from the network (NeuronArray and modules) to the file
             try
             {
                 theNeuronArray.displayParams = theNeuronArrayView.Dp;
@@ -403,7 +416,7 @@ namespace BrainSimulator
             Nullable<bool> result = saveFileDialog1.ShowDialog();
             if (result ?? false)// System.Windows.Forms.DialogResult.OK)
             {
-                //Save the data from the Brainsim Engine to the file
+                //Save the data from the NeuronArray to the file
                 System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(NeuronArray));
                 System.IO.FileStream file = System.IO.File.Create(saveFileDialog1.FileName);
                 writer.Serialize(file, theNeuronArrayView.myClipBoard);
@@ -416,11 +429,14 @@ namespace BrainSimulator
             dlg.ShowDialog();
             if (dlg.returnValue)
             {
+                SuspendEngine();
                 theNeuronArrayView.Update();
                 currentFileName = "";
                 Properties.Settings.Default["CurrentFile"] = currentFileName;
                 Properties.Settings.Default.Save();
                 setTitleBar();
+                MenuItemNotes_Click(null, null);
+                ResumeEngine();
             }
         }
         private void button_Exit_Click(object sender, RoutedEventArgs e)
@@ -441,9 +457,9 @@ namespace BrainSimulator
             // Show the Dialog.  
             // If the user clicked OK in the dialog and  
             Nullable<bool> result = openFileDialog1.ShowDialog();
-            if (result ?? false)// System.Windows.Forms.DialogResult.OK)
+            if (result ?? false)
             {
-                // Load the data from the XML to the Brainsim Engine.  
+                // Load the data from the XML to the Brainsim NeuronArray.  
                 FileStream file = File.Open(openFileDialog1.FileName, FileMode.Open);
                 XmlSerializer reader = new XmlSerializer(typeof(NeuronArray));
                 theNeuronArrayView.myClipBoard = (NeuronArray)reader.Deserialize(file);
@@ -496,12 +512,14 @@ namespace BrainSimulator
             }
         }
 
-        static int oldEngineDelay = 0;
+//        static int oldEngineDelay = 0;
         public static void SuspendEngine()
         {
             if (engineDelay == 2000) return; //already suspended
             //suspend the engine...
-            oldEngineDelay = engineDelay;
+            if (MainWindow.theNeuronArray != null)
+                MainWindow.theNeuronArray.EngineSpeed = engineDelay;
+//            oldEngineDelay = engineDelay;
             engineDelay = 2000;
             while (!engineIsWaiting)
                 Thread.Sleep(100);
@@ -509,7 +527,12 @@ namespace BrainSimulator
         public static void ResumeEngine()
         {
             //resume the engine
-            engineDelay = oldEngineDelay;
+//            engineDelay = oldEngineDelay;
+            engineDelay = MainWindow.theNeuronArray.EngineSpeed;
+            Application.Current.Dispatcher.Invoke((Action)delegate
+            {
+                MainWindow.thisWindow.SetSliderPosition(engineDelay);
+            });
         }
 
         static bool engineIsWaiting = false;
@@ -532,6 +555,20 @@ namespace BrainSimulator
             }
         }
 
+        private void SetSliderPosition (int interval)
+        {
+            if (interval == 0) slider.Value = 10;
+            else if (interval <= 1) slider.Value = 9;
+            else if (interval <= 2) slider.Value = 8;
+            else if (interval <= 5) slider.Value = 7;
+            else if (interval <= 10) slider.Value = 6;
+            else if (interval <= 50) slider.Value = 5;
+            else if (interval <= 100) slider.Value = 4;
+            else if (interval <= 250) slider.Value = 3;
+            else if (interval <= 500) slider.Value = 2;
+            else if (interval <= 1000) slider.Value = 1;
+            else slider.Value = 0;
+        }
 
         //Set the engine speed
         private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -608,6 +645,7 @@ namespace BrainSimulator
                 EnableMenuItem(MainMenu.Items, "Save _As", false);
                 EnableMenuItem(MainMenu.Items, "_Insert", false);
                 EnableMenuItem(MainMenu.Items, "_Properties", false);
+                EnableMenuItem(MainMenu.Items, "_Notes", false);
             }
             else
             {
@@ -615,6 +653,7 @@ namespace BrainSimulator
                 EnableMenuItem(MainMenu.Items, "Save _As", true);
                 EnableMenuItem(MainMenu.Items, "_Insert", true);
                 EnableMenuItem(MainMenu.Items, "_Properties", true);
+                EnableMenuItem(MainMenu.Items, "_Notes", true);
             }
             if (theNeuronArrayView.theSelection.selectedRectangles.Count == 0)
             {
@@ -732,10 +771,12 @@ namespace BrainSimulator
                 currentFileName = (string)Properties.Settings.Default["CurrentFile"];
                 if (currentFileName != "")
                 {
+                    SuspendEngine();
                     bool loadSuccessful = LoadFile(currentFileName);
                     if (!loadSuccessful)
                         currentFileName = "";
                     setTitleBar();
+                    ResumeEngine();
                 }
             }
             //various errors might have happened so we'll just ignore them all and start with a fresh file 
@@ -807,20 +848,6 @@ namespace BrainSimulator
             Update();
         }
 
-        private void MenuItemProperties_Click(object sender, RoutedEventArgs e)
-        {
-            PropertiesDlg p = new PropertiesDlg();
-            try
-            {
-                p.ShowDialog();
-            }
-            catch
-            {
-                MessageBox.Show("Properties could not be displayed");
-            }
-        }
-        DispatcherTimer zoomInOutTimer;
-        int zoomAomunt = 0;
         private void ButtonZoomIn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             StartZoom(3);
@@ -855,7 +882,58 @@ namespace BrainSimulator
 
         private void Window_MouseEnter(object sender, MouseEventArgs e)
         {
+            //activate this windoe if it is not activated and not of the child dialogs are activated
+            if (theNeuronArray != null)
+            {
+                foreach (ModuleView na in theNeuronArray.Modules)
+                {
+                    if (na.TheModule != null)
+                    {
+                        na.TheModule.Activate();
+                    }
+                }
+            }
             Activate();
+        }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            showSynapses = true;
+            Update();
+        }
+
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            showSynapses = false;
+            Update();
+        }
+
+        private void MenuItemProperties_Click(object sender, RoutedEventArgs e)
+        {
+            PropertiesDlg p = new PropertiesDlg();
+            try
+            {
+                p.ShowDialog();
+            }
+            catch
+            {
+                MessageBox.Show("Properties could not be displayed");
+            }
+        }
+
+        private void MenuItemNotes_Click(object sender, RoutedEventArgs e)
+        {
+            NotesDialog p = new NotesDialog();
+            p.Topmost = true;
+            try
+            {
+                p.ShowDialog();
+            }
+            catch
+            {
+                MessageBox.Show("Notes could not be displayed");
+            }
+
         }
     }
 }

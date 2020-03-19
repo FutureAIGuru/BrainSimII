@@ -32,7 +32,7 @@ namespace BrainSimulator
         string crlf = "\r\n\r\n";
         public bool returnValue = false;
         ulong approxSynapseSize = 55;
-        ulong assumedSynapseCount = 10;
+        ulong assumedSynapseCount = 7;
 
         public NewArrayDlg()
         {
@@ -73,6 +73,8 @@ namespace BrainSimulator
         {
             MainWindow.CloseAllModuleDialogs();
             MainWindow.CloseHistoryWindow();
+            if (MainWindow.theNeuronArray != null)  
+                MainWindow.theNeuronArray.Modules.Clear();
             MainWindow.arrayView.ClearSelection();
             if (!int.TryParse(textBoxColumns.Text, out int cols)) return;
             if (!int.TryParse(textBoxRows.Text, out int rows)) return;
@@ -109,7 +111,7 @@ namespace BrainSimulator
                 int dest = newCol * rows + newRow;
                 if (dest >= MainWindow.theNeuronArray.arraySize) dest -= MainWindow.theNeuronArray.arraySize;
                 if (dest < 0) dest += MainWindow.theNeuronArray.arraySize;
-                float weight = 1 - (float)rand.Next(0, 1000) / 500f;
+                float weight = 1.5f - (float)rand.Next(0, 1500) / 900f;
                 n.AddSynapse(dest, weight, MainWindow.theNeuronArray, false);
             }
         }

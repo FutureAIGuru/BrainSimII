@@ -30,7 +30,7 @@ namespace BrainSimulator.Modules
             get =>
                 "This module uses no neurons of its own but fires neurons in various sensory modules if they are in the network. It has methods (Move and Turn and potentially others " +
                 "which can be called by other modules to move its point of view around the simulation. " +
-                "The mouse wheel can zoom the display and the left mouse button can drag (pan). " +
+                "Shift-mouse wheel can zoom the display and Shift-left mouse button can drag (pan). " +
                 "Right-clicking in the dialog box can direct the entity to that location." +
                 ""
                 ;

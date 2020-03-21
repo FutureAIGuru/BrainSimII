@@ -100,7 +100,7 @@ namespace BrainSimulator.Modules
 
 
             if (GetNeuronValue(null,"Go") == 0 && !tryAgain) return;
-            if (GetNeuronValue("ModuleBehavior","Done") != 0) return;
+            if (GetNeuronValue("ModuleBehavior","Done") == 0) return;
 
             if (!tryAgain)
             {

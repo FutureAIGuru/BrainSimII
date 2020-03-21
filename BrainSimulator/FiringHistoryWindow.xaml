@@ -15,10 +15,10 @@
         </Canvas>
         <StackPanel Margin="0,10,10,0" HorizontalAlignment="Right" Height="22" VerticalAlignment="Top" Orientation="Horizontal" Width="46">
             <Button x:Name="Clear" Width="22" Height="22" VerticalAlignment="Top" Click="Clear_Click" ToolTip="Remove firing history">
-                <Image Height="15" Width="18" Source="Icons/ClearHistory.png"/>
+                <Image Height="15" Width="18" Source="Resources/ClearHistory.png"/>
             </Button>
             <Button x:Name="Cancel" Width="22" Height="22" VerticalAlignment="Top" Click="RemoveTags_Click" ToolTip="Remove all neuron recording tags">
-                <Image Height="15" Width="18" Source="Icons/Close.png"/>
+                <Image Height="15" Width="18" Source="Resources/Close.png"/>
             </Button>
         </StackPanel>
     </Grid>

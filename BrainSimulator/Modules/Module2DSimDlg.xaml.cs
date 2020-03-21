@@ -28,6 +28,7 @@ namespace BrainSimulator.Modules
         public Module2DSimDlg()
         {
             InitializeComponent();
+            Focusable = false;
         }
 
         float zoom = 1 / 12f;
@@ -35,6 +36,7 @@ namespace BrainSimulator.Modules
 
         public override bool Draw(bool checkDrawTimer)
         {
+            if (MainWindow.shiftPressed) theCanvas.Cursor = Cursors.Hand; else theCanvas.Cursor = Cursors.Arrow;
             if (!base.Draw(checkDrawTimer)) return false;
 
             Module2DSim parent = (Module2DSim)base.ParentModule;
@@ -177,7 +179,7 @@ namespace BrainSimulator.Modules
             ////draw the body...it's a transparent gif
             Image body = new Image()
             {
-                Source = new BitmapImage(new Uri("/Icons/entity.png", UriKind.Relative)),
+                Source = new BitmapImage(new Uri("/Resources/entity.png", UriKind.Relative)),
                 Width = 2 * parent.BodyRadius,
                 Height = 2 * parent.BodyRadius
             };
@@ -234,14 +236,19 @@ namespace BrainSimulator.Modules
 
         private void TheCanvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
+            e.Handled = true;
+            if (!MainWindow.shiftPressed) return;
             zoom += e.Delta / 12000f;
             if (zoom < 0.001) zoom = 0.001f;
             Draw(true);
+            MainWindow.thisWindow.Activate();
         }
 
         Point prevPos = new Point(0, 0);
         private void TheCanvas_MouseMove(object sender, MouseEventArgs e)
         {
+            e.Handled = true;
+            if (!MainWindow.shiftPressed) return;
             Point currentPosition = e.GetPosition(this);
             if (e.LeftButton == MouseButtonState.Pressed)
             {
@@ -250,12 +257,25 @@ namespace BrainSimulator.Modules
                 pan += move;
             }
             prevPos = currentPosition;
+            MainWindow.thisWindow.Activate();
         }
-
+        public void SetHand()
+        {
+            theCanvas.Cursor = Cursors.Hand;
+        }
+        public void ClearHand()
+        {
+            theCanvas.Cursor = Cursors.Arrow;
+        }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Module2DSim parent = (Module2DSim)base.ParentModule;
             parent.SetModel();
+        }
+
+        private void TheCanvas_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            MainWindow.thisWindow.Activate();
         }
     }
 }

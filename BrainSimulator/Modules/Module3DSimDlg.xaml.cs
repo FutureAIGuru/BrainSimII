@@ -216,10 +216,5 @@ namespace BrainSimulator.Modules
                 theBitMap2 = new Bitmap(stream);
             ((Module3DSim)ParentModule).renderDone = true;
         }
-
-        private void ModuleBaseDlg_MouseEnter(object sender, MouseEventArgs e)
-        {
-            this.Activate();
-        }
     }
 }

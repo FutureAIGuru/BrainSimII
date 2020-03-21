@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrainSimulator.Modules"
         mc:Ignorable="d"
-        Title="2D Environment Simulation" Background="Gray" Height="450" Width="800" ShowInTaskbar="False">
+        Title="2D Environment Simulation" Background="Gray" Height="450" Width="800" ShowInTaskbar="False" Focusable="False">
     <Grid>
-        <Canvas Name="theCanvas" Background="Transparent" SizeChanged="TheCanvas_SizeChanged" MouseRightButtonDown="TheCanvas_MouseRightButtonDown" MouseWheel="TheCanvas_MouseWheel" MouseMove="TheCanvas_MouseMove"/>
+        <Canvas Name="theCanvas"  Focusable="False" Background="Transparent" SizeChanged="TheCanvas_SizeChanged" MouseRightButtonDown="TheCanvas_MouseRightButtonDown" MouseWheel="TheCanvas_MouseWheel" MouseMove="TheCanvas_MouseMove" MouseUp="TheCanvas_MouseUp" Grid.ColumnSpan="2"/>
         <Button x:Name="ButtonSetModel"  Content="Set Model" Margin="6,4,0,0" Click="Button_Click" HorizontalAlignment="Left" Width="68" Height="20" VerticalAlignment="Top"/>
+        <Label Content="Zoom/Pan with Shift-Mouse     Set obstacles with synapses" Background="Azure" Height="26" VerticalAlignment="Bottom"></Label>
     </Grid>
 </local:ModuleBaseDlg>

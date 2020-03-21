@@ -137,7 +137,7 @@ namespace BrainSimulator
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
         {
-            //Debug.WriteLine("Window_KeyUp");
+            Debug.WriteLine("Window_KeyUp");
             if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
             {
                 ctrlPressed = false;
@@ -145,14 +145,14 @@ namespace BrainSimulator
             if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
             {
                 shiftPressed = false;
-                if (Mouse.LeftButton != MouseButtonState.Pressed)   
+                if (Mouse.LeftButton != MouseButtonState.Pressed)
                     theNeuronArrayView.theCanvas.Cursor = Cursors.Cross;
             }
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            //Debug.WriteLine("Window_KeyDown");
+            Debug.WriteLine("Window_KeyDown");
             if (e.Key == Key.Delete)
             {
                 if (theNeuronArrayView.theSelection.selectedRectangles.Count > 0)
@@ -259,9 +259,9 @@ namespace BrainSimulator
             catch (Exception e1)
             {
                 if (e1.InnerException != null)
-                MessageBox.Show("File Load failed because:\r\n " + e1.Message + "\r\nAnd:\r\n" + e1.InnerException.Message);
+                    MessageBox.Show("File Load failed because:\r\n " + e1.Message + "\r\nAnd:\r\n" + e1.InnerException.Message);
                 else
-                    MessageBox.Show("File Load failed because:\r\n " + e1.Message );
+                    MessageBox.Show("File Load failed because:\r\n " + e1.Message);
                 return false;
             }
             Update();
@@ -316,7 +316,7 @@ namespace BrainSimulator
             }
             else
             {
-                currentFileName = Path.GetFullPath("./Networks/"+fileName+ ".xml");
+                currentFileName = Path.GetFullPath("./Networks/" + fileName + ".xml");
                 bool loadSuccessful = LoadFile(currentFileName);
                 if (!loadSuccessful)
                 {
@@ -529,14 +529,14 @@ namespace BrainSimulator
             }
         }
 
-//        static int oldEngineDelay = 0;
+        //        static int oldEngineDelay = 0;
         public static void SuspendEngine()
         {
             if (engineDelay == 2000) return; //already suspended
             //suspend the engine...
             if (MainWindow.theNeuronArray != null)
                 MainWindow.theNeuronArray.EngineSpeed = engineDelay;
-//            oldEngineDelay = engineDelay;
+            //            oldEngineDelay = engineDelay;
             engineDelay = 2000;
             while (!engineIsWaiting)
                 Thread.Sleep(100);
@@ -544,7 +544,7 @@ namespace BrainSimulator
         public static void ResumeEngine()
         {
             //resume the engine
-//            engineDelay = oldEngineDelay;
+            //            engineDelay = oldEngineDelay;
             engineDelay = MainWindow.theNeuronArray.EngineSpeed;
             Application.Current.Dispatcher.Invoke((Action)delegate
             {
@@ -572,7 +572,7 @@ namespace BrainSimulator
             }
         }
 
-        private void SetSliderPosition (int interval)
+        private void SetSliderPosition(int interval)
         {
             if (interval == 0) slider.Value = 10;
             else if (interval <= 1) slider.Value = 9;
@@ -797,7 +797,7 @@ namespace BrainSimulator
                 }
                 else
                 {
-                    bool showHelp  = (bool)Properties.Settings.Default["ShowHelp"];
+                    bool showHelp = (bool)Properties.Settings.Default["ShowHelp"];
                     if (showHelp)
                         MenuItemHelp_Click(null, null);
                 }
@@ -897,17 +897,17 @@ namespace BrainSimulator
 
         private void Window_MouseEnter(object sender, MouseEventArgs e)
         {
-            //activate this windoe if it is not activated and not of the child dialogs are activated
-            if (theNeuronArray != null)
-            {
-                foreach (ModuleView na in theNeuronArray.Modules)
-                {
-                    if (na.TheModule != null)
-                    {
-                        na.TheModule.Activate();
-                    }
-                }
-            }
+            ////activate this windoe if it is not activated and not of the child dialogs are activated
+            //if (theNeuronArray != null)
+            //{
+            //    foreach (ModuleView na in theNeuronArray.Modules)
+            //    {
+            //        if (na.TheModule != null)
+            //        {
+            //            na.TheModule.Activate();
+            //        }
+            //    }
+            //}
             Activate();
         }
 

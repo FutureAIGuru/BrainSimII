@@ -205,6 +205,7 @@
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
     <Neuron>
+      <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
       <Label />
@@ -225,8 +226,11 @@
           <TargetNeuron>202</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
     </Neuron>
     <Neuron>
+      <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
       <Label />
@@ -247,8 +251,11 @@
           <TargetNeuron>203</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
     </Neuron>
     <Neuron>
+      <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
       <Label />
@@ -269,6 +276,8 @@
           <TargetNeuron>303</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
@@ -368,6 +377,7 @@
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
     <Neuron>
+      <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
       <Label />
@@ -388,9 +398,12 @@
           <TargetNeuron>201</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron>
+      <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
       <Label />
@@ -411,6 +424,8 @@
           <TargetNeuron>403</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
@@ -510,6 +525,7 @@
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
     <Neuron>
+      <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
       <Label />
@@ -530,8 +546,11 @@
           <TargetNeuron>301</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
     </Neuron>
     <Neuron>
+      <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
       <Label />
@@ -552,16 +571,19 @@
           <TargetNeuron>401</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
     </Neuron>
     <Neuron>
+      <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
       <Label />
       <Id>403</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>1</LastCharge>
-      <LastChargeInt>1000</LastChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
       <Synapses>
         <Synapse>
           <Weight>1</Weight>
@@ -574,6 +596,8 @@
           <TargetNeuron>402</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
@@ -10180,6 +10204,21 @@
     </DisplayOffset>
     <NeuronRows>100</NeuronRows>
   </displayParams>
+  <networkNotes>Purpose:
+
+
+Things to try:
+
+
+Current state of development:
+
+
+Notes:
+
+
+</networkNotes>
+  <hideNotes>true</hideNotes>
   <Modules />
-  <Generation>430</Generation>
+  <Generation>561</Generation>
+  <EngineSpeed>250</EngineSpeed>
 </NeuronArray>

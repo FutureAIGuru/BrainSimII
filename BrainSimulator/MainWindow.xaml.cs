@@ -17,7 +17,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml.Serialization;
 using System.IO;
 using System.Windows.Threading;
@@ -259,7 +258,10 @@ namespace BrainSimulator
             }
             catch (Exception e1)
             {
+                if (e1.InnerException != null)
                 MessageBox.Show("File Load failed because:\r\n " + e1.Message + "\r\nAnd:\r\n" + e1.InnerException.Message);
+                else
+                    MessageBox.Show("File Load failed because:\r\n " + e1.Message );
                 return false;
             }
             Update();
@@ -289,17 +291,32 @@ namespace BrainSimulator
 
         private void buttonLoad_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog1 = new OpenFileDialog
+            string fileName = (string)(sender as MenuItem).Header;
+            if (fileName == "_Open")
             {
-                Filter = "XML Network Files|*.xml",
-                Title = "Select a Brain Simulator File"
-            };
-            // Show the Dialog.  
-            // If the user clicked OK in the dialog and  
-            Nullable<bool> result = openFileDialog1.ShowDialog();
-            if (result ?? false)
+                OpenFileDialog openFileDialog1 = new OpenFileDialog
+                {
+                    Filter = "XML Network Files|*.xml",
+                    Title = "Select a Brain Simulator File"
+                };
+                // Show the Dialog.  
+                // If the user clicked OK in the dialog and  
+                Nullable<bool> result = openFileDialog1.ShowDialog();
+                if (result ?? false)
+                {
+                    currentFileName = openFileDialog1.FileName;
+                    bool loadSuccessful = LoadFile(currentFileName);
+                    if (!loadSuccessful)
+                    {
+                        currentFileName = "";
+                    }
+                    Properties.Settings.Default["CurrentFile"] = currentFileName;
+                    Properties.Settings.Default.Save();
+                }
+            }
+            else
             {
-                currentFileName = openFileDialog1.FileName;
+                currentFileName = Path.GetFullPath("./Networks/"+fileName+ ".xml");
                 bool loadSuccessful = LoadFile(currentFileName);
                 if (!loadSuccessful)
                 {
@@ -778,6 +795,12 @@ namespace BrainSimulator
                     setTitleBar();
                     ResumeEngine();
                 }
+                else
+                {
+                    bool showHelp  = (bool)Properties.Settings.Default["ShowHelp"];
+                    if (showHelp)
+                        MenuItemHelp_Click(null, null);
+                }
             }
             //various errors might have happened so we'll just ignore them all and start with a fresh file 
             catch (Exception e1)
@@ -838,24 +861,16 @@ namespace BrainSimulator
             theNeuronArrayView.theCanvas.Cursor = Cursors.Hand;
         }
 
-        private void ButtonDisplay_Click(object sender, RoutedEventArgs e)
-        {
-            theNeuronArrayView.Origin();
-            double height = theNeuronArrayView.ActualHeight;
-            theNeuronArrayView.Dp.NeuronDisplaySize = (int)height / theNeuronArrayView.Dp.NeuronRows;
-            if (theNeuronArrayView.Dp.NeuronDisplaySize < 1)
-                theNeuronArrayView.Dp.NeuronDisplaySize = 1;
-            Update();
-        }
-
         private void ButtonZoomIn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             StartZoom(3);
         }
+
         private void ButtonZoomOut_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             StartZoom(-3);
         }
+
         private void StartZoom(int amount)
         {
             zoomInOutTimer = new DispatcherTimer();
@@ -933,7 +948,20 @@ namespace BrainSimulator
             {
                 MessageBox.Show("Notes could not be displayed");
             }
+        }
 
+        private void MenuItemHelp_Click(object sender, RoutedEventArgs e)
+        {
+            Help p = new Help();
+            try
+            {
+                p.Owner = this;
+                p.ShowDialog();
+            }
+            catch
+            {
+                MessageBox.Show("Help could not be displayed");
+            }
         }
     }
 }

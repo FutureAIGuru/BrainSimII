@@ -106,6 +106,9 @@
       <DependentUpon>FiringHistoryWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="FiringHistory.cs" />
+    <Compile Include="Help.xaml.cs">
+      <DependentUpon>Help.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HelpAbout.xaml.cs">
       <DependentUpon>HelpAbout.xaml</DependentUpon>
     </Compile>
@@ -194,6 +197,10 @@
     <Compile Include="SynapseView.cs" />
     <Compile Include="Utils.cs" />
     <Page Include="FiringHistoryWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Help.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -322,22 +329,24 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\Pause.png" />
+    <Resource Include="Resources\Pause.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\Step.png" />
+    <Resource Include="Resources\Step.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\Play.png" />
+    <Resource Include="Resources\Play.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\Rewind.png" />
+    <Resource Include="Resources\Rewind.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\Hand.png" />
+    <Resource Include="Resources\Hand.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\FullScreen.png" />
+    <Resource Include="Resources\FullScreen.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WebCamWrapper\WebCamWrapper.csproj">
@@ -346,40 +355,60 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\Entity.png" />
+    <Resource Include="Resources\Entity.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\Record.png" />
+    <Resource Include="Resources\Record.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\Close.png" />
+    <Resource Include="Resources\Close.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\ClearHistory.png" />
+    <Resource Include="Resources\ClearHistory.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\ZoomIn.png" />
+    <Resource Include="Resources\ZoomIn.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\ZoomOut.png" />
+    <Resource Include="Resources\ZoomOut.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Tools\VS Templates Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Networks\BasicNeurons.xml" />
+    <Content Include="Networks\BasicNeurons.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Networks\Commands.txt" />
+    <Content Include="Networks\Commands.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Networks\CameraTest.xml" />
+    <Content Include="Networks\CameraTest.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Networks\SpeechInOutTest.xml" />
+    <Content Include="Networks\SpeechTest.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Networks\Sallie.xml" />
+    <Content Include="Networks\Sallie.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Networks\Maze.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Getting Started.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

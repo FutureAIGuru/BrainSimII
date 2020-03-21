@@ -10,7 +10,7 @@
 
         <Button x:Name="buttonOK" Content="OK" HorizontalAlignment="Left" Height="24" Margin="199,255,0,0" VerticalAlignment="Top" Width="93" Click="ButtonOK_Click"/>
         <Image x:Name="image" HorizontalAlignment="Left" Height="167" Margin="19,19,0,0" VerticalAlignment="Top" Width="293" Source="SplashScreen.gif"/>
-        <Label x:Name="labelContributors" Content="Bill&#xD;&#xA;George&#xD;&#xA;Fred" HorizontalAlignment="Left" Height="158" Margin="317,47,0,0" VerticalAlignment="Top" Width="141"/>
-        <Label x:Name="label" Content="Contributors:" HorizontalAlignment="Left" Height="23" Margin="317,19,0,0" VerticalAlignment="Top" Width="141" FontWeight="Bold"/>
+        <Label x:Name="labelContributors" HorizontalAlignment="Left" Height="158" Margin="317,47,0,0" VerticalAlignment="Top" Width="141"/>
+        <Label x:Name="label" Content="Project Contributors:" HorizontalAlignment="Left" Height="23" Margin="317,19,0,0" VerticalAlignment="Top" Width="141" FontWeight="Bold"/>
     </Grid>
 </Window>

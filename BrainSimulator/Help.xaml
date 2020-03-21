@@ -1,0 +1,15 @@
+﻿<Window x:Class="BrainSimulator.Help"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BrainSimulator"
+        mc:Ignorable="d"
+        Title="Brain Simulator II Help" Height="600" Width="800">
+    <Grid>
+        <WebBrowser Name="theBrowser" Margin="48,40,55,75"/>
+        <Button Content="OK" Height="29" Width="120" Margin="337,0,331,21" VerticalAlignment="Bottom" Click="Button_Click"/>
+        <CheckBox Content="Don't show this at startup" Name="dontShow" HorizontalAlignment="Left" Margin="158,0,0,26" Width="163" RenderTransformOrigin="0.52,0.941" Height="17" VerticalAlignment="Bottom"/>
+
+    </Grid>
+</Window>

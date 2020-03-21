@@ -27,6 +27,7 @@ namespace BrainSimulator
         public HelpAbout()
         {
             InitializeComponent();
+            labelContributors.Content = "[add your name here if\nyou add to this project]";
         }
 
         private void ButtonOK_Click(object sender, RoutedEventArgs e)

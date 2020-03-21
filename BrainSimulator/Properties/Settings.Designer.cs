@@ -34,5 +34,17 @@ namespace BrainSimulator.Properties {
                 this["CurrentFile"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowHelp {
+            get {
+                return ((bool)(this["ShowHelp"]));
+            }
+            set {
+                this["ShowHelp"] = value;
+            }
+        }
     }
 }

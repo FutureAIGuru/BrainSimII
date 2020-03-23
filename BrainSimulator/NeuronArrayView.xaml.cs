@@ -193,7 +193,7 @@ namespace BrainSimulator
             }
 
             //draw the synapses
-            if (MainWindow.showSynapses && dp.ShowSynapses())
+            if (MainWindow.theNeuronArray.ShowSynapses && dp.ShowSynapses())
                 for (int i = 0; i < MainWindow.theNeuronArray.neuronArray.Length; i++)
                 {
                     Point p1 = dp.pointFromNeuron(i);

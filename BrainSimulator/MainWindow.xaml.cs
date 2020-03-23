@@ -47,7 +47,6 @@ namespace BrainSimulator
         // if the control key is pressed...used for adding multiple selection areas
         public static bool ctrlPressed = false;
         public static bool shiftPressed = false;
-        public static bool showSynapses = false;
 
         //the name of the currently-loaded network file
         public static string currentFileName = "";
@@ -265,6 +264,7 @@ namespace BrainSimulator
                 return false;
             }
             Update();
+            SetShowSynapsesCheckBox(theNeuronArray.ShowSynapses);
             OpenHistoryWindow();
             if (!theNeuronArray.hideNotes)
                 MenuItemNotes_Click(null, null);
@@ -913,14 +913,19 @@ namespace BrainSimulator
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            showSynapses = true;
+            theNeuronArray.ShowSynapses = true;
             Update();
         }
 
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            showSynapses = false;
+            theNeuronArray.ShowSynapses = false;
             Update();
+        }
+
+        private void SetShowSynapsesCheckBox(bool showSynapses)
+        {
+            checkBox.IsChecked = showSynapses;
         }
 
         private void MenuItemProperties_Click(object sender, RoutedEventArgs e)

@@ -116,15 +116,15 @@ namespace BrainSimulator.Modules
         {
             TrainingSamples = new string[]
             {
-            //"what color is this:Say:Positive",
-            //"what is this:Say:Positive",
-            //"go:Go:Positive",
-            //"stop:Stop:Positive",
-            ////"sallie:Attn:Positive",
-            ////"turn around:UTurn:Positive",
-            //"turn left:LTurn:Positive",
-            //"turn right:RTurn:Positive",
-            //"This is [color]:NoAction:Positive",
+            "what color is this:Say:Positive",
+            "what is this:Say:Positive",
+            "go:Go:Positive",
+            "stop:Stop:Positive",
+            //"sallie:Attn:Positive",
+            //"turn around:UTurn:Positive",
+            "turn left:LTurn:Positive",
+            "turn right:RTurn:Positive",
+            "This is [color]:NoAction:Positive",
             "[color]:NoAction:Positive"
         };
 
@@ -169,7 +169,7 @@ namespace BrainSimulator.Modules
             int colorCount = 0;
             Color[] theColors = new Color[] {
                 Colors.Red,Colors.Blue,Colors.Orange,Colors.Magenta,Colors.Pink,
-                Colors.PeachPuff,Colors.Lime,Colors.MediumAquamarine,Colors.LightBlue,Colors.Yellow,
+                Colors.Lime,Colors.MediumAquamarine,Colors.LightBlue,Colors.Yellow,Colors.PeachPuff,
                 Colors.GreenYellow,Colors.Cyan,Colors.DarkBlue,Colors.DarkGreen,Colors.LawnGreen,
                 Colors.BlueViolet,Colors.DarkRed,Colors.DarkSeaGreen,Colors.LightCoral,Colors.Lavender,Colors.DarkOrange};
 
@@ -179,24 +179,27 @@ namespace BrainSimulator.Modules
             {
                 na.GetNeuronLocation(n, out int x1, out int y1);
                 TransformPoint(ref x1, ref y1);
-                foreach(Synapse s in n.Synapses)
+                foreach (Synapse s in n.Synapses)
                 {
-                    na.GetNeuronLocation(s.TargetNeuron,out int x2, out int y2);
-                    TransformPoint(ref x2, ref y2);
-                    physObject newObject = new physObject
+                    if (s.TargetNeuron != n.Id)
                     {
-                        P1 = new Point(x1-0.5,y1-0.5),
-                        P2 = new Point(x2-0.5,y2-0.5),
-//                        theColor = currentColor,
-                        theColor = theColors[colorCount],
-                        Aroma = -1,
-                        Temperature = 10,
-                    };
-                    objects.Add(newObject);
-                                      colorCount = (colorCount+1) % theColors.Length;
-                    int currentColorInt = Utils.ColorToInt(currentColor);
-                    currentColorInt--;
-                    currentColor = Utils.IntToColor(currentColorInt);
+                        na.GetNeuronLocation(s.TargetNeuron, out int x2, out int y2);
+                        TransformPoint(ref x2, ref y2);
+                        physObject newObject = new physObject
+                        {
+                            P1 = new Point(x1 - 0.5, y1 - 0.5),
+                            P2 = new Point(x2 - 0.5, y2 - 0.5),
+                            //                        theColor = currentColor,
+                            theColor = theColors[colorCount],
+                            Aroma = -1,
+                            Temperature = 10,
+                        };
+                        objects.Add(newObject);
+                        colorCount = (colorCount + 1) % theColors.Length;
+                        int currentColorInt = Utils.ColorToInt(currentColor);
+                        currentColorInt--;
+                        currentColor = Utils.IntToColor(currentColorInt);
+                    }
                 }
             }
             HandleVision();
@@ -504,7 +507,7 @@ namespace BrainSimulator.Modules
             bool bResponded = false;
             foreach (Thing action in actions)
             {
-                if (nmKB.Fired(action, 2,false))
+                if (nmKB.Fired(action, 2, false))
                 {
                     if (action.Label == trainingCase[1])
                     {

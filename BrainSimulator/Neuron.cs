@@ -208,7 +208,7 @@ namespace BrainSimulator
                         {
                             Neuron n = theNeuronArray.neuronArray[s.TargetNeuron];
                             Interlocked.Add(ref n.currentCharge, (int)(s.Weight * threshold));
-                            if (n.currentCharge > 990 && s.Weight > 0.5f && n.Id != Id)
+                            if (n.currentCharge > threshold && s.Weight > 0.5f && n.Id != Id)
                                 n.LastSynapse = Id;
                         }
                     }
@@ -236,7 +236,7 @@ namespace BrainSimulator
                 case modelType.LIF:
                     if (currentCharge < 0) currentCharge = 0;
                     lastCharge = currentCharge;
-                    if (currentCharge > 990)
+                    if (currentCharge > threshold)
                     {
                         currentCharge = 0;
                         if (KeepHistory)
@@ -256,7 +256,7 @@ namespace BrainSimulator
                 case modelType.Antifeedback:
                     if (currentCharge < 0) currentCharge = 0;
                     lastCharge = currentCharge;
-                    if (currentCharge > 990)
+                    if (currentCharge >= threshold)
                     {
                         currentCharge = 0;
                         if (KeepHistory)
@@ -268,7 +268,7 @@ namespace BrainSimulator
                 //fire if sufficient weights on this cycle or cancel...do not accumulate weight across multiple cycles
                 case modelType.OneTime:
                     lastCharge = currentCharge;
-                    if (currentCharge > 990)
+                    if (currentCharge >= threshold)
                     {
                         if (KeepHistory)
                             FiringHistory.AddFiring(Id, generation);

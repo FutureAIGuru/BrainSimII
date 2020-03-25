@@ -22,10 +22,13 @@
                     <MenuItem Header="_Exit" Click="button_Exit_Click"/>
                     <Separator />
                     <MenuItem Header="BasicNeurons" Click="buttonLoad_Click"/>
-                    <MenuItem Header="CameraTesrt" Click="buttonLoad_Click"/>
+                    <MenuItem Header="CameraTest" Click="buttonLoad_Click"/>
                     <MenuItem Header="SpeechTest" Click="buttonLoad_Click"/>
-                    <MenuItem Header="Sallie" Click="buttonLoad_Click"/>
+                    <MenuItem Header="SimVision" Click="buttonLoad_Click"/>
+                    <MenuItem Header="Imagination" Click="buttonLoad_Click"/>
+                    <MenuItem Header="BabyTalk" Click="buttonLoad_Click"/>
                     <MenuItem Header="Maze" Click="buttonLoad_Click"/>
+                    <MenuItem Header="Sallie" Click="buttonLoad_Click"/>
                 </MenuItem>
                 <MenuItem Header="Edit">
                     <MenuItem Header=" Cut"  Click="MenuItem_CutNeurons" />

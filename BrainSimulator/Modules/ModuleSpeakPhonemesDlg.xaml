@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrainSimulator.Modules"
         mc:Ignorable="d"
-        Title="ModuleSpeakPhonemesDlg Module Dialog" Height="271.118" Width="470.186" Background="Gray" ShowInTaskbar="False">
+        Title="Speak Phonemes" Height="271.118" Width="470.186" Background="Gray" ShowInTaskbar="False">
     <Canvas Name="theCanvas" SizeChanged="TheCanvas_SizeChanged" >
         <Button x:Name="buttonOK" Content="OK" Height="36" Canvas.Left="29" Canvas.Top="156" Width="81" Click="ButtonOK_Click" RenderTransformOrigin="0.68,-1.887"/>
         <TextBox x:Name="textBox" Height="70" Canvas.Left="29" TextWrapping="Wrap" Text="" Canvas.Top="26" Width="265" KeyDown="TextBox_KeyDown" />

@@ -25,6 +25,7 @@ using System.Threading;
 using System.IO.MemoryMappedFiles;
 using System.Drawing;
 using BrainSimulator.Modules;
+using System.Net;
 
 namespace BrainSimulator
 {
@@ -37,6 +38,7 @@ namespace BrainSimulator
         public static NeuronArrayView arrayView = null;
         public static NeuronArray theNeuronArray = null;
         public static FiringHistoryWindow fwWindow = null;
+        public static NotesDialog notesWindow = null;
 
         Thread engineThread = new Thread(new ThreadStart(EngineLoop)) { Name = "EngineThread" };
         private static int engineDelay = 500;//how long to wait after each cycle of the engine
@@ -92,6 +94,8 @@ namespace BrainSimulator
             splashHide.Tick += SplashHide_Tick;
             splashHide.Start();
 
+            ThreadPool.QueueUserWorkItem(CheckInternetConnectivity);
+
         }
 
         private void SplashHide_Tick(object sender, EventArgs e)
@@ -108,6 +112,12 @@ namespace BrainSimulator
                         na.TheModule.SetDlgOwner(this);
                     }
                 }
+            }
+            else
+            {
+                bool showHelp = (bool)Properties.Settings.Default["ShowHelp"];
+                if (showHelp || theNeuronArray == null)
+                    MenuItemHelp_Click(null, null);
             }
             OpenHistoryWindow();
         }
@@ -216,6 +226,7 @@ namespace BrainSimulator
         {
             CloseAllModuleDialogs();
             CloseHistoryWindow();
+            CloseNotesWindow();
 
             theNeuronArrayView.theSelection.selectedRectangles.Clear();
             CloseAllModuleDialogs();
@@ -266,8 +277,6 @@ namespace BrainSimulator
             Update();
             SetShowSynapsesCheckBox(theNeuronArray.ShowSynapses);
             OpenHistoryWindow();
-            if (!theNeuronArray.hideNotes)
-                MenuItemNotes_Click(null, null);
             ResumeEngine();
             return true;
         }
@@ -286,25 +295,47 @@ namespace BrainSimulator
                     });
                 }
             }
+            if (!theNeuronArray.hideNotes)
+                Application.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    MenuItemNotes_Click(null, null);
+                });
             ResumeEngine();
         }
 
         private void buttonLoad_Click(object sender, RoutedEventArgs e)
         {
-            string fileName = (string)(sender as MenuItem).Header;
-            if (fileName == "_Open")
+            if (PromptToSaveChanges())
+            { }
+            else
             {
-                OpenFileDialog openFileDialog1 = new OpenFileDialog
+
+                string fileName = (string)(sender as MenuItem).Header;
+                if (fileName == "_Open")
                 {
-                    Filter = "XML Network Files|*.xml",
-                    Title = "Select a Brain Simulator File"
-                };
-                // Show the Dialog.  
-                // If the user clicked OK in the dialog and  
-                Nullable<bool> result = openFileDialog1.ShowDialog();
-                if (result ?? false)
+                    OpenFileDialog openFileDialog1 = new OpenFileDialog
+                    {
+                        Filter = "XML Network Files|*.xml",
+                        Title = "Select a Brain Simulator File"
+                    };
+                    // Show the Dialog.  
+                    // If the user clicked OK in the dialog and  
+                    Nullable<bool> result = openFileDialog1.ShowDialog();
+                    if (result ?? false)
+                    {
+                        currentFileName = openFileDialog1.FileName;
+                        bool loadSuccessful = LoadFile(currentFileName);
+                        if (!loadSuccessful)
+                        {
+                            currentFileName = "";
+                        }
+                        Properties.Settings.Default["CurrentFile"] = currentFileName;
+                        Properties.Settings.Default.Save();
+                    }
+                }
+                else
                 {
-                    currentFileName = openFileDialog1.FileName;
+                    currentFileName = Path.GetFullPath("./Networks/" + fileName + ".xml");
                     bool loadSuccessful = LoadFile(currentFileName);
                     if (!loadSuccessful)
                     {
@@ -313,17 +344,6 @@ namespace BrainSimulator
                     Properties.Settings.Default["CurrentFile"] = currentFileName;
                     Properties.Settings.Default.Save();
                 }
-            }
-            else
-            {
-                currentFileName = Path.GetFullPath("./Networks/" + fileName + ".xml");
-                bool loadSuccessful = LoadFile(currentFileName);
-                if (!loadSuccessful)
-                {
-                    currentFileName = "";
-                }
-                Properties.Settings.Default["CurrentFile"] = currentFileName;
-                Properties.Settings.Default.Save();
             }
         }
 
@@ -442,18 +462,23 @@ namespace BrainSimulator
         }
         private void button_FileNew_Click(object sender, RoutedEventArgs e)
         {
-            NewArrayDlg dlg = new NewArrayDlg();
-            dlg.ShowDialog();
-            if (dlg.returnValue)
+            if (PromptToSaveChanges())
+            { } //cancel the operation
+            else
             {
-                SuspendEngine();
-                theNeuronArrayView.Update();
-                currentFileName = "";
-                Properties.Settings.Default["CurrentFile"] = currentFileName;
-                Properties.Settings.Default.Save();
-                setTitleBar();
-                MenuItemNotes_Click(null, null);
-                ResumeEngine();
+                NewArrayDlg dlg = new NewArrayDlg();
+                dlg.ShowDialog();
+                if (dlg.returnValue)
+                {
+                    SuspendEngine();
+                    theNeuronArrayView.Update();
+                    currentFileName = "";
+                    Properties.Settings.Default["CurrentFile"] = currentFileName;
+                    Properties.Settings.Default.Save();
+                    setTitleBar();
+                    MenuItemNotes_Click(null, null);
+                    ResumeEngine();
+                }
             }
         }
         private void button_Exit_Click(object sender, RoutedEventArgs e)
@@ -713,16 +738,7 @@ namespace BrainSimulator
         {
             if (theNeuronArray != null)
             {
-                MessageBoxResult mbResult = System.Windows.MessageBox.Show(this, "Do you want to save changes?", "Save", MessageBoxButton.YesNoCancel,
-                MessageBoxImage.Asterisk, MessageBoxResult.No);
-                if (mbResult == MessageBoxResult.Yes)
-                {
-                    if (currentFileName != "")
-                        SaveFile(currentFileName);
-                    else
-                        buttonSaveAs_Click(null, null);
-                }
-                if (mbResult == MessageBoxResult.Cancel)
+                if (PromptToSaveChanges())
                 {
                     e.Cancel = true;
                 }
@@ -730,7 +746,6 @@ namespace BrainSimulator
                 {
                     SuspendEngine();
                     engineThread.Abort();
-
                     CloseAllModuleDialogs();
                 }
             }
@@ -738,6 +753,26 @@ namespace BrainSimulator
             {
                 engineThread.Abort();
             }
+        }
+
+        private bool PromptToSaveChanges()
+        {
+            if (theNeuronArray == null) return false;
+            bool retVal = false;
+            MessageBoxResult mbResult = System.Windows.MessageBox.Show(this, "Do you want to save changes?", "Save", MessageBoxButton.YesNoCancel,
+            MessageBoxImage.Asterisk, MessageBoxResult.No);
+            if (mbResult == MessageBoxResult.Yes)
+            {
+                if (currentFileName != "")
+                    SaveFile(currentFileName);
+                else
+                    buttonSaveAs_Click(null, null);
+            }
+            if (mbResult == MessageBoxResult.Cancel)
+            {
+                retVal = true;
+            }
+            return retVal;
         }
 
         public static void CloseAllModuleDialogs()
@@ -777,7 +812,7 @@ namespace BrainSimulator
         private void Button_HelpAbout_Click(object sender, RoutedEventArgs e)
         {
             HelpAbout dlg = new HelpAbout();
-            dlg.ShowDialog();
+            dlg.Show();
         }
 
         //this reloads the file which was being used on the previous run of the program
@@ -794,12 +829,6 @@ namespace BrainSimulator
                         currentFileName = "";
                     setTitleBar();
                     ResumeEngine();
-                }
-                else
-                {
-                    bool showHelp = (bool)Properties.Settings.Default["ShowHelp"];
-                    if (showHelp)
-                        MenuItemHelp_Click(null, null);
                 }
             }
             //various errors might have happened so we'll just ignore them all and start with a fresh file 
@@ -941,13 +970,25 @@ namespace BrainSimulator
             }
         }
 
+        public static void CloseNotesWindow()
+        {
+            if (notesWindow != null)
+            {
+                notesWindow.Close();
+                notesWindow = null;
+            }
+        }
         private void MenuItemNotes_Click(object sender, RoutedEventArgs e)
         {
-            NotesDialog p = new NotesDialog();
-            p.Topmost = true;
+            if (notesWindow != null) notesWindow.Close();
+            bool showTools = false;
+            if (sender != null) showTools = true;
+            notesWindow = new NotesDialog(showTools);
             try
             {
-                p.ShowDialog();
+                notesWindow.Top = 200;
+                notesWindow.Left = 500;
+                notesWindow.Show();
             }
             catch
             {
@@ -957,15 +998,50 @@ namespace BrainSimulator
 
         private void MenuItemHelp_Click(object sender, RoutedEventArgs e)
         {
-            Help p = new Help();
+            Help p;
+            //for future of help system
+            //if (internetAvailable)
+            //    p = new Help("https://futureai.guru/help");
+            //else
+            p = new Help();
             try
             {
+                p.Left = 200;
+                p.Top = 200;
                 p.Owner = this;
-                p.ShowDialog();
+                p.Show();
             }
             catch
             {
                 MessageBox.Show("Help could not be displayed");
+            }
+        }
+
+        void CheckInternetConnectivity(object state)
+        {
+            if (System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+            {
+                using (WebClient webClient = new WebClient())
+                {
+                    webClient.CachePolicy = new System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.BypassCache);
+                    webClient.Proxy = null;
+                    webClient.OpenReadCompleted += webClient_OpenReadCompleted;
+                    webClient.OpenReadAsync(new Uri("https://futureai.guru"));
+                }
+            }
+        }
+
+        volatile bool internetAvailable = false; // boolean used elsewhere in code
+
+        void webClient_OpenReadCompleted(object sender, OpenReadCompletedEventArgs e)
+        {
+            if (e.Error == null)
+            {
+                internetAvailable = true;
+                Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
+                {
+                    // UI changes made here
+                }));
             }
         }
     }

@@ -48,8 +48,9 @@ namespace BrainSimulator.Modules
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             timer.Stop();
+            if (Application.Current == null) return;
             Application.Current.Dispatcher.Invoke((Action)delegate
-            {
+            {if (this != null)
                 Draw(false);
             });
         }

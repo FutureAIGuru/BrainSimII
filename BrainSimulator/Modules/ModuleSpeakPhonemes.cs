@@ -148,6 +148,7 @@ namespace BrainSimulator.Modules
             ClearNeurons();
             na.GetNeuronAt(0).Label = "Enable";
             na.GetNeuronAt(0).AddSynapse(na.GetNeuronAt(0).Id, 1);
+            AddLabel("BabyTalk");
             AddLabel("Vowels");
 
             //this is used to eliminate unused phonemes (many not used by english SR) and to find phonemes which can be combined
@@ -275,7 +276,7 @@ namespace BrainSimulator.Modules
         public static string GetPronunciationFromText(string MyWord, string Pron = null)
         {
             //this is a trick to figure out phonemes used by synthesis engine
-
+            if (MyWord == null | MyWord == "") return "";
             //txt to wav
             using (MemoryStream audioStream = new MemoryStream())
             {

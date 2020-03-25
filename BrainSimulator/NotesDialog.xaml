@@ -7,9 +7,44 @@
         mc:Ignorable="d"
         Title="Network Notes" Height="412.5" Width="753.5">
     <Grid>
+        <Grid.Resources>
+            <Style TargetType="{x:Type Button}" x:Key="formatTextStyle">
+                <Setter Property="FontFamily" Value="Palatino Linotype"></Setter>
+                <Setter Property="Width" Value="30"></Setter>
+                <Setter Property="FontSize" Value ="14"></Setter>
+                <Setter Property="CommandTarget" Value="{Binding ElementName=mainRTB}"></Setter>
+            </Style>
+            <Style TargetType="{x:Type Button}" x:Key="formatImageStyle">
+                <Setter Property="Width" Value="30"></Setter>
+                <Setter Property="CommandTarget" Value="{Binding ElementName=mainRTB}"></Setter>
+            </Style>
+        </Grid.Resources>
+
+        <DockPanel Name="mainPanel" Margin="0,0,0,105">
+
+            <!-- This tool bar contains all the editing buttons. -->
+            <ToolBar Name="mainToolBar" Height="30" DockPanel.Dock="Top">
+                <Button Style="{StaticResource formatTextStyle}" Command="EditingCommands.ToggleBold" ToolTip="Bold">
+                    <TextBlock FontWeight="Bold">B</TextBlock>
+                </Button>
+                <Button Style="{StaticResource formatTextStyle}" Command="EditingCommands.ToggleItalic" ToolTip="Italic">
+                    <TextBlock FontStyle="Italic" FontWeight="Bold">I</TextBlock>
+                </Button>
+                <Button Style="{StaticResource formatTextStyle}" Command="EditingCommands.ToggleUnderline" ToolTip="Underline">
+                    <TextBlock TextDecorations="Underline" FontWeight="Bold">U</TextBlock>
+                </Button>
+                <Button Style="{StaticResource formatImageStyle}" Command="EditingCommands.IncreaseFontSize" ToolTip="Grow Font">
+                    <Image Source="resources\CharacterGrowFont.png"></Image>
+                </Button>
+                <Button Style="{StaticResource formatImageStyle}" Command="EditingCommands.DecreaseFontSize" ToolTip="Shrink Font">
+                    <Image Source="resources\CharacterShrinkFont.png"></Image>
+                </Button>
+
+            </ToolBar>
+            <RichTextBox x:Name="mainRTB" SpellCheck.IsEnabled="True" VerticalScrollBarVisibility="Auto" AcceptsReturn="True"/>
+        </DockPanel>
         <Button x:Name="OKbutton" Content="OK" HorizontalAlignment="Left" Height="32" Margin="431,0,0,35" VerticalAlignment="Bottom" Width="95" Click="OKbutton_Click"/>
-        <Button x:Name="Cancel" Content="Cancel" HorizontalAlignment="Left" Height="32" Margin="314,0,0,35" VerticalAlignment="Bottom" Width="95" RenderTransformOrigin="-0.653,0.51" Click="Cancel_Click"/>
+        <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" Height="32" Margin="314,0,0,35" VerticalAlignment="Bottom" Width="95" RenderTransformOrigin="-0.653,0.51" Click="Cancel_Click"/>
         <CheckBox x:Name="checkBox" Content="Don't show this on startup" HorizontalAlignment="Left" Height="32" Margin="81,0,0,35" VerticalAlignment="Bottom" Width="218"/>
-        <TextBox x:Name="textBox" SpellCheck.IsEnabled="True" VerticalScrollBarVisibility="Auto" Margin="30,30,30,94" TextWrapping="Wrap" Text="Network Notes:" AcceptsReturn="True"/>
     </Grid>
 </Window>

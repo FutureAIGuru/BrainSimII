@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrainSimulator.Modules"
         mc:Ignorable="d"
-        Title="ModuleKBDebugDlg Module Dialog" Height="450" Width="800" Background="Gray" ShowInTaskbar="False">
+        Title="Knowledge Store Debug" Height="450" Width="800" Background="Gray" ShowInTaskbar="False">
     <Grid>
         <ScrollViewer Name="theScroller">
             <TextBox Name="theTextBox"  />

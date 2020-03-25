@@ -73,6 +73,7 @@ namespace BrainSimulator
         {
             MainWindow.CloseAllModuleDialogs();
             MainWindow.CloseHistoryWindow();
+            MainWindow.CloseNotesWindow();
             if (MainWindow.theNeuronArray != null)  
                 MainWindow.theNeuronArray.Modules.Clear();
             MainWindow.arrayView.ClearSelection();

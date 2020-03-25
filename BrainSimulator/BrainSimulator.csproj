@@ -391,6 +391,12 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Networks\Imagination.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\SimVision.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Networks\SpeechTest.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -406,6 +412,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\charactergrowfont.png" />
+    <Resource Include="Resources\charactershrinkfont.png" />
     <Content Include="Resources\Getting Started.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

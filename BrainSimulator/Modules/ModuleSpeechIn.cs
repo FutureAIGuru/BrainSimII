@@ -139,6 +139,7 @@ namespace BrainSimulator.Modules
             GrammarBuilder a = new GrammarBuilder();
             a.Append(attentionWord, 1, 1);
             a.Append(commands);
+            a.Append(digit);
 
 
 

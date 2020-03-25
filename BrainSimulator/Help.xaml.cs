@@ -19,14 +19,21 @@ namespace BrainSimulator
     /// </summary>
     public partial class Help : Window
     {
-        public Help()
+        public Help(string urlToShow = "")
         {
             InitializeComponent();
             bool showHelp = (bool)Properties.Settings.Default["ShowHelp"];
             dontShow.IsChecked = !showHelp;
-            string fullpath = Path.GetFullPath("./resources/getting started.htm");
-            Uri theUri = new Uri("file:///"+fullpath);
-            theBrowser.Navigate(theUri);
+            if (urlToShow == "")
+            {
+                string fullpath = Path.GetFullPath("./resources/getting started.htm");
+                Uri theUri = new Uri("file:///" + fullpath);
+                theBrowser.Navigate(theUri);
+            }
+            else
+            {
+                theBrowser.Navigate(urlToShow);
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

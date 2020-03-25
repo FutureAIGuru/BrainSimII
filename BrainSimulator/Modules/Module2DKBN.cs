@@ -203,9 +203,14 @@ namespace BrainSimulator.Modules
             ModuleView naPhonemes = theNeuronArray.FindAreaByLabel("ModuleSpeakPhonemes");
             if (naPhonemes != null)
             {
+                Neuron n2 = GetNeuron(Labeled("SayRnd"));
+                Neuron n3 = naPhonemes.GetNeuronAt("BabyTalk");
+                if (n2 != null && n3 != null)
+                    n3.AddSynapse(n2.Id, 1);
                 Thing parent = Labeled("Vowel");
                 foreach (Neuron n in naPhonemes.Neurons())
                 {
+
                     if (n.Label == "Conson.") parent = Labeled("Consonant");
                     if (n.Label.Length == 1)
                     {

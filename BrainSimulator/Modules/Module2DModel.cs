@@ -55,7 +55,7 @@ namespace BrainSimulator.Modules
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
-            if (KBPoints == null)
+            if (KBPoints == null || KBPoints.Count == 0)
                 GetSegmentsFromKB();
 
             ModuleBehavior nmBehavior = (ModuleBehavior)FindModuleByType(typeof(ModuleBehavior));
@@ -662,6 +662,7 @@ namespace BrainSimulator.Modules
             //    KBSegments[i].RemoveReference(tVisible);
 
             ModuleView naVision = theNeuronArray.FindAreaByLabel("Module2DVision");
+            if (naVision == null) return;
             int possibleViewAngles = naVision.Width;
             float deltaTheta = Module2DVision.fieldOfView / possibleViewAngles;
             for (int i = 0; i < possibleViewAngles; i++)
@@ -729,6 +730,7 @@ namespace BrainSimulator.Modules
         {
             List<Thing> retVal = new List<Thing>();
             if (KBSegments == null) return retVal;
+            if (KBSegments.Count == 0) return retVal;
             foreach (Thing t in KBSegments)
             {
                 retVal.Add(t);

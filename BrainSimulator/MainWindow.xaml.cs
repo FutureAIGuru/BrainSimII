@@ -126,6 +126,7 @@ namespace BrainSimulator
         {
             if (fwWindow != null)
                 fwWindow.Close();
+            FiringHistory.Clear();
         }
 
         private void OpenHistoryWindow()

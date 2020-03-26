@@ -99,8 +99,8 @@ namespace BrainSimulator.Modules
                     Color theColor = Utils.IntToColor(segment.theColor);
                     Point P1 = segment.P1.P;
                     Point P2 = segment.P2.P;
-                    Point P1P = P1 + (P2 - P1) * .2;
-                    Point P2P = P1 + (P2 - P1) * .8;
+                    Point P1P = P1 + (P2 - P1) * segment.P1.Conf/2;// .2;
+                    Point P2P = P1 + (P2 - P1) * (1- segment.P2.Conf/2);// .8;
 
                     theCanvas.Children.Add(new Line
                     {

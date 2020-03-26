@@ -724,7 +724,7 @@
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
-      <LastFired>249917</LastFired>
+      <LastFired>258681</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0</LeakRate>
@@ -1078,10 +1078,10 @@
       <Model>Color</Model>
       <Label />
       <Id>411</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
+      <CurrentCharge>1671.168</CurrentCharge>
+      <CurrentChargeInt>16711680</CurrentChargeInt>
+      <LastCharge>1671.168</LastCharge>
+      <LastChargeInt>16711680</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -1503,7 +1503,7 @@
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
-      <LastFired>255345</LastFired>
+      <LastFired>259074</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.1</LeakRate>
@@ -1518,7 +1518,7 @@
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
-      <LastFired>255345</LastFired>
+      <LastFired>259074</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
@@ -4784,7 +4784,7 @@
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
+      <LastFired>259071</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
@@ -14404,7 +14404,7 @@
     </DisplayOffset>
     <NeuronRows>100</NeuronRows>
   </displayParams>
-  <networkNotes>&lt;Section xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve" TextAlignment="Left" LineHeight="Auto" IsHyphenationEnabled="False" xml:lang="en-us" FlowDirection="LeftToRight" NumberSubstitution.CultureSource="Text" NumberSubstitution.Substitution="AsCulture" FontFamily="Segoe UI" FontStyle="Normal" FontWeight="Normal" FontStretch="Normal" FontSize="12" Foreground="#FF000000" Typography.StandardLigatures="True" Typography.ContextualLigatures="True" Typography.DiscretionaryLigatures="False" Typography.HistoricalLigatures="False" Typography.AnnotationAlternates="0" Typography.ContextualAlternates="True" Typography.HistoricalForms="False" Typography.Kerning="True" Typography.CapitalSpacing="False" Typography.CaseSensitiveForms="False" Typography.StylisticSet1="False" Typography.StylisticSet2="False" Typography.StylisticSet3="False" Typography.StylisticSet4="False" Typography.StylisticSet5="False" Typography.StylisticSet6="False" Typography.StylisticSet7="False" Typography.StylisticSet8="False" Typography.StylisticSet9="False" Typography.StylisticSet10="False" Typography.StylisticSet11="False" Typography.StylisticSet12="False" Typography.StylisticSet13="False" Typography.StylisticSet14="False" Typography.StylisticSet15="False" Typography.StylisticSet16="False" Typography.StylisticSet17="False" Typography.StylisticSet18="False" Typography.StylisticSet19="False" Typography.StylisticSet20="False" Typography.Fraction="Normal" Typography.SlashedZero="False" Typography.MathematicalGreek="False" Typography.EastAsianExpertForms="False" Typography.Variants="Normal" Typography.Capitals="Normal" Typography.NumeralStyle="Normal" Typography.NumeralAlignment="Normal" Typography.EastAsianWidths="Normal" Typography.EastAsianLanguage="Normal" Typography.StandardSwashes="0" Typography.ContextualSwashes="0" Typography.StylisticAlternates="0"&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Purpose:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   "Sallie" lives in a simulated two-dimensional environment.  There is also a three-dimensional environment for future use. Right now, working with two dimensions is simpler. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   This network demonstrates the simulator, Sallie's vision process, and how she builds an internal "mental" model of her surroundings. You can see the color patterns seen by her two eyes as arcs in the simulation window and as the color of neurons firing in the 2DVision Module (equivalent to a retina). &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   As obstacles come into view, you can see them added to her mental model in the "Internal Model" window. Sallie uses the differences in the images in her two eyes to estimate distances to objects. Because of limitations in this method (human binocular depth perception is not very accurate either) coupled with the fact that her retina has less than a hundred cells, the initial stored model is not particularly accurate and this is indicated by the white ends on the lines.  As she move closer to an object the estimates become progressively more accurate and you can see the objects adjusting positions as she moves.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Things to try:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Move and turn Sallie by using the controls at the upper left of the network. These are akin to the motor controls on a robot.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Rotate Sallie a full turn by pressing and holding the "&amp;gt;" or "&amp;lt;" neuron in the upper left.  See how objects are mapped into her internal mental model. Notice that it is not terribly accurate as binocular depth perception had decreasing accuracy as the distance increases. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Move Sallie forward in the direction she is currently facing by pressing and holding the "^^" neuron.  Notice as Sallie approaches an obstacle, her perception of it position becomes progressively more accurate.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   In the Universal Knowledge Store window, you can see Things being added or adjusted. In the hierarchy, you'll find visible objects under Thing-&amp;gt;Sense-&amp;gt;Visual where you'll find colors, points and segments.  If you check the auto-refresh box, you can watch the data change as information is added or updated. This only works while the Knowledge Store contains a small number of objects.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   See how retinal resolution impacts vision accuracy. You can increase the size of Sallie's retina by 1) making giving the overall neuron model more columns in File-&amp;gt;Properties (Say 200 columns). Then 2) right-clicking the 2DVision module and changing the width (must be less than the number of columns). And 3) reinitializing the engine with the "Reset all modules" button (with the rewind symbol).&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Current state of development:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Sallie can only identify segments.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Sallie can only properly identify objects which are not in front of one another. (Much of the code to handle this is written but not complete.)&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Colors and points are currently handled by storing values in the Knowledge Store and this is not biologically plausible. While we can see our way to biologically-plausible methods, they are less efficient and, down the road, we will need to evaluated the balance between biological plausibility vs. efficiency.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="12.75"&gt;Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;/Section&gt;</networkNotes>
+  <networkNotes>&lt;Section xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve" TextAlignment="Left" LineHeight="Auto" IsHyphenationEnabled="False" xml:lang="en-us" FlowDirection="LeftToRight" NumberSubstitution.CultureSource="Text" NumberSubstitution.Substitution="AsCulture" FontFamily="Segoe UI" FontStyle="Normal" FontWeight="Normal" FontStretch="Normal" FontSize="12" Foreground="#FF000000" Typography.StandardLigatures="True" Typography.ContextualLigatures="True" Typography.DiscretionaryLigatures="False" Typography.HistoricalLigatures="False" Typography.AnnotationAlternates="0" Typography.ContextualAlternates="True" Typography.HistoricalForms="False" Typography.Kerning="True" Typography.CapitalSpacing="False" Typography.CaseSensitiveForms="False" Typography.StylisticSet1="False" Typography.StylisticSet2="False" Typography.StylisticSet3="False" Typography.StylisticSet4="False" Typography.StylisticSet5="False" Typography.StylisticSet6="False" Typography.StylisticSet7="False" Typography.StylisticSet8="False" Typography.StylisticSet9="False" Typography.StylisticSet10="False" Typography.StylisticSet11="False" Typography.StylisticSet12="False" Typography.StylisticSet13="False" Typography.StylisticSet14="False" Typography.StylisticSet15="False" Typography.StylisticSet16="False" Typography.StylisticSet17="False" Typography.StylisticSet18="False" Typography.StylisticSet19="False" Typography.StylisticSet20="False" Typography.Fraction="Normal" Typography.SlashedZero="False" Typography.MathematicalGreek="False" Typography.EastAsianExpertForms="False" Typography.Variants="Normal" Typography.Capitals="Normal" Typography.NumeralStyle="Normal" Typography.NumeralAlignment="Normal" Typography.EastAsianWidths="Normal" Typography.EastAsianLanguage="Normal" Typography.StandardSwashes="0" Typography.ContextualSwashes="0" Typography.StylisticAlternates="0"&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Purpose:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   "Sallie" lives in a simulated two-dimensional environment.  There is also a three-dimensional environment for future use. Right now, working with two dimensions is simpler. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   This network demonstrates the simulator, Sallie's vision process, and how she builds an internal "mental" model of her surroundings. You can see the color patterns seen by her two eyes as arcs in the simulation window and as the color of neurons firing in the 2DVision Module (equivalent to a retina). &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   As obstacles come into view, you can see them added to her mental model in the "Internal Model" window. Sallie uses the differences in the images in her two eyes to estimate distances to objects. Because of limitations in this method (human binocular depth perception is not very accurate either) coupled with the fact that her retina has less than a hundred cells, the initial stored model is not particularly accurate and this is indicated by the white ends on the lines--the shorter the white, the higher the confidence.  As she move closer to an object the estimates become progressively more accurate and you can see the objects adjusting positions as she moves.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Things to try:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Move and turn Sallie by using the controls at the upper left of the network. These are akin to the motor controls on a robot.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Rotate Sallie a full turn by pressing and holding the "&amp;gt;" or "&amp;lt;" neuron in the upper left.  See how objects are mapped into her internal mental model. Notice that it is not terribly accurate as binocular depth perception had decreasing accuracy as the distance increases.  As Sallie gets near an obstacle, the "Obstacle" neuron will fire.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Move Sallie forward in the direction she is currently facing by pressing and holding the "^^" neuron.  Notice as Sallie approaches an obstacle, her perception of it position becomes progressively more accurate.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   In the Universal Knowledge Store window, you can see Things being added or adjusted. In the hierarchy, you'll find visible objects under Thing-&amp;gt;Sense-&amp;gt;Visual where you'll find colors, points and segments.  If you check the auto-refresh box, you can watch the data change as information is added or updated. This only works while the Knowledge Store contains a small number of objects.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   See how retinal resolution impacts vision accuracy. You can increase the size of Sallie's retina by 1) making giving the overall neuron model more columns in File-&amp;gt;Properties (Say 200 columns). Then 2) right-clicking the 2DVision module and changing the width (must be less than the number of columns). And 3) reinitializing the engine with the "Reset all modules" button (with the rewind symbol).&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Current state of development:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Sallie can only identify segments.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Sallie can only properly identify objects which are not in front of one another. (Much of the code to handle this is written but not complete.)&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   If Sallie sees an obstacle viewed from near one end (so the segment appears very short) erroneous information can be stored in the model which doesn't self-correct.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Colors and points are currently handled by storing values in the Knowledge Store and this is not biologically plausible. While we can see our way to biologically-plausible methods, they are less efficient and, down the road, we will need to evaluated the balance between biological plausibility vs. efficiency.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="12.75"&gt;Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;/Section&gt;</networkNotes>
   <hideNotes>false</hideNotes>
   <Modules>
     <ModuleView>
@@ -14497,7 +14497,7 @@
             <label>Thing</label>
             <parents />
             <references />
-            <useCount>6</useCount>
+            <useCount>5</useCount>
           </SThing>
           <SThing>
             <label>Action</label>
@@ -14505,7 +14505,7 @@
               <int>4</int>
             </parents>
             <references />
-            <useCount>2634</useCount>
+            <useCount>30</useCount>
           </SThing>
           <SThing>
             <label>NoAction</label>
@@ -14545,7 +14545,7 @@
               <int>5</int>
             </parents>
             <references />
-            <useCount>2622</useCount>
+            <useCount>18</useCount>
           </SThing>
           <SThing>
             <label>Vowel</label>
@@ -14617,7 +14617,7 @@
               <int>5</int>
             </parents>
             <references />
-            <useCount>2620</useCount>
+            <useCount>16</useCount>
           </SThing>
           <SThing>
             <label>SayRnd</label>
@@ -14625,7 +14625,7 @@
               <int>5</int>
             </parents>
             <references />
-            <useCount>2620</useCount>
+            <useCount>16</useCount>
           </SThing>
           <SThing>
             <label>Attn</label>
@@ -14657,7 +14657,7 @@
               <int>23</int>
             </parents>
             <references />
-            <useCount>7</useCount>
+            <useCount>3</useCount>
           </SThing>
           <SThing>
             <label>Shape</label>
@@ -14673,7 +14673,7 @@
               <int>25</int>
             </parents>
             <references />
-            <useCount>6</useCount>
+            <useCount>4</useCount>
           </SThing>
           <SThing>
             <label>Dot</label>
@@ -14689,7 +14689,7 @@
               <int>25</int>
             </parents>
             <references />
-            <useCount>5</useCount>
+            <useCount>3</useCount>
           </SThing>
           <SThing>
             <label>Audible</label>
@@ -14713,7 +14713,7 @@
               <int>29</int>
             </parents>
             <references />
-            <useCount>5240</useCount>
+            <useCount>32</useCount>
           </SThing>
           <SThing>
             <label>Phrase</label>
@@ -14721,7 +14721,7 @@
               <int>29</int>
             </parents>
             <references />
-            <useCount>5241</useCount>
+            <useCount>33</useCount>
           </SThing>
           <SThing>
             <label>PhraseISpoke</label>
@@ -14745,7 +14745,7 @@
               <int>34</int>
             </parents>
             <references />
-            <useCount>2620</useCount>
+            <useCount>16</useCount>
           </SThing>
           <SThing>
             <label>NoWord</label>
@@ -14827,7 +14827,7 @@
             <references />
             <useCount>0</useCount>
             <V xsi:type="PointPlus">
-              <X>3.18905187</X>
+              <X>3.214052</X>
               <Y>0.424748421</Y>
               <Conf>0.537091732</Conf>
             </V>
@@ -14840,9 +14840,9 @@
             <references />
             <useCount>0</useCount>
             <V xsi:type="PointPlus">
-              <X>2.348914</X>
+              <X>2.373914</X>
               <Y>-1.46223247</Y>
-              <Conf>0.537091732</Conf>
+              <Conf>0.483034372</Conf>
             </V>
           </SThing>
           <SThing>
@@ -14851,7 +14851,7 @@
               <int>24</int>
             </parents>
             <references />
-            <useCount>18</useCount>
+            <useCount>6</useCount>
             <V xsi:type="xsd:int">16711935</V>
           </SThing>
           <SThing>
@@ -14861,11 +14861,11 @@
             </parents>
             <references>
               <Point>
-                <X>46</X>
+                <X>45</X>
                 <Y>1</Y>
               </Point>
               <Point>
-                <X>45</X>
+                <X>46</X>
                 <Y>1</Y>
               </Point>
               <Point>
@@ -14873,7 +14873,7 @@
                 <Y>1</Y>
               </Point>
             </references>
-            <useCount>3</useCount>
+            <useCount>1</useCount>
           </SThing>
         </UKSTemp>
         <immediateMemory>2</immediateMemory>
@@ -15143,16 +15143,16 @@
         </objects>
         <armRelative>
           <Vector>
-            <X>0.58117454441151073</X>
-            <Y>0.48313073410811785</Y>
+            <X>0.58414327975320712</X>
+            <Y>0.330602090061682</Y>
           </Vector>
           <Vector>
-            <X>0.41797170631598979</X>
-            <Y>-0.27450947459722419</Y>
+            <X>0.49416048411840041</X>
+            <Y>-0.31075053899370686</Y>
           </Vector>
         </armRelative>
         <entityPosition>
-          <X>0.02500000037252903</X>
+          <X>0</X>
           <Y>0</Y>
         </entityPosition>
         <entityDirection1>0</entityDirection1>
@@ -15204,7 +15204,7 @@
       </TheModule>
     </ModuleView>
   </Modules>
-  <Generation>257772</Generation>
+  <Generation>259090</Generation>
   <EngineSpeed>250</EngineSpeed>
   <ShowSynapses>true</ShowSynapses>
 </NeuronArray>

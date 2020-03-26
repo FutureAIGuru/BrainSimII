@@ -179,42 +179,44 @@ namespace BrainSimulator.Modules
                     float matchVisualWidth = s.VisualWidth();
                     //if the newVisualWidth is bigger, an adjustment is needed
                     //this happens if the initial view was occluded but now it is less
-                    if (newVisualWidth > matchVisualWidth)
+                    //if (newVisualWidth > matchVisualWidth)
                     {
-                        if (s.P1.Conf > newSegment.P1.Conf)
+                        if (newSegment.P1.Conf < s.P1.Conf)
                         {
                             s.P1.Conf = newSegment.P1.Conf;
                             s.P1.R = newSegment.P1.R;
+                            s.P1.Theta = newSegment.P1.Theta;
                         }
-                        if (s.P2.Conf > newSegment.P2.Conf)
+                        if (newSegment.P2.Conf< s.P2.Conf)
                         {
                             s.P2.Conf = newSegment.P2.Conf;
                             s.P2.R = newSegment.P2.R;
+                            s.P2.Theta = newSegment.P2.Theta;
                         }
-                        if (s.P1.R < newSegment.P1.R && s.P1.Conf > newSegment.P1.Conf)
-                            s.P1.R = newSegment.P1.R;
-                        if (s.P2.R < newSegment.P2.R && s.P2.Conf > newSegment.P2.Conf)
-                            s.P2.R = newSegment.P2.R;
+                        //if (s.P1.R < newSegment.P1.R && s.P1.Conf > newSegment.P1.Conf)
+                        //    s.P1.R = newSegment.P1.R;
+                        //if (s.P2.R < newSegment.P2.R && s.P2.Conf > newSegment.P2.Conf)
+                        //    s.P2.R = newSegment.P2.R;
                     }
 
-                    //if the input point is significantly further it may be occlusion related
-                    if (newSegment.P1.R > s.P1.R + s.P1.Conf && s.P1.Conf > newSegment.P1.Conf)
-                    {
-                        s.P1.R = newSegment.P1.R;
-                        s.P1.Theta = newSegment.P1.Theta;
-                    }
-                    if (newSegment.P2.R > s.P2.R + s.P2.Conf && s.P2.Conf > newSegment.P2.Conf)
-                    {
-                        s.P2.R = newSegment.P2.R;
-                        s.P2.Theta = newSegment.P2.Theta;
-                    }
-                    //if the newVisualWidth is smaller, an occlusion 
+                    ////if the input point is significantly further it may be occlusion related
+                    //if (newSegment.P1.R > s.P1.R + s.P1.Conf && s.P1.Conf > newSegment.P1.Conf)
+                    //{
+                    //    s.P1.R = newSegment.P1.R;
+                    //    s.P1.Theta = newSegment.P1.Theta;
+                    //}
+                    //if (newSegment.P2.R > s.P2.R + s.P2.Conf && s.P2.Conf > newSegment.P2.Conf)
+                    //{
+                    //    s.P2.R = newSegment.P2.R;
+                    //    s.P2.Theta = newSegment.P2.Theta;
+                    //}
+                    ////if the newVisualWidth is smaller, an occlusion 
 
                 }
                 else
                 {
-                    P1.Conf = P1.Conf;
-                    P2.Conf = P2.Conf;
+                    //P1.Conf = P1.R;
+                    //P2.Conf = P2.R;
                     Thing newThing = AddSegmentToKB(P1, P2, theColor);
                     kb.Fire(newThing);
                     UpdateDialog();

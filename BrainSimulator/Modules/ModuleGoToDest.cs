@@ -72,14 +72,18 @@ namespace BrainSimulator.Modules
                 if (pv1 != null)
                 {
                     pvTry.Theta = -pvTry.Theta;
-                    SetNeuronValue("ModuleBehavior", "TurnTo", 1);
-                    SetNeuronValue("ModuleBehavior", "Theta", (float)pvTry.Theta);
-                    SetNeuronValue("ModuleBehavior", "MoveTo", 1);
-                    SetNeuronValue("ModuleBehavior", "R", (float)pvTry.R);
-                    
+                    nmBehavior.TurnTo(pvTry.Theta);
+                    nmBehavior.MoveTo(pvTry.R);
+                    //SetNeuronValue("ModuleBehavior", "TurnTo", 1);
+                    //SetNeuronValue("ModuleBehavior", "Theta", (float)pvTry.Theta);
+                    //SetNeuronValue("ModuleBehavior", "MoveTo", 1);
+                    //SetNeuronValue("ModuleBehavior", "R", (float)pvTry.R);
+                    //SetNeuronValue("ModuleBehavior", "Done", 0);
+
                     //we made a partial move...update the target
                     pointsToTry.Clear();
                     tryAgain = true;
+                    countDown = 5;
                 }
                 else
                 {
@@ -113,8 +117,8 @@ namespace BrainSimulator.Modules
                 SetNeuronValue(null, "R", 0);
                 SetNeuronValue(null, "Theta", 0);
             }
-            if (pvTarget.R == 0)
-                pvTarget = nmModel.FindGreen().MidPoint();
+           // if (pvTarget.R == 0)
+           //     pvTarget = nmModel.FindGreen().MidPoint();
             if (pvTarget != null)
             {
                 PointPlus pv1 = nmModel.CanISGoStraightTo(pvTarget, out Segment obstacle); 
@@ -130,12 +134,10 @@ namespace BrainSimulator.Modules
                 }
                 else
                 {
-                    PointPlus pvTry1 = Utils.ExtendSegment(obstacle.P1.P, obstacle.P2.P, 0.4f, true);
-                    PointPlus pvTry2 = Utils.ExtendSegment(obstacle.P1.P, obstacle.P2.P, 0.4f, false);
+                    PointPlus pvTry1 = Utils.ExtendSegment(obstacle.P1.P, obstacle.P2.P, 0.5f, true);
+                    PointPlus pvTry2 = Utils.ExtendSegment(obstacle.P1.P, obstacle.P2.P, 0.5f, false);
                     pointsToTry.Add(pvTry1);
                     pointsToTry.Add(pvTry2);
-                    pointsToTry.Add(new PointPlus { X = 1, Y = 1 });
-                    pointsToTry.Add(new PointPlus { X = 1, Y = -1 });
                 }
             }
         }

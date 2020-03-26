@@ -149,14 +149,25 @@ namespace BrainSimulator.Modules
             for (int i = 0; i < LBoundaries.Count-1; i++)
             {
                 //the color of area is the color to the right of the left boundary
+                //TODO this hack requires that a visible area is surround by black to eliminate occlusion problems
+                if (LBoundaries[i].colorL != 0) continue;
+                if (LBoundaries[i+1].colorR != 0) continue;
+
                 int areaColorL = LBoundaries[i].colorR;
                 for (int j = 0; j < RBoundaries.Count-1; j++)
                 {
+                    if (RBoundaries[j].colorL != 0) continue;
+                    if (RBoundaries[j + 1].colorR != 0) continue;
                     int areaColorR = RBoundaries[j].colorR;
                     //does the same boundary appear in both eyes? 
                     //TODO: This doesn't handle the case where more than one area of the same color is in the visual field
-                    if (areaColorL == areaColorR && areaColorL != 0)
-                    {
+                    //if (areaColorL == areaColorR && areaColorL != 0)
+                        if (areaColorL == areaColorR && areaColorL != 0)
+                        {
+                            int l1 = LBoundaries[i].direction;
+                        int r1 = RBoundaries[j].direction;
+                        int l2 = LBoundaries[i + 1].direction;
+                        int r2 = RBoundaries[j+1].direction;
                         PointPlus leftPoint = FindDepth(LBoundaries[i].direction, RBoundaries[j].direction);
                         PointPlus leftPointError = FindDepth(LBoundaries[i].direction-1, RBoundaries[j].direction);
                         float error = leftPointError.R- leftPoint.R ;
@@ -165,7 +176,7 @@ namespace BrainSimulator.Modules
 
                         PointPlus rightPoint = FindDepth(LBoundaries[i + 1].direction, RBoundaries[j + 1].direction);
                         PointPlus rightPointError = FindDepth(LBoundaries[i + 1].direction-1, RBoundaries[j + 1].direction);
-                        error = leftPointError.R - leftPoint.R;
+                        error = rightPointError.R - rightPoint.R;
                         if (error < 0) break;
                         rightPoint.Conf = error;
 

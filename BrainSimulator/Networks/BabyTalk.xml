@@ -56,7 +56,7 @@
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>137863</LastFired>
+      <LastFired>185862</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.1</LeakRate>
@@ -12116,9 +12116,7 @@
     </DisplayOffset>
     <NeuronRows>30</NeuronRows>
   </displayParams>
-  <networkNotes>&lt;Section xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve" TextAlignment="Left" LineHeight="Auto" IsHyphenationEnabled="False" xml:lang="en-us" FlowDirection="LeftToRight" NumberSubstitution.CultureSource="Text" NumberSubstitution.Substitution="AsCulture" FontFamily="Segoe UI" FontStyle="Normal" FontWeight="Normal" FontStretch="Normal" FontSize="12" Foreground="#FF000000" Typography.StandardLigatures="True" Typography.ContextualLigatures="True" Typography.DiscretionaryLigatures="False" Typography.HistoricalLigatures="False" Typography.AnnotationAlternates="0" Typography.ContextualAlternates="True" Typography.HistoricalForms="False" Typography.Kerning="True" Typography.CapitalSpacing="False" Typography.CaseSensitiveForms="False" Typography.StylisticSet1="False" Typography.StylisticSet2="False" Typography.StylisticSet3="False" Typography.StylisticSet4="False" Typography.StylisticSet5="False" Typography.StylisticSet6="False" Typography.StylisticSet7="False" Typography.StylisticSet8="False" Typography.StylisticSet9="False" Typography.StylisticSet10="False" Typography.StylisticSet11="False" Typography.StylisticSet12="False" Typography.StylisticSet13="False" Typography.StylisticSet14="False" Typography.StylisticSet15="False" Typography.StylisticSet16="False" Typography.StylisticSet17="False" Typography.StylisticSet18="False" Typography.StylisticSet19="False" Typography.StylisticSet20="False" Typography.Fraction="Normal" Typography.SlashedZero="False" Typography.MathematicalGreek="False" Typography.EastAsianExpertForms="False" Typography.Variants="Normal" Typography.Capitals="Normal" Typography.NumeralStyle="Normal" Typography.NumeralAlignment="Normal" Typography.EastAsianWidths="Normal" Typography.EastAsianLanguage="Normal" Typography.StandardSwashes="0" Typography.ContextualSwashes="0" Typography.StylisticAlternates="0"&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Purpose&lt;/Run&gt;&lt;Run&gt;:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   This network illustrates a number of interesting features about language, how a child might learn it, and how it might be stored in the brain.  Consider that hearing words requires looking for similarities in an incoming audio stream to find words and phrases while speaking requires complex sequences of muscle contractions to make the vocal tract say sounds, words and phrases. Internally, there is likely no instinctive connection between things we hear and things we say--all of which must be learned. This network makes more-or-less random utterances in order to learn that a specific spoken sequence corresponds to a specific audible sequence.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   The network uses phonemes which are what linguists use as the building blocks for speech. Each phoneme corresponds to a specific sound and a specific letter in the phonetic alphabet. Although there are over a hundred letters in the phonetic alphabet, the program initializes with a set of English words to limit the set to fewer than 40. Phonetic symbols are different from alphabetic letters in that there is no ambiguity in pronunciation.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   The network also demonstrates how words and phrases can be stored in synaptic connections in your brain where there is no symbolic notation. For programming convenience, neurons in the Knowledge Store are labelled with the phoneme's character, HOWEVER, the labels are not used in computation. A key feature is that while words and phrases are stored in the Knowledge Store, there are NO VALUES actually stored, there are only links to and from external sources.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Initially, there are synaptic connections between the speaking phoneme neurons in the Knowledge Store and SpeakPhoneme module. The correspond roughly to multiple motor nerves which manipulate your vocal tract to make a specific sound. When the "BabyTalk" neuron is fired, Sallie makes a random selection of sounds to create a syllable which may be repeated several times. She then hears the phonemes she uttered and can begin to create connections between what she hears vs. what she said.  The phoneme selection is not completely random but consists of a consonant sound and a vowel sound. This restriction prevents numerous combinations which are more-or-less unpronounceable.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Sallie also hears speech from an external source and does her best to imitate what she hears. With progressively more practice, she is able to speak more accurately. Speech from the external source is a continuous sequence of phonemes not broken into words. Over time and repetition, Sallie learns to identify individual words and build them into phrases.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Things to try:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Fire the "BabyTalk" neuron and listen for the baby-talk response.  Repeat several times.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Enter the word "Mommy" into the Speak Phonemes window and press OK. A male voice will speak what you typed and Sallie's voice will make an effort to repeat back what she heard within the limitations of the phonemes she knows. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Fire the "BabyTalk" neuron many more times and press OK on the Speak Phonemes. Notice how Sallie gets progressively better at talking. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Continue the process with different words to see how the speech process is acquired. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   You can enter multi-word phrases. The more you start with individual words and work up to more complex phrases, the more efficiently Sallie will learn to identify the words within the phrases.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   You can speed up training if you disable the Speak Phonemes Module with its "Enable" neuron. Then you can speed up the engine and run many BabyTalk samples without having to wait for the speech synthesis queue. Then you can reenable the module to see how much has been learned.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   You can examine the Knowledge Store under Thing-&amp;gt;Audible and expand Phoneme to see which phonemes Sallie has associated, Word to see words she's learned, and Phrase to see how phrases sometimes consist of un-decoded phonemes and sometimes later on, consist of words.. Note that these contain no data, only attribute references.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Current state of development:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   The system is limited by the underlying speech engine which can decode phonemes but cannot handle pitch, emphases, and non-verbal sounds. A more generalize approach would be very interesting.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Sallie can learn a phoneme from a single presentation. A more true-to-life demonstration would require perhaps ten presentations for her to learn a phoneme and begins to point out why it takes years for a child to learn to speak.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Software exists for Sallie to speak and edit phrases she learns but it is not accessible through this network.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;
-Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;
-&lt;/Run&gt;&lt;/Paragraph&gt;&lt;/Section&gt;</networkNotes>
+  <networkNotes>&lt;Section xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve" TextAlignment="Left" LineHeight="Auto" IsHyphenationEnabled="False" xml:lang="en-us" FlowDirection="LeftToRight" NumberSubstitution.CultureSource="Text" NumberSubstitution.Substitution="AsCulture" FontFamily="Segoe UI" FontStyle="Normal" FontWeight="Normal" FontStretch="Normal" FontSize="12" Foreground="#FF000000" Typography.StandardLigatures="True" Typography.ContextualLigatures="True" Typography.DiscretionaryLigatures="False" Typography.HistoricalLigatures="False" Typography.AnnotationAlternates="0" Typography.ContextualAlternates="True" Typography.HistoricalForms="False" Typography.Kerning="True" Typography.CapitalSpacing="False" Typography.CaseSensitiveForms="False" Typography.StylisticSet1="False" Typography.StylisticSet2="False" Typography.StylisticSet3="False" Typography.StylisticSet4="False" Typography.StylisticSet5="False" Typography.StylisticSet6="False" Typography.StylisticSet7="False" Typography.StylisticSet8="False" Typography.StylisticSet9="False" Typography.StylisticSet10="False" Typography.StylisticSet11="False" Typography.StylisticSet12="False" Typography.StylisticSet13="False" Typography.StylisticSet14="False" Typography.StylisticSet15="False" Typography.StylisticSet16="False" Typography.StylisticSet17="False" Typography.StylisticSet18="False" Typography.StylisticSet19="False" Typography.StylisticSet20="False" Typography.Fraction="Normal" Typography.SlashedZero="False" Typography.MathematicalGreek="False" Typography.EastAsianExpertForms="False" Typography.Variants="Normal" Typography.Capitals="Normal" Typography.NumeralStyle="Normal" Typography.NumeralAlignment="Normal" Typography.EastAsianWidths="Normal" Typography.EastAsianLanguage="Normal" Typography.StandardSwashes="0" Typography.ContextualSwashes="0" Typography.StylisticAlternates="0"&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span FontWeight="Bold" FontSize="14"&gt;&lt;Run&gt;Purpose&lt;/Run&gt;&lt;/Span&gt;&lt;Span&gt;&lt;Run&gt;:&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   This network illustrates a number of interesting features about language, how a child might learn it, and how it might be stored in the brain.  Consider that hearing words requires searching the incoming audio stream to find patterns representing words and phrases while speaking requires complex sequences of muscle contractions to make the vocal tract say sounds, words and phrases. In your brain, there is likely no instinctive connection between things we hear and things we say—all of which must be learned. This network makes more-or-less random utterances in order to learn that a specific spoken sequence corresponds to a specific audible sequence.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   The network uses phonemes which are what linguists use as the building blocks for speech. Each phoneme corresponds to a specific sound and a specific letter in the phonetic alphabet. Although there are over a hundred letters in the phonetic alphabet, the program initializes with a set of English words to limit the set to fewer than 40. Phonetic symbols are different from alphabetic letters in that there is no ambiguity in pronunciation.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   The network also demonstrates how words and phrases can be stored in synaptic connections in your brain where there is no symbolic notation. For programming convenience, neurons in the Knowledge Store are labelled with the phoneme's character, HOWEVER, the labels are not used in computation. A key feature is that while words and phrases are stored in the Knowledge Store, there are NO VALUES actually stored, there are only links to and from external sources.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   Initially, there are synaptic connections between the speaking phoneme neurons in the Knowledge Store and SpeakPhoneme module. They correspond roughly to multiple motor nerves which manipulate your vocal tract to make a specific sound. When the "BabyTalk" neuron is fired, Sallie makes a random selection of sounds to create a syllable which may be repeated several times. She then hears the phonemes she uttered and can begin to create connections between what she hears vs. what she said.  The phoneme selection is not completely random but consists of a consonant sound and a vowel sound. This restriction prevents numerous combinations which are more-or-less unpronounceable.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   Sallie also hears speech from an external source and does her best to imitate what she hears. With progressively more practice, she is able to speak more accurately. Speech from the external source is a continuous sequence of phonemes not broken into words. Over time and repetition, Sallie learns to identify individual words and build them into phrases.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph FontSize="14" Margin="0,0,0,8"&gt;&lt;Span FontWeight="Bold"&gt;&lt;Run&gt;Things to try:&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   Fire the "BabyTalk" neuron and listen for the baby-talk response.  Repeat several times.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   Enter the word "Mommy" into the Speak Phonemes window and press OK. A male voice will speak what you typed and Sallie's voice will make an effort to repeat back what she heard within the limitations of the phonemes she knows. &lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   Fire the "BabyTalk" neuron many more times and press OK on the Speak Phonemes. Notice how Sallie gets progressively better at talking. &lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   Continue the process with different words to see how the speech process is acquired. &lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   You can enter multi-word phrases. The more you start with individual words and work up to more complex phrases, the more efficiently Sallie will learn to identify the words within the phrases.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   You can speed up training if you disable the Speak Phonemes Module with its "Enable" neuron. Then you can speed up the engine and run many BabyTalk samples without having to wait for the speech synthesis queue. Then you can reenable the module to see how much has been learned.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   You can examine the Knowledge Store under Thing-&amp;gt;Sense-&amp;gt;Audible and expand “Phoneme” to see which phonemes Sallie has associated, expand “Word” to see words she's learned, and “Phrase” to see how phrases sometimes consist of un-decoded phonemes and sometimes later on, consist of words.. Note that these contain no data, only attribute references.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph FontSize="14" Margin="0,0,0,8"&gt;&lt;Span FontWeight="Bold"&gt;&lt;Run&gt;Current state of development:&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   The system is limited by the underlying speech engine which can decode phonemes but cannot handle pitch, emphasis, and non-verbal sounds. A more generalized approach would be very interesting.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   Sallie can learn a phoneme from a single presentation. A more true-to-life demonstration would require perhaps ten presentations for her to learn a phoneme and illustrates why it takes years for a child to learn to speak.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   Software exists for Sallie to speak and edit phrases she learns but it is not accessible through this network.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph FontSize="14" Margin="0,0,0,8"&gt;&lt;Span FontWeight="Bold"&gt;&lt;Run&gt;Notes:&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;/Paragraph&gt;&lt;Paragraph FontFamily="Calibri" FontSize="14.666666666666666" Margin="0,0,0,8"&gt;&lt;/Paragraph&gt;&lt;/Section&gt;</networkNotes>
   <hideNotes>false</hideNotes>
   <Modules>
     <ModuleView>
@@ -12190,7 +12188,7 @@ Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;
             <label>Thing</label>
             <parents />
             <references />
-            <useCount>8</useCount>
+            <useCount>9</useCount>
           </SThing>
           <SThing>
             <label>Action</label>
@@ -12198,7 +12196,7 @@ Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;
               <int>4</int>
             </parents>
             <references />
-            <useCount>53020</useCount>
+            <useCount>101019</useCount>
           </SThing>
           <SThing>
             <label>NoAction</label>
@@ -12238,7 +12236,7 @@ Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;
               <int>5</int>
             </parents>
             <references />
-            <useCount>53008</useCount>
+            <useCount>101007</useCount>
           </SThing>
           <SThing>
             <label>Vowel</label>
@@ -12310,7 +12308,7 @@ Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;
               <int>5</int>
             </parents>
             <references />
-            <useCount>53006</useCount>
+            <useCount>101005</useCount>
           </SThing>
           <SThing>
             <label>SayRnd</label>
@@ -12318,7 +12316,7 @@ Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;
               <int>5</int>
             </parents>
             <references />
-            <useCount>53007</useCount>
+            <useCount>101006</useCount>
           </SThing>
           <SThing>
             <label>Attn</label>
@@ -12406,7 +12404,7 @@ Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;
               <int>29</int>
             </parents>
             <references />
-            <useCount>106012</useCount>
+            <useCount>202010</useCount>
           </SThing>
           <SThing>
             <label>Phrase</label>
@@ -12414,7 +12412,7 @@ Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;
               <int>29</int>
             </parents>
             <references />
-            <useCount>106013</useCount>
+            <useCount>202011</useCount>
           </SThing>
           <SThing>
             <label>PhraseISpoke</label>
@@ -12438,7 +12436,7 @@ Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;
               <int>34</int>
             </parents>
             <references />
-            <useCount>53006</useCount>
+            <useCount>101005</useCount>
           </SThing>
           <SThing>
             <label>NoWord</label>
@@ -12810,7 +12808,7 @@ Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;
       </TheModule>
     </ModuleView>
   </Modules>
-  <Generation>137864</Generation>
+  <Generation>185863</Generation>
   <EngineSpeed>10</EngineSpeed>
   <ShowSynapses>false</ShowSynapses>
 </NeuronArray>

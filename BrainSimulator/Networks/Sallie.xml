@@ -278,7 +278,7 @@
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>251133</LastFired>
+      <LastFired>252272</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0</LeakRate>
@@ -1436,7 +1436,7 @@
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
+      <LastFired>252194</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.1</LeakRate>
@@ -5121,7 +5121,7 @@
       </Synapses>
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
-      <LastFired>247538</LastFired>
+      <LastFired>252193</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0</LeakRate>
@@ -5276,7 +5276,21 @@
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>good</Label>
+      <Id>2620</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>252193</LastFired>
+    </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
@@ -5815,7 +5829,7 @@
       </Synapses>
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
-      <LastFired>251133</LastFired>
+      <LastFired>252272</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
@@ -15390,7 +15404,7 @@
     </DisplayOffset>
     <NeuronRows>100</NeuronRows>
   </displayParams>
-  <networkNotes>&lt;Section xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve" TextAlignment="Left" LineHeight="Auto" IsHyphenationEnabled="False" xml:lang="en-us" FlowDirection="LeftToRight" NumberSubstitution.CultureSource="Text" NumberSubstitution.Substitution="AsCulture" FontFamily="Segoe UI" FontStyle="Normal" FontWeight="Normal" FontStretch="Normal" FontSize="12" Foreground="#FF000000" Typography.StandardLigatures="True" Typography.ContextualLigatures="True" Typography.DiscretionaryLigatures="False" Typography.HistoricalLigatures="False" Typography.AnnotationAlternates="0" Typography.ContextualAlternates="True" Typography.HistoricalForms="False" Typography.Kerning="True" Typography.CapitalSpacing="False" Typography.CaseSensitiveForms="False" Typography.StylisticSet1="False" Typography.StylisticSet2="False" Typography.StylisticSet3="False" Typography.StylisticSet4="False" Typography.StylisticSet5="False" Typography.StylisticSet6="False" Typography.StylisticSet7="False" Typography.StylisticSet8="False" Typography.StylisticSet9="False" Typography.StylisticSet10="False" Typography.StylisticSet11="False" Typography.StylisticSet12="False" Typography.StylisticSet13="False" Typography.StylisticSet14="False" Typography.StylisticSet15="False" Typography.StylisticSet16="False" Typography.StylisticSet17="False" Typography.StylisticSet18="False" Typography.StylisticSet19="False" Typography.StylisticSet20="False" Typography.Fraction="Normal" Typography.SlashedZero="False" Typography.MathematicalGreek="False" Typography.EastAsianExpertForms="False" Typography.Variants="Normal" Typography.Capitals="Normal" Typography.NumeralStyle="Normal" Typography.NumeralAlignment="Normal" Typography.EastAsianWidths="Normal" Typography.EastAsianLanguage="Normal" Typography.StandardSwashes="0" Typography.ContextualSwashes="0" Typography.StylisticAlternates="0"&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Purpose:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Demonstrates the end-to-end intelligence model. Sallie can sense her environment through vision, touch, hearing, and smell can navigate around obstacles she sees and move toward goals.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Things to try:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Move and turn Sallie by using the controls at the upper left of the network. These are akin to the motor controls on a robot.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Rotate Sallie a full turn and see how object are mapped into her internal mental model. Notice that it is not terribly accurate as binocular depth perception had decreasing accuracy as the distance increases. Notice as Sallie approaches an obstacle, her perception of it position becomes progressively more accurate until she can touch it for the most accurate possible location information.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Enable learning by firing the "Color" neuron. This enables the simulator to say "This is [color]" based on the color direction in front of Sallie. Over time, Sallie can learn the names for colors. You can see the words the simulator is injecting into the audio stream in the Knowledge Store Debug window which shows the inputs and outputs to the Knowledge Store (as opposed to its content). &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Enable more learning by firing the "Action" neuron. The enables the simulator to send commands into Sallie's hearing stream and reward her when she responds correctly.  Over time she can learn to Go, Stop, Turn Right, Turn Left, and Say the color in front of her.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Current state of development:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Once this network is complete, Sallie will be able to explore and manipulate her environment through several senses. She will be able to learn the limited language which goes along with the limitations in her abilities and her environment. She will be able to make sequences of decisions to further her goals. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Within these limits, she may appear to understand her environment and the words associated withit. After that, the environment can be expanded to three dimensions with more degrees of flexibility. Eventually, the simulation can be replaced with a simple robot operating in the real world.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="12.75"&gt;Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;/Section&gt;</networkNotes>
+  <networkNotes>&lt;Section xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve" TextAlignment="Left" LineHeight="Auto" IsHyphenationEnabled="False" xml:lang="en-us" FlowDirection="LeftToRight" NumberSubstitution.CultureSource="Text" NumberSubstitution.Substitution="AsCulture" FontFamily="Segoe UI" FontStyle="Normal" FontWeight="Normal" FontStretch="Normal" FontSize="12" Foreground="#FF000000" Typography.StandardLigatures="True" Typography.ContextualLigatures="True" Typography.DiscretionaryLigatures="False" Typography.HistoricalLigatures="False" Typography.AnnotationAlternates="0" Typography.ContextualAlternates="True" Typography.HistoricalForms="False" Typography.Kerning="True" Typography.CapitalSpacing="False" Typography.CaseSensitiveForms="False" Typography.StylisticSet1="False" Typography.StylisticSet2="False" Typography.StylisticSet3="False" Typography.StylisticSet4="False" Typography.StylisticSet5="False" Typography.StylisticSet6="False" Typography.StylisticSet7="False" Typography.StylisticSet8="False" Typography.StylisticSet9="False" Typography.StylisticSet10="False" Typography.StylisticSet11="False" Typography.StylisticSet12="False" Typography.StylisticSet13="False" Typography.StylisticSet14="False" Typography.StylisticSet15="False" Typography.StylisticSet16="False" Typography.StylisticSet17="False" Typography.StylisticSet18="False" Typography.StylisticSet19="False" Typography.StylisticSet20="False" Typography.Fraction="Normal" Typography.SlashedZero="False" Typography.MathematicalGreek="False" Typography.EastAsianExpertForms="False" Typography.Variants="Normal" Typography.Capitals="Normal" Typography.NumeralStyle="Normal" Typography.NumeralAlignment="Normal" Typography.EastAsianWidths="Normal" Typography.EastAsianLanguage="Normal" Typography.StandardSwashes="0" Typography.ContextualSwashes="0" Typography.StylisticAlternates="0"&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Purpose:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Demonstrates the end-to-end intelligence model. Sallie can sense her environment through vision, touch, hearing, and smell can navigate around obstacles she sees and move toward goals.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Things to try:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Move and turn Sallie by using the controls at the upper left of the network. These are akin to the motor controls on a robot.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Rotate Sallie a full turn and see how object are mapped into her internal mental model. Notice that it is not terribly accurate as binocular depth perception had decreasing accuracy as the distance increases. Notice as Sallie approaches an obstacle, her perception of it position becomes progressively more accurate until she can touch it for the most accurate possible location information.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Enable learning by firing the "Color" neuron. This enables the simulator to say "This is [color]" based on the color direction in front of Sallie. Over time, Sallie can learn the names for colors. You can see the words the simulator is injecting into the audio stream in the Knowledge Store Debug window which shows the inputs and outputs to the Knowledge Store (as opposed to its content). &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Enable more learning by firing the "Action" neuron. The enables the simulator to send commands into Sallie's hearing stream and reward her when she responds correctly.  Over time she can learn to Go, Stop, Turn Right, Turn Left, and Say the color in front of her.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Current state of development:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Once this network is complete, Sallie will be able to explore and manipulate her environment through several senses. She will be able to learn the limited language which goes along with the limitations in her abilities and her environment. She will be able to make sequences of decisions to further her goals. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Within these limits, she may appear to understand her environment and the words associated withit. After that, the environment can be expanded to three dimensions with more degrees of flexibility. Eventually, the simulation can be replaced with a simple robot operating in the real world.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="12.75"&gt;Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;/Section&gt;</networkNotes>
   <hideNotes>false</hideNotes>
   <Modules>
     <ModuleView>
@@ -15483,7 +15497,7 @@
             <label>Thing</label>
             <parents />
             <references />
-            <useCount>5</useCount>
+            <useCount>6</useCount>
           </SThing>
           <SThing>
             <label>Action</label>
@@ -15491,7 +15505,7 @@
               <int>4</int>
             </parents>
             <references />
-            <useCount>215</useCount>
+            <useCount>1354</useCount>
           </SThing>
           <SThing>
             <label>NoAction</label>
@@ -15531,7 +15545,7 @@
               <int>5</int>
             </parents>
             <references />
-            <useCount>203</useCount>
+            <useCount>1342</useCount>
           </SThing>
           <SThing>
             <label>Vowel</label>
@@ -15603,7 +15617,7 @@
               <int>5</int>
             </parents>
             <references />
-            <useCount>201</useCount>
+            <useCount>1340</useCount>
           </SThing>
           <SThing>
             <label>SayRnd</label>
@@ -15611,7 +15625,7 @@
               <int>5</int>
             </parents>
             <references />
-            <useCount>201</useCount>
+            <useCount>1340</useCount>
           </SThing>
           <SThing>
             <label>Attn</label>
@@ -15643,7 +15657,7 @@
               <int>23</int>
             </parents>
             <references />
-            <useCount>3</useCount>
+            <useCount>5</useCount>
           </SThing>
           <SThing>
             <label>Shape</label>
@@ -15659,7 +15673,7 @@
               <int>25</int>
             </parents>
             <references />
-            <useCount>4</useCount>
+            <useCount>5</useCount>
           </SThing>
           <SThing>
             <label>Dot</label>
@@ -15675,7 +15689,7 @@
               <int>25</int>
             </parents>
             <references />
-            <useCount>3</useCount>
+            <useCount>4</useCount>
           </SThing>
           <SThing>
             <label>Audible</label>
@@ -15691,7 +15705,7 @@
               <int>29</int>
             </parents>
             <references />
-            <useCount>202</useCount>
+            <useCount>1341</useCount>
           </SThing>
           <SThing>
             <label>Phoneme</label>
@@ -15699,7 +15713,7 @@
               <int>29</int>
             </parents>
             <references />
-            <useCount>402</useCount>
+            <useCount>2680</useCount>
           </SThing>
           <SThing>
             <label>Phrase</label>
@@ -15707,7 +15721,7 @@
               <int>29</int>
             </parents>
             <references />
-            <useCount>403</useCount>
+            <useCount>2681</useCount>
           </SThing>
           <SThing>
             <label>PhraseISpoke</label>
@@ -15731,7 +15745,7 @@
               <int>34</int>
             </parents>
             <references />
-            <useCount>201</useCount>
+            <useCount>1340</useCount>
           </SThing>
           <SThing>
             <label>NoWord</label>
@@ -15837,7 +15851,7 @@
               <int>24</int>
             </parents>
             <references />
-            <useCount>6</useCount>
+            <useCount>12</useCount>
             <V xsi:type="xsd:int">16753920</V>
           </SThing>
           <SThing>
@@ -15847,11 +15861,11 @@
             </parents>
             <references>
               <Point>
-                <X>45</X>
+                <X>46</X>
                 <Y>1</Y>
               </Point>
               <Point>
-                <X>46</X>
+                <X>45</X>
                 <Y>1</Y>
               </Point>
               <Point>
@@ -15859,7 +15873,7 @@
                 <Y>1</Y>
               </Point>
             </references>
-            <useCount>1</useCount>
+            <useCount>2</useCount>
           </SThing>
         </UKSTemp>
         <immediateMemory>2</immediateMemory>
@@ -16107,12 +16121,12 @@
         </objects>
         <armRelative>
           <Vector>
-            <X>0.50280966863409815</X>
-            <Y>0.25034821998831974</Y>
+            <X>0.49880425413395535</X>
+            <Y>0.71499401707164834</Y>
           </Vector>
           <Vector>
-            <X>0.5386690998559498</X>
-            <Y>-0.25849619861085527</Y>
+            <X>0.357095841585896</X>
+            <Y>-0.34320141404415572</Y>
           </Vector>
         </armRelative>
         <entityPosition>
@@ -16400,7 +16414,7 @@
       </TheModule>
     </ModuleView>
   </Modules>
-  <Generation>251134</Generation>
+  <Generation>252273</Generation>
   <EngineSpeed>250</EngineSpeed>
   <ShowSynapses>true</ShowSynapses>
 </NeuronArray>

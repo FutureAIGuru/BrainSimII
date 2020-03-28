@@ -34,7 +34,7 @@ namespace BrainSimulator.Modules
         [XmlIgnore]
         public BitmapImage theDlgBitMap = null;
 
-
+     
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable

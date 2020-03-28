@@ -283,7 +283,7 @@
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>254204</LastFired>
+      <LastFired>254723</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0</LeakRate>
@@ -4878,7 +4878,7 @@
       </Synapses>
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
-      <LastFired>254204</LastFired>
+      <LastFired>254723</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron>
@@ -14508,7 +14508,7 @@
     </DisplayOffset>
     <NeuronRows>100</NeuronRows>
   </displayParams>
-  <networkNotes>&lt;Section xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve" TextAlignment="Left" LineHeight="Auto" IsHyphenationEnabled="False" xml:lang="en-us" FlowDirection="LeftToRight" NumberSubstitution.CultureSource="Text" NumberSubstitution.Substitution="AsCulture" FontFamily="Segoe UI" FontStyle="Normal" FontWeight="Normal" FontStretch="Normal" FontSize="12" Foreground="#FF000000" Typography.StandardLigatures="True" Typography.ContextualLigatures="True" Typography.DiscretionaryLigatures="False" Typography.HistoricalLigatures="False" Typography.AnnotationAlternates="0" Typography.ContextualAlternates="True" Typography.HistoricalForms="False" Typography.Kerning="True" Typography.CapitalSpacing="False" Typography.CaseSensitiveForms="False" Typography.StylisticSet1="False" Typography.StylisticSet2="False" Typography.StylisticSet3="False" Typography.StylisticSet4="False" Typography.StylisticSet5="False" Typography.StylisticSet6="False" Typography.StylisticSet7="False" Typography.StylisticSet8="False" Typography.StylisticSet9="False" Typography.StylisticSet10="False" Typography.StylisticSet11="False" Typography.StylisticSet12="False" Typography.StylisticSet13="False" Typography.StylisticSet14="False" Typography.StylisticSet15="False" Typography.StylisticSet16="False" Typography.StylisticSet17="False" Typography.StylisticSet18="False" Typography.StylisticSet19="False" Typography.StylisticSet20="False" Typography.Fraction="Normal" Typography.SlashedZero="False" Typography.MathematicalGreek="False" Typography.EastAsianExpertForms="False" Typography.Variants="Normal" Typography.Capitals="Normal" Typography.NumeralStyle="Normal" Typography.NumeralAlignment="Normal" Typography.EastAsianWidths="Normal" Typography.EastAsianLanguage="Normal" Typography.StandardSwashes="0" Typography.ContextualSwashes="0" Typography.StylisticAlternates="0"&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Purpose:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   This network shows why an imagination is useful with a very simple example. After Sallie has seen the obstacles in the environment, she can be directed to a specific location. If there is an obstacle in the way, she imagines what she would see if she were at the ends of the obstacle see if she can get to her destination from there. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Things to try:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Hold the "&amp;gt;" neuron to rotate Sallie and initialize her internal mental model.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Right-click at a location in the Environment Simulator window to direct Sallie to that location. If there is an obstacle in the way, you'll see the Internal Model window go gray as Sallie imagines what she would see from a different location. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   You can edit synapses connecting the neurons in the Module2DSim module to change the pattern of obstacles when you reinitialize the engine. You'll likely see some of the limitations in the vision system, both in the resolution of less than 100 pixels and in the limitations in obstacles which occlude one another in the visual field. You can bypass these with the "Set Model" button.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Current state of development:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   This is a basic example but the Internal Model module is designed to support the imagination of objects from the Knowledge Store so Sallie &lt;/Run&gt;&lt;Run FontStyle="Italic"&gt;could&lt;/Run&gt;&lt;Run&gt; have a general visual imagination. An auditory imagination could work along the same lines.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   It might also be interesting for sounds heard to be located with directions in the mental model. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="12.75"&gt;Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;/Section&gt;</networkNotes>
+  <networkNotes>&lt;Section xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve" TextAlignment="Left" LineHeight="Auto" IsHyphenationEnabled="False" xml:lang="en-us" FlowDirection="LeftToRight" NumberSubstitution.CultureSource="Text" NumberSubstitution.Substitution="AsCulture" FontFamily="Segoe UI" FontStyle="Normal" FontWeight="Normal" FontStretch="Normal" FontSize="12" Foreground="#FF000000" Typography.StandardLigatures="True" Typography.ContextualLigatures="True" Typography.DiscretionaryLigatures="False" Typography.HistoricalLigatures="False" Typography.AnnotationAlternates="0" Typography.ContextualAlternates="True" Typography.HistoricalForms="False" Typography.Kerning="True" Typography.CapitalSpacing="False" Typography.CaseSensitiveForms="False" Typography.StylisticSet1="False" Typography.StylisticSet2="False" Typography.StylisticSet3="False" Typography.StylisticSet4="False" Typography.StylisticSet5="False" Typography.StylisticSet6="False" Typography.StylisticSet7="False" Typography.StylisticSet8="False" Typography.StylisticSet9="False" Typography.StylisticSet10="False" Typography.StylisticSet11="False" Typography.StylisticSet12="False" Typography.StylisticSet13="False" Typography.StylisticSet14="False" Typography.StylisticSet15="False" Typography.StylisticSet16="False" Typography.StylisticSet17="False" Typography.StylisticSet18="False" Typography.StylisticSet19="False" Typography.StylisticSet20="False" Typography.Fraction="Normal" Typography.SlashedZero="False" Typography.MathematicalGreek="False" Typography.EastAsianExpertForms="False" Typography.Variants="Normal" Typography.Capitals="Normal" Typography.NumeralStyle="Normal" Typography.NumeralAlignment="Normal" Typography.EastAsianWidths="Normal" Typography.EastAsianLanguage="Normal" Typography.StandardSwashes="0" Typography.ContextualSwashes="0" Typography.StylisticAlternates="0"&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Purpose:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   This network shows why an imagination is useful with a very simple example. After Sallie has seen the obstacles in the environment, she can be directed to a specific location. If there is an obstacle in the way, she imagines what she would see if she were at the ends of the obstacle to see if she can get to her destination from there. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Things to try:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Hold the "&amp;gt;" neuron to rotate Sallie and initialize her internal mental model.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Right-click at a location in the Environment Simulator window to direct Sallie to that location. If there is an obstacle in the way, you'll see the Internal Model window go gray as Sallie imagines what she would see from a different location. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   You can edit synapses connecting the neurons in the Module2DSim module to change the pattern of obstacles when you reinitialize the engine. You'll likely see some of the limitations in the vision system, both in the resolution of less than 100 pixels and in the limitations in obstacles which occlude one another in the visual field. You can bypass these with the "Set Model" button.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Current state of development:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   This is a basic example but the Internal Model module is designed to support the imagination of objects from the Knowledge Store so Sallie &lt;/Run&gt;&lt;Run FontStyle="Italic"&gt;could&lt;/Run&gt;&lt;Run&gt; have a general visual imagination. An auditory imagination could work along the same lines.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   It might also be interesting for sounds heard to be located with directions in the mental model. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="12.75"&gt;Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;/Section&gt;</networkNotes>
   <hideNotes>false</hideNotes>
   <Modules>
     <ModuleView>
@@ -14601,7 +14601,7 @@
             <label>Thing</label>
             <parents />
             <references />
-            <useCount>5</useCount>
+            <useCount>7</useCount>
           </SThing>
           <SThing>
             <label>Action</label>
@@ -14609,7 +14609,7 @@
               <int>4</int>
             </parents>
             <references />
-            <useCount>28</useCount>
+            <useCount>547</useCount>
           </SThing>
           <SThing>
             <label>NoAction</label>
@@ -14649,7 +14649,7 @@
               <int>5</int>
             </parents>
             <references />
-            <useCount>16</useCount>
+            <useCount>535</useCount>
           </SThing>
           <SThing>
             <label>Vowel</label>
@@ -14721,7 +14721,7 @@
               <int>5</int>
             </parents>
             <references />
-            <useCount>14</useCount>
+            <useCount>533</useCount>
           </SThing>
           <SThing>
             <label>SayRnd</label>
@@ -14729,7 +14729,7 @@
               <int>5</int>
             </parents>
             <references />
-            <useCount>14</useCount>
+            <useCount>533</useCount>
           </SThing>
           <SThing>
             <label>Attn</label>
@@ -14761,7 +14761,7 @@
               <int>23</int>
             </parents>
             <references />
-            <useCount>2</useCount>
+            <useCount>6</useCount>
           </SThing>
           <SThing>
             <label>Shape</label>
@@ -14777,7 +14777,7 @@
               <int>25</int>
             </parents>
             <references />
-            <useCount>15</useCount>
+            <useCount>534</useCount>
           </SThing>
           <SThing>
             <label>Dot</label>
@@ -14793,7 +14793,7 @@
               <int>25</int>
             </parents>
             <references />
-            <useCount>15</useCount>
+            <useCount>534</useCount>
           </SThing>
           <SThing>
             <label>Audible</label>
@@ -14817,7 +14817,7 @@
               <int>29</int>
             </parents>
             <references />
-            <useCount>28</useCount>
+            <useCount>1066</useCount>
           </SThing>
           <SThing>
             <label>Phrase</label>
@@ -14825,7 +14825,7 @@
               <int>29</int>
             </parents>
             <references />
-            <useCount>29</useCount>
+            <useCount>1067</useCount>
           </SThing>
           <SThing>
             <label>PhraseISpoke</label>
@@ -14849,7 +14849,7 @@
               <int>34</int>
             </parents>
             <references />
-            <useCount>14</useCount>
+            <useCount>533</useCount>
           </SThing>
           <SThing>
             <label>NoWord</label>
@@ -15191,12 +15191,12 @@
         </objects>
         <armRelative>
           <Vector>
-            <X>0.66210266031671927</X>
-            <Y>0.313200990012956</Y>
+            <X>0.46653973549728689</X>
+            <Y>0.37820845401092529</Y>
           </Vector>
           <Vector>
-            <X>0.45658060951566759</X>
-            <Y>-0.29276944172585267</Y>
+            <X>0.56901359233993287</X>
+            <Y>-0.27527243055196482</Y>
           </Vector>
         </armRelative>
         <entityPosition>
@@ -15260,8 +15260,8 @@
       <TheModule xsi:type="Module2DModel">
         <initialized>true</initialized>
         <dlgPos>
-          <X>1382</X>
-          <Y>72</Y>
+          <X>1778</X>
+          <Y>60</Y>
         </dlgPos>
         <dlgSize>
           <X>346</X>
@@ -15294,7 +15294,7 @@
       </TheModule>
     </ModuleView>
   </Modules>
-  <Generation>254205</Generation>
+  <Generation>254724</Generation>
   <EngineSpeed>250</EngineSpeed>
   <ShowSynapses>true</ShowSynapses>
 </NeuronArray>

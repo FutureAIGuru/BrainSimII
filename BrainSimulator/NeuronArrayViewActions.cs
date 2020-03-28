@@ -138,6 +138,7 @@ namespace BrainSimulator
         public void MoveNeurons()
         {
             if (theSelection.selectedNeuronIndex == -1) return;
+            if (theSelection.selectedRectangles.Count == 0) return;
             theSelection.EnumSelectedNeurons();
             int offset = targetNeuronIndex - theSelection.selectedRectangles[0].FirstSelectedNeuron;
             for (Neuron n = theSelection.GetSelectedNeuron(); n != null; n = theSelection.GetSelectedNeuron())

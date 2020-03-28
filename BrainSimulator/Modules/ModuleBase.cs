@@ -105,6 +105,17 @@ namespace BrainSimulator.Modules
             dlg.Closing += Dlg_Closing;
             dlg.LocationChanged += Dlg_LocationChanged;
             dlg.SizeChanged += Dlg_SizeChanged;
+
+            //we need to set the dialog owner so it will display properly
+            //this hack is here because a file might load and create dialogs prior to the mainwindow opening
+            //so the same functionality is called from within FileLoad
+            Window mainWindow = Application.Current.MainWindow;
+            if (mainWindow.GetType() == typeof(MainWindow))
+                dlg.Owner = Application.Current.MainWindow;
+            else
+                mainWindow = mainWindow;
+
+            //restore the size and position
             if (dlgPos != new Point(0, 0))
             {
                 dlg.Top = dlgPos.Y;
@@ -125,15 +136,14 @@ namespace BrainSimulator.Modules
                 dlg.Width = 350;
                 dlg.Height = 300;
             }
-            //we need to set the dialog owner so it will display properly
-            //this hack is here because a file might load and create dialogs prior to the mainwindow opening
-            //so the same functionality is called from within FileLoad
-            Window mainWindow = Application.Current.MainWindow;
-            if (mainWindow.GetType() == typeof(MainWindow))
-                dlg.Owner = Application.Current.MainWindow;
-            else
-                mainWindow = mainWindow;
 
+            if (mainWindow.ActualWidth > 800) //try to keep dialogs on the screen
+            {
+                if (dlg.Width + dlg.Left > mainWindow.ActualWidth)
+                    dlg.Left = mainWindow.ActualWidth - dlg.Width;
+                if (dlg.Height + dlg.Top > mainWindow.ActualHeight)
+                    dlg.Top = mainWindow.ActualHeight - dlg.Height;
+            }
             dlg.Show();
             dlgIsOpen = true;
         }

@@ -287,7 +287,7 @@
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>693445</LastFired>
+      <LastFired>826366</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.1</LeakRate>
@@ -2849,7 +2849,7 @@
       </Synapses>
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
-      <LastFired>693445</LastFired>
+      <LastFired>826366</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
@@ -6258,7 +6258,7 @@
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>693445</LastFired>
+      <LastFired>826366</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.1</LeakRate>
@@ -29362,7 +29362,7 @@
     </DisplayOffset>
     <NeuronRows>50</NeuronRows>
   </displayParams>
-  <networkNotes>&lt;Section xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve" TextAlignment="Left" LineHeight="Auto" IsHyphenationEnabled="False" xml:lang="en-us" FlowDirection="LeftToRight" NumberSubstitution.CultureSource="Text" NumberSubstitution.Substitution="AsCulture" FontFamily="Segoe UI" FontStyle="Normal" FontWeight="Normal" FontStretch="Normal" FontSize="12" Foreground="#FF000000" Typography.StandardLigatures="True" Typography.ContextualLigatures="True" Typography.DiscretionaryLigatures="False" Typography.HistoricalLigatures="False" Typography.AnnotationAlternates="0" Typography.ContextualAlternates="True" Typography.HistoricalForms="False" Typography.Kerning="True" Typography.CapitalSpacing="False" Typography.CaseSensitiveForms="False" Typography.StylisticSet1="False" Typography.StylisticSet2="False" Typography.StylisticSet3="False" Typography.StylisticSet4="False" Typography.StylisticSet5="False" Typography.StylisticSet6="False" Typography.StylisticSet7="False" Typography.StylisticSet8="False" Typography.StylisticSet9="False" Typography.StylisticSet10="False" Typography.StylisticSet11="False" Typography.StylisticSet12="False" Typography.StylisticSet13="False" Typography.StylisticSet14="False" Typography.StylisticSet15="False" Typography.StylisticSet16="False" Typography.StylisticSet17="False" Typography.StylisticSet18="False" Typography.StylisticSet19="False" Typography.StylisticSet20="False" Typography.Fraction="Normal" Typography.SlashedZero="False" Typography.MathematicalGreek="False" Typography.EastAsianExpertForms="False" Typography.Variants="Normal" Typography.Capitals="Normal" Typography.NumeralStyle="Normal" Typography.NumeralAlignment="Normal" Typography.EastAsianWidths="Normal" Typography.EastAsianLanguage="Normal" Typography.StandardSwashes="0" Typography.ContextualSwashes="0" Typography.StylisticAlternates="0"&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Purpose&lt;/Run&gt;&lt;Run&gt;:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   This network is he first iteration of a system for basic, human-like navigation. Consider that any three-year-old can navigate around within a home...to go to a room where she knows a desired object exists. Sallie can explore her environment and note landmarks at points where she can make a decision as to which way to turn. When she reaches an end, it notes the "color" (which can be a goal) of the destination and stores the informatization in the Knowledge Store.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Each landmark consists of the nearby segments. As Sallie moves, she continuously tests her surroundings for landmarks she recognizes and takes a different path in order to explore its surroundings.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   After exploration, enabling the "Goal" mode followed by a specific goal firing initiates a search of the knowledge base for the route to that goal.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Things to try:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Fire the "Auto" neuron to initiate exploration and watch the entire environment be searched.  Below the "Goal" neuron, colored neurons will be added as the various destinations are encountered.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Fire the "Goal" neuron followed by a neuron to the right of a colored neuron. The entity will proceed to that goal.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Open the Knowledge Store dialog box and examine the "Situations" section. A situation consists of a recognizable situation (in this case, a landmark). Children of a situation consist of pairs, an action, and its related outcome. Armed with this information, the entity can know for any given situation which actions led to which outcomes. In other networks, situations contain words or phrases (or anything else) and so can form the basis for all decision-making.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   You can modify the environment by enabling synapses and adding and deleting synapses in the Sim module. After initialization, the synapse pattern is transferred to the environment. Colors are randomly assigned. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Current state of development:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   This is the very first iteration of this experiment in navigation and several simplifying limitations have been imposed in order to get it started out:  The entity and obstacles are  limited to right angles on 0.5-unit boundaries.  Subsequent improvements in the way it detects obstacles landmarks should relax these requirements.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   This has only been tried on very simple environments but there is no reason that complex environments should not work equally well.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Because of limitations in the vision system's ability to handle object occlusion, the maze must be stored directly into the mental model with the temporary "Set Model" button on the Simulator Module.  Improvements in vision will allow this to be vision-based.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Because of the limitation in resolution of rotations, a round-off error accumulates and Sallie eventually becomes unable to detect landmarks. While simply improving the resolution would mask the issue, a better (more human-like) approach would be to constantly correct the orientation and position of the internal mental model as Sallie sees it.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Touch and vision are not currently enabled. Both need upgrades to handle the visual object occlusion found of this type of environment.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   The system presently uses a unique color for every segment in the environment as an aid to landmark recognition. This can probably be eliminated.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;/Section&gt;</networkNotes>
+  <networkNotes>&lt;Section xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve" TextAlignment="Left" LineHeight="Auto" IsHyphenationEnabled="False" xml:lang="en-us" FlowDirection="LeftToRight" NumberSubstitution.CultureSource="Text" NumberSubstitution.Substitution="AsCulture" FontFamily="Segoe UI" FontStyle="Normal" FontWeight="Normal" FontStretch="Normal" FontSize="12" Foreground="#FF000000" Typography.StandardLigatures="True" Typography.ContextualLigatures="True" Typography.DiscretionaryLigatures="False" Typography.HistoricalLigatures="False" Typography.AnnotationAlternates="0" Typography.ContextualAlternates="True" Typography.HistoricalForms="False" Typography.Kerning="True" Typography.CapitalSpacing="False" Typography.CaseSensitiveForms="False" Typography.StylisticSet1="False" Typography.StylisticSet2="False" Typography.StylisticSet3="False" Typography.StylisticSet4="False" Typography.StylisticSet5="False" Typography.StylisticSet6="False" Typography.StylisticSet7="False" Typography.StylisticSet8="False" Typography.StylisticSet9="False" Typography.StylisticSet10="False" Typography.StylisticSet11="False" Typography.StylisticSet12="False" Typography.StylisticSet13="False" Typography.StylisticSet14="False" Typography.StylisticSet15="False" Typography.StylisticSet16="False" Typography.StylisticSet17="False" Typography.StylisticSet18="False" Typography.StylisticSet19="False" Typography.StylisticSet20="False" Typography.Fraction="Normal" Typography.SlashedZero="False" Typography.MathematicalGreek="False" Typography.EastAsianExpertForms="False" Typography.Variants="Normal" Typography.Capitals="Normal" Typography.NumeralStyle="Normal" Typography.NumeralAlignment="Normal" Typography.EastAsianWidths="Normal" Typography.EastAsianLanguage="Normal" Typography.StandardSwashes="0" Typography.ContextualSwashes="0" Typography.StylisticAlternates="0"&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Purpose&lt;/Run&gt;&lt;Run&gt;:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   This network is the first iteration of a system for basic, human-like navigation. Consider that any three-year-old can navigate around within a home...to go to a room where she knows a desired object exists. Sallie can explore her environment and note landmarks at points where she can make a decision as to which way to turn. When she reaches an end, it notes the "color" (which can be a goal) of the destination and stores the informatization in the Knowledge Store.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Each landmark consists of the nearby segments. As Sallie moves, she continuously tests her surroundings for landmarks she recognizes and takes a different path in order to explore its surroundings.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   After exploration, enabling the "Goal" mode followed by a specific goal firing initiates a search of the knowledge base for the route to that goal.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Things to try:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Fire the "Auto" neuron to initiate exploration and watch the entire environment be searched.  Below the "Goal" neuron, colored neurons will be added as the various destinations are encountered.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Fire the "Goal" neuron followed by a neuron to the right of a colored neuron. The entity will proceed to that goal.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Open the Knowledge Store dialog box and examine the "Situations" section. A situation consists of a recognizable situation (in this case, a landmark). Children of a situation consist of pairs, an action, and its related outcome. Armed with this information, the entity can know for any given situation which actions led to which outcomes. In other networks, situations contain words or phrases (or anything else) and so can form the basis for all decision-making.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   You can modify the environment by enabling synapses and adding and deleting synapses in the Sim module. After initialization, the synapse pattern is transferred to the environment. Colors are randomly assigned. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Current state of development:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   This is the very first iteration of this experiment in navigation and several simplifying limitations have been imposed in order to get it started out:  The entity and obstacles are  limited to right angles on 0.5-unit boundaries.  Subsequent improvements in the way it detects obstacles landmarks should relax these requirements.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   This has only been tried on very simple environments but there is no reason that complex environments should not work equally well.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Because of limitations in the vision system's ability to handle object occlusion, the maze must be stored directly into the mental model with the temporary "Set Model" button on the Simulator Module.  Improvements in vision will allow this to be vision-based.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Because of the limitation in resolution of rotations, a round-off error accumulates and Sallie eventually becomes unable to detect landmarks. While simply improving the resolution would mask the issue, a better (more human-like) approach would be to constantly correct the orientation and position of the internal mental model as Sallie sees it.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Touch and vision are not currently enabled. Both need upgrades to handle the visual object occlusion found of this type of environment.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   The system presently uses a unique color for every segment in the environment as an aid to landmark recognition. This can probably be eliminated.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;/Section&gt;</networkNotes>
   <hideNotes>false</hideNotes>
   <Modules>
     <ModuleView>
@@ -29413,7 +29413,7 @@
             <label>Thing</label>
             <parents />
             <references />
-            <useCount>5</useCount>
+            <useCount>7</useCount>
           </SThing>
           <SThing>
             <label>Action</label>
@@ -29421,7 +29421,7 @@
               <int>4</int>
             </parents>
             <references />
-            <useCount>28233</useCount>
+            <useCount>161154</useCount>
           </SThing>
           <SThing>
             <label>NoAction</label>
@@ -29461,7 +29461,7 @@
               <int>5</int>
             </parents>
             <references />
-            <useCount>28217</useCount>
+            <useCount>161138</useCount>
           </SThing>
           <SThing>
             <label>Vowel</label>
@@ -29533,7 +29533,7 @@
               <int>5</int>
             </parents>
             <references />
-            <useCount>28215</useCount>
+            <useCount>161136</useCount>
           </SThing>
           <SThing>
             <label>SayRnd</label>
@@ -29541,7 +29541,7 @@
               <int>5</int>
             </parents>
             <references />
-            <useCount>28215</useCount>
+            <useCount>161136</useCount>
           </SThing>
           <SThing>
             <label>Attn</label>
@@ -29589,7 +29589,7 @@
               <int>25</int>
             </parents>
             <references />
-            <useCount>787</useCount>
+            <useCount>789</useCount>
           </SThing>
           <SThing>
             <label>Dot</label>
@@ -29605,7 +29605,7 @@
               <int>25</int>
             </parents>
             <references />
-            <useCount>769</useCount>
+            <useCount>771</useCount>
           </SThing>
           <SThing>
             <label>Audible</label>
@@ -29629,7 +29629,7 @@
               <int>29</int>
             </parents>
             <references />
-            <useCount>56430</useCount>
+            <useCount>322272</useCount>
           </SThing>
           <SThing>
             <label>Phrase</label>
@@ -29637,7 +29637,7 @@
               <int>29</int>
             </parents>
             <references />
-            <useCount>56431</useCount>
+            <useCount>322273</useCount>
           </SThing>
           <SThing>
             <label>PhraseISpoke</label>
@@ -29661,7 +29661,7 @@
               <int>34</int>
             </parents>
             <references />
-            <useCount>28215</useCount>
+            <useCount>161136</useCount>
           </SThing>
           <SThing>
             <label>NoWord</label>
@@ -29685,7 +29685,7 @@
               <int>37</int>
             </parents>
             <references />
-            <useCount>56432</useCount>
+            <useCount>322274</useCount>
           </SThing>
           <SThing>
             <label>SPoint</label>
@@ -31370,12 +31370,12 @@
         </objects>
         <armRelative>
           <Vector>
-            <X>0.4966604385503</X>
-            <Y>0.25298076597693536</Y>
+            <X>0.44370605139477615</X>
+            <Y>0.74255595475035041</Y>
           </Vector>
           <Vector>
-            <X>0.62927213281645389</X>
-            <Y>-0.30360842149369316</Y>
+            <X>0.55382721730675466</X>
+            <Y>-0.74368509660699122</Y>
           </Vector>
         </armRelative>
         <entityPosition>
@@ -31431,7 +31431,7 @@
       </TheModule>
     </ModuleView>
   </Modules>
-  <Generation>693446</Generation>
+  <Generation>826367</Generation>
   <EngineSpeed>5</EngineSpeed>
   <ShowSynapses>true</ShowSynapses>
 </NeuronArray>

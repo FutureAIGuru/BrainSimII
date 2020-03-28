@@ -211,8 +211,8 @@
       <Id>200</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
+      <LastCharge>1</LastCharge>
+      <LastChargeInt>10000</LastChargeInt>
       <Synapses>
         <Synapse>
           <Weight>1</Weight>
@@ -230,7 +230,7 @@
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>true</KeepHistory>
-      <LastFired>20490</LastFired>
+      <LastFired>22570</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.1</LeakRate>
@@ -259,7 +259,7 @@
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>20489</LastFired>
+      <LastFired>22569</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.1</LeakRate>
@@ -288,7 +288,7 @@
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>20488</LastFired>
+      <LastFired>22568</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron>
@@ -318,7 +318,7 @@
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>20493</LastFired>
+      <LastFired>22570</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron>
@@ -418,7 +418,7 @@
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>20493</LastFired>
+      <LastFired>22570</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
@@ -534,7 +534,7 @@
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>true</KeepHistory>
-      <LastFired>20491</LastFired>
+      <LastFired>22563</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron>
@@ -564,7 +564,7 @@
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>20487</LastFired>
+      <LastFired>22567</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron>
@@ -573,10 +573,10 @@
       <Model>Std</Model>
       <Label />
       <Id>304</Id>
-      <CurrentCharge>0.6</CurrentCharge>
-      <CurrentChargeInt>6000</CurrentChargeInt>
-      <LastCharge>0.6</LastCharge>
-      <LastChargeInt>6000</LastChargeInt>
+      <CurrentCharge>0.3</CurrentCharge>
+      <CurrentChargeInt>3000</CurrentChargeInt>
+      <LastCharge>0.3</LastCharge>
+      <LastChargeInt>3000</LastChargeInt>
       <Synapses>
         <Synapse>
           <Weight>1</Weight>
@@ -590,7 +590,7 @@
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>20487</LastFired>
+      <LastFired>22567</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron>
@@ -694,7 +694,7 @@
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>20493</LastFired>
+      <LastFired>22570</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.1</LeakRate>
@@ -838,7 +838,7 @@
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>true</KeepHistory>
-      <LastFired>20492</LastFired>
+      <LastFired>22564</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.1</LeakRate>
@@ -848,8 +848,8 @@
       <Id>401</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>1</LastCharge>
-      <LastChargeInt>10000</LastChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
       <Synapses>
         <Synapse>
           <Weight>1</Weight>
@@ -863,7 +863,7 @@
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>20493</LastFired>
+      <LastFired>22565</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.1</LeakRate>
@@ -888,7 +888,7 @@
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>20486</LastFired>
+      <LastFired>22566</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron>
@@ -909,7 +909,7 @@
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>20488</LastFired>
+      <LastFired>22568</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
@@ -1070,7 +1070,7 @@
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>20493</LastFired>
+      <LastFired>22570</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.1</LeakRate>
@@ -10684,10 +10684,10 @@
     </DisplayOffset>
     <NeuronRows>100</NeuronRows>
   </displayParams>
-  <networkNotes>&lt;Section xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve" TextAlignment="Left" LineHeight="Auto" IsHyphenationEnabled="False" xml:lang="en-us" FlowDirection="LeftToRight" NumberSubstitution.CultureSource="Text" NumberSubstitution.Substitution="AsCulture" FontFamily="Segoe UI" FontStyle="Normal" FontWeight="Normal" FontStretch="Normal" FontSize="12" Foreground="#FF000000" Typography.StandardLigatures="True" Typography.ContextualLigatures="True" Typography.DiscretionaryLigatures="False" Typography.HistoricalLigatures="False" Typography.AnnotationAlternates="0" Typography.ContextualAlternates="True" Typography.HistoricalForms="False" Typography.Kerning="True" Typography.CapitalSpacing="False" Typography.CaseSensitiveForms="False" Typography.StylisticSet1="False" Typography.StylisticSet2="False" Typography.StylisticSet3="False" Typography.StylisticSet4="False" Typography.StylisticSet5="False" Typography.StylisticSet6="False" Typography.StylisticSet7="False" Typography.StylisticSet8="False" Typography.StylisticSet9="False" Typography.StylisticSet10="False" Typography.StylisticSet11="False" Typography.StylisticSet12="False" Typography.StylisticSet13="False" Typography.StylisticSet14="False" Typography.StylisticSet15="False" Typography.StylisticSet16="False" Typography.StylisticSet17="False" Typography.StylisticSet18="False" Typography.StylisticSet19="False" Typography.StylisticSet20="False" Typography.Fraction="Normal" Typography.SlashedZero="False" Typography.MathematicalGreek="False" Typography.EastAsianExpertForms="False" Typography.Variants="Normal" Typography.Capitals="Normal" Typography.NumeralStyle="Normal" Typography.NumeralAlignment="Normal" Typography.EastAsianWidths="Normal" Typography.EastAsianLanguage="Normal" Typography.StandardSwashes="0" Typography.ContextualSwashes="0" Typography.StylisticAlternates="0"&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Purpose&lt;/Run&gt;&lt;Run&gt;:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   This network shows the basic Integrate-and-Fire neuron model.&lt;/Run&gt;&lt;Run&gt; &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   The neurons in the upper square are connected one-to-the-next by synapses of weight of 1.0 so the firing of one causes firing of the next. The top three neurons of the square are shown in the firing history window at the lower right.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   The three neurons below:  the left-most is connected to itself so it will always fire. It is also connected to the center neurons with a synapse of weight 0.1. You cans see the color change as it accumulates charge. When it reaches its threshold, it will fire and cause the right-most neuron to fire once every tenth cycle.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Below that are a cluster of neurons which show basic digital logic functions of OR, AND, NAND, and XOR and a set-reset flip-flop--the simplest possible digital memory.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Things to try:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Click the "A" and "B" neurons to exercise various digital logic functions [This will make sense to people with EE and CS experience]. A neuron with a synapse to itself will fire continuously after it is clicked and will stop firing if clicked again.  Note that a "1" neuron which always fires is necessary to create an inverter (for NAND). This simple demonstration shows that the  Integrate-and-Fire forms a logically complete set.  That is, with enough neurons, any digital circuit &lt;/Run&gt;&lt;Run FontStyle="Italic"&gt;could &lt;/Run&gt;&lt;Run&gt;be created.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Click the "SET" and "CLR" neurons to change the firing state of the memory neuron. This is a fast memory mechanism with this type of neuron model as it stores a bit in a single neuron.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold"&gt;You can build your own network:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;      Right-click any neuron or synapse to see its state and edit it. You can use the checkbox to add more neurons to the firing history window.  You can drag waveform labels up and down in the history window to reorder the waveforms. You can change the model used to calculated a neuron's function.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   You can drag the mouse cursor from one neuron to another to create a new synapse.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   You can zoom and pan the neuron display by holding the Shift key and using the mouse wheel or dragging the display. You can also use the scrollbars or the buttons below the main menu bar. Notice that this network is 100x100 or 10,000 neurons. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   When the mouse cursor is between neurons it changes to a cross and you can then drag to select a group of neurons. You can then move to a clear neuron area, right-click a neuron and select Clipboard-&amp;gt;Move Here to move the neurons. Other standard clipboard commands also work. If you change the model of a neuron within a selected area, all neurons in the selection are changed.  Holding the Shift key while selecting lets you create a selection with multiple rectangle.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Current state of development:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   This represent the basic neuron models, engine operation, and user interface and is reasonably robust. Please report any bugs you encounter.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Some known bugs:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   If you cut-paste-move a group of neurons to an area which overlaps itself or other neurons, problems may occur.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   The only models which work through the user interface are Std, LIF, and Random. Others are only useful programmatically.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Network size is limited only by RAM and CPU performance. User-interface performance degrades with the number of neurons on the display, not the number in the network which has been tried with millions.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;/Section&gt;</networkNotes>
+  <networkNotes>&lt;Section xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve" TextAlignment="Left" LineHeight="Auto" IsHyphenationEnabled="False" xml:lang="en-us" FlowDirection="LeftToRight" NumberSubstitution.CultureSource="Text" NumberSubstitution.Substitution="AsCulture" FontFamily="Segoe UI" FontStyle="Normal" FontWeight="Normal" FontStretch="Normal" FontSize="12" Foreground="#FF000000" Typography.StandardLigatures="True" Typography.ContextualLigatures="True" Typography.DiscretionaryLigatures="False" Typography.HistoricalLigatures="False" Typography.AnnotationAlternates="0" Typography.ContextualAlternates="True" Typography.HistoricalForms="False" Typography.Kerning="True" Typography.CapitalSpacing="False" Typography.CaseSensitiveForms="False" Typography.StylisticSet1="False" Typography.StylisticSet2="False" Typography.StylisticSet3="False" Typography.StylisticSet4="False" Typography.StylisticSet5="False" Typography.StylisticSet6="False" Typography.StylisticSet7="False" Typography.StylisticSet8="False" Typography.StylisticSet9="False" Typography.StylisticSet10="False" Typography.StylisticSet11="False" Typography.StylisticSet12="False" Typography.StylisticSet13="False" Typography.StylisticSet14="False" Typography.StylisticSet15="False" Typography.StylisticSet16="False" Typography.StylisticSet17="False" Typography.StylisticSet18="False" Typography.StylisticSet19="False" Typography.StylisticSet20="False" Typography.Fraction="Normal" Typography.SlashedZero="False" Typography.MathematicalGreek="False" Typography.EastAsianExpertForms="False" Typography.Variants="Normal" Typography.Capitals="Normal" Typography.NumeralStyle="Normal" Typography.NumeralAlignment="Normal" Typography.EastAsianWidths="Normal" Typography.EastAsianLanguage="Normal" Typography.StandardSwashes="0" Typography.ContextualSwashes="0" Typography.StylisticAlternates="0"&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Purpose&lt;/Run&gt;&lt;Run&gt;:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   This network shows the basic Integrate-and-Fire neuron model.&lt;/Run&gt;&lt;Run&gt; &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   The neurons in the upper square are connected one-to-the-next by synapses of weight of 1.0 so the firing of one causes firing of the next. The top three neurons of the square are shown in the firing history window at the lower right.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   The three neurons below:  the left-most is connected to itself so it will always fire. It is also connected to the center neurons with a synapse of weight 0.1.   You cans see the color change as it accumulates charge. When it reaches its threshold, it will fire and cause the right-most neuron to fire once every tenth cycle.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Below that are a cluster of neurons which show basic digital logic functions of OR, AND, NAND, and XOR and a set-reset flip-flop--the simplest possible digital memory.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Things to try:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Click the "A" and "B" neurons to exercise various digital logic functions [This will make sense to people with EE and CS experience]. A neuron with a synapse to itself will fire continuously after it is clicked and will stop firing if clicked again.  Note that a "1" neuron which always fires is necessary to create an inverter (for NAND). This simple demonstration shows that the Integrate-and-Fire forms a logically complete set.  That is, with enough neurons, any digital circuit &lt;/Run&gt;&lt;Run FontStyle="Italic"&gt;could &lt;/Run&gt;&lt;Run&gt;be created.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Click the "SET" and "CLR" neurons to change the firing state of the memory neuron. This is a fast memory mechanism with this type of neuron model as it stores a bit in a single neuron.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   You can control the speed of the engine with the slider at the top of the screen. To the left, the &amp;lt;&amp;lt; button resets the engine and reinitializes any modules, the || button pauses the engine, and the &amp;gt;| single steps the engine.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold"&gt;You can build your own network:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;      Right-click any neuron or synapse to see its state and edit it. You can use the checkbox to add more neurons to the firing history window.  You can drag waveform labels up and down in the history window to reorder the waveforms. You can change the model used to calculate a neuron's function.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   You can drag the mouse cursor from one neuron to another to create a new synapse.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   You can zoom and pan the neuron display by holding the Shift key and using the mouse wheel or dragging the display. You can also use the scrollbars or the buttons below the main menu bar. Notice that this network is 100x100 or 10,000 neurons. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   When the mouse cursor is between neurons it changes to a cross and you can then drag to select a group of neurons. You can then move to a clear neuron area, right-click a neuron and select Clipboard-&amp;gt;Move Here to move the neurons. Other standard clipboard commands also work. If you change the model of a neuron within a selected area, all neurons in the selection are changed.  Holding the Shift key while selecting lets you create a selection with multiple rectangles.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Current state of development:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   This network represents the basic neuron models, engine operation, and user interface and is reasonably robust. Please report any bugs you encounter.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Some known bugs:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   If you cut-paste-move a group of neurons to an area which overlaps itself or other neurons, problems may occur.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   The only models which work through the user interface are Std, LIF, and Random. Others are only useful programmatically.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Network size is limited only by RAM and CPU performance. User-interface performance degrades with the number of neurons on the display, not the number in the network which has been tried with millions.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;/Section&gt;</networkNotes>
   <hideNotes>false</hideNotes>
   <Modules />
-  <Generation>20494</Generation>
+  <Generation>22571</Generation>
   <EngineSpeed>250</EngineSpeed>
   <ShowSynapses>true</ShowSynapses>
 </NeuronArray>

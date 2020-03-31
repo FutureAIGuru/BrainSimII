@@ -12,9 +12,11 @@
                 <MenuItem Header="_File">
                     <MenuItem Header="_New" Click="button_FileNew_Click"/>
                     <MenuItem Header="_Open" Click="buttonLoad_Click"/>
-                    <MenuItem Header="_Insert" Click="button_PatternLoad_Click"/>
                     <MenuItem Header="_Save" Click="buttonSave_Click"/>
                     <MenuItem Header="Save _As" Click="buttonSaveAs_Click"/>
+                    <Separator />
+                    <MenuItem Header="Load Clipboard" Click="button_LoadClipboard_Click" ToolTip="Load clipboard from file"/>
+                    <MenuItem Header="Save Clipboard" Click="button_ClipboardSave_Click" ToolTip="Save clipboard to file"/>
                     <Separator />
                     <MenuItem Header="_Properties" Click="MenuItemProperties_Click"/>
                     <MenuItem Header="_Notes" Click="MenuItemNotes_Click" />
@@ -36,8 +38,6 @@
                     <MenuItem Header=" Paste"  Click="MenuItem_PasteNeurons" />
                     <MenuItem Header=" Delete"  Click="MenuItem_DeleteNeurons" />
                     <MenuItem Header=" Move" Click="MenuItem_MoveNeurons" />
-                    <Separator />
-                    <MenuItem Header=" Save Selection to File" Click="button_ClipboardSave_Click"/>
                 </MenuItem>
                 <MenuItem Header=" Help">
                     <MenuItem Header="Getting Started" Click="MenuItemHelp_Click" />

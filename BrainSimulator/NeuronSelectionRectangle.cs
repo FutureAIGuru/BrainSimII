@@ -28,12 +28,27 @@ namespace BrainSimulator
         public int Width { get => width; set => width = value; }
         public int Height { get => height; set => height = value; }
 
+
         public NeuronSelectionRectangle(int iFirstSelectedNeuron, int width,int height)
         {
             FirstSelectedNeuron = iFirstSelectedNeuron;
             Height = height;
             Width = width;
         }
+
+        public IEnumerable<int> NeuronInRectangle()
+        {
+            int count = width * height;
+            for (int i = 0; i < count; i++)
+            {
+                int row = i % height;
+                int col = i / height;
+                int target = firstSelectedNeuron + row + MainWindow.theNeuronArray.rows * col;
+                yield return target;
+            }
+        }
+
+
 
         //in neuron numbers
         public void GetSelectedArea(out int X1, out int Y1, out int X2, out int Y2)

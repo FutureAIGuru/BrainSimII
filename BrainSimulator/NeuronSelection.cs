@@ -26,11 +26,28 @@ namespace BrainSimulator
         //list to avoid duplicates in enumeration
         List<Neuron> neuronsAlreadyVisited = new List<Neuron>();
 
-
-        public void EnumSelectedNeurons()
+        //create a sorted list of all the neurons in the selection
+        public List<int> EnumSelectedNeurons()
         {
             position = -1;
             neuronsAlreadyVisited.Clear();
+
+            List<int> neuronsInSelection = new List<int>();
+            neuronsInSelection.Clear();
+            for (int i = 0; i < selectedRectangles.Count; i++)
+            {
+                if (selectedRectangles[i] != null)
+                {
+                    List<int> neuronsInRectangle = new List<int>();
+                    foreach(int neuronID in selectedRectangles[i].NeuronInRectangle())
+                    {
+                        neuronsInRectangle .Add(neuronID);
+                    }
+                    neuronsInSelection = neuronsInSelection.Union(neuronsInRectangle).ToList();
+                }
+            }
+            neuronsInSelection.Sort();
+            return neuronsInSelection;
         }
 
         public Neuron GetSelectedNeuron()

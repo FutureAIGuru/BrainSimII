@@ -98,7 +98,7 @@ namespace BrainSimulator.Modules
                 pvTry = pointsToTry[0];
                 pointsToTry.RemoveAt(0);
                 nmModel.ImagineStart(pvTry, 0);
-                countDown = 5;
+                countDown = 15;
                 return;
             }
 

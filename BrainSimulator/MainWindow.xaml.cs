@@ -487,10 +487,8 @@ namespace BrainSimulator
             Properties.Settings.Default.Save();
         }
 
-        private void button_PatternLoad_Click(object sender, RoutedEventArgs e)
+        private void button_LoadClipboard_Click(object sender, RoutedEventArgs e)
         {
-            if (theNeuronArrayView.targetNeuronIndex < 0) return;
-
             OpenFileDialog openFileDialog1 = new OpenFileDialog
             {
                 Filter = "XML Network Files|*.xml",
@@ -507,70 +505,28 @@ namespace BrainSimulator
                 XmlSerializer reader = new XmlSerializer(typeof(NeuronArray));
                 theNeuronArrayView.myClipBoard = (NeuronArray)reader.Deserialize(file);
                 file.Close();
-                //restore unused neurons to save on storage space
-                for (int i = 0; i < theNeuronArrayView.myClipBoard.arraySize; i++)
-                    if (theNeuronArrayView.myClipBoard == null)
-                        theNeuronArrayView.myClipBoard.neuronArray[i] = new Neuron(i);
             }
+            if (theNeuronArrayView.targetNeuronIndex < 0) return;
+
             theNeuronArrayView.PasteNeurons(true);
             theNeuronArrayView.Update();
         }
 
-        //this should be a module It's not currently used
-        private void Button_PatternFileLoad_Click(object sender, RoutedEventArgs e)
-        {
-            if (theNeuronArrayView.targetNeuronIndex < 0) return;
-            int firstNeuron = theNeuronArrayView.targetNeuronIndex;
-            OpenFileDialog openFileDialog1 = new OpenFileDialog
-            {
-                Filter = "BMP Files|*.bmp",
-                Title = "Select a Brain Simulator pattern File"
-            };
 
-            // Show the Dialog.  
-            // If the user clicked OK in the dialog and  
-            Nullable<bool> result = openFileDialog1.ShowDialog();
-            if (result ?? true)// System.Windows.Forms.DialogResult.OK)
-            {
-                Bitmap bitmap1 = new Bitmap(openFileDialog1.FileName);
-
-                //for (int i = 0; i < bitmap1.Height; i++)
-                //    for (int j = 0; j < bitmap1.Width; j++)
-                //    {
-                //        int i1 = i / 5;
-                //        int j1 = j / 5;
-                //        int neuronIndex = firstNeuron + i1 + j1 * theNeuronArrayView.dp.NeuronRows;
-                //        if (neuronIndex >= theNeuronArray.arraySize) return;
-                //        Neuron n = theNeuronArray.neuronArray[neuronIndex];
-                //        System.Drawing.Color c = bitmap1.GetPixel(j, i);
-                //        if (c.R != 255 || c.G != 255 || c.B != 255)
-                //        {
-                //            n.CurrentCharge = n.LastCharge = 1;
-                //        }
-                //        else
-                //        {
-                //            n.CurrentCharge = n.LastCharge = 0;
-                //        }
-                //    }
-            }
-        }
-
-        //        static int oldEngineDelay = 0;
         public static void SuspendEngine()
         {
             if (engineDelay == 2000) return; //already suspended
             //suspend the engine...
             if (MainWindow.theNeuronArray != null)
                 MainWindow.theNeuronArray.EngineSpeed = engineDelay;
-            //            oldEngineDelay = engineDelay;
             engineDelay = 2000;
             while (!engineIsWaiting)
                 Thread.Sleep(100);
         }
+
         public static void ResumeEngine()
         {
             //resume the engine
-            //            engineDelay = oldEngineDelay;
             engineDelay = MainWindow.theNeuronArray.EngineSpeed;
             Application.Current.Dispatcher.Invoke((Action)delegate
             {
@@ -715,12 +671,12 @@ namespace BrainSimulator
             if (theNeuronArrayView.myClipBoard == null)
             {
                 EnableMenuItem(MainMenu.Items, " Paste", false);
-                EnableMenuItem(MainMenu.Items, " Save Selection to File", false);
+                EnableMenuItem(MainMenu.Items, " Save Clipboard", false);
             }
             else
             {
                 EnableMenuItem(MainMenu.Items, " Paste", true);
-                EnableMenuItem(MainMenu.Items, " Save Selection to File", true);
+                EnableMenuItem(MainMenu.Items, " Save Clipboard", true);
             }
         }
 

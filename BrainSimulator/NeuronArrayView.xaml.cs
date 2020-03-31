@@ -660,7 +660,7 @@ namespace BrainSimulator
                 )
             {
                 //TODO: Add rearrangement of neurons
-                //TODO: Add clone of neurons to hand ALL properties
+                //TODO: Add clone of neurons to handle ALL properties
                 dragging = true;
                 na.GetBounds(out int X1, out int Y1, out int X2, out int Y2);
                 na.GetAbsNeuronLocation(firstSelectedNeuron, out int Xf, out int Yf);

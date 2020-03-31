@@ -294,5 +294,34 @@ namespace BrainSimulator
                         count++;
             return count;
         }
+
+        public Neuron Clone()
+        {
+            Neuron n = (Neuron)this.MemberwiseClone();
+            n.synapses = new List<Synapse>();
+            n.synapsesFrom = new List<Synapse>();;
+            return n;
+        }
+        public void Copy (Neuron n)
+        {
+            n.label = this.label;
+            n.lastCharge = this.lastCharge;
+            n.currentCharge = this.currentCharge;
+            n.keepHistory = this.keepHistory;
+            n.model = this.model;
+            n.synapses = new List<Synapse>();
+            n.synapsesFrom = new List<Synapse>(); ;
+        }
+        public void Clear()
+        {
+            label = "";
+            currentCharge = 0;
+            lastCharge = 0;
+            model = modelType.Std;
+            LeakRate = 0.1f;
+            keepHistory = false;
+            synapses = new List<Synapse>();
+            synapsesFrom = new List<Synapse>(); ;
+        }
     }
 }

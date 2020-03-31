@@ -97,8 +97,9 @@ namespace BrainSimulator
             }
             cb.Width = 180;
             cb.Name = "AreaType";
+            cb.SelectionChanged += Cb_SelectionChanged;
             sp.Children.Add(cb);
-            //cm.Items.Add(cb);
+
 
             TextBox tb2 = new TextBox();
             tb2.Text = "";
@@ -163,6 +164,14 @@ namespace BrainSimulator
             cm.Closed += Cm_Closed;
         }
 
+        private static void Cb_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is ComboBox cb)
+                if (cb.Parent is StackPanel sp)
+                    if (sp.Parent is ContextMenu cm)
+                        cm.IsOpen = false;
+        }
+
         static bool deleted = false;
         private static void Cm_Closed(object sender, RoutedEventArgs e)
         {
@@ -214,10 +223,11 @@ namespace BrainSimulator
                     MainWindow.theNeuronArray.modules[i].Height = height;
                     //did we change the module type?
                     string[] Params = commandLine.Split(' ');
-                    Type t1x = Type.GetType("BrainSimulator." + Params[0]);
+                    Type t1x = Type.GetType("BrainSimulator.Modules." + Params[0]);
                     if (t1x != null && (MainWindow.theNeuronArray.modules[i].TheModule == null || MainWindow.theNeuronArray.modules[i].TheModule.GetType() != t1x))
                     {
                         MainWindow.theNeuronArray.modules[i].TheModule = (ModuleBase)Activator.CreateInstance(t1x);
+                        MainWindow.theNeuronArray.modules[i].label = Params[0];
                     }
                 }
                 else

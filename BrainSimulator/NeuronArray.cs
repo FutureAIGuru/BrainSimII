@@ -16,13 +16,11 @@ namespace BrainSimulator
     public partial class NeuronArray
     {
 
-#if DEBUG
         public int arraySize = 10000; // ten thousand neurons to start
         public int rows = 100;
-#else
-        public int arraySize = 1000000; // a million neurons to start
-        public int rows = 1000;
-#endif
+
+        public int Cols {get => arraySize / rows; }
+
         internal List<ModuleView> modules = new List<ModuleView>();
         public List<ModuleView> Modules
         {

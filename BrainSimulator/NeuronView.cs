@@ -349,16 +349,13 @@ namespace BrainSimulator
                 theNeuronArrayView.targetNeuronIndex = i;
                 theNeuronArrayView.PasteNeurons();
                 theNeuronArrayView.targetNeuronIndex = -1;
+                cmCancelled = true;
             }
             if ((string)mi.Header == "Move Here")
             {
                 theNeuronArrayView.targetNeuronIndex = i;
                 theNeuronArrayView.MoveNeurons();
                 cmCancelled = true;
-            }
-            if ((string)mi.Header == "Copy Selection")
-            {
-                theNeuronArrayView.CopyNeurons();
             }
             if ((string)mi.Header == "Connect to Here")
             {

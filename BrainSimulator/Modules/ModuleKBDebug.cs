@@ -25,6 +25,7 @@ namespace BrainSimulator.Modules
             Init();  //be sure to leave this here
             string tempString = "";
             ModuleView naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
+            if (naKB == null) return;
             for (int i = 0; i < naKB.NeuronCount; i++)
             {
                 Neuron n = naKB.GetNeuronAt(i);
@@ -42,6 +43,7 @@ namespace BrainSimulator.Modules
             }
             tempString = ">>>>";
             ModuleView naKBOut = theNeuronArray.FindAreaByLabel("KBOut");
+            if (naKBOut == null) return;
             for (int i = 0; i < naKBOut.NeuronCount; i++)
             {
                 Neuron n = naKBOut.GetNeuronAt(i);

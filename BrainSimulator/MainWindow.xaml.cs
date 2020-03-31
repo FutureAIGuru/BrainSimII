@@ -167,7 +167,7 @@ namespace BrainSimulator
             {
                 if (theNeuronArrayView.theSelection.selectedRectangles.Count > 0)
                 {
-                    theNeuronArrayView.DeleteNeurons();
+                    theNeuronArrayView.DeleteSelection();
                     theNeuronArrayView.Update();
                 }
                 else
@@ -455,7 +455,7 @@ namespace BrainSimulator
             if (result ?? false)// System.Windows.Forms.DialogResult.OK)
             {
                 //Save the data from the NeuronArray to the file
-                System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(NeuronArray));
+                System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(NeuronArray),GetModuleTypes());
                 System.IO.FileStream file = System.IO.File.Create(saveFileDialog1.FileName);
                 writer.Serialize(file, theNeuronArrayView.myClipBoard);
                 file.Close();
@@ -502,7 +502,7 @@ namespace BrainSimulator
             {
                 // Load the data from the XML to the Brainsim NeuronArray.  
                 FileStream file = File.Open(openFileDialog1.FileName, FileMode.Open);
-                XmlSerializer reader = new XmlSerializer(typeof(NeuronArray));
+                XmlSerializer reader = new XmlSerializer(typeof(NeuronArray),GetModuleTypes());
                 theNeuronArrayView.myClipBoard = (NeuronArray)reader.Deserialize(file);
                 file.Close();
             }
@@ -764,7 +764,7 @@ namespace BrainSimulator
         }
         private void MenuItem_DeleteNeurons(object sender, RoutedEventArgs e)
         {
-            theNeuronArrayView.DeleteNeurons();
+            theNeuronArrayView.DeleteSelection();
         }
         private void Button_HelpAbout_Click(object sender, RoutedEventArgs e)
         {

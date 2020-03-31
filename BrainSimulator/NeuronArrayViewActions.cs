@@ -59,6 +59,27 @@ namespace BrainSimulator
                     }
                 }
             }
+
+            //copy modules
+            foreach (ModuleView mv in MainWindow.theNeuronArray.modules)
+            {
+                if (theSelection.NeuronInSelection(mv.FirstNeuron) > 0 && theSelection.NeuronInSelection(mv.LastNeuron) > 0)
+                {
+                    ModuleView newMV = new ModuleView()
+                    {
+                        FirstNeuron = GetClipboardId(X1o, Y1o, mv.FirstNeuron),
+                        TheModule = mv.TheModule,
+                        Color = mv.Color,
+                        Height = mv.Height,
+                        Width = mv.Width,
+                        Label = mv.Label,
+                        CommandLine = mv.CommandLine,
+                    };
+
+                    myClipBoard.modules.Add(newMV);
+                }
+            }
+
         }
 
         private int GetClipboardId(int X1o, int Y1o, int nID)
@@ -78,13 +99,27 @@ namespace BrainSimulator
             return destId;
         }
 
-      
+
         public void CutNeurons()
         {
             CopyNeurons();
-            DeleteNeurons();
+            DeleteSelection();
+            DeleteModulesInSelection();
             ClearSelection();
             Update();
+        }
+
+        private void DeleteModulesInSelection()
+        {
+            for (int i = 0; i < MainWindow.theNeuronArray.modules.Count; i++)
+            {
+                ModuleView mv = MainWindow.theNeuronArray.modules[i];
+                if (theSelection.NeuronInSelection(mv.FirstNeuron) > 0 && theSelection.NeuronInSelection(mv.LastNeuron) > 0)
+                {
+                    MainWindow.theNeuronArray.modules.RemoveAt(i);
+                    i--;
+                }
+            }
         }
 
         public void PasteNeurons(bool pasteSynapses = true)
@@ -96,7 +131,7 @@ namespace BrainSimulator
 
             //first check to see if the destination is claar and warn
             List<int> targetNeurons = new List<int>();
-            for (int i = 0; i < myClipBoard.arraySize;i++)
+            for (int i = 0; i < myClipBoard.arraySize; i++)
             {
                 if (myClipBoard.neuronArray[i] != null)
                 {
@@ -108,17 +143,17 @@ namespace BrainSimulator
             if (col + myClipBoard.Cols > MainWindow.theNeuronArray.Cols ||
                 row + myClipBoard.rows > MainWindow.theNeuronArray.rows)
             {
-                MessageBoxResult result = MessageBox.Show("Paste would exceed neuron array boundary!", "Continue", MessageBoxButton.OK);
+                MessageBoxResult result = MessageBox.Show("Paste would exceed neuron array boundary!", "Error", MessageBoxButton.OK);
                 return;
             }
 
-            if (!IsDestinationClear(targetNeurons, 0,true))
+            if (!IsDestinationClear(targetNeurons, 0, true))
             {
                 MessageBoxResult result = MessageBox.Show("Some desination is are in use and will be overwritten, continue?", "Continue", MessageBoxButton.YesNo);
                 if (result == MessageBoxResult.No) return;
             }
 
-            //now past the neurons
+            //now past thec neurons
             for (int i = 0; i < myClipBoard.arraySize; i++)
             {
                 if (myClipBoard.neuronArray[i] != null)
@@ -135,6 +170,24 @@ namespace BrainSimulator
                     }
                 }
             }
+
+            //paste modules
+            foreach (ModuleView mv in myClipBoard.modules)
+            {
+                ModuleView newMV = new ModuleView()
+                {
+                    FirstNeuron = GetNeuronArrayId(mv.FirstNeuron),
+                    TheModule = mv.TheModule,
+                    Color = mv.Color,
+                    Height = mv.Height,
+                    Width = mv.Width,
+                    Label = mv.Label,
+                    CommandLine = mv.CommandLine,
+                };
+
+                MainWindow.theNeuronArray.modules.Add(newMV);
+            }
+
             Update();
         }
 
@@ -142,7 +195,7 @@ namespace BrainSimulator
         {
             if (targetNeuronIndex == -1) return;
             Neuron targetNeuron = MainWindow.theNeuronArray.neuronArray[targetNeuronIndex];
-            List<int> neuronsInSelection= theSelection.EnumSelectedNeurons();
+            List<int> neuronsInSelection = theSelection.EnumSelectedNeurons();
             for (int i = 0; i < neuronsInSelection.Count; i++)
             {
                 targetNeuron.AddSynapse(neuronsInSelection[i], lastSynapseWeight, MainWindow.theNeuronArray);
@@ -153,8 +206,6 @@ namespace BrainSimulator
         public void ConnectToHere()
         {
             if (targetNeuronIndex == -1) return;
-            //We are copying neuron values from one array to another.  
-            //The arrays may have different sizes so we consider the source to be linear and handle the destination with an offset for each col.
             List<int> neuronsInSelection = theSelection.EnumSelectedNeurons();
             for (int i = 0; i < neuronsInSelection.Count; i++)
             {
@@ -164,8 +215,8 @@ namespace BrainSimulator
             Update();
         }
 
-      
-        public void DeleteNeurons(bool deleteSynapses = true)
+
+        public void DeleteSelection(bool deleteSynapses = true)
         {
             List<int> neuronsToDelete = theSelection.EnumSelectedNeurons();
             foreach (int nID in neuronsToDelete)
@@ -180,11 +231,11 @@ namespace BrainSimulator
                 }
                 n.Label = "";
             }
-
+            DeleteModulesInSelection();
             Update();
         }
 
-        private bool IsDestinationClear(List<int> neuronsToMove, int offset,bool flagOverlap = false)
+        private bool IsDestinationClear(List<int> neuronsToMove, int offset, bool flagOverlap = false)
         {
             bool retVal = true;
             foreach (int id in neuronsToMove)
@@ -216,8 +267,8 @@ namespace BrainSimulator
             foreach (int id in neuronsToMove)
             {
                 MainWindow.theNeuronArray.GetNeuronLocation(id, out int tcol, out int trow);
-                if (maxCol< tcol - col0) maxCol = tcol-col0;
-                if (maxRow < trow - row0) maxRow = trow-row0;
+                if (maxCol < tcol - col0) maxCol = tcol - col0;
+                if (maxRow < trow - row0) maxRow = trow - row0;
             }
 
 
@@ -225,7 +276,7 @@ namespace BrainSimulator
             if (col + maxCol >= MainWindow.theNeuronArray.Cols ||
                 row + maxRow >= MainWindow.theNeuronArray.rows)
             {
-                MessageBoxResult result = MessageBox.Show("Paste would exceed neuron array boundary!", "Continue", MessageBoxButton.OK);
+                MessageBoxResult result = MessageBox.Show("Move would exceed neuron array boundary!", "Error", MessageBoxButton.OK);
                 return;
             }
 
@@ -244,6 +295,14 @@ namespace BrainSimulator
                 Neuron sourceNeuron = MainWindow.theNeuronArray.neuronArray[source];
                 Neuron destNeuron = MainWindow.theNeuronArray.neuronArray[source + offset];
                 MoveOneNeuron(sourceNeuron, destNeuron);
+            }
+
+            foreach (ModuleView mv in MainWindow.theNeuronArray.modules)
+            {
+                if (theSelection.NeuronInSelection(mv.FirstNeuron) > 0 && theSelection.NeuronInSelection(mv.LastNeuron) > 0)
+                {
+                    mv.FirstNeuron += offset;
+                }
             }
 
             try

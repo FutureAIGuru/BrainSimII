@@ -166,8 +166,6 @@ namespace BrainSimulator
             mi = new MenuItem();
             mi.Header = "Clipboard";
             mi.Click += Mi_Click;
-            mi.Items.Add(new MenuItem() { Header = "Copy Selection" });
-            ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
             mi.Items.Add(new MenuItem() { Header = "Paste Here" });
             ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
             mi.Items.Add(new MenuItem() { Header = "Move Here" });

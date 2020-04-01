@@ -24,7 +24,7 @@ namespace BrainSimulator.Modules
         public Point3D cameraPosition = new Point3D(0, 0, 0);
         public Vector3D cameraDirection = new Vector3D(0, 0, -1);
         [XmlIgnore]
-        public bool renderStarted = false;
+        public bool renderStarted = true;
         [XmlIgnore]
         public bool renderDone = false;
 
@@ -46,6 +46,7 @@ namespace BrainSimulator.Modules
         {
             for (int i = 0; i < na.NeuronCount; i++)
                 na.GetNeuronAt(i).Model = Neuron.modelType.Color;
+            SetNeuronValues();
         }
         void SetNeuronValues()
         {

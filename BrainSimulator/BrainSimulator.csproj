@@ -376,6 +376,9 @@
     <Resource Include="Tools\VS Templates Readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Networks\3DSim.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Networks\BabyTalk.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

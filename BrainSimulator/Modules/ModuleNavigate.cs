@@ -16,15 +16,10 @@ namespace BrainSimulator.Modules
 {
     public class ModuleNavigate : ModuleBase
     {
-        //state: (this is needed to cope with the parallel operation with other modules
-        //Idle (moving forward & scanning)...monitor for:
-        // rediscovering landmarks
-        // obstacles requiring change in direction
-        //busy turning...waiting for a turn to complete
-        //busy orienting..waiting for alignement with a landmark angle
+        //Auto Mode:  searching the maze
+        //goingtogoal: returning to a known endpoint
 
-        bool turning = false;
-        bool scanning = false;
+        //        bool scanning = false;  //used with vision
         bool orienting = false;
         bool auto = false; //for debugging in manual mode
         bool goingToGoal = false;
@@ -34,36 +29,23 @@ namespace BrainSimulator.Modules
         int situationCount = 0;
         int landmarkCount = 0;
         int pairCount = 0;
-        string colorFired = "";
 
         Thing lastLandmark = null;
         Thing currentLandmark = null;
         Thing currentSituation = null;
         Thing currentTargetReached = null;
         Thing currentTarget = null;
+        Thing lastBest = null;
+        int orientationCount = 0;
 
         //we'll use this to creat a random selection of behaviors
         Random rand = new Random((int)DateTime.Now.Ticks);
-        string[] options = new string[] { "RTurnS", "LTurnS", "UTurnS", "GoS" };
 
         public override void Fire()
         {
             Init();  //be sure to leave this here
 
-            if (colorFired == "")
-            {
-                foreach (Neuron n in na.Neurons())
-                {
-                    if (n.Fired() && n.Label.IndexOf("c") == 0 && n.Model == Neuron.modelType.Std)
-                    {
-                        colorFired = n.Label;
-                    }
-                }
-            }
-
-            auto = (GetNeuronValue(null, "Auto") == 1) ? true : false;
-            goingToGoal = (GetNeuronValue(null, "Goal") == 1) ? true : false;
-
+            //get the external references
             Module2DKBN kb = (Module2DKBN)FindModuleByType(typeof(Module2DKBN));
             Module2DModel nmModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
             if (kb == null) return;
@@ -72,90 +54,113 @@ namespace BrainSimulator.Modules
             if (nmBehavior == null) return;
 
 
+            //check on the various input neurons...
+            //check for a goal selection
+            foreach (Neuron n in na.Neurons())
+            {
+                if (n.Fired() && n.Label.IndexOf("c") == 0 && n.Model == Neuron.modelType.Std)
+                {
+                    currentTarget = kb.Labeled(n.Label);
+                }
+            }
+
+            //don't do anything while a behavior is in progress
+            if (GetNeuronValue("ModuleBehavior", "Done") == 0) return;
+
+            //check for operating mode
+            auto = (GetNeuronValue(null, "Auto") == 1) ? true : false;
+            goingToGoal = (GetNeuronValue(null, "Goal") == 1) ? true : false;
+
+
             //is there an existing landmark? Do I recognize I'm near a spot I was before?
             //this only calculates "R" so it is rotation-independent
 
             Thing best = null;
             float bestDist = 1000;
-            List<Thing> near = nmModel.NearbySegments();
+
+            List<Thing> near = nmModel.NearbySegments(3);
+
             FindBestLandmarkMatch(kb, ref best, ref bestDist, near);
+
             nmModel.FireVisibleObjects(); //not really needed
-            if (bestDist < .1f) //are we near a landmark we've been at before?
+
+            if (bestDist < .2f) //are we near a landmark we've been at before?
             {
                 SetNeuronValue(null, "Found", 1);
-                if (best != null && bestDist < .5f)
-                {
-                    //we have returned to a landmark we've been at before
-                    currentLandmark = best;
-                    currentSituation = currentLandmark.ReferencedBy[0].T;
-                }
+
+                //yse, we have returned to a landmark we've been at before
+                currentLandmark = best;
+                currentSituation = currentLandmark.ReferencedBy[0].T;
 
                 //do we need to reorient ourselves to face the same way as we did before?
-                if (!turning && lastLandmark != currentLandmark && currentLandmark != null)
+                if (lastLandmark != currentLandmark)
                 {
                     lastLandmark = currentLandmark;
-                    float totalAngleError = GetTotalAngleError(near);
-                    if (totalAngleError > 0.1f)
-                    {
-                        //we have returned to a landmark, turn to match the previous orientation
-                        orienting = true;
-                    }
+                    orienting = true;
+                    orientationCount = 0;
                 }
             }
             else
             {
+                //we're not near an existing landmark
                 currentLandmark = null;
                 currentSituation = null;
                 lastLandmark = null;
             }
 
+            //this is our first time back at a landmark
             if (orienting)
             {
-                if (GetNeuronValue("ModuleBehavior", "Done") == 1)
+                Angle totalAngleError = GetTotalAngleError(near);
+                if (Abs(totalAngleError) > PI / 2 - .1f)
                 {
-                    if (lastLandmark == null)
-                    {
-                        orienting = false;
-                        return;
-                    }
-                    float totalAngleError = GetTotalAngleError(near);
-                    if (totalAngleError > 0.25f && auto)
-                    {
-                        //keep turning until the angular error gets small
-                        float angle = (float)PI / 2;
-                        //if (totalAngleError > 0)
-                        //    angle = -angle;
-                        nmBehavior.TurnTo(angle);
-                        return;
-                    }
-                    if (totalAngleError < 0.1f)
-                    {
-                        orienting = false;
-                        return;
-                    }
+                    //turn in large increments until the angular error gets small
+                    Angle angle = (float)PI / 2;
+                    nmBehavior.TurnTo(angle);
+                    orientationCount++;
+                    return;
                 }
-            }
 
-            if (turning)
-            {
-                if (GetNeuronValue("ModuleBehavior", "Done") == 1)
+                //locations are not very accurate and accumulate errors
+                //whenever we encounter a landmark, we update the orientation/location of the model to correct errors
+                //we're at a landmark and are closely oriented...correct the model for position first time only
+                if (best != lastBest)
                 {
-                    turning = false;
+                    //since we're oriented, corrected to any segment is OK
+                    lastBest = best;
+                    Segment s2 = Module2DModel.SegmentFromKBThing(near[0]);
+                    Segment s1 = null;
+                    foreach (Link l in best.References)
+                    {
+                        Segment s = Module2DModel.SegmentFromKBThing(l.T);
+                        if (s.theColor == s2.theColor)
+                        { s1 = s; break; }
+                    }
+                    if (s1 != null)
+                    {
+                        PointPlus m1 = s1.MidPoint();
+                        PointPlus m2 = s2.MidPoint();
+                        float deltaX = m1.X - m2.X;
+                        float deltaY = m1.Y - m2.Y;
+                        PointPlus a1 = new PointPlus() { P = (Point)(s1.P1.V - s1.P2.V) };
+                        PointPlus a2 = new PointPlus() { P = (Point)(s2.P1.V - s2.P2.V) };
+                        Angle deltaTheta = a1.Theta - a2.Theta;
+                        //TODO: this move may also need to be a behavior thing if the sim module also gets an error
+                        nmModel.Move(-deltaX, -deltaY);
+                        nmBehavior.TurnTo(deltaTheta);
+                        return;
+                    }
                 }
+                else
+                    orienting = false;
                 return;
             }
 
-            if (goingToGoal && !turning && GetNeuronValue("ModuleBehavior", "Done") == 1)
+            //we are in going-to-goal mode
+            if (goingToGoal)
             {
-                if (colorFired != "")
-                {
-                    currentTarget = kb.Labeled(colorFired);
-                    colorFired = "";
-                }
                 if (currentSituation != null) //currentSituation means we're at a decision point...check for the decision and execute it
                 {
-                    if (currentTarget == null)
-                        currentTarget = kb.Labeled(colorFired);
                     Thing action = GoToGoal(currentTarget);
                     if (action != null)
                     {
@@ -163,10 +168,8 @@ namespace BrainSimulator.Modules
                         if (angle != 0)
                         {
                             nmBehavior.TurnTo(angle);
-                            turning = true;
                         }
                         nmBehavior.MoveTo(1);
-                        colorFired = "";
                         currentSituation = null;
                         return;
                     }
@@ -174,111 +177,117 @@ namespace BrainSimulator.Modules
                 else
                 {
                     goingToGoal = false;
-                    //currentTarget = null;
                 }
             }
 
+            //we are in exploration mode
+            //We're not at a known landmark
+            //decide which way to turn at an obstacle
+            //I am up to an obstacle...is there a decision or can I only go one way
+            float distAhead = nmModel.GetDistanceAtDirection(0);
+            float distLeft = nmModel.GetDistanceAtDirection((float)PI / 2);
+            float distRight = nmModel.GetDistanceAtDirection((float)-PI / 2);
+            bool canGoAhead = distAhead > 1;
+            bool canGoLeft = distLeft > 1;
+            bool canGoRight = distRight > 1;
+            int options = (canGoAhead ? 1 : 0) + (canGoRight ? 1 : 0) + (canGoLeft ? 1 : 0);
 
-
-
-            //decide which way to turn at an obstacle...this is the beef
-            if (!scanning && !turning && !orienting && GetNeuronValue("ModuleBehavior", "Done") == 1)
+            //First determine if there is a decision to be made or if there is only one option
+            if (options == 1 && auto)
             {
-                //I am up to an obstacle...is there a decision or can I only go one way
-                float distAhead = nmModel.GetDistanceAtDirection(0);
-                float distLeft = nmModel.GetDistanceAtDirection((float)PI / 2);
-                float distRight = nmModel.GetDistanceAtDirection((float)-PI / 2);
-                bool canGoAhead = distAhead > 1;
-                bool canGoLeft = distLeft > 1;
-                bool canGoRight = distRight > 1;
-                int options = (canGoAhead ? 1 : 0) + (canGoRight ? 1 : 0) + (canGoLeft ? 1 : 0);
-
-                //First determine if there is a decision to be made or if there is only one option
-                if (options == 1 && auto)
+                //we have not choice but to follow the path
+                if (canGoAhead)
                 {
-                    //we have not choice but to follow the path
-                    if (canGoAhead)
-                    {
-                        nmBehavior.MoveTo(1);
-                        return;
-                    }
-                    if (canGoLeft)
-                    {//TODO figure out why thetas seem to be reversed
-                        nmBehavior.TurnTo((float)-PI / 2);
-                        nmBehavior.MoveTo(1);
-                        turning = true;
-                        return;
-                    }
-                    if (canGoRight)
-                    {
-                        nmBehavior.TurnTo((float)PI / 2);
-                        nmBehavior.MoveTo(1);
-                        turning = true;
-                        return;
-                    }
+                    nmBehavior.MoveTo(1);
+                    return;
                 }
-                else if (options == 0 && auto)
+                if (canGoLeft)
                 {
-                    //we're trapped...note the color ahead
-                    currentTargetReached = nmModel.GetColorAtDirection(0);
-                    Neuron n1 = na.GetNeuronAt(currentTargetReached.Label);
-                    if (n1 == null)
-                    {
-                        n1 = AddLabel(currentTargetReached.Label + " ");
-                        n1.Model = Neuron.modelType.Color;
-                        n1.SetValueInt((int)currentTargetReached.V);
-                        na.GetNeuronLocation(n1, out int X, out int Y);
-                        Neuron n2 = na.GetNeuronAt(X + 1, Y);
+                    nmBehavior.TurnTo((float)-PI / 2);
+                    nmBehavior.MoveTo(1);
+                    return;
+                }
+                if (canGoRight)
+                {
+                    nmBehavior.TurnTo((float)PI / 2);
+                    nmBehavior.MoveTo(1);
+                    return;
+                }
+            }
+            else if (options == 0 && auto)
+            {
+                //we're trapped...note the color ahead and turn around
+                currentTargetReached = nmModel.GetColorAtDirection(0);
+                Neuron n1 = null;
+                if (currentTargetReached != null) n1 = na.GetNeuronAt(currentTargetReached.Label);
+                if (n1 == null && currentTargetReached != null)
+                {
+                    n1 = AddLabel(currentTargetReached.Label + " ");
+                    n1.Model = Neuron.modelType.Color;
+                    n1.SetValueInt((int)currentTargetReached.V);
+                    na.GetNeuronLocation(n1, out int X, out int Y);
+                    Neuron n2 = na.GetNeuronAt(X + 1, Y);
+                    if (n2 != null)
                         n2.Label = currentTargetReached.Label;
-                    }
-                    if (currentTargetReached == currentTarget)
-                    {
-                        currentSituation = null;
-                    }
-                    else 
-                    {
-                        //make a U-Turn and start backtracking
-                        nmBehavior.TurnTo((float)-PI);
-                        turning = true;
-                    }
                 }
-                else if (auto && !goingToGoal)
+                if (currentTargetReached == currentTarget)
                 {
-                    //we have a choice...
+                    currentSituation = null;
+                }
+                else
+                {
+                    //make a U-Turn and start backtracking
+                    nmBehavior.TurnTo((float)-PI);
+                }
+            }
+            else if (auto && !goingToGoal)
+            {
+                //we have a choice...
 
-                    //if the current landmark is null, create a new landmark & situation
-                    if (currentLandmark == null)
+                //if the current landmark is null, create a new landmark & situation
+                if (currentLandmark == null)
+                {
+                    //Create new Landmark...it clones the points so they are not modified by the model module
+                    //By having points which don't change, we can determine if we've returned to a same position by calculating the deltas.
+                    Thing newLandmark = kb.AddThing("Lm" + landmarkCount++.ToString(), "Landmark");
+
+                    foreach (Thing t in near)
                     {
-                        //Create new Landmark...it clones the points so they are not modified by the model module
-                        //By having points which don't change, we can determine if we've returned to a same position by calculating the deltas.
-                        Thing newLandmark = kb.AddThing("Lm" + landmarkCount++.ToString(), "Landmark");
-
-                        foreach (Thing t in near)
-                        {
-                            Segment s = Module2DModel.SegmentFromKBThing(t);
-                            Thing P1 = kb.AddThing("lmp" + pointCount++.ToString(), "SPoint");
-                            P1.V = new PointPlus() { R = s.P1.R, Theta = s.P1.Theta };
-                            Thing P2 = kb.AddThing("lmp" + pointCount++.ToString(), "SPoint");
-                            P2.V = new PointPlus() { R = s.P2.R, Theta = s.P2.Theta };
-                            Thing S = kb.AddThing("l" + t.Label.ToString(), "SSegment");
-                            S.AddReference(P1);
-                            S.AddReference(P2);
-                            S.AddReference(t.References[2].T);//the color
-                            newLandmark.AddReference(S);
-                        }
-                        currentSituation = kb.AddThing("Si" + situationCount++.ToString(), "Situation");
-                        currentSituation.AddReference(newLandmark);
-                        currentLandmark = newLandmark;
+                        Segment s = Module2DModel.SegmentFromKBThing(t);
+                        Thing P1 = kb.AddThing("lmp" + pointCount++.ToString(), "SPoint");
+                        P1.V = new PointPlus() { R = s.P1.R, Theta = s.P1.Theta };
+                        Thing P2 = kb.AddThing("lmp" + pointCount++.ToString(), "SPoint");
+                        P2.V = new PointPlus() { R = s.P2.R, Theta = s.P2.Theta };
+                        Thing S = kb.AddThing("l" + t.Label.ToString(), "SSegment");
+                        S.AddReference(P1);
+                        S.AddReference(P2);
+                        S.AddReference(t.References[2].T);//the color
+                        newLandmark.AddReference(S);
                     }
-                    else
+                    currentSituation = kb.AddThing("Si" + situationCount++.ToString(), "Situation");
+                    currentSituation.AddReference(newLandmark);
+                    currentLandmark = newLandmark;
+                }
+                else
+                {
+                    //we have arrived back at a decision point...store the outcome we received
+                    if (currentTargetReached != null && currentTargetReached != currentSituation)
                     {
-                        //we have arrived back at a decision point...store the outcome we received
-                        if (currentTargetReached != null && currentTargetReached != currentSituation)
+                        Thing theAction = null;
+                        switch (orientationCount) //what way did you have to turn to reorient...the reverse is the action you need to take
+                        {
+                            case 0: theAction = kb.Labeled("UTurnS"); break;
+                            case 1: theAction = kb.Labeled("RTurnS"); break;
+                            case 2: theAction = kb.Labeled("GoS"); break;
+                            case 3: theAction = kb.Labeled("LTurnS"); break;
+                        }
+
+                        if (currentSituation.Children.Find(t1 => t1.References[0].T == theAction) == null)
                         {
                             Thing newOutcomePair = kb.AddThing("x" + pairCount++, currentSituation.Label);
-                            newOutcomePair.AddReference(currentSituation.References[currentSituation.References.Count - 1].T);
+                            newOutcomePair.AddReference(theAction);
                             newOutcomePair.AddReference(currentTargetReached);
-                            //to connection to decision points, we need pointers both ways
+                            //to connection two decision points, we need pointers both ways
                             if (currentTargetReached.Parents[0] == kb.Labeled("Situation"))
                             {
                                 Thing newOutcomePair1 = kb.AddThing("x" + pairCount++, currentTargetReached.Label);
@@ -286,82 +295,91 @@ namespace BrainSimulator.Modules
                                 newOutcomePair1.AddReference(currentSituation);
                             }
                         }
-                        currentTargetReached = currentSituation;
+                        else //you can set a breakpoint here to detect problems
+                            theAction = theAction;
                     }
-
-                    //Decide which untried path to take
-                    //priorities...1)continue ahead 2)left 3)right TODO could be randomized
-                    string newAction = "";
-                    float angle = 0;
-                    if (currentSituation.References.Find(l1 => l1.T.Label == "GoS") == null && canGoAhead)
-                    {
-                        angle = 0;
-                        newAction = "GoS";
-                    }
-                    else if (currentSituation.References.Find(l1 => l1.T.Label == "LTurnS") == null && canGoLeft)
-                    {
-                        angle = -(float)PI / 2;
-                        newAction = "LTurnS";
-                    }
-                    else if (currentSituation.References.Find(l1 => l1.T.Label == "RTurnS") == null && canGoRight)
-                    {
-                        angle = (float)PI / 2;
-                        newAction = "RTurnS";
-                    }
-                    else if (currentSituation.References.Find(l1 => l1.T.Label == "UTurnS") == null)
-                    {
-                        //assume we can always go back the way  we came
-                        angle = (float)PI;
-                        newAction = "UTurnS";
-                    }
-                    else
-                    {
-                        //tried all options
-                    }
-                    if (newAction != "")
-                    {
-                        currentSituation.AddReference(kb.Labeled(newAction), .1f);
-                        nmBehavior.TurnTo(angle);
-                        nmBehavior.MoveTo(1);
-                        turning = true;
-                    }
-                    lastLandmark = currentLandmark;
-                    return;
+                    currentTargetReached = currentSituation;
                 }
-            }
 
-            //default to scanning and moving forward
-            else if (GetNeuronValue("ModuleBehavior", "Done") == 1)
-            {
-                if (scanning)
+                //Decide which untried path to take
+                //priorities...1)continue ahead 2)left 3)right or randomized (depending on comment below)
+                string newAction = "NoAction";
+                Angle angle = 0;
+                List<string> possibleActions = new List<string>();
+                if (currentSituation.References.Find(l1 => l1.T.Label == "GoS") == null && canGoAhead)
+                    possibleActions.Add("GoS");
+                if (currentSituation.References.Find(l1 => l1.T.Label == "LTurnS") == null && canGoLeft)
+                    possibleActions.Add("LTurnS");
+                if (currentSituation.References.Find(l1 => l1.T.Label == "RTurnS") == null && canGoRight)
+                    possibleActions.Add("RTurnS");
+                if (possibleActions.Count == 0 && currentSituation.References.Find(l1 => l1.T.Label == "UTurnS") == null)
+                    newAction = "UTurnS";
+                else if (possibleActions.Count == 1) newAction = possibleActions[0];
+                //for debugging, eliminate the ransomizatioin by alternately commenting the 2 stmts below
+                //               else if (possibleActions.Count > 0) newAction = possibleActions[0];
+                else if (possibleActions.Count > 0) newAction = possibleActions[rand.Next(possibleActions.Count)];
+                switch (newAction)
                 {
-                    scanning = false;
-                    SetNeuronValue("ModuleBehavior", "Done", 0); //this is here because clearing the bit lags by a cycle...bit of a hack
+                    case "GoS":
+                        angle = 0;
+                        break;
+                    case "UTurnS":
+                        angle = PI;
+                        break;
+                    case "RTurnS":
+                        angle = PI / 2;
+                        break;
+                    case "LTurnS":
+                        angle = -PI / 2;
+                        break;
+                }
+
+                if (newAction != "NoAction")
+                {
+                    currentSituation.AddReference(kb.Labeled(newAction), .1f);
+                    nmBehavior.TurnTo(angle);
                     nmBehavior.MoveTo(1);
                 }
-                else if (auto && !scanning)
-                {
-                    SetNeuronValue("ModuleBehavior", "Done", 0); //this is here because clearing the bit lags by a cycle...bit of a hack
-                    nmBehavior.Scan();
-                    scanning = true;
-                }
+                lastLandmark = currentLandmark;
+                return;
+            }
+
+            //default to scanning and moving forward  Useful with vision which is current disabled
+            else
+            {
+                //if (scanning)
+                //{
+                //    scanning = false;
+                //    SetNeuronValue("ModuleBehavior", "Done", 0); //this is here because clearing the bit lags by a cycle...bit of a hack
+                //    nmBehavior.MoveTo(1);
+                //}
+                //else if (auto && !scanning)
+                //{
+                //    SetNeuronValue("ModuleBehavior", "Done", 0); //this is here because clearing the bit lags by a cycle...bit of a hack
+                //    nmBehavior.Scan();
+                //    scanning = true;
+                //}
             }
         }
 
-        private float GetTotalAngleError(List<Thing> near)
+        private Angle GetTotalAngleError(List<Thing> near)
         {
             if (lastLandmark == null) return 10000;
-            float totalAngleError = 1000;
-            Segment s1 = Module2DModel.SegmentFromKBThing(lastLandmark.References[0].T);
-            foreach (Thing t1 in near)
+            Angle totalAngleError = 0;
+            for (int i = 0; i < lastLandmark.References.Count; i++)
             {
-                //does it match one of the segments presently near me?
-                Segment s2 = Module2DModel.SegmentFromKBThing(t1);
-                if (s1.theColor == s2.theColor)
+                Segment s1 = Module2DModel.SegmentFromKBThing(lastLandmark.References[i].T);
+                foreach (Thing t1 in near)
                 {
-                    float angle = (float)Abs(s1.MidPoint().Theta - s2.MidPoint().Theta);
-                    if (totalAngleError == 1000) totalAngleError = 0;
-                    totalAngleError += angle;
+                    //does it match one of the segments presently near me?
+                    Segment s2 = Module2DModel.SegmentFromKBThing(t1);
+                    if (s1.theColor == s2.theColor)
+                    {
+                        Angle m1 = s1.MidPoint().Theta;
+                        Angle m2 = s2.MidPoint().Theta;
+                        Angle angle = m1 - m2;
+                        totalAngleError += Abs(angle);
+                    }
                 }
             }
             return totalAngleError;
@@ -374,34 +392,42 @@ namespace BrainSimulator.Modules
             bestDist = 1000;
             if (kb == null) return;
             if (kb.Labeled("Landmark") == null) return;
+
+            //landmark segments are sorted, closest segment first
+            //closer segments are weightet to be more important
             List<Thing> landmarks = kb.Labeled("Landmark").Children;
-            foreach (Thing t in landmarks)
+            foreach (Thing landmark in landmarks)
             {
-                if (t.References.Count > 0)
+                if (landmark.References.Count > 0)
                 {
                     float totalDist = 0;
-                    //each child object in that landmark
-                    int foundCount = 0;  //must match at least two items to count as a hit
-                    foreach (Link L1 in t.References)
+                    //each reference in that landmark
+                    int foundCount = 0;  //must match several items to count as a hit
+                    int linkNumber = 0;
+                    foreach (Link L1 in landmark.References)
                     {
                         Segment s1 = Module2DModel.SegmentFromKBThing(L1.T);
+                        float d1 = (float)Utils.FindDistanceToSegment(s1);
+                        int nearNumber = 0;
                         foreach (Thing t1 in near)
                         {
                             //does it match one of the segments presently near me?
                             Segment s2 = Module2DModel.SegmentFromKBThing(t1);
+                            float d2 = (float)Utils.FindDistanceToSegment(s2);
                             if (s1.theColor == s2.theColor)
                             {
                                 foundCount++;
-                                float dist = (float)Abs(((Vector)s1.MidPoint().P).Length - ((Vector)s2.MidPoint().P).Length);
+                                float dist = (float)Abs(d1 - d2);
+                                dist *= Abs(nearNumber - linkNumber) + 1;
                                 totalDist += dist;
                             }
+                            nearNumber++;
                         }
+                        linkNumber++;
                     }
-                    if (foundCount < near.Count) totalDist = 1000; //didn't find enough matches
-                    if (foundCount < t.References.Count && t.References.Count < near.Count) totalDist = 1000; //didn't find enough matches
-                    if (totalDist < bestDist)
+                    if (totalDist < bestDist && foundCount == near.Count)
                     {
-                        best = t;
+                        best = landmark;
                         bestDist = totalDist;
                     }
                 }
@@ -431,48 +457,57 @@ namespace BrainSimulator.Modules
             return angle;
         }
 
+        //this returns a list of things directly connected to a target object
+        private List<Thing> FindGoal(Thing target)
+        {
+            if (target == null) return null;
+            Module2DKBN kb = (Module2DKBN)FindModuleByType(typeof(Module2DKBN));
+            List<Thing> placesToTry = new List<Thing>();
+
+            foreach (Thing situation in kb.Labeled("Situation").Children)
+            {
+                foreach (Thing outcomePair in situation.Children)
+                {
+                    if (outcomePair.References.Count > 1 && outcomePair.References[1].T == target)
+                    {
+                        placesToTry.Add(situation);
+                    }
+                }
+            }
+            return placesToTry;
+        }
+
         //This returns the action needed at the currentSituation in order to move toward the goal
-        //the KB search is recursive
-        public Thing GoToGoal(Thing goal, List<Thing> visited = null)
+        public Thing GoToGoal(Thing goal)
         {
             if (goal == null) return null;
             Module2DKBN kb = (Module2DKBN)FindModuleByType(typeof(Module2DKBN));
-            foreach (Thing situation in kb.Labeled("Situation").Children)
+
+            //trivial case, you can go straight to goal
+            Thing pair = currentSituation.Children.Find(t => t.References[1].T == goal);
+            if (pair != null)
+                return pair.References[0].T;
+
+            List<Thing> placesToTry = FindGoal(goal);
+            //extend the list of connections to existing nodes until we reach our current position
+            for (int i = 0; i < placesToTry.Count; i++)
             {
-                if (situation.Label.IndexOf("S") == 0 && (visited == null || !visited.Contains(situation)))
+                List<Thing> newPlacesToTry = FindGoal(placesToTry[i]);
+                if (newPlacesToTry.Contains(currentSituation))
                 {
-                    foreach (Thing outcomePair in situation.Children)
-                    {
-                        Link destDecision = outcomePair.References.Find(l => l.T == goal);
-                        if (outcomePair.References[1].T == goal)
-                       // if (destDecision != null)
-                        {
-                            //we found the goal...trace back
-                            if (situation == currentSituation)
-                            {
-                                Thing action = outcomePair.References[0].T;
-                                return action;
-                            }
-                            else
-                            {
-                                if (visited == null) visited = new List<Thing>();
-                                visited.Add(situation);
-                                Thing retVal = GoToGoal(situation, visited);
-                                if (retVal != null)
-                                    return retVal;
-                                visited.Remove(situation);
-                            }
-                        }
-                    }
+                    Thing target = placesToTry[i]; //target is the immediate target
+                    pair = currentSituation.Children.Find(t => t.References[1].T == target);
+                    return pair.References[0].T;
                 }
+                foreach (Thing t in newPlacesToTry)
+                    if (!placesToTry.Contains(t)) placesToTry.Add(t);
             }
             return null;
         }
 
         public override void Initialize()
         {
-            scanning = false;
-            turning = false;
+            //scanning = false;
             orienting = false;
             auto = false;
 
@@ -480,8 +515,15 @@ namespace BrainSimulator.Modules
             currentLandmark = null;
             currentSituation = null;
             ClearNeurons();
+            pointCount = 0;
+            situationCount = 0;
+            landmarkCount = 0;
+            pairCount = 0;
+
+
             //randomize
             rand = new Random((int)DateTime.Now.Ticks);
+
             AddLabel("Auto");
             AddLabel("Found");
             AddLabel("Goal");

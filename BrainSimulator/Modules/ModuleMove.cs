@@ -49,6 +49,7 @@ namespace BrainSimulator.Modules
                 na.GetNeuronAt(0,2).SetValue(0);
             }
 
+            //obsolete
             ModuleRealityModel mrm = (ModuleRealityModel)FindModuleByType(typeof(ModuleRealityModel));
             if (mrm != null)
                 mrm.Move(distance);

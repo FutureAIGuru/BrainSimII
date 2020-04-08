@@ -721,13 +721,17 @@ namespace BrainSimulator.Modules
         {
             Segment s1 = SegmentFromKBThing(t1);
             Segment s2 = SegmentFromKBThing(t2);
-            float d1 = (float)((Vector)s1.MidPoint().P).Length;
-            float d2 = (float)((Vector)s2.MidPoint().P).Length;
+            float d1 = (float)Utils.FindDistanceToSegment(s1);
+            float d2 = (float)Utils.FindDistanceToSegment(s2);
             if (d1 > d2) return 1;
             if (d1 == d2)
-                return 0;
+            {
+                //this is a bit of a hack to ensure that the list always comes back in the same order
+                if (s1.theColor > s2.theColor) return 1;
+            }
             return -1;
         }
+
         public List<Thing> NearbySegments(int max = 1)
         {
             List<Thing> retVal = new List<Thing>();
@@ -740,17 +744,18 @@ namespace BrainSimulator.Modules
             retVal.Sort(CompareSegmentsByDistance);
             int matches = 0;
             Segment s = SegmentFromKBThing(retVal[0]);
-            float d = (float)((Vector)s.MidPoint().P).Length;
+            float d = (float)Utils.FindDistanceToSegment(s);
             for (int i = 1; i < retVal.Count; i++)
             {
                 s = SegmentFromKBThing(retVal[i]);
-                float d1 = (float)((Vector)s.MidPoint().P).Length;
+                float d1 = (float)Utils.FindDistanceToSegment(s);
                 matches++;
-                if (Math.Abs(d - d1) > .02)
+                if (i >= max && Math.Abs(d - d1) > .1)
                     break;
                 d = d1;
             }
-            if (matches > max) max = matches;
+            if (matches > max)
+                max = matches;
             if (retVal.Count > max)
                 retVal.RemoveRange(max, retVal.Count - max);
             return retVal;
@@ -815,8 +820,7 @@ namespace BrainSimulator.Modules
             UpdateDialog();
         }
 
-        //This adjust all the objects in the model for an entity motion
-        public void Move(float motion)
+        public void Move (float x, float y)
         {
             if (KBPoints == null) return;
             //move all the objects in the model
@@ -824,10 +828,17 @@ namespace BrainSimulator.Modules
             {
                 if (t.V != null && t.V is PointPlus P)
                 {
-                    P.X -= motion;
+                    P.X -= x;
+                    P.Y -= y;
                 }
             }
             UpdateDialog();
+        }
+
+        //This adjust all the objects in the model for an entity motion
+        public void Move(float motion)
+        {
+            Move(motion, 0);
         }
 
 

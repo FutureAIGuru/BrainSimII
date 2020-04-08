@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
@@ -167,13 +168,24 @@ namespace BrainSimulator.Modules
             }
 
             int colorCount = 0;
-            Color[] theColors = new Color[] {
-                Colors.Red,Colors.Blue,Colors.Orange,Colors.Magenta,Colors.Pink,
-                Colors.Lime,Colors.MediumAquamarine,Colors.LightBlue,Colors.Yellow,Colors.PeachPuff,
-                Colors.GreenYellow,Colors.Cyan,Colors.DarkBlue,Colors.DarkGreen,Colors.LawnGreen,
-                Colors.BlueViolet,Colors.DarkRed,Colors.DarkSeaGreen,Colors.LightCoral,Colors.Lavender,Colors.DarkOrange};
+            //Color[] theColors = new Color[] {
+            //    Colors.Red,Colors.Blue,Colors.Orange,Colors.Magenta,Colors.Pink,
+            //    Colors.Lime,Colors.MediumAquamarine,Colors.LightBlue,Colors.Yellow,Colors.PeachPuff,
+            //    Colors.GreenYellow,Colors.Cyan,Colors.DarkBlue,Colors.DarkGreen,Colors.LawnGreen,
+            //    Colors.BlueViolet,Colors.DarkRed,Colors.DarkSeaGreen,Colors.LightCoral,Colors.Lavender,Colors.DarkOrange};
 
             Color currentColor = Colors.Blue;
+
+            List<Color> theColors = new List<Color>();
+            PropertyInfo[] p1 = typeof(Colors).GetProperties();
+            foreach (PropertyInfo p in p1)
+            {
+                Color c = (Color)p.GetValue(null);
+                if (c != Colors.White && c != Colors.Black && c != Colors.AliceBlue && c != Colors.GhostWhite && c != Colors.Honeydew
+                    && c != Colors.Azure && c != Colors.Beige && c != Colors.Bisque&& c != Colors.Cornsilk && c != Colors.AntiqueWhite
+                    && c != Colors.Cyan && c != Colors.FloralWhite && c != Colors.Gray && c != Colors.Cyan)
+                    theColors.Add(c);
+            }
 
             foreach (Neuron n in na.Neurons())
             {
@@ -195,7 +207,7 @@ namespace BrainSimulator.Modules
                             Temperature = 10,
                         };
                         objects.Add(newObject);
-                        colorCount = (colorCount + 1) % theColors.Length;
+                        colorCount = (colorCount + 1) % theColors.Count;
                         int currentColorInt = Utils.ColorToInt(currentColor);
                         currentColorInt--;
                         currentColor = Utils.IntToColor(currentColorInt);

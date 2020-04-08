@@ -69,6 +69,11 @@ namespace BrainSimulator
             return null;
         }
 
+        public static float Rad(float degrees)
+        {
+            return (float)(degrees * Math.PI / 180);
+        }
+
 
         public static Color IntToColor(int theColor)
         {
@@ -118,6 +123,15 @@ namespace BrainSimulator
                     return p.Name;
             }
             return "??";
+        }
+        public static double FindDistanceToSegment(Segment s)
+        {
+            return FindDistanceToSegment(new Point(0, 0), s.P1.P, s.P2.P, out Point closest);
+        }
+
+        public static double FindDistanceToSegment(Segment s,out Point closest)
+        {
+            return FindDistanceToSegment(new Point(0,0),s.P1.P,s.P2.P,out closest);
         }
 
         // Calculate the distance between

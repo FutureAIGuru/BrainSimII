@@ -64,8 +64,8 @@ namespace BrainSimulator
                 range.Save(stream, DataFormats.Xaml);
                 string xamlText = Encoding.UTF8.GetString(stream.ToArray());
                 MainWindow.theNeuronArray.networkNotes = xamlText;
-                MainWindow.theNeuronArray.hideNotes = (bool)checkBox.IsChecked;
             }
+            MainWindow.theNeuronArray.hideNotes = (bool)checkBox.IsChecked;
             Close();
         }
 

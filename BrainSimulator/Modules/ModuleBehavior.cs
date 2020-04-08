@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using static System.Math;
+using static BrainSimulator.Utils;
 
 namespace BrainSimulator.Modules
 {
@@ -127,31 +129,31 @@ namespace BrainSimulator.Modules
             {
                 theBehavior = TheBehavior.Turn
             };
-            newBehavoir.param1 = -(float)Math.PI / 6;
-            if (x < .925) newBehavoir.param1 = -(float)Math.PI / 12;
-            else if (x < .95) newBehavoir.param1 = -(float)Math.PI / 24;
-            else if (x < .975) newBehavoir.param1 = (float)Math.PI / 24;
-            else if (x < 1) newBehavoir.param1 = (float)Math.PI / 12;
+            newBehavoir.param1 = -(float)PI / 6;
+            if (x < .925) newBehavoir.param1 = -(float)PI / 12;
+            else if (x < .95) newBehavoir.param1 = -(float)PI / 24;
+            else if (x < .975) newBehavoir.param1 = (float)PI / 24;
+            else if (x < 1) newBehavoir.param1 = (float)PI / 12;
 
             pending.Add(newBehavoir);
         }
 
         public void Scan()
         {
-            SetNeuronValue(null, "Done", 0); 
+            SetNeuronValue(null, "Done", 0);
 
-            TurnTo((float)Math.PI / 24);
-            TurnTo((float)Math.PI / 24);
-            TurnTo((float)Math.PI / 24);
-            TurnTo((float)Math.PI / -24);
-            TurnTo((float)Math.PI / -24);
-            TurnTo((float)Math.PI / -24);
-            TurnTo((float)Math.PI / -24);
-            TurnTo((float)Math.PI / -24);
-            TurnTo((float)Math.PI / -24);
-            TurnTo((float)Math.PI / 24);
-            TurnTo((float)Math.PI / 24);
-            TurnTo((float)Math.PI / 24);
+            TurnTo((float)PI / 24);
+            TurnTo((float)PI / 24);
+            TurnTo((float)PI / 24);
+            TurnTo((float)PI / -24);
+            TurnTo((float)PI / -24);
+            TurnTo((float)PI / -24);
+            TurnTo((float)PI / -24);
+            TurnTo((float)PI / -24);
+            TurnTo((float)PI / -24);
+            TurnTo((float)PI / 24);
+            TurnTo((float)PI / 24);
+            TurnTo((float)PI / 24);
         }
 
         public bool IsMoving()
@@ -164,9 +166,9 @@ namespace BrainSimulator.Modules
             //SetNeuronValue(null, "Done", 0);
             //pending.Clear();
             //float collisionAngle = na.GetNeuronAt("CollAngle").CurrentCharge;
-            //TurnTo(-collisionAngle - (float)Math.PI / 2);
+            //TurnTo(-collisionAngle - (float)PI / 2);
             //MoveTo(.2f);
-            //TurnTo(+collisionAngle + (float)Math.PI / 2);
+            //TurnTo(+collisionAngle + (float)PI / 2);
         }
 
         //TurnTo
@@ -177,16 +179,21 @@ namespace BrainSimulator.Modules
             if (theta == 0) return;
             TurnTo(theta);
         }
-        public void TurnTo(float theta)
+
+        public void TurnTo(Angle theta)
         {
+            float x = theta % Rad(90);
+            if (Abs(x) > Rad(1)) //if correction is more than a degree...break
+
+                x = x;
             SetNeuronValue(null, "Done", 0);
 
             //don't bother turing more than 180-degrees, turn the other way
-            while (theta > Math.PI) theta -= (float)Math.PI * 2;
-            while (theta < -Math.PI) theta += (float)Math.PI * 2;
-            float deltaTheta = (float)Math.PI / 6;
+            while (theta > PI) theta -= (float)PI * 2;
+            while (theta < -PI) theta += (float)PI * 2;
+            float deltaTheta = (float)PI / 6;
 
-            while (Math.Abs(theta) > 0.001)
+            while (Abs(theta) > 0.001)
             {
                 float theta1 = 0;
                 if (theta > 0)
@@ -221,17 +228,17 @@ namespace BrainSimulator.Modules
         public void MoveTo(float dist)
         {
             SetNeuronValue(null, "Done", 0);
-                        
-            while (Math.Abs(dist) > 0.001)
+
+            while (Abs(dist) > 0.001)
             {
-                behavior newBehavior = new behavior(){theBehavior= TheBehavior.Rest};
+                behavior newBehavior = new behavior() { theBehavior = TheBehavior.Rest };
                 pending.Add(newBehavior);
                 pending.Add(newBehavior);
                 float dist1 = 0;
                 if (dist > .2f) dist1 = .2f;
                 else dist1 = dist;
                 dist = dist - dist1;
-                newBehavior  = new behavior()
+                newBehavior = new behavior()
                 {
                     theBehavior = TheBehavior.Move,
                     param1 = dist1

@@ -97,7 +97,6 @@ namespace BrainSimulator.Modules
         {
             return theAngle.CompareTo(a.theAngle);
         }
-
     }
 
 }

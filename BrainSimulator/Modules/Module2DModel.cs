@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows;
 using System.Xml.Serialization;
 using System.Diagnostics;
+using static System.Math;
+using static BrainSimulator.Utils;
 
 
 
@@ -85,6 +87,7 @@ namespace BrainSimulator.Modules
                 KBPoints = kb.HavingParent(kb.Labeled("Point"));
             }
         }
+
         public static Segment SegmentFromKBThing(Thing t)
         {
             if (t == null) return null;
@@ -156,6 +159,39 @@ namespace BrainSimulator.Modules
             }
         }
 
+        private Thing MostLikelyPoint(PointPlus p1, ColorInt theColor)
+        {
+            Thing retVal = null;
+            if (KBPoints == null) return null;
+            foreach (Thing t in KBPoints)
+            {
+                Segment s = SegmentFromKBThing(t.ReferencedBy[0].T);
+                if (s.theColor == theColor)
+                {
+                    if (t.V is PointPlus p)
+                    {
+                        if (Abs(p.Theta - p1.Theta) < Rad(5))  //are angles within 5 degrees
+                        {
+                            if (p1.Conf < p.Conf)
+                            {
+                                return t;
+                            }
+                        }
+                    }
+                }
+            }
+            return retVal;
+        }
+
+        public void UpdateEndpointFromVision(PointPlus P1, ColorInt theColor) //we might add color
+        {
+            Thing match = MostLikelyPoint(P1, theColor);
+            if (match != null)
+            {
+                match.V = P1;
+            }
+        }
+
         public void AddSegmentFromVision(PointPlus P1, PointPlus P2, int theColor)
         {
             //determine if the segment is already in the UKS.  
@@ -187,7 +223,7 @@ namespace BrainSimulator.Modules
                             s.P1.R = newSegment.P1.R;
                             s.P1.Theta = newSegment.P1.Theta;
                         }
-                        if (newSegment.P2.Conf< s.P2.Conf)
+                        if (newSegment.P2.Conf < s.P2.Conf)
                         {
                             s.P2.Conf = newSegment.P2.Conf;
                             s.P2.R = newSegment.P2.R;
@@ -235,7 +271,7 @@ namespace BrainSimulator.Modules
         //get input from vision...less accurate
         public Thing AddPointFromVision(PointPlus P)
         {
-            float angularResolution = (float)Math.PI / 90; //2-degrees
+            float angularResolution = (float)PI / 90; //2-degrees
             float depthResolution = 0.5f;
             GetSegmentsFromKB();
             if (KBPoints == null) return null; //this is a startup issue 
@@ -496,7 +532,7 @@ namespace BrainSimulator.Modules
             Thing nearest = null;
             float dist = float.MaxValue;
             Segment s = null;
-            foreach  (Thing t in KBSegments)
+            foreach (Thing t in KBSegments)
             {
                 s = SegmentFromKBThing(t);
 
@@ -604,7 +640,7 @@ namespace BrainSimulator.Modules
             {
                 if (t.V is PointPlus p)
                 {
-                    if (Math.Abs(p.Theta - theta) < toler)
+                    if (Abs(p.Theta - theta) < toler)
                     {
                         if (p.R < dist)
                         {
@@ -750,7 +786,7 @@ namespace BrainSimulator.Modules
                 s = SegmentFromKBThing(retVal[i]);
                 float d1 = (float)Utils.FindDistanceToSegment(s);
                 matches++;
-                if (i >= max && Math.Abs(d - d1) > .1)
+                if (i >= max && Abs(d - d1) > .1)
                     break;
                 d = d1;
             }
@@ -820,7 +856,7 @@ namespace BrainSimulator.Modules
             UpdateDialog();
         }
 
-        public void Move (float x, float y)
+        public void Move(float x, float y)
         {
             if (KBPoints == null) return;
             //move all the objects in the model

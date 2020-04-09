@@ -9,6 +9,9 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
+using static System.Math;
+using static BrainSimulator.Utils;
+
 
 namespace BrainSimulator.Modules
 {
@@ -22,6 +25,7 @@ namespace BrainSimulator.Modules
             public Color theColor;
             public float Aroma = 0;
             public float Temperature = 0;
+            public bool isMobile;
         }
         public List<physObject> objects = new List<physObject>();
 
@@ -52,13 +56,13 @@ namespace BrainSimulator.Modules
 
         //where we are in the world
         public Point entityPosition = new Point(0, 0);
-        public float entityDirection1 = (float)Math.PI / 2;
+        public float entityDirection1 = (float)PI / 2;
 
         //the size of the universe
         public double boundarySize = 5;
 
         [XmlIgnore]
-        public float BodyRadius = .2f;
+        public float bodyRadius = .2f;
 
         Random rand = new Random();
 
@@ -80,8 +84,8 @@ namespace BrainSimulator.Modules
             {
                 //random arm motion if no arm modules are loaded
                 armRelative = new Vector[] {
-                new Vector(.5, .5) + new Vector(.25*rand.NextDouble()*Math.Cos(armTheta1),.25*Math.Sin(armTheta1)),
-                new Vector(.5, -.5)+ new Vector(.25*rand.NextDouble()*Math.Cos(armTheta2),.25*Math.Sin(armTheta2))
+                new Vector(.5, .5) + new Vector(.25*rand.NextDouble()*Cos(armTheta1),.25*Sin(armTheta1)),
+                new Vector(.5, -.5)+ new Vector(.25*rand.NextDouble()*Cos(armTheta2),.25*Sin(armTheta2))
             };
                 armTheta1 += .3f;
                 armTheta2 += .35f;
@@ -148,10 +152,10 @@ namespace BrainSimulator.Modules
             objects.Clear();
 
             //build a pen to keep the entity inside
-            objects.Add(new physObject() { P1 = new Point(boundarySize, boundarySize), P2 = new Point(boundarySize, -boundarySize), theColor = Colors.Black });
-            objects.Add(new physObject() { P1 = new Point(boundarySize, -boundarySize), P2 = new Point(-boundarySize, -boundarySize), theColor = Colors.Black });
-            objects.Add(new physObject() { P1 = new Point(-boundarySize, -boundarySize), P2 = new Point(-boundarySize, boundarySize), theColor = Colors.Black });
-            objects.Add(new physObject() { P1 = new Point(-boundarySize, boundarySize), P2 = new Point(boundarySize, boundarySize), theColor = Colors.Black });
+            objects.Add(new physObject() { P1 = new Point(boundarySize, boundarySize), P2 = new Point(boundarySize, -boundarySize), theColor = Colors.Black, isMobile = false });
+            objects.Add(new physObject() { P1 = new Point(boundarySize, -boundarySize), P2 = new Point(-boundarySize, -boundarySize), theColor = Colors.Black, isMobile = false });
+            objects.Add(new physObject() { P1 = new Point(-boundarySize, -boundarySize), P2 = new Point(-boundarySize, boundarySize), theColor = Colors.Black, isMobile = false });
+            objects.Add(new physObject() { P1 = new Point(-boundarySize, boundarySize), P2 = new Point(boundarySize, boundarySize), theColor = Colors.Black, isMobile = false });
 
             void TransformPoint(ref int x, ref int y)
             {
@@ -177,14 +181,29 @@ namespace BrainSimulator.Modules
             Color currentColor = Colors.Blue;
 
             List<Color> theColors = new List<Color>();
+            theColors.Add(Colors.Red);
+            theColors.Add(Colors.Lime);
+            theColors.Add(Colors.Blue);
+            theColors.Add(Colors.Magenta);
+            theColors.Add(Colors.Cyan);
+            theColors.Add(Colors.Orange);
+            theColors.Add(Colors.Purple);
+            theColors.Add(Colors.Maroon);
+            theColors.Add(Colors.Green);
+            theColors.Add(Colors.Crimson);
             PropertyInfo[] p1 = typeof(Colors).GetProperties();
+            int count = 0;
             foreach (PropertyInfo p in p1)
             {
-                Color c = (Color)p.GetValue(null);
-                if (c != Colors.White && c != Colors.Black && c != Colors.AliceBlue && c != Colors.GhostWhite && c != Colors.Honeydew
-                    && c != Colors.Azure && c != Colors.Beige && c != Colors.Bisque&& c != Colors.Cornsilk && c != Colors.AntiqueWhite
-                    && c != Colors.Cyan && c != Colors.FloralWhite && c != Colors.Gray && c != Colors.Cyan)
-                    theColors.Add(c);
+                if (count++ > 7)
+                {
+                    Color c = (Color)p.GetValue(null);
+                    if (c != Colors.White && c != Colors.Black && c != Colors.AliceBlue && c != Colors.GhostWhite && c != Colors.Honeydew
+                        && c != Colors.Azure && c != Colors.Beige && c != Colors.Bisque && c != Colors.Cornsilk && c != Colors.AntiqueWhite
+                        && c != Colors.Cyan && c != Colors.FloralWhite && c != Colors.Gray && c != Colors.Cyan)
+                        if (!theColors.Contains(c))
+                            theColors.Add(c);
+                }
             }
 
             foreach (Neuron n in na.Neurons())
@@ -205,6 +224,7 @@ namespace BrainSimulator.Modules
                             theColor = theColors[colorCount],
                             Aroma = -1,
                             Temperature = 10,
+                            isMobile = (s.Weight > 0) ? true : false,
                         };
                         objects.Add(newObject);
                         colorCount = (colorCount + 1) % theColors.Count;
@@ -237,8 +257,8 @@ namespace BrainSimulator.Modules
         public void Rotate(double theta) //(in radian CW) 
         {
             entityDirection1 -= (float)theta;
-            if (entityDirection1 > Math.PI) entityDirection1 -= (float)Math.PI * 2;
-            if (entityDirection1 < -Math.PI) entityDirection1 += (float)Math.PI * 2;
+            if (entityDirection1 > PI) entityDirection1 -= (float)PI * 2;
+            if (entityDirection1 < -PI) entityDirection1 += (float)PI * 2;
             HandleTouch();
             HandleVision();
             HandleAroma();
@@ -250,8 +270,8 @@ namespace BrainSimulator.Modules
         {
             Point newPosition = new Point()
             {
-                X = entityPosition.X + motion * Math.Cos(entityDirection1),
-                Y = entityPosition.Y + motion * Math.Sin(entityDirection1)
+                X = entityPosition.X + motion * Cos(entityDirection1),
+                Y = entityPosition.Y + motion * Sin(entityDirection1)
             };
 
             //check for collisions  collision can impede motion
@@ -278,23 +298,93 @@ namespace BrainSimulator.Modules
         //a collision is the intersection of the desired newPosition and an obstacle
         private bool CheckForCollisions(Point newPosition)
         {
-            //generally, you can only be up against one obstacle 
+            bool retVal = false;
             for (int i = 0; i < objects.Count; i++)
             {
                 Point P1 = objects[i].P1;
                 Point P2 = objects[i].P2;
                 physObject ph = objects[i];
                 double dist = Utils.FindDistanceToSegment(newPosition, ph.P1, ph.P2, out Point closest);
-                if (dist < BodyRadius)
+                if (dist < bodyRadius)
                 {
-                    SetNeuronValue("ModuleBehavior", "Coll", 1);
                     PointPlus collPt = new PointPlus { P = (Point)(closest - newPosition) };
-                    collPt.Theta -= entityDirection1;
-                    SetNeuronValue("ModuleBehavior", "CollAngle", collPt.Theta);
-                    return true;
+                    if (!objects[i].isMobile) //collision
+                    {
+                        SetNeuronValue("ModuleBehavior", "Coll", 1);
+                        collPt.Theta -= entityDirection1;
+                        SetNeuronValue("ModuleBehavior", "CollAngle", collPt.Theta);
+                        retVal = true; ;
+                    }
+                    else //move the object
+                    {
+                        float distToMoveObject = bodyRadius - (float)dist;
+                        PointPlus motion = new PointPlus() { P = collPt.P };
+                        motion.R = distToMoveObject;
+                        Point oldPoint1 = new Point(ph.P1.X, ph.P1.Y);
+                        Point oldPoint2 = new Point(ph.P2.X, ph.P2.Y);
+
+                        MovePhysObject(ph, closest, motion);
+                        //TODO check for collisions with this object and other objects
+                        for (int j = 0; j < objects.Count; j++)
+                        {
+                            if (j == i) continue;
+                            physObject ph2 = objects[j];
+                            if (!ph2.isMobile) continue;
+                            FindIntersection(ph.P1, ph.P2, ph2.P1, ph2.P2, out bool lines_intersect, out bool segments_intersect,
+                                out Point intersection, out Point close_p1, out Point close_p2, out double collisionAngle);
+                            if (segments_intersect)
+                            {
+                                PointPlus endMotion = new PointPlus();
+                                float dist1 = (float)((Vector)(intersection - (Vector)ph.P1)).Length;
+                                float dist2 = (float)((Vector)(intersection - (Vector)ph.P2)).Length;
+                                if (dist1 < dist2)
+                                {
+                                    endMotion.P = ph.P1 - (Vector)oldPoint1;
+                                }
+                                else 
+                                {
+                                    endMotion.P = ph.P2 - (Vector)oldPoint2;
+                                }
+
+                                MovePhysObject(objects[j], intersection, endMotion);
+                            }
+                        }
+
+                    }
                 }
             }
-            return false;
+            return retVal;
+        }
+
+        private static void MovePhysObject(physObject ph, Point closest, PointPlus motion)
+        {
+            ph.P1 = ph.P1 + motion.V;
+            ph.P2 = ph.P2 + motion.V;
+
+            //handle rotation if object not hit in the middle
+            //we know that our point "closest" moves with "motion"...rotation should be about "closest"
+            Segment s = new Segment
+            {
+                P1 = new PointPlus() { P = ph.P1 },
+                P2 = new PointPlus() { P = ph.P2 }
+            };
+            PointPlus contactPoint = new PointPlus() { P = closest };
+            PointPlus offset = new PointPlus() { P = (Point)(contactPoint.V - s.MidPoint().V) };
+
+            double cross = Vector.CrossProduct(offset.V, motion.V);
+
+            float rotation = 10 * Sign(cross);
+
+            float rotationRatio = (float)(offset.V.Length / s.Length() * 2);
+
+            PointPlus V1 = new PointPlus() { P = (Point)(s.P1.P - contactPoint.P) };
+            PointPlus V2 = new PointPlus() { P = (Point)(s.P2.P - contactPoint.P) };
+
+            V1.Theta += Rad(rotation * rotationRatio);
+            V2.Theta += Rad(rotation * rotationRatio);
+
+            ph.P1 = (Point)V1.V + contactPoint.V;
+            ph.P2 = (Point)V2.V + contactPoint.V;
         }
 
         //aroma is a field strength at a given position
@@ -392,15 +482,15 @@ namespace BrainSimulator.Modules
         private void HandleVision()
         {
             Point oldCamerPosition = entityPosition;
-            Double offsetDirection = entityDirection1 + Math.PI / 2;
-            Vector offset = new Vector(Math.Cos(offsetDirection), Math.Sin(offsetDirection));
+            Double offsetDirection = entityDirection1 + PI / 2;
+            Vector offset = new Vector(Cos(offsetDirection), Sin(offsetDirection));
             offset = Vector.Multiply(Module2DVision.eyeOffset, offset);
             entityPosition += offset;
             HandleVision(0);
 
             entityPosition = oldCamerPosition;
-            offsetDirection = entityDirection1 - Math.PI / 2;
-            offset = new Vector(Math.Cos(offsetDirection), Math.Sin(offsetDirection));
+            offsetDirection = entityDirection1 - PI / 2;
+            offset = new Vector(Cos(offsetDirection), Sin(offsetDirection));
             offset = Vector.Multiply(Module2DVision.eyeOffset, offset);
             entityPosition += offset;
             HandleVision(1);
@@ -423,7 +513,7 @@ namespace BrainSimulator.Modules
                 double theta = Module2DVision.GetDirectionOfNeuron(i, retinaWidth);
                 theta = entityDirection1 + theta;
                 //create a segment from the view direction for this pixel (length 100 assumes the size of the universe)
-                Point p2 = entityPosition + new Vector(Math.Cos(theta) * 100.0, Math.Sin(theta) * 100.0);
+                Point p2 = entityPosition + new Vector(Cos(theta) * 100.0, Sin(theta) * 100.0);
                 Color theColor = Colors.Pink;
                 double closestDistance = 20;
                 for (int j = 0; j < objects.Count; j++)
@@ -442,7 +532,7 @@ namespace BrainSimulator.Modules
                     }
                 }
                 pixels[i] = Utils.ColorToInt(theColor);
-                Point p3 = entityPosition + new Vector(Math.Cos(theta), Math.Sin(theta));
+                Point p3 = entityPosition + new Vector(Cos(theta), Sin(theta));
                 if (row == 0)
                     currentView0.Add(new physObject() { P1 = p3, P2 = entityPosition, theColor = theColor });
                 //currentView0.Add(new physObject() { P1 = p3, P2 = new Point(0, 0), theColor = theColor });

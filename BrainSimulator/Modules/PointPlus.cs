@@ -10,6 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.Windows;
+using System.Windows.Media;
+using static System.Math;
+using static BrainSimulator.Utils;
 
 namespace BrainSimulator.Modules
 {
@@ -29,57 +32,58 @@ namespace BrainSimulator.Modules
             get { if (xyDirty) UpdateXY(); return p; }
             set { polarDirty = true; p = value; }
         }
-        public float X { get { if (xyDirty) UpdateXY(); return (float)p.X; } set { p.X = value; polarDirty = true; } }
-        public float Y { get { if (xyDirty) UpdateXY(); return (float)p.Y; } set { p.Y = value; polarDirty = true; } }
+        public float X { get { if (xyDirty) UpdateXY(); return (float)p.X; } set { if (xyDirty) UpdateXY(); p.X = value; polarDirty = true; } }
+        public float Y { get { if (xyDirty) UpdateXY(); return (float)p.Y; } set { if (xyDirty) UpdateXY(); p.Y = value; polarDirty = true; } }
         [XmlIgnore]
         public Vector V { get => (Vector)P; }
         [XmlIgnore]
-        public float Degrees { get => (float)(Theta * 180 / Math.PI); }
+        public float Degrees { get => (float)(Theta * 180 / PI); }
         public float Conf { get; set; }
         [XmlIgnore]
-        public float R { get { if (polarDirty) UpdatePolar(); return r; } set { r = value; xyDirty = true; } }
+        public float R { get { if (polarDirty) UpdatePolar(); return r; } set { if (polarDirty) UpdatePolar(); r = value; xyDirty = true; } }
         [XmlIgnore]
         public Angle Theta
         {
             get { if (polarDirty) UpdatePolar(); return theta; }
             set
             {//keep theta within the range +/- PI
+                if (polarDirty) UpdatePolar();
                 theta = value;
-                if (theta > Math.PI) theta -= 2 * (float)Math.PI;
-                if (theta < -Math.PI) theta += 2 * (float)Math.PI;
+                if (theta > PI) theta -= 2 * (float)PI;
+                if (theta < -PI) theta += 2 * (float)PI;
                 xyDirty = true;
             }
         }
         private void UpdateXY()
         {
-            p.X = r * Math.Cos(theta);
-            p.Y = r * Math.Sin(theta);
+            p.X = r * Cos(theta);
+            p.Y = r * Sin(theta);
             xyDirty = false;
         }
 
         public void UpdatePolar()
         {
-            theta = (float)Math.Atan2(p.Y, p.X);
-            r = (float)Math.Sqrt(p.X * p.X + p.Y * p.Y);
+            theta = (float)Atan2(p.Y, p.X);
+            r = (float)Sqrt(p.X * p.X + p.Y * p.Y);
             polarDirty = false;
         }
         public bool Near(PointPlus PP, float toler)
         {
-            //if ((Math.Abs(PP.R - R) < 1 && Math.Abs(PP.Theta - Theta) < .1) ||
-            //    ((Math.Abs(PP.X - X) < toler && Math.Abs(PP.Y - Y) < toler)))
-            if (Math.Abs(PP.X - X) <= toler && Math.Abs(PP.Y - Y) <= toler)   
+            //if ((Abs(PP.R - R) < 1 && Abs(PP.Theta - Theta) < .1) ||
+            //    ((Abs(PP.X - X) < toler && Abs(PP.Y - Y) < toler)))
+            if (Abs(PP.X - X) <= toler && Abs(PP.Y - Y) <= toler)
                 return true;
             return false;
         }
         public override string ToString()
         {
-            string s = "R: "+R.ToString("F3") + ", Theta: " + Degrees.ToString("F3")+ "° (" + X.ToString("F2") +","+Y.ToString("F2")+")";
+            string s = "R: " + R.ToString("F3") + ", Theta: " + Degrees.ToString("F3") + "° (" + X.ToString("F2") + "," + Y.ToString("F2") + ")";
             return s;
         }
     }
 
-    //this little helper adds the convenience of displaying angles also in degrees even though they are stored in radians
-    //it's really just an extension of float
+    //this little helper adds the convenience of displaying angles in radians AND degrees even though they are stored in radians
+    //it's really just an extension of float...it also accepts assignment from a double without an explicit cast
     public class Angle
     {
         private readonly float theAngle;
@@ -89,13 +93,34 @@ namespace BrainSimulator.Modules
         public static implicit operator Angle(double a) => new Angle((float)a);
         public override string ToString()
         {
-            float degrees = theAngle * 180 / (float)Math.PI;
+            float degrees = theAngle * 180 / (float)PI;
             string s = theAngle.ToString("F3") + " " + degrees.ToString("F3") + "°";
             return s;
         }
         public int CompareTo(Angle a)
         {
             return theAngle.CompareTo(a.theAngle);
+        }
+    }
+    public class ColorInt
+    {
+        private readonly int theColor;
+        public ColorInt(int aColor) { this.theColor = aColor; }
+        public static implicit operator int(ColorInt c) => c.theColor;
+        public static implicit operator ColorInt(int aColor) => new ColorInt(aColor);
+        public static implicit operator ColorInt(Color aColor) => new ColorInt(ColorToInt(aColor));
+        public override string ToString()
+        {
+            int A = theColor >> 24 & 0xff;
+            int R = theColor >> 16 & 0xff;
+            int G = theColor >> 8 & 0xff;
+            int B = theColor & 0xff;
+            string s = "ARGB: " + A + "," + R + "," + G + "," + B;
+            return s;
+        }
+        public int CompareTo(ColorInt c)
+        {
+            return theColor.CompareTo(c.theColor);
         }
     }
 

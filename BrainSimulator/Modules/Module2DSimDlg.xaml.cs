@@ -180,11 +180,11 @@ namespace BrainSimulator.Modules
             Image body = new Image()
             {
                 Source = new BitmapImage(new Uri("/Resources/entity.png", UriKind.Relative)),
-                Width = 2 * parent.BodyRadius,
-                Height = 2 * parent.BodyRadius
+                Width = 2 * parent.bodyRadius,
+                Height = 2 * parent.bodyRadius
             };
             TransformGroup tg1 = new TransformGroup();
-            tg1.Children.Add(new TranslateTransform(-parent.BodyRadius, -parent.BodyRadius));
+            tg1.Children.Add(new TranslateTransform(-parent.bodyRadius, -parent.bodyRadius));
             tg1.Children.Add(new RotateTransform(90 + parent.entityDirection1 * 180 / Math.PI));
             body.RenderTransform = tg1;
             Canvas.SetLeft(body, parent.entityPosition.X);

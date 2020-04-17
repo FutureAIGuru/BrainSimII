@@ -8,10 +8,10 @@
         Title="Speak Phonemes" Height="271.118" Width="470.186" Background="Gray" ShowInTaskbar="False">
     <Canvas Name="theCanvas" SizeChanged="TheCanvas_SizeChanged" >
         <Button x:Name="buttonOK" Content="OK" Height="36" Canvas.Left="29" Canvas.Top="156" Width="81" Click="ButtonOK_Click" RenderTransformOrigin="0.68,-1.887"/>
-        <TextBox x:Name="textBox" Height="70" Canvas.Left="29" TextWrapping="Wrap" Text="" Canvas.Top="26" Width="265" KeyDown="TextBox_KeyDown" />
-        <Label x:Name="labelIn" Content="" Height="23" Canvas.Left="76" Canvas.Top="101" Width="288"/>
-        <Label x:Name="label1" Content="In:" Height="23" Canvas.Left="58" Canvas.Top="101" Width="42"/>
-        <Label x:Name="labelOut" Content="" Height="23" Canvas.Left="76" Canvas.Top="121" Width="288"/>
-        <Label x:Name="label2" Content="Out:" Height="23" Canvas.Left="49" Canvas.Top="121" Width="42"/>
+        <TextBox x:Name="textBox" Height="70"   Canvas.Left="29" TextWrapping="Wrap" Text="" Canvas.Top="26" Width="265" KeyDown="TextBox_KeyDown" />
+        <TextBox x:Name="labelIn" Padding="0,10,0,0" Text="" VerticalContentAlignment="Bottom" Background="Gray" BorderThickness="0" Height="31" Canvas.Left="76" Canvas.Top="96" Width="288" />
+        <Label x:Name="label1" Content="In:" Height="24" Canvas.Left="58" Canvas.Top="106" Width="42"/>
+        <TextBox x:Name="labelOut" BorderThickness="0,0,0,0" Text="" VerticalContentAlignment="Bottom" VerticalAlignment="Top" IsReadOnly="True" Background="Transparent" Height="22" Canvas.Left="76" Canvas.Top="127" Width="288"/>
+        <Label x:Name="label2" Content="Out:" Height="24" Canvas.Left="48" Canvas.Top="128" Width="42" RenderTransformOrigin="0.5,0.479"/>
     </Canvas>
 </local:ModuleBaseDlg>

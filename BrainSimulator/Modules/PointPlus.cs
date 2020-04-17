@@ -77,7 +77,7 @@ namespace BrainSimulator.Modules
         }
         public override string ToString()
         {
-            string s = "R: " + R.ToString("F3") + ", Theta: " + Degrees.ToString("F3") + "° (" + X.ToString("F2") + "," + Y.ToString("F2") + ")";
+            string s = "R: " + R.ToString("F3") + ", Theta: " + Degrees.ToString("F3") + "° (" + X.ToString("F2") + "," + Y.ToString("F2") + ") Conf:"+Conf.ToString("F3");
             return s;
         }
     }
@@ -117,6 +117,14 @@ namespace BrainSimulator.Modules
             int B = theColor & 0xff;
             string s = "ARGB: " + A + "," + R + "," + G + "," + B;
             return s;
+        }
+        public static bool operator ==(ColorInt a, ColorInt b)
+        {
+            return (a.theColor == b.theColor);
+        }
+        public static bool operator !=(ColorInt a, ColorInt b)
+        {
+            return (a.theColor != b.theColor);
         }
         public int CompareTo(ColorInt c)
         {

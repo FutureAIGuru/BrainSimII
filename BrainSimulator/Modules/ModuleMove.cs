@@ -31,7 +31,7 @@ namespace BrainSimulator.Modules
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
-            float[] dist = { .1f,.025f,0,-.025f,-.1f};
+            float[] dist = { .5f,.1f,0,-.025f,-.1f};
             float distance = 0;
 
 
@@ -66,6 +66,10 @@ namespace BrainSimulator.Modules
             Module2DModel m2DModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
             if (m2DModel != null && moved && distance != 0)
                 m2DModel.Move(distance);
+
+            Module2DVision m2DVision = (Module2DVision)FindModuleByType(typeof(Module2DVision));
+            if (m2DVision != null && distance != 0) m2DVision.ViewChanged();
+
         }
 
         public override void Initialize()

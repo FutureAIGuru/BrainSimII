@@ -26,6 +26,8 @@ namespace BrainSimulator.Modules
             public float Aroma = 0;
             public float Temperature = 0;
             public bool isMobile;
+            public Vector motion = new Vector(0,0);
+            public float rotation = 0;
         }
         public List<physObject> objects = new List<physObject>();
 
@@ -47,6 +49,8 @@ namespace BrainSimulator.Modules
         public List<physObject> currentView0 = new List<physObject>();
         [XmlIgnore]
         public List<physObject> currentView1 = new List<physObject>();
+        [XmlIgnore]
+        public int inMotion = 0; //+1 move objects fwd, -1 reverse
 
         //where the arm tips are relative to self
         public Vector[] armRelative = { new Vector(.5, .5), new Vector(.5, -.5) };
@@ -108,7 +112,11 @@ namespace BrainSimulator.Modules
                     };
                 }
             }
+            MoveObjects();
+
             HandleTouch();
+            HandleVision();
+            HandleAroma();
 
             CreateRandomTrainingCase();
             DoTrainingAction();
@@ -117,126 +125,15 @@ namespace BrainSimulator.Modules
             UpdateDialog();
         }
 
-        public override void Initialize()
+        private void MoveObjects()
         {
-            TrainingSamples = new string[]
+            foreach(physObject ph in objects)
             {
-            "what color is this:Say:Positive",
-            "what is this:Say:Positive",
-            "go:Go:Positive",
-            "stop:Stop:Positive",
-            //"sallie:Attn:Positive",
-            //"turn around:UTurn:Positive",
-            "turn left:LTurn:Positive",
-            "turn right:RTurn:Positive",
-            "This is [color]:NoAction:Positive",
-            "[color]:NoAction:Positive"
-        };
-
-
-            index = 0;
-            entityTrack.Clear();
-            entityPosition = new Point(0, 0);
-            entityTrack.Add(entityPosition);
-            entityDirection1 = 0;
-
-            na.GetNeuronAt(0).Label = "Actions";
-            na.GetNeuronAt(1).Label = "Colors";
-            na.GetNeuronAt(2).Label = "Train";
-
-            armRelative = new Vector[] { new Vector(.4, .4), new Vector(.4, -.4) };
-            armActual = new Point[2];
-            for (int i = 0; i < armRelative.Length; i++)
-                armActual[i] = entityPosition + armRelative[i];
-
-            objects.Clear();
-
-            //build a pen to keep the entity inside
-            objects.Add(new physObject() { P1 = new Point(boundarySize, boundarySize), P2 = new Point(boundarySize, -boundarySize), theColor = Colors.Black, isMobile = false });
-            objects.Add(new physObject() { P1 = new Point(boundarySize, -boundarySize), P2 = new Point(-boundarySize, -boundarySize), theColor = Colors.Black, isMobile = false });
-            objects.Add(new physObject() { P1 = new Point(-boundarySize, -boundarySize), P2 = new Point(-boundarySize, boundarySize), theColor = Colors.Black, isMobile = false });
-            objects.Add(new physObject() { P1 = new Point(-boundarySize, boundarySize), P2 = new Point(boundarySize, boundarySize), theColor = Colors.Black, isMobile = false });
-
-            void TransformPoint(ref int x, ref int y)
-            {
-                //the middle of the area
-                int mx = na.Width / 2; int my = na.Height / 2;
-                x -= mx;
-                y -= my;
-                int temp = x;
-                x = y;
-                y = temp; ;
-
-                y = -y;
-                x = -x;
+                ph.P1 += ph.motion*inMotion;
+                ph.P2 += ph.motion*inMotion;
             }
-
-            int colorCount = 0;
-            //Color[] theColors = new Color[] {
-            //    Colors.Red,Colors.Blue,Colors.Orange,Colors.Magenta,Colors.Pink,
-            //    Colors.Lime,Colors.MediumAquamarine,Colors.LightBlue,Colors.Yellow,Colors.PeachPuff,
-            //    Colors.GreenYellow,Colors.Cyan,Colors.DarkBlue,Colors.DarkGreen,Colors.LawnGreen,
-            //    Colors.BlueViolet,Colors.DarkRed,Colors.DarkSeaGreen,Colors.LightCoral,Colors.Lavender,Colors.DarkOrange};
-
-            Color currentColor = Colors.Blue;
-
-            List<Color> theColors = new List<Color>();
-            theColors.Add(Colors.Red);
-            theColors.Add(Colors.Lime);
-            theColors.Add(Colors.Blue);
-            theColors.Add(Colors.Magenta);
-            theColors.Add(Colors.Cyan);
-            theColors.Add(Colors.Orange);
-            theColors.Add(Colors.Purple);
-            theColors.Add(Colors.Maroon);
-            theColors.Add(Colors.Green);
-            theColors.Add(Colors.Crimson);
-            PropertyInfo[] p1 = typeof(Colors).GetProperties();
-            int count = 0;
-            foreach (PropertyInfo p in p1)
-            {
-                if (count++ > 7)
-                {
-                    Color c = (Color)p.GetValue(null);
-                    if (c != Colors.White && c != Colors.Black && c != Colors.AliceBlue && c != Colors.GhostWhite && c != Colors.Honeydew
-                        && c != Colors.Azure && c != Colors.Beige && c != Colors.Bisque && c != Colors.Cornsilk && c != Colors.AntiqueWhite
-                        && c != Colors.Cyan && c != Colors.FloralWhite && c != Colors.Gray && c != Colors.Cyan)
-                        if (!theColors.Contains(c))
-                            theColors.Add(c);
-                }
-            }
-
-            foreach (Neuron n in na.Neurons())
-            {
-                na.GetNeuronLocation(n, out int x1, out int y1);
-                TransformPoint(ref x1, ref y1);
-                foreach (Synapse s in n.Synapses)
-                {
-                    if (s.TargetNeuron != n.Id)
-                    {
-                        na.GetNeuronLocation(s.TargetNeuron, out int x2, out int y2);
-                        TransformPoint(ref x2, ref y2);
-                        physObject newObject = new physObject
-                        {
-                            P1 = new Point(x1 - 0.5, y1 - 0.5),
-                            P2 = new Point(x2 - 0.5, y2 - 0.5),
-                            //                        theColor = currentColor,
-                            theColor = theColors[colorCount],
-                            Aroma = -1,
-                            Temperature = 10,
-                            isMobile = (s.Weight > 0) ? true : false,
-                        };
-                        objects.Add(newObject);
-                        colorCount = (colorCount + 1) % theColors.Count;
-                        int currentColorInt = Utils.ColorToInt(currentColor);
-                        currentColorInt--;
-                        currentColor = Utils.IntToColor(currentColorInt);
-                    }
-                }
-            }
-            HandleVision();
-            UpdateDialog();
         }
+
         public float randCoord()
         {
             return (float)(rand.NextDouble() * 2 * (boundarySize - 2) - (boundarySize - 2));
@@ -259,10 +156,6 @@ namespace BrainSimulator.Modules
             entityDirection1 -= (float)theta;
             if (entityDirection1 > PI) entityDirection1 -= (float)PI * 2;
             if (entityDirection1 < -PI) entityDirection1 += (float)PI * 2;
-            HandleTouch();
-            HandleVision();
-            HandleAroma();
-            UpdateDialog();
         }
 
         //returning true said there no collision and it is OK to move there...in the event of a collision, the move is cancelled
@@ -286,12 +179,6 @@ namespace BrainSimulator.Modules
                 entityPosition = newPosition;
                 entityTrack.Add(entityPosition);
             }
-
-            HandleTouch();
-            HandleVision();
-            HandleAroma();
-
-            UpdateDialog();
             return !collision;
         }
 
@@ -675,10 +562,134 @@ namespace BrainSimulator.Modules
                 PointPlus P1 = new PointPlus() { P = objects[i].P1 };
                 PointPlus P2 = new PointPlus() { P = objects[i].P2 };
                 int theColor = Utils.ColorToInt(objects[i].theColor);
-                nmModel.AddSegmentFromVision(P1, P2, theColor);
+                nmModel.AddSegmentFromVision(P1, P2, theColor,false);
             }
             MainWindow.ResumeEngine();
         }
+        public override void Initialize()
+        {
+            TrainingSamples = new string[]
+            {
+            "what color is this:Say:Positive",
+            "what is this:Say:Positive",
+            "go:Go:Positive",
+            "stop:Stop:Positive",
+            //"sallie:Attn:Positive",
+            //"turn around:UTurn:Positive",
+            "turn left:LTurn:Positive",
+            "turn right:RTurn:Positive",
+            "This is [color]:NoAction:Positive",
+            "[color]:NoAction:Positive"
+        };
+
+
+            index = 0;
+            entityTrack.Clear();
+            entityPosition = new Point(0, 0);
+            entityTrack.Add(entityPosition);
+            entityDirection1 = 0;
+
+            na.GetNeuronAt(0).Label = "Actions";
+            na.GetNeuronAt(1).Label = "Colors";
+            na.GetNeuronAt(2).Label = "Train";
+
+            armRelative = new Vector[] { new Vector(.4, .4), new Vector(.4, -.4) };
+            armActual = new Point[2];
+            for (int i = 0; i < armRelative.Length; i++)
+                armActual[i] = entityPosition + armRelative[i];
+
+            objects.Clear();
+
+            //build a pen to keep the entity inside
+            objects.Add(new physObject() { P1 = new Point(boundarySize, boundarySize), P2 = new Point(boundarySize, -boundarySize), theColor = Colors.Black, isMobile = false });
+            objects.Add(new physObject() { P1 = new Point(boundarySize, -boundarySize), P2 = new Point(-boundarySize, -boundarySize), theColor = Colors.Black, isMobile = false });
+            objects.Add(new physObject() { P1 = new Point(-boundarySize, -boundarySize), P2 = new Point(-boundarySize, boundarySize), theColor = Colors.Black, isMobile = false });
+            objects.Add(new physObject() { P1 = new Point(-boundarySize, boundarySize), P2 = new Point(boundarySize, boundarySize), theColor = Colors.Black, isMobile = false });
+
+            void TransformPoint(ref int x, ref int y)
+            {
+                //the middle of the area
+                int mx = na.Width / 2; int my = na.Height / 2;
+                x -= mx;
+                y -= my;
+                int temp = x;
+                x = y;
+                y = temp; ;
+
+                y = -y;
+                x = -x;
+            }
+
+            int colorCount = 0;
+            //Color[] theColors = new Color[] {
+            //    Colors.Red,Colors.Blue,Colors.Orange,Colors.Magenta,Colors.Pink,
+            //    Colors.Lime,Colors.MediumAquamarine,Colors.LightBlue,Colors.Yellow,Colors.PeachPuff,
+            //    Colors.GreenYellow,Colors.Cyan,Colors.DarkBlue,Colors.DarkGreen,Colors.LawnGreen,
+            //    Colors.BlueViolet,Colors.DarkRed,Colors.DarkSeaGreen,Colors.LightCoral,Colors.Lavender,Colors.DarkOrange};
+
+            Color currentColor = Colors.Blue;
+
+            List<Color> theColors = new List<Color>();
+            theColors.Add(Colors.Red);
+            theColors.Add(Colors.Lime);
+            theColors.Add(Colors.Blue);
+            theColors.Add(Colors.Magenta);
+            theColors.Add(Colors.Cyan);
+            theColors.Add(Colors.Orange);
+            theColors.Add(Colors.Purple);
+            theColors.Add(Colors.Maroon);
+            theColors.Add(Colors.Green);
+            theColors.Add(Colors.Crimson);
+            PropertyInfo[] p1 = typeof(Colors).GetProperties();
+            int count = 0;
+            foreach (PropertyInfo p in p1)
+            {
+                if (count++ > 7)
+                {
+                    Color c = (Color)p.GetValue(null);
+                    if (c != Colors.White && c != Colors.Black && c != Colors.AliceBlue && c != Colors.GhostWhite && c != Colors.Honeydew
+                        && c != Colors.Azure && c != Colors.Beige && c != Colors.Bisque && c != Colors.Cornsilk && c != Colors.AntiqueWhite
+                        && c != Colors.Cyan && c != Colors.FloralWhite && c != Colors.Gray && c != Colors.Cyan)
+                        if (!theColors.Contains(c))
+                            theColors.Add(c);
+                }
+            }
+
+            foreach (Neuron n in na.Neurons())
+            {
+                na.GetNeuronLocation(n, out int x1, out int y1);
+                TransformPoint(ref x1, ref y1);
+                foreach (Synapse s in n.Synapses)
+                {
+                    if (s.TargetNeuron != n.Id)
+                    {
+                        na.GetNeuronLocation(s.TargetNeuron, out int x2, out int y2);
+                        TransformPoint(ref x2, ref y2);
+                        physObject newObject = new physObject
+                        {
+                            P1 = new Point(x1 - 0.5, y1 - 0.5),
+                            P2 = new Point(x2 - 0.5, y2 - 0.5),
+                            theColor = theColors[colorCount],
+                            Aroma = -1,
+                            Temperature = 10,
+                            isMobile = (s.Weight == 1) ? true : false,
+                        };
+                        if (s.Weight < 1)
+                            newObject.motion = new Vector(s.Weight-.5f, 0);
+                        if (s.Weight < 0)
+                            newObject.motion = new Vector(0,-.5f-s.Weight);
+                        objects.Add(newObject);
+                        colorCount = (colorCount + 1) % theColors.Count;
+                        int currentColorInt = Utils.ColorToInt(currentColor);
+                        currentColorInt--;
+                        currentColor = Utils.IntToColor(currentColorInt);
+                    }
+                }
+            }
+            HandleVision();
+            UpdateDialog();
+        }
+
     }
 }
 

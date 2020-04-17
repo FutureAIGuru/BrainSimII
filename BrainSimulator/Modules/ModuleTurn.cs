@@ -64,6 +64,10 @@ namespace BrainSimulator.Modules
             Module2DModel m2DModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
             if (m2DModel != null && direction != 0)
                 m2DModel.Rotate(direction);
+
+            Module2DVision m2DVision = (Module2DVision)FindModuleByType(typeof(Module2DVision));
+            if (m2DVision != null && direction != 0) m2DVision.ViewChanged();
+
         }
 
         public override void Initialize()

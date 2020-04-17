@@ -26,6 +26,7 @@ namespace BrainSimulator.Modules
         private List<Thing> KBPoints;
 
         //these are public to let the dialog box use the info
+
         public List<Thing> GetKBSegments() { return KBSegments; }
         public List<Thing> GetKBPoints() { return KBPoints; }
 
@@ -35,7 +36,6 @@ namespace BrainSimulator.Modules
         int sCount = 0;
         int cCount = 0;
         int ppCount = 0;
-
 
         public override string ShortDescription { get => "Maintains an internal representation of surroung things"; }
         public override string LongDescription
@@ -106,36 +106,50 @@ namespace BrainSimulator.Modules
                 else if (t1.V is int c)
                     s.theColor = c;
             }
+            if (s.P1 == null || s.P2 == null) return null;
             return s;
         }
 
-        private Thing MostLikelySegment(Segment newSegment)
+        public Segment SegmentInFront(Segment s1, Segment s2)
+        {
+            Segment retVal = null;
+            //if the segments visually overlap
+            float thx1 = s1.P1.Theta;
+            float thx2 = s1.P2.Theta;
+            float thy1 = s2.P1.Theta;
+            float thy2 = s2.P2.Theta;
+            //order the endpoints Left-to-right
+            if (thx1 > thx2)
+            { float temp = thx1; thx1 = thx2; thx2 = temp; }
+            if (thy1 > thy2)
+            { float temp = thy1; thy1 = thy2; thy2 = temp; }
+
+            //do the overlap?
+            if (thx1 <= thy2 && thx2 >= thy1)
+            {
+                //yes, the segments overlap, return the nearer one
+                if (thx1 >= thy1 && thx1 <= thy2)
+                {
+                    //p1 is the point of interest
+                }
+
+            }
+            return retVal;
+        }
+
+        public Thing MostLikelySegment(Segment newSegment)
         {
             Thing retVal = null;
             if (KBSegments == null) return null;
             foreach (Thing t in KBSegments)
             {
                 Segment s = SegmentFromKBThing(t);
+                if (s == null) continue;
                 if (s.theColor == newSegment.theColor)
                 {
                     //TODO is the segment visible?
-
-                    //if the segments visually overlap
-                    float thx1 = newSegment.P1.Theta;
-                    float thx2 = newSegment.P2.Theta;
-                    float thy1 = s.P1.Theta;
-                    float thy2 = s.P2.Theta;
-                    if (thx1 > thx2)
-                    { float temp = thx1; thx1 = thx2; thx2 = temp; }
-                    if (thy1 > thy2)
-                    { float temp = thy1; thy1 = thy2; thy2 = temp; }
-
-                    if (thx1 < thy2 && thx2 > thy1)
-                    {
-                        //yes, the segments overlap
-                        retVal = t;
-                        break;
-                    }
+                    retVal = t;
+                    break;
                 }
             }
             return retVal;
@@ -163,19 +177,20 @@ namespace BrainSimulator.Modules
         {
             Thing retVal = null;
             if (KBPoints == null) return null;
+            Angle closestTheta = Rad(180);
             foreach (Thing t in KBPoints)
             {
                 Segment s = SegmentFromKBThing(t.ReferencedBy[0].T);
+                if (s == null) continue;
                 if (s.theColor == theColor)
                 {
                     if (t.V is PointPlus p)
                     {
-                        if (Abs(p.Theta - p1.Theta) < Rad(5))  //are angles within 5 degrees
+                        Angle deltaAngle = Abs(p.Theta - p1.Theta);
+                        if (deltaAngle < closestTheta)
                         {
-                            if (p1.Conf < p.Conf)
-                            {
-                                return t;
-                            }
+                            closestTheta = deltaAngle;
+                            retVal = t;
                         }
                     }
                 }
@@ -183,21 +198,27 @@ namespace BrainSimulator.Modules
             return retVal;
         }
 
-        public void UpdateEndpointFromVision(PointPlus P1, ColorInt theColor) //we might add color
+        public void UpdateEndpointFromVision(PointPlus P1, ColorInt theColor, bool moved)
         {
+            Debug.WriteLine("UpdatePoint: " + P1 + theColor);
             Thing match = MostLikelyPoint(P1, theColor);
             if (match != null)
             {
-                match.V = P1;
+                if (match.V is PointPlus p)
+                    if (P1.Conf < p.Conf || moved)
+                        match.V = P1;
+                UpdateDialog();
             }
         }
 
-        public void AddSegmentFromVision(PointPlus P1, PointPlus P2, int theColor)
+        public Thing AddSegmentFromVision(PointPlus P1, PointPlus P2, ColorInt theColor, bool moved)
         {
+            Thing retVal = null;
+            Debug.WriteLine("AddSegment: " + P1 + P2 + theColor);
             //determine if the segment is already in the UKS.  
             //Correct it if it is there, add it if it is not.
             //FUTURE: detect motion
-            if (theColor == 0) return;
+            if (theColor == 0) return null;
             Segment newSegment = new Segment() { P1 = P1, P2 = P2, theColor = theColor };
             Module2DKBN kb = (Module2DKBN)FindModuleByType(typeof(Module2DKBN));
             GetSegmentsFromKB();
@@ -205,59 +226,60 @@ namespace BrainSimulator.Modules
             {
                 //it's easier if we sort by theta
                 OrderSegment(newSegment);
-                Thing match = MostLikelySegment(newSegment);
-                if (match != null)
+                retVal = MostLikelySegment(newSegment);
+                if (retVal != null)
                 {
-                    kb.Fire(match);
-                    OrderSegment(match);
-                    Segment s = SegmentFromKBThing(match);
-                    float newVisualWidth = newSegment.VisualWidth();
-                    float matchVisualWidth = s.VisualWidth();
-                    //if the newVisualWidth is bigger, an adjustment is needed
-                    //this happens if the initial view was occluded but now it is less
-                    //if (newVisualWidth > matchVisualWidth)
-                    {
-                        if (newSegment.P1.Conf < s.P1.Conf)
-                        {
-                            s.P1.Conf = newSegment.P1.Conf;
-                            s.P1.R = newSegment.P1.R;
-                            s.P1.Theta = newSegment.P1.Theta;
-                        }
-                        if (newSegment.P2.Conf < s.P2.Conf)
-                        {
-                            s.P2.Conf = newSegment.P2.Conf;
-                            s.P2.R = newSegment.P2.R;
-                            s.P2.Theta = newSegment.P2.Theta;
-                        }
-                        //if (s.P1.R < newSegment.P1.R && s.P1.Conf > newSegment.P1.Conf)
-                        //    s.P1.R = newSegment.P1.R;
-                        //if (s.P2.R < newSegment.P2.R && s.P2.Conf > newSegment.P2.Conf)
-                        //    s.P2.R = newSegment.P2.R;
-                    }
-
-                    ////if the input point is significantly further it may be occlusion related
-                    //if (newSegment.P1.R > s.P1.R + s.P1.Conf && s.P1.Conf > newSegment.P1.Conf)
+                    //kb.Fire(match);
+                    //OrderSegment(match);
+                    //Segment s = SegmentFromKBThing(match);
+                    //float newVisualWidth = newSegment.VisualWidth();
+                    //float matchVisualWidth = s.VisualWidth();
+                    ////if the newVisualWidth is bigger, an adjustment is needed
+                    ////this happens if the initial view was occluded but now it is less
+                    //Thing match1 = MostLikelyPoint(newSegment.P1, newSegment.theColor);
+                    //Thing match2 = MostLikelyPoint(newSegment.P2, newSegment.theColor);
+                    //if (match1 != null && match2 != null)
                     //{
-                    //    s.P1.R = newSegment.P1.R;
-                    //    s.P1.Theta = newSegment.P1.Theta;
+                    //    if (newSegment.P1.Conf < s.P1.Conf)
+                    //    {
+                    //        s.P1.Conf = newSegment.P1.Conf;
+                    //        s.P1.R = newSegment.P1.R;
+                    //        s.P1.Theta = newSegment.P1.Theta;
+                    //    }
+                    //    if (newSegment.P2.Conf < s
+                    //        .P2.Conf)
+                    //    {
+                    //        s.P2.Conf = newSegment.P2.Conf;
+                    //        s.P2.R = newSegment.P2.R;
+                    //        s.P2.Theta = newSegment.P2.Theta;
+                    //    }
                     //}
-                    //if (newSegment.P2.R > s.P2.R + s.P2.Conf && s.P2.Conf > newSegment.P2.Conf)
-                    //{
-                    //    s.P2.R = newSegment.P2.R;
-                    //    s.P2.Theta = newSegment.P2.Theta;
-                    //}
-                    ////if the newVisualWidth is smaller, an occlusion 
 
+                    ////there is a significant point mismatch...
+                    //else
+                    //{
+                    //    if (match1 == null && newSegment.P1.R > s.P1.R)
+                    //    {
+                    //        s.P1.Conf = newSegment.P1.Conf;
+                    //        s.P1.R = newSegment.P1.R;
+                    //        s.P1.Theta = newSegment.P1.Theta;
+                    //    }
+                    //    if (match2 == null && newSegment.P2.R > s.P2.R)
+                    //    {
+                    //        s.P2.Conf = newSegment.P2.Conf;
+                    //        s.P2.R = newSegment.P2.R;
+                    //        s.P2.Theta = newSegment.P2.Theta;
+                    //    }
+                    //}
                 }
                 else
                 {
-                    //P1.Conf = P1.R;
-                    //P2.Conf = P2.R;
-                    Thing newThing = AddSegmentToKB(P1, P2, theColor);
-                    kb.Fire(newThing);
-                    UpdateDialog();
+                    retVal = AddSegmentToKB(P1, P2, theColor);
+                    kb.Fire(retVal);
                 }
+                UpdateDialog();
             }
+            return retVal;
         }
 
 
@@ -507,7 +529,7 @@ namespace BrainSimulator.Modules
             foreach (Thing t in KBSegments)
             {
                 s = SegmentFromKBThing(t);
-
+                if (s == null) return 0;
                 //does this object cross the given visual angle?
                 PointPlus pv = new PointPlus { R = 10, Theta = theta };
                 Utils.FindIntersection(new Point(0, 0), pv.P, s.P1.P, s.P2.P,
@@ -664,6 +686,7 @@ namespace BrainSimulator.Modules
             foreach (Thing t in KBSegments)
             {
                 Segment s = SegmentFromKBThing(t);
+                if (s == null) return null;
                 if (s.P1.X < 0 && s.P2.X < 0) continue;
                 if (InRange(s.P1, requiredPathWidth) ||
                     InRange(s.P2, requiredPathWidth) ||
@@ -710,6 +733,7 @@ namespace BrainSimulator.Modules
                 foreach (Thing t in KBSegments)
                 {
                     Segment s = SegmentFromKBThing(t);
+                    if (s == null) continue;
                     Utils.FindIntersection(new Point(0, 0), P.P, s.P1.P, s.P2.P,
                         out bool lines_intersect, out bool segments_intersect,
                         out Point intersection, out Point close_p1, out Point closep2, out double collisionAngle);
@@ -757,6 +781,8 @@ namespace BrainSimulator.Modules
         {
             Segment s1 = SegmentFromKBThing(t1);
             Segment s2 = SegmentFromKBThing(t2);
+            if (s1 == null || s2 == null)
+                return 0;
             float d1 = (float)Utils.FindDistanceToSegment(s1);
             float d2 = (float)Utils.FindDistanceToSegment(s2);
             if (d1 > d2) return 1;
@@ -804,6 +830,7 @@ namespace BrainSimulator.Modules
         PointPlus imaginationOffset;
         float imaginationDirection;
         //this will all need to be converted to run with KB Things instead of segments
+        [XmlIgnore]
         public List<Segment> imagination = new List<Segment>();
 
         public void ImagineObject(Segment obj)
@@ -880,6 +907,7 @@ namespace BrainSimulator.Modules
 
         public override void Initialize()
         {
+
             pCount = 0;
             sCount = 0;
             cCount = 0;

@@ -21,7 +21,7 @@ namespace BrainSimulator
     {
         public PointPlus P1;
         public PointPlus P2;
-        public int theColor;
+        public ColorInt theColor;
         public PointPlus MidPoint()
         {
             return new PointPlus { X = (P1.X + P2.X) / 2, Y = (P1.Y + P2.Y) / 2 };
@@ -126,6 +126,7 @@ namespace BrainSimulator
         }
         public static double FindDistanceToSegment(Segment s)
         {
+            if (s == null) return 0;
             return FindDistanceToSegment(new Point(0, 0), s.P1.P, s.P2.P, out Point closest);
         }
 

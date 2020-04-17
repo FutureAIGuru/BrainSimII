@@ -54,7 +54,7 @@ namespace BrainSimulator.Modules
         {
             string text = textBox.Text;
             string phonemes = ModuleSpeakPhonemes.GetPronunciationFromText(text);
-            labelIn.Content = phonemes;
+            labelIn.Text = phonemes;
             ((ModuleSpeakPhonemes)ParentModule).FirePhonemes(phonemes);
         }
 
@@ -62,7 +62,7 @@ namespace BrainSimulator.Modules
         {
             Application.Current.Dispatcher.Invoke((Action)delegate
             {
-                labelOut.Content = s;
+                labelOut.Text = s;
             });
         }
 

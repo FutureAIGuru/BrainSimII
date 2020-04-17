@@ -142,18 +142,10 @@ namespace BrainSimulator.Modules
         {
             SetNeuronValue(null, "Done", 0);
 
-            TurnTo((float)PI / 24);
-            TurnTo((float)PI / 24);
-            TurnTo((float)PI / 24);
-            TurnTo((float)PI / -24);
-            TurnTo((float)PI / -24);
-            TurnTo((float)PI / -24);
-            TurnTo((float)PI / -24);
-            TurnTo((float)PI / -24);
-            TurnTo((float)PI / -24);
-            TurnTo((float)PI / 24);
-            TurnTo((float)PI / 24);
-            TurnTo((float)PI / 24);
+            TurnTo((float)PI / 2);
+            TurnTo((float)PI / -2);
+            TurnTo((float)PI / -2);
+            TurnTo((float)PI / 2);
         }
 
         public bool IsMoving()

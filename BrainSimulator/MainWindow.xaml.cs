@@ -371,6 +371,7 @@ namespace BrainSimulator
             List<Type> list = new List<Type>();
             for (int i = 0; i < listOfBs.Length; i++)
                 list.Add(listOfBs[i]);
+            list.Add(typeof(PointPlus));
             return list.ToArray();
         }
 

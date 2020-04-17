@@ -49,7 +49,7 @@ namespace BrainSimulator.Modules
             if (t != null)
             {
                 TreeViewItem tvi = new TreeViewItem { Header = t.Label };
-                if (expandedItems.Contains(t.Label)) tvi.IsExpanded = true;
+                tvi.IsExpanded = true; //always expand the top-level item
                 theTreeView.Items.Add(tvi);
                 try
                 {
@@ -191,6 +191,12 @@ namespace BrainSimulator.Modules
             dt.Stop();
         }
 
-      
+        private void TextBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                Button_Click(null, null);
+            }
+        }
     }
 }

@@ -277,5 +277,25 @@ namespace BrainSimulator.Modules
         {
             MainWindow.thisWindow.Activate();
         }
+
+        private void CbButton_Checked(object sender, RoutedEventArgs e)
+        {
+            Module2DSim parent = (Module2DSim)base.ParentModule;
+            if (parent == null || cbRev == null || cbFwd == null || cbStop == null) return;
+            if (cbRev.IsChecked == true) parent.inMotion = -1;
+            if (cbFwd.IsChecked == true) parent.inMotion = 1;
+            if (cbStop.IsChecked == true) parent.inMotion = 0;
+        }
+
+        private void ModuleBaseDlg_Loaded(object sender, RoutedEventArgs e)
+        {
+            Module2DSim parent = (Module2DSim)base.ParentModule;
+            if (parent.inMotion == 0)
+                cbStop.IsChecked = true;
+            if (parent.inMotion == 1)
+                cbFwd.IsChecked = true;
+            if (parent.inMotion == -1)
+                cbRev.IsChecked = true;
+        }
     }
 }

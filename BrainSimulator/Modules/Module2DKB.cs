@@ -263,15 +263,13 @@ namespace BrainSimulator.Modules
             AddThing("Thing", new Thing[] { });
             AddThing("Action","Thing");
             AddThing("NoAction", "Action");
-            AddThing("Done", "Action"); //is fired by external neurons when an action is complete
-            AddThing("Stop", "Action");  //TODO Remove duplicate
+            AddThing("Stop", "Action");
             AddThing("Utterance", "Action");
             AddThing("SpeakPhn", "Action");
             AddThing("Vowel", "SpeakPhn");
             AddThing("Consonant", "SpeakPhn");
             AddThing("End", "Action");
             AddThing("Go","Action");
-            AddThing("Stop","Action");
             AddThing("RTurn","Action");
             AddThing("LTurn","Action");
             AddThing("UTurn","Action");
@@ -283,7 +281,6 @@ namespace BrainSimulator.Modules
             AddThing("Color", "Visual");
             AddThing("Shape", "Visual");
             AddThing("Point", "Shape");
-            AddThing("Dot", "Shape");
             AddThing("Segment", "Shape");
             AddThing("Audible", "Sense");
             AddThing("Word", "Audible");
@@ -293,6 +290,9 @@ namespace BrainSimulator.Modules
             AddThing("ShortTerm", "Phrase");
             AddThing("phTemp", "ShortTerm");
             AddThing("NoWord", "Word");
+            AddThing("Relation", "Thing");
+            AddThing("Bigger", "Relation");
+            AddThing("Closer", "Relation");
             AddThing("Situation", "Thing");
             AddThing("Landmark", "Situation");
             AddThing("SPoint", "Landmark");

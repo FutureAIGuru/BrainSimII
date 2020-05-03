@@ -14,7 +14,7 @@ using System.Xml.Serialization;
 
 namespace BrainSimulator.Modules
 {
-    public class Module2DKBN : Module2DKB
+    public class ModuleUKSN : ModuleUKS
     {
         public long immediateMemory = 2; //items are more-or-less simultaneous
         long shortTermMemory = 10; //items are close in time

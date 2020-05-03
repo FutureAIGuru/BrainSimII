@@ -38,8 +38,11 @@ namespace BrainSimulator.Modules
                 "This module uses no neurons of its own but fires neurons in various sensory modules if they are in the network. It has methods (Move and Turn and potentially others " +
                 "which can be called by other modules to move its point of view around the simulation. " +
                 "Shift-mouse wheel can zoom the display and Shift-left mouse button can drag (pan). " +
-                "Right-clicking in the dialog box can direct the entity to that location." +
-                ""
+                "Right-clicking in the dialog box can direct the entity to that location. " +
+                "Shift + Mouse motion or mouse wheel will pan or zoom the display. \n\n"+
+                "Obstacles are set with synapses and will show after initiiation. "+
+                "\nWeight=1 movable.  \nWeight=-1 fixed \nWeight=(0,1) obstacle moves vertically spd=weight-.5 "+
+                "\nWeight=(-1,0) obstacle moves horizontally spd=weight-(-.5) \nSpeeds are adjusted with the slider."
                 ;
         }
 
@@ -61,6 +64,7 @@ namespace BrainSimulator.Modules
         //where we are in the world
         public Point entityPosition = new Point(0, 0);
         public float entityDirection1 = (float)PI / 2;
+
 
         //the size of the universe
         public double boundarySize = 5;
@@ -112,9 +116,9 @@ namespace BrainSimulator.Modules
                     };
                 }
             }
-            MoveObjects();
+            MoveObjects(); //handle objects which move themselves
 
-            HandleTouch();
+            HandleTouch(); 
             HandleVision();
             HandleAroma();
 
@@ -129,8 +133,8 @@ namespace BrainSimulator.Modules
         {
             foreach(physObject ph in objects)
             {
-                ph.P1 += ph.motion*inMotion;
-                ph.P2 += ph.motion*inMotion;
+                ph.P1 += ph.motion*inMotion/10;
+                ph.P2 += ph.motion*inMotion/10;
             }
         }
 
@@ -159,12 +163,16 @@ namespace BrainSimulator.Modules
         }
 
         //returning true said there no collision and it is OK to move there...in the event of a collision, the move is cancelled
-        public bool Move(float motion) //move fwd +, rev -
+        public bool Move (float motion)
+        {
+            return Move(motion, 0);
+        }
+        public bool Move(float motionX,float motionY) //move fwd +, rev -
         {
             Point newPosition = new Point()
             {
-                X = entityPosition.X + motion * Cos(entityDirection1),
-                Y = entityPosition.Y + motion * Sin(entityDirection1)
+                X = entityPosition.X + motionX * Cos(entityDirection1) - motionY*Sin(entityDirection1),
+                Y = entityPosition.Y + motionX * Sin(entityDirection1) + motionY*Cos(entityDirection1)
             };
 
             //check for collisions  collision can impede motion
@@ -181,10 +189,11 @@ namespace BrainSimulator.Modules
             }
             return !collision;
         }
-
+        PointPlus motion = new PointPlus();
         //a collision is the intersection of the desired newPosition and an obstacle
         private bool CheckForCollisions(Point newPosition)
         {
+            motion = new PointPlus() { R = 0, Theta = 0 };
             bool retVal = false;
             for (int i = 0; i < objects.Count; i++)
             {
@@ -205,12 +214,22 @@ namespace BrainSimulator.Modules
                     else //move the object
                     {
                         float distToMoveObject = bodyRadius - (float)dist;
-                        PointPlus motion = new PointPlus() { P = collPt.P };
+                        motion = new PointPlus() { P = collPt.P };
                         motion.R = distToMoveObject;
                         Point oldPoint1 = new Point(ph.P1.X, ph.P1.Y);
                         Point oldPoint2 = new Point(ph.P2.X, ph.P2.Y);
+                        Segment s = new Segment();
+                        s.P1 = new PointPlus() { P = ph.P1 };
+                        s.P2 = new PointPlus() { P = ph.P2 };
+                        Angle oldM = s.Angle();
 
                         MovePhysObject(ph, closest, motion);
+
+                        s.P1 = new PointPlus() { P = ph.P1 };
+                        s.P2 = new PointPlus() { P = ph.P2 };
+                        Angle newM = s.Angle();
+                        motion.Conf = newM - oldM;
+
                         //TODO check for collisions with this object and other objects
                         for (int j = 0; j < objects.Count; j++)
                         {
@@ -304,6 +323,7 @@ namespace BrainSimulator.Modules
                 Point armPositionAbs = entityPosition + (Vector)pv.P;
                 HandleTouch(armPositionAbs, i);
             }
+            motion = new PointPlus() { R = 0, Theta = 0 };
         }
 
         private void HandleTouch(Point armPositionAbs, int index)
@@ -345,7 +365,7 @@ namespace BrainSimulator.Modules
                     PointPlus armPositionRel = new PointPlus { P = (Point)(Intersection - entityPosition) };
                     armPositionRel.Theta = armPositionRel.Theta - entityDirection1;
 
-                    float[] neuronValues = new float[9];
+                    float[] neuronValues = new float[12];
                     //everything from here out is  coordinates relative to self
                     //neurons:  0:touch   1:armAngle  2:armDistance 3: sensedLineAngle 4: conf1 5: len1 6: conf2 7: len2 8: Release
                     neuronValues[0] = 1;
@@ -357,8 +377,12 @@ namespace BrainSimulator.Modules
                     neuronValues[6] = (float)p2IsEndpt;
                     neuronValues[7] = (float)l2;
                     neuronValues[8] = 0;
+                    neuronValues[9] = motion.R;
+                    neuronValues[10] = motion.Theta;
+                    neuronValues[11] = motion.Conf;
                     SetNeuronVector("Module2DTouch", true, index, neuronValues);
-
+                    if (motion.R != 0)
+                        motion.R = motion.R;
                     armActual[index] = Intersection;
                     break;
                 }
@@ -488,15 +512,15 @@ namespace BrainSimulator.Modules
         private void CheckForTrainingResult()
         {
             if (actionTrainingState == -1) return;
-            Module2DKBN nmKB = (Module2DKBN)FindModuleByType(typeof(Module2DKBN));
-            if (nmKB == null) return;
+            ModuleUKSN nmUKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            if (nmUKS == null) return;
             actionTrainingState--;
             if (actionTrainingState <= 4 || !na.GetNeuronAt("Train").Fired()) return;
-            List<Thing> actions = nmKB.GetChildren(nmKB.Labeled("Action"));
+            List<Thing> actions = nmUKS.GetChildren(nmUKS.Labeled("Action"));
             bool bResponded = false;
             foreach (Thing action in actions)
             {
-                if (nmKB.Fired(action, 2, false))
+                if (nmUKS.Fired(action, 2, false))
                 {
                     if (action.Label == trainingCase[1])
                     {

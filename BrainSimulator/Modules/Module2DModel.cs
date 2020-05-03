@@ -22,19 +22,20 @@ namespace BrainSimulator.Modules
 
     public class Module2DModel : ModuleBase
     {
-        private List<Thing> KBSegments;
-        private List<Thing> KBPoints;
+        private List<Thing> UKSSegments;
+        private List<Thing> UKSPoints;
 
         //these are public to let the dialog box use the info
 
-        public List<Thing> GetKBSegments() { return KBSegments; }
-        public List<Thing> GetKBPoints() { return KBPoints; }
+        public List<Thing> GetUKSSegments() { return UKSSegments; }
+        public List<Thing> GetUKSPoints() { return UKSPoints; }
 
         //these are used to build labels for things
         //TODO make public and reset on initialize
         int pCount = 0;
         int sCount = 0;
         int cCount = 0;
+        int mCount = 0;
         int ppCount = 0;
 
         public override string ShortDescription { get => "Maintains an internal representation of surroung things"; }
@@ -50,45 +51,45 @@ namespace BrainSimulator.Modules
 
         public Module2DModel()
         {
-            KBSegments = new List<Thing>();
-            KBPoints = new List<Thing>();
+            UKSSegments = new List<Thing>();
+            UKSPoints = new List<Thing>();
         }
 
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
-            if (KBPoints == null || KBPoints.Count == 0)
-                GetSegmentsFromKB();
+            if (UKSPoints == null || UKSPoints.Count == 0)
+                GetSegmentsFromUKS();
 
             ModuleBehavior nmBehavior = (ModuleBehavior)FindModuleByType(typeof(ModuleBehavior));
             Thing obstacle = NearestThingAhead();
             if (obstacle != null)
             {
-                Segment s = SegmentFromKBThing(obstacle);
+                Segment s = SegmentFromUKSThing(obstacle);
                 Utils.FindDistanceToSegment(new Point(0, 0), s.P1.P, s.P2.P, out Point closest);
                 double dist = ((Vector)closest).Length;
 
                 if (dist < 0.6f)
                 {
                     //we are approaching an obsctacle.
-                    //TODO: Fire a neuron
                     SetNeuronValue(null, "Obstacle", 1);
                 }
             }
         }
 
-        public void GetSegmentsFromKB()
+        public void GetSegmentsFromUKS()
         {
-            ModuleView naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
-            if (naKB == null) return;
-            if (naKB.TheModule is Module2DKB kb)
+            ModuleUKSN nmUKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            if (nmUKS is ModuleUKS UKS)
             {
-                KBSegments = kb.HavingParent(kb.Labeled("Segment"));
-                KBPoints = kb.HavingParent(kb.Labeled("Point"));
+                UKSSegments = UKS.Labeled("Segment").Children;
+                UKSPoints = new List<Thing>();
+                if (UKS.Labeled("ModelThing") != null)
+                    UKSPoints = UKS.Labeled("ModelThing").Children;
             }
         }
 
-        public static Segment SegmentFromKBThing(Thing t)
+        public static Segment SegmentFromUKSThing(Thing t)
         {
             if (t == null) return null;
             if (t.References.Count == 0 && t.ReferencedBy.Count == 1)
@@ -101,8 +102,10 @@ namespace BrainSimulator.Modules
                 Thing t1 = l.T;
                 if (s.P1 == null && t1.V is PointPlus p1)
                     s.P1 = p1;
-                else if (t1.V is PointPlus p2)
+                else if (s.P2 == null && t1.V is PointPlus p2)
                     s.P2 = p2;
+                else if (t1.V is PointPlus p3)
+                    s.Motion = p3;
                 else if (t1.V is int c)
                     s.theColor = c;
             }
@@ -110,40 +113,45 @@ namespace BrainSimulator.Modules
             return s;
         }
 
-        public Segment SegmentInFront(Segment s1, Segment s2)
+        //Segments consist of two points and a color. Optionally, a segment may have some motion. 
+        //AddToModel determines whether or not the endpoints are to be modified as Sallie moves so static objects can be stored
+        public Thing AddSegmentToUKS(PointPlus P1, PointPlus P2, int theColor, PointPlus motion = null, bool addToModel = true)
         {
-            Segment retVal = null;
-            //if the segments visually overlap
-            float thx1 = s1.P1.Theta;
-            float thx2 = s1.P2.Theta;
-            float thy1 = s2.P1.Theta;
-            float thy2 = s2.P2.Theta;
-            //order the endpoints Left-to-right
-            if (thx1 > thx2)
-            { float temp = thx1; thx1 = thx2; thx2 = temp; }
-            if (thy1 > thy2)
-            { float temp = thy1; thy1 = thy2; thy2 = temp; }
-
-            //do the overlap?
-            if (thx1 <= thy2 && thx2 >= thy1)
+            ModuleUKS nmUKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            if (nmUKS is ModuleUKS UKS)
             {
-                //yes, the segments overlap, return the nearer one
-                if (thx1 >= thy1 && thx1 <= thy2)
+                Thing t1, t2;
+                Thing t3 = null;
+                t1 = UKS.AddThing("p" + pCount++, new Thing[] { UKS.Labeled("Point") }, P1);
+                t2 = UKS.AddThing("p" + pCount++, new Thing[] { UKS.Labeled("Point") }, P2);
+                if (addToModel)
                 {
-                    //p1 is the point of interest
+                    t1.AddParent(UKS.Labeled("ModelThing"));
+                    t2.AddParent(UKS.Labeled("ModelThing"));
                 }
-
+                if (motion != null)
+                    t3 = UKS.AddThing("m" + mCount++, new Thing[] { UKS.Labeled("Motion") }, motion);
+                Thing color = UKS.Valued(theColor);
+                if (color == null)
+                    color = UKS.AddThing("c" + cCount++, new Thing[] { UKS.Labeled("Color") }, theColor);
+                Thing newThing = null;
+                if (motion != null)
+                    newThing = UKS.AddThing("s" + sCount++, new Thing[] { UKS.Labeled("Segment") }, null, new Thing[] { t1, t2, color, t3 });
+                else
+                    newThing = UKS.AddThing("s" + sCount++, new Thing[] { UKS.Labeled("Segment") }, null, new Thing[] { t1, t2, color });
+                return newThing;
             }
-            return retVal;
+            return null;
         }
+
 
         public Thing MostLikelySegment(Segment newSegment)
         {
             Thing retVal = null;
-            if (KBSegments == null) return null;
-            foreach (Thing t in KBSegments)
+            if (UKSSegments == null) return null;
+            foreach (Thing t in UKSSegments)
             {
-                Segment s = SegmentFromKBThing(t);
+                Segment s = SegmentFromUKSThing(t);
                 if (s == null) continue;
                 if (s.theColor == newSegment.theColor)
                 {
@@ -155,7 +163,7 @@ namespace BrainSimulator.Modules
             return retVal;
         }
 
-        public void OrderSegment(object x)
+        public static void OrderSegment(object x)
         {
             if (x is Thing t)
             {
@@ -176,11 +184,11 @@ namespace BrainSimulator.Modules
         private Thing MostLikelyPoint(PointPlus p1, ColorInt theColor)
         {
             Thing retVal = null;
-            if (KBPoints == null) return null;
+            if (UKSPoints == null) return null;
             Angle closestTheta = Rad(180);
-            foreach (Thing t in KBPoints)
+            foreach (Thing t in UKSPoints)
             {
-                Segment s = SegmentFromKBThing(t.ReferencedBy[0].T);
+                Segment s = SegmentFromUKSThing(t.ReferencedBy[0].T);
                 if (s == null) continue;
                 if (s.theColor == theColor)
                 {
@@ -211,6 +219,8 @@ namespace BrainSimulator.Modules
             }
         }
 
+
+        //TODO: rewrite again
         public Thing AddSegmentFromVision(PointPlus P1, PointPlus P2, ColorInt theColor, bool moved)
         {
             Thing retVal = null;
@@ -220,18 +230,18 @@ namespace BrainSimulator.Modules
             //FUTURE: detect motion
             if (theColor == 0) return null;
             Segment newSegment = new Segment() { P1 = P1, P2 = P2, theColor = theColor };
-            Module2DKBN kb = (Module2DKBN)FindModuleByType(typeof(Module2DKBN));
-            GetSegmentsFromKB();
-            if (kb != null)
+            ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            GetSegmentsFromUKS();
+            if (UKS != null)
             {
                 //it's easier if we sort by theta
                 OrderSegment(newSegment);
                 retVal = MostLikelySegment(newSegment);
                 if (retVal != null)
                 {
-                    //kb.Fire(match);
+                    //UKS.Fire(match);
                     //OrderSegment(match);
-                    //Segment s = SegmentFromKBThing(match);
+                    //Segment s = SegmentFromUKSThing(match);
                     //float newVisualWidth = newSegment.VisualWidth();
                     //float matchVisualWidth = s.VisualWidth();
                     ////if the newVisualWidth is bigger, an adjustment is needed
@@ -274,8 +284,8 @@ namespace BrainSimulator.Modules
                 }
                 else
                 {
-                    retVal = AddSegmentToKB(P1, P2, theColor);
-                    kb.Fire(retVal);
+                    retVal = AddSegmentToUKS(P1, P2, theColor);
+                    UKS.Fire(retVal);
                 }
                 UpdateDialog();
             }
@@ -283,284 +293,154 @@ namespace BrainSimulator.Modules
         }
 
 
-        private float SegmentLength(Thing t)
-        {
-            if (t == null || t.Parents[0].Label != "Segment") return -1;
-            Segment s = SegmentFromKBThing(t);
-            return s.Length();
-        }
-
-        //get input from vision...less accurate
-        public Thing AddPointFromVision(PointPlus P)
-        {
-            float angularResolution = (float)PI / 90; //2-degrees
-            float depthResolution = 0.5f;
-            GetSegmentsFromKB();
-            if (KBPoints == null) return null; //this is a startup issue 
-            P.Conf = P.R;
-            Thing newThing = null;
-            ModuleView naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
-            if (naKB?.TheModule is Module2DKBN kb)
-            {
-                //find the nearest point at this angle...if it's near in depth, use it, otherwise create a new point
-                Thing t1 = NearestPoint(P.Theta, 5 * angularResolution);
-                if (t1 != null && t1.V is PointPlus pp)
-                {
-                    //if the new point is less than .5 closer, it is likely the same point
-                    if (pp.R - P.R < depthResolution)
-                    {
-                        //point already in model...update it if this is a more accurate entry
-                        if (pp.Conf < P.Conf)
-                            pp = P;
-                        return t1;
-                    }
-                }
-                //point not in model...add it
-                P.Conf = P.R;
-                newThing = kb.AddThing("p" + ppCount++, new Thing[] { kb.Labeled("Point") }, P);
-            }
-            UpdateDialog();
-            return newThing;
-        }
-
-        private Thing newPoint(PointPlus p)
-        {
-            ModuleView naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
-            if (naKB == null) return null;
-            if (naKB.TheModule is Module2DKB kb)
-            {
-                Thing t1 = kb.AddThing("p" + pCount++, new Thing[] { kb.Labeled("Point") }, p);
-                return t1;
-            }
-            return null;
-        }
-
-        public Thing AddSegmentToKB(object P1, object P2, int theColor)
-        {
-            ModuleView naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
-            if (naKB == null) return null;
-            if (naKB.TheModule is Module2DKB kb)
-            {
-                Thing t1, t2;
-                if (P1 is PointPlus p1)
-                    t1 = kb.AddThing("p" + pCount++, new Thing[] { kb.Labeled("Point") }, p1);
-                else
-                    t1 = (Thing)P1;
-                if (P2 is PointPlus p2)
-                    t2 = kb.AddThing("p" + pCount++, new Thing[] { kb.Labeled("Point") }, p2);
-                else
-                    t2 = (Thing)P2;
-                Thing color = kb.Valued(theColor);
-                if (color == null)
-                    color = kb.AddThing("c" + cCount++, new Thing[] { kb.Labeled("Color") }, theColor);
-                Thing newThing = kb.AddThing("s" + sCount++, new Thing[] { kb.Labeled("Segment") }, null, new Thing[] { t1, t2, color });
-                return newThing;
-            }
-            return null;
-        }
-
+        //TODO this is not currently used but is needed
         //if the new segment extends an existing segment, merge/delete the intermediate point(s)
-        //if the new segment lies within an existing segment, delete it
-        private bool MergeNewSegment(Segment s)
+        //if the new segment lies within an existing segment, ignore it
+        private Thing MergeNewSegment(Segment s)
         {
-            //Segment s = SegmentFromKBThing(t1);
-            foreach (Thing t in KBSegments)
+            OrderSegment(s);
+            foreach (Thing t in UKSSegments)
             {
-                //                if (t != t1)
-                {
-                    Segment segment = SegmentFromKBThing(t);
-                    if (s.theColor == segment.theColor)
-                    {
+                Segment segment = SegmentFromUKSThing(t);
 
-                        //if one of the points is not on the line...this is not the stored object we're looking for
-                        float d1 = Utils.DistancePointToLine(s.P1.P, segment.P1.P, segment.P2.P);
-                        float d2 = Utils.DistancePointToLine(s.P2.P, segment.P1.P, segment.P2.P);
-                        if (d1 > 0.05 || d2 > 0.05) continue; //we may need to loosen this to handle seen segments
+                //if one of the points is not on the line...this is not the stored object we're looking for
+                float d1 = Utils.DistancePointToLine(s.P1.P, segment.P1.P, segment.P2.P);
+                float d2 = Utils.DistancePointToLine(s.P2.P, segment.P1.P, segment.P2.P);
+                if (d1 > 0.1 || d2 > 0.1) continue; //we may need to loosen this to handle seen segments
 
-                        //if both points are not on the segment, there is no overlap (but the new segment may completely include the other which we'll ignore)
-                        Point closest;
-                        d1 = (float)Utils.FindDistanceToSegment(s.P1.P, segment.P1.P, segment.P2.P, out closest);
-                        d2 = (float)Utils.FindDistanceToSegment(s.P2.P, segment.P1.P, segment.P2.P, out closest);
-                        if (d1 > 0.05 && d2 > 0.05) continue; //we may need to loosen this to handle seen segments
+                //if both points are not on the segment, there is no overlap (but the new segment may completely include the other which we'll ignore)
+                Point closest;
+                d1 = (float)Utils.FindDistanceToSegment(s.P1.P, segment.P1.P, segment.P2.P, out closest);
+                d2 = (float)Utils.FindDistanceToSegment(s.P2.P, segment.P1.P, segment.P2.P, out closest);
+                if (d1 > 0.05 && d2 > 0.05) continue; //we may need to loosen this to handle seen segments
 
-                        //if we got here, the new segment needs to be merged onto this existing segment
+                //if we got here, the new segment needs to be merged onto this existing segment
 
-                        //if the existing endpoints are used by other segments, we can't change them
-                        //TODO this should be obsolete because points are no longer shared
-                        bool p1CanChange = t.References[0].T.ReferencedBy.Count < 2;
-                        bool p2CanChange = t.References[1].T.ReferencedBy.Count < 2;
-
-                        //sort by theta so we get the true max/min points
-                        List<PointPlus> points = new List<PointPlus> {
+                //sort by theta so we get the true max/min points
+                List<PointPlus> points = new List<PointPlus> {
                             s.P1,
                             s.P2,
                             (PointPlus)t.References[0].T.V,
                             (PointPlus)t.References[1].T.V,
                             };
-                        points.Sort((x, y) => x.Theta.CompareTo(y.Theta));
-                        if (((PointPlus)t.References[0].T.V).Theta < ((PointPlus)t.References[1].T.V).Theta)
-                        {
-                            //the points on the existing segment are alreaady in the right order;
-                            if (!points[0].Near((PointPlus)t.References[0].T.V, .01f))
-                            {
-                                if (p1CanChange)
-                                    t.References[0].T.V = points[0];
-                                else
-                                    ChangeReference(t, 0, newPoint(points[0]));
-                                if (p2CanChange)
-                                    t.References[1].T.V = points[3];
-                                else
-                                    ChangeReference(t, 1, newPoint(points[3]));
-                            }
-                        }
-                        else
-                        {
-                            if (!points[3].Near((PointPlus)t.References[0].T.V, .01f))
-                            {
-                                if (p1CanChange)
-                                    t.References[0].T.V = points[3];
-                                else
-                                    ChangeReference(t, 0, newPoint(points[3]));
-                            }
-                            if (!points[0].Near((PointPlus)t.References[1].T.V, .01f))
-                            {
-                                if (p2CanChange)
-                                    t.References[1].T.V = points[0];
-                                else
-                                    ChangeReference(t, 1, newPoint(points[0]));
-                            }
-                        }
+                points.Sort((x, y) => x.Theta.CompareTo(y.Theta));
 
-                        return true;
+                if (((PointPlus)t.References[0].T.V).Theta < ((PointPlus)t.References[1].T.V).Theta)
+                {
+                    //the points on the existing segment are alreaady in the right order;
+                    if (!points[0].Near((PointPlus)t.References[0].T.V, .01f))
+                    {
+                        t.References[0].T.V = points[0];
+                        t.References[1].T.V = points[3];
                     }
                 }
+                else
+                {
+                    if (!points[3].Near((PointPlus)t.References[0].T.V, .01f))
+                    {
+                        t.References[0].T.V = points[3];
+                    }
+                    if (!points[0].Near((PointPlus)t.References[1].T.V, .01f))
+                    {
+                        t.References[1].T.V = points[0];
+                    }
+                }
+
+                return t;
             }
-            return false;
-        }
-        //move to Thing as a metnod
-        private void ChangeReference(Thing t, int num, Thing newThing)
-        {
-            Thing oldRef = t.References[num].T;
-            t.RemoveReference(oldRef);
-            t.References.Insert(0, new Link() { T = newThing });
+            return null;
         }
 
         //get input from touch... accurate locations, no color
-        public bool AddSegmentFromTouch(PointPlus P1, PointPlus P2)
+        public bool AddSegmentFromTouch(PointPlus P1, PointPlus P2, PointPlus motion, int arm)
         {
-            //if (P1 != P2) return false;
-            if (KBSegments is null) return false;
+            //if conf=0, it's a known endpoint. conf=1, not an endpoint
+            ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            if (UKS is null) return false;
+            if (UKSSegments is null) return false;
             if (imagining) return false;
 
-            ModuleView naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
-            if (naKB == null) return false;
-            if (naKB.TheModule is Module2DKB kb)
-            {
-                int theColor = Utils.ColorToInt(Colors.Wheat);
-                Segment s = new Segment() { P1 = P1, P2 = P2, theColor = theColor };
-                bool newSegmentMerged = MergeNewSegment(s);
+            ColorInt theColor = Utils.ColorToInt(Colors.Wheat);
+            Segment newSegment = new Segment() { P1 = P1, P2 = P2, theColor = theColor };
 
-                if (!newSegmentMerged)
-                {
-                    Thing t1 = NearestPoint(P1.Theta);
-                    Thing t2 = NearestPoint(P2.Theta);
-                    Thing newThing;
-                    if (t1 != null && t2 != null)
-                    {
-                        t1.V = P1;
-                        t2.V = P2;
-                        newThing = AddSegmentToKB(t1, t2, theColor);
-                    }
-                    else if (t1 != null)
-                    {
-                        t1.V = P1;
-                        newThing = AddSegmentToKB(t1, P2, theColor);
-                    }
-                    else if (t2 != null)
-                    {
-                        t2.V = P2;
-                        newThing = AddSegmentToKB(P1, t2, theColor);
-                    }
-                    else
-                    {
-                        newThing = AddSegmentToKB(P1, P2, theColor);
-                    }
-                }
-                UpdateDialog();
+            Thing t1 = GetNearestThing(newSegment.MidPoint().Theta, out float dist1);
+            if (t1 == null)
+            {
+                //TODO: merge mutliple segments
+                AddSegmentToUKS(P1, P2, theColor, motion);
             }
+
+            else if (dist1 < 1)
+            {
+                Segment prevSegment = SegmentFromUKSThing(t1);
+                PointPlus prevMidpoint = prevSegment.MidPoint();
+                Angle oldM = prevSegment.Angle();
+                Angle newM = newSegment.Angle();
+                PointPlus offset = new PointPlus() { R = prevSegment.Length(), Theta = newM };
+                if (P1.Conf == 0 && P2.Conf == 0) //we're given both endpoints
+                {
+                    prevSegment.P1.P = P1.P; prevSegment.P1.Conf = 0;
+                    prevSegment.P2.P = P2.P; prevSegment.P2.Conf = 0;
+                }
+                else if (P1.Conf == 0)
+                {
+                    prevSegment.P1.P = P1.P; prevSegment.P1.Conf = 0;
+                    prevSegment.P2.P = P1.P - offset.V;
+                }
+                else if (P2.Conf == 0)
+                {
+                    prevSegment.P1.P = P2.P; prevSegment.P2.Conf = 0;
+                    prevSegment.P2.P = P2.P + offset.V;
+                }
+                else
+                {
+                    //we're not near an endpoint--match the modpoint as close as possible & preserve length
+                    //make the segment match the two points
+                    PointPlus newMidpoint1 = new PointPlus() { P = (Point)GetClosestPointOnLine(P1.V, P2.V, prevMidpoint.V), };
+                    //offset is the dietance from the midpoint to each end
+                    offset.R = offset.R / 2;
+                    PointPlus newP1 = new PointPlus() { P = newMidpoint1.P + offset.V };
+                    PointPlus newP2 = new PointPlus() { P = newMidpoint1.P - offset.V };
+                    prevSegment.P1.R = newP1.R; prevSegment.P1.Theta = newP1.Theta;
+                    prevSegment.P2.R = newP2.R; prevSegment.P2.Theta = newP2.Theta;
+                }
+                PointPlus newMidpoint = prevSegment.MidPoint();
+                newMidpoint.P = newMidpoint.P - prevMidpoint.V;
+                if (newMidpoint.R > 0.01)
+                {
+                    prevSegment.Motion.R = motion.R;
+                    prevSegment.Motion.Theta = motion.Theta;
+                    prevSegment.Motion.Conf = newM - oldM;
+                }
+            }
+
+            UpdateDialog();
             return false;
         }
 
-        //returns a point with low confidence which an entity might use to explore and improve the confidence in the point
-        public PointPlus FindLowConfidence()
-        {
-            PointPlus pv = null;
-            float nearest = float.MaxValue;
-            foreach (Thing t in KBSegments)
-            {
-                Segment s = SegmentFromKBThing(t);
-                if (s.P1.Conf == 0)
-                {
-                    if (s.P1.R < nearest)
-                    {
-                        if (pv == null) pv = new PointPlus();
-                        pv.P = s.P1.P;
-                        nearest = s.P1.R;
-                    }
-                }
-                if (s.P2.Conf == 0)
-                {
-                    if (s.P2.R < nearest)
-                    {
-                        if (pv == null) pv = new PointPlus();
-                        pv.P = s.P2.P;
-                        nearest = s.P2.R;
-                    }
-                }
-            }
-            return pv;
-        }
         public float GetDistanceAtDirection(float theta)
         {
-            if (KBSegments == null) return 0;
-            float retVal = float.MaxValue;
-            Thing nearest = null;
-            Segment s = null;
-            foreach (Thing t in KBSegments)
-            {
-                s = SegmentFromKBThing(t);
-                if (s == null) return 0;
-                //does this object cross the given visual angle?
-                PointPlus pv = new PointPlus { R = 10, Theta = theta };
-                Utils.FindIntersection(new Point(0, 0), pv.P, s.P1.P, s.P2.P,
-                    out bool lines_intersect, out bool segments_intersect, out Point intersection, out Point clos_p1, out Point close_p2, out double collisionAngle);
-                if (!segments_intersect) continue;
-
-                //and is it the nearest?
-                Vector v = (Vector)intersection;
-                if (v.Length < retVal)
-                {
-                    nearest = t;
-                    retVal = (float)v.Length;
-                }
-            }
-            if (retVal > 10000) retVal = 0;
-            return retVal;
+            GetNearestThing(theta, out float dist);
+            return dist;
         }
 
+        public Thing GetNearestThing(float theta = 0)
+        {
+            return GetNearestThing(theta, out float dist);
+        }
 
-        public Thing GetColorAtDirection(float theta)
+        public Thing GetNearestThing(float theta, out float dist)
         {
             Thing nearest = null;
-            float dist = float.MaxValue;
+            dist = float.MaxValue;
             Segment s = null;
-            foreach (Thing t in KBSegments)
+            foreach (Thing t in UKSSegments)
             {
-                s = SegmentFromKBThing(t);
+                s = SegmentFromUKSThing(t);
 
                 //does this object cross the given visual angle?
                 PointPlus pv = new PointPlus { R = 10, Theta = theta };
-                Utils.FindIntersection(new Point(0, 0), pv.P, s.P1.P, s.P2.P,
+                Utils.FindIntersection(new Point(-.2, 0), pv.P, s.P1.P, s.P2.P,
                     out bool lines_intersect, out bool segments_intersect, out Point intersection, out Point clos_p1, out Point close_p2, out double collisionAngle);
                 if (!segments_intersect) continue;
 
@@ -572,9 +452,9 @@ namespace BrainSimulator.Modules
                     dist = (float)v.Length;
                 }
             }
-            if (nearest != null && nearest.References.Count > 2)
+            if (nearest != null)
             {
-                return nearest.References[2].T;
+                return nearest;
             }
             return null;
         }
@@ -585,9 +465,9 @@ namespace BrainSimulator.Modules
             //int nearest = -1;
             //float dist = float.MaxValue;
             //Segment s = null;
-            //for (int i = 0; i < KBSegments.Count; i++)
+            //for (int i = 0; i < UKSSegments.Count; i++)
             //{
-            //    s = SegmentFromKBThing(KBSegments[i]);
+            //    s = SegmentFromUKSThing(UKSSegments[i]);
             //    //has color already been assigned?
             //    if (s.theColor != Colors.Wheat) continue;
 
@@ -608,7 +488,7 @@ namespace BrainSimulator.Modules
             //if (nearest != -1)
             //{
             //    s.theColor = theColor;
-            //    SegmentToKBThing(s, KBSegments[nearest]);
+            //    SegmentToUKSThing(s, UKSSegments[nearest]);
             //    na.GetNeuronAt("Color").SetValue(1);
             //    return true;
             //}
@@ -618,9 +498,9 @@ namespace BrainSimulator.Modules
         //TODO: see if this is useful
         public Segment FindGreen()
         {
-            foreach (Thing t in KBSegments)
+            foreach (Thing t in UKSSegments)
             {
-                Segment s = SegmentFromKBThing(t);
+                Segment s = SegmentFromUKSThing(t);
                 if (s.theColor == Utils.ColorToInt(Colors.Green))
                     return s;
             }
@@ -633,9 +513,9 @@ namespace BrainSimulator.Modules
             double closestDistance = 100;
             Segment foundObject = null;
             Segment s = null;
-            for (int i = 0; i < KBSegments.Count; i++)
+            for (int i = 0; i < UKSSegments.Count; i++)
             {
-                s = SegmentFromKBThing(KBSegments[i]);
+                s = SegmentFromUKSThing(UKSSegments[i]);
                 Utils.FindDistanceToSegment(new Point(0, 0), s.P1.P, s.P1.P, out Point closest);
                 if (((Vector)closest).Length < closestDistance)
                 {
@@ -655,10 +535,10 @@ namespace BrainSimulator.Modules
         }
         public Thing NearestPoint(Angle theta, float toler = .01f)
         {
-            GetSegmentsFromKB();
+            GetSegmentsFromUKS();
             Thing retVal = null;
             float dist = 1000;
-            foreach (Thing t in KBPoints)
+            foreach (Thing t in UKSPoints)
             {
                 if (t.V is PointPlus p)
                 {
@@ -679,13 +559,13 @@ namespace BrainSimulator.Modules
         //this takes into acount the width of the entity to see if a collision might be imminent
         public Thing NearestThingAhead()
         {
-            if (KBSegments == null) return null;
+            if (UKSSegments == null) return null;
             float requiredPathWidth = 0.2f;
             Thing retVal = null;
             float dist = 100;
-            foreach (Thing t in KBSegments)
+            foreach (Thing t in UKSSegments)
             {
-                Segment s = SegmentFromKBThing(t);
+                Segment s = SegmentFromUKSThing(t);
                 if (s == null) return null;
                 if (s.P1.X < 0 && s.P2.X < 0) continue;
                 if (InRange(s.P1, requiredPathWidth) ||
@@ -712,15 +592,15 @@ namespace BrainSimulator.Modules
         //maintain a list of objects in the current visual field
         public void FireVisibleObjects()
         {
-            ModuleView naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
-            if (naKB == null) return;
-            Module2DKBN kb = (Module2DKBN)naKB.TheModule;
-            if (KBSegments == null) return;
-            //Thing tVisible = kb.Labeled("Visible");
+            ModuleView naUKS = theNeuronArray.FindAreaByLabel("Module2DUKS");
+            if (naUKS == null) return;
+            ModuleUKSN UKS = (ModuleUKSN)naUKS.TheModule;
+            if (UKSSegments == null) return;
+            //Thing tVisible = UKS.Labeled("Visible");
 
             //clear all visiblility references
-            //for (int i = 0; i < KBSegments.Count; i++)
-            //    KBSegments[i].RemoveReference(tVisible);
+            //for (int i = 0; i < UKSSegments.Count; i++)
+            //    UKSSegments[i].RemoveReference(tVisible);
 
             ModuleView naVision = theNeuronArray.FindAreaByLabel("Module2DVision");
             if (naVision == null) return;
@@ -730,9 +610,9 @@ namespace BrainSimulator.Modules
             {
                 float theta = (float)-Module2DVision.fieldOfView / 2 + (i * deltaTheta);
                 PointPlus P = new PointPlus { R = 10, Theta = theta };
-                foreach (Thing t in KBSegments)
+                foreach (Thing t in UKSSegments)
                 {
-                    Segment s = SegmentFromKBThing(t);
+                    Segment s = SegmentFromUKSThing(t);
                     if (s == null) continue;
                     Utils.FindIntersection(new Point(0, 0), P.P, s.P1.P, s.P2.P,
                         out bool lines_intersect, out bool segments_intersect,
@@ -740,7 +620,7 @@ namespace BrainSimulator.Modules
                     if (segments_intersect)
                     {
                         //TODO...only fire the closest at each point
-                        kb.Fire(t);
+                        UKS.Fire(t);
                         //                        t.AddReference(tVisible);
                     }
                 }
@@ -752,13 +632,13 @@ namespace BrainSimulator.Modules
         {
             obstacle = null;
             float closestDistance = 100;
-            ModuleView naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
-            if (naKB == null) return null;
-            Module2DKB kb = (Module2DKB)naKB.TheModule;
+            ModuleView naUKS = theNeuronArray.FindAreaByLabel("Module2DUKS");
+            if (naUKS == null) return null;
+            ModuleUKS UKS = (ModuleUKS)naUKS.TheModule;
             bool ok = true;
-            foreach (Thing t in KBSegments)
+            foreach (Thing t in UKSSegments)
             {
-                Segment s = SegmentFromKBThing(t);
+                Segment s = SegmentFromUKSThing(t);
                 Utils.FindIntersection(new Point(0, 0), midPoint.P, s.P1.P, s.P2.P,
                     out bool lines_intersect, out bool segments_intersect,
                     out Point intersection, out Point close_p1, out Point closep2, out double collisionAngle);
@@ -779,8 +659,8 @@ namespace BrainSimulator.Modules
 
         private static int CompareSegmentsByDistance(Thing t1, Thing t2)
         {
-            Segment s1 = SegmentFromKBThing(t1);
-            Segment s2 = SegmentFromKBThing(t2);
+            Segment s1 = SegmentFromUKSThing(t1);
+            Segment s2 = SegmentFromUKSThing(t2);
             if (s1 == null || s2 == null)
                 return 0;
             float d1 = (float)Utils.FindDistanceToSegment(s1);
@@ -797,19 +677,19 @@ namespace BrainSimulator.Modules
         public List<Thing> NearbySegments(int max = 1)
         {
             List<Thing> retVal = new List<Thing>();
-            if (KBSegments == null) return retVal;
-            if (KBSegments.Count == 0) return retVal;
-            foreach (Thing t in KBSegments)
+            if (UKSSegments == null) return retVal;
+            if (UKSSegments.Count == 0) return retVal;
+            foreach (Thing t in UKSSegments)
             {
                 retVal.Add(t);
             }
             retVal.Sort(CompareSegmentsByDistance);
             int matches = 0;
-            Segment s = SegmentFromKBThing(retVal[0]);
+            Segment s = SegmentFromUKSThing(retVal[0]);
             float d = (float)Utils.FindDistanceToSegment(s);
             for (int i = 1; i < retVal.Count; i++)
             {
-                s = SegmentFromKBThing(retVal[i]);
+                s = SegmentFromUKSThing(retVal[i]);
                 float d1 = (float)Utils.FindDistanceToSegment(s);
                 matches++;
                 if (i >= max && Abs(d - d1) > .1)
@@ -829,7 +709,7 @@ namespace BrainSimulator.Modules
         public bool imagining = false;
         PointPlus imaginationOffset;
         float imaginationDirection;
-        //this will all need to be converted to run with KB Things instead of segments
+        //this will all need to be converted to run with UKS Things instead of segments
         [XmlIgnore]
         public List<Segment> imagination = new List<Segment>();
 
@@ -871,9 +751,9 @@ namespace BrainSimulator.Modules
         //This adjust all the objects in the model for an entity rotation
         public void Rotate(float theta)
         {
-            if (KBPoints == null) return;
+            if (UKSPoints == null) return;
             //move all the objects in the model
-            foreach (Thing t in KBPoints)
+            foreach (Thing t in UKSPoints)
             {
                 if (t.V != null && t.V is PointPlus P)
                 {
@@ -885,9 +765,9 @@ namespace BrainSimulator.Modules
 
         public void Move(float x, float y)
         {
-            if (KBPoints == null) return;
+            if (UKSPoints == null) return;
             //move all the objects in the model
-            foreach (Thing t in KBPoints)
+            foreach (Thing t in UKSPoints)
             {
                 if (t.V != null && t.V is PointPlus P)
                 {
@@ -913,18 +793,18 @@ namespace BrainSimulator.Modules
             cCount = 0;
             ppCount = 0;
 
-            GetSegmentsFromKB();
+            GetSegmentsFromUKS();
 
-            Module2DKBN kbn = (Module2DKBN)FindModuleByType(typeof(Module2DKBN));
-            if (kbn == null) return;
-            while (KBSegments.Count > 0)
+            ModuleUKSN UKSn = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            if (UKSn == null) return;
+            while (UKSSegments.Count > 0)
             {
-                kbn.DeleteThing(KBSegments[0]);
+                UKSn.DeleteThing(UKSSegments[0]);
             }
 
-            while (KBPoints.Count > 0)
+            while (UKSPoints.Count > 0)
             {
-                kbn.DeleteThing(KBPoints[0]);
+                UKSn.DeleteThing(UKSPoints[0]);
             }
 
             na.GetNeuronAt(0, 0).Label = "New";

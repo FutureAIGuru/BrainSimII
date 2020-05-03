@@ -36,18 +36,18 @@ namespace BrainSimulator.Modules
                         //the word has not been heard before, add it
                         n.Label = word;
                         n.CurrentCharge = 1;
-                        //connection to KB 
-                        Module2DKBN nmKB = (Module2DKBN)FindModuleByType(typeof(Module2DKBN));
-                        if (nmKB != null)
+                        //connection to UKS 
+                        ModuleUKSN nmUKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+                        if (nmUKS != null)
                         {
-                            List<Thing> words = nmKB.Labeled("Word").Children;
-                            Thing w = nmKB.Valued(word, words);
+                            List<Thing> words = nmUKS.Labeled("Word").Children;
+                            Thing w = nmUKS.Valued(word, words);
                             if (w == null)
                             {
                                 string label = "w" + char.ToUpper(word[0]) + word.Substring(1);
-                                w = nmKB.AddThing(label, new Thing[] { nmKB.Labeled("Word") }, word);
+                                w = nmUKS.AddThing(label, new Thing[] { nmUKS.Labeled("Word") }, word);
                             }
-                            Neuron n1 = nmKB.GetNeuron(w);
+                            Neuron n1 = nmUKS.GetNeuron(w);
                             if (n1 != null)
                                 n.AddSynapse(n1.Id, 1);
                             //TODO: add a synapse to the speakwords module as well
@@ -83,12 +83,12 @@ namespace BrainSimulator.Modules
 
             Neuron n1 = na.GetNeuronAt(0);
             n1.Label = "good";
-            Neuron n1Target = GetNeuron("Module2DKB", "Positive");
+            Neuron n1Target = GetNeuron("Module2DUKS", "Positive");
             if (n1Target != null)
                 n1.AddSynapse(n1Target.Id, 1);
             Neuron n2 = na.GetNeuronAt(1);
             n2.Label = "no";
-            Neuron n2Target = GetNeuron("Module2DKB", "Negative");
+            Neuron n2Target = GetNeuron("Module2DUKS", "Negative");
             if (n2Target != null)
                 n2.AddSynapse(n2Target.Id, 1);
         }

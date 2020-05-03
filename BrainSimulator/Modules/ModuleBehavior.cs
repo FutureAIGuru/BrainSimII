@@ -66,7 +66,7 @@ namespace BrainSimulator.Modules
                 {
                     case TheBehavior.Rest: break;
                     case TheBehavior.Move:
-                        SetNeuronValue("ModuleMove", 0, 2, currentBehavior.param1);
+                        SetNeuronValue("ModuleMove", 1, 2, currentBehavior.param1);
                         break;
                     case TheBehavior.Turn:
                         SetNeuronValue("ModuleTurn", 2, 0, currentBehavior.param1);
@@ -95,13 +95,13 @@ namespace BrainSimulator.Modules
             na.GetNeuronAt(10, 0).Label = "CollAngle";
             na.GetNeuronAt(10, 0).Model = Neuron.modelType.FloatValue;
 
-            //Connect Neurons to the KB
-            Neuron nKBDone = GetNeuron("Module2DKB", "Done");
-            if (nKBDone != null)
-                na.GetNeuronAt("Done").AddSynapse(nKBDone.Id, 1);
-            Neuron nKBStop = GetNeuron("KBOut", "Stop");
-            if (nKBStop != null)
-                nKBStop.AddSynapse(na.GetNeuronAt("Stop").Id, 1);
+            //Connect Neurons to the UKS
+            Neuron nUKSDone = GetNeuron("Module2DUKS", "Done");
+            if (nUKSDone != null)
+                na.GetNeuronAt("Done").AddSynapse(nUKSDone.Id, 1);
+            Neuron nUKSStop = GetNeuron("UKSOut", "Stop");
+            if (nUKSStop != null)
+                nUKSStop.AddSynapse(na.GetNeuronAt("Stop").Id, 1);
 
         }
 

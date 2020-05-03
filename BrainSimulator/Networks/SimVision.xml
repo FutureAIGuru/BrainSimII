@@ -14456,8 +14456,8 @@
       <Height>10</Height>
       <Width>11</Width>
       <Color>8388564</Color>
-      <CommandLine>Module2DKBN </CommandLine>
-      <TheModule xsi:type="Module2DKBN">
+      <CommandLine>ModuleUKSN </CommandLine>
+      <TheModule xsi:type="ModuleUKSN">
         <initialized>true</initialized>
         <dlgPos>
           <X>1046</X>

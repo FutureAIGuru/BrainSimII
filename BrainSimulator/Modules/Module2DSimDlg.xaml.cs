@@ -139,43 +139,45 @@ namespace BrainSimulator.Modules
             }
 
             //draw the current field of view
-            for (int i = 0; i < parent.currentView0.Count; i++)
+            if ((bool)cbArcs.IsChecked)
             {
-                try //TODO lock the list
+                for (int i = 0; i < parent.currentView0.Count; i++)
                 {
-                    theCanvas.Children.Add(new Line
+                    try //TODO lock the list
                     {
-                        X1 = parent.currentView0[i].P1.X,
-                        Y1 = parent.currentView0[i].P1.Y,
-                        X2 = parent.currentView0[i].P1.X,
-                        Y2 = parent.currentView0[i].P1.Y,
-                        StrokeThickness = 3 / scale,
-                        StrokeEndLineCap = PenLineCap.Round,
-                        StrokeStartLineCap = PenLineCap.Round,
-                        Stroke = new SolidColorBrush(parent.currentView0[i].theColor)
-                    });
+                        theCanvas.Children.Add(new Line
+                        {
+                            X1 = parent.currentView0[i].P1.X,
+                            Y1 = parent.currentView0[i].P1.Y,
+                            X2 = parent.currentView0[i].P1.X,
+                            Y2 = parent.currentView0[i].P1.Y,
+                            StrokeThickness = 3 / scale,
+                            StrokeEndLineCap = PenLineCap.Round,
+                            StrokeStartLineCap = PenLineCap.Round,
+                            Stroke = new SolidColorBrush(parent.currentView0[i].theColor)
+                        });
+                    }
+                    catch { }
                 }
-                catch { }
-            }
-            for (int i = 0; i < parent.currentView1.Count; i++)
-            {
-                try //another thread might mess the array up TODO, lock the object list
+                for (int i = 0; i < parent.currentView1.Count; i++)
                 {
-                    theCanvas.Children.Add(new Line
+                    try //another thread might mess the array up TODO, lock the object list
                     {
-                        X1 = parent.currentView1[i].P1.X,
-                        Y1 = parent.currentView1[i].P1.Y,
-                        X2 = parent.currentView1[i].P1.X,
-                        Y2 = parent.currentView1[i].P1.Y,
-                        StrokeThickness = 3 / scale,
-                        StrokeEndLineCap = PenLineCap.Round,
-                        StrokeStartLineCap = PenLineCap.Round,
-                        Stroke = new SolidColorBrush(parent.currentView1[i].theColor)
-                    });
+                        theCanvas.Children.Add(new Line
+                        {
+                            X1 = parent.currentView1[i].P1.X,
+                            Y1 = parent.currentView1[i].P1.Y,
+                            X2 = parent.currentView1[i].P1.X,
+                            Y2 = parent.currentView1[i].P1.Y,
+                            StrokeThickness = 3 / scale,
+                            StrokeEndLineCap = PenLineCap.Round,
+                            StrokeStartLineCap = PenLineCap.Round,
+                            Stroke = new SolidColorBrush(parent.currentView1[i].theColor)
+                        });
+                    }
+                    catch { }
                 }
-                catch { }
             }
-
             ////draw the body...it's a transparent gif
             Image body = new Image()
             {
@@ -278,24 +280,21 @@ namespace BrainSimulator.Modules
             MainWindow.thisWindow.Activate();
         }
 
-        private void CbButton_Checked(object sender, RoutedEventArgs e)
-        {
-            Module2DSim parent = (Module2DSim)base.ParentModule;
-            if (parent == null || cbRev == null || cbFwd == null || cbStop == null) return;
-            if (cbRev.IsChecked == true) parent.inMotion = -1;
-            if (cbFwd.IsChecked == true) parent.inMotion = 1;
-            if (cbStop.IsChecked == true) parent.inMotion = 0;
-        }
-
         private void ModuleBaseDlg_Loaded(object sender, RoutedEventArgs e)
         {
             Module2DSim parent = (Module2DSim)base.ParentModule;
-            if (parent.inMotion == 0)
-                cbStop.IsChecked = true;
-            if (parent.inMotion == 1)
-                cbFwd.IsChecked = true;
-            if (parent.inMotion == -1)
-                cbRev.IsChecked = true;
+            speedSlider.Value = parent.inMotion;
+        }
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Module2DSim parent = (Module2DSim)base.ParentModule;
+            parent.inMotion = (int)speedSlider.Value;
+        }
+
+        private void CbArcs_Click(object sender, RoutedEventArgs e)
+        {
+            Draw(false);
         }
     }
 }

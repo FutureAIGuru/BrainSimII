@@ -17,7 +17,7 @@ using System.Diagnostics;
 
 namespace BrainSimulator.Modules
 {
-    public class Module2DKB : ModuleBase
+    public class ModuleUKS : ModuleBase
     {
         //This is the actual Universal Knowledge Store
         protected List<Thing> UKS = new List<Thing>();
@@ -26,16 +26,16 @@ namespace BrainSimulator.Modules
         //break circular links by storing index values instead of actual links Note the use of SThing instead of Thing
         public List<SThing> UKSTemp = new List<SThing>();
 
-        public override string ShortDescription { get => "Knowledge Base for storing linked knowledge data"; }
+        public override string ShortDescription { get => "Universal Knowledge Store for storing linked knowledge data"; }
         public override string LongDescription
         {
             get => "This module uses no neurons but can be called directly by other modules.\n\r" +
-"Within the KB, everything is a 'Thing' (see the source code for the 'Thing' object). Things may have parents, children, " +
+"Within the Knoweldge Store, everything is a 'Thing' (see the source code for the 'Thing' object). Things may have parents, children, " +
 "references to other Things, and a 'value' which can be " +
 "any .NET object (with Color and Point being implemented). " +
 "It can search by value with an optional tolerance. A reference to another thing is done with a 'Link' " +
 "which is a thing with an attached weight which can be examined and/or modified.\n\r " +
-"Note that the Knowledge Base is a bit like a neural network its own right if we consider a node to be a neuron " +
+"Note that the Knowledge store is a bit like a neural network its own right if we consider a node to be a neuron " +
 "and a link to be a synapse.";
         }
 
@@ -44,6 +44,7 @@ namespace BrainSimulator.Modules
             Init();  //be sure to leave this here to enable use of the na variable
         }
 
+        //this is used to format debug output 
         private string ArrayToString(Thing[] list)
         {
             string retVal = ",";
@@ -74,9 +75,9 @@ namespace BrainSimulator.Modules
                 if (!referenceMissing)
                     return t;
             }
-
             return found;
         }
+
         public virtual Thing AddThing(string label, Thing[] parents, object value = null, Thing[] references = null)
         {
             Debug.WriteLine("AddThing: " + label + " (" + ArrayToString(parents) + ") (" + ArrayToString(references) + ")");
@@ -98,6 +99,7 @@ namespace BrainSimulator.Modules
             UKS.Add(newThing);
             return newThing;
         }
+
         public virtual void DeleteThing(Thing t)
         {
             if (t.Children.Count != 0) return; //can't delete something with children...must delete all children first.
@@ -111,26 +113,25 @@ namespace BrainSimulator.Modules
         }
 
         //returns a thing with the given label
-        //2nd paramter defines KB to search, null=search entire knowledge base
-        public Thing Labeled(string label, List<Thing> KBt = null)
+        //2nd paramter defines UKS to search, null=search entire knowledge store
+        public Thing Labeled(string label, List<Thing> UKSt = null)
         {
-            KBt = KBt ?? UKS;
+            UKSt = UKSt ?? UKS; //if UKSt is null, search the entire UKS
             Thing retVal = null;
-            retVal = KBt.Find(t => t.Label == label);
+            retVal = UKSt.Find(t => t.Label == label);
             if (retVal != null) retVal.useCount++;
-
             return retVal;
         }
 
         //returns the first thing it encounters which with a given value or null if none is found
-        //the 2nd paramter defines the KB to search (e.g. list of children)
-        //if it is null, it searches the entire KB,
-        //the 3re paramter defines the tolerance for spatial matches
+        //the 2nd paramter defines the UKS to search (e.g. list of children)
+        //if it is null, it searches the entire UKS,
+        //the 3rd paramter defines the tolerance for spatial matches
         //if it is null, an exact match is required
-        public virtual Thing Valued(object value, List<Thing> KBt = null, float toler = 0)
+        public virtual Thing Valued(object value, List<Thing> UKSt = null, float toler = 0)
         {
-            KBt = KBt ?? UKS;
-            foreach (Thing t in KBt)
+            UKSt = UKSt ?? UKS;
+            foreach (Thing t in UKSt)
             {
                 if (t == null) continue;
                 if (t.V is PointPlus p1 && value is PointPlus p2)
@@ -153,15 +154,9 @@ namespace BrainSimulator.Modules
             return null;
         }
 
-        //returns a list of all things which share the given parent thing
-        public virtual List<Thing> HavingParent(Thing parent)
-        {
-            if (parent == null) return null;
 
-            return parent.Children;
-        }
-
-        //these two functions transform the KB into an structure which can be serialized/deserialized
+        //these two functions transform the UKS into an structure which can be serialized/deserialized
+        //by translating object references into array indices, all the problems of circular references go away
         public override void SetUpBeforeSave()
         {
             base.SetUpBeforeSave();
@@ -234,12 +229,14 @@ namespace BrainSimulator.Modules
             }
         }
 
+        //gets direct children
         public List<Thing> GetChildren(Thing t)
         {
             if (t == null) return new List<Thing>();
             return t.Children;
         }
 
+        //recursively gets all descendents
         public IEnumerable<Thing> GetAllChildren(Thing T)
         {
             foreach (Thing t in T.Children)
@@ -253,6 +250,11 @@ namespace BrainSimulator.Modules
         public Thing AddThing (string label, string parentLabel)
         {
             return AddThing(label, new Thing[] { Labeled(parentLabel) });
+        }
+
+        public Thing AddThing(string label, Thing parent)
+        {
+            return AddThing(label, new Thing[] { parent });
         }
 
         public override void Initialize()
@@ -280,13 +282,15 @@ namespace BrainSimulator.Modules
             AddThing("Visual", "Sense");
             AddThing("Color", "Visual");
             AddThing("Shape", "Visual");
+            AddThing("Landmark", "Visual");
+            AddThing("SSegment", "Shape");
             AddThing("Point", "Shape");
+            AddThing("Motion", "Visual");
             AddThing("Segment", "Shape");
             AddThing("Audible", "Sense");
             AddThing("Word", "Audible");
             AddThing("Phoneme", "Audible");
             AddThing("Phrase", "Audible");
-            AddThing("PhraseISpoke", "Audible");
             AddThing("ShortTerm", "Phrase");
             AddThing("phTemp", "ShortTerm");
             AddThing("NoWord", "Word");
@@ -294,13 +298,10 @@ namespace BrainSimulator.Modules
             AddThing("Bigger", "Relation");
             AddThing("Closer", "Relation");
             AddThing("Situation", "Thing");
-            AddThing("Landmark", "Situation");
-            AddThing("SPoint", "Landmark");
-            AddThing("SSegment", "Landmark");
-            AddThing("Verbal", "Situation");
             AddThing("Outcome","Thing");
             AddThing("Positive","Outcome");
             AddThing("Negative","Outcome");
+            AddThing("ModelThing", new Thing[] { });
         }
     }
 }

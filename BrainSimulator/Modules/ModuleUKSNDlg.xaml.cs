@@ -20,9 +20,9 @@ using System.Windows.Threading;
 
 namespace BrainSimulator.Modules
 {
-    public partial class Module2DKBNDlg : ModuleBaseDlg
+    public partial class ModuleUKSNDlg : ModuleBaseDlg
     {
-        public Module2DKBNDlg()
+        public ModuleUKSNDlg()
         {
             InitializeComponent();
         }
@@ -40,7 +40,7 @@ namespace BrainSimulator.Modules
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             string root = textBox1.Text;
-            Module2DKBN parent = (Module2DKBN)base.ParentModule;
+            ModuleUKSN parent = (ModuleUKSN)base.ParentModule;
             expandedItems.Clear();
             FindExpandedItems(theTreeView.Items,root);
             theTreeView.Items.Clear();
@@ -96,7 +96,7 @@ namespace BrainSimulator.Modules
                 if (child.References.Count > 0)
                 {
                     header +=  " (";
-                    Module2DKBN parent = (Module2DKBN)base.ParentModule;
+                    ModuleUKSN parent = (ModuleUKSN)base.ParentModule;
                     Thing best = parent.FindBestReference(child);
                     foreach (Link L in child.References)
                     {

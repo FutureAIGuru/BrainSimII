@@ -26,6 +26,12 @@ namespace BrainSimulator.Modules
         private bool polarDirty = false;
         private bool xyDirty = false;
 
+        public PointPlus()
+        {
+            r = 0;
+            theta = 0;
+            P = new Point(0, 0);
+        }
         [XmlIgnore]
         public Point P
         {
@@ -60,7 +66,11 @@ namespace BrainSimulator.Modules
             p.Y = r * Sin(theta);
             xyDirty = false;
         }
-
+        public PointPlus Clone()
+        {
+            PointPlus p1 = new PointPlus() { R = this.R, Theta = this.Theta,Conf = this.Conf };
+            return p1;
+        }
         public void UpdatePolar()
         {
             theta = (float)Atan2(p.Y, p.X);
@@ -102,6 +112,7 @@ namespace BrainSimulator.Modules
             return theAngle.CompareTo(a.theAngle);
         }
     }
+
     public class ColorInt
     {
         private readonly int theColor;
@@ -129,6 +140,16 @@ namespace BrainSimulator.Modules
         public int CompareTo(ColorInt c)
         {
             return theColor.CompareTo(c.theColor);
+        }
+        public override bool Equals(object a)
+        {
+            if (a is ColorInt c)
+                return this.theColor.Equals(c.theColor);
+            return false;
+        }
+        public override int GetHashCode()
+        {
+            return theColor;
         }
     }
 

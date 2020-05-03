@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using static System.Math;
+using static BrainSimulator.Utils;
 
 namespace BrainSimulator.Modules
 {
@@ -94,17 +95,17 @@ namespace BrainSimulator.Modules
         {
             int c1 = GetNeuronValueInt(null, na.Width / 2, 0);
             int c2 = GetNeuronValueInt(null, na.Width / 2, 1);
-            Module2DKBN nmKB = (Module2DKBN)FindModuleByType(typeof(Module2DKBN));
-            if (nmKB != null && nmKB.Labeled("Color") != null)
+            ModuleUKSN nmUKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            if (nmUKS != null && nmUKS.Labeled("Color") != null)
             {
-                List<Thing> colors = nmKB.Labeled("Color").Children;
+                List<Thing> colors = nmUKS.Labeled("Color").Children;
                 //if (c1 != 0)
                 {
-                    nmKB.Fire(nmKB.Valued(c1, colors));
+                    nmUKS.Fire(nmUKS.Valued(c1, colors));
                 }
                 //if (c2 != 0)
                 {
-                    nmKB.Fire(nmKB.Valued(c2, colors));
+                    nmUKS.Fire(nmUKS.Valued(c2, colors));
                 }
             }
         }
@@ -288,10 +289,12 @@ namespace BrainSimulator.Modules
                     if (curArea.theColor != 0 && nextArea.theColor != 0 && curArea.t != null && nextArea.t != null)
                         //&&                         curArea.PR.R == nextArea.PL.R && curArea.PR.Theta == nextArea.PL.Theta)
                     {
-                        Segment curS = Module2DModel.SegmentFromKBThing(curArea.t);
-                        Segment nextS = Module2DModel.SegmentFromKBThing(nextArea.t);
-                        //is aa.PL in front of prevSegment
-                        if (nextArea.PL.Theta < curS.P1.Theta && nextArea.PL.Theta > curS.P2.Theta)
+                        Segment curS = Module2DModel.SegmentFromUKSThing(curArea.t);
+                        Module2DModel.OrderSegment(curS);
+                        Segment nextS = Module2DModel.SegmentFromUKSThing(nextArea.t);
+                        Module2DModel.OrderSegment(nextS);
+                        //is aa.PL in front of prevSegment (the little correction hides an occlusion problem where the endpoints nearly match
+                        if (nextArea.PL.Theta > curS.P1.Theta-Rad(2) && nextArea.PL.Theta < curS.P2.Theta+Rad(2))
                         {
                             float segDistAtPoint = curS.P1.R;
                             float dr1 = (curS.P2.R - curS.P1.R);
@@ -304,7 +307,7 @@ namespace BrainSimulator.Modules
                             }
                         }
                         //is prevArea.PR in front of aaSegment
-                        if (curArea.PR.Theta < nextS.P1.Theta && curArea.PR.Theta > nextS.P2.Theta)
+                        if (curArea.PR.Theta > nextS.P1.Theta -Rad(2)&& curArea.PR.Theta < nextS.P2.Theta+Rad(2))
                         {
                             float segDistAtPoint = nextS.P1.R + (nextS.P2.R - nextS.P1.R) * (nextS.P1.Theta - curArea.PR.Theta) / (nextS.P1.Theta - nextS.P2.Theta);
                             if (curArea.PR.R < segDistAtPoint)

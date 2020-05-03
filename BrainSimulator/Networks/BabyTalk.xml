@@ -12142,13 +12142,13 @@
     </ModuleView>
     <ModuleView>
       <AreaNumber>0</AreaNumber>
-      <Label>Module2DKBN </Label>
+      <Label>ModuleUKSN </Label>
       <FirstNeuron>420</FirstNeuron>
       <Height>4</Height>
       <Width>70</Width>
       <Color>8388564</Color>
-      <CommandLine>Module2DKBN </CommandLine>
-      <TheModule xsi:type="Module2DKBN">
+      <CommandLine>ModuleUKSN </CommandLine>
+      <TheModule xsi:type="ModuleUKSN">
         <initialized>true</initialized>
         <dlgPos>
           <X>1365</X>

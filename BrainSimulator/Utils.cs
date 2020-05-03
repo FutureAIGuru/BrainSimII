@@ -21,6 +21,7 @@ namespace BrainSimulator
     {
         public PointPlus P1;
         public PointPlus P2;
+        public PointPlus Motion;
         public ColorInt theColor;
         public PointPlus MidPoint()
         {
@@ -40,6 +41,22 @@ namespace BrainSimulator
         {
             float length = P2.Theta - P1.Theta;
             return length;
+        }
+        public float Angle()
+        {
+            PointPlus pTemp = new PointPlus() { P = (Point)(P1.V - P2.V) };
+            return pTemp.Theta;
+        }
+        public Segment Clone()
+        {
+            Segment s = new Segment
+            {
+                P1 = this.P1.Clone(),
+                P2 = this.P2.Clone(),
+                Motion = this.Motion.Clone(),
+                theColor = this.theColor
+            };
+            return s;
         }
     }
 
@@ -133,6 +150,30 @@ namespace BrainSimulator
         public static double FindDistanceToSegment(Segment s,out Point closest)
         {
             return FindDistanceToSegment(new Point(0,0),s.P1.P,s.P2.P,out closest);
+        }
+
+        public static Vector GetClosestPointOnLine(Vector A, Vector B, Vector P)
+        {
+            Vector AP = P - A;       //Vector from A to P   
+            Vector AB = B - A;       //Vector from A to B  
+
+            float magnitudeAB = (float)(AB.Length*AB.Length);     //Magnitude of AB vector (it's length squared)     
+            float ABAPproduct = (float)Vector.Multiply(AP, AB);    //The DOT product of a_to_p and a_to_b     
+            float distance = ABAPproduct / magnitudeAB; //The normalized "distance" from a to your closest point  
+
+            //if (distance < 0)     //Check if P projection is over vectorAB     
+            //{
+            //    return A;
+
+            //}
+            //else if (distance > 1)
+            //{
+            //    return B;
+            //}
+            //else
+            {
+                return A + AB * distance;
+            }
         }
 
         // Calculate the distance between

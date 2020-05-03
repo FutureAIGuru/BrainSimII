@@ -252,6 +252,10 @@ namespace BrainSimulator.Modules
             }
             return retVal;
         }
+        protected float GetNeuronValue(string neuronLabel)
+        {
+            return GetNeuronValue(null, neuronLabel);
+        }
 
         protected float GetNeuronValue(string moduleName, string neuronLabel)
         {

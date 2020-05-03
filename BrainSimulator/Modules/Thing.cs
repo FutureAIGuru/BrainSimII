@@ -107,7 +107,6 @@ namespace BrainSimulator
                 }
                 return existingLink.weight;
             }
-
         }
 
         public void RemoveReference(Thing t)
@@ -125,6 +124,15 @@ namespace BrainSimulator
         {
             Parents.Remove(t);
             t.Children.Remove(this);
+        }
+
+        public void AddChild(Thing t)
+        {
+            children.Add(t);
+        }
+        public void RemoveChild(Thing t)
+        {
+            children.Remove(t);
         }
 
         public float Distance(Thing t, bool ordered = false)

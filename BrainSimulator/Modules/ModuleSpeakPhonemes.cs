@@ -43,7 +43,7 @@ namespace BrainSimulator.Modules
                     {
                         //if a neuron fired and it has no connection, connect it to the knowledge store
                         //connection to KB 
-                        Module2DKBN nmKB = (Module2DKBN)FindModuleByType(typeof(Module2DKBN));
+                        ModuleUKSN nmKB = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
                         if (nmKB != null)
                         {
                             string label = "pn" + n.Label;

@@ -70,7 +70,7 @@ namespace BrainSimulator.Modules
             //draw possible points;
             try
             {
-                foreach (Thing t in parent.GetKBPoints() ?? Enumerable.Empty<Thing>())
+                foreach (Thing t in parent.GetUKSPoints() ?? Enumerable.Empty<Thing>())
                 {
                     if (t.V is PointPlus P1 && !float.IsInfinity(P1.X) && !float.IsInfinity(P1.Y))
                     {
@@ -93,9 +93,9 @@ namespace BrainSimulator.Modules
             //draw the objects'
             try
             {
-                foreach (Thing t in parent.GetKBSegments() ?? Enumerable.Empty<Thing>())
+                foreach (Thing t in parent.GetUKSSegments() ?? Enumerable.Empty<Thing>())
                 {
-                    Segment segment = Module2DModel.SegmentFromKBThing(t);
+                    Segment segment = Module2DModel.SegmentFromUKSThing(t);
                     if (float.IsNaN(segment.P1.R)) continue;
                     Color theColor = Utils.IntToColor(segment.theColor);
                     Point P1 = segment.P1.P;

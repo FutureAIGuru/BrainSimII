@@ -15,11 +15,11 @@ namespace BrainSimulator.Modules
 {
     public class ModuleLearning : ModuleBase
     {
-        //THIS IS A DEMONSTRATION module showing the rewrite needed to migrate a learning algorithm out of the 2DKBN module.
+        //THIS IS A DEMONSTRATION module showing the rewrite needed to migrate a learning algorithm out of the UKSN module.
         //As learning algorithms become more complex and prolific, this will become progressively more important.
 
 
-        Module2DKBN KB = null;
+        ModuleUKSN KB = null;
 
         //fill this method in with code which will execute
         //once for each cycle of the engine
@@ -47,12 +47,12 @@ namespace BrainSimulator.Modules
 
         public override void Initialize()
         {
-            ModuleView naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
+            ModuleView naKB = theNeuronArray.FindAreaByLabel("ModuleUKS");
             if (naKB != null)
             {
                 if (naKB.TheModule != null)
                 {
-                    KB = (Module2DKBN)naKB.TheModule;
+                    KB = (ModuleUKSN)naKB.TheModule;
                 }
             }
         }

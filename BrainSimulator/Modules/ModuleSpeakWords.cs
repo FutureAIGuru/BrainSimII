@@ -33,7 +33,7 @@ namespace BrainSimulator.Modules
             Init();  //be sure to leave this here
             if (synth == null) Initialize();
             if (!na.GetNeuronAt(0).Fired()) return;
-            Module2DKBN nmKB = (Module2DKBN)FindModuleByType(typeof(Module2DKBN));
+            ModuleUKSN nmKB = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
             if (nmKB == null) return;
             List<Thing> words = nmKB.GetChildren(nmKB.Labeled("Word"));
             bool paused = true;

@@ -26,6 +26,7 @@ using System.IO.MemoryMappedFiles;
 using System.Drawing;
 using BrainSimulator.Modules;
 using System.Net;
+using System.Security.Principal;
 
 namespace BrainSimulator
 {
@@ -59,6 +60,7 @@ namespace BrainSimulator
         //for autorepeat on the zoom in-out buttons
         DispatcherTimer zoomInOutTimer;
         int zoomAomunt = 0;
+
 
 
         public MainWindow()
@@ -96,6 +98,12 @@ namespace BrainSimulator
 
             ThreadPool.QueueUserWorkItem(CheckInternetConnectivity);
 
+            if (Properties.Settings.Default.UpgradeRequired)
+            {
+                Properties.Settings.Default.Upgrade();
+                Properties.Settings.Default.UpgradeRequired = false;
+                Properties.Settings.Default.Save();
+            }
         }
 
         private void SplashHide_Tick(object sender, EventArgs e)
@@ -769,29 +777,35 @@ namespace BrainSimulator
         }
         private void Button_HelpAbout_Click(object sender, RoutedEventArgs e)
         {
-            HelpAbout dlg = new HelpAbout();
+            HelpAbout dlg = new HelpAbout
+            {
+                Owner = this
+            };
             dlg.Show();
         }
 
         //this reloads the file which was being used on the previous run of the program
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            try
+            if (Keyboard.IsKeyUp(Key.LeftShift))
             {
-                currentFileName = (string)Properties.Settings.Default["CurrentFile"];
-                if (currentFileName != "")
+                try
                 {
-                    SuspendEngine();
-                    bool loadSuccessful = LoadFile(currentFileName);
-                    if (!loadSuccessful)
-                        currentFileName = "";
-                    setTitleBar();
-                    ResumeEngine();
+                    currentFileName = (string)Properties.Settings.Default["CurrentFile"];
+                    if (currentFileName != "")
+                    {
+                        SuspendEngine();
+                        bool loadSuccessful = LoadFile(currentFileName);
+                        if (!loadSuccessful)
+                            currentFileName = "";
+                        setTitleBar();
+                        ResumeEngine();
+                    }
                 }
+                //various errors might have happened so we'll just ignore them all and start with a fresh file 
+                catch (Exception e1)
+                { }
             }
-            //various errors might have happened so we'll just ignore them all and start with a fresh file 
-            catch (Exception e1)
-            { }
         }
 
         private void ButtonInit_Click(object sender, RoutedEventArgs e)

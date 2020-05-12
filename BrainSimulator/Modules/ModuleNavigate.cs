@@ -23,14 +23,10 @@ namespace BrainSimulator.Modules
         bool auto = false; //for debugging in manual mode
 
         //counters used to create unique labels 
-        int pointCount = 0;
-        int situationCount = 0;
-        int landmarkCount = 0;
-        int pairCount = 0;
 
         Thing lastLandmark = null;
         Thing currentLandmark = null;
-        Thing currentSituation = null;
+        Thing currentEvent = null;
         Thing currentTargetReached = null;
         Thing currentTarget = null;
         Thing mostRecentAction = null;
@@ -46,11 +42,14 @@ namespace BrainSimulator.Modules
 
             //get the external references
             ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
-            Module2DModel nmModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
             if (UKS == null) return;
+            Module2DModel nmModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
             if (nmModel == null) return;
             ModuleBehavior nmBehavior = (ModuleBehavior)FindModuleByType(typeof(ModuleBehavior));
             if (nmBehavior == null) return;
+            ModuleEvent mEvent = (ModuleEvent)FindModuleByType(typeof(ModuleEvent));
+            if (mEvent == null) return;
+
 
             //check on the various input neurons...
             //check for a goal selection
@@ -90,7 +89,7 @@ namespace BrainSimulator.Modules
 
                 //yse, we have returned to a landmark we've been at before
                 currentLandmark = best;
-                currentSituation = currentLandmark.ReferencedBy[0].T;
+                currentEvent = currentLandmark.ReferencedBy[0].T;
 
                 //we need to reorient ourselves to face the same way as we did before (set a flag)
                 if (lastLandmark != currentLandmark)
@@ -103,7 +102,7 @@ namespace BrainSimulator.Modules
             {
                 //we're not near an existing landmark
                 currentLandmark = null;
-                currentSituation = null;
+                currentEvent = null;
                 lastLandmark = null;
             }
 
@@ -127,7 +126,7 @@ namespace BrainSimulator.Modules
             //we are in going-to-goal mode
             if (currentTarget != null)//goingToGoal)
             {
-                if (currentSituation != null) //currentSituation means we're at a decision point...check for the decision and execute it
+                if (currentEvent != null) //currentEvent means we're at a decision point...check for the decision and execute it
                 {
                     Thing action = GoToGoal(currentTarget);
                     if (action != null)
@@ -138,7 +137,7 @@ namespace BrainSimulator.Modules
                             nmBehavior.TurnTo(angle);
                         }
                         nmBehavior.MoveTo(1);
-                        currentSituation = null;
+                        currentEvent = null;
                         return;
                     }
                 }
@@ -185,7 +184,7 @@ namespace BrainSimulator.Modules
                 currentTargetReached = thingAhead.References[2].T;
                 if (mostRecentDecisionPoint != null)
                 {
-                    AddOutcomePair(mostRecentDecisionPoint, mostRecentAction, currentTargetReached);
+                    mEvent.AddOutcomePair(mostRecentDecisionPoint, mostRecentAction, currentTargetReached);
                     mostRecentAction = null;
                     mostRecentDecisionPoint = null;
                 }
@@ -209,7 +208,7 @@ namespace BrainSimulator.Modules
                 {
                     //if we're looking for a goal, we've reached it, so stop
                     //currentTarget = null;
-                    currentSituation = null;
+                    currentEvent = null;
                 }
                 else
                 {                
@@ -220,21 +219,20 @@ namespace BrainSimulator.Modules
             else if (auto)
             {
                 //we have a choice...
-                //if the current landmark is null, create a new landmark & situation
+                //if the current landmark is null, create a new landmark & Event
                 if (currentLandmark == null)
                 {
                     //Create new Landmark...it clones the points so they are not modified by the model module
-                    Thing newLandmark = CreateLandmark(near);
-                    currentSituation = UKS.AddThing("Si" + situationCount++.ToString(), "Situation");
-                    currentSituation.AddReference(newLandmark);
+                    Thing newLandmark = mEvent.CreateLandmark(near);
+                    currentEvent = mEvent.CreateEvent(newLandmark);
                     currentLandmark = newLandmark;
                     if (mostRecentDecisionPoint != null)
-                        AddOutcomePair(mostRecentDecisionPoint, mostRecentAction, currentSituation);
+                        mEvent.AddOutcomePair(mostRecentDecisionPoint, mostRecentAction, currentEvent);
                 }
                 else
                 {
                     if (mostRecentDecisionPoint != null && mostRecentDecisionPoint.Children.Find(t1 => t1.References[0].T == mostRecentAction) == null)
-                        AddOutcomePair(mostRecentDecisionPoint, mostRecentAction, currentSituation);
+                        mEvent.AddOutcomePair(mostRecentDecisionPoint, mostRecentAction, currentEvent);
                 }
 
                 //TODO improve the method of finding something not tried before
@@ -242,13 +240,13 @@ namespace BrainSimulator.Modules
                 //priorities...1)continue ahead 2)left 3)right or randomized (depending on comment below)
                 Thing newAction = UKS.Labeled("NoAction");
                 List<Thing> possibleActions = new List<Thing>();
-                if (currentSituation.Children.Find(t => t.References[0].T.Label == "GoS") == null && canGoAhead)
+                if (currentEvent.Children.Find(t => t.References[0].T.Label == "GoS") == null && canGoAhead)
                     possibleActions.Add(UKS.Labeled("GoS"));
-                if (currentSituation.Children.Find(t => t.References[0].T.Label == "LTurnS") == null && canGoLeft)
+                if (currentEvent.Children.Find(t => t.References[0].T.Label == "LTurnS") == null && canGoLeft)
                     possibleActions.Add(UKS.Labeled("LTurnS"));
-                if (currentSituation.Children.Find(t => t.References[0].T.Label == "RTurnS") == null && canGoRight)
+                if (currentEvent.Children.Find(t => t.References[0].T.Label == "RTurnS") == null && canGoRight)
                     possibleActions.Add(UKS.Labeled("RTurnS"));
-                if (possibleActions.Count == 0 && currentSituation.Children.Find(t => t.References[0].T.Label == "UTurnS") == null)
+                if (possibleActions.Count == 0 && currentEvent.Children.Find(t => t.References[0].T.Label == "UTurnS") == null)
                     newAction = UKS.Labeled("UTurnS");
                 else if (possibleActions.Count == 1)
                     newAction = possibleActions[0];
@@ -260,7 +258,7 @@ namespace BrainSimulator.Modules
                 if (newAction.Label != "NoAction")
                 {
                     mostRecentAction = newAction;
-                    mostRecentDecisionPoint = currentSituation;
+                    mostRecentDecisionPoint = currentEvent;
 
                     Angle angle = GetAngleFromAction(newAction);
                     nmBehavior.TurnTo(angle);
@@ -268,7 +266,7 @@ namespace BrainSimulator.Modules
                 }
                 else
                 {
-                    //TODO: all actions at the current situation have been tried, is there another situation which hasn't been exhausted?
+                    //TODO: all actions at the current Event have been tried, is there another Event which hasn't been exhausted?
                 }
                 lastLandmark = currentLandmark;
                 return;
@@ -289,8 +287,8 @@ namespace BrainSimulator.Modules
             }
             if (s1 != null)
             {
-                PointPlus m1 = s1.MidPoint();
-                PointPlus m2 = s2.MidPoint();
+                PointPlus m1 = s1.MidPoint;
+                PointPlus m2 = s2.MidPoint;
                 float deltaX = m1.X - m2.X;
                 float deltaY = m1.Y - m2.Y;
                 PointPlus a1 = new PointPlus() { P = (Point)(s1.P1.V - s1.P2.V) };
@@ -299,37 +297,6 @@ namespace BrainSimulator.Modules
                 nmModel.Move(-deltaX, -deltaY);
                 nmBehavior.TurnTo(deltaTheta);
             }
-        }
-
-        private void AddOutcomePair(Thing parent, Thing theAction, Thing theOutcome)
-        {
-            ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
-            Thing newOutcomePair = UKS.AddThing("x" + pairCount++, parent); //creates new thing as it as a child 
-            newOutcomePair.AddReference(theAction);
-            newOutcomePair.AddReference(theOutcome);
-        }
-
-        private Thing CreateLandmark(List<Thing> near)
-        {
-            //a landmark is a collection of nearby segments
-            //these must be cloned so they can be fixed in position rather than being adjusted relative to Sallie's position
-            ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
-            Thing newLandmark = UKS.AddThing("Lm" + landmarkCount++.ToString(), "Landmark");
-            foreach (Thing t in near)
-            {
-                Segment s = Module2DModel.SegmentFromUKSThing(t);
-                Thing P1 = UKS.AddThing("lmp" + pointCount++.ToString(), "Point"); //These points are not included in the model and do don't move with poin of view
-                P1.V = s.P1.Clone();
-                Thing P2 = UKS.AddThing("lmp" + pointCount++.ToString(), "Point");
-                P2.V = s.P2.Clone();
-                Thing S = UKS.AddThing("l" + t.Label.ToString(), "SSegment");
-                S.AddReference(P1);
-                S.AddReference(P2);
-                S.AddReference(t.References[2].T);//the color
-                newLandmark.AddReference(S);
-            }
-
-            return newLandmark;
         }
 
         private Angle GetTotalAngleError(List<Thing> near)
@@ -345,8 +312,8 @@ namespace BrainSimulator.Modules
                     Segment s2 = Module2DModel.SegmentFromUKSThing(t1);
                     if (s1.theColor == s2.theColor)
                     {
-                        Angle m1 = s1.MidPoint().Theta;
-                        Angle m2 = s2.MidPoint().Theta;
+                        Angle m1 = s1.MidPoint.Theta;
+                        Angle m2 = s2.MidPoint.Theta;
                         Angle angle = m1 - m2;
                         totalAngleError += Abs(angle);
                     }
@@ -357,7 +324,7 @@ namespace BrainSimulator.Modules
 
         private static void FindBestLandmarkMatch(ModuleUKSN UKS, ref Thing best, ref float bestDist, List<Thing> near)
         {
-            //searching each spatial situation 
+            //searching each spatial Event 
             best = null;
             bestDist = 1000;
             if (UKS == null) return;
@@ -418,18 +385,18 @@ namespace BrainSimulator.Modules
         {
             if (target == null) return null;
             ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
-            return UKS.Labeled("Situation").Children.FindAll(
+            return UKS.Labeled("Event").Children.FindAll(
                 t => t.Children.Find(u => u.References[1].T == target) != null);
         }
 
-        //This returns the action needed at the currentSituation in order to move toward the goal
+        //This returns the action needed at the currentEvent in order to move toward the goal
         public Thing GoToGoal(Thing goal)
         {
             if (goal == null) return null;
             ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
 
             //trivial case, you can go straight to goal
-            Thing pair = currentSituation.Children.Find(t => t.References[1].T == goal);
+            Thing pair = currentEvent.Children.Find(t => t.References[1].T == goal);
             if (pair != null)
                 return pair.References[0].T;
 
@@ -438,10 +405,10 @@ namespace BrainSimulator.Modules
             for (int i = 0; i < placesToTry.Count; i++)
             {
                 List<Thing> newPlacesToTry = FindGoal(placesToTry[i]);
-                if (newPlacesToTry.Contains(currentSituation))
+                if (newPlacesToTry.Contains(currentEvent))
                 {
                     Thing target = placesToTry[i]; //target is the intermediate target
-                    pair = currentSituation.Children.Find(t => t.References[1].T == target);
+                    pair = currentEvent.Children.Find(t => t.References[1].T == target);
                     return pair.References[0].T; //return the action of the outcome pair
                 }
                 foreach (Thing t in newPlacesToTry)
@@ -458,13 +425,8 @@ namespace BrainSimulator.Modules
 
             lastLandmark = null;
             currentLandmark = null;
-            currentSituation = null;
+            currentEvent = null;
             ClearNeurons();
-            pointCount = 0;
-            situationCount = 0;
-            landmarkCount = 0;
-            pairCount = 0;
-
 
             //randomize
             rand = new Random((int)DateTime.Now.Ticks);

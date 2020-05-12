@@ -127,6 +127,7 @@
     <Compile Include="ModuleDescription.xaml.cs">
       <DependentUpon>ModuleDescription.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\ModuleEvent.cs" />
     <Compile Include="Modules\ModuleUKSN.cs" />
     <Compile Include="Modules\ModuleUKSNDlg.xaml.cs">
       <DependentUpon>ModuleUKSNDlg.xaml</DependentUpon>

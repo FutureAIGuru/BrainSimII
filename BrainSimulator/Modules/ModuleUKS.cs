@@ -276,6 +276,7 @@ namespace BrainSimulator.Modules
             AddThing("LTurn","Action");
             AddThing("UTurn","Action");
             AddThing("Say", "Action");
+            AddThing("Push", "Action");
             AddThing("SayRnd", "Action");
             AddThing("Attn","Action");
             AddThing("Sense", "Thing");
@@ -283,9 +284,9 @@ namespace BrainSimulator.Modules
             AddThing("Color", "Visual");
             AddThing("Shape", "Visual");
             AddThing("Landmark", "Visual");
+            AddThing("Motion", "Visual");
             AddThing("SSegment", "Shape");
             AddThing("Point", "Shape");
-            AddThing("Motion", "Visual");
             AddThing("Segment", "Shape");
             AddThing("Audible", "Sense");
             AddThing("Word", "Audible");
@@ -297,7 +298,7 @@ namespace BrainSimulator.Modules
             AddThing("Relation", "Thing");
             AddThing("Bigger", "Relation");
             AddThing("Closer", "Relation");
-            AddThing("Situation", "Thing");
+            AddThing("Event", "Thing");
             AddThing("Outcome","Thing");
             AddThing("Positive","Outcome");
             AddThing("Negative","Outcome");

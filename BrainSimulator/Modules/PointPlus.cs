@@ -31,6 +31,7 @@ namespace BrainSimulator.Modules
             r = 0;
             theta = 0;
             P = new Point(0, 0);
+            Conf = 0;
         }
         [XmlIgnore]
         public Point P
@@ -68,7 +69,7 @@ namespace BrainSimulator.Modules
         }
         public PointPlus Clone()
         {
-            PointPlus p1 = new PointPlus() { R = this.R, Theta = this.Theta,Conf = this.Conf };
+            PointPlus p1 = new PointPlus() { R = this.R, Theta = this.Theta, Conf = this.Conf };
             return p1;
         }
         public void UpdatePolar()
@@ -87,10 +88,109 @@ namespace BrainSimulator.Modules
         }
         public override string ToString()
         {
-            string s = "R: " + R.ToString("F3") + ", Theta: " + Degrees.ToString("F3") + "° (" + X.ToString("F2") + "," + Y.ToString("F2") + ") Conf:"+Conf.ToString("F3");
+            string s = "R: " + R.ToString("F3") + ", Theta: " + Degrees.ToString("F3") + "° (" + X.ToString("F2") + "," + Y.ToString("F2") + ") Conf:" + Conf.ToString("F3");
+            return s;
+        }
+
+        //these make comparisons by value instead of by reference
+        public static bool operator ==(PointPlus a, PointPlus b)
+        {
+            if (a is null && b is null) return true;
+            if (a is null || b is null) return false;
+            return (a.P.X == b.P.X && a.P.Y == b.P.Y && a.Conf == b.Conf);
+        }
+        public static bool operator !=(PointPlus a, PointPlus b)
+        {
+            if (a is null && b is null) return false;
+            if (a is null || b is null) return true;
+            return (a.P.X != b.P.X || a.P.Y != b.P.Y || a.Conf != b.Conf);
+        }
+        public static PointPlus operator +(PointPlus a, PointPlus b)
+        {
+            PointPlus retVal = new PointPlus
+            {
+                P = new Point(a.P.X + b.P.X, a.P.Y + b.P.Y)
+            };
+            return retVal;
+        }
+        public static PointPlus operator -(PointPlus a, PointPlus b)
+        {
+            PointPlus retVal = new PointPlus
+            {
+                P = new Point(a.P.X - b.P.X, a.P.Y - b.P.Y)
+            };
+            return retVal;
+        }
+    }
+
+    public class Motion : PointPlus
+    {
+        public Angle rotation = 0;
+        public override string ToString()
+        {
+            string s = "R: " + R.ToString("F3") + ", Theta: " + Degrees.ToString("F3") + "° (" + X.ToString("F2") + "," + Y.ToString("F2") + ") Rot:" + rotation;
             return s;
         }
     }
+
+    public class Segment
+    {
+        public PointPlus P1;
+        public PointPlus P2;
+        public PointPlus Motion;
+        public ColorInt theColor;
+
+        public PointPlus MidPoint
+        {
+            get
+            {
+                return new PointPlus { X = (P1.X + P2.X) / 2, Y = (P1.Y + P2.Y) / 2 };
+            }
+        }
+
+        public PointPlus ClosestPoint()
+        {
+            Utils.FindDistanceToSegment(new Point(0, 0), P1.P, P2.P, out Point closest);
+            return new PointPlus { P = closest };
+        }
+        public float Length
+        {
+            get
+            {
+                float length = (float)((Vector)P2.V - P1.V).Length;
+                return length;
+            }
+        }
+        public float VisualWidth()
+        {
+            float length = P2.Theta - P1.Theta;
+            return length;
+        }
+        public Angle Angle
+        {
+            get
+            {
+                PointPlus pTemp = new PointPlus() { P = (Point)(P1.V - P2.V) };
+                return pTemp.Theta;
+            }
+        }
+
+        public Segment Clone()
+        {
+            Segment s = new Segment
+            {
+                P1 = this.P1.Clone(),
+                P2 = this.P2.Clone(),
+                theColor = this.theColor
+            };
+            if (this.Motion != null)
+                Motion = this.Motion.Clone();
+            return s;
+        }
+    }
+
+
+
 
     //this little helper adds the convenience of displaying angles in radians AND degrees even though they are stored in radians
     //it's really just an extension of float...it also accepts assignment from a double without an explicit cast

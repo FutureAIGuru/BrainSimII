@@ -117,6 +117,7 @@ namespace BrainSimulator
 
         public void AddParent(Thing t)
         {
+            if (t == null) return;
             parents.Add(t);
             t.Children.Add(this);
         }

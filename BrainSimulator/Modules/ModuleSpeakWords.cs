@@ -20,19 +20,15 @@ namespace BrainSimulator.Modules
     public class ModuleSpeakWords : ModuleBase
     {
         SpeechSynthesizer synth = null;
+        string phraseToSpeak = "";
 
-        //any public variable you create here will automatically be stored with the network
-        //unless you precede it with the [XmlIgnore] directive
-        //[XlmIgnore] 
-        //public theStatus = 1;
-
-        //fill this method in with code which will execute
-        //once for each cycle of the engine
         public override void Fire()
         {
             Init();  //be sure to leave this here
-            if (synth == null) Initialize();
+            if (synth == null) return;
+
             if (!na.GetNeuronAt(0).Fired()) return;
+
             ModuleUKSN nmKB = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
             if (nmKB == null) return;
             List<Thing> words = nmKB.GetChildren(nmKB.Labeled("Word"));
@@ -56,25 +52,6 @@ namespace BrainSimulator.Modules
             }
         }
 
-        string phraseToSpeak = "";
-
-
-        //fill this method in with code which will execute once
-        //when the module is added, when "initialize" is selected from the context menu,
-        //or when the engine restart button is pressed
-        public override void Initialize()
-        {
-            synth = new SpeechSynthesizer();
-
-            // Configure the audio output.   
-            synth.SetOutputToDefaultAudioDevice();
-            synth.SpeakCompleted += Synth_SpeakCompleted;
-            synth.SelectVoice("Microsoft Zira Desktop");
-
-            na.GetNeuronAt(0).Label = "Enable";
-            na.GetNeuronAt(0).AddSynapse(na.GetNeuronAt(0).Id, 1);
-        }
-
         private void Synth_SpeakCompleted(object sender, SpeakCompletedEventArgs e)
         {
             // Restart speech recognition.  
@@ -83,7 +60,32 @@ namespace BrainSimulator.Modules
                 msi.ResumeRecognition();
         }
 
+        public override void SetUpAfterLoad()
+        {
+            base.SetUpAfterLoad();
+            Init();
+            Initialize();
+        }
 
+        //fill this method in with code which will execute once
+        //when the module is added, when "initialize" is selected from the context menu,
+        //or when the engine restart button is pressed
+        public override void Initialize()
+        {
 
+            na.GetNeuronAt(0).Label = "Enable";
+            na.GetNeuronAt(0).AddSynapse(na.GetNeuronAt(0).Id, 1);
+
+            synth = new SpeechSynthesizer();
+            if (synth == null)
+            {
+                MessageBox.Show("Speech Synthisizer could not be opened.");
+                return;
+            }
+            // Configure the audio output.   
+            synth.SetOutputToDefaultAudioDevice();
+            synth.SpeakCompleted += Synth_SpeakCompleted;
+            synth.SelectVoice("Microsoft Zira Desktop");
+        }
     }
 }

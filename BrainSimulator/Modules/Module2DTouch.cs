@@ -38,8 +38,8 @@ namespace BrainSimulator.Modules
             {
                 //neurons:  0:touch   1:antAngle  2:antDistance 3: sensedLineAngle 4: conf1 5: len1 6: conf2 7: len2 8: touch-ended 9: modelchanged
                 if (na.GetNeuronAt(0, i).CurrentCharge == 0) continue;
-                float antAngle = na.GetNeuronAt(1, i).CurrentCharge;
-                float antDist = na.GetNeuronAt(2, i).CurrentCharge;
+                float antDist = na.GetNeuronAt(1, i).CurrentCharge;
+                float antAngle = na.GetNeuronAt(2, i).CurrentCharge;
                 float lineAngle = na.GetNeuronAt(3, i).CurrentCharge;
                 float p1IsEndpt = na.GetNeuronAt(4, i).CurrentCharge;
                 float l1 = na.GetNeuronAt(5, i).CurrentCharge;

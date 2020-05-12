@@ -21,7 +21,7 @@ namespace BrainSimulator.Modules
         public override string ShortDescription => "A Knowledge Graph KB module expanded with a neuron arrays for intputs and outputs.";
         public override string LongDescription => "This is like a KB module but expanded to be accessible via neuron firings instead of just programmatically. " + base.LongDescription;
 
-        int situationCount = 0; //sequence # for labelling situation entries
+        int EventCount = 0; //sequence # for labelling Event entries
         int phraseCount = 0; //sequence # for labelling phrases
         int wordCount = 0; //sequence # for labelling wordss
         List<Thing> activeSequences = new List<Thing>();
@@ -195,7 +195,7 @@ namespace BrainSimulator.Modules
             UKS.Insert(0, new Thing { Label = "Ref" });
             UKS.Insert(0, new Thing { Label = "Parent" });
             firstThing = 4;
-            situationCount = 0;
+            EventCount = 0;
             phraseCount = 0;
 
             //add connections from speakPhonemes to this module
@@ -532,7 +532,7 @@ namespace BrainSimulator.Modules
                 List<Thing> phrasesToSay = AnyChildrenFired(Labeled("Phrase"));
                 if (phrasesToSay.Count != 0)
                 {
-                    Thing newUtterance = AddThing("uu" + situationCount++, new Thing[] { Labeled("Utterance") }, null, null);
+                    Thing newUtterance = AddThing("uu" + EventCount++, new Thing[] { Labeled("Utterance") }, null, null);
                     foreach (Link l in phrasesToSay[0].References)
                     {
                         //if the link is to a word, get the pronunciation of the word
@@ -596,7 +596,7 @@ namespace BrainSimulator.Modules
                 int repeatCount = rand.Next(3);
                 repeatCount++;
 
-                Thing newUtterance = AddThing("uu" + situationCount++, new Thing[] { Labeled("Utterance") }, null, null);
+                Thing newUtterance = AddThing("uu" + EventCount++, new Thing[] { Labeled("Utterance") }, null, null);
                 for (int i = 0; i < repeatCount; i++)
                 {
                     if (useCombiner < ModuleSpeakPhonemes.combiners.Count)
@@ -630,7 +630,7 @@ namespace BrainSimulator.Modules
             }
 
             /*//TODO select a phrase to say
-            //things you can say are children of "Say".  They can contain sequences of words OR word-parameters which are affected by the situation
+            //things you can say are children of "Say".  They can contain sequences of words OR word-parameters which are affected by the Event
             List<Thing> sayPhrases = Labeled("Say").Children;
             Thing bestPhrase = null;
             foreach (Thing phrase in sayPhrases)
@@ -690,7 +690,7 @@ namespace BrainSimulator.Modules
             */
         }
 
-        //this learns associations between words and situations
+        //this learns associations between words and Events
         private void LearnWordLinks()
         {
             List<Thing> words = GetChildren(Labeled("Word"));
@@ -722,10 +722,10 @@ namespace BrainSimulator.Modules
                 {
                     float positive = (outcome.Label == "Positive") ? 1 : -1;
                     //do we already know this?
-                    List<Thing> situations = GetChildren(Labeled("Situation"));
-                    foreach (Thing learned in situations)
+                    List<Thing> Events = GetChildren(Labeled("Event"));
+                    foreach (Thing learned in Events)
                     {
-                        //TODO we now have other types of situations...need to detect
+                        //TODO we now have other types of Events...need to detect
                         if (learned.References.Count > 0 && learned.References[0].T == lastPhraseHeard)  //TODO remove hard-coding of phrase as first reference
                         {
                             learned.AdjustReference(lastActionPerformed, positive);
@@ -736,12 +736,12 @@ namespace BrainSimulator.Modules
                         }
                     }
 
-                    //store the new situation memory
+                    //store the new Event memory
                     //TODO add a time limit so really old inputs aren't stored?
                     if (lastPhraseHeard != null && lastActionPerformed != null)
                     {
-                        Thing newSituation = AddThing("si" + situationCount++, new Thing[] { Labeled("Situation") }, null, new Thing[] { lastPhraseHeard });
-                        newSituation.AdjustReference(lastActionPerformed, positive);
+                        Thing newEvent = AddThing("si" + EventCount++, new Thing[] { Labeled("Event") }, null, new Thing[] { lastPhraseHeard });
+                        newEvent.AdjustReference(lastActionPerformed, positive);
                     }
                     Fire(lastActionPerformed, false);
                     lastPhraseHeard = null;
@@ -771,14 +771,14 @@ namespace BrainSimulator.Modules
 
                     foreach (Link l in phrase.ReferencedBy)
                     {
-                        if (l.T.Parents.Contains(Labeled("Situation")))
+                        if (l.T.Parents.Contains(Labeled("Event")))
                         {
-                            Thing situation = l.T;
-                            for (int i = 1; i < situation.References.Count; i++)
+                            Thing Event = l.T;
+                            for (int i = 1; i < Event.References.Count; i++)
                             {
-                                Thing action = situation.References[i].T;
-                                float weight = situation.References[i].weight;
-                                if (situation.References[i].weight > 0)
+                                Thing action = Event.References[i].T;
+                                float weight = Event.References[i].weight;
+                                if (Event.References[i].weight > 0)
                                 {
                                     //we have a positive action, perform it
                                     Fire(action, false);
@@ -816,33 +816,33 @@ namespace BrainSimulator.Modules
                         foreach (Link l in similarPhrases)
                         {
                             Thing t = l.T;
-                            //find a situation with this phrase
-                            Thing situation = null;
+                            //find a Event with this phrase
+                            Thing Event = null;
                             foreach (Link l2 in t.ReferencedBy)
                             {
-                                //TODO handle multiple situations containing this phrase
-                                if (l2.T.Parents.Contains(Labeled("Situation")))
+                                //TODO handle multiple Events containing this phrase
+                                if (l2.T.Parents.Contains(Labeled("Event")))
                                 {
-                                    situation = l2.T;
+                                    Event = l2.T;
                                     break;
                                 }
                             }
-                            if (situation == null) break;
-                            for (int i = 1; i < situation.References.Count; i++)
+                            if (Event == null) break;
+                            for (int i = 1; i < Event.References.Count; i++)
                             {
-                                if (situation.References[i].weight > 0)
+                                if (Event.References[i].weight > 0)
                                 {
                                     //check if actions is in actionsnotyettried
-                                    if (actionsNotYetTried.Contains(situation.References[i].T))
+                                    if (actionsNotYetTried.Contains(Event.References[i].T))
                                     {
-                                        Fire(situation.References[i].T, false);
-                                        lastActionPerformed = situation.References[i].T;
+                                        Fire(Event.References[i].T, false);
+                                        lastActionPerformed = Event.References[i].T;
                                         return;
                                     }
                                     //try nearby actions
                                     else
                                     {
-                                        int index = actions.IndexOf(situation.References[i].T);
+                                        int index = actions.IndexOf(Event.References[i].T);
                                         if (index != -1)
                                         {
                                             for (int j = 1; j < 20; j++)

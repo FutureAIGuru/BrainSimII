@@ -17,50 +17,6 @@ using BrainSimulator.Modules;
 
 namespace BrainSimulator
 {
-    public class Segment
-    {
-        public PointPlus P1;
-        public PointPlus P2;
-        public PointPlus Motion;
-        public ColorInt theColor;
-        public PointPlus MidPoint()
-        {
-            return new PointPlus { X = (P1.X + P2.X) / 2, Y = (P1.Y + P2.Y) / 2 };
-        }
-        public PointPlus ClosestPoint()
-        {
-            Utils.FindDistanceToSegment(new Point(0, 0), P1.P, P2.P, out Point closest);
-            return new PointPlus { P = closest };
-        }
-        public float Length()
-        {
-            float length = (float)((Vector)P2.V - P1.V).Length;
-            return length;
-        }
-        public float VisualWidth()
-        {
-            float length = P2.Theta - P1.Theta;
-            return length;
-        }
-        public float Angle()
-        {
-            PointPlus pTemp = new PointPlus() { P = (Point)(P1.V - P2.V) };
-            return pTemp.Theta;
-        }
-        public Segment Clone()
-        {
-            Segment s = new Segment
-            {
-                P1 = this.P1.Clone(),
-                P2 = this.P2.Clone(),
-                Motion = this.Motion.Clone(),
-                theColor = this.theColor
-            };
-            return s;
-        }
-    }
-
-
 
     public static class Utils
     {

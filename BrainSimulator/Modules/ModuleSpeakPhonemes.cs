@@ -26,7 +26,7 @@ namespace BrainSimulator.Modules
         public override void Fire()
         {
             Init();  //be sure to leave this here
-            if (synth == null) Initialize();
+            if (synth == null) return ;
 
             bool paused = true;
             for (int i = 1; i < na.NeuronCount; i++)
@@ -131,6 +131,13 @@ namespace BrainSimulator.Modules
             return t1;
         }
 
+        public override void SetUpAfterLoad()
+        {
+            Init();
+            base.SetUpAfterLoad();
+            Initialize();
+        }
+
         //fill this method in with code which will execute once
         //when the module is added, when "initialize" is selected from the context menu,
         //or when the engine restart button is pressed
@@ -138,6 +145,11 @@ namespace BrainSimulator.Modules
         public override void Initialize()
         {
             synth = new SpeechSynthesizer();
+            if (synth == null)
+            {
+                MessageBox.Show("Speech Synthisizer could not be opened.");
+                return;
+            }
 
             // Configure the audio output.   
             synth.SetOutputToDefaultAudioDevice();
@@ -280,8 +292,13 @@ namespace BrainSimulator.Modules
             //txt to wav
             using (MemoryStream audioStream = new MemoryStream())
             {
-                using (SpeechSynthesizer synth = new SpeechSynthesizer())
+                using (SpeechSynthesizer synth =  new SpeechSynthesizer())
                 {
+                    if (synth == null)
+                    {
+                        MessageBox.Show("Could not open speech synthisizer.");
+                        return "";
+                    }
                     synth.SetOutputToWaveStream(audioStream);
                     PromptBuilder pb = new PromptBuilder();
                     if (Pron == null)
@@ -303,6 +320,11 @@ namespace BrainSimulator.Modules
                     Grammar g = new Grammar(gb); //TODO the hard letters to recognize are 'g' and 'e'
                     //Grammar g = new DictationGrammar();
                     SpeechRecognitionEngine reco = new SpeechRecognitionEngine();
+                    if (reco == null)
+                    {
+                        MessageBox.Show("Could not open speech recognition engine.");
+                        return "";
+                    }
                     reco.SpeechHypothesized += new EventHandler<SpeechHypothesizedEventArgs>(reco_SpeechHypothesized);
                     reco.SpeechRecognitionRejected += new EventHandler<SpeechRecognitionRejectedEventArgs>(reco_SpeechRecognitionRejected);
                     reco.UnloadAllGrammars(); //only use the one word grammar

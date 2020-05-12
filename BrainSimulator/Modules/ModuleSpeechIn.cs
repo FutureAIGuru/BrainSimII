@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Linq;
 using System.Speech.Recognition;
 using System.Speech.Recognition.SrgsGrammar;
+using System.Windows;
 
 namespace BrainSimulator.Modules
 {
@@ -24,7 +25,7 @@ namespace BrainSimulator.Modules
         public override void Fire()
         {
             Init();
-            if (recognizer == null) StartRecognizer();
+            if (recognizer == null) return;
 
             //if a word is in the input queue...process one word
             if (words.Count > 0)
@@ -55,27 +56,17 @@ namespace BrainSimulator.Modules
 
                 words.RemoveAt(0);
             }
-
-        }
-        public override void Initialize()
-        {
-            na.BeginEnum();
-            for (Neuron n = na.GetNextNeuron(); n != null; n = na.GetNextNeuron())
-                n.Label = "";
-
-            if (recognizer != null)
-            {
-                recognizer.RecognizeAsyncStop();
-                recognizer.Dispose();
-            }
-            StartRecognizer();
         }
 
         private void StartRecognizer()
         {
             // Create an in-process speech recognizer for the en-US locale.  
             recognizer = new SpeechRecognitionEngine(new System.Globalization.CultureInfo("en-US"));
-
+            if (recognizer == null)
+            {
+                MessageBox.Show("Could not open speech recognition engine.");
+                return;
+            }
             CreateGrammar();
 
             // Add a handler for the speech recognized event.  
@@ -140,20 +131,17 @@ namespace BrainSimulator.Modules
             a.Append(attentionWord, 1, 1);
             a.Append(commands);
             a.Append(digit);
-
-
+            
 
             //some words we might need some day
             //Choices article = new Choices("a", "an", "the", "some", "containing", "with", "which are");
             //Choices emotion = new Choices("ecstatic", "happy", "so-so", "OK", "sad", "unhappy");
             //Choices timeOfDay = new Choices("morning", "afternoon", "evening", "night");
 
-
-            //someday we'll need numbers
+                        //someday we'll need numbers
             //Choices number = new Choices();
             //for (int i = 1; i < 200; i++)
             //    number.Add(i.ToString());
-
 
             //how to add singular/plural to choices
             //PluralizationService ps = PluralizationService.CreateService(new CultureInfo("en-us"));
@@ -161,8 +149,6 @@ namespace BrainSimulator.Modules
             //string[] attribList1 = new string[attribList.Length];
             //for (int i = 0; i < attribList.Length; i++)
             //    attribList1[i] = ps.Singularize(attribList[i]);
-
-
 
 
             //how to specify a custom pronunciation with SRGS--these don't integrate with the rest of the grammar
@@ -258,6 +244,28 @@ namespace BrainSimulator.Modules
                 if (recognizer.AudioState == AudioState.Stopped)
                     recognizer.RecognizeAsync(RecognizeMode.Multiple);
         }
+
+        public override void SetUpAfterLoad()
+        {
+            base.SetUpAfterLoad();
+            Init();
+            Initialize();
+        }
+
+        public override void Initialize()
+        {
+            na.BeginEnum();
+            ClearNeurons();
+
+            if (recognizer != null)
+            {
+                recognizer.RecognizeAsyncStop();
+                recognizer.Dispose();
+            }
+
+            StartRecognizer();
+        }
+
 
     }
 }

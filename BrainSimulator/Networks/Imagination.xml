@@ -135,10 +135,10 @@
       <Model>Color</Model>
       <Label>Left</Label>
       <Id>112</Id>
-      <CurrentCharge>0.0255</CurrentCharge>
-      <CurrentChargeInt>255</CurrentChargeInt>
-      <LastCharge>0.0255</LastCharge>
-      <LastChargeInt>255</LastChargeInt>
+      <CurrentCharge>6.528</CurrentCharge>
+      <CurrentChargeInt>65280</CurrentChargeInt>
+      <LastCharge>6.528</LastCharge>
+      <LastChargeInt>65280</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -269,27 +269,22 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Done</Label>
+      <Label>Stop</Label>
       <Id>122</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>1</LastCharge>
-      <LastChargeInt>10000</LastChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
       <Synapses />
-      <SynapsesFrom>
-        <Synapse>
-          <Weight>1</Weight>
-          <TargetNeuron>2410</TargetNeuron>
-        </Synapse>
-      </SynapsesFrom>
+      <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
-      <LastFired>254723</LastFired>
+      <LastFired>254758</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Stop</Label>
+      <Label>Utterance</Label>
       <Id>123</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -304,7 +299,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Utterance</Label>
+      <Label>SpeakPhn</Label>
       <Id>124</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -408,7 +403,21 @@
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>&lt;</Label>
+      <Id>204</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
@@ -422,10 +431,10 @@
       <Model>Color</Model>
       <Label />
       <Id>212</Id>
-      <CurrentCharge>0.0255</CurrentCharge>
-      <CurrentChargeInt>255</CurrentChargeInt>
-      <LastCharge>0.0255</LastCharge>
-      <LastChargeInt>255</LastChargeInt>
+      <CurrentCharge>6.528</CurrentCharge>
+      <CurrentChargeInt>65280</CurrentChargeInt>
+      <LastCharge>6.528</LastCharge>
+      <LastChargeInt>65280</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -451,7 +460,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>SpeakPhn</Label>
+      <Label>Vowel</Label>
       <Id>215</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -466,7 +475,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Vowel</Label>
+      <Label>Consonant</Label>
       <Id>216</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -481,7 +490,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Consonant</Label>
+      <Label>End</Label>
       <Id>217</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -496,7 +505,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>End</Label>
+      <Label>Go</Label>
       <Id>218</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -511,7 +520,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Go</Label>
+      <Label>RTurn</Label>
       <Id>219</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -526,7 +535,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Stop</Label>
+      <Label>LTurn</Label>
       <Id>220</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -541,7 +550,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>RTurn</Label>
+      <Label>UTurn</Label>
       <Id>221</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -556,7 +565,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>LTurn</Label>
+      <Label>Say</Label>
       <Id>222</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -571,7 +580,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>UTurn</Label>
+      <Label>Push</Label>
       <Id>223</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -586,7 +595,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Say</Label>
+      <Label>SayRnd</Label>
       <Id>224</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -716,7 +725,7 @@
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
-      <LastFired>154769</LastFired>
+      <LastFired>254796</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0</LeakRate>
@@ -774,10 +783,10 @@
       <Model>Color</Model>
       <Label />
       <Id>312</Id>
-      <CurrentCharge>0.0255</CurrentCharge>
-      <CurrentChargeInt>255</CurrentChargeInt>
-      <LastCharge>0.0255</LastCharge>
-      <LastChargeInt>255</LastChargeInt>
+      <CurrentCharge>6.528</CurrentCharge>
+      <CurrentChargeInt>65280</CurrentChargeInt>
+      <LastCharge>6.528</LastCharge>
+      <LastChargeInt>65280</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -803,7 +812,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>SayRnd</Label>
+      <Label>Attn</Label>
       <Id>315</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -818,7 +827,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Attn</Label>
+      <Label>Sense</Label>
       <Id>316</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -833,7 +842,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Sense</Label>
+      <Label>Visual</Label>
       <Id>317</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -848,7 +857,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Visual</Label>
+      <Label>Color</Label>
       <Id>318</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -863,7 +872,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Color</Label>
+      <Label>Shape</Label>
       <Id>319</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -878,7 +887,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Shape</Label>
+      <Label>Landmark</Label>
       <Id>320</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -893,7 +902,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Point</Label>
+      <Label>Motion</Label>
       <Id>321</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -908,7 +917,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Dot</Label>
+      <Label>SSegment</Label>
       <Id>322</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -923,7 +932,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Segment</Label>
+      <Label>Point</Label>
       <Id>323</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -938,7 +947,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Audible</Label>
+      <Label>Segment</Label>
       <Id>324</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -1042,7 +1051,21 @@
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>&gt;</Label>
+      <Id>404</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
@@ -1056,10 +1079,10 @@
       <Model>Color</Model>
       <Label />
       <Id>412</Id>
-      <CurrentCharge>0.0255</CurrentCharge>
-      <CurrentChargeInt>255</CurrentChargeInt>
-      <LastCharge>0.0255</LastCharge>
-      <LastChargeInt>255</LastChargeInt>
+      <CurrentCharge>6.528</CurrentCharge>
+      <CurrentChargeInt>65280</CurrentChargeInt>
+      <LastCharge>6.528</LastCharge>
+      <LastChargeInt>65280</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -1085,7 +1108,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Word</Label>
+      <Label>Audible</Label>
       <Id>415</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -1100,7 +1123,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Phoneme</Label>
+      <Label>Word</Label>
       <Id>416</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -1115,7 +1138,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Phrase</Label>
+      <Label>Phoneme</Label>
       <Id>417</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -1130,7 +1153,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>PhraseISpoke</Label>
+      <Label>Phrase</Label>
       <Id>418</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -1190,7 +1213,7 @@
       <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Situation</Label>
+      <Label>Relation</Label>
       <Id>422</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -1205,7 +1228,7 @@
       <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Landmark</Label>
+      <Label>Bigger</Label>
       <Id>423</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -1220,7 +1243,7 @@
       <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>SPoint</Label>
+      <Label>Closer</Label>
       <Id>424</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -1338,10 +1361,10 @@
       <Model>Color</Model>
       <Label />
       <Id>512</Id>
-      <CurrentCharge>0.0255</CurrentCharge>
-      <CurrentChargeInt>255</CurrentChargeInt>
-      <LastCharge>0.0255</LastCharge>
-      <LastChargeInt>255</LastChargeInt>
+      <CurrentCharge>6.528</CurrentCharge>
+      <CurrentChargeInt>65280</CurrentChargeInt>
+      <LastCharge>6.528</LastCharge>
+      <LastChargeInt>65280</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -1367,7 +1390,7 @@
       <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>SSegment</Label>
+      <Label>Event</Label>
       <Id>515</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -1382,7 +1405,7 @@
       <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Verbal</Label>
+      <Label>Outcome</Label>
       <Id>516</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -1397,7 +1420,7 @@
       <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Outcome</Label>
+      <Label>Positive</Label>
       <Id>517</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -1412,7 +1435,7 @@
       <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Positive</Label>
+      <Label>Negative</Label>
       <Id>518</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -1427,7 +1450,7 @@
       <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Negative</Label>
+      <Label>ModelThing</Label>
       <Id>519</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -1438,11 +1461,81 @@
       <KeepHistory>false</KeepHistory>
       <LastFired>0</LastFired>
     </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p0</Label>
+      <Id>520</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p1</Label>
+      <Id>521</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>c0</Label>
+      <Id>522</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>255070</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>s0</Label>
+      <Id>523</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>255336</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p2</Label>
+      <Id>524</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
@@ -1561,16 +1654,156 @@
       <LastFired>0</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p3</Label>
+      <Id>615</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>c1</Label>
+      <Id>616</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>255070</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>s1</Label>
+      <Id>617</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>255336</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p4</Label>
+      <Id>618</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p5</Label>
+      <Id>619</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>c2</Label>
+      <Id>620</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>254797</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>s2</Label>
+      <Id>621</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>255336</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p6</Label>
+      <Id>622</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p7</Label>
+      <Id>623</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>c3</Label>
+      <Id>624</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>255071</LastFired>
+    </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
@@ -1689,15 +1922,141 @@
       <LastFired>0</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>s3</Label>
+      <Id>715</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>255336</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p8</Label>
+      <Id>716</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p9</Label>
+      <Id>717</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>c4</Label>
+      <Id>718</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>s4</Label>
+      <Id>719</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>255336</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p10</Label>
+      <Id>720</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p11</Label>
+      <Id>721</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>c5</Label>
+      <Id>722</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>s5</Label>
+      <Id>723</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>255336</LastFired>
+    </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
@@ -2633,7 +2992,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Done</Label>
+      <Label>Stop</Label>
       <Id>1222</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -2648,18 +3007,13 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Stop</Label>
+      <Label>Utterance</Label>
       <Id>1223</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
       <LastCharge>0</LastCharge>
       <LastChargeInt>0</LastChargeInt>
-      <Synapses>
-        <Synapse>
-          <Weight>1</Weight>
-          <TargetNeuron>2310</TargetNeuron>
-        </Synapse>
-      </Synapses>
+      <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
       <LastFired>0</LastFired>
@@ -2668,7 +3022,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Utterance</Label>
+      <Label>SpeakPhn</Label>
       <Id>1224</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -2820,7 +3174,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>SpeakPhn</Label>
+      <Label>Vowel</Label>
       <Id>1315</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -2835,7 +3189,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Vowel</Label>
+      <Label>Consonant</Label>
       <Id>1316</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -2850,7 +3204,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Consonant</Label>
+      <Label>End</Label>
       <Id>1317</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -2865,7 +3219,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>End</Label>
+      <Label>Go</Label>
       <Id>1318</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -2880,7 +3234,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Go</Label>
+      <Label>RTurn</Label>
       <Id>1319</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -2895,7 +3249,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Stop</Label>
+      <Label>LTurn</Label>
       <Id>1320</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -2910,7 +3264,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>RTurn</Label>
+      <Label>UTurn</Label>
       <Id>1321</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -2925,7 +3279,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>LTurn</Label>
+      <Label>Say</Label>
       <Id>1322</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -2940,7 +3294,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>UTurn</Label>
+      <Label>Push</Label>
       <Id>1323</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -2955,7 +3309,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Say</Label>
+      <Label>SayRnd</Label>
       <Id>1324</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3164,7 +3518,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>SayRnd</Label>
+      <Label>Attn</Label>
       <Id>1415</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3179,7 +3533,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Attn</Label>
+      <Label>Sense</Label>
       <Id>1416</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3194,7 +3548,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Sense</Label>
+      <Label>Visual</Label>
       <Id>1417</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3209,7 +3563,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Visual</Label>
+      <Label>Color</Label>
       <Id>1418</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3224,7 +3578,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Color</Label>
+      <Label>Shape</Label>
       <Id>1419</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3239,7 +3593,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Shape</Label>
+      <Label>Landmark</Label>
       <Id>1420</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3254,7 +3608,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Point</Label>
+      <Label>Motion</Label>
       <Id>1421</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3269,7 +3623,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Dot</Label>
+      <Label>SSegment</Label>
       <Id>1422</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3284,7 +3638,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Segment</Label>
+      <Label>Point</Label>
       <Id>1423</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3299,7 +3653,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Audible</Label>
+      <Label>Segment</Label>
       <Id>1424</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3432,7 +3786,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Word</Label>
+      <Label>Audible</Label>
       <Id>1515</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3447,7 +3801,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Phoneme</Label>
+      <Label>Word</Label>
       <Id>1516</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3462,7 +3816,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Phrase</Label>
+      <Label>Phoneme</Label>
       <Id>1517</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3477,7 +3831,7 @@
       <LeakRate>0</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>PhraseISpoke</Label>
+      <Label>Phrase</Label>
       <Id>1518</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3537,7 +3891,7 @@
       <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Situation</Label>
+      <Label>Relation</Label>
       <Id>1522</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3552,7 +3906,7 @@
       <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Landmark</Label>
+      <Label>Bigger</Label>
       <Id>1523</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3567,7 +3921,7 @@
       <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>SPoint</Label>
+      <Label>Closer</Label>
       <Id>1524</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3700,7 +4054,7 @@
       <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>SSegment</Label>
+      <Label>Event</Label>
       <Id>1615</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3715,7 +4069,7 @@
       <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Verbal</Label>
+      <Label>Outcome</Label>
       <Id>1616</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3730,7 +4084,7 @@
       <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Outcome</Label>
+      <Label>Positive</Label>
       <Id>1617</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3745,7 +4099,7 @@
       <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Positive</Label>
+      <Label>Negative</Label>
       <Id>1618</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3760,7 +4114,7 @@
       <LeakRate>0.1</LeakRate>
       <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
-      <Label>Negative</Label>
+      <Label>ModelThing</Label>
       <Id>1619</Id>
       <CurrentCharge>0</CurrentCharge>
       <CurrentChargeInt>0</CurrentChargeInt>
@@ -3771,11 +4125,81 @@
       <KeepHistory>false</KeepHistory>
       <LastFired>0</LastFired>
     </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p0</Label>
+      <Id>1620</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p1</Label>
+      <Id>1621</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>c0</Label>
+      <Id>1622</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>s0</Label>
+      <Id>1623</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p2</Label>
+      <Id>1624</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
@@ -3894,16 +4318,156 @@
       <LastFired>0</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p3</Label>
+      <Id>1715</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>c1</Label>
+      <Id>1716</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>s1</Label>
+      <Id>1717</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p4</Label>
+      <Id>1718</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p5</Label>
+      <Id>1719</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>c2</Label>
+      <Id>1720</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>s2</Label>
+      <Id>1721</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p6</Label>
+      <Id>1722</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p7</Label>
+      <Id>1723</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>c3</Label>
+      <Id>1724</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
@@ -4022,15 +4586,141 @@
       <LastFired>0</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>s3</Label>
+      <Id>1815</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p8</Label>
+      <Id>1816</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p9</Label>
+      <Id>1817</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>c4</Label>
+      <Id>1818</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>s4</Label>
+      <Id>1819</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p10</Label>
+      <Id>1820</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>p11</Label>
+      <Id>1821</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>c5</Label>
+      <Id>1822</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
+    <Neuron>
+      <LeakRate>0.1</LeakRate>
+      <LastSynapse>-1</LastSynapse>
+      <Model>Std</Model>
+      <Label>s5</Label>
+      <Id>1823</Id>
+      <CurrentCharge>0</CurrentCharge>
+      <CurrentChargeInt>0</CurrentChargeInt>
+      <LastCharge>0</LastCharge>
+      <LastChargeInt>0</LastChargeInt>
+      <Synapses />
+      <SynapsesFrom />
+      <KeepHistory>false</KeepHistory>
+      <LastFired>0</LastFired>
+    </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
@@ -4125,7 +4815,7 @@
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
-      <LastFired>248940</LastFired>
+      <LastFired>254985</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
@@ -4724,12 +5414,7 @@
       <LastCharge>0</LastCharge>
       <LastChargeInt>0</LastChargeInt>
       <Synapses />
-      <SynapsesFrom>
-        <Synapse>
-          <Weight>1</Weight>
-          <TargetNeuron>1223</TargetNeuron>
-        </Synapse>
-      </SynapsesFrom>
+      <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
       <LastFired>247624</LastFired>
     </Neuron>
@@ -4870,15 +5555,10 @@
       <CurrentChargeInt>0</CurrentChargeInt>
       <LastCharge>1</LastCharge>
       <LastChargeInt>10000</LastChargeInt>
-      <Synapses>
-        <Synapse>
-          <Weight>1</Weight>
-          <TargetNeuron>122</TargetNeuron>
-        </Synapse>
-      </Synapses>
+      <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
-      <LastFired>254723</LastFired>
+      <LastFired>255589</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron>
@@ -5020,7 +5700,7 @@
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
-      <LastFired>249042</LastFired>
+      <LastFired>255170</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron>
@@ -5155,8 +5835,8 @@
       <Model>FloatValue</Model>
       <Label>Theta</Label>
       <Id>2610</Id>
-      <CurrentCharge>-0.6977</CurrentCharge>
-      <CurrentChargeInt>-6977</CurrentChargeInt>
+      <CurrentCharge>1.5814</CurrentCharge>
+      <CurrentChargeInt>15814</CurrentChargeInt>
       <LastCharge>0</LastCharge>
       <LastChargeInt>0</LastChargeInt>
       <Synapses />
@@ -5304,7 +5984,7 @@
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
-      <LastFired>249042</LastFired>
+      <LastFired>255170</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron>
@@ -5439,8 +6119,8 @@
       <Model>FloatValue</Model>
       <Label>R</Label>
       <Id>2810</Id>
-      <CurrentCharge>1.8113</CurrentCharge>
-      <CurrentChargeInt>18113</CurrentChargeInt>
+      <CurrentCharge>2.7172</CurrentCharge>
+      <CurrentChargeInt>27172</CurrentChargeInt>
       <LastCharge>0</LastCharge>
       <LastChargeInt>0</LastChargeInt>
       <Synapses />
@@ -5896,10 +6576,10 @@
       <Model>Color</Model>
       <Label />
       <Id>3113</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -6038,10 +6718,10 @@
       <Model>Color</Model>
       <Label />
       <Id>3213</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -6180,10 +6860,10 @@
       <Model>Color</Model>
       <Label />
       <Id>3313</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -6308,10 +6988,10 @@
       <Model>Color</Model>
       <Label />
       <Id>3413</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -6436,10 +7116,10 @@
       <Model>Color</Model>
       <Label />
       <Id>3513</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -6564,10 +7244,10 @@
       <Model>Color</Model>
       <Label />
       <Id>3613</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -6692,10 +7372,10 @@
       <Model>Color</Model>
       <Label />
       <Id>3713</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -6820,10 +7500,10 @@
       <Model>Color</Model>
       <Label />
       <Id>3813</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -6948,10 +7628,10 @@
       <Model>Color</Model>
       <Label />
       <Id>3913</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -7061,10 +7741,10 @@
       <Model>Color</Model>
       <Label />
       <Id>4012</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -7076,10 +7756,10 @@
       <Model>Color</Model>
       <Label />
       <Id>4013</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -7189,10 +7869,10 @@
       <Model>Color</Model>
       <Label />
       <Id>4112</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -7204,10 +7884,10 @@
       <Model>Color</Model>
       <Label />
       <Id>4113</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -7317,10 +7997,10 @@
       <Model>Color</Model>
       <Label />
       <Id>4212</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -7332,10 +8012,10 @@
       <Model>Color</Model>
       <Label />
       <Id>4213</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -7445,10 +8125,10 @@
       <Model>Color</Model>
       <Label />
       <Id>4312</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -7460,10 +8140,10 @@
       <Model>Color</Model>
       <Label />
       <Id>4313</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -7573,10 +8253,10 @@
       <Model>Color</Model>
       <Label />
       <Id>4412</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -7588,10 +8268,10 @@
       <Model>Color</Model>
       <Label />
       <Id>4413</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -7701,10 +8381,10 @@
       <Model>Color</Model>
       <Label />
       <Id>4512</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -7716,10 +8396,10 @@
       <Model>Color</Model>
       <Label />
       <Id>4513</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -7829,10 +8509,10 @@
       <Model>Color</Model>
       <Label>  ||</Label>
       <Id>4612</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -7844,10 +8524,10 @@
       <Model>Color</Model>
       <Label />
       <Id>4613</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -7957,10 +8637,10 @@
       <Model>Color</Model>
       <Label />
       <Id>4712</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -7972,10 +8652,10 @@
       <Model>Color</Model>
       <Label />
       <Id>4713</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -8085,10 +8765,10 @@
       <Model>Color</Model>
       <Label />
       <Id>4812</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -8100,10 +8780,10 @@
       <Model>Color</Model>
       <Label />
       <Id>4813</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -8213,10 +8893,10 @@
       <Model>Color</Model>
       <Label />
       <Id>4912</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -8228,10 +8908,10 @@
       <Model>Color</Model>
       <Label />
       <Id>4913</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -8341,10 +9021,10 @@
       <Model>Color</Model>
       <Label />
       <Id>5012</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -8356,10 +9036,10 @@
       <Model>Color</Model>
       <Label />
       <Id>5013</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -8469,10 +9149,10 @@
       <Model>Color</Model>
       <Label />
       <Id>5112</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -8484,10 +9164,10 @@
       <Model>Color</Model>
       <Label />
       <Id>5113</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -8597,10 +9277,10 @@
       <Model>Color</Model>
       <Label />
       <Id>5212</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -8612,10 +9292,10 @@
       <Model>Color</Model>
       <Label />
       <Id>5213</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -8725,10 +9405,10 @@
       <Model>Color</Model>
       <Label />
       <Id>5312</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -8740,10 +9420,10 @@
       <Model>Color</Model>
       <Label />
       <Id>5313</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -8853,10 +9533,10 @@
       <Model>Color</Model>
       <Label />
       <Id>5412</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -8868,10 +9548,10 @@
       <Model>Color</Model>
       <Label />
       <Id>5413</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -8981,10 +9661,10 @@
       <Model>Color</Model>
       <Label />
       <Id>5512</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -8996,10 +9676,10 @@
       <Model>Color</Model>
       <Label />
       <Id>5513</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -9109,10 +9789,10 @@
       <Model>Color</Model>
       <Label />
       <Id>5612</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -9124,10 +9804,10 @@
       <Model>Color</Model>
       <Label />
       <Id>5613</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -9237,10 +9917,10 @@
       <Model>Color</Model>
       <Label />
       <Id>5712</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -9252,10 +9932,10 @@
       <Model>Color</Model>
       <Label />
       <Id>5713</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -9365,10 +10045,10 @@
       <Model>Color</Model>
       <Label />
       <Id>5812</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -9380,10 +10060,10 @@
       <Model>Color</Model>
       <Label />
       <Id>5813</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -9493,10 +10173,10 @@
       <Model>Color</Model>
       <Label />
       <Id>5912</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -9508,10 +10188,10 @@
       <Model>Color</Model>
       <Label />
       <Id>5913</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -9621,10 +10301,10 @@
       <Model>Color</Model>
       <Label />
       <Id>6012</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -9636,10 +10316,10 @@
       <Model>Color</Model>
       <Label />
       <Id>6013</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -9749,10 +10429,10 @@
       <Model>Color</Model>
       <Label />
       <Id>6112</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -9764,10 +10444,10 @@
       <Model>Color</Model>
       <Label />
       <Id>6113</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -9877,10 +10557,10 @@
       <Model>Color</Model>
       <Label />
       <Id>6212</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -9892,10 +10572,10 @@
       <Model>Color</Model>
       <Label />
       <Id>6213</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -10005,10 +10685,10 @@
       <Model>Color</Model>
       <Label />
       <Id>6312</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -10020,10 +10700,10 @@
       <Model>Color</Model>
       <Label />
       <Id>6313</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -10133,10 +10813,10 @@
       <Model>Color</Model>
       <Label />
       <Id>6412</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -10148,10 +10828,10 @@
       <Model>Color</Model>
       <Label />
       <Id>6413</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -10261,10 +10941,10 @@
       <Model>Color</Model>
       <Label />
       <Id>6512</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -10276,10 +10956,10 @@
       <Model>Color</Model>
       <Label />
       <Id>6513</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -10389,10 +11069,10 @@
       <Model>Color</Model>
       <Label />
       <Id>6612</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -10404,10 +11084,10 @@
       <Model>Color</Model>
       <Label />
       <Id>6613</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -10517,10 +11197,10 @@
       <Model>Color</Model>
       <Label />
       <Id>6712</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -10532,10 +11212,10 @@
       <Model>Color</Model>
       <Label />
       <Id>6713</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -10645,10 +11325,10 @@
       <Model>Color</Model>
       <Label />
       <Id>6812</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -10660,10 +11340,10 @@
       <Model>Color</Model>
       <Label />
       <Id>6813</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -10773,10 +11453,10 @@
       <Model>Color</Model>
       <Label />
       <Id>6912</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -10788,10 +11468,10 @@
       <Model>Color</Model>
       <Label />
       <Id>6913</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -10901,10 +11581,10 @@
       <Model>Color</Model>
       <Label />
       <Id>7012</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -10916,10 +11596,10 @@
       <Model>Color</Model>
       <Label />
       <Id>7013</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -11029,10 +11709,10 @@
       <Model>Color</Model>
       <Label />
       <Id>7112</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -11044,10 +11724,10 @@
       <Model>Color</Model>
       <Label />
       <Id>7113</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -11157,10 +11837,10 @@
       <Model>Color</Model>
       <Label />
       <Id>7212</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -11172,10 +11852,10 @@
       <Model>Color</Model>
       <Label />
       <Id>7213</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -11285,10 +11965,10 @@
       <Model>Color</Model>
       <Label />
       <Id>7312</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -11300,10 +11980,10 @@
       <Model>Color</Model>
       <Label />
       <Id>7313</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -11413,10 +12093,10 @@
       <Model>Color</Model>
       <Label />
       <Id>7412</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -11428,10 +12108,10 @@
       <Model>Color</Model>
       <Label />
       <Id>7413</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -11541,10 +12221,10 @@
       <Model>Color</Model>
       <Label />
       <Id>7512</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -11556,10 +12236,10 @@
       <Model>Color</Model>
       <Label />
       <Id>7513</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -11669,10 +12349,10 @@
       <Model>Color</Model>
       <Label />
       <Id>7612</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -11684,10 +12364,10 @@
       <Model>Color</Model>
       <Label />
       <Id>7613</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -11797,10 +12477,10 @@
       <Model>Color</Model>
       <Label />
       <Id>7712</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -11812,10 +12492,10 @@
       <Model>Color</Model>
       <Label />
       <Id>7713</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -11925,10 +12605,10 @@
       <Model>Color</Model>
       <Label />
       <Id>7812</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -11940,10 +12620,10 @@
       <Model>Color</Model>
       <Label />
       <Id>7813</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -12053,10 +12733,10 @@
       <Model>Color</Model>
       <Label />
       <Id>7912</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -12068,10 +12748,10 @@
       <Model>Color</Model>
       <Label />
       <Id>7913</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -12181,10 +12861,10 @@
       <Model>Color</Model>
       <Label />
       <Id>8012</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -12196,10 +12876,10 @@
       <Model>Color</Model>
       <Label />
       <Id>8013</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -12309,10 +12989,10 @@
       <Model>Color</Model>
       <Label />
       <Id>8112</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -12324,10 +13004,10 @@
       <Model>Color</Model>
       <Label />
       <Id>8113</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -12437,10 +13117,10 @@
       <Model>Color</Model>
       <Label />
       <Id>8212</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -12452,10 +13132,10 @@
       <Model>Color</Model>
       <Label />
       <Id>8213</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -12565,10 +13245,10 @@
       <Model>Color</Model>
       <Label />
       <Id>8312</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -12580,10 +13260,10 @@
       <Model>Color</Model>
       <Label />
       <Id>8313</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -12693,10 +13373,10 @@
       <Model>Color</Model>
       <Label />
       <Id>8412</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -12708,10 +13388,10 @@
       <Model>Color</Model>
       <Label />
       <Id>8413</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -12821,10 +13501,10 @@
       <Model>Color</Model>
       <Label />
       <Id>8512</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -12836,10 +13516,10 @@
       <Model>Color</Model>
       <Label />
       <Id>8513</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -12949,10 +13629,10 @@
       <Model>Color</Model>
       <Label />
       <Id>8612</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -12964,10 +13644,10 @@
       <Model>Color</Model>
       <Label />
       <Id>8613</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -13077,10 +13757,10 @@
       <Model>Color</Model>
       <Label />
       <Id>8712</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -13092,10 +13772,10 @@
       <Model>Color</Model>
       <Label />
       <Id>8713</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -13205,10 +13885,10 @@
       <Model>Color</Model>
       <Label />
       <Id>8812</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -13220,10 +13900,10 @@
       <Model>Color</Model>
       <Label />
       <Id>8813</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -13333,10 +14013,10 @@
       <Model>Color</Model>
       <Label />
       <Id>8912</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -13348,10 +14028,10 @@
       <Model>Color</Model>
       <Label />
       <Id>8913</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -13461,10 +14141,10 @@
       <Model>Color</Model>
       <Label />
       <Id>9012</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -13476,10 +14156,10 @@
       <Model>Color</Model>
       <Label />
       <Id>9013</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -13589,10 +14269,10 @@
       <Model>Color</Model>
       <Label />
       <Id>9112</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -13604,10 +14284,10 @@
       <Model>Color</Model>
       <Label />
       <Id>9113</Id>
-      <CurrentCharge>1675.392</CurrentCharge>
-      <CurrentChargeInt>16753920</CurrentChargeInt>
-      <LastCharge>1675.392</LastCharge>
-      <LastChargeInt>16753920</LastChargeInt>
+      <CurrentCharge>0.0255</CurrentCharge>
+      <CurrentChargeInt>255</CurrentChargeInt>
+      <LastCharge>0.0255</LastCharge>
+      <LastChargeInt>255</LastChargeInt>
       <Synapses />
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
@@ -14601,7 +15281,7 @@
             <label>Thing</label>
             <parents />
             <references />
-            <useCount>7</useCount>
+            <useCount>6</useCount>
           </SThing>
           <SThing>
             <label>Action</label>
@@ -14609,18 +15289,10 @@
               <int>4</int>
             </parents>
             <references />
-            <useCount>547</useCount>
+            <useCount>331</useCount>
           </SThing>
           <SThing>
             <label>NoAction</label>
-            <parents>
-              <int>5</int>
-            </parents>
-            <references />
-            <useCount>0</useCount>
-          </SThing>
-          <SThing>
-            <label>Done</label>
             <parents>
               <int>5</int>
             </parents>
@@ -14649,12 +15321,12 @@
               <int>5</int>
             </parents>
             <references />
-            <useCount>535</useCount>
+            <useCount>320</useCount>
           </SThing>
           <SThing>
             <label>Vowel</label>
             <parents>
-              <int>10</int>
+              <int>9</int>
             </parents>
             <references />
             <useCount>0</useCount>
@@ -14662,7 +15334,7 @@
           <SThing>
             <label>Consonant</label>
             <parents>
-              <int>10</int>
+              <int>9</int>
             </parents>
             <references />
             <useCount>0</useCount>
@@ -14677,14 +15349,6 @@
           </SThing>
           <SThing>
             <label>Go</label>
-            <parents>
-              <int>5</int>
-            </parents>
-            <references />
-            <useCount>0</useCount>
-          </SThing>
-          <SThing>
-            <label>Stop</label>
             <parents>
               <int>5</int>
             </parents>
@@ -14721,7 +15385,15 @@
               <int>5</int>
             </parents>
             <references />
-            <useCount>533</useCount>
+            <useCount>318</useCount>
+          </SThing>
+          <SThing>
+            <label>Push</label>
+            <parents>
+              <int>5</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>SayRnd</label>
@@ -14729,7 +15401,7 @@
               <int>5</int>
             </parents>
             <references />
-            <useCount>533</useCount>
+            <useCount>318</useCount>
           </SThing>
           <SThing>
             <label>Attn</label>
@@ -14750,63 +15422,79 @@
           <SThing>
             <label>Visual</label>
             <parents>
-              <int>22</int>
-            </parents>
-            <references />
-            <useCount>2</useCount>
-          </SThing>
-          <SThing>
-            <label>Color</label>
-            <parents>
-              <int>23</int>
-            </parents>
-            <references />
-            <useCount>6</useCount>
-          </SThing>
-          <SThing>
-            <label>Shape</label>
-            <parents>
-              <int>23</int>
-            </parents>
-            <references />
-            <useCount>3</useCount>
-          </SThing>
-          <SThing>
-            <label>Point</label>
-            <parents>
-              <int>25</int>
-            </parents>
-            <references />
-            <useCount>534</useCount>
-          </SThing>
-          <SThing>
-            <label>Dot</label>
-            <parents>
-              <int>25</int>
-            </parents>
-            <references />
-            <useCount>0</useCount>
-          </SThing>
-          <SThing>
-            <label>Segment</label>
-            <parents>
-              <int>25</int>
-            </parents>
-            <references />
-            <useCount>534</useCount>
-          </SThing>
-          <SThing>
-            <label>Audible</label>
-            <parents>
-              <int>22</int>
+              <int>21</int>
             </parents>
             <references />
             <useCount>4</useCount>
           </SThing>
           <SThing>
+            <label>Color</label>
+            <parents>
+              <int>22</int>
+            </parents>
+            <references />
+            <useCount>8</useCount>
+          </SThing>
+          <SThing>
+            <label>Shape</label>
+            <parents>
+              <int>22</int>
+            </parents>
+            <references />
+            <useCount>3</useCount>
+          </SThing>
+          <SThing>
+            <label>Landmark</label>
+            <parents>
+              <int>22</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
+          </SThing>
+          <SThing>
+            <label>Motion</label>
+            <parents>
+              <int>22</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
+          </SThing>
+          <SThing>
+            <label>SSegment</label>
+            <parents>
+              <int>24</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
+          </SThing>
+          <SThing>
+            <label>Point</label>
+            <parents>
+              <int>24</int>
+            </parents>
+            <references />
+            <useCount>12</useCount>
+          </SThing>
+          <SThing>
+            <label>Segment</label>
+            <parents>
+              <int>24</int>
+            </parents>
+            <references />
+            <useCount>78</useCount>
+          </SThing>
+          <SThing>
+            <label>Audible</label>
+            <parents>
+              <int>21</int>
+            </parents>
+            <references />
+            <useCount>3</useCount>
+          </SThing>
+          <SThing>
             <label>Word</label>
             <parents>
-              <int>29</int>
+              <int>30</int>
             </parents>
             <references />
             <useCount>1</useCount>
@@ -14814,31 +15502,23 @@
           <SThing>
             <label>Phoneme</label>
             <parents>
-              <int>29</int>
+              <int>30</int>
             </parents>
             <references />
-            <useCount>1066</useCount>
+            <useCount>636</useCount>
           </SThing>
           <SThing>
             <label>Phrase</label>
             <parents>
-              <int>29</int>
+              <int>30</int>
             </parents>
             <references />
-            <useCount>1067</useCount>
-          </SThing>
-          <SThing>
-            <label>PhraseISpoke</label>
-            <parents>
-              <int>29</int>
-            </parents>
-            <references />
-            <useCount>0</useCount>
+            <useCount>637</useCount>
           </SThing>
           <SThing>
             <label>ShortTerm</label>
             <parents>
-              <int>32</int>
+              <int>33</int>
             </parents>
             <references />
             <useCount>1</useCount>
@@ -14849,18 +15529,18 @@
               <int>34</int>
             </parents>
             <references />
-            <useCount>533</useCount>
+            <useCount>318</useCount>
           </SThing>
           <SThing>
             <label>NoWord</label>
             <parents>
-              <int>30</int>
+              <int>31</int>
             </parents>
             <references />
             <useCount>0</useCount>
           </SThing>
           <SThing>
-            <label>Situation</label>
+            <label>Relation</label>
             <parents>
               <int>4</int>
             </parents>
@@ -14868,33 +15548,25 @@
             <useCount>2</useCount>
           </SThing>
           <SThing>
-            <label>Landmark</label>
+            <label>Bigger</label>
             <parents>
               <int>37</int>
-            </parents>
-            <references />
-            <useCount>2</useCount>
-          </SThing>
-          <SThing>
-            <label>SPoint</label>
-            <parents>
-              <int>38</int>
             </parents>
             <references />
             <useCount>0</useCount>
           </SThing>
           <SThing>
-            <label>SSegment</label>
+            <label>Closer</label>
             <parents>
-              <int>38</int>
+              <int>37</int>
             </parents>
             <references />
             <useCount>0</useCount>
           </SThing>
           <SThing>
-            <label>Verbal</label>
+            <label>Event</label>
             <parents>
-              <int>37</int>
+              <int>4</int>
             </parents>
             <references />
             <useCount>0</useCount>
@@ -14910,7 +15582,7 @@
           <SThing>
             <label>Positive</label>
             <parents>
-              <int>42</int>
+              <int>41</int>
             </parents>
             <references />
             <useCount>0</useCount>
@@ -14918,10 +15590,364 @@
           <SThing>
             <label>Negative</label>
             <parents>
-              <int>42</int>
+              <int>41</int>
             </parents>
             <references />
             <useCount>0</useCount>
+          </SThing>
+          <SThing>
+            <label>ModelThing</label>
+            <parents />
+            <references />
+            <useCount>156</useCount>
+          </SThing>
+          <SThing>
+            <label>p0</label>
+            <parents>
+              <int>28</int>
+              <int>44</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
+            <V xsi:type="PointPlus">
+              <X>-0.5</X>
+              <Y>3.5</Y>
+              <Conf>0</Conf>
+            </V>
+          </SThing>
+          <SThing>
+            <label>p1</label>
+            <parents>
+              <int>28</int>
+              <int>44</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
+            <V xsi:type="PointPlus">
+              <X>-1.5</X>
+              <Y>3.5</Y>
+              <Conf>0</Conf>
+            </V>
+          </SThing>
+          <SThing>
+            <label>c0</label>
+            <parents>
+              <int>23</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
+            <V xsi:type="xsd:int">16711680</V>
+          </SThing>
+          <SThing>
+            <label>s0</label>
+            <parents>
+              <int>29</int>
+            </parents>
+            <references>
+              <Point>
+                <X>45</X>
+                <Y>1</Y>
+              </Point>
+              <Point>
+                <X>46</X>
+                <Y>1</Y>
+              </Point>
+              <Point>
+                <X>47</X>
+                <Y>1</Y>
+              </Point>
+            </references>
+            <useCount>1</useCount>
+          </SThing>
+          <SThing>
+            <label>p2</label>
+            <parents>
+              <int>28</int>
+              <int>44</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
+            <V xsi:type="PointPlus">
+              <X>0.5</X>
+              <Y>2.5</Y>
+              <Conf>0</Conf>
+            </V>
+          </SThing>
+          <SThing>
+            <label>p3</label>
+            <parents>
+              <int>28</int>
+              <int>44</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
+            <V xsi:type="PointPlus">
+              <X>1.5</X>
+              <Y>1.5</Y>
+              <Conf>0</Conf>
+            </V>
+          </SThing>
+          <SThing>
+            <label>c1</label>
+            <parents>
+              <int>23</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
+            <V xsi:type="xsd:int">65280</V>
+          </SThing>
+          <SThing>
+            <label>s1</label>
+            <parents>
+              <int>29</int>
+            </parents>
+            <references>
+              <Point>
+                <X>49</X>
+                <Y>1</Y>
+              </Point>
+              <Point>
+                <X>50</X>
+                <Y>1</Y>
+              </Point>
+              <Point>
+                <X>51</X>
+                <Y>1</Y>
+              </Point>
+            </references>
+            <useCount>1</useCount>
+          </SThing>
+          <SThing>
+            <label>p4</label>
+            <parents>
+              <int>28</int>
+              <int>44</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
+            <V xsi:type="PointPlus">
+              <X>2.5</X>
+              <Y>0.5</Y>
+              <Conf>0</Conf>
+            </V>
+          </SThing>
+          <SThing>
+            <label>p5</label>
+            <parents>
+              <int>28</int>
+              <int>44</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
+            <V xsi:type="PointPlus">
+              <X>1.5</X>
+              <Y>-2.5</Y>
+              <Conf>0</Conf>
+            </V>
+          </SThing>
+          <SThing>
+            <label>c2</label>
+            <parents>
+              <int>23</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
+            <V xsi:type="xsd:int">255</V>
+          </SThing>
+          <SThing>
+            <label>s2</label>
+            <parents>
+              <int>29</int>
+            </parents>
+            <references>
+              <Point>
+                <X>53</X>
+                <Y>1</Y>
+              </Point>
+              <Point>
+                <X>54</X>
+                <Y>1</Y>
+              </Point>
+              <Point>
+                <X>55</X>
+                <Y>1</Y>
+              </Point>
+            </references>
+            <useCount>1</useCount>
+          </SThing>
+          <SThing>
+            <label>p6</label>
+            <parents>
+              <int>28</int>
+              <int>44</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
+            <V xsi:type="PointPlus">
+              <X>-3.5</X>
+              <Y>0.5</Y>
+              <Conf>0</Conf>
+            </V>
+          </SThing>
+          <SThing>
+            <label>p7</label>
+            <parents>
+              <int>28</int>
+              <int>44</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
+            <V xsi:type="PointPlus">
+              <X>-2.5</X>
+              <Y>2.5</Y>
+              <Conf>0</Conf>
+            </V>
+          </SThing>
+          <SThing>
+            <label>c3</label>
+            <parents>
+              <int>23</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
+            <V xsi:type="xsd:int">16711935</V>
+          </SThing>
+          <SThing>
+            <label>s3</label>
+            <parents>
+              <int>29</int>
+            </parents>
+            <references>
+              <Point>
+                <X>57</X>
+                <Y>1</Y>
+              </Point>
+              <Point>
+                <X>58</X>
+                <Y>1</Y>
+              </Point>
+              <Point>
+                <X>59</X>
+                <Y>1</Y>
+              </Point>
+            </references>
+            <useCount>1</useCount>
+          </SThing>
+          <SThing>
+            <label>p8</label>
+            <parents>
+              <int>28</int>
+              <int>44</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
+            <V xsi:type="PointPlus">
+              <X>-4.5</X>
+              <Y>-1.5</Y>
+              <Conf>0</Conf>
+            </V>
+          </SThing>
+          <SThing>
+            <label>p9</label>
+            <parents>
+              <int>28</int>
+              <int>44</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
+            <V xsi:type="PointPlus">
+              <X>-3.5</X>
+              <Y>-2.5</Y>
+              <Conf>0</Conf>
+            </V>
+          </SThing>
+          <SThing>
+            <label>c4</label>
+            <parents>
+              <int>23</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
+            <V xsi:type="xsd:int">65535</V>
+          </SThing>
+          <SThing>
+            <label>s4</label>
+            <parents>
+              <int>29</int>
+            </parents>
+            <references>
+              <Point>
+                <X>61</X>
+                <Y>1</Y>
+              </Point>
+              <Point>
+                <X>62</X>
+                <Y>1</Y>
+              </Point>
+              <Point>
+                <X>63</X>
+                <Y>1</Y>
+              </Point>
+            </references>
+            <useCount>1</useCount>
+          </SThing>
+          <SThing>
+            <label>p10</label>
+            <parents>
+              <int>28</int>
+              <int>44</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
+            <V xsi:type="PointPlus">
+              <X>0.5</X>
+              <Y>-2.5</Y>
+              <Conf>0</Conf>
+            </V>
+          </SThing>
+          <SThing>
+            <label>p11</label>
+            <parents>
+              <int>28</int>
+              <int>44</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
+            <V xsi:type="PointPlus">
+              <X>-1.5</X>
+              <Y>-2.5</Y>
+              <Conf>0</Conf>
+            </V>
+          </SThing>
+          <SThing>
+            <label>c5</label>
+            <parents>
+              <int>23</int>
+            </parents>
+            <references />
+            <useCount>0</useCount>
+            <V xsi:type="xsd:int">16753920</V>
+          </SThing>
+          <SThing>
+            <label>s5</label>
+            <parents>
+              <int>29</int>
+            </parents>
+            <references>
+              <Point>
+                <X>65</X>
+                <Y>1</Y>
+              </Point>
+              <Point>
+                <X>66</X>
+                <Y>1</Y>
+              </Point>
+              <Point>
+                <X>67</X>
+                <Y>1</Y>
+              </Point>
+            </references>
+            <useCount>1</useCount>
           </SThing>
         </UKSTemp>
         <immediateMemory>2</immediateMemory>
@@ -14930,9 +15956,9 @@
     <ModuleView>
       <AreaNumber>0</AreaNumber>
       <Label>ModuleMove </Label>
-      <FirstNeuron>302</FirstNeuron>
+      <FirstNeuron>202</FirstNeuron>
       <Height>5</Height>
-      <Width>1</Width>
+      <Width>3</Width>
       <Color>8388564</Color>
       <CommandLine>ModuleMove </CommandLine>
       <TheModule xsi:type="ModuleMove">
@@ -14989,6 +16015,12 @@
             </theColor>
             <Aroma>0</Aroma>
             <Temperature>0</Temperature>
+            <isMobile>false</isMobile>
+            <motion>
+              <X>0</X>
+              <Y>0</Y>
+            </motion>
+            <rotation>0</rotation>
           </physObject>
           <physObject>
             <P1>
@@ -15011,6 +16043,12 @@
             </theColor>
             <Aroma>0</Aroma>
             <Temperature>0</Temperature>
+            <isMobile>false</isMobile>
+            <motion>
+              <X>0</X>
+              <Y>0</Y>
+            </motion>
+            <rotation>0</rotation>
           </physObject>
           <physObject>
             <P1>
@@ -15033,6 +16071,12 @@
             </theColor>
             <Aroma>0</Aroma>
             <Temperature>0</Temperature>
+            <isMobile>false</isMobile>
+            <motion>
+              <X>0</X>
+              <Y>0</Y>
+            </motion>
+            <rotation>0</rotation>
           </physObject>
           <physObject>
             <P1>
@@ -15055,6 +16099,12 @@
             </theColor>
             <Aroma>0</Aroma>
             <Temperature>0</Temperature>
+            <isMobile>false</isMobile>
+            <motion>
+              <X>0</X>
+              <Y>0</Y>
+            </motion>
+            <rotation>0</rotation>
           </physObject>
           <physObject>
             <P1>
@@ -15077,6 +16127,12 @@
             </theColor>
             <Aroma>-1</Aroma>
             <Temperature>10</Temperature>
+            <isMobile>true</isMobile>
+            <motion>
+              <X>0</X>
+              <Y>0</Y>
+            </motion>
+            <rotation>0</rotation>
           </physObject>
           <physObject>
             <P1>
@@ -15090,15 +16146,21 @@
             <theColor>
               <A>255</A>
               <R>0</R>
-              <G>0</G>
-              <B>255</B>
+              <G>255</G>
+              <B>0</B>
               <ScA>1</ScA>
               <ScR>0</ScR>
-              <ScG>0</ScG>
-              <ScB>1</ScB>
+              <ScG>1</ScG>
+              <ScB>0</ScB>
             </theColor>
             <Aroma>-1</Aroma>
             <Temperature>10</Temperature>
+            <isMobile>true</isMobile>
+            <motion>
+              <X>0</X>
+              <Y>0</Y>
+            </motion>
+            <rotation>0</rotation>
           </physObject>
           <physObject>
             <P1>
@@ -15111,16 +16173,22 @@
             </P2>
             <theColor>
               <A>255</A>
-              <R>255</R>
-              <G>165</G>
-              <B>0</B>
+              <R>0</R>
+              <G>0</G>
+              <B>255</B>
               <ScA>1</ScA>
-              <ScR>1</ScR>
-              <ScG>0.376262158</ScG>
-              <ScB>0</ScB>
+              <ScR>0</ScR>
+              <ScG>0</ScG>
+              <ScB>1</ScB>
             </theColor>
             <Aroma>-1</Aroma>
             <Temperature>10</Temperature>
+            <isMobile>true</isMobile>
+            <motion>
+              <X>0</X>
+              <Y>0</Y>
+            </motion>
+            <rotation>0</rotation>
           </physObject>
           <physObject>
             <P1>
@@ -15143,6 +16211,12 @@
             </theColor>
             <Aroma>-1</Aroma>
             <Temperature>10</Temperature>
+            <isMobile>true</isMobile>
+            <motion>
+              <X>0</X>
+              <Y>0</Y>
+            </motion>
+            <rotation>0</rotation>
           </physObject>
           <physObject>
             <P1>
@@ -15155,16 +16229,22 @@
             </P2>
             <theColor>
               <A>255</A>
-              <R>255</R>
-              <G>192</G>
-              <B>203</B>
+              <R>0</R>
+              <G>255</G>
+              <B>255</B>
               <ScA>1</ScA>
-              <ScR>1</ScR>
-              <ScG>0.527115166</ScG>
-              <ScB>0.5972018</ScB>
+              <ScR>0</ScR>
+              <ScG>1</ScG>
+              <ScB>1</ScB>
             </theColor>
             <Aroma>-1</Aroma>
             <Temperature>10</Temperature>
+            <isMobile>true</isMobile>
+            <motion>
+              <X>0</X>
+              <Y>0</Y>
+            </motion>
+            <rotation>0</rotation>
           </physObject>
           <physObject>
             <P1>
@@ -15177,26 +16257,32 @@
             </P2>
             <theColor>
               <A>255</A>
-              <R>0</R>
-              <G>255</G>
+              <R>255</R>
+              <G>165</G>
               <B>0</B>
               <ScA>1</ScA>
-              <ScR>0</ScR>
-              <ScG>1</ScG>
+              <ScR>1</ScR>
+              <ScG>0.376262158</ScG>
               <ScB>0</ScB>
             </theColor>
             <Aroma>-1</Aroma>
             <Temperature>10</Temperature>
+            <isMobile>true</isMobile>
+            <motion>
+              <X>0</X>
+              <Y>0</Y>
+            </motion>
+            <rotation>0</rotation>
           </physObject>
         </objects>
         <armRelative>
           <Vector>
-            <X>0.46653973549728689</X>
-            <Y>0.37820845401092529</Y>
+            <X>0.475950771522481</X>
+            <Y>0.737284065654667</Y>
           </Vector>
           <Vector>
-            <X>0.56901359233993287</X>
-            <Y>-0.27527243055196482</Y>
+            <X>0.5844901921925385</X>
+            <Y>-0.27082316134325823</Y>
           </Vector>
         </armRelative>
         <entityPosition>
@@ -15260,7 +16346,7 @@
       <TheModule xsi:type="Module2DModel">
         <initialized>true</initialized>
         <dlgPos>
-          <X>1778</X>
+          <X>1590</X>
           <Y>60</Y>
         </dlgPos>
         <dlgSize>
@@ -15269,7 +16355,6 @@
         </dlgSize>
         <dlgIsOpen>true</dlgIsOpen>
         <imagining>false</imagining>
-        <imagination />
       </TheModule>
     </ModuleView>
     <ModuleView>
@@ -15294,7 +16379,7 @@
       </TheModule>
     </ModuleView>
   </Modules>
-  <Generation>254724</Generation>
-  <EngineSpeed>250</EngineSpeed>
+  <Generation>255590</Generation>
+  <EngineSpeed>50</EngineSpeed>
   <ShowSynapses>true</ShowSynapses>
 </NeuronArray>

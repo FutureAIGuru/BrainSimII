@@ -36,7 +36,6 @@ namespace BrainSimulator.Modules
         int sCount = 0;
         int cCount = 0;
         int mCount = 0;
-        int ppCount = 0;
 
         public override string ShortDescription { get => "Maintains an internal representation of surroung things"; }
         public override string LongDescription
@@ -115,6 +114,10 @@ namespace BrainSimulator.Modules
 
         //Segments consist of two points and a color. Optionally, a segment may have some motion. 
         //AddToModel determines whether or not the endpoints are to be modified as Sallie moves so static objects can be stored
+        public Thing AddSegmentToUKS (Segment s)
+        {
+            return AddSegmentToUKS(s.P1, s.P2, s.theColor);
+        }
         public Thing AddSegmentToUKS(PointPlus P1, PointPlus P2, int theColor, PointPlus motion = null, bool addToModel = true)
         {
             ModuleUKS nmUKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
@@ -188,17 +191,20 @@ namespace BrainSimulator.Modules
             Angle closestTheta = Rad(180);
             foreach (Thing t in UKSPoints)
             {
-                Segment s = SegmentFromUKSThing(t.ReferencedBy[0].T);
-                if (s == null) continue;
-                if (s.theColor == theColor)
+                if (t.ReferencedBy.Count > 0)
                 {
-                    if (t.V is PointPlus p)
+                    Segment s = SegmentFromUKSThing(t.ReferencedBy[0].T);
+                    if (s == null) continue;
+                    if (s.theColor == theColor)
                     {
-                        Angle deltaAngle = Abs(p.Theta - p1.Theta);
-                        if (deltaAngle < closestTheta)
+                        if (t.V is PointPlus p)
                         {
-                            closestTheta = deltaAngle;
-                            retVal = t;
+                            Angle deltaAngle = Abs(p.Theta - p1.Theta);
+                            if (deltaAngle < closestTheta)
+                            {
+                                closestTheta = deltaAngle;
+                                retVal = t;
+                            }
                         }
                     }
                 }
@@ -363,20 +369,21 @@ namespace BrainSimulator.Modules
             ColorInt theColor = Utils.ColorToInt(Colors.Wheat);
             Segment newSegment = new Segment() { P1 = P1, P2 = P2, theColor = theColor };
 
-            Thing t1 = GetNearestThing(newSegment.MidPoint().Theta, out float dist1);
+            Thing t1 = GetNearestThing(newSegment.MidPoint.Theta, out float dist1);
             if (t1 == null)
             {
                 //TODO: merge mutliple segments
-                AddSegmentToUKS(P1, P2, theColor, motion);
+//                AddSegmentToUKS(P1, P2, theColor, motion); //don't store motion with the segment (yet)
+                AddSegmentToUKS(P1, P2, theColor);
             }
 
             else if (dist1 < 1)
             {
                 Segment prevSegment = SegmentFromUKSThing(t1);
-                PointPlus prevMidpoint = prevSegment.MidPoint();
-                Angle oldM = prevSegment.Angle();
-                Angle newM = newSegment.Angle();
-                PointPlus offset = new PointPlus() { R = prevSegment.Length(), Theta = newM };
+                PointPlus prevMidpoint = prevSegment.MidPoint;
+                Angle oldM = prevSegment.Angle;
+                Angle newM = newSegment.Angle;
+                PointPlus offset = new PointPlus() { R = prevSegment.Length, Theta = newM };
                 if (P1.Conf == 0 && P2.Conf == 0) //we're given both endpoints
                 {
                     prevSegment.P1.P = P1.P; prevSegment.P1.Conf = 0;
@@ -404,10 +411,17 @@ namespace BrainSimulator.Modules
                     prevSegment.P1.R = newP1.R; prevSegment.P1.Theta = newP1.Theta;
                     prevSegment.P2.R = newP2.R; prevSegment.P2.Theta = newP2.Theta;
                 }
-                PointPlus newMidpoint = prevSegment.MidPoint();
+                PointPlus newMidpoint = prevSegment.MidPoint;
                 newMidpoint.P = newMidpoint.P - prevMidpoint.V;
-                if (newMidpoint.R > 0.01)
+                if (newMidpoint.R > 0.01 && motion.R != 0)
                 {
+                    if (prevSegment.Motion == null)
+                    {
+                        prevSegment.Motion = new PointPlus();
+                        Thing tMotion = UKS.AddThing("m" + mCount++, UKS.Labeled("Point"));
+                        tMotion.V = prevSegment.Motion;
+                        t1.AddReference(tMotion);
+                    }
                     prevSegment.Motion.R = motion.R;
                     prevSegment.Motion.Theta = motion.Theta;
                     prevSegment.Motion.Conf = newM - oldM;
@@ -418,18 +432,19 @@ namespace BrainSimulator.Modules
             return false;
         }
 
-        public float GetDistanceAtDirection(float theta)
+        public float GetDistanceAtDirection(Angle  theta)
         {
             GetNearestThing(theta, out float dist);
             return dist;
         }
 
-        public Thing GetNearestThing(float theta = 0)
+        public Thing GetNearestThing(Angle theta = default(Angle))
         {
+            if (theta is null) theta = 0;
             return GetNearestThing(theta, out float dist);
         }
 
-        public Thing GetNearestThing(float theta, out float dist)
+        public Thing GetNearestThing(Angle theta, out float dist)
         {
             Thing nearest = null;
             dist = float.MaxValue;
@@ -442,8 +457,10 @@ namespace BrainSimulator.Modules
                 PointPlus pv = new PointPlus { R = 10, Theta = theta };
                 Utils.FindIntersection(new Point(-.2, 0), pv.P, s.P1.P, s.P2.P,
                     out bool lines_intersect, out bool segments_intersect, out Point intersection, out Point clos_p1, out Point close_p2, out double collisionAngle);
-                if (!segments_intersect) continue;
-
+                if (!segments_intersect)
+                {
+                    continue;
+                }
                 //and is it the nearest?
                 Vector v = (Vector)intersection;
                 if (v.Length < dist)
@@ -460,7 +477,7 @@ namespace BrainSimulator.Modules
         }
 
         //not presently used
-        public bool SetColor(float theta, Color theColor)
+        public bool SetColor(Angle theta, Color theColor)
         {
             //int nearest = -1;
             //float dist = float.MaxValue;
@@ -632,9 +649,8 @@ namespace BrainSimulator.Modules
         {
             obstacle = null;
             float closestDistance = 100;
-            ModuleView naUKS = theNeuronArray.FindAreaByLabel("Module2DUKS");
-            if (naUKS == null) return null;
-            ModuleUKS UKS = (ModuleUKS)naUKS.TheModule;
+            ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            if (UKS == null) return null;
             bool ok = true;
             foreach (Thing t in UKSSegments)
             {
@@ -791,7 +807,6 @@ namespace BrainSimulator.Modules
             pCount = 0;
             sCount = 0;
             cCount = 0;
-            ppCount = 0;
 
             GetSegmentsFromUKS();
 

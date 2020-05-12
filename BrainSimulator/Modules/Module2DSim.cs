@@ -138,22 +138,7 @@ namespace BrainSimulator.Modules
             }
         }
 
-        public float randCoord()
-        {
-            return (float)(rand.NextDouble() * 2 * (boundarySize - 2) - (boundarySize - 2));
-        }
-        public float randCoord(float dist)
-        {
-            return (float)(rand.NextDouble() * 2 * dist - dist);
-        }
-        public Color randColor()
-        {
-            double temp = rand.NextDouble();
-            if (temp < .5) return Colors.Blue;
-            if (temp < .75) return Colors.Red;
-            return Colors.Green;
-        }
-
+        
         //these are called to move and rotate the entity within the simulator
         public void Rotate(double theta) //(in radian CW) 
         {
@@ -221,13 +206,13 @@ namespace BrainSimulator.Modules
                         Segment s = new Segment();
                         s.P1 = new PointPlus() { P = ph.P1 };
                         s.P2 = new PointPlus() { P = ph.P2 };
-                        Angle oldM = s.Angle();
+                        Angle oldM = s.Angle;
 
                         MovePhysObject(ph, closest, motion);
 
                         s.P1 = new PointPlus() { P = ph.P1 };
                         s.P2 = new PointPlus() { P = ph.P2 };
-                        Angle newM = s.Angle();
+                        Angle newM = s.Angle;
                         motion.Conf = newM - oldM;
 
                         //TODO check for collisions with this object and other objects
@@ -275,13 +260,13 @@ namespace BrainSimulator.Modules
                 P2 = new PointPlus() { P = ph.P2 }
             };
             PointPlus contactPoint = new PointPlus() { P = closest };
-            PointPlus offset = new PointPlus() { P = (Point)(contactPoint.V - s.MidPoint().V) };
+            PointPlus offset = new PointPlus() { P = (Point)(contactPoint.V - s.MidPoint.V) };
 
             double cross = Vector.CrossProduct(offset.V, motion.V);
 
             float rotation = 10 * Sign(cross);
 
-            float rotationRatio = (float)(offset.V.Length / s.Length() * 2);
+            float rotationRatio = (float)(offset.V.Length / s.Length * 2);
 
             PointPlus V1 = new PointPlus() { P = (Point)(s.P1.P - contactPoint.P) };
             PointPlus V2 = new PointPlus() { P = (Point)(s.P2.P - contactPoint.P) };
@@ -369,8 +354,8 @@ namespace BrainSimulator.Modules
                     //everything from here out is  coordinates relative to self
                     //neurons:  0:touch   1:armAngle  2:armDistance 3: sensedLineAngle 4: conf1 5: len1 6: conf2 7: len2 8: Release
                     neuronValues[0] = 1;
-                    neuronValues[1] = armPositionRel.Theta;
-                    neuronValues[2] = armPositionRel.R;
+                    neuronValues[1] = armPositionRel.R;
+                    neuronValues[2] = armPositionRel.Theta;
                     neuronValues[3] = (float)collisionAngle;
                     neuronValues[4] = (float)p1IsEndpt;
                     neuronValues[5] = (float)l1;

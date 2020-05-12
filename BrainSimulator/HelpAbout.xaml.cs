@@ -27,7 +27,12 @@ namespace BrainSimulator
         public HelpAbout()
         {
             InitializeComponent();
-            labelContributors.Content = "[add your name here if\nyou add to this project]";
+            Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            DateTime buildDate = new DateTime(2000, 1, 1)
+                                    .AddDays(version.Build).AddSeconds(version.Revision * 2);
+            string displayableVersion = $"{version}\n({buildDate})";
+            labelVersion.Content = "Version: "+displayableVersion;
+            labelContributors.Content = "cjs\n[add your name]\n\n\n";
         }
 
         private void ButtonOK_Click(object sender, RoutedEventArgs e)

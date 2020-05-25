@@ -32,6 +32,10 @@
                     <MenuItem Header="Maze" Click="buttonLoad_Click"/>
                     <MenuItem Header="Sallie" Click="buttonLoad_Click"/>
                     <MenuItem Header="3DSim" Click="buttonLoad_Click"/>
+                    <MenuItem Header="ShortTermMemory" Click="buttonLoad_Click"/>
+                    <MenuItem Header="NeuralGraph" Click="buttonLoad_Click"/>
+                    <MenuItem Header="FrequencyDetector" Click="buttonLoad_Click"/>
+                    <MenuItem Header="ObjectMotion" Click="buttonLoad_Click"/>
                 </MenuItem>
                 <MenuItem Header="Edit">
                     <MenuItem Header=" Cut"  Click="MenuItem_CutNeurons" />

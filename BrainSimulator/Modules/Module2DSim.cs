@@ -26,7 +26,7 @@ namespace BrainSimulator.Modules
             public float Aroma = 0;
             public float Temperature = 0;
             public bool isMobile;
-            public Vector motion = new Vector(0,0);
+            public Vector motion = new Vector(0, 0);
             public float rotation = 0;
         }
         public List<physObject> objects = new List<physObject>();
@@ -39,9 +39,9 @@ namespace BrainSimulator.Modules
                 "which can be called by other modules to move its point of view around the simulation. " +
                 "Shift-mouse wheel can zoom the display and Shift-left mouse button can drag (pan). " +
                 "Right-clicking in the dialog box can direct the entity to that location. " +
-                "Shift + Mouse motion or mouse wheel will pan or zoom the display. \n\n"+
-                "Obstacles are set with synapses and will show after initiiation. "+
-                "\nWeight=1 movable.  \nWeight=-1 fixed \nWeight=(0,1) obstacle moves vertically spd=weight-.5 "+
+                "Shift + Mouse motion or mouse wheel will pan or zoom the display. \n\n" +
+                "Obstacles are set with synapses and will show after initiiation. " +
+                "\nWeight=1 movable.  \nWeight=-1 fixed \nWeight=(0,1) obstacle moves vertically spd=weight-.5 " +
                 "\nWeight=(-1,0) obstacle moves horizontally spd=weight-(-.5) \nSpeeds are adjusted with the slider."
                 ;
         }
@@ -118,7 +118,7 @@ namespace BrainSimulator.Modules
             }
             MoveObjects(); //handle objects which move themselves
 
-            HandleTouch(); 
+            HandleTouch();
             HandleVision();
             HandleAroma();
 
@@ -131,14 +131,14 @@ namespace BrainSimulator.Modules
 
         private void MoveObjects()
         {
-            foreach(physObject ph in objects)
+            foreach (physObject ph in objects)
             {
-                ph.P1 += ph.motion*inMotion/10;
-                ph.P2 += ph.motion*inMotion/10;
+                ph.P1 += ph.motion * inMotion / 10;
+                ph.P2 += ph.motion * inMotion / 10;
             }
         }
 
-        
+
         //these are called to move and rotate the entity within the simulator
         public void Rotate(double theta) //(in radian CW) 
         {
@@ -148,16 +148,16 @@ namespace BrainSimulator.Modules
         }
 
         //returning true said there no collision and it is OK to move there...in the event of a collision, the move is cancelled
-        public bool Move (float motion)
+        public bool Move(float motion)
         {
             return Move(motion, 0);
         }
-        public bool Move(float motionX,float motionY) //move fwd +, rev -
+        public bool Move(float motionX, float motionY) //move fwd +, rev -
         {
             Point newPosition = new Point()
             {
-                X = entityPosition.X + motionX * Cos(entityDirection1) - motionY*Sin(entityDirection1),
-                Y = entityPosition.Y + motionX * Sin(entityDirection1) + motionY*Cos(entityDirection1)
+                X = entityPosition.X + motionX * Cos(entityDirection1) - motionY * Sin(entityDirection1),
+                Y = entityPosition.Y + motionX * Sin(entityDirection1) + motionY * Cos(entityDirection1)
             };
 
             //check for collisions  collision can impede motion
@@ -232,7 +232,7 @@ namespace BrainSimulator.Modules
                                 {
                                     endMotion.P = ph.P1 - (Vector)oldPoint1;
                                 }
-                                else 
+                                else
                                 {
                                     endMotion.P = ph.P2 - (Vector)oldPoint2;
                                 }
@@ -556,7 +556,30 @@ namespace BrainSimulator.Modules
             }
             return sum;
         }
-
+        public Segment GetMotionTarget()
+        {
+            foreach (Neuron n in na.Neurons())
+            {
+                na.GetNeuronLocation(n, out int x1, out int y1);
+                TransformPoint(ref x1, ref y1);
+                foreach (Synapse s in n.Synapses)
+                {
+                    if (s.Weight == 10)
+                    {
+                        na.GetNeuronLocation(s.TargetNeuron, out int x2, out int y2);
+                        TransformPoint(ref x2, ref y2);
+                        Segment retVal = new Segment()
+                        {
+                            P1 = new PointPlus(x1 - 0.5f, y1 - 0.5f),
+                            P2 = new PointPlus(x2 - 0.5f, y2 - 0.5f),
+                            theColor = 0xff
+                        };
+                        return retVal;
+                    }
+                }
+            }
+            return null;
+        }
         //for debugging it is handy to bypass the exploration to establish the internal model...just set it
         public void SetModel()
         {
@@ -571,10 +594,25 @@ namespace BrainSimulator.Modules
                 PointPlus P1 = new PointPlus() { P = objects[i].P1 };
                 PointPlus P2 = new PointPlus() { P = objects[i].P2 };
                 int theColor = Utils.ColorToInt(objects[i].theColor);
-                nmModel.AddSegmentFromVision(P1, P2, theColor,false);
+                nmModel.AddSegmentFromVision(P1, P2, theColor, false);
             }
             MainWindow.ResumeEngine();
         }
+
+        void TransformPoint(ref int x, ref int y)
+        {
+            //the middle of the area
+            int mx = na.Width / 2; int my = na.Height / 2;
+            x -= mx;
+            y -= my;
+            int temp = x;
+            x = y;
+            y = temp; ;
+
+            y = -y;
+            x = -x;
+        }
+
         public override void Initialize()
         {
             TrainingSamples = new string[]
@@ -614,20 +652,6 @@ namespace BrainSimulator.Modules
             objects.Add(new physObject() { P1 = new Point(boundarySize, -boundarySize), P2 = new Point(-boundarySize, -boundarySize), theColor = Colors.Black, isMobile = false });
             objects.Add(new physObject() { P1 = new Point(-boundarySize, -boundarySize), P2 = new Point(-boundarySize, boundarySize), theColor = Colors.Black, isMobile = false });
             objects.Add(new physObject() { P1 = new Point(-boundarySize, boundarySize), P2 = new Point(boundarySize, boundarySize), theColor = Colors.Black, isMobile = false });
-
-            void TransformPoint(ref int x, ref int y)
-            {
-                //the middle of the area
-                int mx = na.Width / 2; int my = na.Height / 2;
-                x -= mx;
-                y -= my;
-                int temp = x;
-                x = y;
-                y = temp; ;
-
-                y = -y;
-                x = -x;
-            }
 
             int colorCount = 0;
             //Color[] theColors = new Color[] {
@@ -670,7 +694,7 @@ namespace BrainSimulator.Modules
                 TransformPoint(ref x1, ref y1);
                 foreach (Synapse s in n.Synapses)
                 {
-                    if (s.TargetNeuron != n.Id)
+                    if (s.TargetNeuron != n.Id)// && s.Weight != 10)
                     {
                         na.GetNeuronLocation(s.TargetNeuron, out int x2, out int y2);
                         TransformPoint(ref x2, ref y2);
@@ -684,9 +708,9 @@ namespace BrainSimulator.Modules
                             isMobile = (s.Weight == 1) ? true : false,
                         };
                         if (s.Weight < 1)
-                            newObject.motion = new Vector(s.Weight-.5f, 0);
+                            newObject.motion = new Vector(s.Weight - .5f, 0);
                         if (s.Weight < 0)
-                            newObject.motion = new Vector(0,-.5f-s.Weight);
+                            newObject.motion = new Vector(0, -.5f - s.Weight);
                         objects.Add(newObject);
                         colorCount = (colorCount + 1) % theColors.Count;
                         int currentColorInt = Utils.ColorToInt(currentColor);

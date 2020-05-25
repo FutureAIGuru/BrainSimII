@@ -194,7 +194,7 @@ namespace BrainSimulator
 
             double theta1 = Math.Atan2(dy12, dx12); //obstacle
             double theta2 = Math.Atan2(dy34, dx34); //motion attempt
-            collisionAngle = theta2 - theta1;
+            collisionAngle = theta2 - theta1; //angle between the two
 
             // Solve for t1 and t2
             double denominator = (dy12 * dx34 - dx12 * dy34);
@@ -202,6 +202,7 @@ namespace BrainSimulator
             double t1 =
                 ((p1.X - p3.X) * dy34 + (p3.Y - p1.Y) * dx34)
                     / denominator;
+
             if (double.IsInfinity(t1))
             {
                 // The lines are parallel (or close enough to it).
@@ -225,6 +226,9 @@ namespace BrainSimulator
             segments_intersect =
                 ((t1 >= 0) && (t1 <= 1) &&
                  (t2 >= 0) && (t2 <= 1));
+            //segments_intersect =
+            //    ((t1 >= -.09) && (t1 <= 1.09) &&
+            //     (t2 >= -.09) && (t2 <= 1.09));
 
             // Find the closest points on the segments.
             if (t1 < 0)

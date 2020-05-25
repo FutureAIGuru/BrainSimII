@@ -156,7 +156,7 @@ namespace BrainSimulator.Modules
             synth.SpeakCompleted += Synth_SpeakCompleted;
             synth.SelectVoice("Microsoft Zira Desktop");
             minHeight = 10;
-            minWidth = 9;
+            minWidth = 5;
             ClearNeurons();
             na.GetNeuronAt(0).Label = "Enable";
             na.GetNeuronAt(0).AddSynapse(na.GetNeuronAt(0).Id, 1);

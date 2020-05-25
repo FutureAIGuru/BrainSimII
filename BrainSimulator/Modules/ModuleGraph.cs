@@ -23,96 +23,6 @@ namespace BrainSimulator.Modules
             HandleVoiceRequest();
         }
 
-        public override void Initialize()
-        {
-            Neuron n0 = na.GetNeuronAt(1, 1);
-            n0.Label = "'1'";
-            n0.AddSynapse(n0.Id, 1, theNeuronArray, false);
-            n0.SetValue(1);
-            na.GetNeuronAt(0, 1).Label = "clr";
-            for (int i = 0; i < cols.Length; i++)
-            {
-                Neuron n = na.GetNeuronAt(i, 0);
-                n.Label = cols[i];
-            }
-            //put in the vertical synapses for the columns which need them
-            for (int i = 0; i < cols.Length; i++)
-            {
-                if (cols[i] == "this" || cols[i] == "this" ||
-                    cols[i] == "attrib" || cols[i] == "parent" ||
-                    cols[i] == "child" || cols[i] == "next" || cols[i] == "nMtch" || cols[i] == "head" ||
-                    cols[i] == "anyAttr" || cols[i] == "allAttr" ||
-                    cols[i] == "recur" || cols[i] == "head" ||
-                    cols[i] == "match" ||
-                    cols[i] == "say")
-                {
-                    Neuron n = na.GetNeuronAt(i, 0);
-                    Neuron n1 = na.GetNeuronAt(i, 1);
-                    n.AddSynapse(n1.Id, -1, theNeuronArray, false);
-                    n0.AddSynapse(n1.Id, 1, theNeuronArray, false);
-                    for (int j = 2; j < na.Height; j++)
-                    {
-                        n1.AddSynapse(na.GetNeuronAt(i, j).Id, -1, theNeuronArray, false);
-                    }
-                }
-            }
-            //make the clr neuron clear all the input neurons
-            Neuron nClr = na.GetNeuronAt("clr");
-            for (int j = 2; j < na.Height; j++)
-            {
-                nClr.AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "in"), j).Id, -1, theNeuronArray, false);
-            }
-            na.GetNeuronAt("recur").AddSynapse(nClr.Id, 1, theNeuronArray, false);
-
-            //put in all the horizontal synapses
-            for (int j = 2; j < na.Height; j++)
-            {
-                na.GetNeuronAt(Array.IndexOf(cols, "in"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "in"), j).Id, 1, theNeuronArray, false);
-                na.GetNeuronAt(Array.IndexOf(cols, "in"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).Id, 10, theNeuronArray, false);
-                na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "theNeuronArray"), j).Id, 1, theNeuronArray, false);
-                na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "attrib"), j).Id, 1, theNeuronArray, false);
-                na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "anyAttr"), j).Id, 1, theNeuronArray, false);
-                na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "allAttr"), j).Id, 1, theNeuronArray, false);
-                na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "parent"), j).Id, 1, theNeuronArray, false);
-                na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "child"), j).Id, 1, theNeuronArray, false);
-                na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "next"), j).Id, 1, theNeuronArray, false);
-
-
-                na.GetNeuronAt(Array.IndexOf(cols, "theNeuronArray"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "out"), j).Id, 1, theNeuronArray, false);
-                na.GetNeuronAt(Array.IndexOf(cols, "alt"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "out"), j).Id, 1, theNeuronArray, false);
-                //na.GetNeuronAt(Array.IndexOf(cols, "out"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "in"), j).Id, -1, theNeuronArray, false);
-                na.GetNeuronAt(Array.IndexOf(cols, "out"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "recur"), j).Id, 1, theNeuronArray, false);
-                na.GetNeuronAt(Array.IndexOf(cols, "recur"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "in"), j).Id, 2, theNeuronArray, false); //2 because the out is suppressing
-                na.GetNeuronAt(Array.IndexOf(cols, "match"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).Id, 1, theNeuronArray, false);
-
-
-
-                na.GetNeuronAt(Array.IndexOf(cols, "out"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "say"), j).Id, 1, theNeuronArray, false);
-                na.GetNeuronAt(Array.IndexOf(cols, "out"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "0"), j).Id, 1, theNeuronArray, false);
-                na.GetNeuronAt(Array.IndexOf(cols, "0"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "say"), j).Id, -1, theNeuronArray, false);
-
-                na.GetNeuronAt(Array.IndexOf(cols, "next"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "in"), j).Id, -1, theNeuronArray, false);
-                na.GetNeuronAt(Array.IndexOf(cols, "next"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).Id, -30, theNeuronArray, false);
-            }
-            //make som coluimns into an always-fire
-            na.GetNeuronAt(Array.IndexOf(cols, "next"), 0).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "next"), 0).Id, 1, theNeuronArray, false);
-            na.GetNeuronAt(Array.IndexOf(cols, "say"), 0).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "say"), 0).Id, 1, theNeuronArray, false);
-            na.GetNeuronAt(Array.IndexOf(cols, "attrib"), 0).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "attrib"), 0).Id, 1, theNeuronArray, false);
-            na.GetNeuronAt(Array.IndexOf(cols, "match"), 0).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "match"), 0).Id, 1, theNeuronArray, false);
-
-            //na.GetNeuronAt(0, 2).Label = "Attribute";
-            //na.GetNeuronAt(0, 3).Label = "Thing";
-            //na.GetNeuronAt(0, 4).Label = "Sequence";
-            //na.GetNeuronAt("say").SetValue(1);
-            //if (naOut != null)
-            //{
-            //    na.GetNeuronAt(Array.IndexOf(cols, "say"), 2).AddSynapse(GetSpokenWord("Attribute").Id, 1, theNeuronArray, false);
-            //    na.GetNeuronAt(Array.IndexOf(cols, "say"), 3).AddSynapse(GetSpokenWord("Thing").Id, 1, theNeuronArray, false);
-            //    na.GetNeuronAt(Array.IndexOf(cols, "say"), 4).AddSynapse(GetSpokenWord("Sequence").Id, 1, theNeuronArray, false);
-            //}
-            Test();
-        }
-
         void AddSynapse(string source, int sourceRow, string dest, int destRow, float weight)
         {
             Neuron n1 = na.GetNeuronAt(Array.IndexOf(cols, source), sourceRow);
@@ -259,14 +169,14 @@ namespace BrainSimulator.Modules
 
 
 
-            //    AddThing("Attribute", "word");
-            //    AddThing("word", "Mary");
-            //    AddThing("word", "had");
-            //    AddThing("word", "a");
-            //    AddThing("word", "little");
-            //    AddThing("word", "lamb");
-            //    AddThing("Sequence", "M1", null, new string[] { "Mary", "had", "a", "little", "lamb" });
-            //
+            AddThing("Attribute", "word");
+            AddThing("word", "Mary");
+            AddThing("word", "had");
+            AddThing("word", "a");
+            AddThing("word", "little");
+            AddThing("word", "lamb");
+            AddThing("Sequence", "M1", null, new string[] { "Mary", "had", "a", "little", "lamb" });
+
         }
 
 
@@ -475,6 +385,7 @@ namespace BrainSimulator.Modules
 
         private void HandleSpeechIn1()
         {
+            ModuleView naIn = MainWindow.theNeuronArray.FindAreaByLabel("ModuleSpeechIn");
             if (naIn == null) return;
 
             naIn.BeginEnum();
@@ -493,6 +404,7 @@ namespace BrainSimulator.Modules
         }
         public Neuron GetSpokenWord(string word)
         {
+            ModuleView naOut = MainWindow.theNeuronArray.FindAreaByLabel("ModuleSPeechOut");
             Neuron n = null;
             if (naOut != null)
             {
@@ -509,6 +421,97 @@ namespace BrainSimulator.Modules
             }
             return n;
         }
+        public override void Initialize()
+        {
+            ClearNeurons();
+            Neuron n0 = na.GetNeuronAt(1, 1);
+            n0.Label = "'1'";
+            n0.AddSynapse(n0.Id, 1, theNeuronArray, false);
+            n0.SetValue(1);
+            na.GetNeuronAt(0, 1).Label = "clr";
+            for (int i = 0; i < cols.Length; i++)
+            {
+                Neuron n = na.GetNeuronAt(i, 0);
+                n.Label = cols[i];
+            }
+            //put in the vertical synapses for the columns which need them
+            for (int i = 0; i < cols.Length; i++)
+            {
+                if (cols[i] == "this" || cols[i] == "this" ||
+                    cols[i] == "attrib" || cols[i] == "parent" ||
+                    cols[i] == "child" || cols[i] == "next" || cols[i] == "nMtch" || cols[i] == "head" ||
+                    cols[i] == "anyAttr" || cols[i] == "allAttr" ||
+                    cols[i] == "recur" || cols[i] == "head" ||
+                    cols[i] == "match" ||
+                    cols[i] == "say")
+                {
+                    Neuron n = na.GetNeuronAt(i, 0);
+                    Neuron n1 = na.GetNeuronAt(i, 1);
+                    n.AddSynapse(n1.Id, -1, theNeuronArray, false);
+                    n0.AddSynapse(n1.Id, 1, theNeuronArray, false);
+                    for (int j = 2; j < na.Height; j++)
+                    {
+                        n1.AddSynapse(na.GetNeuronAt(i, j).Id, -1, theNeuronArray, false);
+                    }
+                }
+            }
+            //make the clr neuron clear all the input neurons
+            Neuron nClr = na.GetNeuronAt("clr");
+            for (int j = 2; j < na.Height; j++)
+            {
+                nClr.AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "in"), j).Id, -1, theNeuronArray, false);
+            }
+            na.GetNeuronAt("recur").AddSynapse(nClr.Id, 1, theNeuronArray, false);
+
+            //put in all the horizontal synapses
+            for (int j = 2; j < na.Height; j++)
+            {
+                na.GetNeuronAt(Array.IndexOf(cols, "in"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "in"), j).Id, 1, theNeuronArray, false);
+                na.GetNeuronAt(Array.IndexOf(cols, "in"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).Id, 10, theNeuronArray, false);
+                na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "theNeuronArray"), j).Id, 1, theNeuronArray, false);
+                na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "attrib"), j).Id, 1, theNeuronArray, false);
+                na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "anyAttr"), j).Id, 1, theNeuronArray, false);
+                na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "allAttr"), j).Id, 1, theNeuronArray, false);
+                na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "parent"), j).Id, 1, theNeuronArray, false);
+                na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "child"), j).Id, 1, theNeuronArray, false);
+                na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "next"), j).Id, 1, theNeuronArray, false);
+
+
+                na.GetNeuronAt(Array.IndexOf(cols, "theNeuronArray"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "out"), j).Id, 1, theNeuronArray, false);
+                na.GetNeuronAt(Array.IndexOf(cols, "alt"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "out"), j).Id, 1, theNeuronArray, false);
+                //na.GetNeuronAt(Array.IndexOf(cols, "out"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "in"), j).Id, -1, theNeuronArray, false);
+                na.GetNeuronAt(Array.IndexOf(cols, "out"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "recur"), j).Id, 1, theNeuronArray, false);
+                na.GetNeuronAt(Array.IndexOf(cols, "recur"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "in"), j).Id, 2, theNeuronArray, false); //2 because the out is suppressing
+                na.GetNeuronAt(Array.IndexOf(cols, "match"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).Id, 1, theNeuronArray, false);
+
+
+
+                na.GetNeuronAt(Array.IndexOf(cols, "out"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "say"), j).Id, 1, theNeuronArray, false);
+                na.GetNeuronAt(Array.IndexOf(cols, "out"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "0"), j).Id, 1, theNeuronArray, false);
+                na.GetNeuronAt(Array.IndexOf(cols, "0"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "say"), j).Id, -1, theNeuronArray, false);
+
+                na.GetNeuronAt(Array.IndexOf(cols, "next"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "in"), j).Id, -1, theNeuronArray, false);
+                na.GetNeuronAt(Array.IndexOf(cols, "next"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).Id, -30, theNeuronArray, false);
+            }
+            //make som coluimns into an always-fire
+            na.GetNeuronAt(Array.IndexOf(cols, "next"), 0).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "next"), 0).Id, 1, theNeuronArray, false);
+            na.GetNeuronAt(Array.IndexOf(cols, "say"), 0).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "say"), 0).Id, 1, theNeuronArray, false);
+            na.GetNeuronAt(Array.IndexOf(cols, "attrib"), 0).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "attrib"), 0).Id, 1, theNeuronArray, false);
+            na.GetNeuronAt(Array.IndexOf(cols, "match"), 0).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "match"), 0).Id, 1, theNeuronArray, false);
+
+            //na.GetNeuronAt(0, 2).Label = "Attribute";
+            //na.GetNeuronAt(0, 3).Label = "Thing";
+            //na.GetNeuronAt(0, 4).Label = "Sequence";
+            //na.GetNeuronAt("say").SetValue(1);
+            //if (naOut != null)
+            //{
+            //    na.GetNeuronAt(Array.IndexOf(cols, "say"), 2).AddSynapse(GetSpokenWord("Attribute").Id, 1, theNeuronArray, false);
+            //    na.GetNeuronAt(Array.IndexOf(cols, "say"), 3).AddSynapse(GetSpokenWord("Thing").Id, 1, theNeuronArray, false);
+            //    na.GetNeuronAt(Array.IndexOf(cols, "say"), 4).AddSynapse(GetSpokenWord("Sequence").Id, 1, theNeuronArray, false);
+            //}
+            Test();
+        }
+
 
 
     }

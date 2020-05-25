@@ -329,13 +329,9 @@ namespace BrainSimulator
                 }
                 else if (sender is Shape s)
                 {
-                    if (s is Ellipse)//|| s is Rectangle) // a neuron (this will update every time
-                    {
-                        s.ContextMenu = new ContextMenu();
-                        Neuron n1 = MainWindow.theNeuronArray.neuronArray[mouseDownNeuronIndex];
-                        NeuronView.CreateContextMenu(mouseDownNeuronIndex, n1, s.ContextMenu);
-                    }
-                    if (s.ContextMenu == null && (s is Path || s is Line)) // a synapse
+                    
+                    if (s.ContextMenu == null && (s is Path || s is Line || 
+                        (s is Ellipse && (int)s.GetValue(SynapseView.SourceIDProperty) != 0))) // a synapse
                     {
                         int source = (int)s.GetValue(SynapseView.SourceIDProperty);
                         int target = (int)s.GetValue(SynapseView.TargetIDProperty);
@@ -343,6 +339,12 @@ namespace BrainSimulator
                         Synapse s1 = new Synapse(target, weight);
                         s.ContextMenu = new ContextMenu();
                         SynapseView.CreateContextMenu(source, s1, s.ContextMenu);
+                    }
+                    else if (s is Ellipse) //|| s is Rectangle) // a neuron (this will update every time
+                    {
+                        s.ContextMenu = new ContextMenu();
+                        Neuron n1 = MainWindow.theNeuronArray.neuronArray[mouseDownNeuronIndex];
+                        NeuronView.CreateContextMenu(mouseDownNeuronIndex, n1, s.ContextMenu);
                     }
                     if (s.ContextMenu != null)
                         s.ContextMenu.IsOpen = true;

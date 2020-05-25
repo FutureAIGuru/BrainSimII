@@ -587,6 +587,7 @@ namespace BrainSimulator.Modules
                 //say a random utterance  (there is a hack to handle combiners which is needed to work with TTS)
                 List<Thing> vowels = Labeled("Vowel").Children;
                 List<Thing> consonants = Labeled("Consonant").Children;
+                if (consonants.Count == 0) return;
                 Thing consonant = consonants[rand.Next(consonants.Count - 2)];
                 Thing vowel1 = vowels[rand.Next(vowels.Count)];
                 Thing combiner = Labeled("spk\u0361");

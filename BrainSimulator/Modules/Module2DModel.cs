@@ -368,8 +368,11 @@ namespace BrainSimulator.Modules
 
             ColorInt theColor = Utils.ColorToInt(Colors.Wheat);
             Segment newSegment = new Segment() { P1 = P1, P2 = P2, theColor = theColor };
+            //OrderSegment(newSegment);
 
             Thing t1 = GetNearestThing(newSegment.MidPoint.Theta, out float dist1);
+            //TODO: for motion testing
+            t1 = UKS.Labeled("s0");
             if (t1 == null)
             {
                 //TODO: merge mutliple segments
@@ -452,6 +455,7 @@ namespace BrainSimulator.Modules
             foreach (Thing t in UKSSegments)
             {
                 s = SegmentFromUKSThing(t);
+                //OrderSegment(s);
 
                 //does this object cross the given visual angle?
                 PointPlus pv = new PointPlus { R = 10, Theta = theta };

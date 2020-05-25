@@ -411,7 +411,19 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Networks\FrequencyDetector.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Networks\Imagination.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\NeuralGraph.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\ObjectMotion.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\ShortTermMemory.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Networks\SimVision.xml">

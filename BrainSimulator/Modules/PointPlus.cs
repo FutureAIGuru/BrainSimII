@@ -33,6 +33,18 @@ namespace BrainSimulator.Modules
             P = new Point(0, 0);
             Conf = 0;
         }
+        public PointPlus(float x, float y)
+        {
+            P = new Point(x, y);
+            Conf = 0;
+        }
+        public PointPlus(PointPlus pp)
+        {
+            R = pp.R;
+            theta = pp.Theta;
+            Conf = pp.Conf;
+        }
+
         [XmlIgnore]
         public Point P
         {

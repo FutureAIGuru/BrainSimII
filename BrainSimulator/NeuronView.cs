@@ -246,6 +246,11 @@ namespace BrainSimulator
                 if (cc is TextBox tb2)
                 {
                     float.TryParse(tb2.Text, out float leakRate);
+                    if (n.LeakRate != leakRate)
+                    {
+                        n.LeakRate = leakRate;
+                        SetModelAndLeakrate(n);
+                    }
                     n.LeakRate = leakRate;
                 }
                 cc = Utils.FindByName(cm, "History");
@@ -285,6 +290,7 @@ namespace BrainSimulator
             }
             MainWindow.Update();
         }
+
         public static void OpenHistoryWindow()
         {
             if (MainWindow.fwWindow == null || !MainWindow.fwWindow.IsVisible)
@@ -302,12 +308,17 @@ namespace BrainSimulator
             ListBoxItem lbi = (ListBoxItem)cb.SelectedItem;
             Neuron.modelType nm = (Neuron.modelType)System.Enum.Parse(typeof(Neuron.modelType), lbi.Content.ToString());
             Neuron n = MainWindow.theNeuronArray.neuronArray[neuronID];
-
             n.Model = nm;
+            SetModelAndLeakrate(n);
+            cm.IsOpen = false;
+        }
+
+        private static void SetModelAndLeakrate(Neuron n)
+        {
             bool neuronInSelection = false;
             foreach (NeuronSelectionRectangle sr in theNeuronArrayView.theSelection.selectedRectangles)
             {
-                if (sr.NeuronIsInSelection(neuronID))
+                if (sr.NeuronIsInSelection(n.Id))
                 {
                     neuronInSelection = true;
                     break;
@@ -317,10 +328,12 @@ namespace BrainSimulator
             {
                 theNeuronArrayView.theSelection.EnumSelectedNeurons();
                 for (Neuron n1 = theNeuronArrayView.theSelection.GetSelectedNeuron(); n1 != null; n1 = theNeuronArrayView.theSelection.GetSelectedNeuron())
-                    n1.Model = nm;
+                {
+                    n1.Model = n.Model;
+                    n1.LeakRate = n.LeakRate;
+                }
                 MainWindow.Update();
             }
-            cm.IsOpen = false;
         }
 
         private static void Mi_Click(object sender, RoutedEventArgs e)

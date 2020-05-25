@@ -16,10 +16,9 @@ namespace BrainSimulator.Modules
         Thing endTarget = null;
         int motionCount = 0;
         bool goToGoal = false;
-        Thing home = null;
-        int  doPush = 0;
+        int doPush = 0;
         bool doFaceSegment = false;
-        bool doHome = false;
+        bool doBackOff = false;
 
         public override void Fire()
         {
@@ -39,12 +38,6 @@ namespace BrainSimulator.Modules
 
             if (GetNeuronValue("ModuleBehavior", "Done") == 0) return;
 
-            if (home == null)
-            {
-                home = UKS.AddThing("Home", "Point");
-                home.V = new PointPlus();
-                home.AddParent(UKS.Labeled("ModelThing"));
-            }
 
             mModel.GetSegmentsFromUKS();
             List<Thing> segments = mModel.GetUKSSegments();
@@ -54,6 +47,30 @@ namespace BrainSimulator.Modules
             //figure out if any motion occured
             Segment s = Module2DModel.SegmentFromUKSThing(t);
             Module2DModel.OrderSegment(s);
+
+            if (GetNeuronValue("E0") == 1)
+            {
+                GoToLandmark(UKS.Labeled("E0").References[0].T, s);
+                doPush = 2;
+                doBackOff = true;
+                return;
+            }
+            if (GetNeuronValue("E1") == 1)
+            {
+                GoToLandmark(UKS.Labeled("E1").References[0].T, s);
+                doPush = 2;
+                doBackOff = true;
+                return;
+            }
+            if (GetNeuronValue("E2") == 1)
+            {
+                GoToLandmark(UKS.Labeled("E2").References[0].T, s);
+                doPush = 2;
+                doBackOff = true;
+                return;
+            }
+
+
             if (doPush != 0)
             {
                 if (doPush == 2)
@@ -69,21 +86,28 @@ namespace BrainSimulator.Modules
             }
 
             Segment s1;
-            if (lastPosition == null) //creat objects to keep track of the target and last position
+
+            if (lastPosition == null) //create objects to keep track of the target and last position
             {
                 s1 = s.Clone();
                 lastPosition = mModel.AddSegmentToUKS(s1);
                 lastPosition.Label = "LastPosition";
                 lastPosition.RemoveParent(UKS.Labeled("Segment"));
                 lastPosition.AddParent(UKS.Labeled("SSegment"));
-                Segment motionTarget = s.Clone();
-                motionTarget.P1.X += 0.5f;
-                motionTarget.P2.X += 0.5f;
-                motionTarget.theColor = (ColorInt)0xff;
+                Module2DSim mSim = (Module2DSim)FindModuleByType(typeof(Module2DSim));
+                if (mSim is null) return;
+                Segment motionTarget = mSim.GetMotionTarget();
+                if (motionTarget == null)
+                {
+                    motionTarget = new Segment();
+                    motionTarget.P1 = new PointPlus(4, 1.5f);
+                    motionTarget.P2 = new PointPlus(4, -2.5f);
+                    motionTarget.theColor = (ColorInt)0xff;
+                }
                 endTarget = mModel.AddSegmentToUKS(motionTarget);
                 endTarget.Label = "EndTarget";
-                //                endTarget.RemoveParent(UKS.Labeled("Segment"));
-                //                endTarget.AddParent(UKS.Labeled("SSegment"));
+                //endTarget.RemoveParent(UKS.Labeled("Segment"));
+                //endTarget.AddParent(UKS.Labeled("SSegment"));
             }
             else
             {
@@ -102,7 +126,7 @@ namespace BrainSimulator.Modules
             lastPosition.References[0].T.V = s.P1.Clone();
             lastPosition.References[1].T.V = s.P2.Clone();
 
-            if (Abs(motion.R) > .05 || Abs(motion.rotation) > .05)
+            if (Abs(motion.R) > .01 || Abs(motion.rotation) > .05 && !goToGoal && !doBackOff)
             {
                 //check for existing Event
                 Thing currentEvent = MostLikelyEvent(t);
@@ -116,10 +140,11 @@ namespace BrainSimulator.Modules
                 return;
             }
 
-            if (doHome)
+            if (doBackOff)
             {
-                DoHome();
-                doHome = false;
+                DoBackOff(s);
+                doBackOff = false;
+                doFaceSegment = true;
                 return;
             }
 
@@ -136,62 +161,167 @@ namespace BrainSimulator.Modules
             Explore(s);
         }
 
+        //val is the quality of the distance...combination of distance plus rotation...we'll see how it works
         private class Seg : Motion
-        { }
+        {
+            public float Val {
+                get { return X * X + Y * Y + rotation * rotation; } }// + .5f* Abs(Theta) + .1f*Abs(rotation); }// +  Abs(rotation / 2); }
+            public override string ToString()
+            {
+                string s = "R: " + R.ToString("F3") + ", Theta: " + Degrees.ToString("F3") + "° (" + X.ToString("F2") + "," + Y.ToString("F2") + ") Rot: " + rotation + " Val: " + Val;
+                return s;
+            }
+        }
 
         void GoToGoal(Segment sCurrent, Segment sTarget)
         {
-            Motion m1 = DistanceFromTarget(sCurrent, sTarget);
-            if (Abs(m1.rotation) < .05 && Abs(m1.X) < .1 && Abs(m1.Y) < .1)
+            //instead of working with endpoints, we'll just work with midpoint and rotation because the length can't change
+            Seg pCurrent = new Seg { P = sCurrent.MidPoint.P, rotation = sCurrent.Angle };
+            Seg pTarget = new Seg { P = sTarget.MidPoint.P, rotation = sTarget.Angle };
+            Motion neededMotion = DistanceFromTarget(pTarget, pCurrent);
+            //there are two exit cases...here we test for absolute closeness, below we test for the best action makes thing further
+            if (Abs(neededMotion.rotation) < .05 && Abs(neededMotion.X) < .1 && Abs(neededMotion.Y) < .1)
             {
                 endTarget = null;
             }
             else
             {
-                Seg pCurrent = new Seg { P = sCurrent.MidPoint.P, rotation = sCurrent.Angle };
                 ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
-                //find the event with the most desireable outcome and then go the the landmark.
                 Thing bestEvent = null;
-                foreach (Thing tEvent in UKS.Labeled("Event").Children)
+                if (neededMotion.R > .2f)
                 {
-                    Motion motion = (Motion)tEvent.Children[0].References[1].T.V;
-                    Seg newS = NextPosition(pCurrent, motion);
-                    bestEvent = tEvent;
+                    //create a temp distination which is slightly offset
+                    ModuleBehavior mBehavior = (ModuleBehavior)FindModuleByType(typeof(ModuleBehavior));
+                    Seg tempTarget = new Seg(){P=sTarget.MidPoint.P + new PointPlus { R = .15f, Theta = sTarget.Angle - PI / 2 }.V, rotation=0};
+                    neededMotion = DistanceFromTarget(tempTarget, pCurrent);
+                    bestEvent = UKS.Labeled("E0");
+                    if (neededMotion.Theta < -.05)
+                        bestEvent = UKS.Labeled("E2");
+                    if (neededMotion.Theta > .05)
+                        bestEvent = UKS.Labeled("E1");
                 }
-                GoToLandmark(bestEvent.References[0].T,sCurrent);
-                doPush = 2;
+                else if (neededMotion.R > .01)
+                {
+                    if (neededMotion.rotation < -.02)
+                        bestEvent = UKS.Labeled("E2");
+                    else 
+                        bestEvent = UKS.Labeled("E1");
+                }
+                if (bestEvent != null)
+                {
+                    Motion m = (Motion)bestEvent.Children[0].References[1].T.V;
+                    Seg nextPosition = NextPosition(pCurrent, (Motion)bestEvent.Children[0].References[1].T.V);
+                    Motion next = DistanceFromTarget(pTarget, nextPosition);
+                    //if (next.R < neededMotion.R || Abs(next.rotation) > Utils.Rad(5))
+                    {
+                        GoToLandmark(bestEvent.References[0].T, sCurrent);
+                        doPush = 2;
+                        doBackOff = true;
+                    }
+////                    else
+//                    {
+//                        endTarget = null;
+//                    }
+                }
+                //find the event with the most desireable outcome and then go the the landmark.
+                //Thing bestEvent = null;
+                //List<Thing> events = UKS.Labeled("Event").Children;
+                //Seg[] distances = new Seg[events.Count];
+
+                ////first time through loop initialize array and take first action
+                //for (int i = 0; i < events.Count; i++)
+                //{
+                //    distances[i] = new Seg() { P = neededMotion.P, rotation = neededMotion.rotation };
+                //    Thing tEvent = events[i];
+                //    Motion motion = (Motion)tEvent.Children[0].References[1].T.V;
+                //    distances[i] = NextPosition(distances[i], motion);
+                //}
+
+                ////second time through loop, add to array
+                //for (int j = 0; j < 3; j++) //three steps
+                //{
+                //    for (int i = 0; i < events.Count; i++)
+                //    {
+                //        for (int k = 0; k < events.Count; k++)
+                //        {
+                //            Thing tEvent = events[k];
+                //            Motion motion = (Motion)tEvent.Children[0].References[1].T.V;
+
+                //            Seg newS = NextPosition(distances[i], motion);
+                //            if (newS.Val < distances[i].Val)
+                //            { distances[i] = newS; }
+                //        }
+                //    }
+                //}
+
+                //float bestDist = float.MaxValue;
+                //for (int i = 0; i < events.Count; i++) //last time through loop, find best
+                //{
+                //    if (distances[i].Val < bestDist)
+                //    {
+                //        bestDist = distances[i].Val;
+                //        bestEvent = events[i];
+                //    }
+                //}
+
+                //Motion motion1 = (Motion)bestEvent.Children[0].References[1].T.V;
+                //Seg newS1 = NextPosition(pCurrent, motion1);
+                //if (newS1.Val < pTarget.Val)
+                //{
+                //    GoToLandmark(bestEvent.References[0].T, sCurrent);
+                //    doPush = 2;
+                //    doBackOff = true;
+                //}
+                //else //our best move makes things worse
+                //{
+                //    endTarget = null;
+                //}
             }
         }
 
-        void GoToLandmark (Thing landmark,Segment s)
+        void GoToLandmark(Thing landmark, Segment s)
         {
             Segment s1 = Module2DModel.SegmentFromUKSThing(landmark.References[0].T);
             Module2DModel.OrderSegment(s1);
-            PointPlus pt1 = s.P1 + s1.P1;
-            PointPlus pt2 = s.P2 + s1.P2;
-            Utils.FindIntersection(s.P1.P, pt1.P, s.P2.P, pt2.P, out bool lines_intersect, out bool segments_intersect,out Point intersection, out Point close_p1, out Point close_p2, out double collisionAngle);
-            PointPlus newPoint = new PointPlus { P = intersection };
-            MoveTo(newPoint);
+            float ratio = s1.P1.R / (s1.Length);
+            PointPlus target = new PointPlus
+            {
+                X = s.P1.X + (s.P2.X - s.P1.X) * ratio,
+                Y = s.P1.Y + (s.P2.Y - s.P1.Y) * ratio,
+            };
+
+            MoveTo(target, .2f);
         }
 
-        Motion DistanceFromTarget(Segment s, Segment target)
+        Motion DistanceFromTarget(Seg s, Seg target)
         {
             Motion retVal = new Motion
             {
-                P = (s.MidPoint - target.MidPoint).P,
-                rotation = s.Angle - target.Angle
+                P = (s - target).P,
+                rotation = s.rotation - target.rotation
             };
+            while (retVal.rotation > PI)
+                retVal.rotation -= PI;
+            while (retVal.rotation < -PI)
+                retVal.rotation += PI;
             return retVal;
         }
         Seg NextPosition(Seg s, Motion m)
         {
             Seg retVal = new Seg
             {
-                P = (s + m).P,
-                rotation = s.rotation + m.rotation,
+                P = (s - m).P,
+                rotation = s.rotation - m.rotation,
             };
+            while (retVal.rotation > PI)
+                retVal.rotation -= PI;
+            while (retVal.rotation < - PI)
+                retVal.rotation += PI;
+
             return retVal;
         }
+
+        //not used but may be useful elsewhere.
         Segment NextPosition(Segment s, Motion m)
         {
             PointPlus oldMidPoint = s.MidPoint;
@@ -209,10 +339,10 @@ namespace BrainSimulator.Modules
             return retVal;
         }
 
-        void MoveTo(PointPlus target)
+        void MoveTo(PointPlus target, float offset)
         {
             ModuleBehavior mBehavior = (ModuleBehavior)FindModuleByType(typeof(ModuleBehavior));
-            target.X -= 0.21f; //body radius
+            target.X -= offset; //body radius
             mBehavior.TurnTo(-target.Theta);
             mBehavior.MoveTo(target.R);
             mBehavior.TurnTo(target.Theta); //return to previous orientation
@@ -237,10 +367,13 @@ namespace BrainSimulator.Modules
             PointPlus closestPP = new PointPlus { P = closest };
             mBehavior.TurnTo(-closestPP.Theta);
         }
-        void DoHome()
+        void DoBackOff(Segment s)
         {
-            ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
-            MoveTo((PointPlus)UKS.Labeled("Home").V);
+            ModuleBehavior mBehavior = (ModuleBehavior)FindModuleByType(typeof(ModuleBehavior));
+            PointPlus target = new PointPlus(s.MidPoint + new PointPlus { R = 2f, Theta = s.Angle - PI / 2 });
+            mBehavior.TurnTo(-target.Theta);
+            mBehavior.MoveTo(target.R);
+            mBehavior.TurnTo(target.Theta); //return to previous orientation
         }
 
         Thing MostLikelyEvent(Thing currentEvent)
@@ -270,9 +403,9 @@ namespace BrainSimulator.Modules
                 case 0: //go to midpoint 
                     {
                         PointPlus target = s.MidPoint;
-                        MoveTo(target);
+                        MoveTo(target, .2f);
                         doPush = 2;
-                        doHome = true;
+                        doBackOff = true;
                         state++;
                         break;
                     }
@@ -281,9 +414,9 @@ namespace BrainSimulator.Modules
                         Point p1 = s.MidPoint.P;
                         Point p2 = s.P1.P;
                         PointPlus target = new PointPlus { X = (float)(p1.X + p2.X) / 2, Y = (float)(p1.Y + p2.Y) / 2 };
-                        MoveTo(target);
+                        MoveTo(target, .2f);
                         doPush = 2;
-                        doHome = true;
+                        doBackOff = true;
                         state++;
                         break;
                     }
@@ -292,9 +425,9 @@ namespace BrainSimulator.Modules
                         Point p1 = s.MidPoint.P;
                         Point p2 = s.P2.P;
                         PointPlus target2 = new PointPlus { X = (float)(p1.X + p2.X) / 2, Y = (float)(p1.Y + p2.Y) / 2 };
-                        MoveTo(target2);
+                        MoveTo(target2, .22f);
                         doPush = 2;
-                        doHome = true;
+                        doBackOff = true;
                         state++;
                         break;
                     }
@@ -314,12 +447,17 @@ namespace BrainSimulator.Modules
             ClearNeurons();
 
             Neuron n = AddLabel("Auto");
-            
+
             n = AddLabel("Goal");
-            
+            AddLabel("E0");
+            AddLabel("E1");
+            AddLabel("E2");
+
             state = 0;
             lastPosition = null;
-            home = null;
+            doFaceSegment = false;
+            doBackOff = false;
+            doPush = 0;
         }
     }
 }

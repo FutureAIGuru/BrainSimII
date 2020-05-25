@@ -58,6 +58,12 @@ namespace BrainSimulator.Modules
             }
             catch { return; }
 
+            if (pending.Count == 0)
+            {
+                SetNeuronValue(null, "Done", 1);
+            }
+
+
             if (pending.Count != 0)
             {
                 behavior currentBehavior = pending[0];
@@ -72,10 +78,6 @@ namespace BrainSimulator.Modules
                         SetNeuronValue("ModuleTurn", 2, 0, currentBehavior.param1);
                         break;
                 }
-            }
-            if (pending.Count == 0)
-            {
-                SetNeuronValue(null, "Done", 1);
             }
 
         }

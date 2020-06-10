@@ -54,6 +54,8 @@ namespace BrainSimulator.Modules
         public List<physObject> currentView1 = new List<physObject>();
         [XmlIgnore]
         public int inMotion = 0; //+1 move objects fwd, -1 reverse
+        [XmlIgnore]
+        public int texture = 0; //+1 move objects fwd, -1 reverse
 
         //where the arm tips are relative to self
         public Vector[] armRelative = { new Vector(.5, .5), new Vector(.5, -.5) };
@@ -87,6 +89,8 @@ namespace BrainSimulator.Modules
 
             ModuleView naArmL = theNeuronArray.FindAreaByLabel("ModuleArmL");
             ModuleView naArmR = theNeuronArray.FindAreaByLabel("ModuleArmR");
+
+            texture = (int)GetNeuronValue("Texture");
 
             if (naArmL == null || naArmR == null)
             {
@@ -406,7 +410,7 @@ namespace BrainSimulator.Modules
             int[] pixels = new int[retinaWidth];
             for (int i = 0; i < retinaWidth; i++)
             {
-                double theta = Module2DVision.GetDirectionOfNeuron(i, retinaWidth);
+                double theta = Module2DVision.GetDirectionFromNeuron(i, retinaWidth);
                 theta = entityDirection1 + theta;
                 //create a segment from the view direction for this pixel (length 100 assumes the size of the universe)
                 Point p2 = entityPosition + new Vector(Cos(theta) * 100.0, Sin(theta) * 100.0);
@@ -424,6 +428,25 @@ namespace BrainSimulator.Modules
                         {
                             closestDistance = distance;
                             theColor = objects[j].theColor;
+
+                            if (theColor != Colors.Black && false) //TODO texture is commented out
+                            {
+                                //we can give the line some line texture
+                                PointPlus P1 = new PointPlus(objects[j].P1);
+                                PointPlus P2 = new PointPlus(objects[j].P2);
+                                PointPlus pIntersection = new PointPlus(intersection);
+                                PointPlus delta = P2 - P1;
+                                delta.R = .1f;
+                                Segment s = new Segment(P1, P2, objects[j].theColor);
+                                //this is slow as a snail but exactly matches the display code
+                                for (int k = 1; k < 1 + s.Length * 10; k += 2)
+                                {
+                                    PointPlus PStart = new PointPlus((Point)(P1.V + k * delta.V));
+                                    PointPlus PEnd = new PointPlus((Point)(P1.V + (k + .5f) * delta.V));
+                                    if (pIntersection.Theta >= Min(PStart.Theta, PEnd.Theta) && pIntersection.Theta <= Max(PStart.Theta, PEnd.Theta))
+                                        theColor = Colors.AliceBlue;
+                                }
+                            }
                         }
                     }
                 }
@@ -437,6 +460,75 @@ namespace BrainSimulator.Modules
             }
             SetNeuronVector("Module2DVision", true, row, pixels);
         }
+
+        //private void HandleVision(int row)
+        //{
+        //    if (dlg == null) return;
+        //    System.Drawing.Bitmap bitmap1 = null;
+        //    if (((Module2DSimDlg)dlg).theBitMap1 != null)
+        //    {
+        //        bitmap1 = ((Module2DSimDlg)dlg).theBitMap1;
+        //        ((Module2DSimDlg)dlg).theBitMap1 = null;
+        //    }
+        //    else
+        //    if (((Module2DSimDlg)dlg).theBitMap2 != null)
+        //    {
+        //        bitmap1 = ((Module2DSimDlg)dlg).theBitMap2;
+        //        ((Module2DSimDlg)dlg).theBitMap2 = null;
+        //    }
+
+        //    if (bitmap1 == null) return;
+
+        //    if (na.Height == 0 || na.Width == 0) return;
+        //    float ratio = bitmap1.Width / na.Width;
+        //    float ratio2 = bitmap1.Height / na.Height;
+        //    if (ratio2 < ratio) ratio = ratio2;
+
+
+        //    int retinaWidth = GetModuleWidth("Module2DVision");
+
+        //    if (row == 0)
+        //        currentView0.Clear();
+        //    else
+        //        currentView1.Clear();
+
+        //    int[] pixels = new int[retinaWidth];
+        //    for (int i = 0; i < retinaWidth; i++)
+        //    {
+        //        double theta = Module2DVision.GetDirectionOfNeuron(i, retinaWidth);
+        //        theta = entityDirection1 + theta;
+        //        //create a segment from the view direction for this pixel (length 100 assumes the size of the universe)
+        //        Point p2 = entityPosition + new Vector(Cos(theta) * 100.0, Sin(theta) * 100.0);
+        //        Color theColor = Colors.Pink;
+        //        for (int j = 0; j < 1000; j++)
+        //        {
+
+        //        }
+        //    }
+
+        //        for (int i = 0; i < na.Width; i++)
+        //    {
+        //        for (int j = 0; j < na.Height; j++)
+        //        {
+        //            Neuron n = na.GetNeuronAt(i, j);
+        //            int x = (int)(i * ratio);
+        //            int y = (int)(j * ratio);
+        //            if (x >= bitmap1.Width) break;
+        //            if (y >= bitmap1.Height) break;
+        //            System.Drawing.Color c = bitmap1.GetPixel(x, y);
+        //            System.Windows.Media.Color c1 = new System.Windows.Media.Color
+        //            { A = c.A, R = c.R, G = c.G, B = c.B };
+        //            int theColor = Utils.ColorToInt(c1);
+
+        //            if (theColor != 0 && theColor != 8421504)
+        //                n.SetValueInt(theColor);
+        //            else
+        //                n.SetValueInt(0);
+        //        }
+        //    }
+        //}
+
+
 
         //Training samples are triples... a spoken phrase, an anction, and an outcome (separated by colons)
         //TODO delete the outcome? It is always positive by implication
@@ -598,6 +690,8 @@ namespace BrainSimulator.Modules
             }
             MainWindow.ResumeEngine();
         }
+
+
 
         void TransformPoint(ref int x, ref int y)
         {

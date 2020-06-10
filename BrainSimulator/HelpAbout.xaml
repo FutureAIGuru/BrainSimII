@@ -8,7 +8,7 @@
         Title="HelpAbout" Height="334.232" Width="488.174">
     <Grid Margin="0,0,0,0">
 
-        <Button x:Name="buttonOK" Content="OK" HorizontalAlignment="Left" Height="24" Margin="199,0,0,24" VerticalAlignment="Bottom" Width="93" Click="ButtonOK_Click"/>
+        <Button x:Name="buttonOK" IsCancel="True" Content="OK" HorizontalAlignment="Left" Height="24" Margin="199,0,0,24" VerticalAlignment="Bottom" Width="93" Click="ButtonOK_Click"/>
         <Image x:Name="image" Margin="19,19,168,117" Source="SplashScreen.gif"/>
         <Label x:Name="labelContributors" HorizontalAlignment="Left" Height="158" Margin="317,47,0,0" VerticalAlignment="Top" Width="141"/>
         <Label x:Name="label" Content="Project Contributors:" HorizontalAlignment="Left" Height="23" Margin="317,19,0,0" VerticalAlignment="Top" Width="141" FontWeight="Bold"/>

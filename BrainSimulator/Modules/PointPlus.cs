@@ -44,6 +44,12 @@ namespace BrainSimulator.Modules
             theta = pp.Theta;
             Conf = pp.Conf;
         }
+        public PointPlus(Point pp)
+        {
+            X = (float)pp.X;
+            Y = (float)pp.Y;
+            Conf = 0;
+        }
 
         [XmlIgnore]
         public Point P
@@ -152,6 +158,14 @@ namespace BrainSimulator.Modules
         public PointPlus Motion;
         public ColorInt theColor;
 
+        public Segment() { }
+
+        public Segment(PointPlus P1i,PointPlus P2i,ColorInt theColori)
+        {
+            P1 = P1i;
+            P2 = P2i;
+            theColor = theColori;
+        }
         public PointPlus MidPoint
         {
             get

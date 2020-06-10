@@ -177,8 +177,8 @@ namespace BrainSimulator.Modules
 
             Grammar gr = new Grammar(a);
             recognizer.LoadGrammar(gr);
-            gr = new Grammar(reward);
-            recognizer.LoadGrammar(gr);
+//            gr = new Grammar(reward);
+//            recognizer.LoadGrammar(gr);
         }
 
         // Handle the SpeechRecognized event.  
@@ -254,8 +254,18 @@ namespace BrainSimulator.Modules
 
         public override void Initialize()
         {
-            na.BeginEnum();
             ClearNeurons();
+            AddLabel("1");
+            AddLabel("2");
+            AddLabel("3");
+            AddLabel("4");
+            AddLabel("5");
+            AddLabel("6");
+            AddLabel("7");
+            AddLabel("8");
+            AddLabel("9");
+            AddLabel("0");
+            AddLabel("point");
 
             if (recognizer != null)
             {

@@ -51,7 +51,6 @@
     <Neuron xsi:nil="true" />
     <Neuron>
       <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
       <Label>Set0</Label>
       <Id>46</Id>
@@ -61,22 +60,23 @@
       <LastChargeInt>0</LastChargeInt>
       <Synapses>
         <Synapse>
+          <targetNeuron>61</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>61</TargetNeuron>
         </Synapse>
       </Synapses>
       <SynapsesFrom>
         <Synapse>
+          <targetNeuron>61</targetNeuron>
           <Weight>1</Weight>
           <TargetNeuron>61</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>4863</LastFired>
+      <LastFired>5253</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
       <Label>Set1</Label>
       <Id>47</Id>
@@ -86,12 +86,14 @@
       <LastChargeInt>0</LastChargeInt>
       <Synapses>
         <Synapse>
+          <targetNeuron>62</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>62</TargetNeuron>
         </Synapse>
       </Synapses>
       <SynapsesFrom>
         <Synapse>
+          <targetNeuron>62</targetNeuron>
           <Weight>1</Weight>
           <TargetNeuron>62</TargetNeuron>
         </Synapse>
@@ -101,7 +103,6 @@
     </Neuron>
     <Neuron>
       <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
       <Label>Set2</Label>
       <Id>48</Id>
@@ -111,22 +112,23 @@
       <LastChargeInt>0</LastChargeInt>
       <Synapses>
         <Synapse>
+          <targetNeuron>63</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>63</TargetNeuron>
         </Synapse>
       </Synapses>
       <SynapsesFrom>
         <Synapse>
+          <targetNeuron>63</targetNeuron>
           <Weight>1</Weight>
           <TargetNeuron>63</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>4863</LastFired>
+      <LastFired>5253</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
       <Label>Set3</Label>
       <Id>49</Id>
@@ -136,22 +138,23 @@
       <LastChargeInt>0</LastChargeInt>
       <Synapses>
         <Synapse>
+          <targetNeuron>64</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>64</TargetNeuron>
         </Synapse>
       </Synapses>
       <SynapsesFrom>
         <Synapse>
+          <targetNeuron>64</targetNeuron>
           <Weight>1</Weight>
           <TargetNeuron>64</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>4863</LastFired>
+      <LastFired>5377</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
       <Label>Set4</Label>
       <Id>50</Id>
@@ -161,22 +164,23 @@
       <LastChargeInt>0</LastChargeInt>
       <Synapses>
         <Synapse>
+          <targetNeuron>65</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>65</TargetNeuron>
         </Synapse>
       </Synapses>
       <SynapsesFrom>
         <Synapse>
+          <targetNeuron>65</targetNeuron>
           <Weight>1</Weight>
           <TargetNeuron>65</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>4863</LastFired>
+      <LastFired>4979</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
       <Label>Set5</Label>
       <Id>51</Id>
@@ -186,22 +190,23 @@
       <LastChargeInt>0</LastChargeInt>
       <Synapses>
         <Synapse>
+          <targetNeuron>66</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>66</TargetNeuron>
         </Synapse>
       </Synapses>
       <SynapsesFrom>
         <Synapse>
+          <targetNeuron>66</targetNeuron>
           <Weight>1</Weight>
           <TargetNeuron>66</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>65489</LastFired>
+      <LastFired>5377</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
       <Label>Set6</Label>
       <Id>52</Id>
@@ -211,22 +216,23 @@
       <LastChargeInt>0</LastChargeInt>
       <Synapses>
         <Synapse>
+          <targetNeuron>67</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>67</TargetNeuron>
         </Synapse>
       </Synapses>
       <SynapsesFrom>
         <Synapse>
+          <targetNeuron>67</targetNeuron>
           <Weight>1</Weight>
           <TargetNeuron>67</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>66129</LastFired>
+      <LastFired>4979</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
       <Label>Set7</Label>
       <Id>53</Id>
@@ -236,12 +242,14 @@
       <LastChargeInt>0</LastChargeInt>
       <Synapses>
         <Synapse>
+          <targetNeuron>68</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>68</TargetNeuron>
         </Synapse>
       </Synapses>
       <SynapsesFrom>
         <Synapse>
+          <targetNeuron>68</targetNeuron>
           <Weight>1</Weight>
           <TargetNeuron>68</TargetNeuron>
         </Synapse>
@@ -251,7 +259,6 @@
     </Neuron>
     <Neuron>
       <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
       <Label>Read</Label>
       <Id>54</Id>
@@ -261,45 +268,54 @@
       <LastChargeInt>0</LastChargeInt>
       <Synapses>
         <Synapse>
+          <targetNeuron>69</targetNeuron>
           <Weight>1</Weight>
           <TargetNeuron>69</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>67</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>67</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>68</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>68</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>66</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>66</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>65</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>65</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>61</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>61</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>62</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>62</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>63</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>63</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>64</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>64</TargetNeuron>
         </Synapse>
       </Synapses>
       <SynapsesFrom />
       <KeepHistory>false</KeepHistory>
-      <LastFired>4861</LastFired>
+      <LastFired>5375</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
@@ -309,7 +325,6 @@
     <Neuron xsi:nil="true" />
     <Neuron>
       <LeakRate>0.05</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>LIF</Model>
       <Label />
       <Id>61</Id>
@@ -319,34 +334,38 @@
       <LastChargeInt>0</LastChargeInt>
       <Synapses>
         <Synapse>
+          <targetNeuron>46</targetNeuron>
           <Weight>1</Weight>
           <TargetNeuron>46</TargetNeuron>
         </Synapse>
         <Synapse>
-          <Weight>0.5</Weight>
+          <targetNeuron>76</targetNeuron>
+          <Weight>1</Weight>
           <TargetNeuron>76</TargetNeuron>
         </Synapse>
       </Synapses>
       <SynapsesFrom>
         <Synapse>
+          <targetNeuron>54</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>54</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>69</targetNeuron>
           <Weight>-1</Weight>
           <TargetNeuron>69</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>46</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>46</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>4862</LastFired>
+      <LastFired>5252</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.05</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>LIF</Model>
       <Label />
       <Id>62</Id>
@@ -356,24 +375,29 @@
       <LastChargeInt>0</LastChargeInt>
       <Synapses>
         <Synapse>
-          <Weight>0.5</Weight>
+          <targetNeuron>77</targetNeuron>
+          <Weight>1</Weight>
           <TargetNeuron>77</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>47</targetNeuron>
           <Weight>1</Weight>
           <TargetNeuron>47</TargetNeuron>
         </Synapse>
       </Synapses>
       <SynapsesFrom>
         <Synapse>
+          <targetNeuron>54</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>54</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>69</targetNeuron>
           <Weight>-1</Weight>
           <TargetNeuron>69</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>47</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>47</TargetNeuron>
         </Synapse>
@@ -383,7 +407,6 @@
     </Neuron>
     <Neuron>
       <LeakRate>0.05</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>LIF</Model>
       <Label />
       <Id>63</Id>
@@ -393,71 +416,79 @@
       <LastChargeInt>0</LastChargeInt>
       <Synapses>
         <Synapse>
+          <targetNeuron>48</targetNeuron>
           <Weight>1</Weight>
           <TargetNeuron>48</TargetNeuron>
         </Synapse>
         <Synapse>
-          <Weight>0.5</Weight>
+          <targetNeuron>78</targetNeuron>
+          <Weight>1</Weight>
           <TargetNeuron>78</TargetNeuron>
         </Synapse>
       </Synapses>
       <SynapsesFrom>
         <Synapse>
+          <targetNeuron>54</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>54</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>69</targetNeuron>
           <Weight>-1</Weight>
           <TargetNeuron>69</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>48</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>48</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>4862</LastFired>
+      <LastFired>5252</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.05</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>LIF</Model>
       <Label />
       <Id>64</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
+      <CurrentCharge>0.01</CurrentCharge>
+      <CurrentChargeInt>100</CurrentChargeInt>
+      <LastCharge>0.0106</LastCharge>
+      <LastChargeInt>106</LastChargeInt>
       <Synapses>
         <Synapse>
+          <targetNeuron>49</targetNeuron>
           <Weight>1</Weight>
           <TargetNeuron>49</TargetNeuron>
         </Synapse>
         <Synapse>
-          <Weight>0.5</Weight>
+          <targetNeuron>79</targetNeuron>
+          <Weight>1</Weight>
           <TargetNeuron>79</TargetNeuron>
         </Synapse>
       </Synapses>
       <SynapsesFrom>
         <Synapse>
+          <targetNeuron>54</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>54</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>69</targetNeuron>
           <Weight>-1</Weight>
           <TargetNeuron>69</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>49</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>49</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>4862</LastFired>
+      <LastFired>5376</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.05</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>LIF</Model>
       <Label />
       <Id>65</Id>
@@ -467,71 +498,79 @@
       <LastChargeInt>0</LastChargeInt>
       <Synapses>
         <Synapse>
-          <Weight>0.5</Weight>
+          <targetNeuron>80</targetNeuron>
+          <Weight>1</Weight>
           <TargetNeuron>80</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>50</targetNeuron>
           <Weight>1</Weight>
           <TargetNeuron>50</TargetNeuron>
         </Synapse>
       </Synapses>
       <SynapsesFrom>
         <Synapse>
+          <targetNeuron>54</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>54</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>69</targetNeuron>
           <Weight>-1</Weight>
           <TargetNeuron>69</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>50</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>50</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>4862</LastFired>
+      <LastFired>4978</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.05</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>LIF</Model>
       <Label />
       <Id>66</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
+      <CurrentCharge>0.01</CurrentCharge>
+      <CurrentChargeInt>100</CurrentChargeInt>
+      <LastCharge>0.0106</LastCharge>
+      <LastChargeInt>106</LastChargeInt>
       <Synapses>
         <Synapse>
+          <targetNeuron>51</targetNeuron>
           <Weight>1</Weight>
           <TargetNeuron>51</TargetNeuron>
         </Synapse>
         <Synapse>
-          <Weight>0.5</Weight>
+          <targetNeuron>81</targetNeuron>
+          <Weight>1</Weight>
           <TargetNeuron>81</TargetNeuron>
         </Synapse>
       </Synapses>
       <SynapsesFrom>
         <Synapse>
+          <targetNeuron>69</targetNeuron>
           <Weight>-1</Weight>
           <TargetNeuron>69</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>54</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>54</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>51</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>51</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>65488</LastFired>
+      <LastFired>5376</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.05</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>LIF</Model>
       <Label />
       <Id>67</Id>
@@ -541,34 +580,38 @@
       <LastChargeInt>0</LastChargeInt>
       <Synapses>
         <Synapse>
+          <targetNeuron>52</targetNeuron>
           <Weight>1</Weight>
           <TargetNeuron>52</TargetNeuron>
         </Synapse>
         <Synapse>
-          <Weight>0.5</Weight>
+          <targetNeuron>82</targetNeuron>
+          <Weight>1</Weight>
           <TargetNeuron>82</TargetNeuron>
         </Synapse>
       </Synapses>
       <SynapsesFrom>
         <Synapse>
+          <targetNeuron>69</targetNeuron>
           <Weight>-1</Weight>
           <TargetNeuron>69</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>54</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>54</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>52</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>52</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>66128</LastFired>
+      <LastFired>4978</LastFired>
     </Neuron>
     <Neuron>
       <LeakRate>0.05</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>LIF</Model>
       <Label />
       <Id>68</Id>
@@ -578,24 +621,29 @@
       <LastChargeInt>0</LastChargeInt>
       <Synapses>
         <Synapse>
-          <Weight>0.5</Weight>
+          <targetNeuron>83</targetNeuron>
+          <Weight>1</Weight>
           <TargetNeuron>83</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>53</targetNeuron>
           <Weight>1</Weight>
           <TargetNeuron>53</TargetNeuron>
         </Synapse>
       </Synapses>
       <SynapsesFrom>
         <Synapse>
+          <targetNeuron>69</targetNeuron>
           <Weight>-1</Weight>
           <TargetNeuron>69</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>54</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>54</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>53</targetNeuron>
           <Weight>0.9</Weight>
           <TargetNeuron>53</TargetNeuron>
         </Synapse>
@@ -605,7 +653,6 @@
     </Neuron>
     <Neuron>
       <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>Std</Model>
       <Label>Reset</Label>
       <Id>69</Id>
@@ -615,78 +662,55 @@
       <LastChargeInt>0</LastChargeInt>
       <Synapses>
         <Synapse>
+          <targetNeuron>68</targetNeuron>
           <Weight>-1</Weight>
           <TargetNeuron>68</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>67</targetNeuron>
           <Weight>-1</Weight>
           <TargetNeuron>67</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>66</targetNeuron>
           <Weight>-1</Weight>
           <TargetNeuron>66</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>65</targetNeuron>
           <Weight>-1</Weight>
           <TargetNeuron>65</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>61</targetNeuron>
           <Weight>-1</Weight>
           <TargetNeuron>61</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>62</targetNeuron>
           <Weight>-1</Weight>
           <TargetNeuron>62</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>63</targetNeuron>
           <Weight>-1</Weight>
           <TargetNeuron>63</TargetNeuron>
         </Synapse>
         <Synapse>
+          <targetNeuron>64</targetNeuron>
           <Weight>-1</Weight>
           <TargetNeuron>64</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>0.5</Weight>
-          <TargetNeuron>76</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>0.5</Weight>
-          <TargetNeuron>77</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>0.5</Weight>
-          <TargetNeuron>78</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>0.5</Weight>
-          <TargetNeuron>79</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>0.5</Weight>
-          <TargetNeuron>80</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>0.5</Weight>
-          <TargetNeuron>81</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>0.5</Weight>
-          <TargetNeuron>82</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>0.5</Weight>
-          <TargetNeuron>83</TargetNeuron>
         </Synapse>
       </Synapses>
       <SynapsesFrom>
         <Synapse>
+          <targetNeuron>54</targetNeuron>
           <Weight>1</Weight>
           <TargetNeuron>54</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
-      <LastFired>4907</LastFired>
+      <LastFired>5376</LastFired>
     </Neuron>
     <Neuron xsi:nil="true" />
     <Neuron xsi:nil="true" />
@@ -696,7 +720,6 @@
     <Neuron xsi:nil="true" />
     <Neuron>
       <LeakRate>0.9</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>LIF</Model>
       <Label>Out0</Label>
       <Id>76</Id>
@@ -707,12 +730,9 @@
       <Synapses />
       <SynapsesFrom>
         <Synapse>
-          <Weight>0.5</Weight>
+          <targetNeuron>61</targetNeuron>
+          <Weight>1</Weight>
           <TargetNeuron>61</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>0.5</Weight>
-          <TargetNeuron>69</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
@@ -720,7 +740,6 @@
     </Neuron>
     <Neuron>
       <LeakRate>0.9</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>LIF</Model>
       <Label>Out1</Label>
       <Id>77</Id>
@@ -731,12 +750,9 @@
       <Synapses />
       <SynapsesFrom>
         <Synapse>
-          <Weight>0.5</Weight>
+          <targetNeuron>62</targetNeuron>
+          <Weight>1</Weight>
           <TargetNeuron>62</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>0.5</Weight>
-          <TargetNeuron>69</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
@@ -744,7 +760,6 @@
     </Neuron>
     <Neuron>
       <LeakRate>0.9</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>LIF</Model>
       <Label>Out1</Label>
       <Id>78</Id>
@@ -755,12 +770,9 @@
       <Synapses />
       <SynapsesFrom>
         <Synapse>
-          <Weight>0.5</Weight>
+          <targetNeuron>63</targetNeuron>
+          <Weight>1</Weight>
           <TargetNeuron>63</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>0.5</Weight>
-          <TargetNeuron>69</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
@@ -768,7 +780,6 @@
     </Neuron>
     <Neuron>
       <LeakRate>0.9</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>LIF</Model>
       <Label>Out2</Label>
       <Id>79</Id>
@@ -779,12 +790,9 @@
       <Synapses />
       <SynapsesFrom>
         <Synapse>
-          <Weight>0.5</Weight>
+          <targetNeuron>64</targetNeuron>
+          <Weight>1</Weight>
           <TargetNeuron>64</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>0.5</Weight>
-          <TargetNeuron>69</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
@@ -792,7 +800,6 @@
     </Neuron>
     <Neuron>
       <LeakRate>0.9</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>LIF</Model>
       <Label>Out3</Label>
       <Id>80</Id>
@@ -803,12 +810,9 @@
       <Synapses />
       <SynapsesFrom>
         <Synapse>
-          <Weight>0.5</Weight>
+          <targetNeuron>65</targetNeuron>
+          <Weight>1</Weight>
           <TargetNeuron>65</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>0.5</Weight>
-          <TargetNeuron>69</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
@@ -816,7 +820,6 @@
     </Neuron>
     <Neuron>
       <LeakRate>0.9</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>LIF</Model>
       <Label>Out1</Label>
       <Id>81</Id>
@@ -827,12 +830,9 @@
       <Synapses />
       <SynapsesFrom>
         <Synapse>
-          <Weight>0.5</Weight>
+          <targetNeuron>66</targetNeuron>
+          <Weight>1</Weight>
           <TargetNeuron>66</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>0.5</Weight>
-          <TargetNeuron>69</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
@@ -840,7 +840,6 @@
     </Neuron>
     <Neuron>
       <LeakRate>0.9</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>LIF</Model>
       <Label>Out2</Label>
       <Id>82</Id>
@@ -851,12 +850,9 @@
       <Synapses />
       <SynapsesFrom>
         <Synapse>
-          <Weight>0.5</Weight>
+          <targetNeuron>67</targetNeuron>
+          <Weight>1</Weight>
           <TargetNeuron>67</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>0.5</Weight>
-          <TargetNeuron>69</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
@@ -864,7 +860,6 @@
     </Neuron>
     <Neuron>
       <LeakRate>0.9</LeakRate>
-      <LastSynapse>-1</LastSynapse>
       <Model>LIF</Model>
       <Label>Out3</Label>
       <Id>83</Id>
@@ -875,12 +870,9 @@
       <Synapses />
       <SynapsesFrom>
         <Synapse>
-          <Weight>0.5</Weight>
+          <targetNeuron>68</targetNeuron>
+          <Weight>1</Weight>
           <TargetNeuron>68</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>0.5</Weight>
-          <TargetNeuron>69</TargetNeuron>
         </Synapse>
       </SynapsesFrom>
       <KeepHistory>false</KeepHistory>
@@ -1254,10 +1246,10 @@
     <Neuron xsi:nil="true" />
   </neuronArray>
   <displayParams>
-    <NeuronDisplaySize>62</NeuronDisplaySize>
+    <NeuronDisplaySize>80</NeuronDisplaySize>
     <DisplayOffset>
-      <X>0</X>
-      <Y>0</Y>
+      <X>-73.797914610299415</X>
+      <Y>-51.136561033709114</Y>
     </DisplayOffset>
     <NeuronRows>15</NeuronRows>
   </displayParams>
@@ -1268,7 +1260,7 @@ Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;
 &lt;/Run&gt;&lt;/Paragraph&gt;&lt;/Section&gt;</networkNotes>
   <hideNotes>false</hideNotes>
   <Modules />
-  <Generation>4921</Generation>
+  <Generation>5464</Generation>
   <EngineSpeed>250</EngineSpeed>
   <ShowSynapses>true</ShowSynapses>
 </NeuronArray>

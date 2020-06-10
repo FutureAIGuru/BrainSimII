@@ -124,7 +124,7 @@ namespace BrainSimulator
             else
             {
                 bool showHelp = (bool)Properties.Settings.Default["ShowHelp"];
-                if (showHelp || theNeuronArray == null)
+                if (showHelp)
                     MenuItemHelp_Click(null, null);
             }
             OpenHistoryWindow();
@@ -249,31 +249,6 @@ namespace BrainSimulator
                 XmlSerializer reader = new XmlSerializer(typeof(NeuronArray), GetModuleTypes());
                 theNeuronArray = (NeuronArray)reader.Deserialize(file);
                 file.Close();
-
-                for (int i = 0; i < theNeuronArray.arraySize; i++)
-                    if (theNeuronArray.neuronArray[i] == null)
-                        theNeuronArray.neuronArray[i] = new Neuron(i);
-
-                //Update all the synapses to ensure that the synapse-from lists are correct
-                foreach (Neuron n in theNeuronArray.neuronArray)
-                {
-                    foreach (Synapse s in n.Synapses)
-                        n.AddSynapse(s.TargetNeuron, s.Weight, theNeuronArray, false);
-                }
-
-                theNeuronArray.CheckSynapseArray();
-                theNeuronArrayView.Update();
-                setTitleBar();
-                Task.Delay(1000).ContinueWith(t => ShowDialogs());
-                foreach (ModuleView na in theNeuronArray.modules)
-                {
-                    if (na.TheModule != null)
-                        na.TheModule.SetUpAfterLoad();
-                }
-                if (theNeuronArray.displayParams != null)
-                    theNeuronArrayView.Dp = theNeuronArray.displayParams;
-
-                NeuronArrayView.SortAreas();
             }
             catch (Exception e1)
             {
@@ -283,6 +258,39 @@ namespace BrainSimulator
                     MessageBox.Show("File Load failed because:\r\n " + e1.Message);
                 return false;
             }
+
+            for (int i = 0; i < theNeuronArray.arraySize; i++)
+            {
+                if (theNeuronArray.neuronArray[i] == null)
+                    theNeuronArray.neuronArray[i] = new Neuron(i);
+                if (theNeuronArray.neuronArray[i].CurrentCharge > 0 || theNeuronArray.neuronArray[i].LastCharge > 0)
+                    theNeuronArray.AddToFiringQueue(theNeuronArray.neuronArray[i].Id);
+            }
+            //Update all the synapses to ensure that the synapse-from lists are correct
+            foreach (Neuron n in theNeuronArray.neuronArray)
+            {
+                foreach (Synapse s in n.Synapses)
+                {
+                    n.AddSynapse(s.TargetNeuron, s.Weight, theNeuronArray, false);
+                    s.N = theNeuronArray.neuronArray[s.TargetNeuron];
+                }
+            }
+
+            theNeuronArray.CheckSynapseArray();
+            theNeuronArrayView.Update();
+            setTitleBar();
+            Task.Delay(1000).ContinueWith(t => ShowDialogs());
+            foreach (ModuleView na in theNeuronArray.modules)
+            {
+                if (na.TheModule != null)
+                    na.TheModule.SetUpAfterLoad();
+            }
+            if (theNeuronArray.displayParams != null)
+                theNeuronArrayView.Dp = theNeuronArray.displayParams;
+
+            NeuronArrayView.SortAreas();
+
+
             Update();
             SetShowSynapsesCheckBox(theNeuronArray.ShowSynapses);
             OpenHistoryWindow();
@@ -304,7 +312,7 @@ namespace BrainSimulator
                     });
                 }
             }
-            if (!theNeuronArray.hideNotes)
+            if (!theNeuronArray.hideNotes && theNeuronArray.networkNotes != "")
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {
                     MenuItemNotes_Click(null, null);
@@ -464,7 +472,7 @@ namespace BrainSimulator
             if (result ?? false)// System.Windows.Forms.DialogResult.OK)
             {
                 //Save the data from the NeuronArray to the file
-                System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(NeuronArray),GetModuleTypes());
+                System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(NeuronArray), GetModuleTypes());
                 System.IO.FileStream file = System.IO.File.Create(saveFileDialog1.FileName);
                 writer.Serialize(file, theNeuronArrayView.myClipBoard);
                 file.Close();
@@ -486,7 +494,8 @@ namespace BrainSimulator
                     Properties.Settings.Default["CurrentFile"] = currentFileName;
                     Properties.Settings.Default.Save();
                     setTitleBar();
-                    MenuItemNotes_Click(null, null);
+                    if (theNeuronArray.networkNotes != "")
+                        MenuItemNotes_Click(null, null);
                     ResumeEngine();
                 }
             }
@@ -511,7 +520,7 @@ namespace BrainSimulator
             {
                 // Load the data from the XML to the Brainsim NeuronArray.  
                 FileStream file = File.Open(openFileDialog1.FileName, FileMode.Open);
-                XmlSerializer reader = new XmlSerializer(typeof(NeuronArray),GetModuleTypes());
+                XmlSerializer reader = new XmlSerializer(typeof(NeuronArray), GetModuleTypes());
                 theNeuronArrayView.myClipBoard = (NeuronArray)reader.Deserialize(file);
                 file.Close();
             }
@@ -911,15 +920,19 @@ namespace BrainSimulator
             //}
             Activate();
         }
-
+        public static bool showSynapses = false;
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
+            showSynapses = true;
+            if (theNeuronArray == null) return;
             theNeuronArray.ShowSynapses = true;
             Update();
         }
 
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
+            showSynapses = false;
+            if (theNeuronArray == null) return;
             theNeuronArray.ShowSynapses = false;
             Update();
         }

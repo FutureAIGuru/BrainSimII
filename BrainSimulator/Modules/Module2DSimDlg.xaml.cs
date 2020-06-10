@@ -80,15 +80,50 @@ namespace BrainSimulator.Modules
             //draw the objects
             for (int i = 0; i < parent.objects.Count; i++)
             {
-                theCanvas.Children.Add(new Line
+                if (parent.objects[i].theColor != Colors.Black && parent.texture != 0)
                 {
-                    X1 = parent.objects[i].P1.X,
-                    X2 = parent.objects[i].P2.X,
-                    Y1 = parent.objects[i].P1.Y,
-                    Y2 = parent.objects[i].P2.Y,
-                    StrokeThickness = 5 / scale,
-                    Stroke = new SolidColorBrush(parent.objects[i].theColor)
-                });
+                    theCanvas.Children.Add(new Line
+                    {
+                        X1 = parent.objects[i].P1.X,
+                        X2 = parent.objects[i].P2.X,
+                        Y1 = parent.objects[i].P1.Y,
+                        Y2 = parent.objects[i].P2.Y,
+                        StrokeThickness = 4 / scale,
+                        Stroke = new SolidColorBrush(parent.objects[i].theColor),
+                    });
+                    //dash the line
+                    PointPlus P1 = new PointPlus(parent.objects[i].P1);
+                    PointPlus P2 = new PointPlus(parent.objects[i].P2);
+                    PointPlus delta = P2 - P1;
+                    delta.R = .1f;
+                    Segment s = new Segment(P1, P2, parent.objects[i].theColor);
+                    for (int j = 1; j < 1 + s.Length * 10; j += 2)
+                    {
+                        PointPlus PStart = new PointPlus((Point)(P1.V + j * delta.V));
+                        PointPlus PEnd = new PointPlus((Point)(P1.V + (j + .5f) * delta.V));
+                        theCanvas.Children.Add(new Line
+                        {
+                            X1 = PStart.X,
+                            X2 = PEnd.X,
+                            Y1 = PStart.Y,
+                            Y2 = PEnd.Y,
+                            StrokeThickness = 4 / scale,
+                            Stroke = new SolidColorBrush(Colors.AliceBlue),
+                        });
+                    }
+                }
+                else
+                {
+                    theCanvas.Children.Add(new Line
+                    {
+                        X1 = parent.objects[i].P1.X,
+                        X2 = parent.objects[i].P2.X,
+                        Y1 = parent.objects[i].P1.Y,
+                        Y2 = parent.objects[i].P2.Y,
+                        StrokeThickness = 4 / scale,
+                        Stroke = new SolidColorBrush(parent.objects[i].theColor),
+                    });
+                }
             }
 
             //draw the arms...

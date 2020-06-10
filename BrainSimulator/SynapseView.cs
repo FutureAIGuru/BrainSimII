@@ -150,7 +150,7 @@ namespace BrainSimulator
             if (newWeight == -20) return;
             theNeuronArrayView.lastSynapseWeight = newWeight;
             Neuron n = MainWindow.theNeuronArray.neuronArray[(int)cm.GetValue(SourceIDProperty)];
-            n.AddSynapse((int)cm.GetValue(TargetIDProperty), newWeight, MainWindow.theNeuronArray);
+            n.AddSynapse((int)cm.GetValue(TargetIDProperty), newWeight, MainWindow.theNeuronArray,true);
         }
 
         public static void GetSynapseInfo(object sender)
@@ -195,7 +195,7 @@ namespace BrainSimulator
             if ((string)mi.Header == "-1")
                 weight = -1f;
             MainWindow.theNeuronArray.neuronArray[(int)cm.GetValue(SourceIDProperty)].
-                AddSynapse((int)cm.GetValue(TargetIDProperty), weight, MainWindow.theNeuronArray);
+                AddSynapse((int)cm.GetValue(TargetIDProperty), weight, MainWindow.theNeuronArray,true);
             theNeuronArrayView.lastSynapseWeight = weight;
             MainWindow.Update();
         }

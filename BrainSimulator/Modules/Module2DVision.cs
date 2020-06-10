@@ -32,19 +32,29 @@ namespace BrainSimulator.Modules
         }
 
         //this converts the position of a retinal neuron to its angular position
-        public static double GetDirectionOfNeuron(float index, int numPixels)
+        //we could make this non-linear to create a fovea some day
+        public static double GetDirectionFromNeuron(float index, int numPixels)
         {
             float i1 = ((float)(numPixels - 1) / 2 - index);
             float thetaPerPixel = fieldOfView / (numPixels - 1);
             double retVal = thetaPerPixel * i1;
             return retVal;
         }
-
+        public static float GetNeuronFromDirection(float angle, int numPixels)
+        {
+            float thetaPerPixel = fieldOfView / (numPixels - 1);
+            float i1 = angle / thetaPerPixel;
+            return (numPixels - 1) / 2 - i1;
+        }
 
         //these arrays are used to determine if any data has changed
         //this is presently used to reduce computation but in future development can also be used to detect object motion
         List<int> lastValuesL = null;
         List<int> lastValuesR = null;
+        List<int> curValuesL = null;
+        List<int> curValuesR = null;
+        List<int> textureValues = null;
+
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
@@ -54,34 +64,50 @@ namespace BrainSimulator.Modules
             {
                 lastValuesL = new List<int>();
                 lastValuesR = new List<int>();
+                curValuesL = new List<int>();
+                curValuesR = new List<int>();
+                textureValues = new List<int>();
                 for (int i = 0; i < na.Width; i++)
                 {
                     lastValuesL.Add(-1);
                     lastValuesR.Add(-1);
+                    curValuesL.Add(-1);
+                    curValuesR.Add(-1);
+                    textureValues.Add(-1);
                 }
                 retinaChanged = true;
+            }
+            for (int i = 0; i < na.Width; i++)
+            {
+                curValuesL[i] = na.GetNeuronAt(i, 1).CurrentChargeInt;
+                curValuesR[i] = na.GetNeuronAt(i, 0).CurrentChargeInt;
+                textureValues[i] = curValuesL[i];
             }
 
             for (int i = 0; i < lastValuesL.Count; i++)
             {
-                if (lastValuesL[i] != na.GetNeuronAt(i, 1).CurrentChargeInt) retinaChanged = true;
-                if (lastValuesR[i] != na.GetNeuronAt(i, 0).CurrentChargeInt) retinaChanged = true;
+                if (lastValuesL[i] != curValuesL[i])
+                {
+                    retinaChanged = true;
+                    break;
+                }
+                if (lastValuesR[i] != curValuesR[i]) 
+                {
+                    retinaChanged = true;
+                    break;
+                }
             }
 
             if (retinaChanged)
             {
-                FindPointsOfInterest();
-                SetCenterColor();
-
                 for (int i = 0; i < lastValuesL.Count; i++)
                 {
-                    lastValuesL[i] = na.GetNeuronAt(i, 1).CurrentChargeInt;
-                    lastValuesR[i] = na.GetNeuronAt(i, 0).CurrentChargeInt;
+                    lastValuesL[i] = curValuesL[i];
+                    lastValuesR[i] = curValuesR[i];
                 }
+                FindPointsOfInterest();
+                SetCenterColor();
             }
-
-
-
             viewChanged = 0;
         }
 
@@ -110,7 +136,7 @@ namespace BrainSimulator.Modules
             }
         }
 
-        struct monocularBoundary
+        struct MonocularBoundary
         {
             public ColorInt colorL;
             public ColorInt colorR;
@@ -133,11 +159,12 @@ namespace BrainSimulator.Modules
             public Thing t;
             public bool PLHidden;
             public bool PRHidden;
+            public float angleFromTexture;
 
         }
 
-        List<monocularBoundary> LBoundaries = new List<monocularBoundary>();
-        List<monocularBoundary> RBoundaries = new List<monocularBoundary>();
+        List<MonocularBoundary> LBoundaries = new List<MonocularBoundary>();
+        List<MonocularBoundary> RBoundaries = new List<MonocularBoundary>();
         List<BinocularBoundary> boundaries = new List<BinocularBoundary>();
         List<Area> areas = new List<Area>();
 
@@ -162,16 +189,58 @@ namespace BrainSimulator.Modules
                         RChanged = bb2.changed,
                         theColor = bb1.theColor,
                     };
+                    //aa.angleFromTexture = GetAngleFromTexture(aa);
                     Segment s = new Segment() { P1 = aa.PL, P2 = aa.PR, theColor = aa.theColor, };
                     Module2DModel nmModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
-                    if (nmModel != null) 
+                    if (nmModel != null)
                         aa.t = nmModel.MostLikelySegment(s);
                     areas.Add(aa);
                 }
                 bb1 = bb2;
             }
-
         }
+
+        float GetAngleFromTexture(Area a)
+        {
+            int start = (int)GetNeuronFromDirection(a.PL.Theta, na.Width);
+            int end = (int)GetNeuronFromDirection(a.PR.Theta, na.Width);
+            int first = 0;
+            int last = 0;
+            int lCount = 0;
+            int rCount = 0;
+            for (int i = start; i < end; i++)
+            {
+                ColorInt color = na.GetNeuronAt(i, 0).CurrentChargeInt;
+                if (color != a.theColor && first == 0)
+                    continue;
+                if (first == 0) first = i;
+                if (color == System.Windows.Media.Colors.AliceBlue)
+                {
+                    lCount++;
+                }
+                else if (lCount > 0) break;
+            }
+            for (int i = end - 1; i >= start; i--)
+            {
+                ColorInt color = na.GetNeuronAt(i, 0).CurrentChargeInt;
+                if (color != a.theColor && last== 0)
+                    continue;
+                if (last == 0) last = i;
+                if (color == System.Windows.Media.Colors.AliceBlue)
+                {
+                    rCount++;
+                }
+                else if (rCount > 0) break;
+            }
+            float retVal = 1;
+            if (Abs (lCount - rCount) > 0)
+            {
+                retVal = (float)lCount / (float)rCount;
+                retVal *= (float)(last - first) / (float)(end - start); //correction because texture is not at the end of the segment
+            }
+            return retVal;
+        }
+
         private void FindBinocularBoundaries()
         {
             boundaries.Clear();
@@ -224,18 +293,41 @@ namespace BrainSimulator.Modules
             }
         }
 
-        private void FindMonocularBoundaries(int eye, List<monocularBoundary> boundaries)
+
+        private void RemoveTextures(int eye)
         {
+            List<int> values = curValuesL;
+            if (eye == 0) values = curValuesR;
+
+            ColorInt color1 = na.GetNeuronAt(0, eye).CurrentChargeInt;
+            for (int i = 1; i < na.Width; i++)
+            {
+                ColorInt color = values[i];
+                if (color == System.Windows.Media.Colors.AliceBlue)
+                {
+                    values[i] = color1;
+                }
+                color1 = values[i];
+            }
+        }
+
+        private void FindMonocularBoundaries(int eye, List<MonocularBoundary> boundaries)
+        {
+            List<int> values = curValuesL;
+            if (eye == 0) values = curValuesR;
             List<int> prevValues = lastValuesL;
             if (eye == 0) prevValues = lastValuesR;
 
-            int color1 = na.GetNeuronAt(0, eye).CurrentChargeInt;
+            RemoveTextures(eye);
+
+            int color1 = values[0];
+
             int prevColor1 = prevValues[0];
             int color2 = color1;
             int prevColor2 = prevColor1;
             for (int i = 1; i < na.Width; i++)
             {
-                color2 = na.GetNeuronAt(i, eye).CurrentChargeInt;
+                color2 = values[i];
                 prevColor2 = prevValues[i];
                 bool changed = false;
                 if (color1 != prevColor1 || color2 != prevColor2)
@@ -243,7 +335,7 @@ namespace BrainSimulator.Modules
 
                 if (color2 != color1)
                 {
-                    monocularBoundary b = new monocularBoundary()
+                    MonocularBoundary b = new MonocularBoundary()
                     {
                         colorL = color1,
                         colorR = color2,
@@ -269,12 +361,13 @@ namespace BrainSimulator.Modules
             FindBinocularBoundaries();
             FindAreasOfColor();
 
+            //curArea.t being null means this area is not in the model...just add it
             foreach (Area curArea in areas)
             {
                 if (curArea.t == null && curArea.theColor != 0)
                 {
                     //add the segment to the model
-                    curArea.t= nmModel.AddSegmentFromVision(curArea.PL, curArea.PR, curArea.theColor, viewChanged == 0);
+                    curArea.t = nmModel.AddSegmentFromVision(curArea.PL, curArea.PR, curArea.theColor, viewChanged == 0);
                 }
             }
 
@@ -283,18 +376,18 @@ namespace BrainSimulator.Modules
                 Area curArea = areas[i];
                 if (i < areas.Count - 1)
                 {
-                    Area nextArea = areas[i+1];
+                    Area nextArea = areas[i + 1];
                     //the case of two adjacent colored boundaries means there are adjoining or occluding areas
                     //if occluding, do not update the (possibly) hidden point(s)
                     if (curArea.theColor != 0 && nextArea.theColor != 0 && curArea.t != null && nextArea.t != null)
-                        //&&                         curArea.PR.R == nextArea.PL.R && curArea.PR.Theta == nextArea.PL.Theta)
+                    //&&                         curArea.PR.R == nextArea.PL.R && curArea.PR.Theta == nextArea.PL.Theta)
                     {
                         Segment curS = Module2DModel.SegmentFromUKSThing(curArea.t);
                         Module2DModel.OrderSegment(curS);
                         Segment nextS = Module2DModel.SegmentFromUKSThing(nextArea.t);
                         Module2DModel.OrderSegment(nextS);
                         //is aa.PL in front of prevSegment (the little correction hides an occlusion problem where the endpoints nearly match
-                        if (nextArea.PL.Theta > curS.P1.Theta-Rad(2) && nextArea.PL.Theta < curS.P2.Theta+Rad(2))
+                        if (nextArea.PL.Theta > curS.P1.Theta - Rad(2) && nextArea.PL.Theta < curS.P2.Theta + Rad(2))
                         {
                             float segDistAtPoint = curS.P1.R;
                             float dr1 = (curS.P2.R - curS.P1.R);
@@ -307,7 +400,7 @@ namespace BrainSimulator.Modules
                             }
                         }
                         //is prevArea.PR in front of aaSegment
-                        if (curArea.PR.Theta > nextS.P1.Theta -Rad(2)&& curArea.PR.Theta < nextS.P2.Theta+Rad(2))
+                        if (curArea.PR.Theta > nextS.P1.Theta - Rad(2) && curArea.PR.Theta < nextS.P2.Theta + Rad(2))
                         {
                             float segDistAtPoint = nextS.P1.R + (nextS.P2.R - nextS.P1.R) * (nextS.P1.Theta - curArea.PR.Theta) / (nextS.P1.Theta - nextS.P2.Theta);
                             if (curArea.PR.R < segDistAtPoint)
@@ -318,7 +411,6 @@ namespace BrainSimulator.Modules
                     }
                 }
             }
-
 
             //check for single boundaries and update them in the model
             foreach (Area curArea in areas)
@@ -338,9 +430,9 @@ namespace BrainSimulator.Modules
         private PointPlus FindDepth(int l, int r)
         {
             //calculation using trig
-            Angle thetaA = GetDirectionOfNeuron(r - 0.5f, na.Width);
+            Angle thetaA = GetDirectionFromNeuron(r - 0.5f, na.Width);
             thetaA = PI / 2 - thetaA; //get angle to axis
-            Angle thetaB = GetDirectionOfNeuron(l - 0.5f, na.Width);
+            Angle thetaB = GetDirectionFromNeuron(l - 0.5f, na.Width);
             thetaB = PI / 2 - thetaB;
             thetaB = PI - thetaB; //to get an inside angle
             Angle thetaC = PI - thetaA - thetaB;
@@ -352,11 +444,11 @@ namespace BrainSimulator.Modules
             //alternate using vectors
             PointPlus p1L = new PointPlus() { Y = -eyeOffset, X = 0 };
             PointPlus p1R = new PointPlus() { Y = +eyeOffset, X = 0 };
-            Angle thetaL = (float)GetDirectionOfNeuron(r, na.Width);
+            Angle thetaL = (float)GetDirectionFromNeuron(r, na.Width);
             PointPlus p2L = new PointPlus() { R = 20, Theta = thetaL };
             p2L.P = p2L.P + (Vector)p1L.P;
 
-            Angle thetaR = (float)GetDirectionOfNeuron(l, na.Width);
+            Angle thetaR = (float)GetDirectionFromNeuron(l, na.Width);
             PointPlus p2R = new PointPlus() { R = 20, Theta = thetaR };
             p2R.P = p2R.P + (Vector)p1R.P;
 
@@ -380,7 +472,7 @@ namespace BrainSimulator.Modules
             lastValuesL = null;
             lastValuesR = null;
 
-            angularResolution = (float)(GetDirectionOfNeuron(0, na.Width) - GetDirectionOfNeuron(1, na.Width));
+            angularResolution = (float)(GetDirectionFromNeuron(0, na.Width) - GetDirectionFromNeuron(1, na.Width));
         }
     }
 }

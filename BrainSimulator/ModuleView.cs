@@ -134,6 +134,8 @@ namespace BrainSimulator
 
         public Neuron GetNeuronAt(int X, int Y)
         {
+            if (X < 0) return null;
+            if (Y < 0) return null;
             if (X >= Width) return null;
             if (Y >= Height) return null;
             int index = firstNeuron + Y + X * Rows;

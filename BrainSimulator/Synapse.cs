@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace BrainSimulator
 {
@@ -23,20 +24,35 @@ namespace BrainSimulator
         public Synapse(int targetNeuronIn, float weightIn)
         {
             targetNeuron = targetNeuronIn;
-            weight = weightIn;
+            N = MainWindow.theNeuronArray.neuronArray[targetNeuron];
+            Weight = weightIn;
         }
         private float weight;
+
+        [XmlIgnore]
+        public Neuron N; //this is used by the engine
+
+        [XmlIgnore]
+        public int IWeight; //this is used by the engine
+
         public float Weight
         {
             get => weight;
-            set => weight = value;
+            set { weight = value; IWeight = (int)(weight * Neuron.threshold); }
         }
+        //public int IWeight
+        //{
+        //    get => iWeight;
+        //}
 
-        private int targetNeuron;
+        public int targetNeuron;
         public int TargetNeuron
         {
             get => targetNeuron;
-            set => targetNeuron = value;
+            set
+            {
+                targetNeuron = value;
+            }
         }
     }
 }

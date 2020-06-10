@@ -10,6 +10,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using BrainSimulator.Modules;
+using System.Collections.Concurrent;
+using System.Threading;
+using System;
 
 namespace BrainSimulator
 {
@@ -19,7 +22,7 @@ namespace BrainSimulator
         public int arraySize = 10000; // ten thousand neurons to start
         public int rows = 100;
 
-        public int Cols {get => arraySize / rows; }
+        public int Cols { get => arraySize / rows; }
 
         internal List<ModuleView> modules = new List<ModuleView>();
         public List<ModuleView> Modules
@@ -33,7 +36,7 @@ namespace BrainSimulator
         public DisplayParams displayParams;
 
         //notes about this network
-        public string networkNotes = "Purpose:\n\r\n\rThings to try:\n\r\n\rCurrent state of development:\n\r\n\rNotes:\n\r\n\r";
+        public string networkNotes = "";
         public bool hideNotes = false;
 
         //these have nothing to do with the NeuronArray but is here so it will be saved and restored with the network
@@ -57,44 +60,120 @@ namespace BrainSimulator
             public bool newSynapse;
         }
         List<SynapseUndo> synapseUndoInfo = new List<SynapseUndo>();
-        
-        public NeuronArray()
-        {
-            neuronArray = new Neuron[arraySize];
-            Parallel.For(0, arraySize, i => neuronArray[i] = new Neuron(i));
 
-            //for (int i = 0; i < neuronArray.Length; i++)
-            //{
-            //    Neuron n = new Neuron(i);
-            //    neuronArray[i] = n;
-            //}
-        }
+        public NeuronArray()
+        { }
+
 
         public NeuronArray(int theSize, int theRows, Neuron.modelType t = Neuron.modelType.Std)
         {
             arraySize = theSize;
             rows = theRows;
-
+            showSynapses = MainWindow.showSynapses;
             neuronArray = new Neuron[arraySize];
-            Parallel.For(0, arraySize, i => neuronArray[i] = new Neuron(i,t)) ;
+            Parallel.For(0, arraySize, i => neuronArray[i] = new Neuron(i, t));
         }
 
- 
+        void Fire1(int id)
+        {
+            int taskID = id;
+            for (int i = taskID; i < insPtr; i += taskCount)
+            {
+                if (firingQueue[i] != -1)
+                    neuronArray[firingQueue[i]].Fire2(taskID);
+            }
+            Interlocked.Add(ref taskBusyCount, -1);
+            var spin = new SpinWait();
+            while (true)
+            {
+                if (taskBusyCount == 0) break;
+                spin.SpinOnce();
+            }
+            for (int i = taskID; i < insPtr; i += taskCount)
+            {
+                if (firingQueue[i] != -1)
+                    neuronArray[firingQueue[i]].Fire1(taskID,ref nextQueuePtr[taskID],nextQueue[taskID]);
+            }
+        }
+
+        //this is not used because it is now included in the neuron code
+        public void AddToFiringQueue(int neuronID, int taskID)
+        {
+            nextQueue[taskID][nextQueuePtr[taskID]++] = neuronID;
+        }
+        //this is used 
+        public void AddToFiringQueue(int neuronID)
+        {
+            if (!useFiringList)return;
+            manualFire.Add(neuronID);
+        }
+
+        bool useFiringList = false;
+        const int queuesize = 4000000;
+        const int taskCount = 16;
+        int taskBusyCount = 0;
+        Task[] engineTask = new Task[taskCount];
+        int[] firingQueue = new int[queuesize];
+        int insPtr = 0;
+        int[][] nextQueue = new int[taskCount][];
+        int[] nextQueuePtr = new int[taskCount];
+        List<int> manualFire = new List<int>();
+
         public void Fire()
         {
             HandleProgrammedActions();
             lastFireCount = fireCount;
             fireCount = 0;
+            int dupcount = 0;
+            if (useFiringList)
+            {
+                if (nextQueue[0] == null)
+                {
+                    for (int i = 0; i < taskCount; i++)
+                        nextQueue[i] = new int[2*queuesize/taskCount];
+                }
+                insPtr = manualFire.Count;
+                Array.Copy(manualFire.ToArray(), firingQueue, manualFire.Count);
+                manualFire.Clear();
+                for (int i = 0; i < taskCount; i++)
+                {
+                    for (int j = 0; j < nextQueuePtr[i]; j++)
+                        firingQueue[insPtr++] = nextQueue[i][j];
+                }
+                Array.Sort(firingQueue, 0, insPtr);
+                for (int i = 0; i < insPtr - 1; i++)
+                {
+                    if (firingQueue[i] == firingQueue[i + 1])
+                    {
+                        firingQueue[i] = -1;
+                        dupcount++;
+                    }
+                }
+                fireCount = insPtr - dupcount;
+                //for (int i = 0; i < neuronArray.Length; i++)
+                //    firingQueue.Add(i);
 
-            //when debugging the Fire1 & Fire2 modules disable parallel operation and use the sequential loops below;
-            Parallel.For(0, arraySize, i => neuronArray[i].Fire1(this,Generation));
-            Parallel.For(0, arraySize, i => neuronArray[i].Fire2(Generation));
+                taskBusyCount = taskCount;
+                for (int i = 0; i < taskCount; i++)
+                {
+                    nextQueuePtr[i] = 0;
+                    int tempID = i;
+                    engineTask[i] = Task.Factory.StartNew(() => { Fire1(tempID); });
+                }
+                Task.WaitAll(engineTask);
+            }
+            else
+            {
+                //when debugging the Fire1 & Fire2 modules disable parallel operation and use the sequential loops below;
+                Parallel.For(0, arraySize, i => neuronArray[i].Fire1());
+                Parallel.For(0, arraySize, i => neuronArray[i].Fire2());
 
-            //use these instead
-            //foreach (Neuron n in neuronArray)
-            //    n.Fire1(this,Generation);
-            //foreach (Neuron n in neuronArray)
-            //    n.Fire2(Generation);
+                //use these instead
+                //foreach ()
+                //    n.Fire1(this,Generation);
+                //foreach ()
+                //    n.Fire2(Generation);
+            }
             Generation++;
         }
 
@@ -151,7 +230,7 @@ namespace BrainSimulator
             }
             else
             {
-                n.AddSynapse(s.target, s.weight, this);
+                n.AddSynapse(s.target, s.weight, this, true);
                 synapseUndoInfo.RemoveAt(synapseUndoInfo.Count - 1);
             }
         }

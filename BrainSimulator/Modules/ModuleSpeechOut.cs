@@ -85,13 +85,15 @@ namespace BrainSimulator.Modules
             synth.SelectVoice("Microsoft Zira Desktop");
 
             //temporarily assign output vocabulary to be identical to input vocabulary
+            ClearNeurons();
+
             ModuleView msi = theNeuronArray.FindAreaByLabel("ModuleSpeechIn");
             if (msi != null)
             {
                 for (int i = 0; i < na.NeuronCount && i < msi.NeuronCount; i++)
                 {
-                    //na.GetNeuronAt(i).Label = msi.GetNeuronAt(i).Label;
-                    //msi.GetNeuronAt(i).AddSynapse(na.GetNeuronAt(i).Id,1,theNeuronArray);
+                    na.GetNeuronAt(i).Label = msi.GetNeuronAt(i).Label;
+                    msi.GetNeuronAt(i).AddSynapse(na.GetNeuronAt(i).Id,1);
                 }
             }
         }

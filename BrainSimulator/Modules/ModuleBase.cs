@@ -475,6 +475,7 @@ namespace BrainSimulator.Modules
                 n.Label = "";
                 n.Model = Neuron.modelType.Std;
                 n.SetValue(0);
+                n.LastCharge = 0;
             }
         }
         protected Neuron AddLabel(string newLabel)

@@ -63,6 +63,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -128,6 +129,7 @@
       <DependentUpon>ModuleDescription.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\ModuleEvent.cs" />
+    <Compile Include="Modules\ModuleLife.cs" />
     <Compile Include="Modules\ModuleUKSN.cs" />
     <Compile Include="Modules\ModuleUKSNDlg.xaml.cs">
       <DependentUpon>ModuleUKSNDlg.xaml</DependentUpon>

@@ -198,7 +198,7 @@ namespace BrainSimulator
             List<int> neuronsInSelection = theSelection.EnumSelectedNeurons();
             for (int i = 0; i < neuronsInSelection.Count; i++)
             {
-                targetNeuron.AddSynapse(neuronsInSelection[i], lastSynapseWeight, MainWindow.theNeuronArray);
+                targetNeuron.AddSynapse(neuronsInSelection[i], lastSynapseWeight, MainWindow.theNeuronArray,true);
             }
             Update();
         }
@@ -210,7 +210,7 @@ namespace BrainSimulator
             for (int i = 0; i < neuronsInSelection.Count; i++)
             {
                 Neuron n = MainWindow.theNeuronArray.neuronArray[neuronsInSelection[i]];
-                n.AddSynapse(targetNeuronIndex, lastSynapseWeight, MainWindow.theNeuronArray);
+                n.AddSynapse(targetNeuronIndex, lastSynapseWeight, MainWindow.theNeuronArray,true);
             }
             Update();
         }
@@ -325,7 +325,7 @@ namespace BrainSimulator
             for (int k = 0; k < n.synapses.Count; k++)
             {
                 Synapse s = n.Synapses[k];
-                nNewLocation.AddSynapse(s.TargetNeuron, s.Weight, MainWindow.theNeuronArray);
+                nNewLocation.AddSynapse(s.TargetNeuron, s.Weight);
             }
 
             //for all the synapses coming into this neuron, change the synapse target to new location
@@ -352,7 +352,7 @@ namespace BrainSimulator
             theSelection.EnumSelectedNeurons();
             for (Neuron n = theSelection.GetSelectedNeuron(); n != null; n = theSelection.GetSelectedNeuron())
             {
-                n.AddSynapse(theSelection.selectedNeuronIndex + distance, weight, MainWindow.theNeuronArray);
+                n.AddSynapse(theSelection.selectedNeuronIndex + distance, weight, MainWindow.theNeuronArray,true);
             }
             Update();
         }

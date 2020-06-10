@@ -37,21 +37,29 @@ namespace BrainSimulator
         {
             l = null;
             theNeuronArrayView = theNeuronArrayViewI;
+            //this hack makes the GameOfLife display bettern
+            if (MainWindow.currentFileName.Contains("Life"))
+            {
+                int row = i % dp.NeuronRows;
+                int col = i / dp.NeuronRows;
+                if ((row + 1) % 2 != 0) return null;
+                if (col % 2 != 0) return null;
+            }
 
             Neuron n = MainWindow.theNeuronArray.neuronArray[i];
             Point p = dp.pointFromNeuron(i);
 
-            if (p.X < -dp.NeuronDisplaySize) return null;
-            if (p.Y < -dp.NeuronDisplaySize) return null;
-            if (p.X > theCanvas.ActualWidth + dp.NeuronDisplaySize) return null;
-            if (p.Y > theCanvas.ActualHeight + dp.NeuronDisplaySize) return null;
+            //if (p.X < -dp.NeuronDisplaySize) return null;
+            //if (p.Y < -dp.NeuronDisplaySize) return null;
+            //if (p.X > theCanvas.ActualWidth + dp.NeuronDisplaySize) return null;
+            //if (p.Y > theCanvas.ActualHeight + dp.NeuronDisplaySize) return null;
 
             // figure out which color to use
             float value = n.LastCharge;
-            Color c = Colors.White;
-            if ((n.Model == Neuron.modelType.Std ||n.Model == Neuron.modelType.LIF || n.Model == Neuron.modelType.OneTime) && value > .99)
+            Color c = Colors.Blue;
+            if ((n.Model == Neuron.modelType.Std ||n.Model == Neuron.modelType.LIF ) && value > .99)
                 c = Colors.Orange;
-            else if ((n.Model == Neuron.modelType.Std || n.Model == Neuron.modelType.LIF || n.Model == Neuron.modelType.OneTime) && value != -1)
+            else if ((n.Model == Neuron.modelType.Std || n.Model == Neuron.modelType.LIF) && value != -1)
                 c = MapRainbowColor(value, 1, 0);
             else if (n.Model == Neuron.modelType.Color)
                 c = Utils.IntToColor((int)n.LastChargeInt);
@@ -351,7 +359,7 @@ namespace BrainSimulator
             if ((string)mi.Header == "Always Fire")
             {
                 if (n.FindSynapse(i) == null)
-                    n.AddSynapse(i, 1, MainWindow.theNeuronArray);
+                    n.AddSynapse(i, 1, MainWindow.theNeuronArray,true);
                 else
                     n.DeleteSynapse(i);
             }

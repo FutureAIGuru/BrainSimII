@@ -41,7 +41,7 @@
                 </Button>
 
             </ToolBar>
-            <RichTextBox x:Name="mainRTB" VerticalScrollBarVisibility="Auto" SpellCheck.IsEnabled="True" IsReadOnly="True" IsDocumentEnabled="True"  AcceptsReturn="True" PreviewMouseDown="MainRTB_PreviewMouseDown"/>
+            <RichTextBox x:Name="mainRTB" VerticalScrollBarVisibility="Auto" SpellCheck.IsEnabled="True"  IsReadOnly="True" IsDocumentEnabled="True"  AcceptsReturn="True" PreviewMouseDown="MainRTB_PreviewMouseDown"/>
         </DockPanel>
         <Button x:Name="OKbutton" Content="OK" HorizontalAlignment="Left" Height="32" Margin="431,0,0,35" VerticalAlignment="Bottom" Width="95" Click="OKbutton_Click"/>
         <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" Height="32" IsCancel="True" Margin="314,0,0,35" VerticalAlignment="Bottom" Width="95" RenderTransformOrigin="-0.653,0.51" Click="Cancel_Click"/>

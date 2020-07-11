@@ -89,6 +89,11 @@ namespace BrainSimulator.Modules
             if (dlg == null) return;
             dlg.Activate();
         }
+        public bool IsActive()
+        {
+            if (dlg == null) return false;
+            return dlg.IsActive;
+        }
 
         public virtual void ShowDialog()
         {
@@ -96,6 +101,11 @@ namespace BrainSimulator.Modules
             if (aps != ApartmentState.STA) return;
             Type t = this.GetType();
             Type t1 = Type.GetType(t.ToString() + "Dlg");
+            while (t1 == null && t.BaseType.Name != "ModuleBase")
+            {
+                t = t.BaseType;
+                t1 = Type.GetType(t.ToString() + "Dlg");
+            }
             if (t1 == null) return;
             if (dlg != null) dlg.Close();
             dlg = (ModuleBaseDlg)Activator.CreateInstance(t1);
@@ -194,7 +204,7 @@ namespace BrainSimulator.Modules
         public virtual void SetUpAfterLoad()
         { }
 
-        protected ModuleBase FindModuleByType(Type t)
+        public ModuleBase FindModuleByType(Type t)
         {
             foreach (ModuleView na1 in theNeuronArray.modules)
             {
@@ -206,7 +216,7 @@ namespace BrainSimulator.Modules
             return null;
         }
 
-        protected ModuleBase FindModuleByName(string name)
+        public ModuleBase FindModuleByName(string name)
         {
             foreach (ModuleView na1 in theNeuronArray.modules)
             {
@@ -216,6 +226,11 @@ namespace BrainSimulator.Modules
                 }
             }
             return null;
+        }
+
+        protected Neuron GetNeuron(string neuronLabel)
+        {
+            return GetNeuron(null, neuronLabel);
         }
 
         protected Neuron GetNeuron(string moduleName, string neuronLabel)
@@ -231,6 +246,10 @@ namespace BrainSimulator.Modules
                 return n;
             }
             return null;
+        }
+        protected bool SetNeuronValue(string neuronLabel, float value)
+        {
+            return SetNeuronValue(null, neuronLabel, value);
         }
 
         protected bool SetNeuronValue(string moduleName, string neuronLabel, float value)

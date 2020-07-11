@@ -231,9 +231,12 @@ namespace BrainSimulator
             }
 
             for (int i = 0; i < neuronCanvasCount; i++)
+            {
                 theCanvas.Children.Add(neuronCanvas[i]);
-            theCanvas.Children.Add(labelCanvas);
+            }
+
             theCanvas.Children.Add(synapseCanvas);
+            theCanvas.Children.Add(labelCanvas);
 
 
             UpdateScrollbars();
@@ -365,7 +368,9 @@ namespace BrainSimulator
                         int source = (int)s.GetValue(SynapseView.SourceIDProperty);
                         int target = (int)s.GetValue(SynapseView.TargetIDProperty);
                         float weight = (float)s.GetValue(SynapseView.WeightValProperty);
-                        Synapse s1 = new Synapse(target, weight);
+                        Synapse s1 = MainWindow.theNeuronArray.neuronArray[(source)].FindSynapse(target);
+
+//                        Synapse s1 = new Synapse(target, weight);
                         s.ContextMenu = new ContextMenu();
                         SynapseView.CreateContextMenu(source, s1, s.ContextMenu);
                     }

@@ -17,7 +17,7 @@ namespace BrainSimulator.Modules
     public class ModuleUKSN : ModuleUKS
     {
         public long immediateMemory = 2; //items are more-or-less simultaneous
-        long shortTermMemory = 10; //items are close in time
+        public static long shortTermMemory = 10; //items are close in time
         public override string ShortDescription => "A Knowledge Graph KB module expanded with a neuron arrays for intputs and outputs.";
         public override string LongDescription => "This is like a KB module but expanded to be accessible via neuron firings instead of just programmatically. " + base.LongDescription;
 
@@ -62,12 +62,7 @@ namespace BrainSimulator.Modules
             return n.Fired();
         }
 
-        //this is needed for the dialog treeview
-        public List<Thing> GetTheKB()
-        {
-            return UKS;
-        }
-
+ 
 
         //this returns the most recent firing regardless of how long ago it was
         Thing MostRecentFired(Thing t)
@@ -258,7 +253,7 @@ namespace BrainSimulator.Modules
 
             t.useCount++;
         }
-        private ModuleView GetOutputModue()
+        private ModuleView GetOutputModule()
         {
             return theNeuronArray.FindAreaByLabel("KBOut");
         }
@@ -271,7 +266,7 @@ namespace BrainSimulator.Modules
             ModuleView naModule = na;
             if (!firedInput)
             {
-                naModule = GetOutputModue();
+                naModule = GetOutputModule();
                 if (naModule == null) return false;
             }
             Neuron n = naModule.GetNeuronAt(i);
@@ -319,7 +314,7 @@ namespace BrainSimulator.Modules
             }
         }
 
-        public Thing FindBestReference(Thing t,Thing parent = null)
+        public Thing FindBestReference(Thing t, Thing parent = null)
         {
             if (t == null) return null;
             Thing retVal = null;
@@ -481,6 +476,7 @@ namespace BrainSimulator.Modules
 
                 //anything which wasn't a word, convert to a word
                 List<Thing> phonemesInWord = new List<Thing>();
+                int startOfNewWord = -1;
                 for (int i = 0; i < shortTermMemoryList.Count; i++)
                 {
                     if (shortTermMemoryList[i].Parents[0] == Labeled("Word"))
@@ -489,16 +485,26 @@ namespace BrainSimulator.Modules
                         {
                             Thing newWord = AddThing("w" + wordCount++, new Thing[] { Labeled("Word") }, null, phonemesInWord.ToArray());
                             phonemesInWord.Clear();
+                            if (startOfNewWord != -1)
+                            {
+                                shortTermMemoryList[startOfNewWord] = newWord;
+                                shortTermMemoryList.RemoveRange(startOfNewWord + 1, newWord.References.Count - 1);
+                                startOfNewWord = -1;
+                            }
                         }
                     }
                     else
                     {
+                        if (startOfNewWord == -1) startOfNewWord = i;
                         phonemesInWord.Add(shortTermMemoryList[i]);
                     }
                 }
                 if (phonemesInWord.Count > 0)
                 {
                     Thing newWord = AddThing("w" + wordCount++, new Thing[] { Labeled("Word") }, null, phonemesInWord.ToArray());
+                    shortTermMemoryList[startOfNewWord] = newWord;
+                    shortTermMemoryList.RemoveRange(startOfNewWord + 1, newWord.References.Count - 1);
+                    startOfNewWord = -1;
                 }
 
                 //Now add the phrase to the knowledge store
@@ -571,7 +577,9 @@ namespace BrainSimulator.Modules
                                     }
                                 }
                             }
-                            l.T = FindBestReference(closest);
+                            Thing t2 = FindBestReference(closest);
+                            if (t2 != null)
+                                l.T = t2;
                         }
                         else
                         {

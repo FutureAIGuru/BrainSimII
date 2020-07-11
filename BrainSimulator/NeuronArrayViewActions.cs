@@ -325,7 +325,9 @@ namespace BrainSimulator
             for (int k = 0; k < n.synapses.Count; k++)
             {
                 Synapse s = n.Synapses[k];
-                nNewLocation.AddSynapse(s.TargetNeuron, s.Weight);
+                Synapse s1 = nNewLocation.AddSynapse(s.TargetNeuron, s.Weight);
+                if (s1 != null && s.IsHebbian)
+                    s1.IsHebbian = true;
             }
 
             //for all the synapses coming into this neuron, change the synapse target to new location

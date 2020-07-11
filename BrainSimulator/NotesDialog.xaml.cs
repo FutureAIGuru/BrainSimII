@@ -33,6 +33,7 @@ namespace BrainSimulator
             if (theNotes.IndexOf("<") != 0) //for backward compatibility from before these were RTF
             {
                 mainRTB.AppendText(theNotes);
+                mainRTB.IsReadOnly = false;
             }
             else
             {
@@ -46,7 +47,7 @@ namespace BrainSimulator
                     mainRTB.IsReadOnly = false;
 
                 //reformat so all hyperlinks in text are converted to hot links
-                int beg = 1000;
+                int beg = Math.Min(theNotes.Length-1,1000);
                 while (theNotes.IndexOf("http", beg) != -1)
                 {
                     beg = theNotes.IndexOf("http", beg);

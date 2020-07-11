@@ -44,6 +44,12 @@ namespace BrainSimulator.Modules
             Init();  //be sure to leave this here to enable use of the na variable
         }
 
+        //this is needed for the dialog treeview
+        public List<Thing> GetTheKB()
+        {
+            return UKS;
+        }
+
         //this is used to format debug output 
         private string ArrayToString(Thing[] list)
         {
@@ -61,7 +67,7 @@ namespace BrainSimulator.Modules
         {
             Thing found = null;
             List<Thing> things = GetChildren(parents[0]);
-            foreach(Thing t in things)
+            foreach (Thing t in things)
             {
                 bool referenceMissing = false;
                 foreach (Thing t1 in references)
@@ -78,6 +84,10 @@ namespace BrainSimulator.Modules
             return found;
         }
 
+        public virtual Thing AddThing(string label, Thing parent, object value = null, Thing[] references = null)
+        {
+            return AddThing(label, new Thing[] { parent }, value, references);
+        }
         public virtual Thing AddThing(string label, Thing[] parents, object value = null, Thing[] references = null)
         {
             Debug.WriteLine("AddThing: " + label + " (" + ArrayToString(parents) + ") (" + ArrayToString(references) + ")");
@@ -119,8 +129,53 @@ namespace BrainSimulator.Modules
             UKSt = UKSt ?? UKS; //if UKSt is null, search the entire UKS
             Thing retVal = null;
             retVal = UKSt.Find(t => t.Label == label);
-            if (retVal != null) retVal.useCount++;
+            //if (retVal != null) retVal.useCount++;
             return retVal;
+        }
+
+        //returns the first thing it encounters which with a given value or null if none is found
+        //the 2nd paramter defines the UKS to search (e.g. list of children)
+        //if it is null, it searches the entire UKS,
+        //the 3rd paramter defines the tolerance for spatial matches
+        //if it is null, an exact match is required
+        public virtual Thing ChildrenMatch(List<Thing> refs, List<Thing> UKSt = null)
+        {
+            UKSt = UKSt ?? UKS;
+            foreach (Thing t in UKSt)
+            {
+                if (t.Children.Count == refs.Count)
+                {
+                    for (int i = 0; i < refs.Count; i++)
+                    {
+                        if (t.Children[i] != refs[i])
+                            goto nextThing;
+                    }
+                    t.useCount++;
+                    return t;
+                nextThing:;
+                }
+            }
+            return null;
+        }
+
+        public virtual Thing ReferenceMatch(List<Thing> refs, List<Thing> UKSt = null)
+        {
+            UKSt = UKSt ?? UKS;
+            foreach (Thing t in UKSt)
+            {
+                if (t.References.Count == refs.Count)
+                {
+                    for (int i = 0; i < t.References.Count; i++)
+                    {
+                        if (t.References[i].T != refs[i])
+                            goto nextThing;
+                    }
+                    //t.useCount++;
+                    return t;
+                nextThing:;
+                }
+            }
+            return null;
         }
 
         //returns the first thing it encounters which with a given value or null if none is found
@@ -247,14 +302,36 @@ namespace BrainSimulator.Modules
             }
         }
 
-        public Thing AddThing (string label, string parentLabel)
+        public Thing AddThing(string label, string parentLabel)
         {
-            return AddThing(label, new Thing[] { Labeled(parentLabel) });
+            Thing retVal = Labeled(label);
+            //if (retVal == null)
+                retVal = AddThing(label, new Thing[] { Labeled(parentLabel) });
+            return retVal;
         }
 
         public Thing AddThing(string label, Thing parent)
         {
             return AddThing(label, new Thing[] { parent });
+        }
+
+        public Thing FindBestReference(Thing t, Thing parent = null)
+        {
+            if (t == null) return null;
+            Thing retVal = null;
+            float bestWeight = -100;
+            foreach (Link l in t.References)
+            {
+                if (parent == null || l.T.Parents[0] == parent)
+                {
+                    if (l.weight > bestWeight)
+                    {
+                        retVal = l.T;
+                        bestWeight = l.weight;
+                    }
+                }
+            }
+            return retVal;
         }
 
         public override void Initialize()
@@ -263,7 +340,7 @@ namespace BrainSimulator.Modules
             UKS.Clear();
             UKSTemp.Clear();
             AddThing("Thing", new Thing[] { });
-            AddThing("Action","Thing");
+            AddThing("Action", "Thing");
             AddThing("NoAction", "Action");
             AddThing("Stop", "Action");
             AddThing("Utterance", "Action");
@@ -271,14 +348,14 @@ namespace BrainSimulator.Modules
             AddThing("Vowel", "SpeakPhn");
             AddThing("Consonant", "SpeakPhn");
             AddThing("End", "Action");
-            AddThing("Go","Action");
-            AddThing("RTurn","Action");
-            AddThing("LTurn","Action");
-            AddThing("UTurn","Action");
+            AddThing("Go", "Action");
+            AddThing("RTurn", "Action");
+            AddThing("LTurn", "Action");
+            AddThing("UTurn", "Action");
             AddThing("Say", "Action");
             AddThing("Push", "Action");
             AddThing("SayRnd", "Action");
-            AddThing("Attn","Action");
+            AddThing("Attn", "Action");
             AddThing("Sense", "Thing");
             AddThing("Visual", "Sense");
             AddThing("Color", "Visual");
@@ -299,9 +376,9 @@ namespace BrainSimulator.Modules
             AddThing("Bigger", "Relation");
             AddThing("Closer", "Relation");
             AddThing("Event", "Thing");
-            AddThing("Outcome","Thing");
-            AddThing("Positive","Outcome");
-            AddThing("Negative","Outcome");
+            AddThing("Outcome", "Thing");
+            AddThing("Positive", "Outcome");
+            AddThing("Negative", "Outcome");
             AddThing("ModelThing", new Thing[] { });
         }
     }

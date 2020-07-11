@@ -155,7 +155,7 @@ namespace BrainSimulator
             {
                 sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
                 sp.Children.Add(new Label { Content = "Leak Rate: ", Padding = new Thickness(0) });
-                sp.Children.Add(new TextBox { Text = n.LeakRate.ToString("f2"), Width = 60, Name = "LeakRate", VerticalAlignment = VerticalAlignment.Center });
+                sp.Children.Add(new TextBox { Text = n.LeakRate.ToString("f4"), Width = 60, Name = "LeakRate", VerticalAlignment = VerticalAlignment.Center });
                 cm.Items.Add(sp);
             }
 

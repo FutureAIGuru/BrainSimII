@@ -23,7 +23,8 @@ namespace BrainSimulator
 
         public override string ToString()
         {
-            return T.Label + ":" + weight;
+            string retVal= T.Label + ":" + weight;
+            return retVal;
         }
         //This is the (temporary) algorithm calculating the weight based on hits or misses
         public float Value()
@@ -60,16 +61,33 @@ namespace BrainSimulator
         public List<Thing> Children { get => children; set => children = value; }
         public List<Link> References { get => references; set => references = value; }
         public List<Link> ReferencedBy { get => referencedBy; set => referencedBy = value; }
-        
+
+        public List<Thing> ReferencesAsThings
+        {
+            get
+            {
+                List<Thing> retVal = new List<Thing>();
+                foreach (Link l in References)
+                    retVal.Add(l.T);
+                return retVal;
+            }
+        }
+
 
         public override string ToString()
         {
-            string retVal = label;
+            string retVal = label + ":" + useCount;
+            if (references.Count > 0)
+            {
+                retVal += " {";
+                foreach (Link l in references)
+                    retVal += l.T.label + ",";
+                retVal += "}";
+            }
             return retVal;
         }
 
         //add a reference from this thing to the specified thing
-
         public void AddReference(Thing t, float weight = 1)
         {
             if (t == null) return; //do not add null references
@@ -78,6 +96,14 @@ namespace BrainSimulator
             //References.RemoveAll(v => v.T == t);
             //t.ReferencedBy.RemoveAll(v => v.T == this);
             References.Add(new Link { T = t, weight = weight });
+            t.ReferencedBy.Add(new Link { T = this, weight = weight });
+        }
+
+        public void InsertReferenceAt(int index,Thing t, float weight = 1)
+        {
+            if (t == null) return; //do not add null references
+            if (index > References.Count) return;
+            References.Insert(index,new Link { T = t, weight = weight });
             t.ReferencedBy.Add(new Link { T = this, weight = weight });
         }
 
@@ -109,6 +135,16 @@ namespace BrainSimulator
             }
         }
 
+        public void RemoveReferenceAt(int i)
+        {
+            if (i < References.Count)
+            {
+                Link l = References[i];
+                l.T.referencedBy.Remove(l);
+                References.RemoveAt(i);
+            }
+        }
+
         public void RemoveReference(Thing t)
         {
             References.RemoveAll(v => v.T == t);
@@ -130,12 +166,18 @@ namespace BrainSimulator
         public void AddChild(Thing t)
         {
             children.Add(t);
+            t.parents.Add(this);
         }
         public void RemoveChild(Thing t)
         {
+            t.parents.Remove(this);
             children.Remove(t);
         }
-
+        public void RemoveAllChildren()
+        {
+            for (int i = children.Count - 1; i >= 0; i--)
+                RemoveChild(children[i]);
+        }
         public float Distance(Thing t, bool ordered = false)
         {
             float retVal = 0;

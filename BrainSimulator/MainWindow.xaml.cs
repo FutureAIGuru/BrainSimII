@@ -3,30 +3,21 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
+using BrainSimulator.Modules;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Text;
+using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Xml.Serialization;
-using System.IO;
 using System.Windows.Threading;
-using System.Diagnostics;
-using System.Threading;
-using System.IO.MemoryMappedFiles;
-using System.Drawing;
-using BrainSimulator.Modules;
-using System.Net;
-using System.Security.Principal;
+using System.Xml.Serialization;
 
 namespace BrainSimulator
 {
@@ -61,11 +52,13 @@ namespace BrainSimulator
         DispatcherTimer zoomInOutTimer;
         int zoomAomunt = 0;
 
+        public static bool showSynapses = false;
 
 
         public MainWindow()
         {
             //this puts up a dialog on unhandled exceptions
+#if !DEBUG
             AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) =>
                 {
                     string message = eventArgs.ExceptionObject.ToString();
@@ -77,6 +70,7 @@ namespace BrainSimulator
                     MessageBox.Show(message);
                     Application.Current.Shutdown(255);
                 };
+#endif
             InitializeComponent();
             displayUpdateTimer.Tick += DisplayUpdate_TimerTick;
             arrayView = theNeuronArrayView;
@@ -145,7 +139,8 @@ namespace BrainSimulator
                 bool history = false;
                 foreach (Neuron n in theNeuronArray.neuronArray)
                 {
-                    if (n.KeepHistory) history = true;
+                    if (n.KeepHistory)
+                        history = true;
                 }
                 if (history)
                     NeuronView.OpenHistoryWindow();
@@ -176,6 +171,7 @@ namespace BrainSimulator
                 if (theNeuronArrayView.theSelection.selectedRectangles.Count > 0)
                 {
                     theNeuronArrayView.DeleteSelection();
+                    theNeuronArrayView.ClearSelection();
                     theNeuronArrayView.Update();
                 }
                 else
@@ -907,6 +903,7 @@ namespace BrainSimulator
 
         private void Window_MouseEnter(object sender, MouseEventArgs e)
         {
+            //There was a problem at some pont which the code below was intended to fix
             ////activate this windoe if it is not activated and not of the child dialogs are activated
             //if (theNeuronArray != null)
             //{
@@ -918,9 +915,8 @@ namespace BrainSimulator
             //        }
             //    }
             //}
-            Activate();
+            ////Activate();
         }
-        public static bool showSynapses = false;
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             showSynapses = true;

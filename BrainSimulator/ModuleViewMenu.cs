@@ -32,6 +32,13 @@ namespace BrainSimulator
             mi.Header = "Delete";
             mi.Click += Mi_Click;
             cm.Items.Add(mi);
+            if (i < 0)
+            {
+                mi = new MenuItem();
+                mi.Header = "Reset Hebbian Weights";
+                mi.Click += Mi_Click;
+                cm.Items.Add(mi);
+            }
             if (i >= 0)
             {
                 mi = new MenuItem();
@@ -151,6 +158,11 @@ namespace BrainSimulator
             {
                 var t = MainWindow.theNeuronArray.Modules[i].TheModule.GetType();
                 Type t1 = Type.GetType(t.ToString() + "Dlg");
+                while (t1 == null && t.BaseType.Name != "ModuleBase")
+                {
+                    t = t.BaseType;
+                    t1 = Type.GetType(t.ToString() + "Dlg");
+                }
                 if (t1 != null)
                 {
                     cm.Items.Add(new MenuItem { Header = "Show Dialog" });
@@ -229,7 +241,7 @@ namespace BrainSimulator
 
                     MainWindow.theNeuronArray.GetNeuronLocation(MainWindow.theNeuronArray.modules[i].firstNeuron, out int col, out int row);
                     if (width < theModuleView.TheModule.MinWidth) width = theModuleView.TheModule.MinWidth;
-                    if (height< theModuleView.TheModule.MinHeight) height = theModuleView.TheModule.MinHeight;
+                    if (height < theModuleView.TheModule.MinHeight) height = theModuleView.TheModule.MinHeight;
 
                     bool dimsChanged = false;
 
@@ -346,6 +358,22 @@ namespace BrainSimulator
                         ModuleDescription md = new ModuleDescription(m1.ShortDescription, m1.LongDescription);
                         md.ShowDialog();
                     }
+                }
+                if ((string)mi.Header == "Reset Hebbian Weights")
+                {
+                    foreach (NeuronSelectionRectangle sr in MainWindow.arrayView.theSelection.selectedRectangles)
+                    {
+                        foreach (int Id in sr.NeuronInRectangle())
+                        {
+                            Neuron n = MainWindow.theNeuronArray.neuronArray[Id];
+                            foreach (Synapse s in n.Synapses)
+                            {
+                                if (s.IsHebbian)
+                                    s.Weight = 0;
+                            }
+                        }
+                    }
+                    MainWindow.Update();
                 }
             }
         }

@@ -128,11 +128,15 @@
     <Compile Include="ModuleDescription.xaml.cs">
       <DependentUpon>ModuleDescription.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\ModuleAudible.cs" />
     <Compile Include="Modules\ModuleEvent.cs" />
     <Compile Include="Modules\ModuleLife.cs" />
+    <Compile Include="Modules\ModuleSpeakPhonemes.cs" />
+    <Compile Include="Modules\ModuleSpeakPhonemesDlg.xaml.cs" />
+    <Compile Include="Modules\ModuleUKS2.cs" />
     <Compile Include="Modules\ModuleUKSN.cs" />
-    <Compile Include="Modules\ModuleUKSNDlg.xaml.cs">
-      <DependentUpon>ModuleUKSNDlg.xaml</DependentUpon>
+    <Compile Include="Modules\ModuleUKSDlg.xaml.cs">
+      <DependentUpon>ModuleUKSDlg.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\Module2DModel.cs" />
     <Compile Include="Modules\Module3DSim.cs" />
@@ -174,9 +178,9 @@
     <Compile Include="Modules\ModuleMotor.cs" />
     <Compile Include="Modules\ModuleNull.cs" />
     <Compile Include="Modules\ModuleRealityModel.cs" />
-    <Compile Include="Modules\ModuleSpeakPhonemes.cs" />
-    <Compile Include="Modules\ModuleSpeakPhonemesDlg.xaml.cs">
-      <DependentUpon>ModuleSpeakPhonemesDlg.xaml</DependentUpon>
+    <Compile Include="Modules\ModuleSpeakPhonemes2.cs" />
+    <Compile Include="Modules\ModuleSpeakPhonemes2Dlg.xaml.cs">
+      <DependentUpon>ModuleSpeakPhonemes2Dlg.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\ModuleSpeakWords.cs" />
     <Compile Include="ModuleViewMenu.cs" />
@@ -240,7 +244,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Modules\ModuleUKSNDlg.xaml">
+    <Page Include="Modules\ModuleSpeakPhonemesDlg.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\ModuleUKSDlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -268,7 +276,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Modules\ModuleSpeakPhonemesDlg.xaml">
+    <Page Include="Modules\ModuleSpeakPhonemes2Dlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -413,9 +421,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Networks\FrequencyDetector.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Networks\Imagination.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -423,9 +428,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Networks\ObjectMotion.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\ShortTermMemory.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Networks\SimVision.xml">

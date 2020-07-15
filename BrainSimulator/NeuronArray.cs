@@ -76,11 +76,31 @@ namespace BrainSimulator
 
         void Fire1(int id)
         {
+            //determine the portion of the firing queue this thread should handle
             int taskID = id;
-            for (int i = taskID; i < insPtr; i += taskCount)
+            int numberToProcess = insPtr / taskCount;
+            int remainder = insPtr % taskCount;
+            int start = numberToProcess * taskID;
+            int end =  start + numberToProcess;
+            if (taskID < remainder)
+            {
+                start += taskID;
+                end = start + numberToProcess+1;
+            }
+            else
+            {
+                start += remainder;
+                end += remainder;
+            }
+
+            //first-phase neuron processing
+            int ptr = nextQueuePtr[taskID];
+            int[] queue = nextQueue[taskID];
+
+            for (int i = start; i < end ; i ++)
             {
                 if (firingQueue[i] != -1)
-                    neuronArray[firingQueue[i]].Fire2(taskID);
+                    neuronArray[firingQueue[i]].Fire2(taskID, ref ptr, queue);
             }
             Interlocked.Add(ref taskBusyCount, -1);
             var spin = new SpinWait();
@@ -89,11 +109,15 @@ namespace BrainSimulator
                 if (taskBusyCount == 0) break;
                 spin.SpinOnce();
             }
-            for (int i = taskID; i < insPtr; i += taskCount)
+            for (int i = start; i < end; i ++)
             {
                 if (firingQueue[i] != -1)
-                    neuronArray[firingQueue[i]].Fire1(taskID,ref nextQueuePtr[taskID],nextQueue[taskID]);
+                {
+                    Neuron n = neuronArray[firingQueue[i]];
+                    n.Fire1(taskID, ref ptr, queue);
+                }
             }
+            nextQueuePtr[taskID] = ptr;
         }
 
         //this is not used because it is now included in the neuron code
@@ -106,11 +130,13 @@ namespace BrainSimulator
         {
             if (!useFiringList)return;
             manualFire.Add(neuronID);
+            MainWindow.theNeuronArray.neuronArray[neuronID].LastCharge = 1;
+            MainWindow.theNeuronArray.neuronArray[neuronID].CurrentCharge = 1;
         }
 
-        bool useFiringList = false;
-        const int queuesize = 4000000;
-        const int taskCount = 16;
+        bool useFiringList = true;
+        const int queuesize = 1000000;
+        const int taskCount = 8;
         int taskBusyCount = 0;
         Task[] engineTask = new Task[taskCount];
         int[] firingQueue = new int[queuesize];
@@ -127,19 +153,26 @@ namespace BrainSimulator
             int dupcount = 0;
             if (useFiringList)
             {
+                //allocate the next generation firing queues
                 if (nextQueue[0] == null)
                 {
                     for (int i = 0; i < taskCount; i++)
                         nextQueue[i] = new int[2*queuesize/taskCount];
                 }
+
+                //put any manually-fired neurons onto the firing queue
                 insPtr = manualFire.Count;
                 Array.Copy(manualFire.ToArray(), firingQueue, manualFire.Count);
                 manualFire.Clear();
+
+                //add all the neurons which fired in the previous generation to the firing queue
                 for (int i = 0; i < taskCount; i++)
                 {
                     for (int j = 0; j < nextQueuePtr[i]; j++)
                         firingQueue[insPtr++] = nextQueue[i][j];
                 }
+
+                //sort the array so we can discard duplicates
                 Array.Sort(firingQueue, 0, insPtr);
                 for (int i = 0; i < insPtr - 1; i++)
                 {
@@ -150,9 +183,8 @@ namespace BrainSimulator
                     }
                 }
                 fireCount = insPtr - dupcount;
-                //for (int i = 0; i < neuronArray.Length; i++)
-                //    firingQueue.Add(i);
 
+                //allocate the firing tasks and start them
                 taskBusyCount = taskCount;
                 for (int i = 0; i < taskCount; i++)
                 {

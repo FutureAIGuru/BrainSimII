@@ -15,8 +15,6 @@ namespace BrainSimulator
 {
     public class Neuron
     {
-
-
         public enum modelType { Std, Color, FloatValue, LIF, Random };
 
         //this is only used in NeuronView but is here so you can add the tooltip when you add a neuron type and 
@@ -43,9 +41,9 @@ namespace BrainSimulator
         }
 
         [XmlIgnore]
-        public static readonly int threshold = 10000;
+        public const int threshold = 10000;
         [XmlIgnore]
-        public static readonly float scaleFactor = (float)threshold;
+        public const float scaleFactor = (float)threshold;
 
         private long lastFired = 0;
 
@@ -66,6 +64,9 @@ namespace BrainSimulator
         private int lastCharge = 0;
         public float LastCharge { get { return (float)lastCharge / scaleFactor; } set { lastCharge = (int)(value * scaleFactor); } }
 
+        bool alreadyInQueue = false; //used by the queue-based engine 
+
+
         //get/set last charge as raw integer
         public int LastChargeInt { get { return lastCharge; } set { lastCharge = value; } }
 
@@ -73,13 +74,14 @@ namespace BrainSimulator
         internal List<Synapse> synapses = new List<Synapse>();
         internal List<Synapse> synapsesFrom = new List<Synapse>();
         public List<Synapse> Synapses { get { return synapses; } }
+        [XmlIgnore]
         public List<Synapse> SynapsesFrom { get { return synapsesFrom; } }
 
-        private long nextFiring = 0; //used only by random neurons
+        //used only by random neurons
+        private long nextFiring = 0; 
         [ThreadStatic]
         static Random rand = new Random();
-        //private Random rand = new Random();
-
+        
         public float LeakRate = 0.1f; //used only by LIF model
         public bool KeepHistory { get => keepHistory; set => keepHistory = value; }
         public long LastFired { get => lastFired; set => lastFired = value; }
@@ -183,46 +185,75 @@ namespace BrainSimulator
             return null;
         }
 
-        bool alreadyInQueue = false;
         public void Fire1(int taskID, ref int nextQueuePtr,int[]nextQueue)
         {
             NeuronArray theNeuronArray = MainWindow.theNeuronArray;
             Neuron[] neuronArray = theNeuronArray.neuronArray;
-            if (currentCharge < threshold) return;
-           // Interlocked.Increment(ref MainWindow.theNeuronArray.fireCount);
+            if (lastCharge < threshold) return;
 
+            //process all the synapses sourced by this neuron
             for (int i = 0; i < synapses.Count; i++)
             {
                 Synapse s = synapses[i];
-                //s.N.currentCharge += s.IWeight;
-                int charge = Interlocked.Add(ref s.N.lastCharge, s.IWeight);
-                if (charge >= threshold && !s.N.alreadyInQueue)
+                Interlocked.Add(ref s.N.currentCharge, s.IWeight);
+
+                //if the target neuron needs processing, add it to the firing queue
+                if (s.N.currentCharge >= threshold && !s.N.alreadyInQueue || s.N.currentCharge < 0)
                 {
                     nextQueue[nextQueuePtr++] = s.N.Id;
-                    //theNeuronArray.AddToFiringQueue(s.N.Id, taskID);
                     s.N.alreadyInQueue = true;
                 }
-                if (s.N.lastCharge < 0) s.N.lastCharge = 0;
+                if (s.IsHebbian)
+                {
+                    if (s.N.LastChargeInt >= threshold)
+                    {
+                        //strengthen the synapse
+                        if (s.Weight < 1)
+                        {
+                            if (s.Weight == 0) s.Weight = .34f;
+                            if (s.Weight == .34f) s.Weight = .5f;
+                            if (s.Weight == .5f) s.Weight = 1f;
+                        }
+                    }
+                    else
+                    {
+                        //weaken the synapse
+                    }
+                }
+
             }
-            currentCharge = 0;
         }
 
         //check for firing
-        public void Fire2(int taskID)
+        public void Fire2(int taskID, ref int nextQueuePtr, int[] nextQueue)
         {
             alreadyInQueue = false;
             NeuronArray theNeuronArray = MainWindow.theNeuronArray;
-            //                case modelType.Std:
-            if (lastCharge < 0) lastCharge = 0;
-            currentCharge = lastCharge;
+            if (currentCharge < 0) currentCharge = 0;
+            lastCharge = currentCharge;
             if (lastCharge >= threshold)
             {
-                lastCharge = 0;
+                currentCharge = 0;
                 if (KeepHistory)
                     FiringHistory.AddFiring(Id, theNeuronArray.Generation);
                 LastFired = theNeuronArray.Generation;
+                nextQueue[nextQueuePtr++] = Id; //add yourself to the firing queue for next time
+                alreadyInQueue = true;
+            }
+            //handle charge reduction of LIF model
+            if (model == modelType.LIF)
+            {
+                if (currentCharge > 99)
+                {
+                    currentCharge = (int)(currentCharge * (1 - LeakRate));
+                }
+                else
+                    currentCharge = 0;
+                nextQueue[nextQueuePtr++] = Id; //alwayse keep LIF neurons on the queue
             }
         }
+
+
         //process the synapses
         public void Fire1()
         {

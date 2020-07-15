@@ -74,6 +74,9 @@ namespace BrainSimulator
         {
             InitializeComponent();
             zoomRepeatTimer.Tick += Dt_Tick;
+#if DEBUG
+            System.Diagnostics.PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Critical;
+#endif
         }
 
         public DisplayParams Dp { get => dp; set => dp = value; }
@@ -82,6 +85,7 @@ namespace BrainSimulator
         public void Update()
         {
             var watch = System.Diagnostics.Stopwatch.StartNew();
+            NeuronArray theNeuronArray = MainWindow.theNeuronArray;
 
             Canvas labelCanvas = new Canvas();
             Canvas.SetLeft(labelCanvas, 0);
@@ -96,6 +100,10 @@ namespace BrainSimulator
             for (int i = 0; i < neuronCanvasCount; i++)
                 neuronCanvas[i] = new Canvas();
 
+            Canvas legendCanvas = new Canvas();
+            Canvas.SetLeft(legendCanvas, 0);
+            Canvas.SetTop(legendCanvas, 0);
+
 
 
             if (MainWindow.theNeuronArray == null) return;
@@ -106,12 +114,12 @@ namespace BrainSimulator
             neuronsOnScreen.Clear();
             int columns = MainWindow.theNeuronArray.arraySize / dp.NeuronRows;
 
-            //draw any module connectors 
+            //draw any module connectors (not implemented)
             //DrawModuleConnectors();
 
-            //draw some background grid, perhaps useful for UI debugging
-            /*
-            for (int i = 0; i <= MainWindow.theNeuronArray.rows; i++)
+            //draw some background grid and labels
+
+            for (int i = 0; i <= theNeuronArray.rows; i += 100)
             {
                 Line l = new Line
                 {
@@ -121,21 +129,41 @@ namespace BrainSimulator
                     Y2 = dp.DisplayOffset.Y + i * dp.NeuronDisplaySize,
                     Stroke = new SolidColorBrush(Colors.Red),
                 };
-                theCanvas.Children.Add(l);
+                legendCanvas.Children.Add(l);
             }
-            for (int j = 0; j <= columns; j++)
+            for (int j = 0; j <= columns; j += 100)
             {
                 Line l = new Line
                 {
                     X1 = dp.DisplayOffset.X + j * dp.NeuronDisplaySize,
                     X2 = dp.DisplayOffset.X + j * dp.NeuronDisplaySize,
                     Y1 = dp.DisplayOffset.Y + 0,
-                    Y2 = dp.DisplayOffset.Y + columns * dp.NeuronDisplaySize,
+                    Y2 = dp.DisplayOffset.Y + theNeuronArray.rows * dp.NeuronDisplaySize,
                     Stroke = new SolidColorBrush(Colors.Red),
                 };
-                theCanvas.Children.Add(l);
+                legendCanvas.Children.Add(l);
             }
-            */
+
+            int refNo = 1;
+            for (int i = 0; i < theNeuronArray.rows; i += 100)
+            {
+                for (int j = 0; j < columns; j += 100)
+                {
+                    Point p = new Point((j + 50) * dp.NeuronDisplaySize, (i + 50) * dp.NeuronDisplaySize);
+                    p += (Vector)dp.DisplayOffset;
+                    Label l = new Label();
+                    l.Content = refNo++;
+                    l.FontSize = dp.NeuronDisplaySize * 10;
+                    l.Foreground = Brushes.White;
+                    l.HorizontalAlignment = HorizontalAlignment.Center;
+                    l.VerticalAlignment = VerticalAlignment.Center;
+                    Canvas.SetLeft(l, p.X);
+                    Canvas.SetTop(l, p.Y);
+                    legendCanvas.Children.Add(l);
+
+                }
+            }
+
 
             //draw the module rectangles
             for (int i = 0; i < MainWindow.theNeuronArray.Modules.Count; i++)
@@ -186,49 +214,64 @@ namespace BrainSimulator
                 r.Fill = new SolidColorBrush(Colors.LightBlue);
                 theCanvas.Children.Add(r);
             }
+
             //draw the neurons
             if (dp.ShowNeurons())
             {
-                for (int i = 0; i < MainWindow.theNeuronArray.neuronArray.Length; i++)
-                {
-                    double x = dp.DisplayOffset.X + i / dp.NeuronRows * dp.NeuronDisplaySize;
-                    double y = dp.DisplayOffset.Y + i % dp.NeuronRows * dp.NeuronDisplaySize;
-                    if (x < -dp.NeuronDisplaySize) continue;
-                    if (y < -dp.NeuronDisplaySize) continue;
-                    if (x > theCanvas.ActualWidth + dp.NeuronDisplaySize) continue;
-                    if (y > theCanvas.ActualHeight + dp.NeuronDisplaySize) continue;
+                dp.GetRowColFromPoint(new Point(0, 0), out int startCol, out int startRow);
+                startRow--;
+                startCol--;
+                dp.GetRowColFromPoint(new Point(theCanvas.ActualWidth, theCanvas.ActualHeight), out int endCol, out int endRow);
+                endRow++;
+                endCol++;
 
-                    UIElement l = NeuronView.GetNeuronView(i, this, out Label lbl);
-                    if (l != null)
+                for (int col = startCol; col < endCol; col++)
+                {
+                    for (int row = startRow; row < endRow; row++)
                     {
-                        int canvas = i % neuronCanvasCount;
-                        neuronCanvas[canvas].Children.Add(l);
-                        //if (l is Ellipse e && e.Fill.Opacity != 0)
-                        if (l is Ellipse || l is Rectangle)
-                            neuronsOnScreen.Add(new NeuronOnScreen(i, l, 0, lbl));
-                        if (lbl != null && dp.ShowNeuronLabels())
+                        int neuronID = dp.GetAbsNeuronAt(col, row);
+                        if (neuronID >= 0 && neuronID < theNeuronArray.arraySize)
                         {
-                            labelCanvas.Children.Add(lbl);
+                            UIElement l = NeuronView.GetNeuronView(neuronID, this, out Label lbl);
+                            if (l != null)
+                            {
+                                int canvas = neuronID % neuronCanvasCount;
+                                neuronCanvas[canvas].Children.Add(l);
+                                if (l is Ellipse || l is Rectangle)
+                                    neuronsOnScreen.Add(new NeuronOnScreen(neuronID, l, -10, lbl));
+                                if (lbl != null && dp.ShowNeuronLabels())
+                                {
+                                    labelCanvas.Children.Add(lbl);
+                                }
+                                if (MainWindow.theNeuronArray.ShowSynapses && dp.ShowSynapses())
+                                {
+                                    Point p1 = dp.pointFromNeuron(neuronID);
+                                    Neuron n = MainWindow.theNeuronArray.neuronArray[neuronID];
+                                    foreach (Synapse s in n.Synapses)
+                                    {
+                                        Shape l1 = SynapseView.GetSynapseView(neuronID, p1, s, this);
+                                        if (l1 != null)
+                                            synapseCanvas.Children.Add(l1);
+                                    }
+                                    foreach (Synapse s in n.SynapsesFrom)
+                                    {
+                                        //check the synapesFrom to draw synapes which source outside the window
+                                        dp.GetAbsNeuronLocation(s.targetNeuron, out int x, out int y);
+                                        if (x >= startCol && x < endCol && y >= startRow && y < endRow) continue;
+                                        Point p2 = dp.pointFromNeuron(s.targetNeuron);
+                                        Synapse s1 = new Synapse() { targetNeuron = neuronID, Weight = s.Weight };
+                                        Shape l1 = SynapseView.GetSynapseView(s.targetNeuron, p2, s1, this);
+                                        if (l1 != null)
+                                            synapseCanvas.Children.Add(l1);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
 
-            //draw the synapses
-            if (MainWindow.theNeuronArray.ShowSynapses && dp.ShowSynapses())
-            {
-                for (int i = 0; i < MainWindow.theNeuronArray.neuronArray.Length; i++)
-                {
-                    Point p1 = dp.pointFromNeuron(i);
-                    Neuron n = MainWindow.theNeuronArray.neuronArray[i];
-                    foreach (Synapse s in n.Synapses)
-                    {
-                        Shape l = SynapseView.GetSynapseView(i, p1, s, this);
-                        if (l != null)
-                            synapseCanvas.Children.Add(l);
-                    }
-                }
-            }
+            theCanvas.Children.Add(legendCanvas);
 
             for (int i = 0; i < neuronCanvasCount; i++)
             {
@@ -237,7 +280,6 @@ namespace BrainSimulator
 
             theCanvas.Children.Add(synapseCanvas);
             theCanvas.Children.Add(labelCanvas);
-
 
             UpdateScrollbars();
             watch.Stop();
@@ -297,30 +339,31 @@ namespace BrainSimulator
                 Neuron n = MainWindow.theNeuronArray.neuronArray[a.neuronIndex];
                 if (a.graphic is Shape e)
                 {
-                    if (n.LastCharge != a.prevValue ||
-                        (a.label != null && n.Label != (string)a.label.Content) ||
-                        (a.label == null && n.Label != ""))
+                    float x = n.LastCharge;
+                    if (x != a.prevValue)// ||
+                                         //    (a.label != null && n.Label != (string)a.label.Content) ||
+                                         //    (a.label == null && n.Label != ""))
                     {
+                        a.prevValue = x;
                         UIElement el = NeuronView.GetNeuronView(a.neuronIndex, this, out Label lbl);
                         if (el is Shape l1)
                         {
                             e.Fill = l1.Fill;
-                            neuronsOnScreen[i].prevValue = n.LastCharge;
                         }
-                        if (a.label != null && (string)a.label.Content != n.Label)
-                        {
-                            a.label.Content = n.Label;
-                        }
-                        if (a.label == null && n.Label != "")
-                        {
-                            a.label = lbl;
-                            theCanvas.Children.Add(lbl);
-                        }
-                        if (a.label != null && n.Label == "")
-                        {
-                            theCanvas.Children.Remove(a.label);
-                            a.label = null;
-                        }
+                        //if (a.label != null && (string)a.label.Content != n.Label)
+                        //{
+                        //    a.label.Content = n.Label;
+                        //}
+                        //if (a.label == null && n.Label != "")
+                        //{
+                        //    a.label = lbl;
+                        //    theCanvas.Children.Add(lbl);
+                        //}
+                        //if (a.label != null && n.Label == "")
+                        //{
+                        //    theCanvas.Children.Remove(a.label);
+                        //    a.label = null;
+                        //}
                     }
                 }
             }
@@ -370,7 +413,7 @@ namespace BrainSimulator
                         float weight = (float)s.GetValue(SynapseView.WeightValProperty);
                         Synapse s1 = MainWindow.theNeuronArray.neuronArray[(source)].FindSynapse(target);
 
-//                        Synapse s1 = new Synapse(target, weight);
+                        //                        Synapse s1 = new Synapse(target, weight);
                         s.ContextMenu = new ContextMenu();
                         SynapseView.CreateContextMenu(source, s1, s.ContextMenu);
                     }
@@ -831,7 +874,7 @@ namespace BrainSimulator
             }
             return false;
         }
-        const int minZoom = 8;
+        const float minZoom = 0.5f;
         public void Zoom(int change)
         {
             dp.DisplayOffset = (Point)(((Vector)dp.DisplayOffset) * (dp.NeuronDisplaySize + change) / dp.NeuronDisplaySize);

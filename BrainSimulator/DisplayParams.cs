@@ -13,7 +13,7 @@ namespace BrainSimulator
 {
     public class DisplayParams
     {
-        private int neuronDisplaySize = 45; //this is the zoom level
+        private float neuronDisplaySize = 45; //this is the zoom level
         private Point displayOffset = new Point(0, 0); //the pan position
         private int neuronRows = -1;     //this number lets us display a one-dimensional array as a 2D array
 
@@ -26,10 +26,10 @@ namespace BrainSimulator
         public bool ShowNeuronOutlines() { return neuronDisplaySize > 15; }
         public bool ShowNeuronCircles() { return neuronDisplaySize > 10; }
         public bool ShowNeuronLabels() { return neuronDisplaySize > 20; }
-        public bool ShowNeurons() { return neuronDisplaySize > 0; }
+        public bool ShowNeurons() { return neuronDisplaySize > 5; }
      
 
-        public int NeuronDisplaySize
+        public float NeuronDisplaySize
         {
             get
             {
@@ -88,10 +88,28 @@ namespace BrainSimulator
         public int NeuronFromPoint(Point p)
         {
             p -= (Vector)DisplayOffset;
-            int x = (int)p.X / NeuronDisplaySize;
-            int y = (int)p.Y / NeuronDisplaySize;
+            int x = (int)(p.X / NeuronDisplaySize);
+            int y = (int)(p.Y / NeuronDisplaySize);
+            if (y >= NeuronRows) y=NeuronRows-1;
             int index = x * NeuronRows + y;
             return index;
         }
+        public void GetRowColFromPoint(Point p,out int x, out int y)
+        {
+            p -= (Vector)DisplayOffset;
+            x = (int)(p.X / NeuronDisplaySize);
+            y = (int)(p.Y / NeuronDisplaySize);
+        }
+        public int GetAbsNeuronAt(int X, int Y)
+        {
+            return X * NeuronRows+ Y;
+        }
+
+        public void GetAbsNeuronLocation(int index, out int X, out int Y)
+        {
+            X = index / NeuronRows;
+            Y = index % NeuronRows;
+        }
+
     }
 }

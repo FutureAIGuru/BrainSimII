@@ -53,8 +53,8 @@
         <Button x:Name="buttonSingle" Margin="71,35,0,0" Click="ButtonSingle_Click" HorizontalAlignment="Left" Width="22" Height="22" VerticalAlignment="Top" ToolTip="Run the engine one cycle">
             <Image x:Name="image" Height="15" Width="18" Source="Resources/Step.png"/>
         </Button>
-        <Label x:Name="label" Content="Label" Margin="483,33,0,0" HorizontalAlignment="Left" Width="161" Height="30" VerticalAlignment="Top"/>
-        <Label x:Name="labelDisplayStatus" Content="Initializing" Margin="649,33,-80.4,0" Height="30
+        <Label x:Name="label" Content="Label" Margin="483,33,0,0" HorizontalAlignment="Left" Width="191" Height="30" VerticalAlignment="Top"/>
+        <Label x:Name="labelDisplayStatus" Content="Initializing" Margin="679,34,-110.4,0" Height="30
                " VerticalAlignment="Top"/>
         <Button x:Name="buttonInit" HorizontalAlignment="Left" Margin="22,35,0,0" VerticalAlignment="Top" Width="22" Click="ButtonInit_Click" Height="22" ToolTip="Reset all modules">
             <Image x:Name="image1" Height="15" Width="18" Source="Resources/Rewind.png"/>

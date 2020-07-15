@@ -17,5 +17,6 @@
         <CheckBox x:Name="checkBoxSynapses" Content="Create Random Synapses" HorizontalAlignment="Left" Height="19" Margin="290,105,0,0" VerticalAlignment="Top" Width="164"/>
         <ComboBox x:Name="comboBoxModel" HorizontalAlignment="Left" Height="22" Margin="290,153,0,0" VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.583,1.409" />
         <Label x:Name="label2" Content="Default Model:" HorizontalAlignment="Left" Height="26" Margin="284,132,0,0" VerticalAlignment="Top" Width="116"/>
+        <ProgressBar x:Name="progressBar" Height="23" Margin="32,0,278,50" VerticalAlignment="Bottom" RenderTransformOrigin="1.147,2.444"/>
     </Grid>
 </Window>

@@ -150,7 +150,7 @@ namespace BrainSimulator
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
         {
-            Debug.WriteLine("Window_KeyUp");
+            //Debug.WriteLine("Window_KeyUp");
             if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
             {
                 ctrlPressed = false;
@@ -165,7 +165,7 @@ namespace BrainSimulator
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            Debug.WriteLine("Window_KeyDown");
+            //Debug.WriteLine("Window_KeyDown");
             if (e.Key == Key.Delete)
             {
                 if (theNeuronArrayView.theSelection.selectedRectangles.Count > 0)
@@ -263,12 +263,17 @@ namespace BrainSimulator
                     theNeuronArray.AddToFiringQueue(theNeuronArray.neuronArray[i].Id);
             }
             //Update all the synapses to ensure that the synapse-from lists are correct
+            foreach (Neuron n in theNeuronArray.neuronArray) n.SynapsesFrom.Clear();
             foreach (Neuron n in theNeuronArray.neuronArray)
             {
                 foreach (Synapse s in n.Synapses)
                 {
                     n.AddSynapse(s.TargetNeuron, s.Weight, theNeuronArray, false);
                     s.N = theNeuronArray.neuronArray[s.TargetNeuron];
+                }
+                if (n.CurrentCharge >= 1 || n.LastCharge >= 1 || n.Model == Neuron.modelType.LIF)
+                {
+                    theNeuronArray.AddToFiringQueue(n.Id);
                 }
             }
 
@@ -694,7 +699,7 @@ namespace BrainSimulator
             }
         }
 
-        static public void UpdateDisplayLabel(int zoomLevel, int firedCount)
+        static public void UpdateDisplayLabel(float zoomLevel, int firedCount)
         {
             thisWindow.labelDisplayStatus.Content = "Zoom Level: " + zoomLevel + ",  " + firedCount + " Neurons Fired";
         }
@@ -869,12 +874,12 @@ namespace BrainSimulator
 
         private void ButtonZoomIn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            StartZoom(3);
+            StartZoom(1);
         }
 
         private void ButtonZoomOut_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            StartZoom(-3);
+            StartZoom(-1);
         }
 
         private void StartZoom(int amount)

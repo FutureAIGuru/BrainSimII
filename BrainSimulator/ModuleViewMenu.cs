@@ -365,7 +365,7 @@ namespace BrainSimulator
                     {
                         foreach (int Id in sr.NeuronInRectangle())
                         {
-                            Neuron n = MainWindow.theNeuronArray.neuronArray[Id];
+                            Neuron n = MainWindow.theNeuronArray.GetNeuron(Id);
                             foreach (Synapse s in n.Synapses)
                             {
                                 if (s.IsHebbian)

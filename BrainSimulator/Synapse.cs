@@ -24,7 +24,7 @@ namespace BrainSimulator
         public Synapse(int targetNeuronIn, float weightIn)
         {
             targetNeuron = targetNeuronIn;
-            N = MainWindow.theNeuronArray.neuronArray[targetNeuron];
+            N = MainWindow.theNeuronArray.GetNeuron(targetNeuron);
             Weight = weightIn;
         }
         private float weight;

@@ -88,8 +88,8 @@ namespace BrainSimulator
                     pl.Points.Add(new Point(theCanvas.Width, yPos0));
                     theCanvas.Children.Add(pl);
                     string label = "#" + FiringHistory.history[i].NeuronID.ToString();
-                    if (MainWindow.theNeuronArray.neuronArray[FiringHistory.history[i].NeuronID].Label != "")
-                        label = MainWindow.theNeuronArray.neuronArray[FiringHistory.history[i].NeuronID].Label;
+                    if (MainWindow.theNeuronArray.GetNeuron(FiringHistory.history[i].NeuronID).Label != "")
+                        label = MainWindow.theNeuronArray.GetNeuron(FiringHistory.history[i].NeuronID).Label;
 
                     Label l = new Label
                     {
@@ -181,7 +181,7 @@ namespace BrainSimulator
             for (int i = 0; i < FiringHistory.history.Count; i++)
             {
                 int nID = FiringHistory.history[i].NeuronID;
-                MainWindow.theNeuronArray.neuronArray[nID].KeepHistory = false;
+                MainWindow.theNeuronArray.GetNeuron(nID).KeepHistory = false;
             }
             FiringHistory.history.Clear();
             this.Close();

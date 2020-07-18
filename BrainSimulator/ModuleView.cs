@@ -86,7 +86,7 @@ namespace BrainSimulator
             int neuronIndex = (currentNeuronInArea % Height) + (currentNeuronInArea / Height) * Rows + firstNeuron;
             if (currentNeuronInArea >= Height * Width) return null;
             currentNeuronInArea++;
-            return MainWindow.theNeuronArray.neuronArray[neuronIndex];
+            return MainWindow.theNeuronArray.GetNeuron(neuronIndex);
         }
         public int GetNeuronOffset(Neuron n)
         {
@@ -129,7 +129,7 @@ namespace BrainSimulator
         {
             if (index > NeuronCount) return null;
             int neuronIndex = (index % Height) + (index / Height) * Rows + firstNeuron;
-            return MainWindow.theNeuronArray.neuronArray[neuronIndex];
+            return MainWindow.theNeuronArray.GetNeuron(neuronIndex);
         }
 
         public Neuron GetNeuronAt(int X, int Y)
@@ -139,7 +139,7 @@ namespace BrainSimulator
             if (X >= Width) return null;
             if (Y >= Height) return null;
             int index = firstNeuron + Y + X * Rows;
-            return MainWindow.theNeuronArray.neuronArray[index];
+            return MainWindow.theNeuronArray.GetNeuron(index);
         }
         public Neuron GetNeuronAt(string label)
         {

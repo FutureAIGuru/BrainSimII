@@ -154,7 +154,7 @@ namespace BrainSimulator
             ContextMenu cm = cb.Parent as ContextMenu;
             cm.IsOpen = false;
             CheckBox cbHebbian = (CheckBox)Utils.FindByName(cm, "Hebbian");
-            Synapse s = MainWindow.theNeuronArray.neuronArray[(int)cm.GetValue(SourceIDProperty)].
+            Synapse s = MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).
                 FindSynapse((int)cm.GetValue(TargetIDProperty));
             if (s != null)
                 s.IsHebbian = (bool)cb.IsChecked;
@@ -174,7 +174,7 @@ namespace BrainSimulator
             float.TryParse(tb.Text, out newWeight);
             if (newWeight == -20) return;
             theNeuronArrayView.lastSynapseWeight = newWeight;
-            Neuron n = MainWindow.theNeuronArray.neuronArray[(int)cm.GetValue(SourceIDProperty)];
+            Neuron n = MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty));
             n.AddSynapse((int)cm.GetValue(TargetIDProperty), newWeight, MainWindow.theNeuronArray,true);
         }
 
@@ -210,7 +210,7 @@ namespace BrainSimulator
             ContextMenu cm = mi.Parent as ContextMenu;
             float weight = 0;
             float.TryParse((string)mi.Header, out weight);
-            MainWindow.theNeuronArray.neuronArray[(int)cm.GetValue(SourceIDProperty)].
+            MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).
                 AddSynapse((int)cm.GetValue(TargetIDProperty), weight, MainWindow.theNeuronArray,true);
             theNeuronArrayView.lastSynapseWeight = weight;
             MainWindow.Update();
@@ -220,7 +220,7 @@ namespace BrainSimulator
         {
             MenuItem mi = (MenuItem)sender;
             ContextMenu cm = mi.Parent as ContextMenu;
-            MainWindow.theNeuronArray.neuronArray[(int)cm.GetValue(SourceIDProperty)].DeleteSynapse((int)cm.GetValue(TargetIDProperty));
+            MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).DeleteSynapse((int)cm.GetValue(TargetIDProperty));
             MainWindow.Update();
         }
 

@@ -68,7 +68,7 @@ namespace BrainSimulator
                         selectedNeuronIndex = selectedRectangles[i].FirstSelectedNeuron + (index / height) * 
                             MainWindow.theNeuronArray.rows + index % height;
                         if (selectedNeuronIndex > MainWindow.theNeuronArray.arraySize) return null;
-                        n = MainWindow.theNeuronArray.neuronArray[selectedNeuronIndex];
+                        n = MainWindow.theNeuronArray.GetNeuron(selectedNeuronIndex);
                         if (!neuronsAlreadyVisited.Contains(n))
                         {
                             neuronsAlreadyVisited.Add(n);

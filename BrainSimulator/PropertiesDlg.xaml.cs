@@ -34,13 +34,7 @@ namespace BrainSimulator
             txtRows.Text = MainWindow.theNeuronArray.rows.ToString();
             txtColumns.Text = (MainWindow.theNeuronArray.arraySize / MainWindow.theNeuronArray.rows).ToString();
             txtNeurons.Text = MainWindow.theNeuronArray.arraySize.ToString();
-            int synapseCount = 0;
-            int neuronInUseCount = 0;
-            for (int i = 0; i < MainWindow.theNeuronArray.arraySize; i++)
-            {
-                if (MainWindow.theNeuronArray.neuronArray[i].InUse()) neuronInUseCount++;
-                synapseCount += MainWindow.theNeuronArray.neuronArray[i].synapses.Count;
-            }
+            MainWindow.theNeuronArray.GetCounts(out int synapseCount, out int neuronInUseCount);
             txtNeuronsInUse.Text = neuronInUseCount.ToString();
             txtSynapses.Text = synapseCount.ToString();
         }
@@ -55,10 +49,10 @@ namespace BrainSimulator
                 MainWindow.SuspendEngine();
                 int oldArraySize = MainWindow.theNeuronArray.arraySize;
                 int newArraySize = oldArraySize / oldColumns * newColumns;
-                Array.Resize(ref  MainWindow.theNeuronArray.neuronArray, newArraySize);
+                MainWindow.theNeuronArray.ChangeArraySize(newArraySize);
                 for (int i = oldArraySize;i < newArraySize; i++)
                 {
-                    MainWindow.theNeuronArray.neuronArray[i] = new Neuron();
+                    MainWindow.theNeuronArray.SetNeuron(i,  new Neuron(false));
                 }
                 MainWindow.theNeuronArray.arraySize = newArraySize;
                 MainWindow.ResumeEngine();

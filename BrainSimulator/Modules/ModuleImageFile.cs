@@ -67,7 +67,7 @@ namespace BrainSimulator.Modules
                 for (int j = Y1 + 1; j < Y2 - 1; j++)
                 {
                     int neuronIndex = MainWindow.theNeuronArray.GetNeuronIndex(i, j);
-                    Neuron n = MainWindow.theNeuronArray.neuronArray[neuronIndex];
+                    Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronIndex);
                     int x = (i - X1) * bitmap1.Width / (X2 - X1);
                     int y = (j - Y1) * bitmap1.Height / (Y2 - Y1);
                     System.Drawing.Color c = bitmap1.GetPixel(x, y);

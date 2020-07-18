@@ -4,6 +4,7 @@
 //  
 
 using System;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,7 +28,7 @@ namespace BrainSimulator
         int arraySize;
 
         //for the progress bar
-        DispatcherTimer barUpdateTimier = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 0, 5) };
+        DispatcherTimer barUpdateTimer = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 1) };
 
 
         public NewArrayDlg()
@@ -36,7 +37,7 @@ namespace BrainSimulator
             ulong StartBytes = (ulong)System.GC.GetTotalMemory(true);
             Neuron[] n = new Neuron[sizeCount];
             for (int i = 0; i < sizeCount; i++)
-                n[i] = new Neuron();
+                n[i] = new Neuron(false);
             ulong StopBytes = (ulong)System.GC.GetTotalMemory(true);
             ulong neuronSize1 = (StopBytes - StartBytes) / sizeCount;
 
@@ -53,132 +54,91 @@ namespace BrainSimulator
             text += "Max Neurons Possible in RAM: " + maxNeurons.ToString("##,#") + crlf;
             text += "Assuming average " + assumedSynapseCount + " synapses per neuron" + crlf;
             textBlock.Text = text;
-
-            foreach (Neuron.modelType model in (Neuron.modelType[])Enum.GetValues(typeof(Neuron.modelType)))
-            { comboBoxModel.Items.Add(model.ToString()); }
-            comboBoxModel.SelectedIndex = 0;
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-        }
-
+        BackgroundWorker bgw = new BackgroundWorker();
+        int rows;
         private void ButtonOK_Click(object sender, RoutedEventArgs e)
         {
+            buttonOK.IsEnabled = false;
             MainWindow.CloseAllModuleDialogs();
             MainWindow.CloseHistoryWindow();
             MainWindow.CloseNotesWindow();
             if (MainWindow.theNeuronArray != null)
                 MainWindow.theNeuronArray.Modules.Clear();
             MainWindow.arrayView.ClearSelection();
+            MainWindow.theNeuronArray = new NeuronArray();
+
             if (!int.TryParse(textBoxColumns.Text, out int cols)) return;
-            if (!int.TryParse(textBoxRows.Text, out int rows)) return;
-            Neuron.modelType t = (Neuron.modelType)System.Enum.Parse(typeof(Neuron.modelType), comboBoxModel.SelectedItem.ToString());
+            if (!int.TryParse(textBoxRows.Text, out rows)) return;
+            if (checkBoxSynapses.IsChecked == true) doSynapses = true;
 
             arraySize = rows * cols;
-            MainWindow.theNeuronArray = new NeuronArray(arraySize, rows, t);
+            progressBar.Maximum = arraySize;
+            //force garbage collection before starting
+
+            bgw.DoWork += AsyncCreateNeurons;
+            bgw.RunWorkerAsync();
+
+            barUpdateTimer.Tick += Dt_Tick;
+            barUpdateTimer.Start();
+
             MainWindow.arrayView.Dp.NeuronDisplaySize = 62;
             MainWindow.arrayView.Dp.DisplayOffset = new Point(0, 0);
-
-            if (checkBoxSynapses.IsChecked ?? true)
-            {
-                progressBar.Maximum = MainWindow.theNeuronArray.arraySize;
-                //allocate randome neurons for testing
-                int rows1 = MainWindow.theNeuronArray.rows;
-                Task.Factory.StartNew(() =>
-                {
-                    Parallel.For(0, MainWindow.theNeuronArray.arraySize, i => CreateRandomSynapses(rows1, i));
-                });
-                //Parallel.For(0, MainWindow.theNeuronArray.arraySize, i => CreateRandomSynapses(rows1, i));
-                barUpdateTimier.Tick += Dt_Tick;
-                barUpdateTimier.Start();
-            }
-            else
-            {
-                Close();
-                returnValue = true;
-            }
-            return;
         }
-
+        bool done = false;
+        bool doingSynapses = false;
+        bool doSynapses = false;
         private void Dt_Tick(object sender, EventArgs e)
         {
-            progressBar.Value = CountSynapses();;
-            if (MainWindow.theNeuronArray != null && progressBar.Value >= MainWindow.theNeuronArray.arraySize*.9f)
+            if (!doingSynapses) 
+                progressBar.Value = MainWindow.theNeuronArray.GetInterimNeuronCount();
+            else
             {
-                barUpdateTimier.Stop();
+                progressBar.Maximum = MainWindow.theNeuronArray.arraySize * 100;
+                MainWindow.theNeuronArray.GetCounts(out int synapseCount, out int useCount);
+                progressBar.Value = synapseCount;
+            }
+            if (done)
+            {
+                barUpdateTimer.Stop();
                 returnValue = true;
                 Close();
-            }
-        }
-        private int CountSynapses()
-        {
-            int retVal = 0;
-            Parallel.For(0, MainWindow.theNeuronArray.arraySize, i =>
-            {
-                if (MainWindow.theNeuronArray.neuronArray[i].synapses.Count > 0)
-                    retVal++;
-            });
-            //for (int i = 0; i < MainWindow.theNeuronArray.arraySize; i++)
-            //{
-            //        if (MainWindow.theNeuronArray.neuronArray[i].InUse())
-            //            retVal++;
-            //}
-            return retVal;
-        }
-
-        private void CreateRandomSynapses(int rows, int i)
-        {
-
-            Neuron n = MainWindow.theNeuronArray.neuronArray[i];
-            //int nextNeuron = n.Id;
-            //nextNeuron++;
-            //if (nextNeuron == MainWindow.theNeuronArray.arraySize) nextNeuron = 0;
-            //n.AddSynapse(nextNeuron, 1.0f);
-            //if (nextNeuron < MainWindow.theNeuronArray.arraySize / 2)
-            //{
-            //    n.AddSynapse(nextNeuron + MainWindow.theNeuronArray.arraySize / 2, 1.0f);
-            //    n.AddSynapse(nextNeuron + MainWindow.theNeuronArray.arraySize / 3, 1.0f);
-            //    n.AddSynapse(nextNeuron + MainWindow.theNeuronArray.arraySize / 4, 1.0f);
-            //    n.AddSynapse(nextNeuron + MainWindow.theNeuronArray.arraySize / 5, 1.0f);
-            //}
-
-            int row = i % rows;
-            int col = i / rows;
-
-            for (int j = 0; j < (int)assumedSynapseCount; j++)
-            {
-                int newRow;
-                int newCol;
-                if (rand == null) rand = new Random();
-                lock (rand)
-                {
-                    newRow = row + rand.Next(10);
-                    newCol = col + rand.Next(20);
-                }
-                int dest = newCol * rows + newRow;
-                if (dest >= MainWindow.theNeuronArray.arraySize) dest -= MainWindow.theNeuronArray.arraySize;
-                if (dest < 0) dest += MainWindow.theNeuronArray.arraySize;
-                //float weight = .95f - (float)rand.Next(0, 1500) / 900f;
-                float weight = .07f;
-                n.AddSynapse(dest, weight, MainWindow.theNeuronArray, false);
-            }
-        }
-
-        private void AddSynapses(int i)
-        {
-            Neuron n = MainWindow.theNeuronArray.neuronArray[i];
-            for (int j = 0; j < (int)assumedSynapseCount; j++)
-            {
-                int dest = rand.Next(MainWindow.theNeuronArray.arraySize - 1);
-                float weight = 1 - (float)rand.Next(0, 1000) / 500f;
-                n.AddSynapse(dest, weight, MainWindow.theNeuronArray, false);
             }
         }
 
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void AsyncCreateNeurons(object sender, DoWorkEventArgs e)
+        {
+            GC.Collect(3, GCCollectionMode.Forced, true);
+            MainWindow.theNeuronArray.Initialize(arraySize, rows);
+            if (doSynapses)
+            {
+                doingSynapses = true;
+                GC.Collect(3, GCCollectionMode.Forced, true);
+                Parallel.For(0, MainWindow.theNeuronArray.arraySize, i => CreateRandomSynapses(i));
+            }
+            done = true;
+        }
+
+        private void CreateRandomSynapses(int i)
+        {
+            if (rand == null) rand = new Random();
+
+            Neuron n = MainWindow.theNeuronArray.GetNeuron(i);
+
+            int nextNeuron = n.Id;
+            for (int j = 0; j < 100; j++)
+            {
+                nextNeuron = rand.Next(MainWindow.theNeuronArray.arraySize-1);
+                float weight = (rand.Next(1000)/1000f) * .2f - .09f;
+
+                n.AddSynapse(nextNeuron, weight);
+            }
         }
 
     }

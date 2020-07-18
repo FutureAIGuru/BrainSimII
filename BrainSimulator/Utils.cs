@@ -5,8 +5,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,12 +16,62 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Xml.Serialization;
 using BrainSimulator.Modules;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace BrainSimulator
 {
 
     public static class Utils
     {
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern IntPtr GetCurrentThreadId();
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern IntPtr GetCurrentThread();
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern bool GetProcessAffinityMask(IntPtr currentProcess, ref Int64 lpProcessAffinityMask, ref Int64 lpSystemAffinityMask);
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern int GetCurrentProcessorNumber();
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern bool GetProcessGroupAffinity(IntPtr currentProcess, ref ushort groupCount, ref ushort groupArray);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern int GetActiveProcessorGroupCount();
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern bool GetThreadGroupAffinity(IntPtr hThread, ref GroupAffinity groupAffinity);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern bool SetThreadGroupAffinity(IntPtr hThread, ref GroupAffinity groupAffinity, ref GroupAffinity prevAffinity);
+
+        public struct GroupAffinity
+        {
+            long mask;
+            public short group;
+            long reserved;
+        }
+        public static void MessWithAffinity(int taskNum)
+        {
+            Thread thread = Thread.CurrentThread;
+            int groupCount = GetActiveProcessorGroupCount();
+            IntPtr threadHandle = GetCurrentThread();
+            short theNewGroup = (short)(taskNum % groupCount);
+            GroupAffinity ga = new GroupAffinity();
+            GroupAffinity ga1 = new GroupAffinity();
+            bool retVal = GetThreadGroupAffinity(threadHandle, ref ga);
+            int error = Marshal.GetLastWin32Error();
+            if (retVal == true)
+            {
+                ga.group = theNewGroup;
+                retVal = SetThreadGroupAffinity(threadHandle, ref ga, ref ga1);
+                if (retVal != true)
+                {
+                    error = Marshal.GetLastWin32Error();
+                }
+            }
+        }
+
+
         //this searches a control tree to find a control by name so you can retrieve its value
         public static Control FindByName(Visual v, string name)
         {
@@ -103,9 +155,9 @@ namespace BrainSimulator
             return FindDistanceToSegment(new Point(0, 0), s.P1.P, s.P2.P, out Point closest);
         }
 
-        public static double FindDistanceToSegment(Segment s,out Point closest)
+        public static double FindDistanceToSegment(Segment s, out Point closest)
         {
-            return FindDistanceToSegment(new Point(0,0),s.P1.P,s.P2.P,out closest);
+            return FindDistanceToSegment(new Point(0, 0), s.P1.P, s.P2.P, out closest);
         }
 
         public static Vector GetClosestPointOnLine(Vector A, Vector B, Vector P)
@@ -113,7 +165,7 @@ namespace BrainSimulator
             Vector AP = P - A;       //Vector from A to P   
             Vector AB = B - A;       //Vector from A to B  
 
-            float magnitudeAB = (float)(AB.Length*AB.Length);     //Magnitude of AB vector (it's length squared)     
+            float magnitudeAB = (float)(AB.Length * AB.Length);     //Magnitude of AB vector (it's length squared)     
             float ABAPproduct = (float)Vector.Multiply(AP, AB);    //The DOT product of a_to_p and a_to_b     
             float distance = ABAPproduct / magnitudeAB; //The normalized "distance" from a to your closest point  
 

@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,6 +25,8 @@ namespace BrainSimulator
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    
+    
     public partial class MainWindow : Window
     {
         //Globals
@@ -72,6 +75,8 @@ namespace BrainSimulator
                 };
 #endif
             InitializeComponent();
+
+
             displayUpdateTimer.Tick += DisplayUpdate_TimerTick;
             arrayView = theNeuronArrayView;
             Width = 1100;
@@ -82,7 +87,7 @@ namespace BrainSimulator
 
             splashScreen.Left = 300;
             splashScreen.Top = 300;
-            splashScreen.Show();
+            //splashScreen.Show();
             DispatcherTimer splashHide = new DispatcherTimer
             {
                 Interval = new TimeSpan(0, 0, 3),
@@ -137,7 +142,7 @@ namespace BrainSimulator
             if (theNeuronArray != null)
             {
                 bool history = false;
-                foreach (Neuron n in theNeuronArray.neuronArray)
+                foreach (Neuron n in theNeuronArray.Neurons())
                 {
                     if (n.KeepHistory)
                         history = true;
@@ -257,19 +262,24 @@ namespace BrainSimulator
 
             for (int i = 0; i < theNeuronArray.arraySize; i++)
             {
-                if (theNeuronArray.neuronArray[i] == null)
-                    theNeuronArray.neuronArray[i] = new Neuron(i);
-                if (theNeuronArray.neuronArray[i].CurrentCharge > 0 || theNeuronArray.neuronArray[i].LastCharge > 0)
-                    theNeuronArray.AddToFiringQueue(theNeuronArray.neuronArray[i].Id);
+                if (theNeuronArray.GetNeuron(i) == null)
+                    theNeuronArray.SetNeuron(i, new Neuron(i));
+                if (theNeuronArray.GetNeuron(i).CurrentCharge > 0 || theNeuronArray.GetNeuron(i).LastCharge > 0)
+                    theNeuronArray.AddToFiringQueue(theNeuronArray.GetNeuron(i).Id);
             }
             //Update all the synapses to ensure that the synapse-from lists are correct
-            foreach (Neuron n in theNeuronArray.neuronArray) n.SynapsesFrom.Clear();
-            foreach (Neuron n in theNeuronArray.neuronArray)
+            foreach (Neuron n in theNeuronArray.Neurons()) 
+                if (n.SynapsesFrom != null)
+                    n.SynapsesFrom.Clear();
+            foreach (Neuron n in theNeuronArray.Neurons())
             {
-                foreach (Synapse s in n.Synapses)
+                if (n.Synapses != null)
                 {
-                    n.AddSynapse(s.TargetNeuron, s.Weight, theNeuronArray, false);
-                    s.N = theNeuronArray.neuronArray[s.TargetNeuron];
+                    foreach (Synapse s in n.Synapses)
+                    {
+                        n.AddSynapse(s.TargetNeuron, s.Weight, theNeuronArray, false);
+                        s.N = theNeuronArray.GetNeuron(s.TargetNeuron);
+                    }
                 }
                 if (n.CurrentCharge >= 1 || n.LastCharge >= 1 || n.Model == Neuron.modelType.LIF)
                 {
@@ -299,7 +309,6 @@ namespace BrainSimulator
             return true;
         }
 
-        //
         private void ShowDialogs()
         {
             SuspendEngine();
@@ -406,8 +415,8 @@ namespace BrainSimulator
 
             //hide unused neurons to save on file size
             for (int i = 0; i < theNeuronArray.arraySize; i++)
-                if (!theNeuronArray.neuronArray[i].InUse() && theNeuronArray.neuronArray[i].Model == Neuron.modelType.Std)
-                    theNeuronArray.neuronArray[i] = null;
+                if (!theNeuronArray.GetNeuron(i).InUse() && theNeuronArray.GetNeuron(i).Model == Neuron.modelType.Std)
+                    theNeuronArray.SetNeuron(i,null);
             //Save the data from the network (NeuronArray and modules) to the file
             try
             {
@@ -433,8 +442,8 @@ namespace BrainSimulator
 
             //restore unused neurons 
             for (int i = 0; i < theNeuronArray.arraySize; i++)
-                if (theNeuronArray.neuronArray[i] == null)
-                    theNeuronArray.neuronArray[i] = new Neuron(i);
+                if (theNeuronArray.GetNeuron(i) == null)
+                    theNeuronArray.SetNeuron(i,new Neuron(i));
 
             ResumeEngine();
         }
@@ -485,11 +494,11 @@ namespace BrainSimulator
             { } //cancel the operation
             else
             {
+                SuspendEngine();
                 NewArrayDlg dlg = new NewArrayDlg();
                 dlg.ShowDialog();
                 if (dlg.returnValue)
                 {
-                    SuspendEngine();
                     theNeuronArrayView.Update();
                     currentFileName = "";
                     Properties.Settings.Default["CurrentFile"] = currentFileName;
@@ -497,9 +506,9 @@ namespace BrainSimulator
                     setTitleBar();
                     if (theNeuronArray.networkNotes != "")
                         MenuItemNotes_Click(null, null);
-                    ResumeEngine();
                 }
             }
+            ResumeEngine();
         }
         private void button_Exit_Click(object sender, RoutedEventArgs e)
         {
@@ -546,11 +555,14 @@ namespace BrainSimulator
         public static void ResumeEngine()
         {
             //resume the engine
-            engineDelay = MainWindow.theNeuronArray.EngineSpeed;
-            Application.Current.Dispatcher.Invoke((Action)delegate
+            if (MainWindow.theNeuronArray != null)
             {
-                MainWindow.thisWindow.SetSliderPosition(engineDelay);
-            });
+                engineDelay = MainWindow.theNeuronArray.EngineSpeed;
+                Application.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    MainWindow.thisWindow.SetSliderPosition(engineDelay);
+                });
+            }
         }
 
         static bool engineIsWaiting = false;

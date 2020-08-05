@@ -74,6 +74,10 @@ namespace BrainSimulator
                 l.Stroke = Brushes.Blue;
             if (s.Weight < -0.9)
                 l.Stroke = Brushes.Black;
+            if (l is Ellipse E)
+            { }
+            else
+                l.Fill = l.Stroke;
             l.SetValue(SourceIDProperty, i);
             l.SetValue(TargetIDProperty, s.TargetNeuron);
             l.SetValue(WeightValProperty, s.Weight);
@@ -123,6 +127,11 @@ namespace BrainSimulator
             cm.Items.Add(mi);
 
             mi = new MenuItem();
+            mi.Header = "0";
+            mi.Click += ANDSynapse_Click;
+            cm.Items.Add(mi);
+
+            mi = new MenuItem();
             mi.Header = "-1";
             mi.Click += ANDSynapse_Click;
             cm.Items.Add(mi);
@@ -139,7 +148,7 @@ namespace BrainSimulator
             cm.Items.Add(tb);
             CheckBox cbHebbian = new CheckBox
             {
-                IsChecked = s.IsHebbian,
+                IsChecked = s.isHebbian,
                 Content = "Hebbian Learning",
                 Name = "Hebbian",
             };
@@ -157,7 +166,10 @@ namespace BrainSimulator
             Synapse s = MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).
                 FindSynapse((int)cm.GetValue(TargetIDProperty));
             if (s != null)
-                s.IsHebbian = (bool)cb.IsChecked;
+                s.isHebbian = (bool)cb.IsChecked;
+            Neuron n = MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty));
+            n.AddSynapse((int)cm.GetValue(TargetIDProperty), s.weight, s.isHebbian);
+
         }
 
         private static void Cm_Closed(object sender, RoutedEventArgs e)
@@ -254,7 +266,9 @@ namespace BrainSimulator
             s.Stroke = Brushes.Red;
             s.StrokeThickness = 1;
             if (dp.ShowSynapseWideLines())
-                s.StrokeThickness = dp.NeuronDisplaySize / 15;
+            {
+                s.StrokeThickness = Math.Min(4, dp.NeuronDisplaySize / 15);
+            }
             s.MouseDown += theNeuronDisplayView.theCanvas_MouseDown;
             s.MouseUp += theNeuronDisplayView.theCanvas_MouseUp;
             if (dp.ShowSynapseArrowCursor())

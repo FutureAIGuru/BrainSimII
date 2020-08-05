@@ -51,13 +51,13 @@ namespace BrainSimulator.Modules
         void SetNeuronValues()
         {
             if (dlg == null) return;
-            if (renderStarted && !renderDone)
+            //if (renderStarted && !renderDone)  //TODO bug which prevents drawing...now has blank frames
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {
                     ((Module3DSimDlg)dlg).GetBitMap();
                 });
 
-            if (!renderStarted || !renderDone) return;
+            //if (!renderStarted || !renderDone) return;
             renderDone = false;
             renderStarted = false;
             System.Drawing.Bitmap bitmap1 = null;

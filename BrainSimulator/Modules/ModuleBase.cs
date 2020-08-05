@@ -375,7 +375,7 @@ namespace BrainSimulator.Modules
                 Neuron n = naModule.GetNeuronAt(x, y);
                 if (n != null)
                 {
-                    retVal = n.CurrentChargeInt;
+                    retVal = n.LastChargeInt;
                 }
             }
             return retVal;

@@ -29,36 +29,20 @@ namespace BrainSimulator
             InitializeComponent();
             if (MainWindow.theNeuronArray == null)
             { Close();return; }
+
             txtFileName.Text = MainWindow.currentFileName;
             txtFileName.ToolTip = MainWindow.currentFileName;
-            txtRows.Text = MainWindow.theNeuronArray.rows.ToString();
-            txtColumns.Text = (MainWindow.theNeuronArray.arraySize / MainWindow.theNeuronArray.rows).ToString();
-            txtNeurons.Text = MainWindow.theNeuronArray.arraySize.ToString();
+            txtRows.Text = MainWindow.theNeuronArray.rows.ToString("N0");
+            txtColumns.Text = (MainWindow.theNeuronArray.arraySize / MainWindow.theNeuronArray.rows).ToString("N0");
+            txtNeurons.Text = MainWindow.theNeuronArray.arraySize.ToString("N0");
             MainWindow.theNeuronArray.GetCounts(out int synapseCount, out int neuronInUseCount);
-            txtNeuronsInUse.Text = neuronInUseCount.ToString();
-            txtSynapses.Text = synapseCount.ToString();
+            txtNeuronsInUse.Text = neuronInUseCount.ToString("N0");
+            txtSynapses.Text = synapseCount.ToString("N0");
         }
 
         private void btnDialogOk_Click(object sender, RoutedEventArgs e)
         {
-            int.TryParse(txtColumns.Text, out int newColumns);
-            int oldColumns = MainWindow.theNeuronArray.arraySize / MainWindow.theNeuronArray.rows;
-
-            if (newColumns != oldColumns)
-            {
-                MainWindow.SuspendEngine();
-                int oldArraySize = MainWindow.theNeuronArray.arraySize;
-                int newArraySize = oldArraySize / oldColumns * newColumns;
-                MainWindow.theNeuronArray.ChangeArraySize(newArraySize);
-                for (int i = oldArraySize;i < newArraySize; i++)
-                {
-                    MainWindow.theNeuronArray.SetNeuron(i,  new Neuron(false));
-                }
-                MainWindow.theNeuronArray.arraySize = newArraySize;
-                MainWindow.ResumeEngine();
-            }
-            MainWindow.Update();
-            Close();
+            this.Close();
         }
     }
 }

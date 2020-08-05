@@ -181,7 +181,7 @@ namespace BrainSimulator
             for (int i = 0; i < FiringHistory.history.Count; i++)
             {
                 int nID = FiringHistory.history[i].NeuronID;
-                MainWindow.theNeuronArray.GetNeuron(nID).KeepHistory = false;
+                //TODOMainWindow.theNeuronArray.GetNeuron(nID).KeepHistory = false;
             }
             FiringHistory.history.Clear();
             this.Close();

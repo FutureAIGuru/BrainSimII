@@ -46,26 +46,10 @@ namespace BrainSimulator
                 if (col % 2 != 0) return null;
             }
 
-            Neuron n = MainWindow.theNeuronArray.GetNeuron(i);
+            Neuron n = MainWindow.theNeuronArray.GetCompleteNeuron(i);
             Point p = dp.pointFromNeuron(i);
 
-            //if (p.X < -dp.NeuronDisplaySize) return null;
-            //if (p.Y < -dp.NeuronDisplaySize) return null;
-            //if (p.X > theCanvas.ActualWidth + dp.NeuronDisplaySize) return null;
-            //if (p.Y > theCanvas.ActualHeight + dp.NeuronDisplaySize) return null;
-
-            // figure out which color to use
-            float value = n.LastCharge;
-            Color c = Colors.Blue;
-            if ((n.Model == Neuron.modelType.Std ||n.Model == Neuron.modelType.LIF ) && value > .99)
-                c = Colors.Orange;
-            else if ((n.Model == Neuron.modelType.Std || n.Model == Neuron.modelType.LIF) && value != -1)
-                c = MapRainbowColor(value, 1, 0);
-            else if (n.Model == Neuron.modelType.Color)
-                c = Utils.IntToColor((int)n.LastChargeInt);
-            SolidColorBrush s1 = new SolidColorBrush(c);
-            //   if (n.Label != "" || !n.InUse()) s1.Opacity = .50;
-            if (!n.InUse() && n.Model == Neuron.modelType.Std) s1.Opacity = .50;
+            SolidColorBrush s1 = GetNeuronColor(n);
 
             Shape r = null;
             if (dp.ShowNeuronCircles())
@@ -124,6 +108,23 @@ namespace BrainSimulator
             return r;
         }
 
+        public static SolidColorBrush GetNeuronColor(Neuron n)
+        {
+            // figure out which color to use
+            float value = n.LastCharge;
+            Color c = Colors.Blue;
+            if ((n.Model == Neuron.modelType.Std || n.Model == Neuron.modelType.LIF || n.model == Neuron.modelType.Random) && value > .99)
+                c = Colors.Orange;
+            else if ((n.Model == Neuron.modelType.Std || n.Model == Neuron.modelType.LIF || n.model == Neuron.modelType.FloatValue) && value != -1)
+                c = MapRainbowColor(value, 1, 0);
+            else if (n.Model == Neuron.modelType.Color)
+                c = Utils.IntToColor((int)n.LastChargeInt);
+            SolidColorBrush s1 = new SolidColorBrush(c);
+            //   if (n.Label != "" || !n.InUse()) s1.Opacity = .50;
+            if (!n.InUse() && n.Model == Neuron.modelType.Std) s1.Opacity = .50;
+            return s1;
+        }
+
         private static void R_MouseLeave(object sender, MouseEventArgs e)
         {
             if (theCanvas.Cursor != Cursors.Hand && !theNeuronArrayView.dragging && e.LeftButton != MouseButtonState.Pressed)
@@ -151,7 +152,7 @@ namespace BrainSimulator
             else
                 sp.Children.Add(new TextBox { Text = n.CurrentCharge.ToString("f2"), Width = 60, Name = "CurrentCharge", VerticalAlignment = VerticalAlignment.Center });
             cm.Items.Add(sp);
-            if (n.Model == Neuron.modelType.LIF)
+            if (n.Model == Neuron.modelType.LIF || n.model == Neuron.modelType.Random)
             {
                 sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
                 sp.Children.Add(new Label { Content = "Leak Rate: ", Padding = new Thickness(0) });
@@ -197,7 +198,8 @@ namespace BrainSimulator
             for (int index = 0; index < Enum.GetValues(typeof(Neuron.modelType)).Length; index++)
             {
                 Neuron.modelType model = (Neuron.modelType)index;
-                cb.Items.Add(new ListBoxItem() {
+                cb.Items.Add(new ListBoxItem()
+                {
                     Content = model.ToString(),
                     ToolTip = Neuron.modelToolTip[index],
                     Width = 100,
@@ -209,7 +211,7 @@ namespace BrainSimulator
             cm.Items.Add(sp);
             CheckBox cbHistory = new CheckBox
             {
-                IsChecked = n.KeepHistory,
+                IsChecked = FiringHistory.NeuronIsInFiringHistory(n.id),
                 Content = "Record Firing History",
                 Name = "History",
             };
@@ -220,24 +222,15 @@ namespace BrainSimulator
             mi = new MenuItem();
             mi.Header = "Synapses";
             mi.Click += Mi_Click;
-            if (n.synapses == null)
-            {
-                n.synapses = new List<Synapse>();
-            }
-            foreach (Synapse s in n.synapses)
-                mi.Items.Add(new MenuItem() { Header = s.targetNeuron + " " + s.Weight });
-
+            foreach (Synapse s in n.Synapses)
+                mi.Items.Add(new MenuItem() { Header = s.targetNeuron.ToString().PadLeft(8) + s.Weight.ToString("F4").PadLeft(9), FontFamily = new FontFamily("Courier New") });
             cm.Items.Add(mi);
 
             mi = new MenuItem();
             mi.Header = "Synapses In";
             mi.Click += Mi_Click;
-            if (n.synapsesFrom == null)
-            {
-                n.synapsesFrom = new List<Synapse>();
-            }
-            foreach (Synapse s in n.synapsesFrom)
-                mi.Items.Add(new MenuItem() { Header = s.targetNeuron + " " + s.Weight });
+            foreach (Synapse s in n.SynapsesFrom)
+                mi.Items.Add(new MenuItem() { Header = s.targetNeuron.ToString().PadLeft(8) + s.Weight.ToString("F4").PadLeft(9), FontFamily = new FontFamily("Courier New") }); ;
             cm.Items.Add(mi);
         }
 
@@ -252,7 +245,7 @@ namespace BrainSimulator
         {
             if ((Keyboard.GetKeyStates(Key.Escape) & KeyStates.Down) > 0)
             {
-                    return;
+                return;
             }
             if (cmCancelled)
             {
@@ -287,10 +280,10 @@ namespace BrainSimulator
                 cc = Utils.FindByName(cm, "History");
                 if (cc is CheckBox cb1)
                 {
-                    n.KeepHistory = (bool)cb1.IsChecked;
-                    if (!n.KeepHistory)
+                    bool KeepHistory = (bool)cb1.IsChecked;
+                    if (!KeepHistory)
                     {
-                        FiringHistory.DeleteHistory(n.Id);
+                        FiringHistory.RemoveNeuronFromHistoryWindow(n.Id);
                         if (FiringHistory.history.Count == 0 && MainWindow.fwWindow != null && MainWindow.fwWindow.IsVisible)
                         {
                             MainWindow.fwWindow.Close();
@@ -299,6 +292,7 @@ namespace BrainSimulator
                     }
                     else  //make sure a window is open
                     {
+                        FiringHistory.AddNeuronToHistoryWindow(n.id);
                         OpenHistoryWindow();
                     }
                     //if there is a selection, set all the keepHistory values to match
@@ -315,7 +309,13 @@ namespace BrainSimulator
                     {
                         theNeuronArrayView.theSelection.EnumSelectedNeurons();
                         for (Neuron n1 = theNeuronArrayView.theSelection.GetSelectedNeuron(); n1 != null; n1 = theNeuronArrayView.theSelection.GetSelectedNeuron())
-                            n1.KeepHistory = (bool)cb1.IsChecked;
+                        {
+                            if (KeepHistory)
+                                FiringHistory.AddNeuronToHistoryWindow(n1.id);
+                            else
+                                FiringHistory.RemoveNeuronFromHistoryWindow(n1.id);
+                        }
+                        //n1.KeepHistory = (bool)cb1.IsChecked;
                     }
                 }
             }
@@ -382,7 +382,7 @@ namespace BrainSimulator
             if ((string)mi.Header == "Always Fire")
             {
                 if (n.FindSynapse(i) == null)
-                    n.AddSynapse(i, 1, MainWindow.theNeuronArray,true);
+                    n.AddSynapse(i, 1, MainWindow.theNeuronArray, true);
                 else
                     n.DeleteSynapse(i);
             }

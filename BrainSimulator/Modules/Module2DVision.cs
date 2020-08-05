@@ -79,8 +79,8 @@ namespace BrainSimulator.Modules
             }
             for (int i = 0; i < na.Width; i++)
             {
-                curValuesL[i] = na.GetNeuronAt(i, 1).CurrentChargeInt;
-                curValuesR[i] = na.GetNeuronAt(i, 0).CurrentChargeInt;
+                curValuesL[i] = na.GetNeuronAt(i, 1).LastChargeInt;
+                curValuesR[i] = na.GetNeuronAt(i, 0).LastChargeInt;
                 textureValues[i] = curValuesL[i];
             }
 
@@ -210,7 +210,7 @@ namespace BrainSimulator.Modules
             int rCount = 0;
             for (int i = start; i < end; i++)
             {
-                ColorInt color = na.GetNeuronAt(i, 0).CurrentChargeInt;
+                ColorInt color = na.GetNeuronAt(i, 0).LastChargeInt;
                 if (color != a.theColor && first == 0)
                     continue;
                 if (first == 0) first = i;
@@ -222,7 +222,7 @@ namespace BrainSimulator.Modules
             }
             for (int i = end - 1; i >= start; i--)
             {
-                ColorInt color = na.GetNeuronAt(i, 0).CurrentChargeInt;
+                ColorInt color = na.GetNeuronAt(i, 0).LastChargeInt;
                 if (color != a.theColor && last== 0)
                     continue;
                 if (last == 0) last = i;
@@ -299,7 +299,7 @@ namespace BrainSimulator.Modules
             List<int> values = curValuesL;
             if (eye == 0) values = curValuesR;
 
-            ColorInt color1 = na.GetNeuronAt(0, eye).CurrentChargeInt;
+            ColorInt color1 = na.GetNeuronAt(0, eye).LastChargeInt;
             for (int i = 1; i < na.Width; i++)
             {
                 ColorInt color = values[i];

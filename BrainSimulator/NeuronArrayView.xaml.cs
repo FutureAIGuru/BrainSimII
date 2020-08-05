@@ -45,8 +45,6 @@ namespace BrainSimulator
         DispatcherTimer zoomRepeatTimer = new DispatcherTimer();
         float scale = 1;
 
-        //for cut-copy-paste
-        public NeuronArray myClipBoard = null; //refactor back to private
         public int targetNeuronIndex = -1;
 
         //needed for handling selections of areas of neurons
@@ -146,7 +144,7 @@ namespace BrainSimulator
             }
 
             int refNo = 1;
-            for (int i = 0; i < theNeuronArray.rows && false; i += boxSize)
+            for (int i = 0; i < theNeuronArray.rows; i += boxSize)
             {
                 for (int j = 0; j < columns; j += boxSize)
                 {
@@ -231,7 +229,7 @@ namespace BrainSimulator
                     for (int row = startRow; row < endRow; row++)
                     {
                         int neuronID = dp.GetAbsNeuronAt(col, row);
-                        if (neuronID >= 0 && neuronID < theNeuronArray.arraySize)
+                        if (neuronID >= 0 && neuronID < theNeuronArray.GetArraySize())
                         {
                             UIElement l = NeuronView.GetNeuronView(neuronID, this, out Label lbl);
                             if (l != null)
@@ -248,9 +246,9 @@ namespace BrainSimulator
                                 {
                                     Point p1 = dp.pointFromNeuron(neuronID);
                                     Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronID);
-                                    if (n.Synapses != null)
+                                    if (n.synapses != null)
                                     {
-                                        foreach (Synapse s in n.Synapses)
+                                        foreach (Synapse s in n.synapses)
                                         {
                                             Shape l1 = SynapseView.GetSynapseView(neuronID, p1, s, this);
                                             if (l1 != null)
@@ -346,31 +344,27 @@ namespace BrainSimulator
                 Neuron n = MainWindow.theNeuronArray.GetNeuron(a.neuronIndex);
                 if (a.graphic is Shape e)
                 {
-                    float x = n.LastCharge;
-                    if (x != a.prevValue)// ||
-                                         //    (a.label != null && n.Label != (string)a.label.Content) ||
-                                         //    (a.label == null && n.Label != ""))
+                    float x = n.lastCharge;
+                    if (x != a.prevValue)
                     {
                         a.prevValue = x;
-                        UIElement el = NeuronView.GetNeuronView(a.neuronIndex, this, out Label lbl);
-                        if (el is Shape l1)
-                        {
-                            e.Fill = l1.Fill;
-                        }
-                        //if (a.label != null && (string)a.label.Content != n.Label)
-                        //{
-                        //    a.label.Content = n.Label;
-                        //}
-                        //if (a.label == null && n.Label != "")
-                        //{
-                        //    a.label = lbl;
-                        //    theCanvas.Children.Add(lbl);
-                        //}
-                        //if (a.label != null && n.Label == "")
-                        //{
-                        //    theCanvas.Children.Remove(a.label);
-                        //    a.label = null;
-                        //}
+
+                        SolidColorBrush newColor = NeuronView.GetNeuronColor(n);
+                        e.Fill = newColor;
+                        if (n.lastCharge != 0)
+                            e.Fill.Opacity = 1;
+                    }
+                    if (a.label != null && n.label != (string)a.label.Content)
+                    {
+                        a.label.Content = n.label;
+                        e.Fill.Opacity = 1;
+                    }
+                    if (a.label == null && n.label != "")
+                    {
+                        UIElement l = NeuronView.GetNeuronView(a.neuronIndex, this, out Label lbl);
+                        e.Fill.Opacity = 1;
+                        a.label = lbl;
+                        theCanvas.Children.Add(lbl);
                     }
                 }
             }
@@ -413,13 +407,13 @@ namespace BrainSimulator
                 else if (sender is Shape s)
                 {
 
-                    if (s.ContextMenu == null && (s is Path || s is Line ||
+                    if ((s is Path || s is Line ||
                         (s is Ellipse && (int)s.GetValue(SynapseView.SourceIDProperty) != 0))) // a synapse
                     {
                         int source = (int)s.GetValue(SynapseView.SourceIDProperty);
                         int target = (int)s.GetValue(SynapseView.TargetIDProperty);
                         float weight = (float)s.GetValue(SynapseView.WeightValProperty);
-                        Synapse s1 = MainWindow.theNeuronArray.GetNeuron(source).FindSynapse(target);
+                        Synapse s1 = MainWindow.theNeuronArray.GetCompleteNeuron(source).FindSynapse(target);
 
                         //                        Synapse s1 = new Synapse(target, weight);
                         s.ContextMenu = new ContextMenu();
@@ -537,11 +531,12 @@ namespace BrainSimulator
                         if (n.LastCharge < .99)
                         {
                             n.CurrentCharge = 1;
-                            MainWindow.theNeuronArray.AddToFiringQueue(n.Id);
+                            n.LastCharge = 1;
                         }
                         else
                         {
-                            n.CurrentCharge = n.LastCharge = 0;
+                            n.CurrentCharge =0;
+                            n.LastCharge = 0;
                         }
                         e.Handled = true;
                     }

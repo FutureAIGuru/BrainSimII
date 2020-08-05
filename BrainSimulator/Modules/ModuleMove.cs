@@ -31,7 +31,7 @@ namespace BrainSimulator.Modules
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
-            float[] dist = { .5f,.1f,0,-.025f,-.1f};
+            float[] dist = { .5f, .1f, 0, -.025f, -.1f };
             float motionX = 0;
             float motionY = 0;
 
@@ -39,16 +39,16 @@ namespace BrainSimulator.Modules
 
             for (int i = 0; i < na.Height; i++)
             {
-                if (na.GetNeuronAt(1,i).LastCharge > 0.9)
+                if (na.GetNeuronAt(1, i).LastCharge > 0.9)
                 {
                     motionX = dist[i];
                 }
             }
 
-            if (na.GetNeuronAt(1,2).CurrentCharge!= 0)
+            if (na.GetNeuronAt(1, 2).LastCharge != 0)
             {
-                motionX = na.GetNeuronAt(1,2).CurrentCharge;
-                na.GetNeuronAt(1,2).SetValue(0);
+                motionX = na.GetNeuronAt(1, 2).LastCharge;
+                na.GetNeuronAt(1, 2).SetValue(0);
             }
 
             if (na.GetNeuronAt(0, 2).LastCharge > 0.9) motionY = 0.5f;
@@ -66,12 +66,12 @@ namespace BrainSimulator.Modules
 
             bool moved = false;
             Module2DSim m2D = (Module2DSim)FindModuleByType(typeof(Module2DSim));
-            if (m2D != null && motionX != 0 || motionY != 0)
-                moved = m2D.Move(motionX,motionY);
+            if (m2D != null && (motionX != 0 || motionY != 0))
+                moved = m2D.Move(motionX, motionY);
 
             Module2DModel m2DModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
             if (m2DModel != null && moved && motionX != 0 || motionY != 0)
-                m2DModel.Move(motionX,motionY);
+                m2DModel.Move(motionX, motionY);
 
             Module2DVision m2DVision = (Module2DVision)FindModuleByType(typeof(Module2DVision));
             if (m2DVision != null && motionX != 0) m2DVision.ViewChanged();
@@ -91,7 +91,7 @@ namespace BrainSimulator.Modules
             na.GetNeuronAt(1, 1).Label = "^";
             na.GetNeuronAt(1, 3).Label = "v";
             na.GetNeuronAt(1, 4).Label = "vv";
-            na.GetNeuronAt(0,2).Label = "<";
+            na.GetNeuronAt(0, 2).Label = "<";
             na.GetNeuronAt(2, 2).Label = ">";
 
         }

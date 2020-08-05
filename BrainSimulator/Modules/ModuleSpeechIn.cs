@@ -50,7 +50,7 @@ namespace BrainSimulator.Modules
                 }
                 if (found != -1) //perhaps the array was full
                 {
-                    n.CurrentCharge = 1;
+                    n.SetValue(1);
                     //Debug.WriteLine("Fired Neuron for word: " + word);
                 }
 

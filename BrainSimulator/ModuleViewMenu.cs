@@ -368,7 +368,7 @@ namespace BrainSimulator
                             Neuron n = MainWindow.theNeuronArray.GetNeuron(Id);
                             foreach (Synapse s in n.Synapses)
                             {
-                                if (s.IsHebbian)
+                                if (s.isHebbian)
                                     s.Weight = 0;
                             }
                         }

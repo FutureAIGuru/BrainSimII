@@ -22,8 +22,7 @@ using System.Text.RegularExpressions;
 
 namespace BrainSimulator
 {
-
-    public static class Utils
+    public static class SystemStuff
     {
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         static extern IntPtr GetCurrentThreadId();
@@ -46,31 +45,58 @@ namespace BrainSimulator
 
         public struct GroupAffinity
         {
-            long mask;
+            public ulong mask;
             public short group;
             long reserved;
         }
-        public static void MessWithAffinity(int taskNum)
+        static int groupCount = -1;
+        public static void SetProcessorGroupAffinity(int taskNum)
         {
-            Thread thread = Thread.CurrentThread;
-            int groupCount = GetActiveProcessorGroupCount();
-            IntPtr threadHandle = GetCurrentThread();
+            taskNum += 2;
+            if (groupCount == -1)
+                groupCount = GetActiveProcessorGroupCount();
             short theNewGroup = (short)(taskNum % groupCount);
+            short theNewProcessor = (short)(taskNum / groupCount);
+            IntPtr threadHandle = GetCurrentThread();
             GroupAffinity ga = new GroupAffinity();
             GroupAffinity ga1 = new GroupAffinity();
             bool retVal = GetThreadGroupAffinity(threadHandle, ref ga);
-            int error = Marshal.GetLastWin32Error();
-            if (retVal == true)
+            int error = 0;
+            if (retVal != true)
+                error = Marshal.GetLastWin32Error();
+            ga.group = theNewGroup;
+            ga.mask = (ulong)1 << theNewProcessor;
+            retVal = SetThreadGroupAffinity(threadHandle, ref ga, ref ga1);
+            if (retVal != true)
             {
-                ga.group = theNewGroup;
-                retVal = SetThreadGroupAffinity(threadHandle, ref ga, ref ga1);
-                if (retVal != true)
-                {
-                    error = Marshal.GetLastWin32Error();
-                }
+                error = Marshal.GetLastWin32Error();
             }
         }
 
+        //Thread thread = Thread.CurrentThread;
+        //if (groupCount == -1)
+        //    groupCount = GetActiveProcessorGroupCount();
+        //short theNewGroup = (short)(taskNum % groupCount);
+        //IntPtr threadHandle = GetCurrentThread();
+        //GroupAffinity ga = new GroupAffinity();
+        //GroupAffinity ga1 = new GroupAffinity();
+        //bool retVal = GetThreadGroupAffinity(threadHandle, ref ga);
+        //int error = Marshal.GetLastWin32Error();
+        //if (retVal == true && ga.group != theNewGroup)
+        //{
+        //    ga.group = theNewGroup;
+        //    retVal = SetThreadGroupAffinity(threadHandle, ref ga, ref ga1);
+        //    if (retVal != true)
+        //    {
+        //        error = Marshal.GetLastWin32Error();
+        //    }
+        //}
+    }
+
+
+
+    public static class Utils
+    {
 
         //this searches a control tree to find a control by name so you can retrieve its value
         public static Control FindByName(Visual v, string name)

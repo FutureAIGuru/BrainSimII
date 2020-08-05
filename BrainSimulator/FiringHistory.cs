@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Speech.Synthesis;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,33 +17,58 @@ namespace BrainSimulator
         public static List<NeuronHistory> history = new List<NeuronHistory>();
 
         static int MaxSamples = 1000;
-        
+
         public static long EarliestValue()
         {
             long retVal = long.MaxValue;
             for (int i = 0; i < history.Count; i++)
             {
-                if (history[i].Samples.Count > 0)       
-                  retVal = Math.Min(retVal, history[i].Samples[0]);
+                if (history[i].Samples.Count > 0)
+                    retVal = Math.Min(retVal, history[i].Samples[0]);
             }
             return retVal;
         }
 
-
-        public static void AddFiring(int NeuronID, long TimeStamp)
+        public static bool NeuronIsInFiringHistory(int id)
         {
             for (int i = 0; i < history.Count; i++)
             {
-                if (NeuronID == history[i].NeuronID)
+                if (history[i].NeuronID == id)
                 {
-                    if (history[i].Samples.Count > MaxSamples)
-                        history[i].Samples.RemoveAt(0);
-                    history[i].Samples.Add(TimeStamp);
+                    return true;
+                }
+            }
+            return false;
+        }
+        public static void AddNeuronToHistoryWindow(int id)
+        {
+            if (NeuronIsInFiringHistory(id)) return;
+            NeuronHistory entry = new NeuronHistory();
+            entry.NeuronID = id;
+            history.Add(entry);
+        }
+        public static void RemoveNeuronFromHistoryWindow(int id)
+        {
+            for (int i = 0; i < history.Count; i++)
+            {
+                if (history[i].NeuronID == id)
+                {
+                    history.RemoveAt(i);
                     return;
                 }
             }
-            history.Add(new NeuronHistory { NeuronID = NeuronID, });
-            AddFiring(NeuronID, TimeStamp);
+        }
+
+        public static void UpdateFiringHistory()
+        {
+            foreach (NeuronHistory active in history)
+            {
+                float lastCharge = MainWindow.theNeuronArray.GetNeuronLastCharge(active.NeuronID);
+                if (lastCharge >= 1)
+                {
+                    active.Samples.Add(MainWindow.theNeuronArray.Generation);
+                }
+            }
         }
 
         public static void Clear()
@@ -50,18 +76,6 @@ namespace BrainSimulator
             for (int i = 0; i < history.Count; i++)
             {
                 history[i].Samples.Clear();
-            }
-        }
-
-        public static void DeleteHistory(int NeuronID)
-        {
-            for (int i = 0; i < history.Count; i++)
-            {
-                if (NeuronID == history[i].NeuronID)
-                {
-                    history.RemoveAt(i);
-                    return;
-                }
             }
         }
     }

@@ -72,7 +72,7 @@ namespace BrainSimulator.Modules
                         phraseToSpeak += n.Label;
                         paused = false;
                     }
-                    if (n.synapses.Count == 0)
+                    if (n.Synapses.Count == 0)
                     {
                         //connect it to the knowledge store
                         //connection to KB 

@@ -84,6 +84,8 @@ namespace BrainSimulator.Modules
             na.GetNeuronAt(9, 0).Label = "mR";
             na.GetNeuronAt(10, 0).Label = "mθ";
             na.GetNeuronAt(11, 0).Label = "mф";
+            foreach (Neuron n in na.Neurons())
+                n.Model = Neuron.modelType.FloatValue;
         }
     }
 

@@ -32,10 +32,14 @@ namespace BrainSimulator
         //Globals
         public static NeuronArrayView arrayView = null;
         public static NeuronArray theNeuronArray = null;
+        //for cut-copy-paste
+        public static NeuronArray myClipBoard = null; //refactor back to private
+
         public static FiringHistoryWindow fwWindow = null;
         public static NotesDialog notesWindow = null;
 
         Thread engineThread = new Thread(new ThreadStart(EngineLoop)) { Name = "EngineThread" };
+
         private static int engineDelay = 500;//how long to wait after each cycle of the engine
 
         //timer to update the neuron values 
@@ -75,7 +79,7 @@ namespace BrainSimulator
                 };
 #endif
             InitializeComponent();
-
+            engineThread.Priority = ThreadPriority.BelowNormal;
 
             displayUpdateTimer.Tick += DisplayUpdate_TimerTick;
             arrayView = theNeuronArrayView;
@@ -138,18 +142,19 @@ namespace BrainSimulator
 
         private void OpenHistoryWindow()
         {
-            if (Application.Current.MainWindow != this) return;
-            if (theNeuronArray != null)
-            {
-                bool history = false;
-                foreach (Neuron n in theNeuronArray.Neurons())
-                {
-                    if (n.KeepHistory)
-                        history = true;
-                }
-                if (history)
-                    NeuronView.OpenHistoryWindow();
-            }
+            return;
+            //if (Application.Current.MainWindow != this) return;
+            //if (theNeuronArray != null)
+            //{
+            //    bool history = false;
+            //    foreach (Neuron n in theNeuronArray.Neurons())
+            //    {
+            //        if (n.KeepHistory)
+            //            history = true;
+            //    }
+            //    if (history)
+            //        NeuronView.OpenHistoryWindow();
+            //}
         }
 
 
@@ -237,58 +242,13 @@ namespace BrainSimulator
             CloseAllModuleDialogs();
             CloseHistoryWindow();
             CloseNotesWindow();
-
             theNeuronArrayView.theSelection.selectedRectangles.Clear();
             CloseAllModuleDialogs();
-
             SuspendEngine();
-            try
-            {
-                // Load the data from the XML to the Brainsim Engine.  
-                FileStream file = File.Open(fileName, FileMode.Open);
 
-                XmlSerializer reader = new XmlSerializer(typeof(NeuronArray), GetModuleTypes());
-                theNeuronArray = (NeuronArray)reader.Deserialize(file);
-                file.Close();
-            }
-            catch (Exception e1)
-            {
-                if (e1.InnerException != null)
-                    MessageBox.Show("File Load failed because:\r\n " + e1.Message + "\r\nAnd:\r\n" + e1.InnerException.Message);
-                else
-                    MessageBox.Show("File Load failed because:\r\n " + e1.Message);
-                return false;
-            }
+            XmlFile.Load(ref theNeuronArray, fileName);
 
-            for (int i = 0; i < theNeuronArray.arraySize; i++)
-            {
-                if (theNeuronArray.GetNeuron(i) == null)
-                    theNeuronArray.SetNeuron(i, new Neuron(i));
-                if (theNeuronArray.GetNeuron(i).CurrentCharge > 0 || theNeuronArray.GetNeuron(i).LastCharge > 0)
-                    theNeuronArray.AddToFiringQueue(theNeuronArray.GetNeuron(i).Id);
-            }
-            //Update all the synapses to ensure that the synapse-from lists are correct
-            foreach (Neuron n in theNeuronArray.Neurons()) 
-                if (n.SynapsesFrom != null)
-                    n.SynapsesFrom.Clear();
-            foreach (Neuron n in theNeuronArray.Neurons())
-            {
-                if (n.Synapses != null)
-                {
-                    foreach (Synapse s in n.Synapses)
-                    {
-                        n.AddSynapse(s.TargetNeuron, s.Weight, theNeuronArray, false);
-                        s.N = theNeuronArray.GetNeuron(s.TargetNeuron);
-                    }
-                }
-                if (n.CurrentCharge >= 1 || n.LastCharge >= 1 || n.Model == Neuron.modelType.LIF)
-                {
-                    theNeuronArray.AddToFiringQueue(n.Id);
-                }
-            }
 
-            theNeuronArray.CheckSynapseArray();
-            theNeuronArrayView.Update();
             setTitleBar();
             Task.Delay(1000).ContinueWith(t => ShowDialogs());
             foreach (ModuleView na in theNeuronArray.modules)
@@ -298,16 +258,54 @@ namespace BrainSimulator
             }
             if (theNeuronArray.displayParams != null)
                 theNeuronArrayView.Dp = theNeuronArray.displayParams;
-
             NeuronArrayView.SortAreas();
-
-
             Update();
             SetShowSynapsesCheckBox(theNeuronArray.ShowSynapses);
             OpenHistoryWindow();
             ResumeEngine();
             return true;
         }
+
+        private bool LoadClipBoardFromFile(string fileName)
+        {
+
+            XmlFile.Load(ref myClipBoard, fileName);
+
+            foreach (ModuleView na in myClipBoard.modules)
+            {
+                if (na.TheModule != null)
+                    na.TheModule.SetUpAfterLoad();
+            }
+            return true;
+        }
+
+        private void SaveFile(string fileName)
+        {
+            SuspendEngine();
+            foreach (ModuleView na in theNeuronArray.modules)
+            {
+                if (na.TheModule != null)
+                    na.TheModule.SetUpBeforeSave();
+            }
+
+            theNeuronArray.displayParams = theNeuronArrayView.Dp;
+            if (XmlFile.Save(theNeuronArray, fileName))
+                currentFileName = fileName;
+
+            ResumeEngine();
+        }
+        private void SaveClipboardToFile(string fileName)
+        {
+            foreach (ModuleView na in myClipBoard.modules)
+            {
+                if (na.TheModule != null)
+                    na.TheModule.SetUpBeforeSave();
+            }
+
+            if (XmlFile.Save(myClipBoard, fileName))
+                currentFileName = fileName;
+        }
+
 
         private void ShowDialogs()
         {
@@ -386,67 +384,6 @@ namespace BrainSimulator
             }
         }
 
-        //this is the set of moduletypes that the xml serializer will save
-        private Type[] GetModuleTypes()
-        {
-            Type[] listOfBs = (from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
-                               from assemblyType in domainAssembly.GetTypes()
-                               where assemblyType.IsSubclassOf(typeof(ModuleBase))
-                               //                               where typeof(ModuleBase).IsAssignableFrom(assemblyType)
-                               select assemblyType).ToArray();
-            List<Type> list = new List<Type>();
-            for (int i = 0; i < listOfBs.Length; i++)
-                list.Add(listOfBs[i]);
-            list.Add(typeof(PointPlus));
-            return list.ToArray();
-        }
-
-        private void SaveFile(string fileName)
-        {
-            SuspendEngine();
-            string tempFile = System.IO.Path.GetTempFileName();
-            FileStream file = File.Create(tempFile);
-
-            foreach (ModuleView na in theNeuronArray.modules)
-            {
-                if (na.TheModule != null)
-                    na.TheModule.SetUpBeforeSave();
-            }
-
-            //hide unused neurons to save on file size
-            for (int i = 0; i < theNeuronArray.arraySize; i++)
-                if (!theNeuronArray.GetNeuron(i).InUse() && theNeuronArray.GetNeuron(i).Model == Neuron.modelType.Std)
-                    theNeuronArray.SetNeuron(i,null);
-            //Save the data from the network (NeuronArray and modules) to the file
-            try
-            {
-                theNeuronArray.displayParams = theNeuronArrayView.Dp;
-                XmlSerializer writer = new XmlSerializer(typeof(NeuronArray), GetModuleTypes());
-                writer.Serialize(file, theNeuronArray);
-                file.Close();
-                currentFileName = fileName;
-                Properties.Settings.Default["CurrentFile"] = currentFileName;
-                Properties.Settings.Default.Save();
-                File.Copy(tempFile, currentFileName, true);
-                File.Delete(tempFile);
-            }
-            catch (Exception e1)
-            {
-                MessageBox.Show("Save Failed because: " + e1.Message + "\r\n" + e1.InnerException.Message);
-                if (File.Exists(tempFile))
-                {
-                    file.Close();
-                    File.Delete(tempFile);
-                }
-            }
-
-            //restore unused neurons 
-            for (int i = 0; i < theNeuronArray.arraySize; i++)
-                if (theNeuronArray.GetNeuron(i) == null)
-                    theNeuronArray.SetNeuron(i,new Neuron(i));
-
-            ResumeEngine();
-        }
 
         private void buttonSaveAs_Click(object sender, RoutedEventArgs e)
         {
@@ -468,7 +405,7 @@ namespace BrainSimulator
 
         private void button_ClipboardSave_Click(object sender, RoutedEventArgs e)
         {
-            if (theNeuronArrayView.myClipBoard == null) return;
+            if (myClipBoard == null) return;
             if (theNeuronArrayView.theSelection.GetSelectedNeuronCount() < 1) return;
             SaveFileDialog saveFileDialog1 = new SaveFileDialog
             {
@@ -482,10 +419,7 @@ namespace BrainSimulator
             if (result ?? false)// System.Windows.Forms.DialogResult.OK)
             {
                 //Save the data from the NeuronArray to the file
-                System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(NeuronArray), GetModuleTypes());
-                System.IO.FileStream file = System.IO.File.Create(saveFileDialog1.FileName);
-                writer.Serialize(file, theNeuronArrayView.myClipBoard);
-                file.Close();
+                SaveClipboardToFile(saveFileDialog1.FileName);
             }
         }
         private void button_FileNew_Click(object sender, RoutedEventArgs e)
@@ -528,11 +462,7 @@ namespace BrainSimulator
             Nullable<bool> result = openFileDialog1.ShowDialog();
             if (result ?? false)
             {
-                // Load the data from the XML to the Brainsim NeuronArray.  
-                FileStream file = File.Open(openFileDialog1.FileName, FileMode.Open);
-                XmlSerializer reader = new XmlSerializer(typeof(NeuronArray), GetModuleTypes());
-                theNeuronArrayView.myClipBoard = (NeuronArray)reader.Deserialize(file);
-                file.Close();
+                LoadClipBoardFromFile(openFileDialog1.FileName);
             }
             if (theNeuronArrayView.targetNeuronIndex < 0) return;
 
@@ -634,12 +564,12 @@ namespace BrainSimulator
             disaplayUpdating = true;
             if (engineDelay > 1000 || theNeuronArray == null)
             {
-                label.Content = "Not Running   " + theNeuronArray.Generation;
+                label.Content = "Not Running   " + theNeuronArray.Generation.ToString("N0");
             }
             else
             {
                 theNeuronArrayView.UpdateNeuronColors();
-                label.Content = "Running, Speed: " + slider.Value + "   " + theNeuronArray.Generation;
+                label.Content = "Running, Speed: " + slider.Value + "   " + theNeuronArray.Generation.ToString("N0");
             }
             disaplayUpdating = false;
         }
@@ -699,7 +629,7 @@ namespace BrainSimulator
                 EnableMenuItem(MainMenu.Items, " Delete", true);
                 EnableMenuItem(MainMenu.Items, " Move", true);
             }
-            if (theNeuronArrayView.myClipBoard == null)
+            if (myClipBoard == null)
             {
                 EnableMenuItem(MainMenu.Items, " Paste", false);
                 EnableMenuItem(MainMenu.Items, " Save Clipboard", false);
@@ -713,7 +643,7 @@ namespace BrainSimulator
 
         static public void UpdateDisplayLabel(float zoomLevel, int firedCount)
         {
-            thisWindow.labelDisplayStatus.Content = "Zoom Level: " + zoomLevel + ",  " + firedCount + " Neurons Fired";
+            thisWindow.labelDisplayStatus.Content = "Zoom Level: " + zoomLevel + ",  " + firedCount.ToString("N0") + " Neurons Fired";
         }
 
 

@@ -214,7 +214,7 @@ namespace BrainSimulator.Modules
 
         public void UpdateEndpointFromVision(PointPlus P1, ColorInt theColor, bool moved)
         {
-            Debug.WriteLine("UpdatePoint: " + P1 + theColor);
+            //Debug.WriteLine("UpdatePoint: " + P1 + theColor);
             Thing match = MostLikelyPoint(P1, theColor);
             if (match != null)
             {

@@ -1,3597 +1,13 @@
 <?xml version="1.0"?>
 <NeuronArray xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <networkNotes>&lt;Section xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve" TextAlignment="Left" LineHeight="Auto" IsHyphenationEnabled="False" xml:lang="en-us" FlowDirection="LeftToRight" NumberSubstitution.CultureSource="Text" NumberSubstitution.Substitution="AsCulture" FontFamily="Segoe UI" FontStyle="Normal" FontWeight="Normal" FontStretch="Normal" FontSize="12" Foreground="#FF000000" Typography.StandardLigatures="True" Typography.ContextualLigatures="True" Typography.DiscretionaryLigatures="False" Typography.HistoricalLigatures="False" Typography.AnnotationAlternates="0" Typography.ContextualAlternates="True" Typography.HistoricalForms="False" Typography.Kerning="True" Typography.CapitalSpacing="False" Typography.CaseSensitiveForms="False" Typography.StylisticSet1="False" Typography.StylisticSet2="False" Typography.StylisticSet3="False" Typography.StylisticSet4="False" Typography.StylisticSet5="False" Typography.StylisticSet6="False" Typography.StylisticSet7="False" Typography.StylisticSet8="False" Typography.StylisticSet9="False" Typography.StylisticSet10="False" Typography.StylisticSet11="False" Typography.StylisticSet12="False" Typography.StylisticSet13="False" Typography.StylisticSet14="False" Typography.StylisticSet15="False" Typography.StylisticSet16="False" Typography.StylisticSet17="False" Typography.StylisticSet18="False" Typography.StylisticSet19="False" Typography.StylisticSet20="False" Typography.Fraction="Normal" Typography.SlashedZero="False" Typography.MathematicalGreek="False" Typography.EastAsianExpertForms="False" Typography.Variants="Normal" Typography.Capitals="Normal" Typography.NumeralStyle="Normal" Typography.NumeralAlignment="Normal" Typography.EastAsianWidths="Normal" Typography.EastAsianLanguage="Normal" Typography.StandardSwashes="0" Typography.ContextualSwashes="0" Typography.StylisticAlternates="0"&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="12.75"&gt;Purpose:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;This network is the first attempt at having Sallie move objects in her environment. There is a single red object and a single green target and it is Sallie's goal to put the red object on the goal.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;She first experiments with the object to determine what level of action causes what level of motion. Then she follows an algorithm to move the object to the goal.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;This is the beginning of many new experiments in goals, trial-and-error, feedback/eye-hand coordination. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="12.75"&gt;Things to try:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;First, fire the "Auto" neuron. Sallie will make three approaches to the object to learn it characteristics.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;Second, fire the "Goal" neuron (with the Auto neuron still firing). Sallie with move the object to the goal.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;You can set different object lengths and goal positions in the Sim module. The goal must be given a weight of 10.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="12.75"&gt;Current state of development:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;This is the first version of this program. Vision is not supported. Sallie doesn't learn in an AI sense but follows a few internal algorithms. Next steps are to expand these abilities.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="12.75"&gt;Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;/Section&gt;</networkNotes>
+  <hideNotes>false</hideNotes>
+  <ShowSynapese>false</ShowSynapese>
+  <Generation>22513</Generation>
+  <EngineSpeed>1</EngineSpeed>
   <arraySize>1378</arraySize>
   <rows>26</rows>
-  <neuronArray>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>&lt;&lt;</Label>
-      <Id>27</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>264309</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Parent</Label>
-      <Id>40</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>25973</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Ref</Label>
-      <Id>41</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>26578</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Max</Label>
-      <Id>42</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Sleep</Label>
-      <Id>43</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Thing</Label>
-      <Id>44</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Action</Label>
-      <Id>45</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>NoAction</Label>
-      <Id>46</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Stop</Label>
-      <Id>47</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Utterance</Label>
-      <Id>48</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>SpeakPhn</Label>
-      <Id>49</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>&lt;</Label>
-      <Id>53</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>249881</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>&lt;</Label>
-      <Id>56</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>264624</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Vowel</Label>
-      <Id>66</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>25962</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Consonant</Label>
-      <Id>67</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>End</Label>
-      <Id>68</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>40236</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Go</Label>
-      <Id>69</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>40284</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>RTurn</Label>
-      <Id>70</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>40261</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>LTurn</Label>
-      <Id>71</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>40267</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>UTurn</Label>
-      <Id>72</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Say</Label>
-      <Id>73</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Push</Label>
-      <Id>74</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>SayRnd</Label>
-      <Id>75</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>FloatValue</Model>
-      <Label />
-      <Id>79</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>^^</Label>
-      <Id>80</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>262429</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>^</Label>
-      <Id>81</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>264556</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>FloatValue</Model>
-      <Label />
-      <Id>82</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>v</Label>
-      <Id>83</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>264564</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>vv</Label>
-      <Id>84</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>250045</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Attn</Label>
-      <Id>92</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>102667</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Sense</Label>
-      <Id>93</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>104506</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Visual</Label>
-      <Id>94</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>227522</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Color</Label>
-      <Id>95</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>232781</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Shape</Label>
-      <Id>96</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>152170</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Landmark</Label>
-      <Id>97</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>242042</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Motion</Label>
-      <Id>98</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>SSegment</Label>
-      <Id>99</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Point</Label>
-      <Id>100</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Segment</Label>
-      <Id>101</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>&gt;</Label>
-      <Id>105</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>264338</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>&gt;</Label>
-      <Id>108</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>264605</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Audible</Label>
-      <Id>118</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>247694</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Word</Label>
-      <Id>119</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Phoneme</Label>
-      <Id>120</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Phrase</Label>
-      <Id>121</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>248079</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>ShortTerm</Label>
-      <Id>122</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>247677</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>phTemp</Label>
-      <Id>123</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>245944</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>NoWord</Label>
-      <Id>124</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Relation</Label>
-      <Id>125</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Bigger</Label>
-      <Id>126</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Closer</Label>
-      <Id>127</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>&gt;&gt;</Label>
-      <Id>131</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>264592</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Event</Label>
-      <Id>144</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>247677</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Outcome</Label>
-      <Id>145</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Positive</Label>
-      <Id>146</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Negative</Label>
-      <Id>147</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>247666</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>ModelThing</Label>
-      <Id>148</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>247663</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>p0</Label>
-      <Id>149</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>p1</Label>
-      <Id>150</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>267071</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>c0</Label>
-      <Id>151</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>69912</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>s0</Label>
-      <Id>152</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>84698</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>p2</Label>
-      <Id>153</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>p3</Label>
-      <Id>170</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>c1</Label>
-      <Id>171</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>s1</Label>
-      <Id>172</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>84698</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Actions</Label>
-      <Id>209</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Colors</Label>
-      <Id>210</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>244126</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Train</Label>
-      <Id>211</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>64486</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label />
-      <Id>262</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses>
-        <Synapse>
-          <Weight>1</Weight>
-          <TargetNeuron>340</TargetNeuron>
-        </Synapse>
-      </Synapses>
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label />
-      <Id>266</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses>
-        <Synapse>
-          <Weight>10</Weight>
-          <TargetNeuron>344</TargetNeuron>
-        </Synapse>
-      </Synapses>
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label />
-      <Id>340</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom>
-        <Synapse>
-          <Weight>1</Weight>
-          <TargetNeuron>262</TargetNeuron>
-        </Synapse>
-      </SynapsesFrom>
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label />
-      <Id>344</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom>
-        <Synapse>
-          <Weight>10</Weight>
-          <TargetNeuron>266</TargetNeuron>
-        </Synapse>
-      </SynapsesFrom>
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Parent</Label>
-      <Id>352</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>39724</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Ref</Label>
-      <Id>353</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Max</Label>
-      <Id>354</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>244096</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Sleep</Label>
-      <Id>355</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>244130</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Thing</Label>
-      <Id>356</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>244151</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Action</Label>
-      <Id>357</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>39766</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>NoAction</Label>
-      <Id>358</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>247679</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Stop</Label>
-      <Id>359</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Utterance</Label>
-      <Id>360</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>SpeakPhn</Label>
-      <Id>361</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Vowel</Label>
-      <Id>378</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>39787</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Consonant</Label>
-      <Id>379</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>154658</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>End</Label>
-      <Id>380</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>2</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Go</Label>
-      <Id>381</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>157425</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>RTurn</Label>
-      <Id>382</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>157465</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>LTurn</Label>
-      <Id>383</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>157532</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>UTurn</Label>
-      <Id>384</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Say</Label>
-      <Id>385</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Push</Label>
-      <Id>386</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>SayRnd</Label>
-      <Id>387</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Attn</Label>
-      <Id>404</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Sense</Label>
-      <Id>405</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Visual</Label>
-      <Id>406</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Color</Label>
-      <Id>407</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Shape</Label>
-      <Id>408</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Landmark</Label>
-      <Id>409</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Motion</Label>
-      <Id>410</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>SSegment</Label>
-      <Id>411</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Point</Label>
-      <Id>412</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Segment</Label>
-      <Id>413</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Audible</Label>
-      <Id>430</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Word</Label>
-      <Id>431</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Phoneme</Label>
-      <Id>432</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Phrase</Label>
-      <Id>433</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>ShortTerm</Label>
-      <Id>434</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>phTemp</Label>
-      <Id>435</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>NoWord</Label>
-      <Id>436</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Relation</Label>
-      <Id>437</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Bigger</Label>
-      <Id>438</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Closer</Label>
-      <Id>439</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Event</Label>
-      <Id>456</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Outcome</Label>
-      <Id>457</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Positive</Label>
-      <Id>458</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Negative</Label>
-      <Id>459</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>ModelThing</Label>
-      <Id>460</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>p0</Label>
-      <Id>461</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>p1</Label>
-      <Id>462</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>c0</Label>
-      <Id>463</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>s0</Label>
-      <Id>464</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>p2</Label>
-      <Id>465</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Auto</Label>
-      <Id>474</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses>
-        <Synapse>
-          <Weight>1</Weight>
-          <TargetNeuron>474</TargetNeuron>
-        </Synapse>
-      </Synapses>
-      <SynapsesFrom>
-        <Synapse>
-          <Weight>1</Weight>
-          <TargetNeuron>474</TargetNeuron>
-        </Synapse>
-      </SynapsesFrom>
-      <KeepHistory>false</KeepHistory>
-      <LastFired>82570</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Goal</Label>
-      <Id>475</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses>
-        <Synapse>
-          <Weight>1</Weight>
-          <TargetNeuron>475</TargetNeuron>
-        </Synapse>
-      </Synapses>
-      <SynapsesFrom>
-        <Synapse>
-          <Weight>1</Weight>
-          <TargetNeuron>475</TargetNeuron>
-        </Synapse>
-      </SynapsesFrom>
-      <KeepHistory>false</KeepHistory>
-      <LastFired>82177</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>E0</Label>
-      <Id>476</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>p3</Label>
-      <Id>482</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>c1</Label>
-      <Id>483</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>s1</Label>
-      <Id>484</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>E1</Label>
-      <Id>500</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>E2</Label>
-      <Id>501</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>New</Label>
-      <Id>604</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Obstacle</Label>
-      <Id>605</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>78203</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Stop</Label>
-      <Id>607</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Change</Label>
-      <Id>630</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Done</Label>
-      <Id>633</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>1</LastCharge>
-      <LastChargeInt>10000</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>312951</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>TurnTo</Label>
-      <Id>659</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Right</Label>
-      <Id>682</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>78200</LastFired>
-    </Neuron>
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Left</Label>
-      <Id>683</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>78204</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>FloatValue</Model>
-      <Label>Theta</Label>
-      <Id>685</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>R</Label>
-      <Id>708</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>16947</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>MoveTo</Label>
-      <Id>711</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>θ</Label>
-      <Id>734</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>78200</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>FloatValue</Model>
-      <Label>R</Label>
-      <Id>737</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Collθ</Label>
-      <Id>760</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>78104</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Scan</Label>
-      <Id>763</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>P1</Label>
-      <Id>786</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>77948</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>L1</Label>
-      <Id>812</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>P2</Label>
-      <Id>838</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>36002</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Coll</Label>
-      <Id>841</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>36474</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>L2</Label>
-      <Id>864</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>266860</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>FloatValue</Model>
-      <Label>CollAngle</Label>
-      <Id>867</Id>
-      <CurrentCharge>0.0002</CurrentCharge>
-      <CurrentChargeInt>2</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>Done►</Label>
-      <Id>890</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>2</LastCharge>
-      <LastChargeInt>20000</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>312951</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>mR</Label>
-      <Id>916</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>mθ</Label>
-      <Id>942</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>78197</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron>
-      <LeakRate>0.1</LeakRate>
-      <LastSynapse>-1</LastSynapse>
-      <Model>Std</Model>
-      <Label>mф</Label>
-      <Id>968</Id>
-      <CurrentCharge>0</CurrentCharge>
-      <CurrentChargeInt>0</CurrentChargeInt>
-      <LastCharge>0</LastCharge>
-      <LastChargeInt>0</LastChargeInt>
-      <Synapses />
-      <SynapsesFrom />
-      <KeepHistory>false</KeepHistory>
-      <LastFired>0</LastFired>
-    </Neuron>
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-    <Neuron xsi:nil="true" />
-  </neuronArray>
+  <lastFireCount>1</lastFireCount>
   <displayParams>
     <NeuronDisplaySize>45</NeuronDisplaySize>
     <DisplayOffset>
@@ -3600,8 +16,7 @@
     </DisplayOffset>
     <NeuronRows>26</NeuronRows>
   </displayParams>
-  <networkNotes>&lt;Section xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve" TextAlignment="Left" LineHeight="Auto" IsHyphenationEnabled="False" xml:lang="en-us" FlowDirection="LeftToRight" NumberSubstitution.CultureSource="Text" NumberSubstitution.Substitution="AsCulture" FontFamily="Segoe UI" FontStyle="Normal" FontWeight="Normal" FontStretch="Normal" FontSize="12" Foreground="#FF000000" Typography.StandardLigatures="True" Typography.ContextualLigatures="True" Typography.DiscretionaryLigatures="False" Typography.HistoricalLigatures="False" Typography.AnnotationAlternates="0" Typography.ContextualAlternates="True" Typography.HistoricalForms="False" Typography.Kerning="True" Typography.CapitalSpacing="False" Typography.CaseSensitiveForms="False" Typography.StylisticSet1="False" Typography.StylisticSet2="False" Typography.StylisticSet3="False" Typography.StylisticSet4="False" Typography.StylisticSet5="False" Typography.StylisticSet6="False" Typography.StylisticSet7="False" Typography.StylisticSet8="False" Typography.StylisticSet9="False" Typography.StylisticSet10="False" Typography.StylisticSet11="False" Typography.StylisticSet12="False" Typography.StylisticSet13="False" Typography.StylisticSet14="False" Typography.StylisticSet15="False" Typography.StylisticSet16="False" Typography.StylisticSet17="False" Typography.StylisticSet18="False" Typography.StylisticSet19="False" Typography.StylisticSet20="False" Typography.Fraction="Normal" Typography.SlashedZero="False" Typography.MathematicalGreek="False" Typography.EastAsianExpertForms="False" Typography.Variants="Normal" Typography.Capitals="Normal" Typography.NumeralStyle="Normal" Typography.NumeralAlignment="Normal" Typography.EastAsianWidths="Normal" Typography.EastAsianLanguage="Normal" Typography.StandardSwashes="0" Typography.ContextualSwashes="0" Typography.StylisticAlternates="0"&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="12.75"&gt;Purpose:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;This network is the first attempt at having Sallie move objects in her environment. There is a single red object and a single green target and it is Sallie's goal to put the red object on the goal.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;She first experiments with the object to determine what level of action causes what level of motion. Then she follows an algorithm to move the object to the goal.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;This is the beginning of many new experiments in goals, trial-and-error, feedback/eye-hand coordination. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="12.75"&gt;Things to try:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;First, fire the "Auto" neuron. Sallie will make three approaches to the object to learn it characteristics.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;Second, fire the "Goal" neuron (with the Auto neuron still firing). Sallie with move the object to the goal.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;You can set different object lengths and goal positions in the Sim module. The goal must be given a weight of 10.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="12.75"&gt;Current state of development:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;This is the first version of this program. Vision is not supported. Sallie doesn't learn in an AI sense but follows a few internal algorithms. Next steps are to expand these abilities.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="12.75"&gt;Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;/Section&gt;</networkNotes>
-  <hideNotes>false</hideNotes>
+  <ShowSynapses>true</ShowSynapses>
   <Modules>
     <ModuleView>
       <AreaNumber>0</AreaNumber>
@@ -3672,7 +87,7 @@
             <label>Thing</label>
             <parents />
             <references />
-            <useCount>5</useCount>
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>Action</label>
@@ -3680,7 +95,7 @@
               <int>4</int>
             </parents>
             <references />
-            <useCount>228968</useCount>
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>NoAction</label>
@@ -3688,7 +103,7 @@
               <int>5</int>
             </parents>
             <references />
-            <useCount>3</useCount>
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>Stop</label>
@@ -3712,7 +127,7 @@
               <int>5</int>
             </parents>
             <references />
-            <useCount>228957</useCount>
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>Vowel</label>
@@ -3776,7 +191,7 @@
               <int>5</int>
             </parents>
             <references />
-            <useCount>228955</useCount>
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>Push</label>
@@ -3792,7 +207,7 @@
               <int>5</int>
             </parents>
             <references />
-            <useCount>228955</useCount>
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>Attn</label>
@@ -3808,7 +223,7 @@
               <int>4</int>
             </parents>
             <references />
-            <useCount>2</useCount>
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>Visual</label>
@@ -3816,7 +231,7 @@
               <int>21</int>
             </parents>
             <references />
-            <useCount>4</useCount>
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>Color</label>
@@ -3824,7 +239,7 @@
               <int>22</int>
             </parents>
             <references />
-            <useCount>2</useCount>
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>Shape</label>
@@ -3832,7 +247,7 @@
               <int>22</int>
             </parents>
             <references />
-            <useCount>3</useCount>
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>Landmark</label>
@@ -3864,7 +279,7 @@
               <int>24</int>
             </parents>
             <references />
-            <useCount>4</useCount>
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>Segment</label>
@@ -3872,7 +287,7 @@
               <int>24</int>
             </parents>
             <references />
-            <useCount>707</useCount>
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>Audible</label>
@@ -3880,7 +295,7 @@
               <int>21</int>
             </parents>
             <references />
-            <useCount>3</useCount>
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>Word</label>
@@ -3888,7 +303,7 @@
               <int>30</int>
             </parents>
             <references />
-            <useCount>1</useCount>
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>Phoneme</label>
@@ -3896,7 +311,7 @@
               <int>30</int>
             </parents>
             <references />
-            <useCount>457910</useCount>
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>Phrase</label>
@@ -3904,7 +319,7 @@
               <int>30</int>
             </parents>
             <references />
-            <useCount>457911</useCount>
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>ShortTerm</label>
@@ -3912,7 +327,7 @@
               <int>33</int>
             </parents>
             <references />
-            <useCount>1</useCount>
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>phTemp</label>
@@ -3920,7 +335,7 @@
               <int>34</int>
             </parents>
             <references />
-            <useCount>228955</useCount>
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>NoWord</label>
@@ -3936,7 +351,7 @@
               <int>4</int>
             </parents>
             <references />
-            <useCount>2</useCount>
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>Bigger</label>
@@ -3968,7 +383,7 @@
               <int>4</int>
             </parents>
             <references />
-            <useCount>65276</useCount>
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>Positive</label>
@@ -3990,7 +405,7 @@
             <label>ModelThing</label>
             <parents />
             <references />
-            <useCount>1414</useCount>
+            <useCount>0</useCount>
           </SThing>
           <SThing>
             <label>p0</label>
@@ -4324,12 +739,12 @@
         </objects>
         <armRelative>
           <Vector>
-            <X>0.4339002627933366</X>
-            <Y>0.58955468487993767</Y>
+            <X>0.44239355858210677</X>
+            <Y>0.28225036397488112</Y>
           </Vector>
           <Vector>
-            <X>0.33264995558028237</X>
-            <Y>-0.63572625350731116</Y>
+            <X>0.4973094633649881</X>
+            <Y>-0.25020909958848159</Y>
           </Vector>
         </armRelative>
         <entityPosition>
@@ -4468,7 +883,783 @@
       </TheModule>
     </ModuleView>
   </Modules>
-  <Generation>312952</Generation>
-  <EngineSpeed>1</EngineSpeed>
-  <ShowSynapses>true</ShowSynapses>
+  <Neurons>
+    <Neuron>
+      <Id>27</Id>
+      <LeakRate>0</LeakRate>
+      <Label>&lt;&lt;</Label>
+    </Neuron>
+    <Neuron>
+      <Id>40</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Parent</Label>
+    </Neuron>
+    <Neuron>
+      <Id>41</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Ref</Label>
+    </Neuron>
+    <Neuron>
+      <Id>42</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Max</Label>
+    </Neuron>
+    <Neuron>
+      <Id>43</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Sleep</Label>
+    </Neuron>
+    <Neuron>
+      <Id>44</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Thing</Label>
+    </Neuron>
+    <Neuron>
+      <Id>45</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Action</Label>
+    </Neuron>
+    <Neuron>
+      <Id>46</Id>
+      <LeakRate>0</LeakRate>
+      <Label>NoAction</Label>
+    </Neuron>
+    <Neuron>
+      <Id>47</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Stop</Label>
+    </Neuron>
+    <Neuron>
+      <Id>48</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Utterance</Label>
+    </Neuron>
+    <Neuron>
+      <Id>49</Id>
+      <LeakRate>0</LeakRate>
+      <Label>SpeakPhn</Label>
+    </Neuron>
+    <Neuron>
+      <Id>53</Id>
+      <LeakRate>0</LeakRate>
+      <Label>&lt;</Label>
+    </Neuron>
+    <Neuron>
+      <Id>56</Id>
+      <Label>&lt;</Label>
+    </Neuron>
+    <Neuron>
+      <Id>66</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Vowel</Label>
+    </Neuron>
+    <Neuron>
+      <Id>67</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Consonant</Label>
+    </Neuron>
+    <Neuron>
+      <Id>68</Id>
+      <LeakRate>0</LeakRate>
+      <Label>End</Label>
+    </Neuron>
+    <Neuron>
+      <Id>69</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Go</Label>
+    </Neuron>
+    <Neuron>
+      <Id>70</Id>
+      <LeakRate>0</LeakRate>
+      <Label>RTurn</Label>
+    </Neuron>
+    <Neuron>
+      <Id>71</Id>
+      <LeakRate>0</LeakRate>
+      <Label>LTurn</Label>
+    </Neuron>
+    <Neuron>
+      <Id>72</Id>
+      <LeakRate>0</LeakRate>
+      <Label>UTurn</Label>
+    </Neuron>
+    <Neuron>
+      <Id>73</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Say</Label>
+    </Neuron>
+    <Neuron>
+      <Id>74</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Push</Label>
+    </Neuron>
+    <Neuron>
+      <Id>75</Id>
+      <LeakRate>0</LeakRate>
+      <Label>SayRnd</Label>
+    </Neuron>
+    <Neuron>
+      <Id>79</Id>
+      <LeakRate>0</LeakRate>
+      <Model>FloatValue</Model>
+    </Neuron>
+    <Neuron>
+      <Id>80</Id>
+      <LeakRate>0</LeakRate>
+      <Label>^^</Label>
+    </Neuron>
+    <Neuron>
+      <Id>81</Id>
+      <LeakRate>0</LeakRate>
+      <Label>^</Label>
+    </Neuron>
+    <Neuron>
+      <Id>82</Id>
+      <LeakRate>0</LeakRate>
+      <Model>FloatValue</Model>
+    </Neuron>
+    <Neuron>
+      <Id>83</Id>
+      <LeakRate>0</LeakRate>
+      <Label>v</Label>
+    </Neuron>
+    <Neuron>
+      <Id>84</Id>
+      <LeakRate>0</LeakRate>
+      <Label>vv</Label>
+    </Neuron>
+    <Neuron>
+      <Id>92</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Attn</Label>
+    </Neuron>
+    <Neuron>
+      <Id>93</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Sense</Label>
+    </Neuron>
+    <Neuron>
+      <Id>94</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Visual</Label>
+    </Neuron>
+    <Neuron>
+      <Id>95</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Color</Label>
+    </Neuron>
+    <Neuron>
+      <Id>96</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Shape</Label>
+    </Neuron>
+    <Neuron>
+      <Id>97</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Landmark</Label>
+    </Neuron>
+    <Neuron>
+      <Id>98</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Motion</Label>
+    </Neuron>
+    <Neuron>
+      <Id>99</Id>
+      <LeakRate>0</LeakRate>
+      <Label>SSegment</Label>
+    </Neuron>
+    <Neuron>
+      <Id>100</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Point</Label>
+    </Neuron>
+    <Neuron>
+      <Id>101</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Segment</Label>
+    </Neuron>
+    <Neuron>
+      <Id>105</Id>
+      <LeakRate>0</LeakRate>
+      <Label>&gt;</Label>
+    </Neuron>
+    <Neuron>
+      <Id>108</Id>
+      <Label>&gt;</Label>
+    </Neuron>
+    <Neuron>
+      <Id>118</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Audible</Label>
+    </Neuron>
+    <Neuron>
+      <Id>119</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Word</Label>
+    </Neuron>
+    <Neuron>
+      <Id>120</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Phoneme</Label>
+    </Neuron>
+    <Neuron>
+      <Id>121</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Phrase</Label>
+    </Neuron>
+    <Neuron>
+      <Id>122</Id>
+      <LeakRate>0</LeakRate>
+      <Label>ShortTerm</Label>
+    </Neuron>
+    <Neuron>
+      <Id>123</Id>
+      <Label>phTemp</Label>
+    </Neuron>
+    <Neuron>
+      <Id>124</Id>
+      <Label>NoWord</Label>
+    </Neuron>
+    <Neuron>
+      <Id>125</Id>
+      <Label>Relation</Label>
+    </Neuron>
+    <Neuron>
+      <Id>126</Id>
+      <Label>Bigger</Label>
+    </Neuron>
+    <Neuron>
+      <Id>127</Id>
+      <Label>Closer</Label>
+    </Neuron>
+    <Neuron>
+      <Id>131</Id>
+      <LeakRate>0</LeakRate>
+      <Label>&gt;&gt;</Label>
+    </Neuron>
+    <Neuron>
+      <Id>144</Id>
+      <Label>Event</Label>
+    </Neuron>
+    <Neuron>
+      <Id>145</Id>
+      <Label>Outcome</Label>
+    </Neuron>
+    <Neuron>
+      <Id>146</Id>
+      <Label>Positive</Label>
+    </Neuron>
+    <Neuron>
+      <Id>147</Id>
+      <Label>Negative</Label>
+    </Neuron>
+    <Neuron>
+      <Id>148</Id>
+      <Label>ModelThing</Label>
+    </Neuron>
+    <Neuron>
+      <Id>149</Id>
+      <Label>p0</Label>
+    </Neuron>
+    <Neuron>
+      <Id>150</Id>
+      <Label>p1</Label>
+    </Neuron>
+    <Neuron>
+      <Id>151</Id>
+      <Label>c0</Label>
+    </Neuron>
+    <Neuron>
+      <Id>152</Id>
+      <Label>s0</Label>
+    </Neuron>
+    <Neuron>
+      <Id>153</Id>
+      <Label>p2</Label>
+    </Neuron>
+    <Neuron>
+      <Id>170</Id>
+      <Label>p3</Label>
+    </Neuron>
+    <Neuron>
+      <Id>171</Id>
+      <Label>c1</Label>
+    </Neuron>
+    <Neuron>
+      <Id>172</Id>
+      <Label>s1</Label>
+    </Neuron>
+    <Neuron>
+      <Id>209</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Actions</Label>
+    </Neuron>
+    <Neuron>
+      <Id>210</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Colors</Label>
+    </Neuron>
+    <Neuron>
+      <Id>211</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Train</Label>
+    </Neuron>
+    <Neuron>
+      <Id>262</Id>
+      <Synapses>
+        <Synapse>
+          <TargetNeuron>340</TargetNeuron>
+        </Synapse>
+      </Synapses>
+    </Neuron>
+    <Neuron>
+      <Id>266</Id>
+      <Synapses>
+        <Synapse>
+          <Weight>10</Weight>
+          <TargetNeuron>344</TargetNeuron>
+        </Synapse>
+      </Synapses>
+    </Neuron>
+    <Neuron>
+      <Id>352</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Parent</Label>
+    </Neuron>
+    <Neuron>
+      <Id>353</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Ref</Label>
+    </Neuron>
+    <Neuron>
+      <Id>354</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Max</Label>
+    </Neuron>
+    <Neuron>
+      <Id>355</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Sleep</Label>
+    </Neuron>
+    <Neuron>
+      <Id>356</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Thing</Label>
+    </Neuron>
+    <Neuron>
+      <Id>357</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Action</Label>
+    </Neuron>
+    <Neuron>
+      <Id>358</Id>
+      <LeakRate>0</LeakRate>
+      <Label>NoAction</Label>
+    </Neuron>
+    <Neuron>
+      <Id>359</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Stop</Label>
+    </Neuron>
+    <Neuron>
+      <Id>360</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Utterance</Label>
+    </Neuron>
+    <Neuron>
+      <Id>361</Id>
+      <LeakRate>0</LeakRate>
+      <Label>SpeakPhn</Label>
+    </Neuron>
+    <Neuron>
+      <Id>378</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Vowel</Label>
+    </Neuron>
+    <Neuron>
+      <Id>379</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Consonant</Label>
+    </Neuron>
+    <Neuron>
+      <Id>380</Id>
+      <LeakRate>0</LeakRate>
+      <Label>End</Label>
+    </Neuron>
+    <Neuron>
+      <Id>381</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Go</Label>
+    </Neuron>
+    <Neuron>
+      <Id>382</Id>
+      <LeakRate>0</LeakRate>
+      <Label>RTurn</Label>
+    </Neuron>
+    <Neuron>
+      <Id>383</Id>
+      <LeakRate>0</LeakRate>
+      <Label>LTurn</Label>
+    </Neuron>
+    <Neuron>
+      <Id>384</Id>
+      <LeakRate>0</LeakRate>
+      <Label>UTurn</Label>
+    </Neuron>
+    <Neuron>
+      <Id>385</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Say</Label>
+    </Neuron>
+    <Neuron>
+      <Id>386</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Push</Label>
+    </Neuron>
+    <Neuron>
+      <Id>387</Id>
+      <LeakRate>0</LeakRate>
+      <Label>SayRnd</Label>
+    </Neuron>
+    <Neuron>
+      <Id>404</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Attn</Label>
+    </Neuron>
+    <Neuron>
+      <Id>405</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Sense</Label>
+    </Neuron>
+    <Neuron>
+      <Id>406</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Visual</Label>
+    </Neuron>
+    <Neuron>
+      <Id>407</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Color</Label>
+    </Neuron>
+    <Neuron>
+      <Id>408</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Shape</Label>
+    </Neuron>
+    <Neuron>
+      <Id>409</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Landmark</Label>
+    </Neuron>
+    <Neuron>
+      <Id>410</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Motion</Label>
+    </Neuron>
+    <Neuron>
+      <Id>411</Id>
+      <LeakRate>0</LeakRate>
+      <Label>SSegment</Label>
+    </Neuron>
+    <Neuron>
+      <Id>412</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Point</Label>
+    </Neuron>
+    <Neuron>
+      <Id>413</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Segment</Label>
+    </Neuron>
+    <Neuron>
+      <Id>430</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Audible</Label>
+    </Neuron>
+    <Neuron>
+      <Id>431</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Word</Label>
+    </Neuron>
+    <Neuron>
+      <Id>432</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Phoneme</Label>
+    </Neuron>
+    <Neuron>
+      <Id>433</Id>
+      <LeakRate>0</LeakRate>
+      <Label>Phrase</Label>
+    </Neuron>
+    <Neuron>
+      <Id>434</Id>
+      <LeakRate>0</LeakRate>
+      <Label>ShortTerm</Label>
+    </Neuron>
+    <Neuron>
+      <Id>435</Id>
+      <Label>phTemp</Label>
+    </Neuron>
+    <Neuron>
+      <Id>436</Id>
+      <Label>NoWord</Label>
+    </Neuron>
+    <Neuron>
+      <Id>437</Id>
+      <Label>Relation</Label>
+    </Neuron>
+    <Neuron>
+      <Id>438</Id>
+      <Label>Bigger</Label>
+    </Neuron>
+    <Neuron>
+      <Id>439</Id>
+      <Label>Closer</Label>
+    </Neuron>
+    <Neuron>
+      <Id>456</Id>
+      <Label>Event</Label>
+    </Neuron>
+    <Neuron>
+      <Id>457</Id>
+      <Label>Outcome</Label>
+    </Neuron>
+    <Neuron>
+      <Id>458</Id>
+      <Label>Positive</Label>
+    </Neuron>
+    <Neuron>
+      <Id>459</Id>
+      <Label>Negative</Label>
+    </Neuron>
+    <Neuron>
+      <Id>460</Id>
+      <Label>ModelThing</Label>
+    </Neuron>
+    <Neuron>
+      <Id>461</Id>
+      <Label>p0</Label>
+    </Neuron>
+    <Neuron>
+      <Id>462</Id>
+      <Label>p1</Label>
+    </Neuron>
+    <Neuron>
+      <Id>463</Id>
+      <Label>c0</Label>
+    </Neuron>
+    <Neuron>
+      <Id>464</Id>
+      <Label>s0</Label>
+    </Neuron>
+    <Neuron>
+      <Id>465</Id>
+      <Label>p2</Label>
+    </Neuron>
+    <Neuron>
+      <Id>474</Id>
+      <Label>Auto</Label>
+      <Synapses>
+        <Synapse>
+          <TargetNeuron>474</TargetNeuron>
+        </Synapse>
+      </Synapses>
+    </Neuron>
+    <Neuron>
+      <Id>475</Id>
+      <Label>Goal</Label>
+      <Synapses>
+        <Synapse>
+          <TargetNeuron>475</TargetNeuron>
+        </Synapse>
+      </Synapses>
+    </Neuron>
+    <Neuron>
+      <Id>476</Id>
+      <Label>E0</Label>
+    </Neuron>
+    <Neuron>
+      <Id>482</Id>
+      <Label>p3</Label>
+    </Neuron>
+    <Neuron>
+      <Id>483</Id>
+      <Label>c1</Label>
+    </Neuron>
+    <Neuron>
+      <Id>484</Id>
+      <Label>s1</Label>
+    </Neuron>
+    <Neuron>
+      <Id>500</Id>
+      <Label>E1</Label>
+    </Neuron>
+    <Neuron>
+      <Id>501</Id>
+      <Label>E2</Label>
+    </Neuron>
+    <Neuron>
+      <Id>604</Id>
+      <Label>New</Label>
+    </Neuron>
+    <Neuron>
+      <Id>605</Id>
+      <Label>Obstacle</Label>
+    </Neuron>
+    <Neuron>
+      <Id>607</Id>
+      <Label>Stop</Label>
+    </Neuron>
+    <Neuron>
+      <Id>630</Id>
+      <Label>Change</Label>
+    </Neuron>
+    <Neuron>
+      <Id>633</Id>
+      <LastCharge>1</LastCharge>
+      <Label>Done</Label>
+    </Neuron>
+    <Neuron>
+      <Id>659</Id>
+      <Label>TurnTo</Label>
+    </Neuron>
+    <Neuron>
+      <Id>682</Id>
+      <Model>FloatValue</Model>
+      <Label>Right</Label>
+    </Neuron>
+    <Neuron>
+      <Id>683</Id>
+      <Model>FloatValue</Model>
+      <Label>Left</Label>
+    </Neuron>
+    <Neuron>
+      <Id>685</Id>
+      <Model>FloatValue</Model>
+      <Label>Theta</Label>
+    </Neuron>
+    <Neuron>
+      <Id>708</Id>
+      <Model>FloatValue</Model>
+      <Label>R</Label>
+    </Neuron>
+    <Neuron>
+      <Id>709</Id>
+      <Model>FloatValue</Model>
+    </Neuron>
+    <Neuron>
+      <Id>711</Id>
+      <Label>MoveTo</Label>
+    </Neuron>
+    <Neuron>
+      <Id>734</Id>
+      <Model>FloatValue</Model>
+      <Label>θ</Label>
+    </Neuron>
+    <Neuron>
+      <Id>735</Id>
+      <Model>FloatValue</Model>
+    </Neuron>
+    <Neuron>
+      <Id>737</Id>
+      <Model>FloatValue</Model>
+      <Label>R</Label>
+    </Neuron>
+    <Neuron>
+      <Id>760</Id>
+      <Model>FloatValue</Model>
+      <Label>Collθ</Label>
+    </Neuron>
+    <Neuron>
+      <Id>761</Id>
+      <Model>FloatValue</Model>
+    </Neuron>
+    <Neuron>
+      <Id>763</Id>
+      <Label>Scan</Label>
+    </Neuron>
+    <Neuron>
+      <Id>786</Id>
+      <Model>FloatValue</Model>
+      <Label>P1</Label>
+    </Neuron>
+    <Neuron>
+      <Id>787</Id>
+      <Model>FloatValue</Model>
+    </Neuron>
+    <Neuron>
+      <Id>812</Id>
+      <Model>FloatValue</Model>
+      <Label>L1</Label>
+    </Neuron>
+    <Neuron>
+      <Id>813</Id>
+      <Model>FloatValue</Model>
+    </Neuron>
+    <Neuron>
+      <Id>838</Id>
+      <Model>FloatValue</Model>
+      <Label>P2</Label>
+    </Neuron>
+    <Neuron>
+      <Id>839</Id>
+      <Model>FloatValue</Model>
+    </Neuron>
+    <Neuron>
+      <Id>841</Id>
+      <Label>Coll</Label>
+    </Neuron>
+    <Neuron>
+      <Id>864</Id>
+      <Model>FloatValue</Model>
+      <Label>L2</Label>
+    </Neuron>
+    <Neuron>
+      <Id>865</Id>
+      <Model>FloatValue</Model>
+    </Neuron>
+    <Neuron>
+      <Id>867</Id>
+      <Model>FloatValue</Model>
+      <Label>CollAngle</Label>
+    </Neuron>
+    <Neuron>
+      <Id>890</Id>
+      <LastCharge>2</LastCharge>
+      <Model>FloatValue</Model>
+      <Label>Done►</Label>
+    </Neuron>
+    <Neuron>
+      <Id>891</Id>
+      <LastCharge>2</LastCharge>
+      <Model>FloatValue</Model>
+    </Neuron>
+    <Neuron>
+      <Id>916</Id>
+      <Model>FloatValue</Model>
+      <Label>mR</Label>
+    </Neuron>
+    <Neuron>
+      <Id>917</Id>
+      <Model>FloatValue</Model>
+    </Neuron>
+    <Neuron>
+      <Id>942</Id>
+      <Model>FloatValue</Model>
+      <Label>mθ</Label>
+    </Neuron>
+    <Neuron>
+      <Id>943</Id>
+      <Model>FloatValue</Model>
+    </Neuron>
+    <Neuron>
+      <Id>968</Id>
+      <Model>FloatValue</Model>
+      <Label>mф</Label>
+    </Neuron>
+    <Neuron>
+      <Id>969</Id>
+      <Model>FloatValue</Model>
+    </Neuron>
+  </Neurons>
 </NeuronArray>

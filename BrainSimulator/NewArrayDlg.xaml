@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BrainSimulator"
         mc:Ignorable="d"
         Title="Create New Neuron Array" Height="287.6" Width="491.2">
-    <Grid Margin="0,0,2,2">
+    <Grid Margin="0,0,0,2" HorizontalAlignment="Left" Width="481">
         <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Height="149" Margin="32,19,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="246"/>
         <Button x:Name="buttonOK" Content="_OK" IsDefault="True" HorizontalAlignment="Left" Height="27" Margin="102,210,0,0" VerticalAlignment="Top" Width="87" Click="ButtonOK_Click"/>
         <Button x:Name="buttonCancel" Content="_Cancel" HorizontalAlignment="Left" Height="27" Margin="259,210,0,0" VerticalAlignment="Top" Width="87" Click="ButtonCancel_Click" IsCancel="True"/>
@@ -14,7 +14,10 @@
         <TextBox x:Name="textBoxColumns" HorizontalAlignment="Left" Height="20" Margin="353,70,0,0" TextWrapping="Wrap" Text="30" VerticalAlignment="Top" Width="55" />
         <Label x:Name="label" Content="Columns:" HorizontalAlignment="Left" Height="30" Margin="278,65,0,0" VerticalAlignment="Top" Width="70" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
         <Label x:Name="label1" Content="Rows:" HorizontalAlignment="Left" Height="23" Margin="290,31,0,0" VerticalAlignment="Top" Width="58" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
-        <CheckBox x:Name="checkBoxSynapses" Content="Create Random Synapses" HorizontalAlignment="Left" Height="19" Margin="290,105,0,0" VerticalAlignment="Top" Width="164"/>
+        <CheckBox x:Name="checkBoxSynapses" Content="Create Random Synapses" HorizontalAlignment="Left" Height="19" Margin="291,105,0,0" VerticalAlignment="Top" Width="164"/>
         <ProgressBar x:Name="progressBar" Height="22" Margin="27,0,17,65" VerticalAlignment="Bottom" RenderTransformOrigin="1.147,2.444"/>
+        <TextBox  x:Name="textBoxSynapses"  HorizontalAlignment="Left" Height="19" Margin="314,129,0,0" TextAlignment="Right"
+                  TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="52" RenderTransformOrigin="0.121,2.239"/>
+        <Label Content="Per Neuron" HorizontalAlignment="Left" Height="24" Margin="362,125,0,0" VerticalAlignment="Top" Width="93"/>
     </Grid>
 </Window>

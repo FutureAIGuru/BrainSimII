@@ -39,7 +39,7 @@ namespace BrainSimulator.Modules
                         phraseToSpeak += n.Label;
                         paused = false;
                     }
-                    if (n.synapses.Count == 0)
+                    if (n.Synapses.Count == 0)
                     {
                         //if a neuron fired and it has no connection, connect it to the knowledge store
                         //connection to KB 
@@ -135,7 +135,7 @@ namespace BrainSimulator.Modules
         {
             Init();
             base.SetUpAfterLoad();
-            Initialize();
+            InitVoice();
         }
 
         //fill this method in with code which will execute once
@@ -144,20 +144,10 @@ namespace BrainSimulator.Modules
         static public List<string> combiners = new List<string>();
         public override void Initialize()
         {
-            synth = new SpeechSynthesizer();
-            if (synth == null)
-            {
-                MessageBox.Show("Speech Synthisizer could not be opened.");
-                return;
-            }
+            foreach (Neuron n in na.Neurons())
+                n.Clear();
+            InitVoice();
 
-            // Configure the audio output.   
-            synth.SetOutputToDefaultAudioDevice();
-            synth.SpeakCompleted += Synth_SpeakCompleted;
-            synth.SelectVoice("Microsoft Zira Desktop");
-            minHeight = 10;
-            minWidth = 5;
-            ClearNeurons();
             na.GetNeuronAt(0).Label = "Enable";
             na.GetNeuronAt(0).AddSynapse(na.GetNeuronAt(0).Id, 1);
             AddLabel("BabyTalk");
@@ -194,6 +184,23 @@ namespace BrainSimulator.Modules
                 }
             }
 
+        }
+
+        private void InitVoice()
+        {
+            synth = new SpeechSynthesizer();
+            if (synth == null)
+            {
+                MessageBox.Show("Speech Synthisizer could not be opened.");
+                return;
+            }
+
+            // Configure the audio output.   
+            synth.SetOutputToDefaultAudioDevice();
+            synth.SpeakCompleted += Synth_SpeakCompleted;
+            synth.SelectVoice("Microsoft Zira Desktop");
+            minHeight = 10;
+            minWidth = 5;
         }
 
         private void Synth_SpeakCompleted(object sender, SpeakCompletedEventArgs e)

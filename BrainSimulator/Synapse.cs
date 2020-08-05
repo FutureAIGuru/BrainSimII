@@ -6,56 +6,50 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace BrainSimulator
 {
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class Synapse
     {
+        public int targetNeuron;
+        public float weight;
+        public bool isHebbian;
+
         //a synapse connects two neurons and has a weight
         //the neuron is "owned" by one neuron and the targetNeuron is the index  of the destination neuron
         public Synapse()
         {
             targetNeuron = -1;
-            weight = -1;
+            weight = 1;
         }
-        public Synapse(int targetNeuronIn, float weightIn)
+        public Synapse(int targetNeuronIn, float weightIn,bool isHebbianIn)
         {
             targetNeuron = targetNeuronIn;
-            N = MainWindow.theNeuronArray.GetNeuron(targetNeuron);
-            Weight = weightIn;
+            weight = weightIn;
+            isHebbian = isHebbianIn;
+
         }
-        private float weight;
-        public  bool IsHebbian = false;
-
-
-        [XmlIgnore]
-        public Neuron N; //this is used by the engine
-
-        [XmlIgnore]
-        public int IWeight; //this is used by the engine
 
         public float Weight
         {
             get => weight;
-            set {
-                weight = value; IWeight = (int)(weight * Neuron.threshold); }
+            set => weight = value;
         }
-        //public int IWeight
-        //{
-        //    get => iWeight;
-        //}
 
-        public int targetNeuron;
         public int TargetNeuron
         {
             get => targetNeuron;
-            set
-            {
-                targetNeuron = value;
-            }
+            set => targetNeuron = value;
+        }
+        public bool IsHebbian
+        {
+            get => isHebbian;
+            set => isHebbian = value;
         }
     }
 }

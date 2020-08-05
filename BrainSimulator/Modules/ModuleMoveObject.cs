@@ -383,15 +383,22 @@ namespace BrainSimulator.Modules
             if (UKS == null) return retVal;
 
             Segment s1 = Module2DModel.SegmentFromUKSThing(currentEvent.References[0].T);
+            List<Thing> events = UKS.Labeled("Event").Children;
 
-            foreach (Thing t in UKS.Labeled("Event").Children)
+            foreach (Thing t in events)
             {
-                Thing lm = t.References[0].T;
-                Thing lms = lm.References[0].T;
-                Segment s2 = Module2DModel.SegmentFromUKSThing(lms);
+                if (t.References.Count > 0)
+                {
+                    Thing lm = t.References[0].T;
+                    if (lm.References.Count > 0)
+                    {
+                        Thing lms = lm.References[0].T;
+                        Segment s2 = Module2DModel.SegmentFromUKSThing(lms);
 
-                if (s1.MidPoint.Near(s2.MidPoint, 0.2f))
-                    retVal = t;
+                        if (s1.MidPoint.Near(s2.MidPoint, 0.2f))
+                            retVal = t;
+                    }
+                }
             }
             return retVal;
         }

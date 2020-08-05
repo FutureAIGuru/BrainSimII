@@ -421,7 +421,7 @@ namespace BrainSimulator.Modules
         {
             //associate phonemes I've heard with phonemes I spoke 2 gens earlier
             BuildAssociation(Labeled("Phoneme"), Labeled("SpeakPhn"), 1, 1, 2);
-            List<Thing> phonemes = AnyChildrenFired(Labeled("Phoneme"), 1, 0, true);
+            List<Thing> phonemes = AnyChildrenFired(Labeled("Phoneme"),0, 0, true);
             List<Thing> phrases = GetChildren(Labeled("Phrase"));
             Thing shortTerm = Labeled("phTemp");
             if (shortTerm == null) return;
@@ -590,7 +590,7 @@ namespace BrainSimulator.Modules
                     activeSequences.Add(newUtterance);
                 }
             }
-            if (Fired(Labeled("SayRnd"), immediateMemory))
+            if (Fired(Labeled("SayRnd"), 0))
             {
                 //say a random utterance  (there is a hack to handle combiners which is needed to work with TTS)
                 List<Thing> vowels = Labeled("Vowel").Children;

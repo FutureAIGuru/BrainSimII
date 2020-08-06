@@ -33,8 +33,9 @@ namespace CsEngineTest
             theNeuronArray.SetThreadCount(16);
             threads = theNeuronArray.GetThreadCount();
 
-            theNeuronArray.SetNeuronCharge(1, 1.4f);
-            theNeuronArray.SetNeuronCharge(2, 0.9f);
+            theNeuronArray.SetNeuronCurrentCharge(1, 1.4f);
+            theNeuronArray.SetNeuronCurrentCharge(2, 0.9f);
+            theNeuronArray.Fire(); //should transfer current chargest to last
             float a = theNeuronArray.GetNeuronLastCharge(1);
             float b = theNeuronArray.GetNeuronLastCharge(2);
 
@@ -82,7 +83,7 @@ namespace CsEngineTest
                 }
             });
             for (int i = 0; i < neuronCount / 100; i++)
-                theNeuronArray.SetNeuronCharge(100 * i, 1);
+                theNeuronArray.SetNeuronCurrentCharge(100 * i, 1);
             MessageBox.Show("synapses and charge complete");
             Stopwatch sw = new Stopwatch();
             string msg = "";

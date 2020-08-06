@@ -129,7 +129,7 @@ namespace NeuronEngine
 		if (n->synapsesFrom == NULL)
 		{
 			n->synapsesFrom = new std::vector<SynapseBase>();
-			n->synapsesFrom->reserve(10);
+			n->synapsesFrom->reserve(5000);
 		}
 		for (int i = 0; i < n->synapsesFrom->size(); i++)
 		{
@@ -180,7 +180,11 @@ namespace NeuronEngine
 		}
 		n->vectorLock = 0;
 	}
-
+	int NeuronBase::GetSynapseCount()
+	{
+		if (synapses == NULL) return 0;
+		return synapses->size();
+	}
 	std::vector<SynapseBase> NeuronBase::GetSynapses()
 	{
 		if (synapses == NULL)

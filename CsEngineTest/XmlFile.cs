@@ -96,7 +96,7 @@ namespace CsEngineTest
                 if (n != null)
                 {
                     int id = n.Id;
-                    theNeuronArray.SetNeuronCharge(id, n.CurrentCharge);
+                    theNeuronArray.SetNeuronCurrentCharge(id, n.CurrentCharge);
                     if (n.Label != "")
                         theNeuronArray.SetNeuronLabel(id, n.Label);
                     if (n.LeakRate != 0.1f)

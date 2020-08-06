@@ -43,15 +43,13 @@ namespace NeuronEngine
 
 	long long NeuronArrayBase::GetTotalSynapseCount()
 	{
-		std::atomic<long> count = 0;
+		std::atomic<long long> count = 0;
 		parallel_for(0, threadCount, [&](int value) {
-			ProcessNeurons1(value);
 			int start, end;
 			GetBounds1(value, start, end);
 			for (int i = start; i < end; i++)
 			{
-				std::vector<SynapseBase> tempVec = GetNeuron(i)->GetSynapses();
-				count += (unsigned)tempVec.size();
+				count += (long long) GetNeuron(i)->GetSynapseCount();;
 			}
 			});
 		return count;;
@@ -127,87 +125,4 @@ namespace NeuronEngine
 		for (int i = start; i < end; i++)
 			GetNeuron(i)->Fire2();
 	}
-
-
-	//firingQueue.clear();
-	//firingQueue.insert(firingQueue.end(), manualFire.begin(), manualFire.end());
-	//manualFire.clear();
-	//for (int i = 0; i < taskCount; i++)
-	//{
-	//	firingQueue.insert(firingQueue.end(), nextQueue[i].begin(), nextQueue[i].end());
-	//	nextQueue[i].clear();
-	//	firingQueue.insert(firingQueue.end(), firedQueue[i].begin(), firedQueue[i].end());
-	//	firedQueue[i].clear();
-	//	firingQueue.insert(firingQueue.end(), zeroQueue[i].begin(), zeroQueue[i].end());
-	//	zeroQueue[i].clear();
-	//} //spin off the paralel tasks to run the engine on the firing queue
-	//firedCount = firingQueue.size();
-	//parallel_for(0, taskCount, [&](int value) {
-	//	ProcessFiringQueue(value);
-	//	});
-	//parallel_for(0, taskCount, [&](int value) {
-	//	ProcessFiringQueue1(value);
-	//	});
-
-
-		//for (int i = 0; i < taskCount; i++)
-		//{
-		//	nextQueue.push_back(std::vector<int>());
-		//	firedQueue.push_back(std::vector<int>());
-		//	zeroQueue.push_back(std::vector<int>());
-		//	nextQueue[i].reserve(queuesize / taskCount);
-		//	firedQueue[i].reserve(queuesize / taskCount);
-		//	zeroQueue[i].reserve(queuesize / taskCount);
-		//}
-	//void NeuronArrayBase::AddToFiringQueue(int id)
-	//{
-	//	//manualFire.push_back(id);
-	//	NeuronBase* n = GetNeuron(id);
-	//	n->currentCharge = 1;
-	//	n->lastCharge = 1;
-	//}
-	//void NeuronArrayBase::ProcessFiringQueue(int id)
-	//{ //determine the portion of the firing queue this thread should handle
-	//	int taskID = id;
-	//	int start, end;
-	//	GetBounds(taskID, start, end);
-	//	vector<int>& fired = firedQueue[taskID];
-	//	//first-phase neuron processing
-	//	for (int i = start; i < end; i++)
-	//	{
-	//		GetNeuron(firingQueue[i])->Fire2(fired);
-	//	}
-	//}
-
-	//void NeuronArrayBase::ProcessFiringQueue1(int id)
-	//{
-	//	int taskID = id;
-	//	int start, end;
-	//	GetBounds(taskID, start, end);
-	//	vector<int>& next = nextQueue[taskID];
-	//	vector<int>& zero = zeroQueue[taskID];
-	//	for (int i = start; i < end; i++)
-	//	{
-	//		GetNeuron(firingQueue[i])->Fire1(this->neuronArray, next, zero);
-	//	}
-	//}
-
-	//void NeuronArrayBase::GetBounds(int taskID, int& start, int& end)
-	//{
-	//	int numberToProcess = firingQueue.size() / taskCount;
-	//	int remainder = firingQueue.size() % taskCount;
-	//	start = numberToProcess * taskID;
-	//	end = start + numberToProcess;
-	//	if (taskID < remainder)
-	//	{
-	//		start += taskID;
-	//		end = start + numberToProcess + 1;
-	//	}
-	//	else
-	//	{
-	//		start += remainder;
-	//		end += remainder;
-	//	}
-	//}
-
 }

@@ -30,7 +30,7 @@ using std::vector;
 
 int main(int argc, char* argv[], char* envp[])
 {
-	printf("hello world\r\n");
+	printf("Running tests...run with debugger to verify\r\n");
 	start_time = my_clock::now();
 
 	random_device rd;
@@ -47,86 +47,119 @@ int main(int argc, char* argv[], char* envp[])
 		delete neuronArray;
 		neuronArray = new NeuronArrayBase();
 		neuronArray->Initialize(neuronCount);
-		const char* newLabel = "Fred";
-		NeuronBase *n = neuronArray->GetNeuron(0);
-		char* test = n->GetLabel();
+		const wchar_t* newLabel(L"Fred");
+		NeuronBase* n = neuronArray->GetNeuron(0);
+		wchar_t* test = n->GetLabel();
 		n->SetLabel(newLabel);
 		test = n->GetLabel();
-		n->SetLabel("George");
+		n->SetLabel(L"George");
 		test = n->GetLabel();
-		n->AddSynapse(neuronArray->GetNeuron(1), .53f, true,true);
-		n->AddSynapse(neuronArray->GetNeuron(2), .45f, true,true);
+		n->AddSynapse(neuronArray->GetNeuron(1), .53f, true, true);
+		n->AddSynapse(neuronArray->GetNeuron(2), .45f, true, true);
 		n->AddSynapse(neuronArray->GetNeuron(3), .34f, true);
 		std::vector<SynapseBase> test2 = n->GetSynapses();
 		test2 = neuronArray->GetNeuron(1)->GetSynapsesFrom();
 
 		neuronArray2 = new NeuronArrayBase();
 		neuronArray2->Initialize(neuronCount);
-		newLabel = "Harry";
+		newLabel = L"Harry";
 		n = neuronArray2->GetNeuron(0);
 		test = n->GetLabel();
 		n->SetLabel(newLabel);
 		test = n->GetLabel();
-		n->SetLabel("Potter");
+		n->SetLabel(L"Potter");
 		test = n->GetLabel();
-		n->SetLabel("");
+		n->SetLabel(L"");
 		test = n->GetLabel();
 		n = neuronArray->GetNeuron(0);
 		test = n->GetLabel();
+		n->SetCurrentCharge(1);
 
 
 		parallel_for(0, neuronCount, [&](int value) {
-		//for (int value = 0; value < neuronCount; value++){
+			//for (int value = 0; value < neuronCount; value++){
 			NeuronBase* n = neuronArray->GetNeuron(value);
 			int id = n->GetId();
 			for (int j = 0; j < synapsesPerNeuron; j++)
 			{
-				n->AddSynapse(neuronArray->GetNeuron(j), 1,false,true);
+				n->AddSynapse(neuronArray->GetNeuron(j), 1, false, true);
 			}
-		}
+			}
 		);
+		n = neuronArray->GetNeuron(0);
+		std::vector<SynapseBase> tempVec = n->GetSynapses();
 
+		int count = neuronArray->GetFiredCount();
 		neuronArray->Fire();
+		count = neuronArray->GetFiredCount();
 		neuronArray->Fire();
+		count = neuronArray->GetFiredCount();
+
 	}
+#if _DEBUG
+	neuronCount = 100'000;
+	synapsesPerNeuron = 10;
+#else
+	neuronCount = 10'000'000;
+	synapsesPerNeuron = 500;
+#endif // DEBUG
 
-	neuronCount = 1'000'000;
-	synapsesPerNeuron = 1000;
 	neuronArray = new NeuronArrayBase();
 	neuronArray->Initialize(neuronCount);
-	outputElapsedTime("neurons allocated");
-	//	for (int i = 0; i < neuronCount; i++)
-	parallel_for(0, neuronCount, [&](int value) {
-		NeuronBase* n = neuronArray->GetNeuron(value);
-		for (int j = 0; j < synapsesPerNeuron; j++)
+	neuronArray->SetThreadCount(64);
+
+	outputElapsedTime(to_string(neuronCount)+" neurons allocated");
+	string s = "allocating synapses using " + to_string(neuronArray->GetThreadCount()) + " threads. Each dot is "+to_string(100'000*synapsesPerNeuron)+" synapses \n";
+	cout << s;
+
+	std::atomic<long long> count = 0;
+	parallel_for(0, neuronArray->GetThreadCount(), [&](int value) {
+		int start, end;
+		neuronArray->GetBounds1(value, start, end);
+		for (int i = start; i < end; i++)
 		{
-			//int target = value + rd() % 3000 - 1500;
-			int target = value + j;
-			if (target >= neuronArray->GetArraySize()) target -= neuronArray->GetArraySize();
-			if (target < 0) target += neuronArray->GetArraySize();
-			n->AddSynapse(neuronArray->GetNeuron(target), 1,false,true);
+			NeuronBase* n = neuronArray->GetNeuron(i);
+			for (int j = 0; j < synapsesPerNeuron; j++)
+			{
+				int target = i + rd() % 8000 - 400;
+				//int target = value + j;
+				if (target >= neuronArray->GetArraySize()) target -= neuronArray->GetArraySize();
+				if (target < 0) target += neuronArray->GetArraySize();
+				n->AddSynapse(neuronArray->GetNeuron(target), 1, false, true);
+			}
+			count++;
+			if (count % 100'000 == 0) printf(".");
 		}
 		});
 
-	outputElapsedTime("synapses allocated");
+	s = "\n"+ to_string((long long)neuronCount * (long long)synapsesPerNeuron) + " random synapses requested  Actual: " + to_string(neuronArray->GetTotalSynapseCount()) + " synapses  alocated";
+	outputElapsedTime(s);
 
 
-	for (int i = 0; i < 10'000; i++)
+	for (int i = 0; i < 100; i++)
 	{
 		int target = rd() % neuronArray->GetArraySize();
+		neuronArray->GetNeuron(target)->SetCurrentCharge(1);
 		neuronArray->GetNeuron(target)->SetLastCharge(1);
 	}
 
 	outputElapsedTime("firing loop Start");
-	neuronArray->SetThreadCount(64);
 	for (int i = 0; i < 20; i++)
 	{
-		for (int j = 0; j < 10; j++)
+		int count = 0;
+		//for (int j = 0; j < 10; j++)
+		{
 			neuronArray->Fire();
-		string s = "fired:" + to_string(neuronArray->GetFiredCount()) + " " + to_string(neuronArray->GetTotalSynapseCount()) + "s " + to_string(neuronArray->GetThreadCount()) + " t ";
+			count += neuronArray->GetFiredCount();
+		}
+		string s = "fired: " + to_string(count) + " neurons,  ";
 		outputElapsedTime(s);
 	}
 	outputElapsedTime("Done");
+
+	printf("Press enter\r\n");
+	std::cin.get();
+
 	return 0;
 }
 
@@ -137,8 +170,10 @@ void outputElapsedTime(string msg)
 	auto diff = end_time - start_time;
 	auto milliseconds = chrono::duration_cast<chrono::milliseconds>(diff);
 	auto millisecond_count = milliseconds.count();
-	cout << millisecond_count << '\n';
+	cout << millisecond_count << "ms\n";
 
 	start_time = my_clock::now();;
 }
+
+
 

@@ -60,6 +60,7 @@ namespace NeuronEngine
 		void DeleteSynapse(NeuronBase* n);
 		std::vector<SynapseBase> GetSynapses();
 		std::vector<SynapseBase> GetSynapsesFrom();
+		int GetSynapseCount();
 
 		wchar_t* GetLabel();
 		void SetLabel(const wchar_t*);

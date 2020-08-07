@@ -77,7 +77,7 @@ namespace NeuronEngine
 			wcscpy_s(label, len, newLabel);
 		}
 	}
-	bool NeuronBase::InUse()
+	bool NeuronBase::GetInUse()
 	{
 		bool retVal = (label != NULL) || (synapses != NULL) || (synapsesFrom != NULL || model != modelType::Std);
 

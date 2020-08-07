@@ -341,7 +341,7 @@ namespace BrainSimulator
             for (int i = 0; i < neuronsOnScreen.Count; i++)
             {
                 NeuronOnScreen a = neuronsOnScreen[i];
-                Neuron n = MainWindow.theNeuronArray.GetNeuron(a.neuronIndex);
+                Neuron n = MainWindow.theNeuronArray.GetNeuronForDrawing(a.neuronIndex);
                 if (a.graphic is Shape e)
                 {
                     float x = n.lastCharge;
@@ -351,18 +351,20 @@ namespace BrainSimulator
 
                         SolidColorBrush newColor = NeuronView.GetNeuronColor(n);
                         e.Fill = newColor;
-                        if (n.lastCharge != 0)
+                        if (n.lastCharge != 0 && e.Fill.Opacity != 1)
                             e.Fill.Opacity = 1;
                     }
                     if (a.label != null && n.label != (string)a.label.Content)
                     {
                         a.label.Content = n.label;
-                        e.Fill.Opacity = 1;
+                        if (e.Fill.Opacity != 1)
+                            e.Fill.Opacity = 1;
                     }
                     if (a.label == null && n.label != "")
                     {
                         UIElement l = NeuronView.GetNeuronView(a.neuronIndex, this, out Label lbl);
-                        e.Fill.Opacity = 1;
+                        if (e.Fill.Opacity != 1)
+                            e.Fill.Opacity = 1;
                         a.label = lbl;
                         theCanvas.Children.Add(lbl);
                     }

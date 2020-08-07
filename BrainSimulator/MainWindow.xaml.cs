@@ -79,7 +79,7 @@ namespace BrainSimulator
                 };
 #endif
             InitializeComponent();
-            engineThread.Priority = ThreadPriority.BelowNormal;
+            engineThread.Priority = ThreadPriority.Lowest;
 
             displayUpdateTimer.Tick += DisplayUpdate_TimerTick;
             arrayView = theNeuronArrayView;
@@ -496,8 +496,10 @@ namespace BrainSimulator
         }
 
         static bool engineIsWaiting = false;
+        static long  engineElapsed = 0;
         private static void EngineLoop()
         {
+            Stopwatch sw = new Stopwatch();
             while (true)
             {
                 if (engineDelay > 1000)
@@ -509,7 +511,13 @@ namespace BrainSimulator
                 {
                     engineIsWaiting = false;
                     if (theNeuronArray != null)
+                    {
+                        sw.Reset();
+                        sw.Start();
                         theNeuronArray.Fire();
+                        sw.Stop();
+                        engineElapsed = sw.ElapsedMilliseconds;
+                    }
                     Thread.Sleep(Math.Abs(engineDelay));
                 }
             }
@@ -556,12 +564,11 @@ namespace BrainSimulator
             displayUpdateTimer.Start();
         }
 
-        bool disaplayUpdating = false;
+//        bool disaplayUpdating = false;
         private void DisplayUpdate_TimerTick(object sender, EventArgs e)
         {
-            if (disaplayUpdating) return;
             if (theNeuronArray == null) return;
-            disaplayUpdating = true;
+            displayUpdateTimer.Stop();
             if (engineDelay > 1000 || theNeuronArray == null)
             {
                 label.Content = "Not Running   " + theNeuronArray.Generation.ToString("N0");
@@ -571,7 +578,7 @@ namespace BrainSimulator
                 theNeuronArrayView.UpdateNeuronColors();
                 label.Content = "Running, Speed: " + slider.Value + "   " + theNeuronArray.Generation.ToString("N0");
             }
-            disaplayUpdating = false;
+            displayUpdateTimer.Start();
         }
 
 
@@ -643,7 +650,7 @@ namespace BrainSimulator
 
         static public void UpdateDisplayLabel(float zoomLevel, int firedCount)
         {
-            thisWindow.labelDisplayStatus.Content = "Zoom Level: " + zoomLevel + ",  " + firedCount.ToString("N0") + " Neurons Fired";
+            thisWindow.labelDisplayStatus.Content = "Zoom Level: " + zoomLevel + ",  " + firedCount.ToString("N0") + " Neurons Fired  "+engineElapsed+"ms";
         }
 
 

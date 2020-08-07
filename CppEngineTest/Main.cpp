@@ -100,13 +100,13 @@ int main(int argc, char* argv[], char* envp[])
 	neuronCount = 100'000;
 	synapsesPerNeuron = 10;
 #else
-	neuronCount = 10'000'000;
-	synapsesPerNeuron = 500;
+	neuronCount = 1'000'000;
+	synapsesPerNeuron = 1000;
 #endif // DEBUG
 
 	neuronArray = new NeuronArrayBase();
 	neuronArray->Initialize(neuronCount);
-	neuronArray->SetThreadCount(64);
+	neuronArray->SetThreadCount(120);
 
 	outputElapsedTime(to_string(neuronCount)+" neurons allocated");
 	string s = "allocating synapses using " + to_string(neuronArray->GetThreadCount()) + " threads. Each dot is "+to_string(100'000*synapsesPerNeuron)+" synapses \n";
@@ -121,8 +121,8 @@ int main(int argc, char* argv[], char* envp[])
 			NeuronBase* n = neuronArray->GetNeuron(i);
 			for (int j = 0; j < synapsesPerNeuron; j++)
 			{
-				int target = i + rd() % 8000 - 400;
-				//int target = value + j;
+				//int target = i + rd() % 1000 - 500;
+				int target = i + j;
 				if (target >= neuronArray->GetArraySize()) target -= neuronArray->GetArraySize();
 				if (target < 0) target += neuronArray->GetArraySize();
 				n->AddSynapse(neuronArray->GetNeuron(target), 1, false, true);
@@ -136,15 +136,16 @@ int main(int argc, char* argv[], char* envp[])
 	outputElapsedTime(s);
 
 
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < neuronCount / 100; i++)
 	{
 		int target = rd() % neuronArray->GetArraySize();
+		//int target = i;
 		neuronArray->GetNeuron(target)->SetCurrentCharge(1);
 		neuronArray->GetNeuron(target)->SetLastCharge(1);
 	}
 
 	outputElapsedTime("firing loop Start");
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 50; i++)
 	{
 		int count = 0;
 		//for (int j = 0; j < 10; j++)

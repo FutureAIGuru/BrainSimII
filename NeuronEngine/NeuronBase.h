@@ -62,10 +62,10 @@ namespace NeuronEngine
 		std::vector<SynapseBase> GetSynapsesFrom();
 		int GetSynapseCount();
 
+		bool GetInUse();
 		wchar_t* GetLabel();
 		void SetLabel(const wchar_t*);
 
-		bool InUse();
 
 		float GetLeakRate();
 		void SetLeakRate(float value);

@@ -92,7 +92,11 @@ namespace NeuronEngine
 			NeuronBase* n = theNeuronArray->GetNeuron(i);
 			n->SetModel((NeuronBase::modelType) model);
 		}
-
+		bool NeuronArrayBase::GetNeuronInUse(int i)
+		{
+			NeuronBase* n = theNeuronArray->GetNeuron(i);
+			return n->GetInUse();
+		}
 		void NeuronArrayBase::SetNeuronLabel(int i, String^ newLabel)
 		{
 			const wchar_t* chars = (const wchar_t*)(Marshal::StringToHGlobalAuto(newLabel)).ToPointer();
@@ -184,7 +188,7 @@ namespace NeuronEngine
 			cli::array<byte>^ tempArr = gcnew cli::array<byte>(byteCount);
 			Neuron n1;
 			n1.id = n->GetId();
-			n1.inUse = n->InUse();
+			n1.inUse = n->GetInUse();
 			n1.lastCharge = n->GetLastCharge();
 			n1.currentCharge = n->GetCurrentCharge();
 			n1.leakRate = n->GetLeakRate();

@@ -35,6 +35,7 @@ namespace NeuronEngine
 			float GetNeuronLastCharge(int i);
 			void SetNeuronLastCharge(int i, float value);
 			void SetNeuronCurrentCharge(int i, float value);
+			bool GetNeuronInUse(int i);
 			System::String^ GetNeuronLabel(int i);
 			void SetNeuronLabel(int i, System::String^ newLabel);
 			int GetNeuronModel(int i);

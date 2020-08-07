@@ -52,6 +52,14 @@ namespace BrainSimulator
             SetNeuronLeakRate(i, n.leakRate);
             SetNeuronModel(i, (int)n.model);
         }
+        public Neuron GetNeuronForDrawing(int i)
+        {
+            Neuron retVal = new Neuron();
+            retVal.LastCharge = GetNeuronLastCharge(i);
+            retVal.inUse = GetNeuronInUse(i);
+            retVal.label = GetNeuronLabel(i);
+            return retVal;
+        }
         public Neuron GetCompleteNeuron(int i)
         {
             NeuronPartial n = GetPartialNeuron(i);

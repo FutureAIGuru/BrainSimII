@@ -63,7 +63,7 @@ namespace NeuronEngine
 			GetBounds1(value, start, end);
 			for (int i = start; i < end; i++)
 			{
-				if (GetNeuron(i)->InUse())
+				if (GetNeuron(i)->GetInUse())
 				count ++;
 			}
 			});

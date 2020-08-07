@@ -121,7 +121,7 @@ namespace BrainSimulator
                 c = Utils.IntToColor((int)n.LastChargeInt);
             SolidColorBrush s1 = new SolidColorBrush(c);
             //   if (n.Label != "" || !n.InUse()) s1.Opacity = .50;
-            if (!n.InUse() && n.Model == Neuron.modelType.Std) s1.Opacity = .50;
+            if (!n.inUse && n.Model == Neuron.modelType.Std) s1.Opacity = .50;
             return s1;
         }
 

@@ -76,7 +76,7 @@ namespace BrainSimulator
             arraySize = rows * cols;
             progressBar.Maximum = arraySize;
 
-            int.TryParse (textBoxSynapses.Text, out synapsesPerNeuron);
+            int.TryParse(textBoxSynapses.Text, out synapsesPerNeuron);
             bgw.DoWork += AsyncCreateNeurons;
             bgw.RunWorkerAsync();
 
@@ -93,14 +93,9 @@ namespace BrainSimulator
         int synapsesPerNeuron = 100;
         private void Dt_Tick(object sender, EventArgs e)
         {
-            if (!doingSynapses) { }
-            /// progressBar.Value = MainWindow.theNeuronArray.arraySize;
-            else
-            {
-                progressBar.Maximum = MainWindow.theNeuronArray.arraySize * 100;
-                MainWindow.theNeuronArray.GetCounts(out int synapseCount, out int useCount);
-                progressBar.Value = synapseCount;
-            }
+            progressBar.Maximum = MainWindow.theNeuronArray.arraySize * synapsesPerNeuron;
+            MainWindow.theNeuronArray.GetCounts(out int synapseCount, out int useCount);
+            progressBar.Value = synapseCount;
             if (done)
             {
                 barUpdateTimer.Stop();
@@ -126,10 +121,10 @@ namespace BrainSimulator
                 Parallel.For(0, MainWindow.theNeuronArray.arraySize, i => CreateRandomSynapses(i));
 #else
                 for (int i = 0; i < MainWindow.theNeuronArray.arraySize; i++)
-                CreateRandomSynapses(i);
+                    CreateRandomSynapses(i);
 #endif
             }
-                done = true;
+            done = true;
         }
 
         private void CreateRandomSynapses(int i)
@@ -137,10 +132,10 @@ namespace BrainSimulator
             if (rand == null) rand = new Random();
             for (int j = 0; j < synapsesPerNeuron; j++)
             {
-                int targetNeuron = i+ rand.Next() % (2*synapsesPerNeuron) - synapsesPerNeuron;
+                int targetNeuron = i + rand.Next() % (2 * synapsesPerNeuron) - synapsesPerNeuron;
                 while (targetNeuron < 0) targetNeuron += arraySize;
                 while (targetNeuron >= arraySize) targetNeuron -= arraySize;
-                float weight = (rand.Next(1000) / 1000f) * .6f - .09f;
+                float weight = (rand.Next(1000) / 1000f) - .5f;
                 MainWindow.theNeuronArray.AddSynapse(i, targetNeuron, weight, false, true);
             }
         }

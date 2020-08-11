@@ -3,14 +3,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Xml.Serialization;
 
 namespace BrainSimulator.Modules
 {
@@ -134,7 +127,7 @@ namespace BrainSimulator.Modules
             {
                 for (int j = i + 1; j < UKS.Count; j++)
                 {
-                    Neuron sourceNeuron = GetNeuron(j,false);
+                    Neuron sourceNeuron = GetNeuron(j, false);
                     Neuron targetNeuron = PrevNeuron(sourceNeuron);
                     MainWindow.thisWindow.theNeuronArrayView.MoveOneNeuron(sourceNeuron, targetNeuron);
                     sourceNeuron = GetNeuron(j, true);
@@ -221,7 +214,7 @@ namespace BrainSimulator.Modules
         private void PlayActiveSequences()
         {
             if (activeSequences.Count == 0) return;
-//            for (int i = 0; i >= 0 && i < activeSequences.Count; i++)
+            //            for (int i = 0; i >= 0 && i < activeSequences.Count; i++)
             {
                 Thing activeSequence = activeSequences[0];
                 if (activeSequence.currentReference == activeSequence.References.Count)

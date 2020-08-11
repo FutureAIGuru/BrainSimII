@@ -3,15 +3,9 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Xml.Serialization;
 
 namespace BrainSimulator.Modules
 {
@@ -23,7 +17,6 @@ namespace BrainSimulator.Modules
         public int textCount = 0;
         bool talking = false;
         int maxPhonemesPerWord = 7;
-        int maxShortTermMemory = 20;
         const int maxWords = 300;
         const int maxPhrases = 100;
 
@@ -137,7 +130,7 @@ namespace BrainSimulator.Modules
                 phrase[i] = word;
                 phrase.RemoveRange(i + 1, word.References.Count - 1);
                 retVal = true;
-                notFound:;
+            notFound:;
             }
             return retVal;
         }
@@ -325,7 +318,9 @@ namespace BrainSimulator.Modules
         {
             List<Thing> words = UKS.GetChildren(UKS.Labeled("Word"));
 
+#pragma warning disable CS0162 // Unreachable code detected
             if (false) return;
+#pragma warning restore CS0162 // Unreachable code detected
             if (words.Count < maxWords / 2) return;
             List<Thing> sortedWords = (List<Thing>)words.OrderByDescending(x => x.useCount).ToList();
 
@@ -357,7 +352,7 @@ namespace BrainSimulator.Modules
                     if (sequence[i + j] != searchTarget[j]) goto NotFound;
                 }
                 return i;
-                NotFound:;
+            NotFound:;
             }
             return retVal;
         }
@@ -463,7 +458,9 @@ namespace BrainSimulator.Modules
             return;
 
             //find phrases which incorporate other phrases
+#pragma warning disable CS0162 // Unreachable code detected
             for (int i = 0; i < phrases.Count; i++)
+#pragma warning restore CS0162 // Unreachable code detected
             {
                 Thing phrase1 = phrases[i];
                 for (int j = i + 1; j < phrases.Count; j++)

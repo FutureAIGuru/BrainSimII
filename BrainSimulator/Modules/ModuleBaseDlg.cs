@@ -4,16 +4,11 @@
 //  
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Threading;
-using System.Windows.Media.Imaging;
-using System.IO;
 using System.Drawing;
+using System.IO;
+using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 
 namespace BrainSimulator.Modules
@@ -54,8 +49,9 @@ namespace BrainSimulator.Modules
             timer.Stop();
             if (Application.Current == null) return;
             Application.Current.Dispatcher.Invoke((Action)delegate
-            {if (this != null)
-                Draw(false);
+            {
+                if (this != null)
+                    Draw(false);
             });
         }
 

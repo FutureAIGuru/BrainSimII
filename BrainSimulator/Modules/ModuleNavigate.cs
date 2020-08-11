@@ -5,11 +5,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Xml.Serialization;
 using static System.Math;
 
 namespace BrainSimulator.Modules
@@ -211,7 +207,7 @@ namespace BrainSimulator.Modules
                     currentEvent = null;
                 }
                 else
-                {                
+                {
                     //make a U-Turn and start backtracking
                     nmBehavior.TurnTo((float)-PI);
                 }

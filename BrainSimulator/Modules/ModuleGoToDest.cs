@@ -3,11 +3,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BrainSimulator.Modules
 {
@@ -19,7 +15,7 @@ namespace BrainSimulator.Modules
             get =>
                 "The module accepts a destination and determines a path to get there. It works by successively " +
                 "trying different endpoints it can current reach to see if there is one which can directly reach " +
-                "the destination. This is a demonstration of the use of various other modules."+
+                "the destination. This is a demonstration of the use of various other modules." +
                 "";
         }
 
@@ -58,7 +54,7 @@ namespace BrainSimulator.Modules
             ModuleBehavior nmBehavior = (ModuleBehavior)naBehavior.TheModule;
             ModuleView naModel = theNeuronArray.FindAreaByLabel("Module2DModel");
             Module2DModel nmModel = (Module2DModel)naModel.TheModule;
-        
+
             if (!nmBehavior.IsIdle()) return;
 
             if (pvTry != null)
@@ -103,26 +99,26 @@ namespace BrainSimulator.Modules
             }
 
 
-            if (GetNeuronValue(null,"Go") == 0 && !tryAgain) return;
-            if (GetNeuronValue("ModuleBehavior","Done") == 0) return;
+            if (GetNeuronValue(null, "Go") == 0 && !tryAgain) return;
+            if (GetNeuronValue("ModuleBehavior", "Done") == 0) return;
 
             if (!tryAgain)
             {
                 pvTarget = new PointPlus
                 {
-                    R = GetNeuronValue(null,"R"),
-                    Theta = GetNeuronValue(null,"Theta")
+                    R = GetNeuronValue(null, "R"),
+                    Theta = GetNeuronValue(null, "Theta")
                 };
                 SetNeuronValue(null, "Go", 0);
                 SetNeuronValue(null, "R", 0);
                 SetNeuronValue(null, "Theta", 0);
             }
-           // if (pvTarget.R == 0)
-           //     pvTarget = nmModel.FindGreen().MidPoint();
+            // if (pvTarget.R == 0)
+            //     pvTarget = nmModel.FindGreen().MidPoint();
             if (pvTarget != null)
             {
-                PointPlus pv1 = nmModel.CanISGoStraightTo(pvTarget, out Segment obstacle); 
-            
+                PointPlus pv1 = nmModel.CanISGoStraightTo(pvTarget, out Segment obstacle);
+
                 if (pv1 != null)
                 {
                     SetNeuronValue("ModuleBehavior", "TurnTo", 1);

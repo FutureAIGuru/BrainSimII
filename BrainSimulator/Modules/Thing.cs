@@ -6,9 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace BrainSimulator
@@ -23,7 +20,7 @@ namespace BrainSimulator
 
         public override string ToString()
         {
-            string retVal= T.Label + ":" + weight;
+            string retVal = T.Label + ":" + weight;
             return retVal;
         }
         //This is the (temporary) algorithm calculating the weight based on hits or misses
@@ -99,11 +96,11 @@ namespace BrainSimulator
             t.ReferencedBy.Add(new Link { T = this, weight = weight });
         }
 
-        public void InsertReferenceAt(int index,Thing t, float weight = 1)
+        public void InsertReferenceAt(int index, Thing t, float weight = 1)
         {
             if (t == null) return; //do not add null references
             if (index > References.Count) return;
-            References.Insert(index,new Link { T = t, weight = weight });
+            References.Insert(index, new Link { T = t, weight = weight });
             t.ReferencedBy.Add(new Link { T = this, weight = weight });
         }
 

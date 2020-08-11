@@ -164,8 +164,10 @@ namespace BrainSimulator.Modules
         //val is the quality of the distance...combination of distance plus rotation...we'll see how it works
         private class Seg : Motion
         {
-            public float Val {
-                get { return X * X + Y * Y + rotation * rotation; } }// + .5f* Abs(Theta) + .1f*Abs(rotation); }// +  Abs(rotation / 2); }
+            public float Val
+            {
+                get { return X * X + Y * Y + rotation * rotation; }
+            }// + .5f* Abs(Theta) + .1f*Abs(rotation); }// +  Abs(rotation / 2); }
             public override string ToString()
             {
                 string s = "R: " + R.ToString("F3") + ", Theta: " + Degrees.ToString("F3") + "° (" + X.ToString("F2") + "," + Y.ToString("F2") + ") Rot: " + rotation + " Val: " + Val;
@@ -192,7 +194,7 @@ namespace BrainSimulator.Modules
                 {
                     //create a temp distination which is slightly offset
                     ModuleBehavior mBehavior = (ModuleBehavior)FindModuleByType(typeof(ModuleBehavior));
-                    Seg tempTarget = new Seg(){P=sTarget.MidPoint.P + new PointPlus { R = .15f, Theta = sTarget.Angle - PI / 2 }.V, rotation=0};
+                    Seg tempTarget = new Seg() { P = sTarget.MidPoint.P + new PointPlus { R = .15f, Theta = sTarget.Angle - PI / 2 }.V, rotation = 0 };
                     neededMotion = DistanceFromTarget(tempTarget, pCurrent);
                     bestEvent = UKS.Labeled("E0");
                     if (neededMotion.Theta < -.05)
@@ -204,7 +206,7 @@ namespace BrainSimulator.Modules
                 {
                     if (neededMotion.rotation < -.02)
                         bestEvent = UKS.Labeled("E2");
-                    else 
+                    else
                         bestEvent = UKS.Labeled("E1");
                 }
                 if (bestEvent != null)
@@ -218,10 +220,10 @@ namespace BrainSimulator.Modules
                         doPush = 2;
                         doBackOff = true;
                     }
-////                    else
-//                    {
-//                        endTarget = null;
-//                    }
+                    ////                    else
+                    //                    {
+                    //                        endTarget = null;
+                    //                    }
                 }
                 //find the event with the most desireable outcome and then go the the landmark.
                 //Thing bestEvent = null;
@@ -315,7 +317,7 @@ namespace BrainSimulator.Modules
             };
             while (retVal.rotation > PI)
                 retVal.rotation -= PI;
-            while (retVal.rotation < - PI)
+            while (retVal.rotation < -PI)
                 retVal.rotation += PI;
 
             return retVal;

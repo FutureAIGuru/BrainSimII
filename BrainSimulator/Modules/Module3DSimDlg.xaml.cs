@@ -5,21 +5,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Windows.Threading;
 using System.Windows.Media.Media3D;
-using System.IO;
-using System.Drawing;
 
 namespace BrainSimulator.Modules
 {
@@ -184,37 +173,6 @@ namespace BrainSimulator.Modules
             myGeometryModel.Material = myMaterial;
             myGeometryModel.BackMaterial = myMaterial;
             return myGeometryModel;
-        }
-
-        public Bitmap theBitMap1 = null;
-        public Bitmap theBitMap2 = null;
-
-        public void GetBitMap()
-        {
-            System.Windows.Size size = new System.Windows.Size(ActualWidth, ActualHeight);
-            Measure(size);
-            Arrange(new Rect(size));
-            // Create a render bitmap and push the surface to it
-            RenderTargetBitmap renderBitmap =
-              new RenderTargetBitmap(
-                (int)size.Width,
-                (int)size.Height,
-                96d,
-                96d,
-                PixelFormats.Default);
-            renderBitmap.Render(this);
-
-            //Convert the RenderBitmap to a real bitmap
-            MemoryStream stream = new MemoryStream();
-            BitmapEncoder encoder = new BmpBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
-            encoder.Save(stream);
-
-            if (theBitMap1 == null)
-                theBitMap1 = new Bitmap(stream);
-            else if (theBitMap2 == null)
-                theBitMap2 = new Bitmap(stream);
-            ((Module3DSim)ParentModule).renderDone = true;
         }
     }
 }

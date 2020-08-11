@@ -4,16 +4,12 @@
 //  
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Touchless.Vision.Camera;
-using System.Windows.Threading;
 using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using System.Xml.Serialization;
+using Touchless.Vision.Camera;
 
 
 namespace BrainSimulator.Modules
@@ -28,13 +24,13 @@ namespace BrainSimulator.Modules
 
 
         [XmlIgnore]
-         System.Drawing.Bitmap theBitMap1 = null;
+        System.Drawing.Bitmap theBitMap1 = null;
         [XmlIgnore]
-         System.Drawing.Bitmap theBitMap2 = null;
+        System.Drawing.Bitmap theBitMap2 = null;
         [XmlIgnore]
         public BitmapImage theDlgBitMap = null;
 
-     
+
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
@@ -48,9 +44,9 @@ namespace BrainSimulator.Modules
             for (int i = 0; i < na.Width; i++)
                 for (int j = 0; j < na.Height; j++)
                 {
-                    Neuron n = na.GetNeuronAt(i,j);
-                    int x = (int)(i* ratio);
-                    int y = (int)(j* ratio);
+                    Neuron n = na.GetNeuronAt(i, j);
+                    int x = (int)(i * ratio);
+                    int y = (int)(j * ratio);
                     if (x >= theBitMap1.Width) break;
                     if (y >= theBitMap1.Height) break;
                     System.Drawing.Color c = theBitMap1.GetPixel(x, y);

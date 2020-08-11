@@ -5,12 +5,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using static System.Math;
 using static BrainSimulator.Utils;
+using static System.Math;
 
 namespace BrainSimulator.Modules
 {
@@ -177,9 +173,11 @@ namespace BrainSimulator.Modules
         public void TurnTo(Angle theta)
         {
             float x = theta % Rad(90);
-            if (Abs(x) > Rad(1)) //if correction is more than a degree...break
+            //if (Abs(x) > Rad(1)) //if correction is more than a degree...break
+            //{
+            //    x = x;
+            //}
 
-                x = x;
             SetNeuronValue(null, "Done", 0);
 
             //don't bother turing more than 180-degrees, turn the other way

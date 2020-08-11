@@ -2,6 +2,7 @@
 
 namespace Touchless.Vision.Contracts
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Touchless")]
     public interface ITouchlessAddIn
     {
         string Name { get; }

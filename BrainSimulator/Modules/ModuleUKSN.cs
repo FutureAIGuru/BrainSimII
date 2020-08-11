@@ -5,12 +5,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Xml.Serialization;
 
 namespace BrainSimulator.Modules
 {
@@ -62,7 +57,7 @@ namespace BrainSimulator.Modules
             return n.Fired();
         }
 
- 
+
 
         //this returns the most recent firing regardless of how long ago it was
         Thing MostRecentFired(Thing t)
@@ -314,7 +309,7 @@ namespace BrainSimulator.Modules
             }
         }
 
-        public Thing FindBestReference(Thing t, Thing parent = null)
+        public new Thing FindBestReference(Thing t, Thing parent = null)
         {
             if (t == null) return null;
             Thing retVal = null;
@@ -421,7 +416,7 @@ namespace BrainSimulator.Modules
         {
             //associate phonemes I've heard with phonemes I spoke 2 gens earlier
             BuildAssociation(Labeled("Phoneme"), Labeled("SpeakPhn"), 1, 1, 2);
-            List<Thing> phonemes = AnyChildrenFired(Labeled("Phoneme"),0, 0, true);
+            List<Thing> phonemes = AnyChildrenFired(Labeled("Phoneme"), 0, 0, true);
             List<Thing> phrases = GetChildren(Labeled("Phrase"));
             Thing shortTerm = Labeled("phTemp");
             if (shortTerm == null) return;

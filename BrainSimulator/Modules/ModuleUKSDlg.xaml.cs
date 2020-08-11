@@ -6,16 +6,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace BrainSimulator.Modules
@@ -156,7 +149,7 @@ namespace BrainSimulator.Modules
             if (expandedItems.Contains(t.Label + ":References"))
                 tviRefLabel.IsExpanded = true;
             tvi.Items.Add(tviRefLabel);
-            for (int i =0; i < t.References.Count;i++)
+            for (int i = 0; i < t.References.Count; i++)
             {
                 Link reference = t.References[i];
                 TreeViewItem tviRef = new TreeViewItem

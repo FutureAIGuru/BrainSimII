@@ -5,8 +5,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -88,13 +86,12 @@ namespace BrainSimulator
 
         }
         bool done = false;
-        bool doingSynapses = false;
         bool doSynapses = false;
         int synapsesPerNeuron = 100;
         private void Dt_Tick(object sender, EventArgs e)
         {
             progressBar.Maximum = MainWindow.theNeuronArray.arraySize * synapsesPerNeuron;
-            MainWindow.theNeuronArray.GetCounts(out int synapseCount, out int useCount);
+            MainWindow.theNeuronArray.GetCounts(out long synapseCount, out int useCount);
             progressBar.Value = synapseCount;
             if (done)
             {
@@ -115,7 +112,6 @@ namespace BrainSimulator
             MainWindow.theNeuronArray.Initialize(arraySize, rows);
             if (doSynapses)
             {
-                doingSynapses = true;
                 GC.Collect(3, GCCollectionMode.Forced, true);
 #if !DEBUG
                 Parallel.For(0, MainWindow.theNeuronArray.arraySize, i => CreateRandomSynapses(i));

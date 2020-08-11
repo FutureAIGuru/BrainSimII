@@ -4,13 +4,8 @@
 //  
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Threading;
-using System.Xml.Serialization;
+using System.Windows;
 
 
 namespace BrainSimulator.Modules
@@ -123,7 +118,7 @@ namespace BrainSimulator.Modules
             if (mainWindow.GetType() == typeof(MainWindow))
                 dlg.Owner = Application.Current.MainWindow;
             else
-                mainWindow = mainWindow;
+                Utils.Noop();
 
             //restore the size and position
             if (dlgPos != new Point(0, 0))

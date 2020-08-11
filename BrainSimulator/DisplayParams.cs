@@ -3,11 +3,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 namespace BrainSimulator
 {
@@ -27,7 +22,7 @@ namespace BrainSimulator
         public bool ShowNeuronCircles() { return neuronDisplaySize > 10; }
         public bool ShowNeuronLabels() { return neuronDisplaySize > 20; }
         public bool ShowNeurons() { return neuronDisplaySize > 5; }
-     
+
 
         public float NeuronDisplaySize
         {
@@ -90,11 +85,11 @@ namespace BrainSimulator
             p -= (Vector)DisplayOffset;
             int x = (int)(p.X / NeuronDisplaySize);
             int y = (int)(p.Y / NeuronDisplaySize);
-            if (y >= NeuronRows) y=NeuronRows-1;
+            if (y >= NeuronRows) y = NeuronRows - 1;
             int index = x * NeuronRows + y;
             return index;
         }
-        public void GetRowColFromPoint(Point p,out int x, out int y)
+        public void GetRowColFromPoint(Point p, out int x, out int y)
         {
             p -= (Vector)DisplayOffset;
             x = (int)(p.X / NeuronDisplaySize);
@@ -102,7 +97,7 @@ namespace BrainSimulator
         }
         public int GetAbsNeuronAt(int X, int Y)
         {
-            return X * NeuronRows+ Y;
+            return X * NeuronRows + Y;
         }
 
         public void GetAbsNeuronLocation(int index, out int X, out int Y)

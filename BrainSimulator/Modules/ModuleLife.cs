@@ -3,14 +3,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Xml.Serialization;
-
 namespace BrainSimulator.Modules
 {
     public class ModuleLife : ModuleBase
@@ -49,7 +41,7 @@ namespace BrainSimulator.Modules
                     Neuron liveNeuron = na.GetNeuronAt(x, y);
                     if (liveNeuron == null) continue;
                     liveNeuron.Label = "+";
-                    Neuron dieNeuron = na.GetNeuronAt(x, y+1);
+                    Neuron dieNeuron = na.GetNeuronAt(x, y + 1);
                     if (dieNeuron == null) continue;
                     dieNeuron.Label = "-";
                     liveNeuron.Model = Neuron.modelType.LIF;

@@ -3,100 +3,96 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
+using BrainSimulator.Modules;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Xml.Serialization;
-using BrainSimulator.Modules;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Text.RegularExpressions;
 
 namespace BrainSimulator
 {
-    public static class SystemStuff
-    {
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        static extern IntPtr GetCurrentThreadId();
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        static extern IntPtr GetCurrentThread();
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        static extern bool GetProcessAffinityMask(IntPtr currentProcess, ref Int64 lpProcessAffinityMask, ref Int64 lpSystemAffinityMask);
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern int GetCurrentProcessorNumber();
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern bool GetProcessGroupAffinity(IntPtr currentProcess, ref ushort groupCount, ref ushort groupArray);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern int GetActiveProcessorGroupCount();
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern bool GetThreadGroupAffinity(IntPtr hThread, ref GroupAffinity groupAffinity);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern bool SetThreadGroupAffinity(IntPtr hThread, ref GroupAffinity groupAffinity, ref GroupAffinity prevAffinity);
-
-        public struct GroupAffinity
+    /*   
+     *   here's how to assign specific threads to specific CPU cores
+     *   public static class SystemStuff
         {
-            public ulong mask;
-            public short group;
-            long reserved;
-        }
-        static int groupCount = -1;
-        public static void SetProcessorGroupAffinity(int taskNum)
-        {
-            taskNum += 2;
-            if (groupCount == -1)
-                groupCount = GetActiveProcessorGroupCount();
-            short theNewGroup = (short)(taskNum % groupCount);
-            short theNewProcessor = (short)(taskNum / groupCount);
-            IntPtr threadHandle = GetCurrentThread();
-            GroupAffinity ga = new GroupAffinity();
-            GroupAffinity ga1 = new GroupAffinity();
-            bool retVal = GetThreadGroupAffinity(threadHandle, ref ga);
-            int error = 0;
-            if (retVal != true)
-                error = Marshal.GetLastWin32Error();
-            ga.group = theNewGroup;
-            ga.mask = (ulong)1 << theNewProcessor;
-            retVal = SetThreadGroupAffinity(threadHandle, ref ga, ref ga1);
-            if (retVal != true)
+            [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            static extern IntPtr GetCurrentThreadId();
+            [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            static extern IntPtr GetCurrentThread();
+            [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            static extern bool GetProcessAffinityMask(IntPtr currentProcess, ref Int64 lpProcessAffinityMask, ref Int64 lpSystemAffinityMask);
+            [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            public static extern int GetCurrentProcessorNumber();
+            [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            public static extern bool GetProcessGroupAffinity(IntPtr currentProcess, ref ushort groupCount, ref ushort groupArray);
+
+            [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            public static extern int GetActiveProcessorGroupCount();
+            [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            public static extern bool GetThreadGroupAffinity(IntPtr hThread, ref GroupAffinity groupAffinity);
+
+            [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            public static extern bool SetThreadGroupAffinity(IntPtr hThread, ref GroupAffinity groupAffinity, ref GroupAffinity prevAffinity);
+
+            public struct GroupAffinity
             {
-                error = Marshal.GetLastWin32Error();
+                public ulong mask;
+                public short group;
+                long reserved;
             }
+            static int groupCount = -1;
+            public static void SetProcessorGroupAffinity(int taskNum)
+            {
+                taskNum += 2;
+                if (groupCount == -1)
+                    groupCount = GetActiveProcessorGroupCount();
+                short theNewGroup = (short)(taskNum % groupCount);
+                short theNewProcessor = (short)(taskNum / groupCount);
+                IntPtr threadHandle = GetCurrentThread();
+                GroupAffinity ga = new GroupAffinity();
+                GroupAffinity ga1 = new GroupAffinity();
+                bool retVal = GetThreadGroupAffinity(threadHandle, ref ga);
+                int error = 0;
+                if (retVal != true)
+                    error = Marshal.GetLastWin32Error();
+                ga.group = theNewGroup;
+                ga.mask = (ulong)1 << theNewProcessor;
+                retVal = SetThreadGroupAffinity(threadHandle, ref ga, ref ga1);
+                if (retVal != true)
+                {
+                    error = Marshal.GetLastWin32Error();
+                }
+            }
+
+            //Thread thread = Thread.CurrentThread;
+            //if (groupCount == -1)
+            //    groupCount = GetActiveProcessorGroupCount();
+            //short theNewGroup = (short)(taskNum % groupCount);
+            //IntPtr threadHandle = GetCurrentThread();
+            //GroupAffinity ga = new GroupAffinity();
+            //GroupAffinity ga1 = new GroupAffinity();
+            //bool retVal = GetThreadGroupAffinity(threadHandle, ref ga);
+            //int error = Marshal.GetLastWin32Error();
+            //if (retVal == true && ga.group != theNewGroup)
+            //{
+            //    ga.group = theNewGroup;
+            //    retVal = SetThreadGroupAffinity(threadHandle, ref ga, ref ga1);
+            //    if (retVal != true)
+            //    {
+            //        error = Marshal.GetLastWin32Error();
+            //    }
+            //}
         }
-
-        //Thread thread = Thread.CurrentThread;
-        //if (groupCount == -1)
-        //    groupCount = GetActiveProcessorGroupCount();
-        //short theNewGroup = (short)(taskNum % groupCount);
-        //IntPtr threadHandle = GetCurrentThread();
-        //GroupAffinity ga = new GroupAffinity();
-        //GroupAffinity ga1 = new GroupAffinity();
-        //bool retVal = GetThreadGroupAffinity(threadHandle, ref ga);
-        //int error = Marshal.GetLastWin32Error();
-        //if (retVal == true && ga.group != theNewGroup)
-        //{
-        //    ga.group = theNewGroup;
-        //    retVal = SetThreadGroupAffinity(threadHandle, ref ga, ref ga1);
-        //    if (retVal != true)
-        //    {
-        //        error = Marshal.GetLastWin32Error();
-        //    }
-        //}
-    }
-
+    */
 
 
     public static class Utils
     {
+        public static void Noop()
+        {
+
+        }
 
         //this searches a control tree to find a control by name so you can retrieve its value
         public static Control FindByName(Visual v, string name)

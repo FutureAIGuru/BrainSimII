@@ -52,6 +52,7 @@ namespace Touchless.Vision.Camera.Configuration
 
         private readonly object _frameSync = new object();
         private bool _frameWaiting = false;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.Double.ToString")]
         private void NewFrame(Touchless.Vision.Contracts.IFrameSource frameSource, Touchless.Vision.Contracts.Frame frame, double fps)
         {
             //We want to ignore frames we can't render fast enough

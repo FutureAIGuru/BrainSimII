@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-//C# TO C++ CONVERTER NOTE: Forward class declarations:
 namespace NeuronEngine { class NeuronBase; }
 
 namespace NeuronEngine
@@ -16,8 +15,8 @@ namespace NeuronEngine
 		bool IsHebbian();
 
 	private:
-		NeuronBase* targetNeuron; //this is used by the engine
-		float weight = 0; //this is used by the engine
-		bool isHebbian = false;
+		NeuronBase* targetNeuron = 0; //pointer to the target neuron
+		float weight = 0; //weight of the synapse
+		bool isHebbian = false; //can the synapse adjust its own weight
 	};
 }

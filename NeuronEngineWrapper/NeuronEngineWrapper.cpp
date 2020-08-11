@@ -77,7 +77,7 @@ namespace NeuronEngine
 			NeuronBase* n = theNeuronArray->GetNeuron(i);
 			n->SetLeakRate(value);
 		}
-		long NeuronArrayBase::GetNeuronLastFired(int i)
+		long long NeuronArrayBase::GetNeuronLastFired(int i)
 		{
 			NeuronBase* n = theNeuronArray->GetNeuron(i);
 			return n->GetLastFired();
@@ -153,8 +153,8 @@ namespace NeuronEngine
 				return gcnew cli::array<byte>(0);
 			}
 			byte* firstElem = (byte*)&tempVec.at(0);
-			const int SIZE = tempVec.size(); //#of synapses
-			const int byteCount = SIZE * sizeof(Synapse);
+			const size_t SIZE = tempVec.size(); //#of synapses
+			const int byteCount = (int)(SIZE * sizeof(Synapse));
 			cli::array<byte>^ tempArr = gcnew cli::array<byte>(byteCount);
 			int k = 0;
 			//this is complicated by the fact that the synapsebase contains a raw point but we want to return an ID
@@ -201,7 +201,7 @@ namespace NeuronEngine
 			}
 			return tempArr;
 		}
-		long NeuronArrayBase::GetTotalSynapses()
+		long long NeuronArrayBase::GetTotalSynapses()
 		{
 			return theNeuronArray->GetTotalSynapseCount();
 		}

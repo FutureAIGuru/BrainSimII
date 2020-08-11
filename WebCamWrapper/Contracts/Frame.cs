@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 
 namespace Touchless.Vision.Contracts
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
     [DataContract]
     public class Frame
     {
@@ -36,6 +37,8 @@ namespace Touchless.Vision.Contracts
             OriginalImage = new Bitmap( originalImage );
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "value")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         [DataMember]
         public byte[] ImageData
         {

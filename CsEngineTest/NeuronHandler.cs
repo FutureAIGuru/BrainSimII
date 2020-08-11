@@ -1,11 +1,6 @@
-﻿using System;
+﻿using NeuronEngine.CLI;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.InteropServices;
-using NeuronEngine.CLI;
-using System.Reflection.Emit;
 
 namespace CsEngineTest
 {
@@ -44,7 +39,7 @@ namespace CsEngineTest
         }
         public Neuron GetCompleteNeuron(int i)
         {
-            Neuron retVal = (Neuron) ConvertToNeuron(GetNeuron(i));
+            Neuron retVal = (Neuron)ConvertToNeuron(GetNeuron(i));
             retVal.label = GetNeuronLabel(i);
             retVal.synapses = GetSynapsesList(i);
             retVal.synapsesFrom = GetSynapsesFromList(i);

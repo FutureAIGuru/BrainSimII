@@ -46,7 +46,7 @@ namespace NeuronEngine
 		std::atomic<long long> count = 0;
 		parallel_for(0, threadCount, [&](int value) {
 			int start, end;
-			GetBounds1(value, start, end);
+			GetBounds(value, start, end);
 			for (int i = start; i < end; i++)
 			{
 				count += (long long) GetNeuron(i)->GetSynapseCount();;
@@ -54,13 +54,13 @@ namespace NeuronEngine
 			});
 		return count;;
 	}
-	long long NeuronArrayBase::GetNeuronsInUseCount()
+	long NeuronArrayBase::GetNeuronsInUseCount()
 	{
 		std::atomic<long> count = 0;
 		parallel_for(0, threadCount, [&](int value) {
 			ProcessNeurons1(value);
 			int start, end;
-			GetBounds1(value, start, end);
+			GetBounds(value, start, end);
 			for (int i = start; i < end; i++)
 			{
 				if (GetNeuron(i)->GetInUse())
@@ -70,7 +70,7 @@ namespace NeuronEngine
 		return count;;
 	}
 
-	void NeuronArrayBase::GetBounds1(int taskID, int& start, int& end)
+	void NeuronArrayBase::GetBounds(int taskID, int& start, int& end)
 	{
 		int numberToProcess = arraySize / threadCount;
 		int remainder = arraySize % threadCount;
@@ -113,7 +113,7 @@ namespace NeuronEngine
 	void NeuronArrayBase::ProcessNeurons1(int taskID)
 	{
 		int start, end;
-		GetBounds1(taskID, start, end);
+		GetBounds(taskID, start, end);
 		for (int i = start; i < end; i++)
 			if (GetNeuron(i)->Fire1(generation))
 				firedCount++;
@@ -121,7 +121,7 @@ namespace NeuronEngine
 	void NeuronArrayBase::ProcessNeurons2(int taskID)
 	{
 		int start, end;
-		GetBounds1(taskID, start, end);
+		GetBounds(taskID, start, end);
 		for (int i = start; i < end; i++)
 			GetNeuron(i)->Fire2();
 	}

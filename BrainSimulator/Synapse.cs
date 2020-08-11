@@ -3,13 +3,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace BrainSimulator
 {
@@ -27,7 +21,7 @@ namespace BrainSimulator
             targetNeuron = -1;
             weight = 1;
         }
-        public Synapse(int targetNeuronIn, float weightIn,bool isHebbianIn)
+        public Synapse(int targetNeuronIn, float weightIn, bool isHebbianIn)
         {
             targetNeuron = targetNeuronIn;
             weight = weightIn;

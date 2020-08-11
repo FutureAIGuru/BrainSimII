@@ -13,6 +13,7 @@ namespace Touchless.Vision.Camera
     [Export(typeof(IFrameSource))]
     public class CameraFrameSource : IFrameSource
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
         public event Action<IFrameSource, Frame, double> NewFrame;
         
         public bool IsCapturing { get; private set; }

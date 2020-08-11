@@ -3,15 +3,8 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Xml.Serialization;
-using static System.Math;
-using System.Runtime.CompilerServices;
-using System.Windows;
 
 namespace BrainSimulator
 {
@@ -32,7 +25,7 @@ namespace BrainSimulator
         };
 
         public NeuronArray Owner { set => ownerArray = value; }
-    
+
         //IMPORTANT:
         //Lastcharge is a stable readable value of the output of a neuron
         //CurrentCharge is an internal accumulation variable which must be set for the engine to act on a neuron's value
@@ -46,32 +39,32 @@ namespace BrainSimulator
         //get/set last charge. Setting also sets current charge
 
         //TODO: change this to SetValue
-        public float LastCharge { get { return (float)lastCharge; } set {lastCharge = value;Update(); } }
+        public float LastCharge { get { return (float)lastCharge; } set { lastCharge = value; Update(); } }
 
         //get/set last charge as raw integer Used by COLOR nueurons
         public int LastChargeInt { get { return (int)lastCharge; } set { lastCharge = value; Update(); } }
-        public void SetValueInt(int value) { LastChargeInt = value; }
+        public void SetValueInt(int value) { LastChargeInt = value; Update(); }
 
-        public List<Synapse> Synapses { get => synapses;  }
+        public List<Synapse> Synapses { get => synapses; }
         [XmlIgnore]
-        public List<Synapse> SynapsesFrom { get=>synapsesFrom;  }
+        public List<Synapse> SynapsesFrom { get => synapsesFrom; }
 
         public long LastFired { get => lastFired; }
 
-        public bool Fired() { return (LastCharge >=  1); }
+        public bool Fired() { return (LastCharge >= 1); }
         //public void SetValue(float value) { lastCharge = value; currentCharge = value; Update(); }
-        public void SetValue(float value) 
-        { 
-            currentCharge = value; 
+        public void SetValue(float value)
+        {
+            currentCharge = value;
             if (model == modelType.FloatValue)
                 lastCharge = value;
-            Update(); 
+            Update();
         }
 
         public enum modelType { Std, Color, FloatValue, LIF, Random };
 
         public int Id { get => id; set => id = value; }
-        public string Label{get => label; set { label = value; Update(); }}
+        public string Label { get => label; set { label = value; Update(); } }
         //Used by LIF, Random neurons
         public float LeakRate { get => leakRate; set { leakRate = value; Update(); } }
 
@@ -84,7 +77,7 @@ namespace BrainSimulator
         public Neuron()
         {
             if (ownerArray == null)
-                ownerArray = MainWindow.myClipBoard; 
+                ownerArray = MainWindow.myClipBoard;
         }
 
         //a neuron is defined as in use if it has any synapses connected from/to it or it has a label
@@ -154,7 +147,7 @@ namespace BrainSimulator
             return null;
         }
 
-        public Neuron Clone() 
+        public Neuron Clone()
         {
             Neuron n = (Neuron)this.MemberwiseClone();
             n.synapses = new List<Synapse>();

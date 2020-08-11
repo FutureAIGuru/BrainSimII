@@ -4,21 +4,9 @@
 //  
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Windows.Threading;
 
 namespace BrainSimulator.Modules
 {
@@ -59,13 +47,13 @@ namespace BrainSimulator.Modules
 
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
-           
+
             ModuleCommand parent = (ModuleCommand)base.ParentModule;
             parent.textFile = textBoxPath.Text;
             string theString = textBox.Text;
-            theString = theString.Replace(">>>","");
+            theString = theString.Replace(">>>", "");
 
-            parent.commands = theString.Split(new string[]{ "\r\n"}, StringSplitOptions.None);
+            parent.commands = theString.Split(new string[] { "\r\n" }, StringSplitOptions.None);
             File.WriteAllLines(parent.textFile, parent.commands);
         }
 
@@ -79,7 +67,7 @@ namespace BrainSimulator.Modules
             // Show the Dialog.  
             // If the user clicked OK in the dialog  
             DialogResult result = openFileDialog1.ShowDialog();
-            if (result == System.Windows.Forms.DialogResult.OK )
+            if (result == System.Windows.Forms.DialogResult.OK)
             {
                 textBoxPath.Text = openFileDialog1.FileName;
             }

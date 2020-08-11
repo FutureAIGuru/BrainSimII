@@ -118,7 +118,7 @@ int main(int argc, char* argv[], char* envp[])
 	std::atomic<long long> count = 0;
 	parallel_for(0, neuronArray->GetThreadCount(), [&](int value) {
 		int start, end;
-		neuronArray->GetBounds1(value, start, end);
+		neuronArray->GetBounds(value, start, end);
 		for (int i = start; i < end; i++)
 		{
 			NeuronBase* n = neuronArray->GetNeuron(i);

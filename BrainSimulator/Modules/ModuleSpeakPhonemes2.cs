@@ -5,17 +5,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Xml.Serialization;
-using System.Speech.Synthesis;
 using System.Diagnostics;
-
-using System.Speech.Recognition; //needed to get pronunciation from text
-using System.Speech.Recognition.SrgsGrammar;
 using System.IO;
+using System.Speech.Recognition; //needed to get pronunciation from text
+using System.Speech.Synthesis;
+using System.Windows;
 
 namespace BrainSimulator.Modules
 {
@@ -354,7 +348,7 @@ namespace BrainSimulator.Modules
                         missPhrase.Add(bestPhraseText);
                     }
 
-                    }
+                }
             }
             else
             {
@@ -363,7 +357,7 @@ namespace BrainSimulator.Modules
                 phonemesToFire += phonemes.Replace(" ", "") + "   ";
             }
         }
-        private int Score (List<Thing> testPhrase, Thing phrase)
+        private int Score(List<Thing> testPhrase, Thing phrase)
         {
             int retVal = 0;
             for (int i = 0; i < testPhrase.Count; i++)

@@ -3,16 +3,11 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 using System.Windows;
 using System.Windows.Media;
-using static System.Math;
+using System.Xml.Serialization;
 using static BrainSimulator.Utils;
+using static System.Math;
 
 namespace BrainSimulator.Modules
 {
@@ -139,6 +134,19 @@ namespace BrainSimulator.Modules
             };
             return retVal;
         }
+        public override bool Equals(object p1)
+        {
+            if (p1 != null && p1 is PointPlus p2)
+            {
+                return (p2.P.X == P.X && p2.P.Y == P.Y);
+
+            }
+            return false;
+        }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 
     public class Motion : PointPlus
@@ -160,7 +168,7 @@ namespace BrainSimulator.Modules
 
         public Segment() { }
 
-        public Segment(PointPlus P1i,PointPlus P2i,ColorInt theColori)
+        public Segment(PointPlus P1i, PointPlus P2i, ColorInt theColori)
         {
             P1 = P1i;
             P2 = P2i;

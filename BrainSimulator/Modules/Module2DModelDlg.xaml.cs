@@ -4,19 +4,11 @@
 //  
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Windows.Threading;
 
 namespace BrainSimulator.Modules
 {
@@ -100,8 +92,8 @@ namespace BrainSimulator.Modules
                     Color theColor = Utils.IntToColor(segment.theColor);
                     Point P1 = segment.P1.P;
                     Point P2 = segment.P2.P;
-                    Point P1P = P1 + (P2 - P1) * segment.P1.Conf/4;// .2;
-                    Point P2P = P1 + (P2 - P1) * (1- segment.P2.Conf/4);// .8;
+                    Point P1P = P1 + (P2 - P1) * segment.P1.Conf / 4;// .2;
+                    Point P2P = P1 + (P2 - P1) * (1 - segment.P2.Conf / 4);// .8;
 
                     theCanvas.Children.Add(new Line
                     {
@@ -140,7 +132,7 @@ namespace BrainSimulator.Modules
                     }
                 }
             }
-            catch{}
+            catch { }
 
             if (parent.imagining)
             {

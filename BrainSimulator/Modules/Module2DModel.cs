@@ -3,17 +3,13 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
-using System.Windows;
-using System.Xml.Serialization;
 using System.Diagnostics;
-using static System.Math;
+using System.Windows;
+using System.Windows.Media;
+using System.Xml.Serialization;
 using static BrainSimulator.Utils;
+using static System.Math;
 
 
 
@@ -114,7 +110,7 @@ namespace BrainSimulator.Modules
 
         //Segments consist of two points and a color. Optionally, a segment may have some motion. 
         //AddToModel determines whether or not the endpoints are to be modified as Sallie moves so static objects can be stored
-        public Thing AddSegmentToUKS (Segment s)
+        public Thing AddSegmentToUKS(Segment s)
         {
             return AddSegmentToUKS(s.P1, s.P2, s.theColor);
         }
@@ -376,7 +372,7 @@ namespace BrainSimulator.Modules
             if (t1 == null)
             {
                 //TODO: merge mutliple segments
-//                AddSegmentToUKS(P1, P2, theColor, motion); //don't store motion with the segment (yet)
+                //                AddSegmentToUKS(P1, P2, theColor, motion); //don't store motion with the segment (yet)
                 AddSegmentToUKS(P1, P2, theColor);
             }
 
@@ -435,7 +431,7 @@ namespace BrainSimulator.Modules
             return false;
         }
 
-        public float GetDistanceAtDirection(Angle  theta)
+        public float GetDistanceAtDirection(Angle theta)
         {
             GetNearestThing(theta, out float dist);
             return dist;

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -144,7 +143,7 @@ namespace BrainSimulator
                 if (sender is Label l)
                 {
                     l.CaptureMouse();
-                    Point oldPos = new Point(Canvas.GetLeft(l),Canvas.GetTop(l));
+                    Point oldPos = new Point(Canvas.GetLeft(l), Canvas.GetTop(l));
                     Point newPos = oldPos + (currentPosition - prevPos);
                     Canvas.SetLeft(l, newPos.X);
                     Canvas.SetTop(l, newPos.Y);

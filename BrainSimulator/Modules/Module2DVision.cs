@@ -5,8 +5,8 @@
 
 using System.Collections.Generic;
 using System.Windows;
-using static System.Math;
 using static BrainSimulator.Utils;
+using static System.Math;
 
 namespace BrainSimulator.Modules
 {
@@ -91,7 +91,7 @@ namespace BrainSimulator.Modules
                     retinaChanged = true;
                     break;
                 }
-                if (lastValuesR[i] != curValuesR[i]) 
+                if (lastValuesR[i] != curValuesR[i])
                 {
                     retinaChanged = true;
                     break;
@@ -159,8 +159,6 @@ namespace BrainSimulator.Modules
             public Thing t;
             public bool PLHidden;
             public bool PRHidden;
-            public float angleFromTexture;
-
         }
 
         List<MonocularBoundary> LBoundaries = new List<MonocularBoundary>();
@@ -223,7 +221,7 @@ namespace BrainSimulator.Modules
             for (int i = end - 1; i >= start; i--)
             {
                 ColorInt color = na.GetNeuronAt(i, 0).LastChargeInt;
-                if (color != a.theColor && last== 0)
+                if (color != a.theColor && last == 0)
                     continue;
                 if (last == 0) last = i;
                 if (color == System.Windows.Media.Colors.AliceBlue)
@@ -233,7 +231,7 @@ namespace BrainSimulator.Modules
                 else if (rCount > 0) break;
             }
             float retVal = 1;
-            if (Abs (lCount - rCount) > 0)
+            if (Abs(lCount - rCount) > 0)
             {
                 retVal = (float)lCount / (float)rCount;
                 retVal *= (float)(last - first) / (float)(end - start); //correction because texture is not at the end of the segment

@@ -4,15 +4,11 @@
 //  
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Shapes;
-using System.Windows.Media;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace BrainSimulator
 {
@@ -187,7 +183,7 @@ namespace BrainSimulator
             if (newWeight == -20) return;
             theNeuronArrayView.lastSynapseWeight = newWeight;
             Neuron n = MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty));
-            n.AddSynapse((int)cm.GetValue(TargetIDProperty), newWeight, MainWindow.theNeuronArray,true);
+            n.AddSynapse((int)cm.GetValue(TargetIDProperty), newWeight, MainWindow.theNeuronArray, true);
         }
 
         public static void GetSynapseInfo(object sender)
@@ -223,7 +219,7 @@ namespace BrainSimulator
             float weight = 0;
             float.TryParse((string)mi.Header, out weight);
             MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).
-                AddSynapse((int)cm.GetValue(TargetIDProperty), weight, MainWindow.theNeuronArray,true);
+                AddSynapse((int)cm.GetValue(TargetIDProperty), weight, MainWindow.theNeuronArray, true);
             theNeuronArrayView.lastSynapseWeight = weight;
             MainWindow.Update();
         }

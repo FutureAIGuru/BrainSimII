@@ -4,10 +4,6 @@
 //  
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Media3D;
 using System.Xml.Serialization;
@@ -52,10 +48,10 @@ namespace BrainSimulator.Modules
         {
             if (dlg == null) return;
             //if (renderStarted && !renderDone)  //TODO bug which prevents drawing...now has blank frames
-                Application.Current.Dispatcher.Invoke((Action)delegate
-                {
-                    ((Module3DSimDlg)dlg).GetBitMap();
-                });
+            Application.Current.Dispatcher.Invoke((Action)delegate
+            {
+                ((Module3DSimDlg)dlg).GetBitMap();
+            });
 
             //if (!renderStarted || !renderDone) return;
             renderDone = false;

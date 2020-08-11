@@ -3,15 +3,12 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BrainSimulator
 {
-    public  class NeuronSelection
+    public class NeuronSelection
     {
 
         //array of rectangular selection areas
@@ -39,9 +36,9 @@ namespace BrainSimulator
                 if (selectedRectangles[i] != null)
                 {
                     List<int> neuronsInRectangle = new List<int>();
-                    foreach(int neuronID in selectedRectangles[i].NeuronInRectangle())
+                    foreach (int neuronID in selectedRectangles[i].NeuronInRectangle())
                     {
-                        neuronsInRectangle .Add(neuronID);
+                        neuronsInRectangle.Add(neuronID);
                     }
                     neuronsInSelection = neuronsInSelection.Union(neuronsInRectangle).ToList();
                 }
@@ -64,8 +61,8 @@ namespace BrainSimulator
                         //the index into the current rectangle
                         int index = position - currentStart;
                         selectedRectangles[i].GetSelectedArea(out int X1, out int Y1, out int X2, out int Y2);
-                        int height = Y2 - Y1+1;
-                        selectedNeuronIndex = selectedRectangles[i].FirstSelectedNeuron + (index / height) * 
+                        int height = Y2 - Y1 + 1;
+                        selectedNeuronIndex = selectedRectangles[i].FirstSelectedNeuron + (index / height) *
                             MainWindow.theNeuronArray.rows + index % height;
                         if (selectedNeuronIndex > MainWindow.theNeuronArray.arraySize) return null;
                         n = MainWindow.theNeuronArray.GetNeuron(selectedNeuronIndex);

@@ -3,17 +3,9 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Xml.Serialization;
 using System.Speech.Synthesis;
-
-using System.Speech.Recognition; //needed to get pronunciation from text
-using System.IO;
+using System.Windows;
 
 namespace BrainSimulator.Modules
 {
@@ -34,9 +26,9 @@ namespace BrainSimulator.Modules
             List<Thing> words = nmKB.GetChildren(nmKB.Labeled("Word"));
             bool paused = true;
             //TODO: replace this direct access into the KB with synapses...then we can eliminate the storage of the words in the things values.
-            foreach(Thing word in words)
+            foreach (Thing word in words)
             {
-                if (nmKB.Fired(word,2,false))
+                if (nmKB.Fired(word, 2, false))
                 {
                     paused = false;
                     phraseToSpeak += " " + word.V.ToString();

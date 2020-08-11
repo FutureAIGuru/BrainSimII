@@ -3,21 +3,17 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Shapes;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Shapes;
 
 namespace BrainSimulator
 {
     public class NeuronSelectionRectangle
     {
         int firstSelectedNeuron;
-  
+
         int width;
         int height;
         public int Rows { get { return MainWindow.theNeuronArray.rows; } }
@@ -29,7 +25,7 @@ namespace BrainSimulator
         public int Height { get => height; set => height = value; }
 
 
-        public NeuronSelectionRectangle(int iFirstSelectedNeuron, int width,int height)
+        public NeuronSelectionRectangle(int iFirstSelectedNeuron, int width, int height)
         {
             FirstSelectedNeuron = iFirstSelectedNeuron;
             Height = height;
@@ -87,7 +83,7 @@ namespace BrainSimulator
         public int GetLength()
         {
             GetSelectedArea(out int X1, out int Y1, out int X2, out int Y2);
-            return (X2 - X1+1) * (Y2 - Y1+1);
+            return (X2 - X1 + 1) * (Y2 - Y1 + 1);
         }
     }
 }

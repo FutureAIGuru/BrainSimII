@@ -3,14 +3,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Xml.Serialization;
-
 namespace BrainSimulator.Modules
 {
     public class ModuleMotor : ModuleBase
@@ -59,7 +51,7 @@ namespace BrainSimulator.Modules
             if (nL != null)
                 nLeft.AddSynapse(nL.Id, 1);
             if (nR != null)
-                nRight .AddSynapse(nR.Id, 1);
+                nRight.AddSynapse(nR.Id, 1);
             Neuron nLTurn = GetNeuron("KBOut", "LTurn");
             if (nLTurn != null)
                 nLTurn.AddSynapse(nLeft.Id, 1);

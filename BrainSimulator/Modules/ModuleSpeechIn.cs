@@ -5,12 +5,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Design.PluralizationServices;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 using System.Speech.Recognition;
-using System.Speech.Recognition.SrgsGrammar;
 using System.Windows;
 
 namespace BrainSimulator.Modules
@@ -70,7 +67,7 @@ namespace BrainSimulator.Modules
             CreateGrammar();
 
             // Add a handler for the speech recognized event.  
-            recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(recognizer_SpeechRecognized);
+            recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(Recognizer_SpeechRecognized);
 
             // Configure input to the speech recognizer.  
             recognizer.SetInputToDefaultAudioDevice();
@@ -118,27 +115,27 @@ namespace BrainSimulator.Modules
 
             GrammarBuilder actionCommand = new GrammarBuilder();
             actionCommand.Append(action);
-            actionCommand.Append(direction,0,1);
+            actionCommand.Append(direction, 0, 1);
 
             Choices digit = new Choices("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "point");
             GrammarBuilder number = new GrammarBuilder();
             number.Append(digit, 1, 5);
 
-            Choices commands = new Choices(reward,say, attribQuery, declaration, actionCommand, query, number);
+            Choices commands = new Choices(reward, say, attribQuery, declaration, actionCommand, query, number);
             Choices attentionWord = new Choices("Sallie", "Computer");
 
             GrammarBuilder a = new GrammarBuilder();
             a.Append(attentionWord, 1, 1);
             a.Append(commands);
             a.Append(digit);
-            
+
 
             //some words we might need some day
             //Choices article = new Choices("a", "an", "the", "some", "containing", "with", "which are");
             //Choices emotion = new Choices("ecstatic", "happy", "so-so", "OK", "sad", "unhappy");
             //Choices timeOfDay = new Choices("morning", "afternoon", "evening", "night");
 
-                        //someday we'll need numbers
+            //someday we'll need numbers
             //Choices number = new Choices();
             //for (int i = 1; i < 200; i++)
             //    number.Add(i.ToString());
@@ -177,13 +174,13 @@ namespace BrainSimulator.Modules
 
             Grammar gr = new Grammar(a);
             recognizer.LoadGrammar(gr);
-//            gr = new Grammar(reward);
-//            recognizer.LoadGrammar(gr);
+            //            gr = new Grammar(reward);
+            //            recognizer.LoadGrammar(gr);
         }
 
         // Handle the SpeechRecognized event.  
         //WARNING: this could be asynchronous to everything else
-        void recognizer_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
+        void Recognizer_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
             string text = e.Result.Text;
 
@@ -226,7 +223,7 @@ namespace BrainSimulator.Modules
                 if (e.Result.Words.Count != 1)
                 {
                     int i = phrase.IndexOf(' ');
-                    phrase = phrase.Substring(i+1);
+                    phrase = phrase.Substring(i + 1);
                 }
                 nmHear.HearPhrase(phrase);
             }

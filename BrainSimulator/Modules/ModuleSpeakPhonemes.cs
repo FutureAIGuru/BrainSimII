@@ -5,16 +5,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Xml.Serialization;
-using System.Speech.Synthesis;
 using System.Diagnostics;
-
-using System.Speech.Recognition; //needed to get pronunciation from text
 using System.IO;
+using System.Linq;
+using System.Speech.Recognition; //needed to get pronunciation from text
+using System.Speech.Synthesis;
+using System.Windows;
 
 namespace BrainSimulator.Modules
 {
@@ -78,7 +74,7 @@ namespace BrainSimulator.Modules
                     }
                 }
                 if (!fired)
-                    c = c;
+                    Utils.Noop();
                 phonemesToFire = phonemesToFire.Substring(1);
             }
 

@@ -3,14 +3,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Xml.Serialization;
-
 namespace BrainSimulator.Modules
 {
     public class ModuleArm : ModuleBase
@@ -71,7 +63,7 @@ namespace BrainSimulator.Modules
         {
             na.GetNeuronAt(0, 0).Model = Neuron.modelType.FloatValue;
             na.GetNeuronAt(1, 0).Model = Neuron.modelType.FloatValue;
-            AddLabels(new string[] { "X","Y", "<", ">", "^", "V" });
+            AddLabels(new string[] { "X", "Y", "<", ">", "^", "V" });
         }
     }
 }

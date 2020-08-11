@@ -9,6 +9,8 @@ namespace Touchless.Vision.Contracts
 {
     public interface IFrameSource : ITouchlessAddIn
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1009:DeclareEventHandlersCorrectly")]
         event Action<IFrameSource, Frame, double> NewFrame;
 
         bool StartFrameCapture();

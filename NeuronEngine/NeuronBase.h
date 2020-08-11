@@ -10,7 +10,7 @@ namespace NeuronEngine { class NeuronArrayBase; }
 
 namespace NeuronEngine
 {
-	class __declspec(dllexport)  NeuronBase
+	class NeuronBase
 	{
 	public:
 		enum class modelType {Std,Color,FloatValue,LIF,Random};
@@ -30,7 +30,7 @@ namespace NeuronEngine
 		float leakRate = 0.1f; //used only by LIF model
 		int nextFiring = 0; //used only by Random model && continuous model
 		long long lastFired = 0; //timestamp of last firing
-		int id;
+		int id = -1; //an illegal value which will trap
 		wchar_t* label = NULL;
 		
 		std::vector<SynapseBase>* synapsesFrom = NULL;
@@ -45,31 +45,31 @@ namespace NeuronEngine
 
 
 	public:
-		NeuronBase(int ID);
-		~NeuronBase();
+		__declspec(dllexport)  NeuronBase(int ID);
+		__declspec(dllexport)  ~NeuronBase();
 
-		int GetId();
-		modelType GetModel();
-		void SetModel(modelType value);
-		float GetLastCharge();
-		void SetLastCharge(float value);
-		float GetCurrentCharge();
-		void SetCurrentCharge(float value);
+		__declspec(dllexport)  int GetId();
+		__declspec(dllexport)  modelType GetModel();
+		__declspec(dllexport)  void SetModel(modelType value);
+		__declspec(dllexport)  float GetLastCharge();
+		__declspec(dllexport)  void SetLastCharge(float value);
+		__declspec(dllexport)  float GetCurrentCharge();
+		__declspec(dllexport)  void SetCurrentCharge(float value);
 
-		void AddSynapse(NeuronBase* n, float weight, bool isHebbian = false, bool noBackPtr = true);
-		void DeleteSynapse(NeuronBase* n);
-		std::vector<SynapseBase> GetSynapses();
-		std::vector<SynapseBase> GetSynapsesFrom();
-		int GetSynapseCount();
+		__declspec(dllexport)  void AddSynapse(NeuronBase* n, float weight, bool isHebbian = false, bool noBackPtr = true);
+		__declspec(dllexport)  void DeleteSynapse(NeuronBase* n);
+		__declspec(dllexport)  std::vector<SynapseBase> GetSynapses();
+		__declspec(dllexport)  std::vector<SynapseBase> GetSynapsesFrom();
+		__declspec(dllexport)  int GetSynapseCount();
 
-		bool GetInUse();
-		wchar_t* GetLabel();
-		void SetLabel(const wchar_t*);
+		__declspec(dllexport)  bool GetInUse();
+		__declspec(dllexport)  wchar_t* GetLabel();
+		__declspec(dllexport)  void SetLabel(const wchar_t*);
 
 
-		float GetLeakRate();
-		void SetLeakRate(float value);
-		long long GetLastFired();
+		__declspec(dllexport)  float GetLeakRate();
+		__declspec(dllexport)  void SetLeakRate(float value);
+		__declspec(dllexport)  long long GetLastFired();
 
 		void Fire2();
 		bool Fire1(long long generation);

@@ -3,17 +3,9 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
-using System.Xml.Serialization;
-using System.Runtime.Serialization;
-using System.Windows;
 using System.Diagnostics;
+using System.Windows;
 
 namespace BrainSimulator.Modules
 {
@@ -306,7 +298,7 @@ namespace BrainSimulator.Modules
         {
             Thing retVal = Labeled(label);
             //if (retVal == null)
-                retVal = AddThing(label, new Thing[] { Labeled(parentLabel) });
+            retVal = AddThing(label, new Thing[] { Labeled(parentLabel) });
             return retVal;
         }
 

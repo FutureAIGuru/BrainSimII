@@ -15,8 +15,11 @@ using DrawingPoint = System.Drawing.Point;
 
 namespace Touchless.Shared.Extensions
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces")]
     public static class Extensions
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "1")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
         public static IEnumerable<T> ForEach<T>(this IEnumerable<T> items, Action<T> action)
         {
             foreach (T item in items)
@@ -27,6 +30,7 @@ namespace Touchless.Shared.Extensions
             return items;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "1")]
         public static void IfNotNull<T>(this T item, Action<T> action)
         {
             if (item != null)
@@ -35,6 +39,7 @@ namespace Touchless.Shared.Extensions
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "p")]
         public static WindowsPoint ToWindowsPoint(this DrawingPoint p)
         {
             return new WindowsPoint
@@ -44,6 +49,7 @@ namespace Touchless.Shared.Extensions
                        };
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "p")]
         public static DrawingPoint ToDrawingPoint(this WindowsPoint p)
         {
             return new DrawingPoint
@@ -53,9 +59,12 @@ namespace Touchless.Shared.Extensions
                        };
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1060:MovePInvokesToNativeMethodsClass")]
         [DllImport("gdi32")]
         private static extern int DeleteObject(IntPtr o);
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Touchless.Shared.Extensions.Extensions.DeleteObject(System.IntPtr)")]
         public static BitmapSource ToBitmapSource(this Bitmap source)
         {
             BitmapSource bs = null;

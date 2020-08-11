@@ -3,30 +3,24 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
-using BrainSimulator.Modules;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using System.Xml.Serialization;
 
 namespace BrainSimulator
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    
-    
+
+
     public partial class MainWindow : Window
     {
         //Globals
@@ -98,8 +92,6 @@ namespace BrainSimulator
             };
             splashHide.Tick += SplashHide_Tick;
             splashHide.Start();
-
-            ThreadPool.QueueUserWorkItem(CheckInternetConnectivity);
 
             if (Properties.Settings.Default.UpgradeRequired)
             {
@@ -496,7 +488,7 @@ namespace BrainSimulator
         }
 
         static bool engineIsWaiting = false;
-        static long  engineElapsed = 0;
+        static long engineElapsed = 0;
         private static void EngineLoop()
         {
             Stopwatch sw = new Stopwatch();
@@ -564,7 +556,7 @@ namespace BrainSimulator
             displayUpdateTimer.Start();
         }
 
-//        bool disaplayUpdating = false;
+        //        bool disaplayUpdating = false;
         private void DisplayUpdate_TimerTick(object sender, EventArgs e)
         {
             if (theNeuronArray == null) return;
@@ -650,7 +642,7 @@ namespace BrainSimulator
 
         static public void UpdateDisplayLabel(float zoomLevel, int firedCount)
         {
-            thisWindow.labelDisplayStatus.Content = "Zoom Level: " + zoomLevel + ",  " + firedCount.ToString("N0") + " Neurons Fired  "+engineElapsed+"ms";
+            thisWindow.labelDisplayStatus.Content = "Zoom Level: " + zoomLevel + ",  " + firedCount.ToString("N0") + " Neurons Fired  " + engineElapsed + "ms";
         }
 
 
@@ -763,7 +755,7 @@ namespace BrainSimulator
                 }
                 //various errors might have happened so we'll just ignore them all and start with a fresh file 
                 catch (Exception e1)
-                { }
+                { e1.GetType(); } //this is to suppress an unused variable waterning
             }
         }
 
@@ -949,34 +941,6 @@ namespace BrainSimulator
             catch
             {
                 MessageBox.Show("Help could not be displayed");
-            }
-        }
-
-        void CheckInternetConnectivity(object state)
-        {
-            if (System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
-            {
-                using (WebClient webClient = new WebClient())
-                {
-                    webClient.CachePolicy = new System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.BypassCache);
-                    webClient.Proxy = null;
-                    webClient.OpenReadCompleted += webClient_OpenReadCompleted;
-                    webClient.OpenReadAsync(new Uri("https://futureai.guru"));
-                }
-            }
-        }
-
-        volatile bool internetAvailable = false; // boolean used elsewhere in code
-
-        void webClient_OpenReadCompleted(object sender, OpenReadCompletedEventArgs e)
-        {
-            if (e.Error == null)
-            {
-                internetAvailable = true;
-                Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
-                {
-                    // UI changes made here
-                }));
             }
         }
     }

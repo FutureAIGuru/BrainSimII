@@ -5,11 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Xml.Serialization;
 
 namespace BrainSimulator.Modules
 {
@@ -62,7 +57,7 @@ namespace BrainSimulator.Modules
         public void HearPhrase(string phrase)
         {
             if (words.Count != 0) return;
-            string[] words1 = phrase.Split(new char[]{ ' '},StringSplitOptions.RemoveEmptyEntries);
+            string[] words1 = phrase.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string word in words1)
             {
                 words.Add(word);

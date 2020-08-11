@@ -9,8 +9,8 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
-using static System.Math;
 using static BrainSimulator.Utils;
+using static System.Math;
 
 
 namespace BrainSimulator.Modules
@@ -548,7 +548,6 @@ namespace BrainSimulator.Modules
             "This is [color]:NoAction:Positive",
             "This is [color]:NoAction:Positive"
 ,        };
-        int index = 1;
         private void CreateRandomTrainingCase()
         {
             if (GetNeuronValue(null, "Actions") == 1 && actionTrainingState < 0)
@@ -724,7 +723,6 @@ namespace BrainSimulator.Modules
         };
 
 
-            index = 0;
             entityTrack.Clear();
             entityPosition = new Point(0, 0);
             entityTrack.Add(entityPosition);

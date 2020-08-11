@@ -70,7 +70,7 @@ namespace NeuronEngine
 	{
 		delete label;
 		label = NULL;
-		int len = wcslen(newLabel) + 2;
+		size_t len = wcslen(newLabel) + 2;
 		if (len > 1)
 		{
 			label = new wchar_t[len];
@@ -183,7 +183,7 @@ namespace NeuronEngine
 	int NeuronBase::GetSynapseCount()
 	{
 		if (synapses == NULL) return 0;
-		return synapses->size();
+		return (int) synapses->size();
 	}
 	std::vector<SynapseBase> NeuronBase::GetSynapses()
 	{
@@ -221,7 +221,7 @@ namespace NeuronEngine
 			if (nextFiring <= 0)
 			{
 				currentCharge = threshold;
-				nextFiring = rand() % 100 * leakRate;
+				nextFiring = (int)(rand() % 100 * leakRate);
 			}
 		}
 		//check for firing

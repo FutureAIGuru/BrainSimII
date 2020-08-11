@@ -3,11 +3,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Speech.Synthesis;
 
 namespace BrainSimulator.Modules
@@ -15,7 +10,7 @@ namespace BrainSimulator.Modules
     public class ModuleSpeechOut : ModuleBase
     {
         SpeechSynthesizer synth = null;
-        
+
         string toSpeak = ""; //accumulates an array of words to speak
         string prePend = "";
         string postPend = "";
@@ -93,7 +88,7 @@ namespace BrainSimulator.Modules
                 for (int i = 0; i < na.NeuronCount && i < msi.NeuronCount; i++)
                 {
                     na.GetNeuronAt(i).Label = msi.GetNeuronAt(i).Label;
-                    msi.GetNeuronAt(i).AddSynapse(na.GetNeuronAt(i).Id,1);
+                    msi.GetNeuronAt(i).AddSynapse(na.GetNeuronAt(i).Id, 1);
                 }
             }
         }

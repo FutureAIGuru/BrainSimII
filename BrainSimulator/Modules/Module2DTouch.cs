@@ -4,10 +4,6 @@
 //  
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace BrainSimulator.Modules
@@ -49,7 +45,7 @@ namespace BrainSimulator.Modules
                 float mTheta = na.GetNeuronAt(10, i).CurrentCharge;
                 float mPhi = na.GetNeuronAt(11, i).CurrentCharge;
 
-                PointPlus motion = new PointPlus() { R = mR, Theta = mTheta,Conf=mPhi };
+                PointPlus motion = new PointPlus() { R = mR, Theta = mTheta, Conf = mPhi };
                 //create the line segment (all coordinates relative to self)
                 PointPlus antennaPos = new PointPlus()
                 { R = antDist, Theta = antAngle };
@@ -61,10 +57,10 @@ namespace BrainSimulator.Modules
 
                 Point P1 = antennaPos.P + pv1.V;
                 Point P2 = antennaPos.P + pv2.V;
-                PointPlus P1P = new PointPlus() { P = P1, Conf = 1-p1IsEndpt };
-                PointPlus P2P = new PointPlus() { P = P2, Conf = 1-p2IsEndpt };
+                PointPlus P1P = new PointPlus() { P = P1, Conf = 1 - p1IsEndpt };
+                PointPlus P2P = new PointPlus() { P = P2, Conf = 1 - p2IsEndpt };
 
-                bool modelChanged = naModel.AddSegmentFromTouch(P1P, P2P,motion,i);
+                bool modelChanged = naModel.AddSegmentFromTouch(P1P, P2P, motion, i);
 
             }
         }

@@ -3,14 +3,8 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Xml.Serialization;
-using System.Windows;
 
 namespace BrainSimulator.Modules
 {
@@ -29,7 +23,7 @@ namespace BrainSimulator.Modules
                 "The 'WaitFor' command which pauses execution until the specified neuron fires.\r\n" +
                 "The 'Stop' command aborts execution at the line in the file...useful for executing just the first lines of a file.";
         }
-        
+
         public string textFile = ""; //path to the text file
         [XmlIgnore]
         public string[] commands;
@@ -71,7 +65,7 @@ namespace BrainSimulator.Modules
                         SetCurrentModule(commandLine[i + 1]);
                         ModuleView na1 = theNeuronArray.FindAreaByLabel(currentModule);
                         Neuron n = na1.GetNeuronAt(commandLine[i + 2]);
-                        if (n != null && !n.Fired())return;
+                        if (n != null && !n.Fired()) return;
                     }
                     SetCurrentModule(currentCommand);
                     ModuleView na = theNeuronArray.FindAreaByLabel(currentModule);
@@ -99,7 +93,7 @@ namespace BrainSimulator.Modules
 
         public override void Initialize()
         {
-         
+
             if (File.Exists(textFile))
             {
                 commands = File.ReadAllLines(textFile);

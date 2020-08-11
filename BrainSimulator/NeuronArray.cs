@@ -4,19 +4,7 @@
 //  
 
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using BrainSimulator.Modules;
-using System.Collections.Concurrent;
-using System.Threading;
-using System;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows;
-using System.Diagnostics;
 
 namespace BrainSimulator
 {
@@ -33,7 +21,7 @@ namespace BrainSimulator
         public int lastFireCount = 0;
         internal List<ModuleView> modules = new List<ModuleView>();
         public DisplayParams displayParams;
-        
+
         //these have nothing to do with the NeuronArray but are here so it will be saved and restored with the network
         private bool showSynapses = false;
         public bool ShowSynapses { get => showSynapses; set => showSynapses = value; }
@@ -49,7 +37,7 @@ namespace BrainSimulator
             arraySize = count;
             base.Initialize(count);
         }
-     
+
         //this list keeps track of changed synapses for undo
         struct SynapseUndo
         {
@@ -64,7 +52,7 @@ namespace BrainSimulator
         {
         }
 
-        public Neuron GetNeuron(int id)
+        public new Neuron GetNeuron(int id)
         {
             Neuron n = GetCompleteNeuron(id);
             return n;
@@ -73,16 +61,16 @@ namespace BrainSimulator
         //OBSOLETE
         public void ChangeArraySize(int newSize)
         {
-//            Array.Resize(ref MainWindow.theNeuronArray.neuronArray, newSize);
+            //            Array.Resize(ref MainWindow.theNeuronArray.neuronArray, newSize);
         }
 
-        public void GetCounts(out int synapseCount, out int useCount)
+        public void GetCounts(out long synapseCount, out int useCount)
         {
             synapseCount = GetTotalSynapses(); ;
             useCount = GetTotalNeuronsInUse();
         }
 
-        public void Fire()
+        public new void Fire()
         {
             base.Fire();
             Generation = GetGeneration();

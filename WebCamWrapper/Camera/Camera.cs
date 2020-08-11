@@ -12,15 +12,31 @@ using WebCamLib;
 
 namespace Touchless.Vision.Camera
 {
-   public enum CameraProperty : int
-   {
-      Pan_degrees = WebCamLib.CameraProperty.Pan_degrees,
-      Tilt_degrees = WebCamLib.CameraProperty.Tilt_degrees,
-      Roll_degrees = WebCamLib.CameraProperty.Roll_degrees,
-      Zoom_mm = WebCamLib.CameraProperty.Zoom_mm,
-      Exposure_lgSec = WebCamLib.CameraProperty.Exposure_lgSec,
-      Iris_10f = WebCamLib.CameraProperty.Iris_10f,
-      FocalLength_mm = WebCamLib.CameraProperty.FocalLength_mm,
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue")]
+    public enum CameraProperty : int
+    {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "degrees")]
+        Pan_degrees = WebCamLib.CameraProperty.Pan_degrees,
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "degrees")]
+        Tilt_degrees = WebCamLib.CameraProperty.Tilt_degrees,
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "degrees")]
+        Roll_degrees = WebCamLib.CameraProperty.Roll_degrees,
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "mm")]
+        Zoom_mm = WebCamLib.CameraProperty.Zoom_mm,
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "lg")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "lg")]
+        Exposure_lgSec = WebCamLib.CameraProperty.Exposure_lgSec,
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "f")]
+        Iris_10f = WebCamLib.CameraProperty.Iris_10f,
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "mm")]
+        FocalLength_mm = WebCamLib.CameraProperty.FocalLength_mm,
       Flash = WebCamLib.CameraProperty.Flash,
       Brightness = WebCamLib.CameraProperty.Brightness,
       Contrast = WebCamLib.CameraProperty.Brightness,
@@ -34,7 +50,11 @@ namespace Touchless.Vision.Camera
       Gain = WebCamLib.CameraProperty.Gain,
    }
 
-   public sealed class CameraPropertyValue : IComparable<CameraPropertyValue>, IEquatable<CameraPropertyValue>
+#pragma warning disable CS0659 // 'CameraPropertyValue' overrides Object.Equals(object o) but does not override Object.GetHashCode()
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2218:OverrideGetHashCodeOnOverridingEquals")]
+    public sealed class CameraPropertyValue : IComparable<CameraPropertyValue>, IEquatable<CameraPropertyValue>
+#pragma warning restore CS0659 // 'CameraPropertyValue' overrides Object.Equals(object o) but does not override Object.GetHashCode()
    {
       public CameraPropertyValue( bool isPercentageValue, int value, bool isAuto )
       {
@@ -105,9 +125,10 @@ namespace Touchless.Vision.Camera
          }
       }
 
-      #region ICompare<CameraPropertyValue> Members
+        #region ICompare<CameraPropertyValue> Members
 
-      public int CompareTo( CameraPropertyValue other )
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
+        public int CompareTo( CameraPropertyValue other )
       {
          int result = 0;
 
@@ -160,7 +181,11 @@ namespace Touchless.Vision.Camera
       }
    }
 
-   public sealed class CameraPropertyRange : IComparable<CameraPropertyRange>, IEquatable<CameraPropertyRange>
+#pragma warning disable CS0659 // 'CameraPropertyRange' overrides Object.Equals(object o) but does not override Object.GetHashCode()
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2218:OverrideGetHashCodeOnOverridingEquals")]
+    public sealed class CameraPropertyRange : IComparable<CameraPropertyRange>, IEquatable<CameraPropertyRange>
+#pragma warning restore CS0659 // 'CameraPropertyRange' overrides Object.Equals(object o) but does not override Object.GetHashCode()
    {
       public CameraPropertyRange( int minimum, int maximum, int step, int defaults, bool isAuto )
       {
@@ -225,9 +250,10 @@ namespace Touchless.Vision.Camera
          }
       }
 
-      #region ICompare<CameraPropertyRange> Members
+        #region ICompare<CameraPropertyRange> Members
 
-      public int CompareTo( CameraPropertyRange other )
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
+        public int CompareTo( CameraPropertyRange other )
       {
          int result = 0;
 
@@ -294,7 +320,11 @@ namespace Touchless.Vision.Camera
       }
    }
 
-   public sealed class CameraPropertyCapabilities : IComparable<CameraPropertyCapabilities>, IEquatable<CameraPropertyCapabilities>
+#pragma warning disable CS0659 // 'CameraPropertyCapabilities' overrides Object.Equals(object o) but does not override Object.GetHashCode()
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2218:OverrideGetHashCodeOnOverridingEquals")]
+    public sealed class CameraPropertyCapabilities : IComparable<CameraPropertyCapabilities>, IEquatable<CameraPropertyCapabilities>
+#pragma warning restore CS0659 // 'CameraPropertyCapabilities' overrides Object.Equals(object o) but does not override Object.GetHashCode()
    {
       internal CameraPropertyCapabilities( Camera camera, WebCamLib.CameraPropertyCapabilities capabilities )
       {
@@ -354,9 +384,10 @@ namespace Touchless.Vision.Camera
          }
       }
 
-      #region IComparable<CameraPropertyCapabilities> Members
-      // sort order: IsGetSupported, IsSetSupported, IsGetRangeSupported; this exists and other doesn't first/less for all keys
-      public int CompareTo( CameraPropertyCapabilities other )
+        #region IComparable<CameraPropertyCapabilities> Members
+        // sort order: IsGetSupported, IsSetSupported, IsGetRangeSupported; this exists and other doesn't first/less for all keys
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
+        public int CompareTo( CameraPropertyCapabilities other )
       {
          int result = 0;
 
@@ -403,7 +434,8 @@ namespace Touchless.Vision.Camera
       }
    }
 
-   public sealed class CaptureSize : IComparable<CaptureSize>, IEquatable<CaptureSize>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes")]
+    public sealed class CaptureSize : IComparable<CaptureSize>, IEquatable<CaptureSize>
    {
       public CaptureSize( int width, int height, int colorDepth )
       {
@@ -430,14 +462,16 @@ namespace Touchless.Vision.Camera
          private set;
       }
 
-      public override String ToString()
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.String.Format(System.String,System.Object,System.Object,System.Object)")]
+        public override String ToString()
       {
          return String.Format( "{0} x {1} @ {2}", Width, Height, ColorDepth );
       }
 
-      #region IComparable<CaptureSize> Members
+        #region IComparable<CaptureSize> Members
 
-      public int CompareTo( CaptureSize other )
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
+        public int CompareTo( CaptureSize other )
       {
          int result;
 
@@ -502,10 +536,12 @@ namespace Touchless.Vision.Camera
       }
    }
 
-   /// <summary>
-   /// Represents a camera in use by the Touchless system
-   /// </summary>
-   public class Camera : IDisposable
+    /// <summary>
+    /// Represents a camera in use by the Touchless system
+    /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly")]
+    public class Camera : IDisposable
    {
       public const int IgnoredBitsPerPixel = -1;
 
@@ -514,7 +550,8 @@ namespace Touchless.Vision.Camera
       private readonly CameraMethods _cameraMethods;
       private RotateFlipType _rotateFlip = RotateFlipType.RotateNoneFlipNone;
 
-      public Camera( CameraMethods cameraMethods, string name, int index )
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
+        public Camera( CameraMethods cameraMethods, string name, int index )
       {
          _name = name;
          _index = index;
@@ -682,23 +719,27 @@ namespace Touchless.Vision.Camera
          }
       }
 
-      #region IDisposable Members
+        #region IDisposable Members
 
-      /// <summary>
-      /// Cleanup function for the camera
-      /// </summary>
-      public void Dispose()
+        /// <summary>
+        /// Cleanup function for the camera
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1816:CallGCSuppressFinalizeCorrectly")]
+        public void Dispose()
       {
          StopCapture();
       }
 
-      #endregion
+        #endregion
 
-      /// <summary>
-      /// Returns the last image acquired from the camera
-      /// </summary>
-      /// <returns>A bitmap of the last image acquired from the camera</returns>
-      public Bitmap GetCurrentImage()
+        /// <summary>
+        /// Returns the last image acquired from the camera
+        /// </summary>
+        /// <returns>A bitmap of the last image acquired from the camera</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        public Bitmap GetCurrentImage()
       {
          Bitmap b = null;
          lock( _bitmapLock )
@@ -722,7 +763,8 @@ namespace Touchless.Vision.Camera
          }
       }
 
-      public CameraInfo GetCameraInfo()
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        public CameraInfo GetCameraInfo()
       {
          lock( CameraMethodsLock )
          {
@@ -743,7 +785,8 @@ namespace Touchless.Vision.Camera
          return result;
       }
 
-      public bool SetCameraProperty( CameraProperty property, CameraPropertyValue value )
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "1")]
+        public bool SetCameraProperty( CameraProperty property, CameraPropertyValue value )
       {
          bool result;
 
@@ -757,7 +800,7 @@ namespace Touchless.Vision.Camera
 
       public bool SetCameraProperty( CameraProperty property, bool isActualValue, int value )
       {
-         bool result = false;
+         bool result;
 
          if( isActualValue )
             result = SetCameraProperty_value( property, value );
@@ -779,18 +822,24 @@ namespace Touchless.Vision.Camera
          return result;
       }
 
-      public bool SetCameraProperty_value( CameraProperty property, bool auto )
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "value")]
+        public bool SetCameraProperty_value( CameraProperty property, bool auto )
       {
          return SetCameraProperty_value( property, 0, auto );
       }
 
-      // Assume manual control
-      public bool SetCameraProperty_value( CameraProperty property, int value )
+        // Assume manual control
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "value")]
+        public bool SetCameraProperty_value( CameraProperty property, int value )
       {
          return SetCameraProperty_value( property, value, false );
       }
 
-      public bool SetCameraProperty_value( CameraProperty property, int value, bool auto )
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "value")]
+        public bool SetCameraProperty_value( CameraProperty property, int value, bool auto )
       {
          bool result = false;
 
@@ -802,18 +851,24 @@ namespace Touchless.Vision.Camera
          return result;
       }
 
-      public bool SetCameraProperty_percentage( CameraProperty property, bool auto )
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "percentage")]
+        public bool SetCameraProperty_percentage( CameraProperty property, bool auto )
       {
          return SetCameraProperty_percentage( property, 0, auto );
       }
 
-      // Assume manual control
-      public bool SetCameraProperty_percentage( CameraProperty property, int percentage )
+        // Assume manual control
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "percentage")]
+        public bool SetCameraProperty_percentage( CameraProperty property, int percentage )
       {
          return SetCameraProperty_percentage( property, percentage, false );
       }
 
-      public bool SetCameraProperty_percentage( CameraProperty property, int percentage, bool auto )
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "percentage")]
+        public bool SetCameraProperty_percentage( CameraProperty property, int percentage, bool auto )
       {
          bool result = false;
 
@@ -837,7 +892,9 @@ namespace Touchless.Vision.Camera
          return result;
       }
 
-      public CameraPropertyValue GetCameraProperty_value( CameraProperty property )
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "value")]
+        public CameraPropertyValue GetCameraProperty_value( CameraProperty property )
       {
          CameraPropertyValue result;
 
@@ -859,7 +916,9 @@ namespace Touchless.Vision.Camera
          return result;
       }
 
-      public CameraPropertyValue GetCameraProperty_percentage( CameraProperty property )
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "percentage")]
+        public CameraPropertyValue GetCameraProperty_percentage( CameraProperty property )
       {
          CameraPropertyValue result;
 
@@ -1013,10 +1072,11 @@ namespace Touchless.Vision.Camera
          }
       }
 
-      /// <summary>
-      /// Here is where the images come in as they are collected, as fast as they can and on a background thread
-      /// </summary>
-      private void CaptureCallbackProc( int dataSize, byte[] data )
+        /// <summary>
+        /// Here is where the images come in as they are collected, as fast as they can and on a background thread
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        private void CaptureCallbackProc( int dataSize, byte[] data )
       {
          // Do the magic to create a bitmap
          int stride = _width * 3;

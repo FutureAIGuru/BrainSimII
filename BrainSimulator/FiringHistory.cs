@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Speech.Synthesis;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BrainSimulator
 {
@@ -15,8 +11,6 @@ namespace BrainSimulator
             public List<long> Samples = new List<long>();
         }
         public static List<NeuronHistory> history = new List<NeuronHistory>();
-
-        static int MaxSamples = 1000;
 
         public static long EarliestValue()
         {

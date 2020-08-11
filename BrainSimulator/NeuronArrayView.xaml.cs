@@ -5,24 +5,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Diagnostics;
 using System.Windows.Threading;
-using System.Collections;
-using System.Reflection;
-using BrainSimulator.Modules;
-using System.Threading;
 
 namespace BrainSimulator
 {
@@ -148,7 +137,7 @@ namespace BrainSimulator
             {
                 for (int j = 0; j < columns; j += boxSize)
                 {
-                    Point p = new Point((j + boxSize/2) * dp.NeuronDisplaySize, (i + boxSize/2) * dp.NeuronDisplaySize);
+                    Point p = new Point((j + boxSize / 2) * dp.NeuronDisplaySize, (i + boxSize / 2) * dp.NeuronDisplaySize);
                     p += (Vector)dp.DisplayOffset;
                     Label l = new Label();
                     l.Content = refNo++;
@@ -537,7 +526,7 @@ namespace BrainSimulator
                         }
                         else
                         {
-                            n.CurrentCharge =0;
+                            n.CurrentCharge = 0;
                             n.LastCharge = 0;
                         }
                         e.Handled = true;

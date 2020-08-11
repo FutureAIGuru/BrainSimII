@@ -30,6 +30,9 @@ using std::vector;
 
 int main(int argc, char* argv[], char* envp[])
 {
+	printf("Press enter\r\n");
+	std::cin.get();
+
 	printf("Running tests...run with debugger to verify\r\n");
 	start_time = my_clock::now();
 
@@ -98,15 +101,15 @@ int main(int argc, char* argv[], char* envp[])
 	}
 #if _DEBUG
 	neuronCount = 100'000;
-	synapsesPerNeuron = 10;
+	synapsesPerNeuron = 100;
 #else
 	neuronCount = 1'000'000;
-	synapsesPerNeuron = 1000;
+	synapsesPerNeuron = 100;
 #endif // DEBUG
 
 	neuronArray = new NeuronArrayBase();
 	neuronArray->Initialize(neuronCount);
-	neuronArray->SetThreadCount(120);
+	neuronArray->SetThreadCount(64);
 
 	outputElapsedTime(to_string(neuronCount)+" neurons allocated");
 	string s = "allocating synapses using " + to_string(neuronArray->GetThreadCount()) + " threads. Each dot is "+to_string(100'000*synapsesPerNeuron)+" synapses \n";
@@ -145,7 +148,7 @@ int main(int argc, char* argv[], char* envp[])
 	}
 
 	outputElapsedTime("firing loop Start");
-	for (int i = 0; i < 50; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		int count = 0;
 		//for (int j = 0; j < 10; j++)

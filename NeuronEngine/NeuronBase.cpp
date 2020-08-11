@@ -245,26 +245,29 @@ namespace NeuronEngine
 	{
 		if (model == modelType::Color) return;
 		if (model == modelType::FloatValue) return;
-		if (lastCharge < threshold)return;
+		if (lastCharge < threshold)return; //did the neuron fire?
 		if (synapses != NULL)
 		{
-			while (vectorLock.exchange(1) == 1) {}
+			while (vectorLock.exchange(1) == 1) {} //prevent the vector of synapses from changing while we're looking at it
 			for (int i = 0; i < synapses->size(); i++) //process all the synapses sourced by this neuron
 			{
 				SynapseBase s = synapses->at(i);
-				NeuronBase* n = s.GetTarget();
-				n->currentCharge = n->currentCharge + s.GetWeight();
+				NeuronBase* nTarget = s.GetTarget();
+				nTarget->currentCharge = nTarget->currentCharge + s.GetWeight();
 				if (s.IsHebbian())
 				{
-					//we have to use lastcharge here because currentCharge is indeterminate in multithread environment
-					if (n->lastCharge >= threshold) 
+					//did this neuron fire coincident with the target
+					if (nTarget->currentCharge >= threshold) 
 					{
 						//strengthen the synapse
-						if (s.GetWeight() <= 1) synapses->at(i).SetWeight(1);
+						float newWeight = s.GetWeight() + 0.1f;
+						synapses->at(i).SetWeight(newWeight);
 					}
 					else
 					{
 						//weaken the synapse
+						float newWeight = s.GetWeight() - 0.01f;
+						synapses->at(i).SetWeight(newWeight);
 					}
 				}
 			}

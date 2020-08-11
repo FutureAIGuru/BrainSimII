@@ -133,9 +133,13 @@ namespace BrainSimulator
             for (int j = 0; j < synapsesPerNeuron; j++)
             {
                 int targetNeuron = i + rand.Next() % (2 * synapsesPerNeuron) - synapsesPerNeuron;
+                int rowOffset = rand.Next() % 10 - 5;
+                int colOffset = rand.Next() % 10 - 5;
+                targetNeuron = i + (colOffset * rows) + rowOffset;
+
                 while (targetNeuron < 0) targetNeuron += arraySize;
                 while (targetNeuron >= arraySize) targetNeuron -= arraySize;
-                float weight = (rand.Next(1000) / 1000f) - .5f;
+                float weight = (rand.Next(1000) / 750f) - .5f;
                 MainWindow.theNeuronArray.AddSynapse(i, targetNeuron, weight, false, true);
             }
         }

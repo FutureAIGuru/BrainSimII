@@ -486,6 +486,7 @@ namespace BrainSimulator.Modules
         {
             foreach (Neuron n in na.Neurons())
             {
+                n.DeleteAllSynapes();
                 n.Label = "";
                 n.Model = Neuron.modelType.Std;
                 n.SetValue(0);

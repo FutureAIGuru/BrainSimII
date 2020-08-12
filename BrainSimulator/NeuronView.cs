@@ -217,14 +217,20 @@ namespace BrainSimulator
             mi.Header = "Synapses";
             mi.Click += Mi_Click;
             foreach (Synapse s in n.Synapses)
-                mi.Items.Add(new MenuItem() { Header = s.targetNeuron.ToString().PadLeft(8) + s.Weight.ToString("F4").PadLeft(9), FontFamily = new FontFamily("Courier New") });
+            {
+                string targetLabel = MainWindow.theNeuronArray.GetNeuron(s.targetNeuron).Label;
+                mi.Items.Add(new MenuItem() { Header = s.targetNeuron.ToString().PadLeft(8) + s.Weight.ToString("F4").PadLeft(9) +" "+targetLabel , FontFamily = new FontFamily("Courier New") });
+            }
             cm.Items.Add(mi);
 
             mi = new MenuItem();
             mi.Header = "Synapses In";
             mi.Click += Mi_Click;
             foreach (Synapse s in n.SynapsesFrom)
-                mi.Items.Add(new MenuItem() { Header = s.targetNeuron.ToString().PadLeft(8) + s.Weight.ToString("F4").PadLeft(9), FontFamily = new FontFamily("Courier New") }); ;
+            {
+                string targetLabel = MainWindow.theNeuronArray.GetNeuron(s.targetNeuron).Label;
+                mi.Items.Add(new MenuItem() { Header = s.targetNeuron.ToString().PadLeft(8) + s.Weight.ToString("F4").PadLeft(9)+" "+targetLabel, FontFamily = new FontFamily("Courier New") }); ;
+            }
             cm.Items.Add(mi);
         }
 

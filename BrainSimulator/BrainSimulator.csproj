@@ -132,6 +132,7 @@
     <Compile Include="Modules\ModuleAudible.cs" />
     <Compile Include="Modules\ModuleEvent.cs" />
     <Compile Include="Modules\ModuleLife.cs" />
+    <Compile Include="Modules\ModuleWords.cs" />
     <Compile Include="Modules\ModuleSpeakPhonemes.cs" />
     <Compile Include="Modules\ModuleSpeakPhonemesDlg.xaml.cs" />
     <Compile Include="Modules\ModuleUKS2.cs" />

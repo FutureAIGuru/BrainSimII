@@ -22,7 +22,19 @@ namespace BrainSimulator.Modules
         public override void Fire()
         {
             Init();  //be sure to leave this here
+            List<int> neuronsWhichFired = GetNeuronsWhichFired();
 
+        }
+
+        List<int> GetNeuronsWhichFired()
+        {
+            List<int> retVal = new List<int>();
+            foreach(Neuron n in na.Neurons())
+            {
+                if (n.lastCharge >= 1)
+                    retVal.Add(n.Id);
+            }
+            return retVal;
         }
 
         int nextFreeNeuron = 1;
@@ -49,9 +61,9 @@ namespace BrainSimulator.Modules
             Neuron n = na.GetNeuronAt(wordNeuronID);
             Neuron nNext = na.GetNeuronAt(nextWordNeuronID);
             Synapse s = n.FindSynapse(nNext.id);
-            float weight = 1;
+            float weight = .1f;
             if (s != null)
-                weight += 1;
+                weight += .1f;
             n.AddSynapse(nNext.id, weight);
         }
 

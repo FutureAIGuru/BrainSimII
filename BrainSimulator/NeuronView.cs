@@ -4,6 +4,7 @@
 //  
 
 using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -215,21 +216,27 @@ namespace BrainSimulator
 
             mi = new MenuItem();
             mi.Header = "Synapses";
-            mi.Click += Mi_Click;
             foreach (Synapse s in n.Synapses)
             {
                 string targetLabel = MainWindow.theNeuronArray.GetNeuron(s.targetNeuron).Label;
-                mi.Items.Add(new MenuItem() { Header = s.targetNeuron.ToString().PadLeft(8) + s.Weight.ToString("F4").PadLeft(9) +" "+targetLabel , FontFamily = new FontFamily("Courier New") });
+                MenuItem synapseMenuItem = new MenuItem() { Header = s.targetNeuron.ToString().PadLeft(8) + s.Weight.ToString("F3").PadLeft(9) + " " + targetLabel, FontFamily = new FontFamily("Courier New") };
+                synapseMenuItem.Click += Mi_Click;
+                synapseMenuItem.PreviewMouseRightButtonDown += SynapseMenuItem_PreviewMouseRightButtonDown;
+                synapseMenuItem.ToolTip = "L-click -> target neuron, R-Click -> edit synapse";
+                mi.Items.Add(synapseMenuItem);
             }
             cm.Items.Add(mi);
 
             mi = new MenuItem();
             mi.Header = "Synapses In";
-            mi.Click += Mi_Click;
             foreach (Synapse s in n.SynapsesFrom)
             {
                 string targetLabel = MainWindow.theNeuronArray.GetNeuron(s.targetNeuron).Label;
-                mi.Items.Add(new MenuItem() { Header = s.targetNeuron.ToString().PadLeft(8) + s.Weight.ToString("F4").PadLeft(9)+" "+targetLabel, FontFamily = new FontFamily("Courier New") }); ;
+                MenuItem synapseMenuItem = new MenuItem() { Header = s.targetNeuron.ToString().PadLeft(8) + " "+ targetLabel, FontFamily = new FontFamily("Courier New") };
+                synapseMenuItem.Click += Mi_Click;
+                synapseMenuItem.PreviewMouseRightButtonDown += SynapseFromMenuItem_PreviewMouseRightButtonDown1;
+                synapseMenuItem.ToolTip = "L-click -> source neuron, R-Click -> edit synapse";
+                mi.Items.Add(synapseMenuItem); ;
             }
             cm.Items.Add(mi);
         }
@@ -367,6 +374,42 @@ namespace BrainSimulator
             }
         }
 
+        private static void SynapseFromMenuItem_PreviewMouseRightButtonDown1(object sender, MouseButtonEventArgs e)
+        {
+            MenuItem mi = sender as MenuItem;
+            MenuItem mi2 = mi.Parent as MenuItem;
+            ContextMenu cm = mi2.Parent as ContextMenu;
+            int targetID = (int)cm.GetValue(NeuronIDProperty);
+            ContextMenu newCm = new ContextMenu();
+            int.TryParse(mi.Header.ToString().Substring(0, 8), out int sourceID);
+            Neuron n = MainWindow.theNeuronArray.GetNeuron(sourceID);
+            Synapse s = n.FindSynapse(targetID);
+            if (s != null)
+            {
+                SynapseView.CreateContextMenu(sourceID, s, newCm);
+                newCm.IsOpen = true;
+                e.Handled = true;
+            }
+        }
+
+        private static void SynapseMenuItem_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            MenuItem mi = sender as MenuItem;
+            MenuItem mi2 = mi.Parent as MenuItem;
+            ContextMenu cm = mi2.Parent as ContextMenu;
+            int sourceID = (int)cm.GetValue(NeuronIDProperty);
+            ContextMenu newCm = new ContextMenu();
+            int.TryParse(mi.Header.ToString().Substring(0, 8), out int targetID);
+            Neuron n = MainWindow.theNeuronArray.GetNeuron(sourceID);
+            Synapse s = n.FindSynapse(targetID);
+            if (s != null)
+            {
+                SynapseView.CreateContextMenu(sourceID, s, newCm);
+                newCm.IsOpen = true;
+                e.Handled = true;
+            }
+        }
+
         private static void Mi_Click(object sender, RoutedEventArgs e)
         {
             MenuItem mi = sender as MenuItem;
@@ -375,6 +418,13 @@ namespace BrainSimulator
             if (cm == null)
             {
                 MenuItem mi2 = mi.Parent as MenuItem;
+                if (mi2.Header.ToString().IndexOf("Synapses") == 0)
+                {
+                    int.TryParse(mi.Header.ToString().Substring(0, 8), out int newID);
+                    Neuron n1 = MainWindow.theNeuronArray.GetNeuron(newID);
+                    NeuronView.CreateContextMenu(n1.id, n1, new ContextMenu() { IsOpen = true,});
+                    return;
+                }
                 cm = mi2.Parent as ContextMenu;
             }
             int i = (int)cm.GetValue(NeuronIDProperty);

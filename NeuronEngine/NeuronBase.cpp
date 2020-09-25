@@ -70,18 +70,48 @@ namespace NeuronEngine
 	{
 		delete label;
 		label = NULL;
-		size_t len = wcslen(newLabel) + 2;
+		size_t len = wcslen(newLabel);
 		if (len > 1)
 		{
-			label = new wchar_t[len];
-			wcscpy_s(label, len, newLabel);
+			label = new wchar_t[len+2];
+			wcscpy_s(label, len+2, newLabel);
 		}
 	}
 	bool NeuronBase::GetInUse()
 	{
-		bool retVal = (label != NULL) || (synapses != NULL) || (synapsesFrom != NULL || model != modelType::Std);
+		bool retVal = (label != NULL) || (synapses != NULL && synapses->size() != 0) || (synapsesFrom != NULL && synapsesFrom->size() != 0) || (model != modelType::Std);
 
 		return retVal;
+	}
+
+	void NeuronBase::AddSynapseFrom(NeuronBase* n, float weight, bool isHebbian)
+	{
+		while (vectorLock.exchange(1) == 1) {}
+
+		SynapseBase s1;
+		s1.SetWeight(weight);
+		s1.SetTarget(n);
+		s1.SetIsHebbian(isHebbian);
+
+		if (synapsesFrom == NULL)
+		{
+			synapsesFrom = new std::vector<SynapseBase>();
+			synapsesFrom->reserve(10);
+		}
+		for (int i = 0; i < synapsesFrom->size(); i++)
+		{
+			if (synapsesFrom->at(i).GetTarget() == n)
+			{
+				//update an existing synapse
+				synapsesFrom->at(i).SetWeight(weight);
+				synapsesFrom->at(i).SetIsHebbian(isHebbian);
+				goto alreadyInList;
+			}
+		}
+		//else create a new synapse
+		synapsesFrom->push_back(s1);
+	alreadyInList:
+		vectorLock = 0;
 	}
 
 	void NeuronBase::AddSynapse(NeuronBase* n, float weight, bool isHebbian, bool noBackPtr)
@@ -120,7 +150,6 @@ namespace NeuronEngine
 		//The previous does not lock because you don't write to the same neuron from multiple threads
 
 		while (n->vectorLock.exchange(1) == 1) {}
-		//n->aLock.lock();
 		SynapseBase s2;
 		s2.SetTarget(this);
 		s2.SetWeight(weight);
@@ -129,42 +158,44 @@ namespace NeuronEngine
 		if (n->synapsesFrom == NULL)
 		{
 			n->synapsesFrom = new std::vector<SynapseBase>();
-			n->synapsesFrom->reserve(5000);
+			n->synapsesFrom->reserve(10);
 		}
 		for (int i = 0; i < n->synapsesFrom->size(); i++)
 		{
 			SynapseBase s = n->synapsesFrom->at(i);
-			if (s.GetTarget() == this)
+			if (n->synapsesFrom->at(i).GetTarget() == this)
 			{
-				s.SetWeight(weight);
-				s.SetIsHebbian(isHebbian);
+				n->synapsesFrom->at(i).SetWeight(weight);
+				n->synapsesFrom->at(i).SetIsHebbian(isHebbian);
 				goto alreadyInList2;
 			}
 		}
 		n->synapsesFrom->push_back(s2);
 	alreadyInList2:
 		n->vectorLock = 0;
-
 		return;
 	}
-
 	void NeuronBase::DeleteSynapse(NeuronBase* n)
 	{
 		while (vectorLock.exchange(1) == 1) {}
-		for (int i = 0; i < synapses->size(); i++)
+		if (synapses != NULL)
 		{
-			if (synapses->at(i).GetTarget() == n)
+			for (int i = 0; i < synapses->size(); i++)
 			{
-				synapses->erase(synapses->begin() + i);
-				break;
+				if (synapses->at(i).GetTarget() == n)
+				{
+					synapses->erase(synapses->begin() + i);
+					break;
+				}
+			}
+			if (synapses->size() == 0)
+			{
+				delete synapses;
+				synapses = NULL;
 			}
 		}
-		if (synapses->size() == 0)
-		{
-			delete synapses;
-			synapses = NULL;
-		}
 		vectorLock = 0;
+		if (((long long)n >>63) != 0) return;
 		while (n->vectorLock.exchange(1) == 1) {}
 		if (n->synapsesFrom != NULL)
 		{
@@ -174,6 +205,11 @@ namespace NeuronEngine
 				if (s.GetTarget() == this)
 				{
 					n->synapsesFrom->erase(n->synapsesFrom->begin() + i);
+					if (n->synapsesFrom->size() == 0)
+					{
+						delete n->synapsesFrom;
+						n->synapsesFrom = NULL;
+					}
 					break;
 				}
 			}
@@ -183,7 +219,7 @@ namespace NeuronEngine
 	int NeuronBase::GetSynapseCount()
 	{
 		if (synapses == NULL) return 0;
-		return (int) synapses->size();
+		return (int)synapses->size();
 	}
 	std::vector<SynapseBase> NeuronBase::GetSynapses()
 	{
@@ -210,6 +246,11 @@ namespace NeuronEngine
 		return tempVec;
 	}
 
+	void NeuronBase::AddToCurrentValue(float weight)
+	{
+		currentCharge = currentCharge + weight;
+	}
+
 	//neuron firing is two-phase so that the network is independent of neuron order
 	bool NeuronBase::Fire1(long long generation)
 	{
@@ -221,22 +262,21 @@ namespace NeuronEngine
 			if (nextFiring <= 0)
 			{
 				currentCharge = threshold;
-				nextFiring = (int)(rand() % 100 * leakRate);
+				nextFiring = (int)(rand() % randomRate);
 			}
 		}
 		//check for firing
 		if (currentCharge < 0)currentCharge = 0;
 		lastCharge = currentCharge;
-		if (lastCharge >= threshold) {
+		if (lastCharge >= threshold) 
+		{
 			lastFired = generation;
 			currentCharge = 0;
 			return true;
 		}
-		if (model == modelType::LIF)
+		if (model == modelType::LIF || model == modelType::Random)
 		{
 			currentCharge = currentCharge * (1 - leakRate);
-			if (currentCharge < .1f)
-				currentCharge = 0;
 		}
 		return false;
 	}
@@ -246,33 +286,93 @@ namespace NeuronEngine
 		if (model == modelType::Color) return;
 		if (model == modelType::FloatValue) return;
 		if (lastCharge < threshold)return; //did the neuron fire?
+		while (vectorLock.exchange(1) == 1) {} //prevent the vector of synapses from changing while we're looking at it
 		if (synapses != NULL)
 		{
-			while (vectorLock.exchange(1) == 1) {} //prevent the vector of synapses from changing while we're looking at it
 			for (int i = 0; i < synapses->size(); i++) //process all the synapses sourced by this neuron
 			{
 				SynapseBase s = synapses->at(i);
 				NeuronBase* nTarget = s.GetTarget();
-				nTarget->currentCharge = nTarget->currentCharge + s.GetWeight();
-				if (s.IsHebbian())
+				if (((long long)nTarget >>63 ) != 0) //does this synapse go to another server
 				{
-					//did this neuron fire coincident with the target
-					if (nTarget->currentCharge >= threshold) 
+					NeuronArrayBase::remoteQueue.push(s);
+				}
+				else
+				{	//nTarget->currentCharge += s.GetWeight(); //not supported until C++20
+					auto current = nTarget->currentCharge.load(std::memory_order_relaxed);
+					float desired = current + s.GetWeight();
+					while (!nTarget->currentCharge.compare_exchange_weak(current, desired));
+
+					//for a random neuron, decrease the randomness if synapses caused a firing
+					if (nTarget->model == modelType::Random && desired >= threshold)
 					{
-						//strengthen the synapse
-						float newWeight = s.GetWeight() + 0.1f;
-						synapses->at(i).SetWeight(newWeight);
+						nTarget->randomRate = nTarget->randomRate * 2;
+						//nextFiring = (int)(rand() % randomRate);
+						nextFiring = 10000;
 					}
-					else
+					if (s.IsHebbian()) //old method needed for network graph demo
 					{
-						//weaken the synapse
-						float newWeight = s.GetWeight() - 0.01f;
-						synapses->at(i).SetWeight(newWeight);
+						//did this neuron fire coincident with the target
+						if (nTarget->currentCharge >= threshold) 
+						{
+							//strengthen the synapse
+							float newWeight = s.GetWeight() + 0.1f;
+							synapses->at(i).SetWeight(newWeight);
+						}
+						else
+						{
+							//weaken the synapse
+							float newWeight = s.GetWeight() - 0.01f;
+							synapses->at(i).SetWeight(newWeight);
+						}
 					}
 				}
 			}
-			vectorLock = 0;
 		}
+		//if (synapsesFrom != NULL)
+		//{
+		//	int hebbianCount = 0;
+		//	for (int i = 0; i < synapsesFrom->size(); i++)
+		//	{
+		//		SynapseBase s = synapsesFrom->at(i);
+		//		if (s.IsHebbian()) hebbianCount++;
+		//	}
+		//	for (int i = 0; i < synapsesFrom->size(); i++)
+		//	{
+		//		SynapseBase s = synapsesFrom->at(i);
+		//		if (s.IsHebbian())
+		//		{
+		//			NeuronBase* nTarget = s.GetTarget();
+		//			while (nTarget->vectorLock.exchange(1) == 1) {}
+		//			float newWeight = s.GetWeight(); //target = .25 
+		//			if (nTarget->lastCharge >= threshold)
+		//			{
+		//				//hit
+		//				float target = 1.1f / hebbianCount;
+		//				newWeight = (newWeight+target)/2; 
+		//			}
+		//			else
+		//			{
+		//				//miss
+		//				float target = -.2f;
+		//				newWeight = (newWeight + target) / 2;
+		//			}
+		//			synapsesFrom->at(i).SetWeight(newWeight);
+		//			if (nTarget->synapses != NULL) //set the forward synapse weight
+		//			{
+		//				for (int j = 0; j < nTarget->synapses->size(); j++)
+		//				{
+		//					if (nTarget->synapses->at(j).GetTarget() == this)
+		//					{
+		//						nTarget->synapses->at(j).SetWeight(newWeight);
+		//						break;
+		//					}
+		//				}
+		//			}
+		//			nTarget->vectorLock = 0;
+		//		}
+		//	}
+		//}
+		vectorLock = 0;
 	}
-
 }

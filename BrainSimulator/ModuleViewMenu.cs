@@ -366,7 +366,10 @@ namespace BrainSimulator
                             foreach (Synapse s in n.Synapses)
                             {
                                 if (s.isHebbian)
+                                {
                                     s.Weight = 0;
+                                    n.AddSynapse(s.targetNeuron, s.weight, s.isHebbian);
+                                }
                             }
                         }
                     }

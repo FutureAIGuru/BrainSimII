@@ -745,6 +745,7 @@ namespace BrainSimulator.Modules
                     if (lastPhraseHeard != null && lastActionPerformed != null)
                     {
                         Thing newEvent = AddThing("si" + EventCount++, new Thing[] { Labeled("Event") }, null, new Thing[] { lastPhraseHeard });
+                        if (newEvent != null)
                         newEvent.AdjustReference(lastActionPerformed, positive);
                     }
                     Fire(lastActionPerformed, false);

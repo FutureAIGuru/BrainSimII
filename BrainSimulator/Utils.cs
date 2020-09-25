@@ -141,6 +141,59 @@ namespace BrainSimulator
             return retVal;
         }
 
+        //helper to make rainbow colors
+        // Map a value to a rainbow color.
+        public static Color RainbowColorFromValue(float value) //value has a range -1,1
+        {
+            // Convert into a value between 0 and 1023.
+            int int_value = (int)(1023 * value);
+
+            if (int_value < -1022) //fully negative
+            {
+                return Colors.Black;
+            }
+            else if (int_value >= 1023) //fully positive
+            {
+                return Colors.White;
+            }
+            else if (int_value == 0) //0 (blue)
+            {
+                return Colors.Blue;
+            }
+            else if (int_value < 0) // -1,0 graysacle
+            {
+                int_value = (1024-(Math.Abs(int_value)/2) + 512)/4;
+                return Color.FromRgb((byte)int_value, (byte)int_value, (byte)int_value);
+            }
+
+            int_value = 1023 - int_value;
+            // Map different color bands.
+            if (int_value < 256)
+            {
+                // Red to yellow. (255, 0, 0) to (255, 255, 0).
+                return Color.FromRgb(255, (byte)int_value, 0);
+            }
+            else if (int_value < 512)
+            {
+                // Yellow to green. (255, 255, 0) to (0, 255, 0).
+                int_value -= 256;
+                return Color.FromRgb((byte)(255 - int_value), 255, 0);
+            }
+            else if (int_value < 768)
+            {
+                // Green to aqua. (0, 255, 0) to (0, 255, 255).
+                int_value -= 512;
+                return Color.FromRgb(0, 255, (byte)int_value);
+            }
+            else
+            {
+                // Aqua to blue. (0, 255, 255) to (0, 0, 255).
+                int_value -= 768;
+                return Color.FromRgb(0, (byte)(255 - int_value), 255);
+            }
+        }
+
+
         public static bool Close(float f1, float f2, float toler = 0.2f)
         {
             float dif = f2 - f1;

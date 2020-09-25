@@ -63,25 +63,41 @@ namespace BrainSimulator
                     double yPos0 = yDelta * (i + 1);
                     double yPos1 = yPos0 - yDelta / 2;
                     double yPos2 = yPos0 + yDelta / 10;
+                    double yPos3 = yPos0 + yDelta / 20;
 
                     Polyline pl = new Polyline()
                     {
                         Stroke = new SolidColorBrush(Colors.Black),
                         StrokeThickness = 4,
                         StrokeEndLineCap = PenLineCap.Round,
+                        StrokeLineJoin = PenLineJoin.Round,
                     };
                     pl.Points.Add(new Point(0, yPos0));
-
+                    float lastValue = 0;
                     for (int j = 0; j < FiringHistory.history[i].Samples.Count; j++)
                     {
-                        double X = (FiringHistory.history[i].Samples[j]);
+                        double X = (FiringHistory.history[i].Samples[j].generation);
+                        float value = FiringHistory.history[i].Samples[j].value;
                         X -= minX;
                         X *= xScale;
-                        pl.Points.Add(new Point(X, yPos0));
-                        pl.Points.Add(new Point(X + xScale / 6, yPos1));
-                        pl.Points.Add(new Point(X + xScale / 5, yPos1));
-                        pl.Points.Add(new Point(X + xScale / 4, yPos2));
-                        pl.Points.Add(new Point(X + xScale / 2, yPos0));
+                        if (value >= 1)
+                        {
+                            double xDelta = xScale / 10;
+                            if (lastValue == 1) lastValue = 0;
+                            float yPosLastValue = (float)(yPos0 - lastValue * yDelta / 3);
+                            pl.Points.Add(new Point(X, yPosLastValue));
+                            pl.Points.Add(new Point(X + xDelta, yPos1));
+                            pl.Points.Add(new Point(X + 2*xDelta, yPos2));
+                            pl.Points.Add(new Point(X + 3 * xDelta, yPos2));
+                            pl.Points.Add(new Point(X + 5 * xDelta, yPos3));
+                            pl.Points.Add(new Point(X + 9*xDelta, yPos0));
+                        }
+                        else
+                        {
+                            float yPosValue = (float)(yPos0 - value * yDelta / 3);
+                            pl.Points.Add(new Point(X, yPosValue));
+                        }
+                        lastValue = value;
                     }
 
                     pl.Points.Add(new Point(theCanvas.Width, yPos0));

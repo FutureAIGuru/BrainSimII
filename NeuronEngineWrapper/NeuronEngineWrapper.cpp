@@ -51,7 +51,6 @@ namespace NeuronEngine
 		{
 			return theNeuronArray->GetThreadCount();
 		}
-
 		float NeuronArrayBase::GetNeuronLastCharge(int i)
 		{
 			NeuronBase* n = theNeuronArray->GetNeuron(i);
@@ -66,6 +65,11 @@ namespace NeuronEngine
 		{
 			NeuronBase* n = theNeuronArray->GetNeuron(i);
 			n->SetCurrentCharge(value);
+		}
+		void NeuronArrayBase::AddToNeuronCurrentCharge(int i, float value)
+		{
+			NeuronBase* n = theNeuronArray->GetNeuron(i);
+			n->AddToCurrentValue(value);
 		}
 		float NeuronArrayBase::GetNeuronLeakRate(int i)
 		{
@@ -118,19 +122,61 @@ namespace NeuronEngine
 				return str;
 			}
 		}
+		String^ NeuronArrayBase::GetRemoteFiring()
+		{
+			std::string remoteFiring = theNeuronArray->GetRemoteFiringString();
+			String^ str = gcnew String(remoteFiring.c_str());
+			return str;
+		}
+		cli::array<byte>^ NeuronArrayBase::GetRemoteFiringSynapses()
+		{
+			std::vector<SynapseBase> tempVec;
+			SynapseBase s1 = theNeuronArray->GetRemoteFiringSynapse();
+			while (s1.GetTarget() != NULL)
+			{
+				tempVec.push_back(s1);
+				s1 = theNeuronArray->GetRemoteFiringSynapse();
+			}
+			return ReturnArray(tempVec);
+		}
 
 		void NeuronArrayBase::AddSynapse(int src, int dest, float weight, bool isHebbian, bool noBackPtr)
 		{
+			if (src < 0)return;
 			NeuronBase* n = theNeuronArray->GetNeuron(src);
-			n->AddSynapse(theNeuronArray->GetNeuron(dest), weight, isHebbian, noBackPtr);
+			if (dest < 0)
+				n->AddSynapse((NeuronBase*)dest, weight, isHebbian, noBackPtr);
+			else
+				n->AddSynapse(theNeuronArray->GetNeuron(dest), weight, isHebbian, noBackPtr);
+		}
+		void NeuronArrayBase::AddSynapseFrom(int src, int dest, float weight, bool isHebbian)
+		{
+			if (dest < 0)return;
+			NeuronBase* n = theNeuronArray->GetNeuron(dest);
+			if (src < 0)
+				n->AddSynapseFrom((NeuronBase*)src, weight, isHebbian);
+			else
+				n->AddSynapseFrom(theNeuronArray->GetNeuron(src), weight, isHebbian);
 		}
 		void NeuronArrayBase::DeleteSynapse(int src, int dest)
 		{
+			if (src < 0) return;
 			NeuronBase* n = theNeuronArray->GetNeuron(src);
-			n->DeleteSynapse(theNeuronArray->GetNeuron(dest));
+			if (dest < 0)
+				n->DeleteSynapse((NeuronBase*)dest);
+			else
+				n->DeleteSynapse(theNeuronArray->GetNeuron(dest));
+		}
+		void NeuronArrayBase::DeleteSynapseFrom(int src, int dest)
+		{
+			if (dest < 0)return;
+			NeuronBase* n = theNeuronArray->GetNeuron(dest);
+			if (src < 0)
+				n->DeleteSynapse((NeuronBase*)src);
+			else
+				n->DeleteSynapse(theNeuronArray->GetNeuron(src));
 		}
 
-		struct Synapse { int target; float weight; int isHebbian; };
 
 		cli::array<byte>^ NeuronArrayBase::GetSynapses(int src)
 		{
@@ -157,13 +203,18 @@ namespace NeuronEngine
 			const int byteCount = (int)(SIZE * sizeof(Synapse));
 			cli::array<byte>^ tempArr = gcnew cli::array<byte>(byteCount);
 			int k = 0;
-			//this is complicated by the fact that the synapsebase contains a raw point but we want to return an ID
 			for (int j = 0; j < tempVec.size(); j++)
 			{
 				Synapse s;
 				s.isHebbian = tempVec.at(j).IsHebbian();
 				s.weight = tempVec.at(j).GetWeight();
-				s.target = tempVec.at(j).GetTarget()->GetId();
+				//if the top bit of the target is not set, it's a raw pointer
+				//if it is set, this is the negative of a global neuron ID
+				NeuronBase* target = tempVec.at(j).GetTarget();
+				if (((long long)target >> 63) != 0 || target == NULL)
+					s.target = (int)(tempVec.at(j).GetTarget());
+				else
+					s.target = tempVec.at(j).GetTarget()->GetId();
 				if (tempVec.at(j).IsHebbian()) //this makes a bool clear all four bytes
 					s.isHebbian = 1;
 				else
@@ -187,6 +238,7 @@ namespace NeuronEngine
 			const int byteCount = sizeof(Neuron);
 			cli::array<byte>^ tempArr = gcnew cli::array<byte>(byteCount);
 			Neuron n1;
+			memset(&n1, 0, byteCount); //clear out the space between struct elements
 			n1.id = n->GetId();
 			n1.inUse = n->GetInUse();
 			n1.lastCharge = n->GetLastCharge();

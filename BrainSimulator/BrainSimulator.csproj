@@ -131,6 +131,7 @@
     </Compile>
     <Compile Include="Modules\ModuleAudible.cs" />
     <Compile Include="Modules\ModuleEvent.cs" />
+    <Compile Include="Modules\ModuleFireOldest.cs" />
     <Compile Include="Modules\ModuleLife.cs" />
     <Compile Include="Modules\ModuleWords.cs" />
     <Compile Include="Modules\ModuleSpeakPhonemes.cs" />
@@ -200,6 +201,7 @@
     <Compile Include="NeuronArrayView.xaml.cs">
       <DependentUpon>NeuronArrayView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NeuronClient.cs" />
     <Compile Include="NeuronHandler.cs" />
     <Compile Include="NeuronSelection.cs" />
     <Compile Include="NeuronSelectionRectangle.cs" />

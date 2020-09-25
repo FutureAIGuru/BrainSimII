@@ -35,7 +35,8 @@ namespace BrainSimulator
         {
             rows = inRows;
             arraySize = count;
-            base.Initialize(count);
+            if (!MainWindow.useServers)
+                base.Initialize(count);
         }
 
         //this list keeps track of changed synapses for undo
@@ -72,13 +73,37 @@ namespace BrainSimulator
 
         public new void Fire()
         {
-            base.Fire();
-            Generation = GetGeneration();
-            lastFireCount = GetFiredCount();
+            if (MainWindow.useServers)
+            {
+                NeuronClient.Fire();
+                lastFireCount = 0;
+                for (int i = 0; i < NeuronClient.serverList.Count; i++)
+                    lastFireCount += NeuronClient.serverList[i].firedCount;
+                Generation = NeuronClient.serverList[0].generation;
+            }
+            else
+            {
+                base.Fire();
+                Generation = GetGeneration();
+                lastFireCount = GetFiredCount();
+            }
             HandleProgrammedActions();
             FiringHistory.UpdateFiringHistory();
         }
-
+        new public void AddSynapse(int src, int dest, float weight, bool isHebbian, bool noBackPtr)
+        {
+            if (MainWindow.useServers)
+                NeuronClient.AddSynapse(src, dest, weight, isHebbian, noBackPtr);
+            else
+                base.AddSynapse(src, dest, weight, isHebbian, noBackPtr);
+        }
+        new public void DeleteSynapse(int src, int dest)
+        {
+            if (MainWindow.useServers)
+                NeuronClient.DeleteSynapse(src, dest);
+            else
+                base.DeleteSynapse(src, dest);
+        }
         //fires all the modules
         private void HandleProgrammedActions()
         {

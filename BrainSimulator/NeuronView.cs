@@ -28,21 +28,12 @@ namespace BrainSimulator
         }
         private static float ellipseSize = 0.7f;
 
-        public static UIElement GetNeuronView(int i, NeuronArrayView theNeuronArrayViewI, out Label l)
+        public static UIElement GetNeuronView(Neuron n, NeuronArrayView theNeuronArrayViewI, out Label l)
         {
             l = null;
             theNeuronArrayView = theNeuronArrayViewI;
-            //this hack makes the GameOfLife display bettern
-            if (MainWindow.currentFileName.Contains("Life"))
-            {
-                int row = i % dp.NeuronRows;
-                int col = i / dp.NeuronRows;
-                if ((row + 1) % 2 != 0) return null;
-                if (col % 2 != 0) return null;
-            }
 
-            Neuron n = MainWindow.theNeuronArray.GetCompleteNeuron(i);
-            Point p = dp.pointFromNeuron(i);
+            Point p = dp.pointFromNeuron(n.id);
 
             SolidColorBrush s1 = GetNeuronColor(n);
 
@@ -107,16 +98,10 @@ namespace BrainSimulator
         {
             // figure out which color to use
             float value = n.LastCharge;
-            Color c = Colors.Blue;
-            if ((n.Model == Neuron.modelType.Std || n.Model == Neuron.modelType.LIF || n.model == Neuron.modelType.Random) && value > .99)
-                c = Colors.Orange;
-            else if ((n.Model == Neuron.modelType.Std || n.Model == Neuron.modelType.LIF || n.model == Neuron.modelType.FloatValue) && value != -1)
-                c = MapRainbowColor(value, 1, 0);
-            else if (n.Model == Neuron.modelType.Color)
-                c = Utils.IntToColor((int)n.LastChargeInt);
+            Color c = Utils.RainbowColorFromValue(value);
             SolidColorBrush s1 = new SolidColorBrush(c);
-            //   if (n.Label != "" || !n.InUse()) s1.Opacity = .50;
-            if (!n.inUse && n.Model == Neuron.modelType.Std) s1.Opacity = .50;
+            if (!n.inUse && n.Model == Neuron.modelType.Std)
+                s1.Opacity = .50;
             return s1;
         }
 
@@ -137,6 +122,7 @@ namespace BrainSimulator
         static bool cmCancelled = false;
         public static void CreateContextMenu(int i, Neuron n, ContextMenu cm)
         {
+            n = MainWindow.theNeuronArray.AddSynapses(n);
             cm.SetValue(NeuronIDProperty, n.Id);
             cm.Closed += Cm_Closed;
             cmCancelled = false;
@@ -232,7 +218,7 @@ namespace BrainSimulator
             foreach (Synapse s in n.SynapsesFrom)
             {
                 string targetLabel = MainWindow.theNeuronArray.GetNeuron(s.targetNeuron).Label;
-                MenuItem synapseMenuItem = new MenuItem() { Header = s.targetNeuron.ToString().PadLeft(8) + " "+ targetLabel, FontFamily = new FontFamily("Courier New") };
+                MenuItem synapseMenuItem = new MenuItem() { Header = s.targetNeuron.ToString().PadLeft(8) + " " + s.Weight.ToString("F3").PadLeft(9) + " " + targetLabel, FontFamily = new FontFamily("Courier New") };
                 synapseMenuItem.Click += Mi_Click;
                 synapseMenuItem.PreviewMouseRightButtonDown += SynapseFromMenuItem_PreviewMouseRightButtonDown1;
                 synapseMenuItem.ToolTip = "L-click -> source neuron, R-Click -> edit synapse";
@@ -351,6 +337,7 @@ namespace BrainSimulator
             cm.IsOpen = false;
         }
 
+        static Random rand = new Random();
         private static void SetModelAndLeakrate(Neuron n)
         {
             bool neuronInSelection = false;
@@ -367,6 +354,10 @@ namespace BrainSimulator
                 theNeuronArrayView.theSelection.EnumSelectedNeurons();
                 for (Neuron n1 = theNeuronArrayView.theSelection.GetSelectedNeuron(); n1 != null; n1 = theNeuronArrayView.theSelection.GetSelectedNeuron())
                 {
+                    if (n.Model == Neuron.modelType.Random)
+                    {
+                        n1.currentCharge = (float)rand.NextDouble();
+                    }
                     n1.Model = n.Model;
                     n1.LeakRate = n.LeakRate;
                 }
@@ -422,7 +413,7 @@ namespace BrainSimulator
                 {
                     int.TryParse(mi.Header.ToString().Substring(0, 8), out int newID);
                     Neuron n1 = MainWindow.theNeuronArray.GetNeuron(newID);
-                    NeuronView.CreateContextMenu(n1.id, n1, new ContextMenu() { IsOpen = true,});
+                    NeuronView.CreateContextMenu(n1.id, n1, new ContextMenu() { IsOpen = true, });
                     return;
                 }
                 cm = mi2.Parent as ContextMenu;
@@ -478,39 +469,5 @@ namespace BrainSimulator
         }
 
 
-        //helper to make rainbow colors
-        // Map a value to a rainbow color.
-        private static Color MapRainbowColor(
-                float value, float red_value, float blue_value)
-        {
-            // Convert into a value between 0 and neuronDisplaySize23.
-            int int_value = (int)(1023 * (value - red_value) /
-                (blue_value - red_value));
-
-            // Map different color bands.
-            if (int_value < 256)
-            {
-                // Red to yellow. (255, 0, 0) to (255, 255, 0).
-                return Color.FromRgb(255, (byte)int_value, 0);
-            }
-            else if (int_value < 512)
-            {
-                // Yellow to green. (255, 255, 0) to (0, 255, 0).
-                int_value -= 256;
-                return Color.FromRgb((byte)(255 - int_value), 255, 0);
-            }
-            else if (int_value < 768)
-            {
-                // Green to aqua. (0, 255, 0) to (0, 255, 255).
-                int_value -= 512;
-                return Color.FromRgb(0, 255, (byte)int_value);
-            }
-            else
-            {
-                // Aqua to blue. (0, 255, 255) to (0, 0, 255).
-                int_value -= 768;
-                return Color.FromRgb(0, (byte)(255 - int_value), 255);
-            }
-        }
     }
 }

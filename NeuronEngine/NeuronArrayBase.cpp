@@ -9,6 +9,32 @@ using namespace std;
 
 namespace NeuronEngine
 {
+	Concurrency::concurrent_queue<SynapseBase> NeuronArrayBase::remoteQueue;
+
+	std::string NeuronArrayBase::GetRemoteFiringString()
+	{
+		std::string retVal("");
+		SynapseBase s;
+		int count = 0;
+		while (remoteQueue.try_pop(s) && count++ < 90) //splits up long strings for transmission
+		{
+			retVal += std::to_string(-(int)s.GetTarget()) + " ";
+			retVal += std::to_string((float)s.GetWeight()) + " ";
+			retVal += std::to_string((bool)s.IsHebbian()) + " ";
+		}
+		return retVal;
+	}
+	SynapseBase NeuronArrayBase::GetRemoteFiringSynapse()
+	{
+		SynapseBase s;
+		if (remoteQueue.try_pop(s))
+		{
+			return s;
+		}
+		s.SetTarget(NULL);
+		return s;
+	}
+
 	NeuronArrayBase::NeuronArrayBase()
 	{
 	}

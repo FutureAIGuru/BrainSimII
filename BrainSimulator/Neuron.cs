@@ -39,7 +39,7 @@ namespace BrainSimulator
         //get/set last charge. Setting also sets current charge
 
         //TODO: change this to SetValue
-        public float LastCharge { get { return (float)lastCharge; } set { lastCharge = value; Update(); } }
+        public float LastCharge { get { return (float)lastCharge; } set { lastCharge = value; } }// Update(); } }
 
         //get/set last charge as raw integer Used by COLOR nueurons
         public int LastChargeInt { get { return (int)lastCharge; } set { lastCharge = value; Update(); } }
@@ -65,12 +65,13 @@ namespace BrainSimulator
 
         public int Id { get => id; set => id = value; }
         public string Label { get => label; set { label = value; Update(); } }
+
         //Used by LIF, Random neurons
         public float LeakRate { get => leakRate; set { leakRate = value; Update(); } }
 
         public modelType Model { get => (Neuron.modelType)model; set { model = (modelType)value; Update(); } }
 
-        private void Update()
+        public void Update()
         {
             ownerArray.SetCompleteNeuron(this);
         }
@@ -115,6 +116,11 @@ namespace BrainSimulator
             foreach (Synapse s in Synapses)
                 DeleteSynapse(s.targetNeuron);
             Synapses.Clear();
+            foreach (Synapse s in synapsesFrom)
+            {
+                ownerArray.DeleteSynapse(s.targetNeuron, id);
+            }
+            synapsesFrom.Clear();
         }
 
         public override string ToString()

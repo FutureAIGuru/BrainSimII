@@ -4,21 +4,6 @@ using System.Runtime.InteropServices;
 
 namespace BrainSimulator
 {
-    //public class Neuron : NeuronPartial
-    //{
-    //    public string label = "";
-    //    public List<Synapse> synapses = new List<Synapse>();
-    //    public List<Synapse> synapsesFrom = new List<Synapse>();
-    //}
-
-    //[StructLayout(LayoutKind.Sequential, Pack = 1)]
-    //public struct Synapse
-    //{
-    //    public int target;
-    //    public float weight;
-    //    public bool isHebbian;
-    //};
-    // public enum modelType { Std, Color, FloatValue, LIF, Random }; //TODO remove redundancy
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class NeuronPartial
@@ -40,39 +25,73 @@ namespace BrainSimulator
         }
         public void SetCompleteNeuron(Neuron n)
         {
-            int i = n.id;
-            SetNeuronCurrentCharge(i, n.currentCharge);
-            SetNeuronLastCharge(i, n.lastCharge);
-            SetNeuronLabel(i, n.label);
-            SetNeuronLeakRate(i, n.leakRate);
-            SetNeuronModel(i, (int)n.model);
+            if (MainWindow.useServers)
+            {
+                NeuronClient.SetNeuron(n);
+            }
+            else
+            {
+                int i = n.id;
+                SetNeuronCurrentCharge(i, n.currentCharge);
+                SetNeuronLastCharge(i, n.lastCharge);
+                SetNeuronLabel(i, n.label);
+                SetNeuronLeakRate(i, n.leakRate);
+                SetNeuronModel(i, (int)n.model);
+            }
         }
         public Neuron GetNeuronForDrawing(int i)
         {
-            Neuron retVal = new Neuron();
-            retVal.LastCharge = GetNeuronLastCharge(i);
-            retVal.inUse = GetNeuronInUse(i);
-            retVal.label = GetNeuronLabel(i);
-            return retVal;
+            if (MainWindow.useServers)
+            {
+                Neuron retVal = NeuronClient.GetNeuron(i);
+                return retVal;
+            }
+            else
+            {
+                Neuron retVal = new Neuron();
+                retVal.LastCharge = GetNeuronLastCharge(i);
+                retVal.inUse = GetNeuronInUse(i);
+                retVal.label = GetNeuronLabel(i);
+                return retVal;
+            }
+        }
+        public Neuron AddSynapses(Neuron n)
+        {
+            if (MainWindow.useServers)
+            {
+                n.synapses = NeuronClient.GetSynapses(n.id);
+                n.synapsesFrom = NeuronClient.GetSynapsesFrom(n.id);
+            }
+            return n;
         }
         public Neuron GetCompleteNeuron(int i)
         {
-            NeuronPartial n = GetPartialNeuron(i);
+            if (MainWindow.useServers)
+            {
+                Neuron retVal = NeuronClient.GetNeuron(i);
+                //retVal.synapses = NeuronClient.GetSynapses(i);
+                //retVal.synapsesFrom = NeuronClient.GetSynapsesFrom(i);
+                return retVal;
+            }
+            else
+            {
+                NeuronPartial n = GetPartialNeuron(i);
 
-            Neuron retVal = new Neuron();
+                Neuron retVal = new Neuron();
 
-            retVal.id = n.id;
-            retVal.currentCharge = n.currentCharge;
-            retVal.lastCharge = n.lastCharge;
-            retVal.lastFired = n.lastFired;
-            retVal.inUse = n.inUse;
-            retVal.leakRate = n.leakRate;
-            retVal.model = n.model;
+                retVal.id = n.id;
+                retVal.currentCharge = n.currentCharge;
+                retVal.lastCharge = n.lastCharge;
+                retVal.lastFired = n.lastFired;
+                retVal.inUse = n.inUse;
+                retVal.leakRate = n.leakRate;
+                retVal.model = n.model;
 
-            retVal.label = GetNeuronLabel(i);
-            retVal.synapses = GetSynapsesList(i);
-            retVal.synapsesFrom = GetSynapsesFromList(i);
-            return retVal;
+                retVal.label = GetNeuronLabel(i);
+                retVal.synapses = GetSynapsesList(i);
+                retVal.synapsesFrom = GetSynapsesFromList(i);
+                return retVal;
+            }
         }
         public List<Synapse> GetSynapsesList(int i)
         {

@@ -29,6 +29,7 @@ namespace NeuronEngine
 		
 		float leakRate = 0.1f; //used only by LIF model
 		int nextFiring = 0; //used only by Random model && continuous model
+		int randomRate = 100;
 		long long lastFired = 0; //timestamp of last firing
 		int id = -1; //an illegal value which will trap
 		wchar_t* label = NULL;
@@ -57,6 +58,7 @@ namespace NeuronEngine
 		__declspec(dllexport)  void SetCurrentCharge(float value);
 
 		__declspec(dllexport)  void AddSynapse(NeuronBase* n, float weight, bool isHebbian = false, bool noBackPtr = true);
+		__declspec(dllexport)  void AddSynapseFrom(NeuronBase* n, float weight, bool isHebbian = false);
 		__declspec(dllexport)  void DeleteSynapse(NeuronBase* n);
 		__declspec(dllexport)  std::vector<SynapseBase> GetSynapses();
 		__declspec(dllexport)  std::vector<SynapseBase> GetSynapsesFrom();
@@ -70,6 +72,8 @@ namespace NeuronEngine
 		__declspec(dllexport)  float GetLeakRate();
 		__declspec(dllexport)  void SetLeakRate(float value);
 		__declspec(dllexport)  long long GetLastFired();
+
+		__declspec(dllexport)  void AddToCurrentValue(float weight);
 
 		void Fire2();
 		bool Fire1(long long generation);

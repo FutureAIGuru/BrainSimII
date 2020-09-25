@@ -1,7 +1,9 @@
+#define CompilingNeuronWrapper
 #pragma once
 #include <Windows.h> 
 #include <vector>
 #include<string>
+#include <tuple>
 
 using namespace std;
 
@@ -14,6 +16,7 @@ namespace NeuronEngine
 
 	namespace CLI
 	{
+		struct Synapse { int target; float weight; int isHebbian; };
 
 		public ref class NeuronArrayBase
 		{
@@ -35,8 +38,13 @@ namespace NeuronEngine
 			float GetNeuronLastCharge(int i);
 			void SetNeuronLastCharge(int i, float value);
 			void SetNeuronCurrentCharge(int i, float value);
+			void AddToNeuronCurrentCharge(int i, float value);
 			bool GetNeuronInUse(int i);
 			System::String^ GetNeuronLabel(int i);
+			
+			System::String^ GetRemoteFiring();
+			cli::array<byte>^ GetRemoteFiringSynapses();
+
 			void SetNeuronLabel(int i, System::String^ newLabel);
 			int GetNeuronModel(int i);
 			void SetNeuronModel(int i, int model);
@@ -47,8 +55,10 @@ namespace NeuronEngine
 			cli::array<byte>^ GetSynapsesFrom(int src);
 
 			void AddSynapse(int src, int dest, float weight, bool isHebbian, bool noBackPtr);
+			void AddSynapseFrom(int src, int dest, float weight, bool isHebbian);
 			void DeleteSynapse(int src, int dest);
-			
+			void DeleteSynapseFrom(int src, int dest);
+
 		private:
 			// Pointer to our implementation
 			NeuronEngine::NeuronArrayBase* theNeuronArray = NULL;

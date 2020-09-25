@@ -133,7 +133,7 @@ namespace BrainSimulator
             XmlNode neuronsNode = xmldoc.CreateNode("element", "Neurons", "");
             root.AppendChild(neuronsNode);
 
-            for (int i = 0; i < theNeuronArray.GetArraySize(); i++)
+            for (int i = 0; i < theNeuronArray.arraySize; i++)
             {
                 Neuron n = theNeuronArray.GetCompleteNeuron(i);
                 if (n.inUse)

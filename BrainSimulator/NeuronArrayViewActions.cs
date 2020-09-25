@@ -202,7 +202,7 @@ namespace BrainSimulator
             List<int> neuronsInSelection = theSelection.EnumSelectedNeurons();
             for (int i = 0; i < neuronsInSelection.Count; i++)
             {
-                targetNeuron.AddSynapse(neuronsInSelection[i], lastSynapseWeight, MainWindow.theNeuronArray, true);
+                targetNeuron.AddSynapse(neuronsInSelection[i], lastSynapseWeight, lastSynapseHebbian);
             }
             Update();
         }
@@ -214,7 +214,7 @@ namespace BrainSimulator
             for (int i = 0; i < neuronsInSelection.Count; i++)
             {
                 Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronsInSelection[i]);
-                n.AddSynapse(targetNeuronIndex, lastSynapseWeight, MainWindow.theNeuronArray, true);
+                n.AddSynapse(targetNeuronIndex, lastSynapseWeight,lastSynapseHebbian);
             }
             Update();
         }
@@ -234,6 +234,7 @@ namespace BrainSimulator
                     n.DeleteAllSynapes();
                 }
                 n.Label = "";
+                n.Update();
             }
             DeleteModulesInSelection();
             Update();

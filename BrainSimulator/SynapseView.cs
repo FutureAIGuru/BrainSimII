@@ -60,16 +60,8 @@ namespace BrainSimulator
             Point p2 = dp.pointFromNeuron(s.TargetNeuron);
             if (!PtOnScreen(p1) && !PtOnScreen(p2)) return null;
 
-            Shape l = GetSynapseShape(p1, p2, theNeuronArrayView);
-            l.Stroke = Brushes.Red;
-            if (s.Weight < 0.9)
-                l.Stroke = Brushes.Yellow;
-            if (s.Weight < 0.1)
-                l.Stroke = Brushes.Green;
-            if (s.Weight < -0.1)
-                l.Stroke = Brushes.Blue;
-            if (s.Weight < -0.9)
-                l.Stroke = Brushes.Black;
+            Shape l = GetSynapseShape(p1, p2, theNeuronArrayView, s.isHebbian);
+            l.Stroke = new SolidColorBrush(Utils.RainbowColorFromValue(s.weight));
             if (l is Ellipse E)
             { }
             else
@@ -81,9 +73,14 @@ namespace BrainSimulator
             return l;
         }
 
-        //these aren't added to synapses for performance but are built on the fly if the user right-clicks
+        //these aren't added to synapses (for performance) but are built on the fly if the user right-clicks
         public static void CreateContextMenu(int i, Synapse s, ContextMenu cm)
         {
+            //set defaults for next synapse add
+            theNeuronArrayView.lastSynapseHebbian = s.isHebbian;
+            theNeuronArrayView.lastSynapseWeight = s.weight;
+
+
             cm.SetValue(SourceIDProperty, i);
             cm.SetValue(TargetIDProperty, s.TargetNeuron);
             cm.SetValue(WeightValProperty, s.Weight);
@@ -165,7 +162,7 @@ namespace BrainSimulator
                 s.isHebbian = (bool)cb.IsChecked;
             Neuron n = MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty));
             n.AddSynapse((int)cm.GetValue(TargetIDProperty), s.weight, s.isHebbian);
-
+            theNeuronArrayView.lastSynapseHebbian = s.isHebbian;
         }
 
         private static void Cm_Closed(object sender, RoutedEventArgs e)
@@ -182,6 +179,7 @@ namespace BrainSimulator
             float.TryParse(tb.Text, out newWeight);
             if (newWeight == -20) return;
             theNeuronArrayView.lastSynapseWeight = newWeight;
+            //theNeuronArrayView.lastSynapseHebbian = cm.Items
             Neuron n = MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty));
             n.AddSynapse((int)cm.GetValue(TargetIDProperty), newWeight, MainWindow.theNeuronArray, true);
         }
@@ -216,11 +214,14 @@ namespace BrainSimulator
         {
             MenuItem mi = (MenuItem)sender;
             ContextMenu cm = mi.Parent as ContextMenu;
+            CheckBox cbIsHebbian = cm.Items[11] as CheckBox;
+            bool isHebbian = (bool)cbIsHebbian.IsChecked;
             float weight = 0;
             float.TryParse((string)mi.Header, out weight);
             MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).
-                AddSynapse((int)cm.GetValue(TargetIDProperty), weight, MainWindow.theNeuronArray, true);
+                AddSynapse((int)cm.GetValue(TargetIDProperty), weight, isHebbian);
             theNeuronArrayView.lastSynapseWeight = weight;
+            theNeuronArrayView.lastSynapseHebbian = isHebbian;
             MainWindow.Update();
         }
 
@@ -233,7 +234,7 @@ namespace BrainSimulator
         }
 
 
-        public static Shape GetSynapseShape(Point p1, Point p2, NeuronArrayView theNeuronDisplayView)
+        public static Shape GetSynapseShape(Point p1, Point p2, NeuronArrayView theNeuronDisplayView, bool isHebbian)
         {
             //returns a line from the source to the destination (with a link arrow at larger zooms
             //unless the source and destination are the same in which it returns an arc
@@ -249,7 +250,7 @@ namespace BrainSimulator
                 if (dp.ShowSynapseArrows())
                 {
                     Vector offset = new Vector(dp.NeuronDisplaySize / 2, dp.NeuronDisplaySize / 2);
-                    s = DrawLinkArrow(p1 + offset, p2 + offset);
+                    s = DrawLinkArrow(p1 + offset, p2 + offset, isHebbian);
                 }
             }
             else
@@ -287,7 +288,7 @@ namespace BrainSimulator
                 theCanvas.Cursor = Cursors.Arrow;
         }
 
-        public static Shape DrawLinkArrow(Point p1, Point p2) //helper to put an arrow in a synapse line
+        public static Shape DrawLinkArrow(Point p1, Point p2, bool isHebbian) //helper to put an arrow in a synapse line
         {
             GeometryGroup lineGroup = new GeometryGroup();
             double theta = Math.Atan2((p2.Y - p1.Y), (p2.X - p1.X)) * 180 / Math.PI;
@@ -301,8 +302,12 @@ namespace BrainSimulator
             Point p = new Point();
             p = p2 - v;
             pathFigure.StartPoint = p;
-            double arrowWidth = dp.NeuronDisplaySize / 15;
-            double arrowLength = dp.NeuronDisplaySize / 10;
+            double arrowWidth = dp.NeuronDisplaySize / 20;
+            double arrowLength = dp.NeuronDisplaySize / 15;
+            if (isHebbian)
+            {
+                arrowWidth *= 2;
+            }
             Point lpoint = new Point(p.X + arrowWidth, p.Y + arrowLength);
             Point rpoint = new Point(p.X - arrowWidth, p.Y + arrowLength);
             LineSegment seg1 = new LineSegment();

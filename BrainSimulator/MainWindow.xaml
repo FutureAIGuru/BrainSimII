@@ -21,6 +21,8 @@
                     <MenuItem Header="_Properties" Click="MenuItemProperties_Click"/>
                     <MenuItem Header="_Notes" Click="MenuItemNotes_Click" />
                     <Separator />
+                    <MenuItem Header="Recent" x:Name="MRUListMenu" />
+                    <Separator />
                     <MenuItem Header="_Exit" Click="button_Exit_Click"/>
                     <Separator />
                     <MenuItem Header="BasicNeurons" Click="buttonLoad_Click"/>

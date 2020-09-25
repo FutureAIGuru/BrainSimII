@@ -5,10 +5,15 @@ namespace BrainSimulator
 {
     class FiringHistory
     {
+        public class Sample
+        {
+            public long generation = 0;
+            public float value = 0;
+        }
         public class NeuronHistory
         {
             public int NeuronID;
-            public List<long> Samples = new List<long>();
+            public List<Sample> Samples = new List<Sample>();
         }
         public static List<NeuronHistory> history = new List<NeuronHistory>();
 
@@ -18,7 +23,7 @@ namespace BrainSimulator
             for (int i = 0; i < history.Count; i++)
             {
                 if (history[i].Samples.Count > 0)
-                    retVal = Math.Min(retVal, history[i].Samples[0]);
+                    retVal = Math.Min(retVal, history[i].Samples[0].generation);
             }
             return retVal;
         }
@@ -58,9 +63,9 @@ namespace BrainSimulator
             foreach (NeuronHistory active in history)
             {
                 float lastCharge = MainWindow.theNeuronArray.GetNeuronLastCharge(active.NeuronID);
-                if (lastCharge >= 1)
+               // if (lastCharge >= 1)
                 {
-                    active.Samples.Add(MainWindow.theNeuronArray.Generation);
+                    active.Samples.Add(new Sample { generation = MainWindow.theNeuronArray.Generation, value = lastCharge });
                 }
             }
         }

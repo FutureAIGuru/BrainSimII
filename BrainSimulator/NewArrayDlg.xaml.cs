@@ -37,6 +37,11 @@ namespace BrainSimulator
         public NewArrayDlg()
         {
             InitializeComponent();
+
+            cbUseServers.IsChecked = MainWindow.useServers;
+            buttonSpeedTest.IsEnabled = MainWindow.useServers;
+            buttonRefresh.IsEnabled = MainWindow.useServers;
+
             ulong StartBytes = (ulong)System.GC.GetTotalMemory(true);
             //NeuronBase[] n = new NeuronBase[sizeCount];
             //for (int i = 0; i < sizeCount; i++)
@@ -81,10 +86,13 @@ namespace BrainSimulator
                         NeuronClient.Server s = NeuronClient.serverList[i];
                         s.firstNeuron = i * neuronsNeeded / numServers;
                         s.lastNeuron = (i + 1) * neuronsNeeded / numServers;
-                        ServerList.Text += s.ipAddress.ToString()+" "+ s.name + " " + s.firstNeuron + " " + s.lastNeuron + "\n";
+                        ServerList.Text += s.ipAddress.ToString() + " " + s.name + " " + s.firstNeuron + " " + s.lastNeuron + "\n";
                     }
                 }
-
+            }
+            else
+            {
+                ServerList.Text = "";
             }
         }
 
@@ -123,15 +131,27 @@ namespace BrainSimulator
                 {
                     if (line == "") continue;
                     string[] command = line.Split(' ');
-                    NeuronClient.Server s =new NeuronClient.Server();
+                    NeuronClient.Server s = new NeuronClient.Server();
                     s.ipAddress = IPAddress.Parse(command[0]);
                     s.name = command[1];
                     int.TryParse(command[2], out s.firstNeuron);
                     int.TryParse(command[3], out s.lastNeuron);
                     NeuronClient.serverList.Add(s);
                 }
+
+                int totalNeuronsInServers = 0;
+                for (int i = 0; i < NeuronClient.serverList.Count; i++)
+                    totalNeuronsInServers += NeuronClient.serverList[i].lastNeuron - NeuronClient.serverList[i].firstNeuron;
+                if (totalNeuronsInServers != arraySize)
+                {
+                    MessageBox.Show("Server neuron allocation does not equal total neurons!");
+                    buttonOK.IsEnabled = true;
+                    returnValue = false;
+                    return;
+                }
+
                 if (!doSynapses) synapsesPerNeuron = 0;
-                NeuronClient.InitServers(synapsesPerNeuron,arraySize);
+                NeuronClient.InitServers(synapsesPerNeuron, arraySize);
                 NeuronClient.WaitForDoneOnAllServers();
                 returnValue = true;
                 Close();
@@ -210,13 +230,19 @@ namespace BrainSimulator
         //PING speed test
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            string s = ServerList.SelectedText;
+            if (!IPAddress.TryParse(s, out IPAddress targetIp))
+            {
+                MessageBox.Show("Highlight an IP address");
+                return;
+            }
             NeuronClient.pingCount = 0;
             System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
             sw.Start();
             string payload = NeuronClient.CreatePayload(1450);
             for (int i = 0; i < 100000; i++)
             {
-                NeuronClient.SendToServer(System.Net.IPAddress.Parse("192.168.0.2"), "Ping");
+                NeuronClient.SendToServer(targetIp, "Ping");
             }
             sw.Stop();
             double packetSendNoPayload = ((double)sw.ElapsedMilliseconds) / 100000.0;
@@ -225,24 +251,41 @@ namespace BrainSimulator
             sw.Start();
             for (int i = 0; i < 100000; i++)
             {
-                NeuronClient.SendToServer(System.Net.IPAddress.Parse("192.168.0.2"), "Ping " + payload);
+                NeuronClient.SendToServer(targetIp, "Ping " + payload);
             }
             sw.Stop();
-            double packetSendBigPayload = ((double) sw.ElapsedMilliseconds) / 100000.0;
+            double packetSendBigPayload = ((double)sw.ElapsedMilliseconds) / 100000.0;
             Thread.Sleep(1000);
 
             List<long> rawData = new List<long>();
             for (int i = 0; i < 1000; i++)
-                rawData.Add(NeuronClient.Ping(""));
+                rawData.Add(NeuronClient.Ping(targetIp, ""));
             double latencyNoPayload = ((double)rawData.Average()) / 10000.0;
             rawData.Clear();
             for (int i = 0; i < 1000; i++)
-                rawData.Add(NeuronClient.Ping(payload));
+                rawData.Add(NeuronClient.Ping(targetIp, payload));
             double latencyBigPayload = ((double)rawData.Average()) / 10000.0;
 
-            PingLabel.Content = "Packet Spd: " + packetSendNoPayload.ToString("F4") +"ms-" + packetSendBigPayload.ToString("F4") + "ms  R/T Latency:  " 
-                + latencyNoPayload.ToString("F4") + "ms-"+latencyBigPayload.ToString("F4") + "ms "+NeuronClient.pingCount ;
+            PingLabel.Content = "Packet Spd: " + packetSendNoPayload.ToString("F4") + "ms-" + packetSendBigPayload.ToString("F4") + "ms  R/T Latency:  "
+                + latencyNoPayload.ToString("F4") + "ms-" + latencyBigPayload.ToString("F4") + "ms " + NeuronClient.pingCount;
             PingLabel1.Visibility = Visibility.Visible;
+        }
+
+        private void CheckBoxUseServers_Checked(object sender, RoutedEventArgs e)
+        {
+            MainWindow.useServers = true;
+            buttonSpeedTest.IsEnabled = MainWindow.useServers;
+            buttonRefresh.IsEnabled = MainWindow.useServers;
+            NeuronClient.Init();
+            UpdateServerTextBox();
+        }
+
+        private void CheckBoxUseServers_Unchecked(object sender, RoutedEventArgs e)
+        {
+            MainWindow.useServers = false;
+            buttonSpeedTest.IsEnabled = MainWindow.useServers;
+            buttonRefresh.IsEnabled = MainWindow.useServers;
+            UpdateServerTextBox();
         }
     }
 }

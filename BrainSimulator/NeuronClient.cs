@@ -17,7 +17,7 @@ namespace BrainSimulator
     class NeuronClient
     {
 
-        static UdpClient serverClient; //listen only
+        static UdpClient serverClient = null; //listen only
         static UdpClient clientServer; //send/broadcasg only
         static IPAddress broadCastAddress = IPAddress.Parse("192.168.0.255"); //TODO: get IP address of current network
 
@@ -25,6 +25,7 @@ namespace BrainSimulator
         const int serverClientPort = 49003;
         public static void Init()
         {
+            if (serverClient != null) return; //already initialized
             serverClient = new UdpClient(serverClientPort);
             serverClient.Client.ReceiveBufferSize = 10000000;
 
@@ -61,12 +62,12 @@ namespace BrainSimulator
         private static extern void GetSystemTimePreciseAsFileTime(out long filetime);
         static long returnTime;
         public static long pingCount = 0;
-        public static long Ping(string payload)
+        public static long Ping(IPAddress targetIp,string payload)
         {
             //run the test
             returnTime = 0;
             GetSystemTimePreciseAsFileTime(out long startTime);
-            SendToServer(IPAddress.Parse("192.168.0.2"),"Ping " + payload);
+            SendToServer(targetIp,"Ping " + payload);
             while (returnTime == 0) Thread.Sleep(1);
             long elapsed = returnTime - startTime;
             return elapsed;

@@ -20,9 +20,9 @@
                   TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="52" RenderTransformOrigin="0.121,2.239"/>
         <Label Content="Per Neuron" HorizontalAlignment="Left" Height="24" Margin="362,125,0,0" VerticalAlignment="Top" Width="93"/>
         <TextBox HorizontalAlignment="Left" Margin="32,213,0,107" x:Name="ServerList" TextWrapping="Wrap" Text="No Servers Detected" Width="437"/>
-        <Button Content="Refresh" HorizontalAlignment="Left" Margin="32,0,0,79" Width="56" Click="Button_Refresh" Height="23" VerticalAlignment="Bottom"/>
-        <CheckBox Content="Use Servers" HorizontalAlignment="Left" Margin="167,0,0,70" Width="111" Height="27" VerticalAlignment="Bottom"/>
-        <Button Content="Speed Test" HorizontalAlignment="Left" Margin="93,0,0,79" Width="69" Click="Button_Click" Height="23" VerticalAlignment="Bottom"/>
+        <Button Content="Refresh" x:Name="buttonRefresh" IsEnabled="false" HorizontalAlignment="Left" Margin="32,0,0,79" Width="56" Click="Button_Refresh" Height="23" VerticalAlignment="Bottom"/>
+        <CheckBox Content="Use Servers" x:Name="cbUseServers" HorizontalAlignment="Left" Margin="167,0,0,70" Width="111" Height="27" VerticalAlignment="Bottom" Checked="CheckBoxUseServers_Checked" Unchecked="CheckBoxUseServers_Unchecked"/>
+        <Button Content="Speed Test" x:Name="buttonSpeedTest" IsEnabled="false" HorizontalAlignment="Left" Margin="93,0,0,79" Width="69" Click="Button_Click" Height="23" VerticalAlignment="Bottom"/>
         <Label Content="" x:Name="PingLabel" HorizontalAlignment="Left" Height="27" Margin="32,0,0,52" VerticalAlignment="Bottom" Width="437"/>
         <Label Content="Range: 0-1450 bytes/packet" x:Name="PingLabel1" Visibility="Hidden" HorizontalAlignment="Left" Height="28" Margin="278,311,0,0" VerticalAlignment="Top" Width="191"/>
     </Grid>

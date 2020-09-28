@@ -48,6 +48,7 @@ namespace NeuronServer
             clientServer = new UdpClient(clientServerPort);
             clientServer.Client.ReceiveBufferSize = 100000000;
 
+            Console.SetCursorPosition(0, 0);
             Console.WriteLine("Neuron Server Started");
 
             Task.Run(() =>
@@ -75,9 +76,7 @@ namespace NeuronServer
             {
                 case "Ping":
                     pingCount++;
-                    string payload = "";
-//                    if (commands.Length > 1) payload = commands[1];
-                    SendToClient("PingBack ");
+                    SendToClient("PingBack " + pingCount);
                     break;
 
                 case "Exit":
@@ -88,6 +87,7 @@ namespace NeuronServer
                     message = "ServerInfo " + ipAddressThisMachine.ToString() + " " + Environment.MachineName + " " + firstNeuron + " " + lastNeuron;
                     if (theNeuronArray != null)
                         message += " " + theNeuronArray.GetTotalNeuronsInUse() + " " + theNeuronArray.GetTotalSynapses();
+                    Console.SetCursorPosition(0, 1);
                     Console.WriteLine(message + " PacketCount: " + pingCount);
                     pingCount = 0;
                     SendToClient(message);
@@ -116,6 +116,8 @@ namespace NeuronServer
                                 for (int j = 0; j < lastNeuron - firstNeuron; j++) CreateRandomSynapses(j, synapsesPerNeuron,arraySize);
                             }
                             SendToClient("Done " + Environment.MachineName + " " + theNeuronArray.GetGeneration() + " " + theNeuronArray.GetFiredCount());
+                            Console.SetCursorPosition(0, 2);
+
                             Console.WriteLine("Server initialized: " + firstNeuron + "-" + lastNeuron + " with " + synapsesPerNeuron + " synapses/neuron");
                         }
                     }
@@ -173,8 +175,8 @@ namespace NeuronServer
                         SendToClient("Done " + Environment.MachineName + " " + theNeuronArray.GetGeneration() + " " + theNeuronArray.GetFiredCount());
                         sw.Stop();
                         long transferTime = sw.ElapsedMilliseconds;
-                        Console.SetCursorPosition(0, 0);
-                        Console.Write("Gen: " + theNeuronArray.GetGeneration() + " Boundary Synapses: " + synapses.Count + " Firing: " + firingTime + "ms Transfer: " + transferTime + "ms");
+                        Console.SetCursorPosition(0, 4);
+                        Console.Write("Gen: " + theNeuronArray.GetGeneration() + " Neurons fired: "+theNeuronArray.GetFiredCount() + " Boundary Synapses: " + synapses.Count + " Firing: " + firingTime + "ms Transfer: " + transferTime + "ms                                                                 ");
                     });
                     break;
 
@@ -358,6 +360,7 @@ namespace NeuronServer
                                 ipAddressThisMachine = host.AddressList[i];
                         }
                     }
+                    Console.SetCursorPosition(0, 3);
                     Console.WriteLine("Server IP Address: " + ipAddressThisMachine + " Name: " + Environment.MachineName + " Client IP Address: " + ipAddressClient);
                 }
                 string incomingMessage = Encoding.UTF8.GetString(recvBuffer);
@@ -367,26 +370,27 @@ namespace NeuronServer
         }
         public static void SendToOtherServer2(IPAddress ip, byte[] datagram)
         {
-            System.IO.MemoryStream stream = new System.IO.MemoryStream(datagram);
-            using (var outStream = new System.IO.MemoryStream())
-            {
-                using (var compressionStream =
-                    new System.IO.Compression.GZipStream(outStream, System.IO.Compression.CompressionMode.Compress))
-                {
-                    stream.CopyTo(compressionStream);
-                }
-                byte[] compressed = outStream.ToArray();
-            }
-            using (var outStream = new System.IO.MemoryStream())
-            {
-                using (var compressionStream =
-                    new System.IO.Compression.DeflateStream(outStream, System.IO.Compression.CompressionLevel.Optimal))
-                {
-                    stream.Position = 0;
-                    stream.CopyTo(compressionStream);
-                }
-                byte[] compressed = outStream.ToArray();
-            }
+            //experiments in data compression
+            //System.IO.MemoryStream stream = new System.IO.MemoryStream(datagram);
+            //using (var outStream = new System.IO.MemoryStream())
+            //{
+            //    using (var compressionStream =
+            //        new System.IO.Compression.GZipStream(outStream, System.IO.Compression.CompressionMode.Compress))
+            //    {
+            //        stream.CopyTo(compressionStream);
+            //    }
+            //    byte[] compressed = outStream.ToArray();
+            //}
+            //using (var outStream = new System.IO.MemoryStream())
+            //{
+            //    using (var compressionStream =
+            //        new System.IO.Compression.DeflateStream(outStream, System.IO.Compression.CompressionLevel.Optimal))
+            //    {
+            //        stream.Position = 0;
+            //        stream.CopyTo(compressionStream);
+            //    }
+            //    byte[] compressed = outStream.ToArray();
+            //}
 
             //Console.WriteLine("Send to servers: " + message.Length + " bytes");
             IPEndPoint ipEnd = new IPEndPoint(ip, serverServerPort);

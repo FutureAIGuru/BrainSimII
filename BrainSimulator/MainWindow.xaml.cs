@@ -35,7 +35,7 @@ namespace BrainSimulator
 
         Thread engineThread;
 
-        public static bool useServers = true;
+        public static bool useServers = false;
 
         private static int engineDelay = 500;//how long to wait after each cycle of the engine
 
@@ -78,19 +78,6 @@ namespace BrainSimulator
             engineThread = new Thread(new ThreadStart(EngineLoop)) { Name = "EngineThread" };
 
             InitializeComponent();
-
-
-
-            if (useServers)
-            {
-                // This can automatically start the server process on the local machine
-                //Process serverProcess = new Process();
-                ////TODO: Fix this fixed string address  
-                //serverProcess.StartInfo.FileName = @"C:\Users\c_sim\Documents\Visual Studio 2015\Projects\BrainSimulator\NeuronServer\bin\x64\Debug\NeuronServer.exe";
-                //serverProcess.Start();
-                NeuronClient.Init();
-                //NeuronClient.GetServerList();
-            }
 
             engineThread.Priority = ThreadPriority.Lowest;
 

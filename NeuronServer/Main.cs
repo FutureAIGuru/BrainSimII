@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Xml;
 
 namespace NeuronServer
@@ -20,9 +21,20 @@ namespace NeuronServer
     //       server->client 49003  server sends, client listens
     class Program
     {
+
+        //for timing info
+        [DllImport("Kernel32.dll", CallingConvention = CallingConvention.Winapi)]
+        public static extern void GetSystemTimePreciseAsFileTime(out long filetime);
+
+        static List<long> elapsedFiring;
+        static List<long> elapsedTransfer;
+        static List<long> neuronsFired;
+        static List<long> boundarySynapses;
+
         static int firstNeuron = -1;
         static int lastNeuron = -1;
 
+        //
         const int maxDatagramSize = 1000;
 
         static IPAddress ipAddressClient = null;
@@ -51,6 +63,29 @@ namespace NeuronServer
             Console.SetCursorPosition(0, 0);
             Console.WriteLine("Neuron Server Started");
 
+
+            elapsedFiring = new List<long>();
+            for (int i = 0; i < 100; i++)
+            {
+                elapsedFiring.Add(0);
+            }
+            elapsedTransfer = new List<long>();
+            for (int i = 0; i < 100; i++)
+            {
+                elapsedTransfer.Add(0);
+            }
+            boundarySynapses = new List<long>();
+            for (int i = 0; i < 100; i++)
+            {
+                boundarySynapses.Add(0);
+            }
+            neuronsFired = new List<long>();
+            for (int i = 0; i < 100; i++)
+            {
+                neuronsFired.Add(0);
+            }
+
+
             Task.Run(() =>
             {
                 Thread.CurrentThread.Priority = ThreadPriority.Highest;
@@ -68,7 +103,7 @@ namespace NeuronServer
         static long pingCount = 0;
         public class ServerInfo { public IPAddress ip; public int firstNeuron; public int lastNeuron; };
         static List<ServerInfo> serverList;
-        static long firingTime = 0;
+
         static void ProcessIncomingMessages(string message)
         {
             string[] commands = message.Trim().Split(' ');
@@ -112,8 +147,8 @@ namespace NeuronServer
                             theNeuronArray.Initialize(lastNeuron - firstNeuron);
                             if (synapsesPerNeuron != 0)
                             {
-                               // Parallel.For(0, lastNeuron - firstNeuron, j => CreateRandomSynapses(j,synapsesPerNeuron));
-                                for (int j = 0; j < lastNeuron - firstNeuron; j++) CreateRandomSynapses(j, synapsesPerNeuron,arraySize);
+                                // Parallel.For(0, lastNeuron - firstNeuron, j => CreateRandomSynapses(j,synapsesPerNeuron));
+                                for (int j = 0; j < lastNeuron - firstNeuron; j++) CreateRandomSynapses(j, synapsesPerNeuron, arraySize);
                             }
                             SendToClient("Done " + Environment.MachineName + " " + theNeuronArray.GetGeneration() + " " + theNeuronArray.GetFiredCount());
                             Console.SetCursorPosition(0, 2);
@@ -124,13 +159,15 @@ namespace NeuronServer
                     break;
 
                 case "Fire":
-                    Stopwatch sw = new Stopwatch();
                     Task.Run(() =>
                     {
-                        sw.Start();
+                        GetSystemTimePreciseAsFileTime(out long start);
                         theNeuronArray.Fire();
-                        sw.Stop();
-                        firingTime = sw.ElapsedMilliseconds;
+                        GetSystemTimePreciseAsFileTime(out long end);
+                        elapsedFiring.RemoveAt(0);
+                        elapsedFiring.Add(end - start);
+                        neuronsFired.RemoveAt(0);
+                        neuronsFired.Add(theNeuronArray.GetFiredCount());
                         SendToClient("Done " + Environment.MachineName + " " + theNeuronArray.GetGeneration() + " " + theNeuronArray.GetFiredCount());
                     });
                     break;
@@ -138,8 +175,7 @@ namespace NeuronServer
                 case "Transfer":
                     Task.Run(() =>
                     {
-                        sw = new Stopwatch();
-                        sw.Start();
+                        GetSystemTimePreciseAsFileTime(out long start);
                         byte[] xx = theNeuronArray.GetRemoteFiringSynapses();
                         List<Synapse> synapses = ConvertToSynapseList(xx);
                         List<Synapse>[] synapsesForServer = new List<Synapse>[serverList.Count];
@@ -173,10 +209,13 @@ namespace NeuronServer
                             }
                         }
                         SendToClient("Done " + Environment.MachineName + " " + theNeuronArray.GetGeneration() + " " + theNeuronArray.GetFiredCount());
-                        sw.Stop();
-                        long transferTime = sw.ElapsedMilliseconds;
+                        GetSystemTimePreciseAsFileTime(out long end);
+                        elapsedTransfer.RemoveAt(0);
+                        elapsedTransfer.Add(end - start);
+                        boundarySynapses.RemoveAt(0);
+                        boundarySynapses.Add(synapses.Count);
                         Console.SetCursorPosition(0, 4);
-                        Console.Write("Gen: " + theNeuronArray.GetGeneration() + " Neurons fired: "+theNeuronArray.GetFiredCount() + " Boundary Synapses: " + synapses.Count + " Firing: " + firingTime + "ms Transfer: " + transferTime + "ms                                                                 ");
+                        Console.Write("Gen: " + theNeuronArray.GetGeneration() + " Neurons fired: " + neuronsFired.Average().ToString("f0") + " Boundary Synapses: " + boundarySynapses.Average().ToString("f0")+ " Firing: " + (elapsedFiring.Average() / 10000f).ToString("f2") + "ms Transfer: " + (elapsedTransfer.Average() / 10000f).ToString("f2") + "ms                                                                 ");
                     });
                     break;
 
@@ -462,21 +501,36 @@ namespace NeuronServer
         }
 
         static Random rand;
-        static private void CreateRandomSynapses(int i, int synapsesPerNeuron,int arraySize)
+        static private void CreateRandomSynapses(int i, int synapsesPerNeuron, int arraySize)
         {
             int rows = 1000;
             if (rand == null) rand = new Random();
             for (int j = 0; j < synapsesPerNeuron; j++)
             {
-                int rowOffset = rand.Next() % 10 - 5;
-                int colOffset = rand.Next() % 10 - 5;
-                int targetNeuron = i+firstNeuron + (colOffset * rows) + rowOffset;
+                //int targetNeuron = i + rand.Next() % (2 * synapsesPerNeuron) - synapsesPerNeuron;
+                int rowOffset = rand.Next() % 100 - 50;
+                int colOffset = rand.Next() % 100 - 50;
+                int targetNeuron = i + firstNeuron + (colOffset * rows) + rowOffset;
 
                 while (targetNeuron < 0) targetNeuron += arraySize;
                 while (targetNeuron >= arraySize) targetNeuron -= arraySize;
-                float weight = (rand.Next(1000) / 750f) - .5f;
-                AddSynapse(i+firstNeuron, targetNeuron, weight, false);
+
+                float weight = (rand.Next(521) / 1000f) - .2605f;
+                AddSynapse(i + firstNeuron, targetNeuron, weight, false);
             }
+
+            //if (rand == null) rand = new Random();
+            //for (int j = 0; j < synapsesPerNeuron; j++)
+            //{
+            //    int rowOffset = rand.Next() % 10 - 5;
+            //    int colOffset = rand.Next() % 10 - 5;
+            //    int targetNeuron = i+firstNeuron + (colOffset * rows) + rowOffset;
+
+            //    while (targetNeuron < 0) targetNeuron += arraySize;
+            //    while (targetNeuron >= arraySize) targetNeuron -= arraySize;
+            //    float weight = (rand.Next(1000) / 750f) - .5f;
+            //    AddSynapse(i+firstNeuron, targetNeuron, weight, false);
+            //}
         }
 
     }

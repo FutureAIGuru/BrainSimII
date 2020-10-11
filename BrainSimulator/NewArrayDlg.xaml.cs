@@ -41,6 +41,9 @@ namespace BrainSimulator
             cbUseServers.IsChecked = MainWindow.useServers;
             buttonSpeedTest.IsEnabled = MainWindow.useServers;
             buttonRefresh.IsEnabled = MainWindow.useServers;
+            textBoxRows.Text = "1000";
+            textBoxColumns.Text = "1000";
+
 
             ulong StartBytes = (ulong)System.GC.GetTotalMemory(true);
             //NeuronBase[] n = new NeuronBase[sizeCount];
@@ -158,6 +161,8 @@ namespace BrainSimulator
             }
             else
             {
+                GC.Collect(3, GCCollectionMode.Forced, true);
+                MainWindow.theNeuronArray.Initialize(arraySize, rows);
                 bgw.DoWork += AsyncCreateNeurons;
                 bgw.RunWorkerAsync();
 
@@ -190,8 +195,6 @@ namespace BrainSimulator
 
         private void AsyncCreateNeurons(object sender, DoWorkEventArgs e)
         {
-            GC.Collect(3, GCCollectionMode.Forced, true);
-            MainWindow.theNeuronArray.Initialize(arraySize, rows);
             if (doSynapses)
             {
                 GC.Collect(3, GCCollectionMode.Forced, true);
@@ -211,13 +214,13 @@ namespace BrainSimulator
             for (int j = 0; j < synapsesPerNeuron; j++)
             {
                 int targetNeuron = i + rand.Next() % (2 * synapsesPerNeuron) - synapsesPerNeuron;
-                int rowOffset = rand.Next() % 10 - 5;
-                int colOffset = rand.Next() % 10 - 5;
+                int rowOffset = rand.Next() % 100 - 50;
+                int colOffset = rand.Next() % 100 - 50;
                 targetNeuron = i + (colOffset * rows) + rowOffset;
 
                 while (targetNeuron < 0) targetNeuron += arraySize;
                 while (targetNeuron >= arraySize) targetNeuron -= arraySize;
-                float weight = (rand.Next(1000) / 750f) - .5f;
+                float weight = (rand.Next(521) / 1000f) - .2605f;
                 MainWindow.theNeuronArray.AddSynapse(i, targetNeuron, weight, false, true);
             }
         }

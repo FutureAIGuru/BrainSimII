@@ -15,15 +15,15 @@ namespace NeuronEngine
 	public:
 		enum class modelType {Std,Color,FloatValue,LIF,Random};
 
-	private:
-		//an empty vector takes up memory so this is a pointer to the vector which is allocated if needed
-		std::vector<SynapseBase>* synapses = NULL; 
-
-		//the accumulating value of a neuron
-		std::atomic<float> currentCharge = 0;
-
 		//the ending value of a neuron 
 		float lastCharge = 0;
+
+		//an empty vector takes up memory so this is a pointer to the vector which is allocated if needed
+		std::vector<SynapseBase>* synapses = NULL;
+
+	private:
+		//the accumulating value of a neuron
+		std::atomic<float> currentCharge = 0;
 
 		modelType model = modelType::Std;
 		
@@ -75,8 +75,8 @@ namespace NeuronEngine
 
 		__declspec(dllexport)  void AddToCurrentValue(float weight);
 
+		__declspec(dllexport)  bool Fire1(long long generation);
 		void Fire2();
-		bool Fire1(long long generation);
 
 
 		NeuronBase(const NeuronBase& t)

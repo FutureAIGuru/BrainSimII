@@ -34,19 +34,27 @@ namespace NeuronEngine
 
 	private:
 		int arraySize = 0;
-		int threadCount = 64;
+		int threadCount = 124;//TODO
 		std::vector<NeuronBase> neuronArray;
 		std::atomic<long> firedCount = 0;
 		long generation = 0;
 
+		static std::vector<unsigned long long> fireList1;
+		static std::vector<unsigned long long> fireList2;
+		static int fireListCount;
+
 	private:
-		void ProcessNeurons1(int taskID);
-		void ProcessNeurons2(int taskID);
+		__declspec(noinline) void ProcessNeurons1(int taskID); //these are noinlined so the profiler makes more sense
+		__declspec(noinline) void ProcessNeurons2(int taskID);
+	public:
+		static void AddNeuronToFireList1(int id);
+		static bool clearFireListNeeded;
+		static void ClearFireLists();
 
 	public:
 #ifndef CompilingNeuronWrapper
 		static concurrency::concurrent_queue<SynapseBase> remoteQueue;
+		static concurrency::concurrent_queue<NeuronBase *> fire2Queue;
 #endif // !NeuronWrapper
-
 	};
 }

@@ -6,6 +6,7 @@
 using BrainSimulator.Modules;
 using System;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -89,6 +90,9 @@ namespace BrainSimulator
 
     public static class Utils
     {
+        [DllImport("Kernel32.dll", CallingConvention = CallingConvention.Winapi)]
+        public static extern void GetSystemTimePreciseAsFileTime(out long filetime);
+
         public static void Noop()
         {
 

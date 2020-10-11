@@ -28,22 +28,23 @@ using std::sort;
 using std::vector;
 
 
+
 int main(int argc, char* argv[], char* envp[])
 {
-	printf("Press enter\r\n");
-	std::cin.get();
+
 
 	printf("Running tests...run with debugger to verify\r\n");
 	start_time = my_clock::now();
 
 	random_device rd;
 	int sizeOfNeuron = sizeof(NeuronBase);
+	int sizeOfSynapse = sizeof(SynapseBase);
 	int sizeOfVector = sizeof(vector<int>);
-	int neuronCount = 100;// '000;//'000; // million neurons
-	int synapsesPerNeuron = 10;
-
-	//memory leak check
+	long long synapsesPerNeuron = 10;
 	NeuronArrayBase* neuronArray = NULL;
+
+	/*
+	//memory leak check
 	NeuronArrayBase* neuronArray2 = NULL;
 	for (int i = 0; i < 10; i++)
 	{
@@ -99,20 +100,36 @@ int main(int argc, char* argv[], char* envp[])
 		count = neuronArray->GetFiredCount();
 
 	}
+	*/
+
+	long long neuronCount; 
+	int threadCount;
+	long long synapsesPerDot;
+	int cyclesPerFiring;
 #if _DEBUG
-	neuronCount = 100'000;
+	neuronCount = 10'000;
 	synapsesPerNeuron = 100;
+	threadCount = 1;
+	synapsesPerDot = 1000;
+	cyclesPerFiring = 10;
 #else
 	neuronCount = 1'000'000;
 	synapsesPerNeuron = 100;
+	threadCount = 124;
+	synapsesPerDot = 1'000'000;
+	cyclesPerFiring = 1;
 #endif // DEBUG
 
 	neuronArray = new NeuronArrayBase();
 	neuronArray->Initialize(neuronCount);
-	neuronArray->SetThreadCount(64);
+	neuronArray->SetThreadCount(threadCount);
 
-	outputElapsedTime(to_string(neuronCount)+" neurons allocated");
-	string s = "allocating synapses using " + to_string(neuronArray->GetThreadCount()) + " threads. Each dot is "+to_string(100'000*synapsesPerNeuron)+" synapses \n";
+	outputElapsedTime(to_string(neuronCount) + " neurons allocated");
+
+	string s = "Using " + to_string(neuronArray->GetThreadCount()) + " threads. \n";
+	cout << s;
+
+	s = "Allocating " + to_string(neuronCount * synapsesPerNeuron) + " synapses . Each dot is " + to_string(synapsesPerDot) + " synapses \n";
 	cout << s;
 
 	std::atomic<long long> count = 0;
@@ -121,25 +138,27 @@ int main(int argc, char* argv[], char* envp[])
 		neuronArray->GetBounds(value, start, end);
 		for (int i = start; i < end; i++)
 		{
-			NeuronBase* n = neuronArray->GetNeuron(i);
-			for (int j = 0; j < synapsesPerNeuron; j++)
+			NeuronBase* n = neuronArray->GetNeuron(i+1);
+			//n->AddSynapse(n, 1, false, true);
+			for (int j = 1; j < synapsesPerNeuron; j++)
 			{
-				//int target = i + rd() % 1000 - 500;
-				int target = i + j;
+				int target = i+ rd() % 1'000;
+				//int target = j;
 				if (target >= neuronArray->GetArraySize()) target -= neuronArray->GetArraySize();
 				if (target < 0) target += neuronArray->GetArraySize();
 				n->AddSynapse(neuronArray->GetNeuron(target), 1, false, true);
+				count++;
+				if (count % synapsesPerDot == 0) printf(".");
 			}
-			count++;
-			if (count % 100'000 == 0) printf(".");
 		}
 		});
 
-	s = "\n"+ to_string((long long)neuronCount * (long long)synapsesPerNeuron) + " random synapses requested  Actual: " + to_string(neuronArray->GetTotalSynapseCount()) + " synapses  alocated";
+	s = "\n" + to_string((long long)neuronCount * (long long)synapsesPerNeuron) + " random synapses requested  Actual: " + to_string(neuronArray->GetTotalSynapseCount()) + " synapses  alocated";
+
 	outputElapsedTime(s);
 
-
-	for (int i = 0; i < neuronCount / 100; i++)
+	//select some neurons to be firing (all the time based on synapses
+	for (int i = 0; i < neuronCount / cyclesPerFiring; i++)
 	{
 		int target = rd() % neuronArray->GetArraySize();
 		//int target = i;
@@ -148,22 +167,19 @@ int main(int argc, char* argv[], char* envp[])
 	}
 
 	outputElapsedTime("firing loop Start");
-	for (int i = 0; i < 10; i++)
+
+	//Run the firing loop
+	for (int i = 0; i < 20; i++)
 	{
 		int count = 0;
-		//for (int j = 0; j < 10; j++)
-		{
-			neuronArray->Fire();
-			count += neuronArray->GetFiredCount();
-		}
-		string s = "fired: " + to_string(count) + " neurons,  ";
+		neuronArray->Fire();
+		string s = "fired: " + to_string(neuronArray->GetFiredCount()) + " neurons,  ";
 		outputElapsedTime(s);
 	}
 	outputElapsedTime("Done");
 
 	printf("Press enter\r\n");
 	std::cin.get();
-
 	return 0;
 }
 

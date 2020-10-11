@@ -40,6 +40,7 @@ namespace NeuronEngine
 	}
 	void NeuronBase::SetLastCharge(float value)
 	{
+		NeuronArrayBase::clearFireListNeeded = true;
 		lastCharge = value;
 	}
 	float NeuronBase::GetCurrentCharge()
@@ -48,6 +49,7 @@ namespace NeuronEngine
 	}
 	void NeuronBase::SetCurrentCharge(float value)
 	{
+		NeuronArrayBase::clearFireListNeeded = true;
 		currentCharge = value;
 	}
 	float NeuronBase::GetLeakRate()
@@ -126,7 +128,7 @@ namespace NeuronEngine
 		if (synapses == NULL)
 		{
 			synapses = new std::vector<SynapseBase>();
-			synapses->reserve(10);
+			synapses->reserve(100);
 		}
 		for (int i = 0; i < synapses->size(); i++)
 		{
@@ -248,7 +250,10 @@ namespace NeuronEngine
 
 	void NeuronBase::AddToCurrentValue(float weight)
 	{
-		currentCharge = currentCharge + weight;
+		currentCharge = currentCharge + weight;					
+		if (currentCharge >= threshold)
+			NeuronArrayBase::AddNeuronToFireList1(id);
+
 	}
 
 	//neuron firing is two-phase so that the network is independent of neuron order
@@ -267,8 +272,12 @@ namespace NeuronEngine
 		}
 		//check for firing
 		if (currentCharge < 0)currentCharge = 0;
-		lastCharge = currentCharge;
-		if (lastCharge >= threshold) 
+		if (currentCharge != lastCharge)
+		{
+			lastCharge = currentCharge;
+			NeuronArrayBase::AddNeuronToFireList1(id);
+		}
+		if (currentCharge >= threshold)
 		{
 			lastFired = generation;
 			currentCharge = 0;
@@ -277,6 +286,7 @@ namespace NeuronEngine
 		if (model == modelType::LIF || model == modelType::Random)
 		{
 			currentCharge = currentCharge * (1 - leakRate);
+			NeuronArrayBase::AddNeuronToFireList1(id);
 		}
 		return false;
 	}
@@ -286,9 +296,10 @@ namespace NeuronEngine
 		if (model == modelType::Color) return;
 		if (model == modelType::FloatValue) return;
 		if (lastCharge < threshold)return; //did the neuron fire?
-		while (vectorLock.exchange(1) == 1) {} //prevent the vector of synapses from changing while we're looking at it
+		NeuronArrayBase::AddNeuronToFireList1(id); 
 		if (synapses != NULL)
 		{
+			while (vectorLock.exchange(1) == 1) {} //prevent the vector of synapses from changing while we're looking at it
 			for (int i = 0; i < synapses->size(); i++) //process all the synapses sourced by this neuron
 			{
 				SynapseBase s = synapses->at(i);
@@ -302,6 +313,8 @@ namespace NeuronEngine
 					auto current = nTarget->currentCharge.load(std::memory_order_relaxed);
 					float desired = current + s.GetWeight();
 					while (!nTarget->currentCharge.compare_exchange_weak(current, desired));
+					if (desired >= threshold) 
+						NeuronArrayBase::AddNeuronToFireList1(nTarget->id);
 
 					//for a random neuron, decrease the randomness if synapses caused a firing
 					if (nTarget->model == modelType::Random && desired >= threshold)
@@ -327,8 +340,11 @@ namespace NeuronEngine
 						}
 					}
 				}
+				vectorLock = 0;
 			}
 		}
+
+		//a way of handling hebbian synapses
 		//if (synapsesFrom != NULL)
 		//{
 		//	int hebbianCount = 0;
@@ -373,6 +389,5 @@ namespace NeuronEngine
 		//		}
 		//	}
 		//}
-		vectorLock = 0;
 	}
 }

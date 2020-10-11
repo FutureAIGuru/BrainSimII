@@ -5,9 +5,11 @@
 
 using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -534,7 +536,6 @@ namespace BrainSimulator
         static long engineElapsed = 0;
         private void EngineLoop()
         {
-            Stopwatch sw = new Stopwatch();
             while (true)
             {
                 if (theNeuronArray == null)
@@ -561,11 +562,13 @@ namespace BrainSimulator
                     engineIsWaiting = false;
                     if (theNeuronArray != null)
                     {
-                        sw.Reset();
-                        sw.Start();
+                        Utils.GetSystemTimePreciseAsFileTime(out long startTime);
+                   
                         theNeuronArray.Fire();
-                        sw.Stop();
-                        engineElapsed = sw.ElapsedMilliseconds;
+ 
+                        Utils.GetSystemTimePreciseAsFileTime(out long end);
+                        engineElapsed = end - startTime;
+
                         if (updateDisplay)
                         {
                             Application.Current.Dispatcher.Invoke((Action)delegate
@@ -712,9 +715,20 @@ namespace BrainSimulator
             }
         }
 
+        static List<int> movingAverage;
         static public void UpdateDisplayLabel(float zoomLevel, int firedCount)
         {
-            thisWindow.labelDisplayStatus.Content = "Zoom Level: " + zoomLevel + ",  " + firedCount.ToString("N0") + " Neurons Fired  " + engineElapsed + "ms";
+            if (movingAverage == null)
+            {
+                movingAverage = new List<int>();
+                for (int i = 0; i < 100; i++)
+                {
+                    movingAverage.Add(0);
+                }
+            }
+            movingAverage.RemoveAt(0);
+            movingAverage.Add((int)engineElapsed);
+            thisWindow.labelDisplayStatus.Content = "Zoom Level: " + zoomLevel + ",  " + firedCount.ToString("N0") + " Neurons Fired  " + (movingAverage.Average()/10000f).ToString("F2")+ "ms";
         }
 
 

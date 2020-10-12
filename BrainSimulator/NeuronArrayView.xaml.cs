@@ -67,7 +67,7 @@ namespace BrainSimulator
         }
 
         public DisplayParams Dp { get => dp; set => dp = value; }
-
+        
         //refresh the display of the neuron network
         public void Update()
         {

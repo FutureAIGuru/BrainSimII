@@ -41,14 +41,13 @@ namespace BrainSimulator
             cbUseServers.IsChecked = MainWindow.useServers;
             buttonSpeedTest.IsEnabled = MainWindow.useServers;
             buttonRefresh.IsEnabled = MainWindow.useServers;
-            textBoxRows.Text = "1000";
-            textBoxColumns.Text = "1000";
+            //textBoxRows.Text = "1000";
+            //textBoxColumns.Text = "1000";
+            textBoxRows.Text = "15";
+            textBoxColumns.Text = "30";
 
 
             ulong StartBytes = (ulong)System.GC.GetTotalMemory(true);
-            //NeuronBase[] n = new NeuronBase[sizeCount];
-            //for (int i = 0; i < sizeCount; i++)
-            //    n[i] = new NeuronBase(false);
             ulong StopBytes = (ulong)System.GC.GetTotalMemory(true);
             ulong neuronSize1 = (StopBytes - StartBytes) / sizeCount;
 
@@ -161,6 +160,7 @@ namespace BrainSimulator
             }
             else
             {
+                
                 GC.Collect(3, GCCollectionMode.Forced, true);
                 MainWindow.theNeuronArray.Initialize(arraySize, rows);
                 bgw.DoWork += AsyncCreateNeurons;

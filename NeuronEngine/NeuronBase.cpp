@@ -73,7 +73,7 @@ namespace NeuronEngine
 		delete label;
 		label = NULL;
 		size_t len = wcslen(newLabel);
-		if (len > 1)
+		if (len > 0)
 		{
 			label = new wchar_t[len+2];
 			wcscpy_s(label, len+2, newLabel);
@@ -326,25 +326,30 @@ namespace NeuronEngine
 					if (s.IsHebbian()) //old method needed for network graph demo
 					{
 						//did this neuron fire coincident with the target
-						if (nTarget->currentCharge >= threshold) 
+						if (nTarget->lastCharge >= threshold)
 						{
 							//strengthen the synapse
-							float newWeight = s.GetWeight() + 0.1f;
-							synapses->at(i).SetWeight(newWeight);
+							if (s.GetWeight() <= 1) synapses->at(i).SetWeight(1);
 						}
-						else
-						{
-							//weaken the synapse
-							float newWeight = s.GetWeight() - 0.01f;
-							synapses->at(i).SetWeight(newWeight);
-						}
+						//if (nTarget->currentCharge >= threshold) 
+						//{
+						//	//strengthen the synapse
+						//	float newWeight = s.GetWeight() + 0.1f;
+						//	synapses->at(i).SetWeight(newWeight);
+						//}
+						//else
+						//{
+						//	//weaken the synapse
+						//	float newWeight = s.GetWeight() - 0.01f;
+						//	synapses->at(i).SetWeight(newWeight);
+						//}
 					}
 				}
 				vectorLock = 0;
 			}
 		}
 
-		//a way of handling hebbian synapses
+		//another way of handling hebbian synapses
 		//if (synapsesFrom != NULL)
 		//{
 		//	int hebbianCount = 0;

@@ -97,6 +97,12 @@ namespace BrainSimulator
         public static SolidColorBrush GetNeuronColor(Neuron n)
         {
             // figure out which color to use
+            if (n.model == Neuron.modelType.Color)
+            {
+
+                SolidColorBrush brush = new SolidColorBrush(Utils.IntToColor(n.LastChargeInt));
+                return brush;
+            }
             float value = n.LastCharge;
             Color c = Utils.RainbowColorFromValue(value);
             SolidColorBrush s1 = new SolidColorBrush(c);

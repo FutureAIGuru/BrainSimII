@@ -195,7 +195,7 @@ namespace BrainSimulator.Modules
             {
                 if (word.Confidence < minConfidence) anyLowConfidence = true;
             }
-            if (e.Result.Confidence < .9 || e.Result.Words[0].Confidence < .92 || anyLowConfidence)
+            if (e.Result.Confidence < .9 || e.Result.Words[0].Confidence < .92)// || anyLowConfidence)
             {
                 //System.Media.SystemSounds.Asterisk.Play();
                 Debug.WriteLine("Words Detected: " + debug + " IGNORED");

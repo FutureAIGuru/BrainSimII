@@ -383,6 +383,10 @@
       <Project>{958ded44-be0d-429c-8957-042bbffa5096}</Project>
       <Name>NeuronEngineWrapper</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NeuronServer\NeuronServer.csproj">
+      <Project>{1a69ebdd-f997-436e-a21e-b536050c5221}</Project>
+      <Name>NeuronServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WebCamWrapper\WebCamWrapper.csproj">
       <Project>{cc5d5149-0092-4508-ac34-2abe1468a1c9}</Project>
       <Name>WebCamWrapper</Name>

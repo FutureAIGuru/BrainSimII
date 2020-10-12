@@ -49,9 +49,11 @@ namespace BrainSimulator
             else
             {
                 Neuron retVal = new Neuron();
+                retVal.id = i;
                 retVal.LastCharge = GetNeuronLastCharge(i);
                 retVal.inUse = GetNeuronInUse(i);
                 retVal.label = GetNeuronLabel(i);
+                retVal.model = (Neuron.modelType)GetNeuronModel(i);
                 return retVal;
             }
         }

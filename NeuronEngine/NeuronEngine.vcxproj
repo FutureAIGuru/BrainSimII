@@ -45,9 +45,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)BrainSimulator\bin\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)BrainSimulator\bin\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -63,8 +65,8 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(SolutionDir)$(confugration)$(PlatformTarget)\$(Configuration)\NeuronEngine.*" "$(solutionDir)BrainSimulator\bin\$(Platformtarget)\$(Configuration)"
-copy "$(SolutionDir)$(confugration)$(PlatformTarget)\$(Configuration)\NeuronEngine.*" "$(solutionDir)NeuronServer\bin\$(Platformtarget)\$(Configuration)"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -85,8 +87,8 @@ copy "$(SolutionDir)$(confugration)$(PlatformTarget)\$(Configuration)\NeuronEngi
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(SolutionDir)$(confugration)$(PlatformTarget)\$(Configuration)\NeuronEngine.*" "$(solutionDir)BrainSimulator\bin\$(Platformtarget)\$(Configuration)"
-copy "$(SolutionDir)$(confugration)$(PlatformTarget)\$(Configuration)\NeuronEngine.*" "$(solutionDir)NeuronServer\bin\$(Platformtarget)\$(Configuration)"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

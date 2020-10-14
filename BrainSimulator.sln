@@ -5,6 +5,7 @@ VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrainSimulator", "BrainSimulator\BrainSimulator.csproj", "{A9535788-CE97-43CE-90E3-964A1704C0F2}"
 	ProjectSection(ProjectDependencies) = postProject
+		{FD48314A-9615-4BA6-913A-03787FB2DD30} = {FD48314A-9615-4BA6-913A-03787FB2DD30}
 		{ED5BEA74-23FD-496D-87A7-88CB42D1E051} = {ED5BEA74-23FD-496D-87A7-88CB42D1E051}
 	EndProjectSection
 EndProject
@@ -24,6 +25,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsEngineTest", "CsEngineTes
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuronServer", "NeuronServer\NeuronServer.csproj", "{1A69EBDD-F997-436E-A21E-B536050C5221}"
+	ProjectSection(ProjectDependencies) = postProject
+		{ED5BEA74-23FD-496D-87A7-88CB42D1E051} = {ED5BEA74-23FD-496D-87A7-88CB42D1E051}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,10 +67,8 @@ Global
 		{ED5BEA74-23FD-496D-87A7-88CB42D1E051}.Release|x64.Build.0 = Release|x64
 		{00D43CB0-D4E5-49F5-A822-02582529C5CD}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{00D43CB0-D4E5-49F5-A822-02582529C5CD}.Debug|x64.ActiveCfg = Debug|x64
-		{00D43CB0-D4E5-49F5-A822-02582529C5CD}.Debug|x64.Build.0 = Debug|x64
 		{00D43CB0-D4E5-49F5-A822-02582529C5CD}.Release|Any CPU.ActiveCfg = Release|Win32
 		{00D43CB0-D4E5-49F5-A822-02582529C5CD}.Release|x64.ActiveCfg = Release|x64
-		{00D43CB0-D4E5-49F5-A822-02582529C5CD}.Release|x64.Build.0 = Release|x64
 		{958DED44-BE0D-429C-8957-042BBFFA5096}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{958DED44-BE0D-429C-8957-042BBFFA5096}.Debug|x64.ActiveCfg = Debug|x64
 		{958DED44-BE0D-429C-8957-042BBFFA5096}.Debug|x64.Build.0 = Debug|x64
@@ -76,11 +78,9 @@ Global
 		{9969A573-1206-4B2B-81AA-605503429DCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9969A573-1206-4B2B-81AA-605503429DCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9969A573-1206-4B2B-81AA-605503429DCD}.Debug|x64.ActiveCfg = Debug|x64
-		{9969A573-1206-4B2B-81AA-605503429DCD}.Debug|x64.Build.0 = Debug|x64
 		{9969A573-1206-4B2B-81AA-605503429DCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9969A573-1206-4B2B-81AA-605503429DCD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9969A573-1206-4B2B-81AA-605503429DCD}.Release|x64.ActiveCfg = Release|x64
-		{9969A573-1206-4B2B-81AA-605503429DCD}.Release|x64.Build.0 = Release|x64
 		{1A69EBDD-F997-436E-A21E-B536050C5221}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1A69EBDD-F997-436E-A21E-B536050C5221}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A69EBDD-F997-436E-A21E-B536050C5221}.Debug|x64.ActiveCfg = Debug|x64

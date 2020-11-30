@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Shapes;
 
 
@@ -29,7 +30,13 @@ namespace BrainSimulator
             for (int i = 0; i < NeuronCount; i++)
                 yield return GetNeuronAt(i);
         }
-
+        public IEnumerable<Neuron> Neurons1
+        {
+            get {
+                for (int i = 0; i < NeuronCount; i++)
+                    yield return GetNeuronAt(i);
+            }
+        }
 
         //here is where we sort the array of modules so they execute top-to-bottom & left-to-right.
         public int CompareTo(ModuleView na)

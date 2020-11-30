@@ -34,18 +34,19 @@ namespace NeuronEngine
 
 	private:
 		int arraySize = 0;
-		int threadCount = 124;//TODO
+		int threadCount = 124;
 		std::vector<NeuronBase> neuronArray;
 		std::atomic<long> firedCount = 0;
 		long generation = 0;
 
 		static std::vector<unsigned long long> fireList1;
 		static std::vector<unsigned long long> fireList2;
-		static int fireListCount;
 
 	private:
 		__declspec(noinline) void ProcessNeurons1(int taskID); //these are noinlined so the profiler makes more sense
 		__declspec(noinline) void ProcessNeurons2(int taskID);
+		void GetBounds64(int taskID, int& start, int& end);
+
 	public:
 		static void AddNeuronToFireList1(int id);
 		static bool clearFireListNeeded;

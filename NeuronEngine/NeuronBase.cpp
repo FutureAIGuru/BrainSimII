@@ -75,8 +75,8 @@ namespace NeuronEngine
 		size_t len = wcslen(newLabel);
 		if (len > 0)
 		{
-			label = new wchar_t[len+2];
-			wcscpy_s(label, len+2, newLabel);
+			label = new wchar_t[len + 2];
+			wcscpy_s(label, len + 2, newLabel);
 		}
 	}
 	bool NeuronBase::GetInUse()
@@ -197,7 +197,7 @@ namespace NeuronEngine
 			}
 		}
 		vectorLock = 0;
-		if (((long long)n >>63) != 0) return;
+		if (((long long)n >> 63) != 0) return;
 		while (n->vectorLock.exchange(1) == 1) {}
 		if (n->synapsesFrom != NULL)
 		{
@@ -250,16 +250,21 @@ namespace NeuronEngine
 
 	void NeuronBase::AddToCurrentValue(float weight)
 	{
-		currentCharge = currentCharge + weight;					
+		currentCharge = currentCharge + weight;
 		if (currentCharge >= threshold)
 			NeuronArrayBase::AddNeuronToFireList1(id);
 
 	}
 
 	//neuron firing is two-phase so that the network is independent of neuron order
+	//When you call this, the neuron is added to fireList2 by the caller.
 	bool NeuronBase::Fire1(long long generation)
 	{
-		if (model == modelType::Color) return false;
+		if (model == modelType::Color)
+		{
+			NeuronArrayBase::AddNeuronToFireList1(id);
+			return true;
+		}
 		if (model == modelType::FloatValue) return false;
 		if (model == modelType::Random)
 		{
@@ -293,10 +298,12 @@ namespace NeuronEngine
 
 	void NeuronBase::Fire2()
 	{
-		if (model == modelType::Color) return;
 		if (model == modelType::FloatValue) return;
-		if (lastCharge < threshold)return; //did the neuron fire?
-		NeuronArrayBase::AddNeuronToFireList1(id); 
+		if (model == modelType::Color && lastCharge != 0)
+			return;
+		else if (model != modelType::Color && lastCharge < threshold)
+			return; //did the neuron fire?
+		NeuronArrayBase::AddNeuronToFireList1(id);
 		if (synapses != NULL)
 		{
 			while (vectorLock.exchange(1) == 1) {} //prevent the vector of synapses from changing while we're looking at it
@@ -304,7 +311,7 @@ namespace NeuronEngine
 			{
 				SynapseBase s = synapses->at(i);
 				NeuronBase* nTarget = s.GetTarget();
-				if (((long long)nTarget >>63 ) != 0) //does this synapse go to another server
+				if (((long long)nTarget >> 63) != 0) //does this synapse go to another server
 				{
 					NeuronArrayBase::remoteQueue.push(s);
 				}
@@ -312,8 +319,12 @@ namespace NeuronEngine
 				{	//nTarget->currentCharge += s.GetWeight(); //not supported until C++20
 					auto current = nTarget->currentCharge.load(std::memory_order_relaxed);
 					float desired = current + s.GetWeight();
-					while (!nTarget->currentCharge.compare_exchange_weak(current, desired));
-					if (desired >= threshold) 
+					while (!nTarget->currentCharge.compare_exchange_weak(current, desired))
+					{
+						current = nTarget->currentCharge.load(std::memory_order_relaxed);
+						desired = current + s.GetWeight();
+					}
+					if (desired >= threshold)
 						NeuronArrayBase::AddNeuronToFireList1(nTarget->id);
 
 					//for a random neuron, decrease the randomness if synapses caused a firing

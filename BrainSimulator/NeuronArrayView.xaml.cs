@@ -67,7 +67,7 @@ namespace BrainSimulator
         }
 
         public DisplayParams Dp { get => dp; set => dp = value; }
-        
+
         //refresh the display of the neuron network
         public void Update()
         {
@@ -218,7 +218,7 @@ namespace BrainSimulator
                 if (endCol > columns) endCol = columns;
                 for (int col = startCol; col < endCol; col++)
                 {
-                    List<Neuron> neuronColumn = null; 
+                    List<Neuron> neuronColumn = null;
                     for (int row = startRow; row < endRow; row++)
                     {
                         int neuronID = dp.GetAbsNeuronAt(col, row);
@@ -358,9 +358,9 @@ namespace BrainSimulator
                 int begin = 0; //beginning of a continuout sequences of neurons to retrieve
                 while (index < neuronsOnScreen.Count)
                 {
-                    if (index == neuronsOnScreen.Count-1 || neuronsOnScreen[index].neuronIndex + 1 != neuronsOnScreen[index + 1].neuronIndex)
+                    if (index == neuronsOnScreen.Count - 1 || neuronsOnScreen[index].neuronIndex + 1 != neuronsOnScreen[index + 1].neuronIndex)
                     {
-                        List<Neuron> neuronColumn = NeuronClient.GetNeurons(neuronsOnScreen[begin].neuronIndex,index-begin+1);
+                        List<Neuron> neuronColumn = NeuronClient.GetNeurons(neuronsOnScreen[begin].neuronIndex, index - begin + 1);
                         for (int i = 0; i < neuronColumn.Count; i++)
                         {
                             int nosIndex = i + begin;
@@ -373,7 +373,7 @@ namespace BrainSimulator
                                 }
                             }
                         }
-                        begin = index+1;
+                        begin = index + 1;
                     }
                     index++;
                 }
@@ -575,15 +575,29 @@ namespace BrainSimulator
                     Neuron n = MainWindow.theNeuronArray.GetNeuron(mouseDownNeuronIndex);
                     if (n != null)
                     {
-                        if (n.LastCharge < .99)
+                        if (n.Model != Neuron.modelType.Color)
                         {
-                            n.CurrentCharge = 1;
-                            n.LastCharge = 1;
+                            if (n.LastCharge < .99)
+                            {
+                                n.CurrentCharge = 1;
+                                n.LastCharge = 1;
+                            }
+                            else
+                            {
+                                n.CurrentCharge = 0;
+                                n.LastCharge = 0;
+                            }
                         }
                         else
                         {
-                            n.CurrentCharge = 0;
-                            n.LastCharge = 0;
+                            if (n.LastChargeInt == 0)
+                            {
+                                n.LastChargeInt = 0xffffff;
+                            }
+                            else
+                            {
+                                n.LastChargeInt = 0;
+                            }
                         }
                         n.Update();
                         e.Handled = true;
@@ -678,7 +692,7 @@ namespace BrainSimulator
                         if (synapseShape != null)
                             theCanvas.Children.Remove(synapseShape);
                         Shape l = SynapseView.GetSynapseShape
-                            (dp.pointFromNeuron(mouseDownNeuronIndex), dp.pointFromNeuron(currentNeuron), this,false);
+                            (dp.pointFromNeuron(mouseDownNeuronIndex), dp.pointFromNeuron(currentNeuron), this, false);
                         theCanvas.Children.Add(l);
                         synapseShape = l;
                     }

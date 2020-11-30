@@ -10,83 +10,45 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using static System.Math;
 
 namespace BrainSimulator
 {
-    /*   
-     *   here's how to assign specific threads to specific CPU cores
-     *   public static class SystemStuff
+    class Range
+    {
+        float minX;
+        float minY;
+        float maxX;
+        float maxY;
+        public Range(Point loc, Angle angle, float length)
         {
-            [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-            static extern IntPtr GetCurrentThreadId();
-            [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-            static extern IntPtr GetCurrentThread();
-            [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-            static extern bool GetProcessAffinityMask(IntPtr currentProcess, ref Int64 lpProcessAffinityMask, ref Int64 lpSystemAffinityMask);
-            [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-            public static extern int GetCurrentProcessorNumber();
-            [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-            public static extern bool GetProcessGroupAffinity(IntPtr currentProcess, ref ushort groupCount, ref ushort groupArray);
-
-            [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-            public static extern int GetActiveProcessorGroupCount();
-            [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-            public static extern bool GetThreadGroupAffinity(IntPtr hThread, ref GroupAffinity groupAffinity);
-
-            [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-            public static extern bool SetThreadGroupAffinity(IntPtr hThread, ref GroupAffinity groupAffinity, ref GroupAffinity prevAffinity);
-
-            public struct GroupAffinity
+            minX = (float)loc.X;
+            minY = (float)loc.Y;
+            maxX = minX + (float)Cos(angle) * length;
+            maxY = minY + (float)Sin(angle) * length;
+            if (minX > maxX)
             {
-                public ulong mask;
-                public short group;
-                long reserved;
+                float temp = minX;
+                minX = maxX;
+                maxX = temp;
             }
-            static int groupCount = -1;
-            public static void SetProcessorGroupAffinity(int taskNum)
+            if (minY > maxY)
             {
-                taskNum += 2;
-                if (groupCount == -1)
-                    groupCount = GetActiveProcessorGroupCount();
-                short theNewGroup = (short)(taskNum % groupCount);
-                short theNewProcessor = (short)(taskNum / groupCount);
-                IntPtr threadHandle = GetCurrentThread();
-                GroupAffinity ga = new GroupAffinity();
-                GroupAffinity ga1 = new GroupAffinity();
-                bool retVal = GetThreadGroupAffinity(threadHandle, ref ga);
-                int error = 0;
-                if (retVal != true)
-                    error = Marshal.GetLastWin32Error();
-                ga.group = theNewGroup;
-                ga.mask = (ulong)1 << theNewProcessor;
-                retVal = SetThreadGroupAffinity(threadHandle, ref ga, ref ga1);
-                if (retVal != true)
-                {
-                    error = Marshal.GetLastWin32Error();
-                }
+                float temp = minY;
+                minY = maxY;
+                maxY = temp;
             }
-
-            //Thread thread = Thread.CurrentThread;
-            //if (groupCount == -1)
-            //    groupCount = GetActiveProcessorGroupCount();
-            //short theNewGroup = (short)(taskNum % groupCount);
-            //IntPtr threadHandle = GetCurrentThread();
-            //GroupAffinity ga = new GroupAffinity();
-            //GroupAffinity ga1 = new GroupAffinity();
-            //bool retVal = GetThreadGroupAffinity(threadHandle, ref ga);
-            //int error = Marshal.GetLastWin32Error();
-            //if (retVal == true && ga.group != theNewGroup)
-            //{
-            //    ga.group = theNewGroup;
-            //    retVal = SetThreadGroupAffinity(threadHandle, ref ga, ref ga1);
-            //    if (retVal != true)
-            //    {
-            //        error = Marshal.GetLastWin32Error();
-            //    }
-            //}
+            //                minX -= 1; maxX += 1; minY -= 1; maxY += 1;
         }
-    */
-
+        public bool Overlaps(Range r2, float minOverlap = 0)
+        {
+            if (r2.minX > maxX + minOverlap) return false;
+            if (r2.minY > maxY + minOverlap) return false;
+            if (r2.maxX < minX - minOverlap) return false;
+            if (r2.maxY < minY - minOverlap) return false;
+            return true;
+        }
+    }
 
     public static class Utils
     {
@@ -144,6 +106,15 @@ namespace BrainSimulator
             retVal += theColor.B;
             return retVal;
         }
+        public static int ColorToInt(System.Drawing.Color theColor)
+        {
+            int retVal = 0;
+            //retVal += theColor.A << 24; ??
+            retVal += theColor.R << 16;
+            retVal += theColor.G << 8;
+            retVal += theColor.B;
+            return retVal;
+        }
 
         //helper to make rainbow colors
         // Map a value to a rainbow color.
@@ -166,7 +137,7 @@ namespace BrainSimulator
             }
             else if (int_value < 0) // -1,0 graysacle
             {
-                int_value = (1024-(Math.Abs(int_value)/2) + 512)/4;
+                int_value = (1024 - (Math.Abs(int_value) / 2) + 512) / 4;
                 return Color.FromRgb((byte)int_value, (byte)int_value, (byte)int_value);
             }
 
@@ -312,10 +283,21 @@ namespace BrainSimulator
         // the lines p1 --> p2 and p3 --> p4.
         public static void FindIntersection(
             Point p1, Point p2, Point p3, Point p4,
+            out Point intersection
+            )
+        {
+            FindIntersection(p1, p2, p3, p4,
             out bool lines_intersect, out bool segments_intersect,
-            out Point intersection,
+            out intersection,
             out Point close_p1, out Point close_p2,
-            out double collisionAngle)
+            out double collisionAngle);
+        }
+        public static void FindIntersection(
+        Point p1, Point p2, Point p3, Point p4,
+        out bool lines_intersect, out bool segments_intersect,
+        out Point intersection,
+        out Point close_p1, out Point close_p2,
+        out double collisionAngle)
         {
             // Get the segments' parameters.
             double dx12 = p2.X - p1.X;

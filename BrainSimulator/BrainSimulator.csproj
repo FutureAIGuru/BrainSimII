@@ -126,10 +126,21 @@
     <Compile Include="ModuleDescription.xaml.cs">
       <DependentUpon>ModuleDescription.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\ModuleBoundary.cs" />
+    <Compile Include="Modules\ModuleStrokeFinderDlg.xaml.cs">
+      <DependentUpon>ModuleStrokeFinderDlg.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\ModuleAudible.cs" />
+    <Compile Include="Modules\ModuleBoundary1.cs" />
     <Compile Include="Modules\ModuleEvent.cs" />
     <Compile Include="Modules\ModuleFireOldest.cs" />
+    <Compile Include="Modules\ModuleGrayScale.cs" />
+    <Compile Include="Modules\ModuleImageFileDlg.xaml.cs">
+      <DependentUpon>ModuleImageFileDlg.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\ModuleLife.cs" />
+    <Compile Include="Modules\ModuleStrokeCenter.cs" />
+    <Compile Include="Modules\ModuleStrokeFinder.cs" />
     <Compile Include="Modules\ModuleWords.cs" />
     <Compile Include="Modules\ModuleSpeakPhonemes.cs" />
     <Compile Include="Modules\ModuleSpeakPhonemesDlg.xaml.cs" />
@@ -244,6 +255,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="ModuleDescription.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\ModuleStrokeFinderDlg.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\ModuleImageFileDlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

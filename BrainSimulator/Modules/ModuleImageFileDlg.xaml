@@ -1,0 +1,16 @@
+﻿<local:ModuleBaseDlg x:Class="BrainSimulator.Modules.ModuleImageFileDlg"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BrainSimulator.Modules"
+        mc:Ignorable="d"
+        Title="ModuleImageFileDlg Module Dialog" Height="243" Width="383" Background="Gray" ShowInTaskbar="False">
+    <Grid Name="theCanvas" SizeChanged="TheCanvas_SizeChanged" Margin="0,0,0,-2" >
+        <Button Content="Cancel" Height="25" Width="80" Click="Button_Cancel_Click" Margin="0,0,73,44" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+        <TextBox x:Name="textBoxPath" Height="44" TextWrapping="Wrap" Margin="10,25,47,0" VerticalAlignment="Top"/>
+        <Button Content="..." Height="26" Click="Button_Browse_Click" Margin="0,32,10,0" Width="32" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+        <Button Content="OK" Height="25" Width="80" Click="Button_OK_Click" Margin="0,0,215,44" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+        <CheckBox Content="All files in folder" x:Name="cbEntireFolder" Height="19" Margin="26,74,0,0" HorizontalAlignment="Left" Width="108" VerticalAlignment="Top"/>
+    </Grid>
+</local:ModuleBaseDlg>

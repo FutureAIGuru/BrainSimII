@@ -329,7 +329,11 @@ namespace BrainSimulator
             for (int k = 0; k < n.Synapses.Count; k++)
             {
                 Synapse s = n.Synapses[k];
-                nNewLocation.AddSynapse(s.targetNeuron, s.weight, s.isHebbian);
+                if (s.targetNeuron != n.id)
+                    nNewLocation.AddSynapse(s.targetNeuron, s.weight, s.isHebbian);
+                else
+                    nNewLocation.AddSynapse(nNewLocation.id, s.weight, s.isHebbian);
+
             }
 
             //for all the synapses coming into this neuron, change the synapse target to new location
@@ -340,7 +344,8 @@ namespace BrainSimulator
                 {
                     Neuron sourceNeuron = MainWindow.theNeuronArray.GetNeuron(reverseSynapse.targetNeuron);
                     sourceNeuron.DeleteSynapse(n.id);
-                    sourceNeuron.AddSynapse(nNewLocation.id, reverseSynapse.weight, reverseSynapse.isHebbian);
+                    if (sourceNeuron.id != n.id)
+                        sourceNeuron.AddSynapse(nNewLocation.id, reverseSynapse.weight, reverseSynapse.isHebbian);
                 }
             }
             n.Clear();

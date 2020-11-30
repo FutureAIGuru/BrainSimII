@@ -57,15 +57,15 @@ namespace BrainSimulator
                 r.StrokeThickness = 1;
             }
 
-            r.MouseDown += theNeuronArrayView.theCanvas_MouseDown;
-            r.MouseUp += theNeuronArrayView.theCanvas_MouseUp;
-            r.MouseWheel += theNeuronArrayView.theCanvas_MouseWheel;
-
             float offset = (1 - ellipseSize) / 2f;
             Canvas.SetLeft(r, p.X + dp.NeuronDisplaySize * offset);
             Canvas.SetTop(r, p.Y + dp.NeuronDisplaySize * offset);
             if (dp.ShowNeuronArrowCursor())
             {
+                r.MouseDown += theNeuronArrayView.theCanvas_MouseDown;
+                r.MouseUp += theNeuronArrayView.theCanvas_MouseUp;
+                r.MouseWheel += theNeuronArrayView.theCanvas_MouseWheel;
+
                 r.MouseEnter += R_MouseEnter;
                 r.MouseLeave += R_MouseLeave;
             }
@@ -134,10 +134,12 @@ namespace BrainSimulator
             cmCancelled = false;
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
             sp.Children.Add(new Label { Content = "Charge: ", Padding = new Thickness(0) });
-            if (n.Model != Neuron.modelType.FloatValue)
-                sp.Children.Add(new TextBox { Text = n.LastCharge.ToString("f2"), Width = 60, Name = "CurrentCharge", VerticalAlignment = VerticalAlignment.Center });
-            else
+            if (n.Model == Neuron.modelType.FloatValue)
                 sp.Children.Add(new TextBox { Text = n.CurrentCharge.ToString("f2"), Width = 60, Name = "CurrentCharge", VerticalAlignment = VerticalAlignment.Center });
+            else if (n.model == Neuron.modelType.Color)
+                sp.Children.Add(new TextBox { Text = n.LastChargeInt.ToString("X"), Width = 60, Name = "CurrentCharge", VerticalAlignment = VerticalAlignment.Center });
+            else
+                sp.Children.Add(new TextBox { Text = n.LastCharge.ToString("f2"), Width = 60, Name = "CurrentCharge", VerticalAlignment = VerticalAlignment.Center });
             cm.Items.Add(sp);
             if (n.Model == Neuron.modelType.LIF || n.model == Neuron.modelType.Random)
             {

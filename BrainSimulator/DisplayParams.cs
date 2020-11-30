@@ -21,7 +21,7 @@ namespace BrainSimulator
         public bool ShowNeuronOutlines() { return neuronDisplaySize > 15; }
         public bool ShowNeuronCircles() { return neuronDisplaySize > 10; }
         public bool ShowNeuronLabels() { return neuronDisplaySize > 20; }
-        public bool ShowNeurons() { return neuronDisplaySize > 5; }
+        public bool ShowNeurons() { return neuronDisplaySize > 4; }
 
 
         public float NeuronDisplaySize

@@ -366,6 +366,8 @@ namespace BrainSimulator.Modules
             AddThing("NoWord", "Word");
             AddThing("Relation", "Thing");
             AddThing("Bigger", "Relation");
+            AddThing("SameLength", "Relation");
+            AddThing("SameAngle", "Relation");
             AddThing("Closer", "Relation");
             AddThing("Event", "Thing");
             AddThing("Outcome", "Thing");

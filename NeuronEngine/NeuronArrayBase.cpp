@@ -14,7 +14,6 @@ namespace NeuronEngine
 	std::vector<unsigned long long> NeuronArrayBase::fireList1;
 	std::vector<unsigned long long> NeuronArrayBase::fireList2;
 	bool NeuronArrayBase::clearFireListNeeded;
-	int NeuronArrayBase::fireListCount;
 
 	std::string NeuronArrayBase::GetRemoteFiringString()
 	{
@@ -62,7 +61,7 @@ namespace NeuronEngine
 		}
 		fireList1.reserve(expandedSize / 64);
 		fireList2.reserve(expandedSize / 64);
-		fireListCount = expandedSize / 64;
+		int fireListCount = expandedSize / 64;
 		for (int i = 0; i < fireListCount; i++)
 		{
 			fireList1.push_back(0xffffffffffffffff);
@@ -113,7 +112,8 @@ namespace NeuronEngine
 		return count;;
 	}
 
-	void NeuronArrayBase::GetBounds(int taskID, int& start, int& end)
+	void NeuronArrayBase::
+		GetBounds(int taskID, int& start, int& end)
 	{
 		int numberToProcess = arraySize / threadCount;
 		int remainder = arraySize % threadCount;
@@ -130,9 +130,51 @@ namespace NeuronEngine
 			end += remainder;
 		}
 	}
+
+	//this is just like getBounds except that start and end must be even multiples of 64
+	//so there won't be collisions on the firelists
+	void NeuronArrayBase::GetBounds64(int taskID, int& start, int& end)
+	{
+		int numberToProcess = arraySize / threadCount;
+		if (numberToProcess % 64 == 0)
+		{
+			int remainder = arraySize % threadCount;
+			start = numberToProcess * taskID;
+			end = start + numberToProcess;
+			if (taskID < remainder)
+			{
+				start += taskID;
+				end = start + numberToProcess + 1;
+			}
+			else
+			{
+				start += remainder;
+				end += remainder;
+			}
+		}
+		else
+		{
+			numberToProcess = (numberToProcess / 64 + 1) * 64;
+			int numUseableThreads = arraySize / numberToProcess;
+			if (taskID > numUseableThreads)
+			{
+				start = 0;
+				end = 0;
+				return;
+			}
+			int remainder = arraySize % numberToProcess;
+			start = numberToProcess * taskID;
+			end = start + numberToProcess;
+			if (taskID == numUseableThreads)
+			{
+				end = start + remainder;
+			}
+		}
+	}
 	void NeuronArrayBase::Fire()
 	{
-		if (clearFireListNeeded) ClearFireLists();
+		if (clearFireListNeeded) 
+			ClearFireLists();
 		clearFireListNeeded = false;
 		generation++;
 		firedCount = 0;
@@ -162,11 +204,11 @@ namespace NeuronEngine
 		int offset = id % 64;
 		unsigned long long bitMask = 0x1;
 		bitMask = bitMask << offset;
-		fireList1[index] |= bitMask;
+		fireList1[index] |= bitMask;  
 	}
 	void NeuronArrayBase::ClearFireLists()
 	{
-		for (int i = 0; i < fireListCount; i++)
+		for (int i = 0; i < fireList1.size(); i++)
 		{
 			fireList1[i] = 0xffffffffffffffff;
 			fireList2[i] = 0;
@@ -176,19 +218,21 @@ namespace NeuronEngine
 	void NeuronArrayBase::ProcessNeurons1(int taskID)
 	{
 		int start, end;
-		GetBounds(taskID, start, end);
+		GetBounds64(taskID, start, end);
 		start /= 64;
 		end /= 64;
 		for (int i = start; i < end; i++)
 		{
 			unsigned long long tempVal = fireList1[i];
+
 			fireList1[i] = 0;
 			unsigned long long bitMask = 0x1;
 			for (int j = 0; j < 64; j++)
 			{
 				if (tempVal & bitMask)
 				{
-					NeuronBase* theNeuron = GetNeuron(i * 64 + j);
+					int neuronID = i * 64 + j;
+					NeuronBase* theNeuron = GetNeuron(neuronID);
 					if (!theNeuron->Fire1(generation))
 					{
 						tempVal &= ~bitMask; //clear the bit if not firing for 2nd phase
@@ -204,7 +248,7 @@ namespace NeuronEngine
 	void NeuronArrayBase::ProcessNeurons2(int taskID)
 	{
 		int start, end;
-		GetBounds(taskID, start, end);
+		GetBounds64(taskID, start, end);
 		start /= 64;
 		end /= 64;
 		for (int i = start; i < end; i++)

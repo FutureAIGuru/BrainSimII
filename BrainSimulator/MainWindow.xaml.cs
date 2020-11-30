@@ -516,7 +516,10 @@ namespace BrainSimulator
                 MainWindow.theNeuronArray.EngineSpeed = engineDelay;
             engineDelay = 2000;
             while (!engineIsWaiting)
+            {
                 Thread.Sleep(100);
+                System.Windows.Forms.Application.DoEvents();
+            }
         }
 
         public static void ResumeEngine()
@@ -841,7 +844,10 @@ namespace BrainSimulator
                 }
                 //various errors might have happened so we'll just ignore them all and start with a fresh file 
                 catch (Exception e1)
-                { e1.GetType(); } //this is to suppress an unused variable waterning
+                { 
+                    e1.GetType();
+                    MessageBox.Show("Erro encountered in file load: " + e1.Message);
+                } //this is to suppress an unused variable waterning
             }
         }
 

@@ -77,9 +77,18 @@ namespace BrainSimulator
                             n.leakRate = leakRate;
                             break;
                         case "LastCharge":
-                            float.TryParse(node.InnerText, out float lastCharge);
-                            n.LastCharge = lastCharge;
-                            n.currentCharge = lastCharge;
+                            if (n.model != Neuron.modelType.Color)
+                            {
+                                float.TryParse(node.InnerText, out float lastCharge);
+                                n.LastCharge = lastCharge;
+                                n.currentCharge = lastCharge;
+                            }
+                            else //is color
+                            {
+                                int.TryParse(node.InnerText, out int lastChargeInt);
+                                n.LastChargeInt = lastChargeInt;
+                                n.currentCharge = lastChargeInt; //current charge is not used on color neurons
+                            }
                             break;
                         case "Synapses":
                             theNeuronArray.SetCompleteNeuron(n);
@@ -122,7 +131,8 @@ namespace BrainSimulator
             string tempFile = System.IO.Path.GetTempFileName();
             FileStream file = File.Create(tempFile);
 
-            XmlSerializer writer = new XmlSerializer(typeof(NeuronArray), GetModuleTypes());
+            Type[] extraTypes = GetModuleTypes();
+            XmlSerializer writer = new XmlSerializer(typeof(NeuronArray), extraTypes);
             writer.Serialize(file, theNeuronArray);
             file.Position = 0; ;
 
@@ -150,22 +160,28 @@ namespace BrainSimulator
                         attrNode.InnerText = n.id.ToString();
                         neuronNode.AppendChild(attrNode);
 
-                        if (n.lastCharge != 0)
+                        if (n.model != Neuron.modelType.Std)
+                        {
+                            attrNode = xmldoc.CreateNode("element", "Model", "");
+                            attrNode.InnerText = n.model.ToString();
+                            neuronNode.AppendChild(attrNode);
+                        }
+                        if (n.model != Neuron.modelType.Color && n.lastCharge != 0)
                         {
                             attrNode = xmldoc.CreateNode("element", "LastCharge", "");
                             attrNode.InnerText = n.lastCharge.ToString();
+                            neuronNode.AppendChild(attrNode);
+                        }
+                        if (n.model == Neuron.modelType.Color && n.LastChargeInt != 0)
+                        {
+                            attrNode = xmldoc.CreateNode("element", "LastCharge", "");
+                            attrNode.InnerText = n.LastChargeInt.ToString();
                             neuronNode.AppendChild(attrNode);
                         }
                         if (n.leakRate != 0.1f)
                         {
                             attrNode = xmldoc.CreateNode("element", "LeakRate", "");
                             attrNode.InnerText = n.leakRate.ToString();
-                            neuronNode.AppendChild(attrNode);
-                        }
-                        if (n.model != Neuron.modelType.Std)
-                        {
-                            attrNode = xmldoc.CreateNode("element", "Model", "");
-                            attrNode.InnerText = n.model.ToString();
                             neuronNode.AppendChild(attrNode);
                         }
                         if (label != "")

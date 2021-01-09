@@ -1,23 +1,23 @@
 <?xml version="1.0"?>
 <NeuronArray xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <networkNotes>&lt;Section xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve" TextAlignment="Left" LineHeight="Auto" IsHyphenationEnabled="False" xml:lang="en-us" FlowDirection="LeftToRight" NumberSubstitution.CultureSource="Text" NumberSubstitution.Substitution="AsCulture" FontFamily="Segoe UI" FontStyle="Normal" FontWeight="Normal" FontStretch="Normal" FontSize="12" Foreground="#FF000000" Typography.StandardLigatures="True" Typography.ContextualLigatures="True" Typography.DiscretionaryLigatures="False" Typography.HistoricalLigatures="False" Typography.AnnotationAlternates="0" Typography.ContextualAlternates="True" Typography.HistoricalForms="False" Typography.Kerning="True" Typography.CapitalSpacing="False" Typography.CaseSensitiveForms="False" Typography.StylisticSet1="False" Typography.StylisticSet2="False" Typography.StylisticSet3="False" Typography.StylisticSet4="False" Typography.StylisticSet5="False" Typography.StylisticSet6="False" Typography.StylisticSet7="False" Typography.StylisticSet8="False" Typography.StylisticSet9="False" Typography.StylisticSet10="False" Typography.StylisticSet11="False" Typography.StylisticSet12="False" Typography.StylisticSet13="False" Typography.StylisticSet14="False" Typography.StylisticSet15="False" Typography.StylisticSet16="False" Typography.StylisticSet17="False" Typography.StylisticSet18="False" Typography.StylisticSet19="False" Typography.StylisticSet20="False" Typography.Fraction="Normal" Typography.SlashedZero="False" Typography.MathematicalGreek="False" Typography.EastAsianExpertForms="False" Typography.Variants="Normal" Typography.Capitals="Normal" Typography.NumeralStyle="Normal" Typography.NumeralAlignment="Normal" Typography.EastAsianWidths="Normal" Typography.EastAsianLanguage="Normal" Typography.StandardSwashes="0" Typography.ContextualSwashes="0" Typography.StylisticAlternates="0"&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span FontWeight="Bold" FontSize="14"&gt;&lt;Run&gt;Purpose&lt;/Run&gt;&lt;/Span&gt;&lt;Span&gt;&lt;Run&gt;:&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Run&gt;   This network shows the basic Integrate and Fire (IF) and Leaky Integrate and Fire (LIF) neuron models. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Run&gt;   The neurons in the upper left rectangle are connected one-to-the-next by synapses of weight of 1.0 so the firing of one causes firing of the next. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Run&gt;   The three neurons to the right:  the left-most is connected to itself so it will always fire. It is also connected to the center neurons with a synapse of weight 0.25.   You cans see the color change as it accumulates charge. When it reaches its threshold, it will fire and cause the right-most neuron to fire once every tenth cycle.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   Below that are a cluster of neurons which show basic digital logic functions of OR, AND, NAND, and XOR and a set-reset flip-flop--the simplest possible digital memory using a logic model of always-firing is "1" and never firing is "0".&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Run&gt;   To the right of that is a similar set of logic circuits using a logic family where "1" is represented by ANY SPIKE and "0" is represented by no spike at all. This uses much less energy because continuous firing is not needed.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Run&gt;   To the right, the "COUNTER" shows how a few  synapses can be configured to count the number of firing neurons in a group.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Run&gt;   At the bottom center are two circuits for detecting the firing frequency of the input. The left one detects the frequency while the right circuit add the ability so that a single spike is output when a frequency is detected but there is no spike output otherwise. The multiple single-spike outputs are OR'ed together in the "Changed" output.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Run&gt;   In the top center is a short-term memory circuit which is unique in that it is fast (for neurons) but used firing energy only for read and write operations. This circuit stores 4 bits of memory in the charge of the neurons in the center column. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Run&gt;   The right side shows two circuits representing the implementation of a knowledge graph in neurons. This is described more fully in the technical paper here:  &lt;/Run&gt;&lt;Run&gt;&lt;/Run&gt;&lt;Run&gt;&lt;/Run&gt;&lt;Run&gt;https://futureai.guru/articles/SingleSpike.aspx&lt;/Run&gt;&lt;Run&gt;&lt;/Run&gt;&lt;Run&gt;&lt;/Run&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph FontSize="14" Margin="0,0,0,0"&gt;&lt;Span FontWeight="Bold"&gt;&lt;Run&gt;Things to try:&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   Click the "A" and "B" neurons to exercise various digital logic functions [This will make sense to people with EE and CS experience]. A neuron with a synapse to itself will fire continuously after it is clicked and will stop firing if clicked again.  Note that a "1" neuron which always fires is necessary to create an inverter (for NAND). This simple demonstration shows that the Integrate-and-Fire forms a logically complete set.  That is, with enough neurons, any digital circuit &lt;/Run&gt;&lt;/Span&gt;&lt;Span FontStyle="Italic"&gt;&lt;Run&gt;could &lt;/Run&gt;&lt;/Span&gt;&lt;Span&gt;&lt;Run&gt;be created.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Run&gt;   Repeat with the "1" ANY SPIKE model. Once you click "A" and/or "B", you need to click "READ" for the logic to perform.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Run&gt;   Click the "S" and "R" neurons to change the firing state of the flip-flop. This is a fast memory mechanism with this type of neuron model as it stores a bit in a single neuron.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Run&gt;   In the "Fractional Synapse is frequency divider" circuit, you can right-click the yellow synapse to change the frequency of the output spiking. You can also do this in the frequency-detector circuits at the bottom to observe that the output shifts with the change in input frequency.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Run&gt;   In the COUNTER, select different combinations of "R" neurons and notice that the appropriate output neuron always indicates the number of neurons which are firing. The  right-most column eliminates noise in the output with additional suppressing synapses but is not strictly necessary.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Run&gt;   To use the "Short-Term Memory" circuit, click one or more "SET" neurons to store information. Click "READ" and observe that the memory content is set to the "Out" neurons. To store a new value, click "Clear" to clear all memory cells. Because the bits are stored in the internal charge of the LIF neurons, it decays over time and needs to be refreshed periodically with a "READ"--just like DRAM.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   You can control the speed of the engine with the slider at the top of the screen. To the left, the &amp;lt;&amp;lt; button resets the engine and reinitializes any modules, the || button pauses the engine, and the &amp;gt;| single steps the engine.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span FontWeight="Bold"&gt;&lt;Run&gt;You can build your own network:&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;      Right-click any neuron or synapse to see its state and edit it. You can use the checkbox to add more neurons to the firing history window.  You can drag waveform labels up and down in the history window to reorder the waveforms. You can change the model used to calculate a neuron's function.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   You can drag the mouse cursor from one neuron to another to create a new synapse.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Run&gt;   You can zoom and pan the neuron display by holding the Shift key and using the mouse wheel or dragging the display. You can also use the scrollbars or the buttons below the main menu bar. Notice that this network is 30x15 or 450 neurons but the simulator works with millions.. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   When the mouse cursor is between neurons it changes to a cross and you can then drag to select a group of neurons. You can then move to a clear neuron area, right-click a neuron and select Clipboard-&amp;gt;Move Here to move the neurons. Other standard clipboard commands also work. If you change the model of a neuron within a selected area, all neurons in the selection are changed.  Holding the Shift key while selecting lets you create a selection with multiple rectangles.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph FontSize="14" Margin="0,0,0,0"&gt;&lt;Span FontWeight="Bold"&gt;&lt;Run&gt;Current state of development:&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   This network represents the basic neuron models, engine operation, and user interface and is reasonably robust. Please report any bugs you encounter.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph FontSize="14" Margin="0,0,0,0"&gt;&lt;Span FontWeight="Bold"&gt;&lt;Run&gt;Some known bugs:&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   If you cut-paste-move a group of neurons to an area which overlaps itself or other neurons, problems may occur.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   The only models which work through the user interface are Std, LIF, and Random. Others are only useful programmatically.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   Network size is limited only by RAM and CPU performance. User-interface performance degrades with the number of neurons on the display, not the number in the network which has been tried with millions.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Run&gt;   In rare instances, a neuron display color will show an erroneous firing state. This is corrected by panning or zooming the display&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph FontFamily="Calibri" FontSize="14.666666666666666" Margin="0,0,0,10.67"&gt;&lt;/Paragraph&gt;&lt;/Section&gt;</networkNotes>
+  <networkNotes>&lt;Section xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve" TextAlignment="Left" LineHeight="Auto" IsHyphenationEnabled="False" xml:lang="en-us" FlowDirection="LeftToRight" NumberSubstitution.CultureSource="Text" NumberSubstitution.Substitution="AsCulture" FontFamily="Segoe UI" FontStyle="Normal" FontWeight="Normal" FontStretch="Normal" FontSize="12" Foreground="#FF000000" Typography.StandardLigatures="True" Typography.ContextualLigatures="True" Typography.DiscretionaryLigatures="False" Typography.HistoricalLigatures="False" Typography.AnnotationAlternates="0" Typography.ContextualAlternates="True" Typography.HistoricalForms="False" Typography.Kerning="True" Typography.CapitalSpacing="False" Typography.CaseSensitiveForms="False" Typography.StylisticSet1="False" Typography.StylisticSet2="False" Typography.StylisticSet3="False" Typography.StylisticSet4="False" Typography.StylisticSet5="False" Typography.StylisticSet6="False" Typography.StylisticSet7="False" Typography.StylisticSet8="False" Typography.StylisticSet9="False" Typography.StylisticSet10="False" Typography.StylisticSet11="False" Typography.StylisticSet12="False" Typography.StylisticSet13="False" Typography.StylisticSet14="False" Typography.StylisticSet15="False" Typography.StylisticSet16="False" Typography.StylisticSet17="False" Typography.StylisticSet18="False" Typography.StylisticSet19="False" Typography.StylisticSet20="False" Typography.Fraction="Normal" Typography.SlashedZero="False" Typography.MathematicalGreek="False" Typography.EastAsianExpertForms="False" Typography.Variants="Normal" Typography.Capitals="Normal" Typography.NumeralStyle="Normal" Typography.NumeralAlignment="Normal" Typography.EastAsianWidths="Normal" Typography.EastAsianLanguage="Normal" Typography.StandardSwashes="0" Typography.ContextualSwashes="0" Typography.StylisticAlternates="0"&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span FontWeight="Bold" FontSize="14"&gt;&lt;Run&gt;Purpose&lt;/Run&gt;&lt;/Span&gt;&lt;Span&gt;&lt;Run&gt;:&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   This network shows the basic Integrate and Fire (IF) and Leaky Integrate and Fire (LIF) neuron models. &lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   The neurons in the upper left rectangle are connected one-to-the-next by synapses of weight of 1.0 so the firing of any one causes firing of the next. &lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   The three neurons to the right:  the left-most is set to always fire. It is connected to the center neuron with a synapse of weight 0.25.   You can see the color change as it accumulates charge. When it reaches its threshold, it will fire and cause the right-most neuron to fire once every fourth cycle.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   Below that are a cluster of neurons which show basic digital logic functions of AND, OR, XOR, and NAND and a set-reset flip-flop--the simplest possible digital memory using a logic model of always-firing is "1" and never firing is "0".&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   To the right of that is a similar set of logic circuits using a logic family where "1" is represented by ANY SPIKE and "0" is represented by no spike at all. This uses much less energy because continuous firing is not needed but outputs are only valid after the READ neuron spikes..&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   To the right, the "COUNTER" shows how a few synapses can be configured to count the number of firing neurons in a group.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   At the bottom center are two circuits for detecting the firing rate of the input. In each group, the left two neurons are connected by a synapse which generates a defined spiking rate. The left group detects the frequency while the right group adds the ability so that a single spike is output when a frequency is detected but there is no spike output otherwise. The multiple single-spike outputs are OR'ed together in the "Changed" output.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   In the top center is a short-term memory circuit which is unique in that it is fast (for neurons) but uses firing energy only for read and write operations. This circuit stores 4 bits of memory in the charge of the neurons in the center column. Because these are “leaky” LIF neurons, this memory will lose its content over time unless it is refreshed by a Read.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   The right side shows a circuit implementing a basic knowledge graph in neurons. This is described more fully in the technical paper here:  &lt;/Run&gt;&lt;/Span&gt;&lt;Span TextDecorations="Underline"&gt;&lt;Run&gt;https://futureai.guru/articles/SingleSpike.aspx&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;/Paragraph&gt;&lt;Paragraph FontSize="14" Margin="0,0,0,0"&gt;&lt;Span FontWeight="Bold"&gt;&lt;Run&gt;Things to try:&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   Click the "A" and "B" neurons to exercise various digital logic functions [This will make sense to people with EE and CS experience]. A neuron with a synapse to itself will fire continuously after it is clicked and will stop firing if clicked again.  Note that a "1" neuron which always fires is necessary to create an inverter (for NAND). This simple demonstration shows that the Integrate-and-Fire forms a logically complete set.  That is, with enough neurons, any digital circuit &lt;/Run&gt;&lt;/Span&gt;&lt;Span FontStyle="Italic"&gt;&lt;Run&gt;could &lt;/Run&gt;&lt;/Span&gt;&lt;Span&gt;&lt;Run&gt;be created.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   Repeat with the "1" ANY SPIKE model. Once you click "A" and/or "B", you need to click "READ" for the logic to perform.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   Click the "S" and "R" neurons to change the firing state of the flip-flop. This is a fast memory mechanism with this type of neuron model as it stores a bit in a single neuron.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   In the "Fractional Synapse is frequency divider" circuit, you can right-click the aqua synapse to change the frequency of the output spiking. You can also do this in the frequency-detector circuits at the bottom to observe that the output shifts with the change in input frequency. This is also a good opportunity to demonstrate the history window by selecting all three neurons, right-clicking, and selecting the “Record firing history” checkbox.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   In the COUNTER, select different combinations of "R" neurons and notice that the appropriate output neuron always indicates the number of neurons which are firing. The right-most column eliminates noise in the output with additional suppressing synapses but is not strictly necessary.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   To use the "Short-Term Memory" circuit, click one or more "SET" neurons to store information. Click "READ" and observe that the memory content is set to the "Out" neurons. To store a new value, click "Clear" to clear all memory cells. Because the bits are stored in the internal charge of the LIF neurons, it decays over time and needs to be refreshed periodically with a "READ"--just like DRAM.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span FontWeight="Bold"&gt;&lt;Run&gt;You can build your own network:&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;      Right-click any neuron or synapse to see its state and edit it. You can use the checkbox to add more neurons to the firing history window.  In that window, you can drag waveform labels up and down in the history window to reorder the waveforms. You can change the model used to calculate a neuron's function.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   You can drag the mouse cursor from one neuron to another to create a new synapse. Then right-click the synapse to set its weight. New synapses will default to the characteristics of the most-recently-selected synapse.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   You can zoom and pan the neuron display by holding the Shift key and using the mouse wheel or dragging the display. You can also use the scrollbars or the buttons below the main menu bar. Notice that this network is 30x15 or 450 neurons but the simulator works with millions.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   When the mouse cursor is between neurons it changes to a cross and you can then drag to select a group of neurons. You can then move to a clear neuron area, right-click a neuron and select Clipboard-&amp;gt;Move Here to move the neurons. Other standard clipboard commands also work. If you change the model of a neuron within a selected area, all neurons in the selection are changed.  Holding the Shift key while selecting lets you create a selection with multiple rectangles.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;/Paragraph&gt;&lt;Paragraph FontSize="14" Margin="0,0,0,0"&gt;&lt;Span FontWeight="Bold"&gt;&lt;Run&gt;Current state of development:&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,0"&gt;&lt;Span&gt;&lt;Run&gt;   This network represents the basic neuron models, engine operation, and user interface and is reasonably robust. Please report any bugs you encounter.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph FontFamily="Calibri" FontSize="14.666666666666666" Margin="0,0,0,10.67"&gt;&lt;/Paragraph&gt;&lt;Paragraph FontFamily="Cambria" FontSize="13.333333333333332" Margin="0,0,0,10.67"&gt;&lt;/Paragraph&gt;&lt;/Section&gt;</networkNotes>
   <hideNotes>false</hideNotes>
-  <ShowSynapese>false</ShowSynapese>
-  <Generation>1698</Generation>
+  <Generation>7017</Generation>
   <EngineSpeed>250</EngineSpeed>
   <arraySize>450</arraySize>
   <rows>15</rows>
-  <lastFireCount>20</lastFireCount>
+  <lastFireCount>19</lastFireCount>
   <displayParams>
-    <NeuronDisplaySize>60</NeuronDisplaySize>
+    <NeuronDisplaySize>60.0000038</NeuronDisplaySize>
     <DisplayOffset>
-      <X>23.606716474276141</X>
-      <Y>5.0036646469837933</Y>
+      <X>29.986433036750398</X>
+      <Y>-1.5987421490222786</Y>
     </DisplayOffset>
     <NeuronRows>15</NeuronRows>
   </displayParams>
   <ShowSynapses>true</ShowSynapses>
   <Modules />
+  <RefractoryDelay>0</RefractoryDelay>
   <Neurons>
     <Neuron>
       <Id>15</Id>
@@ -190,6 +190,7 @@
     </Neuron>
     <Neuron>
       <Id>46</Id>
+      <LastCharge>1</LastCharge>
       <Synapses>
         <Synapse>
           <TargetNeuron>61</TargetNeuron>
@@ -281,7 +282,7 @@
     </Neuron>
     <Neuron>
       <Id>107</Id>
-      <Label>Rt-click yellow synapse to change weight</Label>
+      <Label>Rt-click aqua synapse to change weight</Label>
     </Neuron>
     <Neuron>
       <Id>109</Id>
@@ -340,21 +341,20 @@
           <TargetNeuron>118</TargetNeuron>
         </Synapse>
         <Synapse>
-          <Weight>0.25</Weight>
+          <Weight>0.34</Weight>
           <TargetNeuron>133</TargetNeuron>
         </Synapse>
       </Synapses>
     </Neuron>
     <Neuron>
       <Id>121</Id>
+      <Model>Random</Model>
       <LastCharge>1</LastCharge>
+      <LeakRate>0</LeakRate>
       <Synapses>
         <Synapse>
           <Weight>0.25</Weight>
           <TargetNeuron>136</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <TargetNeuron>121</TargetNeuron>
         </Synapse>
       </Synapses>
     </Neuron>
@@ -422,7 +422,7 @@
     </Neuron>
     <Neuron>
       <Id>133</Id>
-      <LastCharge>0.25</LastCharge>
+      <LastCharge>0.68</LastCharge>
       <Synapses>
         <Synapse>
           <TargetNeuron>148</TargetNeuron>
@@ -478,7 +478,6 @@
     </Neuron>
     <Neuron>
       <Id>148</Id>
-      <LastCharge>1</LastCharge>
       <Synapses>
         <Synapse>
           <Weight>0.9</Weight>
@@ -514,7 +513,7 @@
     <Neuron>
       <Id>161</Id>
       <Model>LIF</Model>
-      <LastCharge>0.02449844</LastCharge>
+      <LastCharge>0.9249743</LastCharge>
       <LeakRate>0.7</LeakRate>
       <Synapses>
         <Synapse>
@@ -549,7 +548,7 @@
     <Neuron>
       <Id>162</Id>
       <Model>LIF</Model>
-      <LastCharge>0.0358527</LastCharge>
+      <LastCharge>0.9368207</LastCharge>
       <LeakRate>0.66</LeakRate>
       <Synapses>
         <Synapse>
@@ -568,7 +567,7 @@
     <Neuron>
       <Id>163</Id>
       <Model>LIF</Model>
-      <LastCharge>0.1123615</LastCharge>
+      <LastCharge>0.9</LastCharge>
       <LeakRate>0.51</LeakRate>
       <Synapses>
         <Synapse>
@@ -587,6 +586,7 @@
     <Neuron>
       <Id>164</Id>
       <Model>LIF</Model>
+      <LastCharge>0.9</LastCharge>
       <LeakRate>0.42</LeakRate>
       <Synapses>
         <Synapse>
@@ -889,7 +889,7 @@
     </Neuron>
     <Neuron>
       <Id>238</Id>
-      <LastCharge>0.34</LastCharge>
+      <LastCharge>1.02</LastCharge>
       <Synapses>
         <Synapse>
           <TargetNeuron>253</TargetNeuron>
@@ -898,7 +898,6 @@
     </Neuron>
     <Neuron>
       <Id>253</Id>
-      <LastCharge>1</LastCharge>
       <Synapses>
         <Synapse>
           <Weight>0.9</Weight>
@@ -933,7 +932,7 @@
     <Neuron>
       <Id>266</Id>
       <Model>LIF</Model>
-      <LastCharge>0.08324769</LastCharge>
+      <LastCharge>0.2774923</LastCharge>
       <LeakRate>0.7</LeakRate>
       <Synapses>
         <Synapse>
@@ -972,7 +971,7 @@
     <Neuron>
       <Id>267</Id>
       <Model>LIF</Model>
-      <LastCharge>0.1538461</LastCharge>
+      <LastCharge>0.3846154</LastCharge>
       <LeakRate>0.6</LeakRate>
       <Synapses>
         <Synapse>
@@ -995,6 +994,7 @@
     <Neuron>
       <Id>268</Id>
       <Model>LIF</Model>
+      <LastCharge>0.495</LastCharge>
       <LeakRate>0.45</LeakRate>
       <Synapses>
         <Synapse>
@@ -1017,6 +1017,7 @@
     <Neuron>
       <Id>269</Id>
       <Model>LIF</Model>
+      <LastCharge>0.54</LastCharge>
       <LeakRate>0.4</LeakRate>
       <Synapses>
         <Synapse>
@@ -1204,6 +1205,7 @@
     <Neuron>
       <Id>288</Id>
       <Model>LIF</Model>
+      <LastCharge>1.261169E-44</LastCharge>
       <LeakRate>0.05</LeakRate>
       <Synapses>
         <Synapse>
@@ -1323,7 +1325,7 @@
     </Neuron>
     <Neuron>
       <Id>298</Id>
-      <LastCharge>1</LastCharge>
+      <LastCharge>0.5</LastCharge>
       <Synapses>
         <Synapse>
           <Weight>0.5</Weight>
@@ -1535,6 +1537,7 @@
     </Neuron>
     <Neuron>
       <Id>351</Id>
+      <LastCharge>0.9</LastCharge>
       <Synapses>
         <Synapse>
           <Weight>0.9</Weight>
@@ -1547,69 +1550,19 @@
         <Synapse>
           <TargetNeuron>336</TargetNeuron>
         </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
-      <Id>353</Id>
-      <Label>NextAvailable</Label>
-      <Synapses>
         <Synapse>
-          <Weight>0.2</Weight>
-          <TargetNeuron>368</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <TargetNeuron>353</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>0</Weight>
-          <TargetNeuron>370</TargetNeuron>
-          <IsHebbian>true</IsHebbian>
-        </Synapse>
-        <Synapse>
-          <Weight>0</Weight>
-          <TargetNeuron>371</TargetNeuron>
-          <IsHebbian>true</IsHebbian>
-        </Synapse>
-        <Synapse>
-          <TargetNeuron>384</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <TargetNeuron>369</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>0</Weight>
-          <TargetNeuron>372</TargetNeuron>
-          <IsHebbian>true</IsHebbian>
-        </Synapse>
-        <Synapse>
-          <Weight>0</Weight>
-          <TargetNeuron>373</TargetNeuron>
-          <IsHebbian>true</IsHebbian>
-        </Synapse>
-        <Synapse>
-          <Weight>0</Weight>
-          <TargetNeuron>374</TargetNeuron>
-          <IsHebbian>true</IsHebbian>
-        </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
-      <Id>362</Id>
-      <LastCharge>0.34</LastCharge>
-      <Synapses>
-        <Synapse>
-          <Weight>-1</Weight>
-          <TargetNeuron>363</TargetNeuron>
+          <Weight>0.9</Weight>
+          <TargetNeuron>381</TargetNeuron>
         </Synapse>
       </Synapses>
     </Neuron>
     <Neuron>
       <Id>363</Id>
+      <Model>Burst</Model>
+      <LeakRate>1</LeakRate>
+      <AxonDelay>3</AxonDelay>
       <Label>Parent</Label>
       <Synapses>
-        <Synapse>
-          <TargetNeuron>363</TargetNeuron>
-        </Synapse>
         <Synapse>
           <Weight>0.5</Weight>
           <TargetNeuron>423</TargetNeuron>
@@ -1625,10 +1578,6 @@
         <Synapse>
           <Weight>0.9</Weight>
           <TargetNeuron>364</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>0.34</Weight>
-          <TargetNeuron>362</TargetNeuron>
         </Synapse>
         <Synapse>
           <TargetNeuron>333</TargetNeuron>
@@ -1684,104 +1633,15 @@
           <TargetNeuron>424</TargetNeuron>
           <IsHebbian>true</IsHebbian>
         </Synapse>
-        <Synapse>
-          <Weight>0.9</Weight>
-          <TargetNeuron>381</TargetNeuron>
-        </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
-      <Id>368</Id>
-      <LastCharge>0.2</LastCharge>
-      <Synapses>
-        <Synapse>
-          <Weight>-1</Weight>
-          <TargetNeuron>353</TargetNeuron>
-        </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
-      <Id>369</Id>
-      <Synapses>
-        <Synapse>
-          <TargetNeuron>385</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <TargetNeuron>386</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <TargetNeuron>387</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <TargetNeuron>388</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <TargetNeuron>389</TargetNeuron>
-        </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
-      <Id>370</Id>
-      <Synapses>
-        <Synapse>
-          <Weight>-1</Weight>
-          <TargetNeuron>385</TargetNeuron>
-        </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
-      <Id>371</Id>
-      <Synapses>
-        <Synapse>
-          <Weight>-1</Weight>
-          <TargetNeuron>386</TargetNeuron>
-        </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
-      <Id>372</Id>
-      <Synapses>
-        <Synapse>
-          <Weight>-1</Weight>
-          <TargetNeuron>387</TargetNeuron>
-        </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
-      <Id>373</Id>
-      <Synapses>
-        <Synapse>
-          <Weight>-1</Weight>
-          <TargetNeuron>388</TargetNeuron>
-        </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
-      <Id>374</Id>
-      <Synapses>
-        <Synapse>
-          <Weight>-1</Weight>
-          <TargetNeuron>389</TargetNeuron>
-        </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
-      <Id>377</Id>
-      <LastCharge>0.34</LastCharge>
-      <Synapses>
-        <Synapse>
-          <Weight>-1</Weight>
-          <TargetNeuron>378</TargetNeuron>
-        </Synapse>
       </Synapses>
     </Neuron>
     <Neuron>
       <Id>378</Id>
+      <Model>Burst</Model>
+      <LeakRate>1</LeakRate>
+      <AxonDelay>3</AxonDelay>
       <Label>Child</Label>
       <Synapses>
-        <Synapse>
-          <TargetNeuron>378</TargetNeuron>
-        </Synapse>
         <Synapse>
           <Weight>0.5</Weight>
           <TargetNeuron>423</TargetNeuron>
@@ -1799,10 +1659,6 @@
           <TargetNeuron>379</TargetNeuron>
         </Synapse>
         <Synapse>
-          <Weight>0.34</Weight>
-          <TargetNeuron>377</TargetNeuron>
-        </Synapse>
-        <Synapse>
           <TargetNeuron>333</TargetNeuron>
         </Synapse>
       </Synapses>
@@ -1813,6 +1669,7 @@
       <LeakRate>1</LeakRate>
       <Synapses>
         <Synapse>
+          <Weight>0</Weight>
           <TargetNeuron>426</TargetNeuron>
           <IsHebbian>true</IsHebbian>
         </Synapse>
@@ -1851,102 +1708,19 @@
           <IsHebbian>true</IsHebbian>
         </Synapse>
         <Synapse>
-          <Weight>0</Weight>
+          <Weight>0.18</Weight>
           <TargetNeuron>424</TargetNeuron>
           <IsHebbian>true</IsHebbian>
         </Synapse>
       </Synapses>
     </Neuron>
     <Neuron>
-      <Id>382</Id>
-      <Label>Selects the next available neurons</Label>
-    </Neuron>
-    <Neuron>
-      <Id>383</Id>
-      <Label>Stores in-use state in Habbian Synapes</Label>
-    </Neuron>
-    <Neuron>
-      <Id>384</Id>
-      <Synapses>
-        <Synapse>
-          <Weight>-1</Weight>
-          <TargetNeuron>369</TargetNeuron>
-        </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
-      <Id>385</Id>
-      <Synapses>
-        <Synapse>
-          <TargetNeuron>400</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>-1</Weight>
-          <TargetNeuron>401</TargetNeuron>
-        </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
-      <Id>386</Id>
-      <Synapses>
-        <Synapse>
-          <TargetNeuron>401</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>-1</Weight>
-          <TargetNeuron>402</TargetNeuron>
-        </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
-      <Id>387</Id>
-      <Synapses>
-        <Synapse>
-          <TargetNeuron>402</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>-1</Weight>
-          <TargetNeuron>403</TargetNeuron>
-        </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
-      <Id>388</Id>
-      <Synapses>
-        <Synapse>
-          <TargetNeuron>403</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>-1</Weight>
-          <TargetNeuron>404</TargetNeuron>
-        </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
-      <Id>389</Id>
-      <Synapses>
-        <Synapse>
-          <TargetNeuron>404</TargetNeuron>
-        </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
-      <Id>392</Id>
-      <LastCharge>0.34</LastCharge>
-      <Synapses>
-        <Synapse>
-          <Weight>-1</Weight>
-          <TargetNeuron>393</TargetNeuron>
-        </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
       <Id>393</Id>
+      <Model>Burst</Model>
+      <LeakRate>1</LeakRate>
+      <AxonDelay>3</AxonDelay>
       <Label>This</Label>
       <Synapses>
-        <Synapse>
-          <TargetNeuron>393</TargetNeuron>
-        </Synapse>
         <Synapse>
           <TargetNeuron>437</TargetNeuron>
         </Synapse>
@@ -1961,10 +1735,6 @@
         <Synapse>
           <Weight>0.9</Weight>
           <TargetNeuron>394</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>0.34</Weight>
-          <TargetNeuron>392</TargetNeuron>
         </Synapse>
         <Synapse>
           <TargetNeuron>333</TargetNeuron>
@@ -1998,62 +1768,6 @@
       <Synapses>
         <Synapse>
           <TargetNeuron>426</TargetNeuron>
-        </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
-      <Id>400</Id>
-      <Synapses>
-        <Synapse>
-          <TargetNeuron>370</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>-1</Weight>
-          <TargetNeuron>401</TargetNeuron>
-        </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
-      <Id>401</Id>
-      <Synapses>
-        <Synapse>
-          <TargetNeuron>371</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>-1</Weight>
-          <TargetNeuron>402</TargetNeuron>
-        </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
-      <Id>402</Id>
-      <Synapses>
-        <Synapse>
-          <TargetNeuron>372</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>-1</Weight>
-          <TargetNeuron>403</TargetNeuron>
-        </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
-      <Id>403</Id>
-      <Synapses>
-        <Synapse>
-          <TargetNeuron>373</TargetNeuron>
-        </Synapse>
-        <Synapse>
-          <Weight>-1</Weight>
-          <TargetNeuron>404</TargetNeuron>
-        </Synapse>
-      </Synapses>
-    </Neuron>
-    <Neuron>
-      <Id>404</Id>
-      <Synapses>
-        <Synapse>
-          <TargetNeuron>374</TargetNeuron>
         </Synapse>
       </Synapses>
     </Neuron>
@@ -2099,6 +1813,7 @@
     </Neuron>
     <Neuron>
       <Id>424</Id>
+      <LastCharge>0.5999999</LastCharge>
       <Synapses>
         <Synapse>
           <Weight>0.9</Weight>

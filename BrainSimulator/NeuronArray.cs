@@ -12,11 +12,11 @@ namespace BrainSimulator
     {
         public string networkNotes = "";
         public bool hideNotes = false;
-        public bool ShowSynapese = false;
         public long Generation = 0;
         public int EngineSpeed = 250;
         public int arraySize;
         public int rows;
+
 
         public int lastFireCount = 0;
         internal List<ModuleView> modules = new List<ModuleView>();
@@ -31,6 +31,11 @@ namespace BrainSimulator
         {
             get { return modules; }
         }
+
+        private int refractoryDelay = 0;
+        public int RefractoryDelay 
+        { get => refractoryDelay; set { refractoryDelay = value; SetRefractoryDelay(refractoryDelay); } }
+
         public void Initialize(int count, int inRows)
         {
             rows = inRows;
@@ -57,6 +62,15 @@ namespace BrainSimulator
         {
             Neuron n = GetCompleteNeuron(id);
             return n;
+        }
+        public Neuron GetNeuron(string label)
+        {
+            for (int i = 0; i < arraySize; i++)
+            {
+                Neuron n = GetNeuron(i);
+                if (n.label == label) return n;
+            }
+            return null;
         }
 
         //OBSOLETE

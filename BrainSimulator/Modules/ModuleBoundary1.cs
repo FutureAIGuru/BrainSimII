@@ -288,15 +288,6 @@ namespace BrainSimulator.Modules
         char GetMotionChar(int dx, int dy)
         {
             return (dirChars[GetDirectionFromDeltas(dx, dy)]);
-            if (dx == 1 && dy == 0) return R;
-            if (dx == -1 && dy == 0) return L;
-            if (dx == 0 && dy == 1) return D;
-            if (dx == 0 && dy == -1) return U;
-            if (dx == 1 && dy == 1) return DR;
-            if (dx == -1 && dy == 1) return DL;
-            if (dx == 1 && dy == -1) return UR;
-            if (dx == -1 && dy == -1) return UL;
-            return ' ';
         }
         Angle GetLineStringSlope(string s)
         {

@@ -51,7 +51,7 @@ namespace BrainSimulator.Modules
             //check for a goal selection
             foreach (Neuron n in na.Neurons())
             {
-                if (n.Fired() && n.Label.IndexOf("c") == 0 && n.Model == Neuron.modelType.Std)
+                if (n.Fired() && n.Label.IndexOf("c") == 0 && n.Model == Neuron.modelType.IF)
                 {
                     Thing newTarget = UKS.Labeled(n.Label);
                     if (newTarget == currentTarget)

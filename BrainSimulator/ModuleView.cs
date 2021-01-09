@@ -10,7 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Shapes;
-
+using System.Xml.Serialization;
 
 namespace BrainSimulator
 {
@@ -24,6 +24,8 @@ namespace BrainSimulator
         Modules.ModuleBase theModule = null;
         int width = 0;
         int height = 0;
+        [XmlIgnore]
+        public System.Windows.Media.Imaging.WriteableBitmap bitmap = null;
 
         public IEnumerable<Neuron> Neurons()
         {
@@ -143,6 +145,12 @@ namespace BrainSimulator
             int index = firstNeuron + Y + X * Rows;
             return MainWindow.theNeuronArray.GetNeuron(index);
         }
+        public int GetNeuronIndexAt(int X, int Y)
+        {
+            int index = firstNeuron + Y + X * Rows;
+            return index;
+        }
+
         public Neuron GetNeuronAt(string label)
         {
             for (int i = 0; i < NeuronCount; i++)

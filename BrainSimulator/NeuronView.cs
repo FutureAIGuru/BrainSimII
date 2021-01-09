@@ -71,7 +71,7 @@ namespace BrainSimulator
             }
 
 
-            if (n.Label != "")
+            if (n.Label != "" || n.model == Neuron.modelType.Burst || n.model ==Neuron.modelType.Random)
             {
                 l = new Label();
                 l.Content = n.Label;
@@ -89,7 +89,10 @@ namespace BrainSimulator
                 l.MouseDown += theNeuronArrayView.theCanvas_MouseDown;
                 l.MouseUp += theNeuronArrayView.theCanvas_MouseUp;
                 l.MouseMove += theNeuronArrayView.theCanvas_MouseMove;
-                //theCanvas.Children.Add(l);
+                if (n.model == Neuron.modelType.Burst)
+                    l.Content += "\rB=" + n.axonDelay.ToString();
+                if (n.model == Neuron.modelType.Random)
+                    l.Content += "\rR=" + n.axonDelay.ToString();
             }
             return r;
         }
@@ -106,7 +109,7 @@ namespace BrainSimulator
             float value = n.LastCharge;
             Color c = Utils.RainbowColorFromValue(value);
             SolidColorBrush s1 = new SolidColorBrush(c);
-            if (!n.inUse && n.Model == Neuron.modelType.Std)
+            if (!n.inUse && n.Model == Neuron.modelType.IF)
                 s1.Opacity = .50;
             return s1;
         }
@@ -131,55 +134,16 @@ namespace BrainSimulator
             n = MainWindow.theNeuronArray.AddSynapses(n);
             cm.SetValue(NeuronIDProperty, n.Id);
             cm.Closed += Cm_Closed;
+            cm.Opened += Cm_Opened;
             cmCancelled = false;
+
+            //The neuron label
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
-            sp.Children.Add(new Label { Content = "Charge: ", Padding = new Thickness(0) });
-            if (n.Model == Neuron.modelType.FloatValue)
-                sp.Children.Add(new TextBox { Text = n.CurrentCharge.ToString("f2"), Width = 60, Name = "CurrentCharge", VerticalAlignment = VerticalAlignment.Center });
-            else if (n.model == Neuron.modelType.Color)
-                sp.Children.Add(new TextBox { Text = n.LastChargeInt.ToString("X"), Width = 60, Name = "CurrentCharge", VerticalAlignment = VerticalAlignment.Center });
-            else
-                sp.Children.Add(new TextBox { Text = n.LastCharge.ToString("f2"), Width = 60, Name = "CurrentCharge", VerticalAlignment = VerticalAlignment.Center });
-            cm.Items.Add(sp);
-            if (n.Model == Neuron.modelType.LIF || n.model == Neuron.modelType.Random)
-            {
-                sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
-                sp.Children.Add(new Label { Content = "Leak Rate: ", Padding = new Thickness(0) });
-                sp.Children.Add(new TextBox { Text = n.LeakRate.ToString("f4"), Width = 60, Name = "LeakRate", VerticalAlignment = VerticalAlignment.Center });
-                cm.Items.Add(sp);
-            }
-
-            MenuItem mi = new MenuItem();
-            mi.Header = "Neuron ID: " + n.Id;
-            cm.Items.Add(mi);
-            cm.Items.Add(new Separator());
-            mi = new MenuItem();
-            mi.Header = "Always Fire";
-            mi.Click += Mi_Click;
-            cm.Items.Add(mi);
-            mi = new MenuItem();
-            mi.Header = "Paste Here";
-            mi.Click += Mi_Click;
-            cm.Items.Add(mi);
-            mi = new MenuItem();
-            mi.Header = "Clipboard";
-            mi.Click += Mi_Click;
-            mi.Items.Add(new MenuItem() { Header = "Paste Here" });
-            ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
-            mi.Items.Add(new MenuItem() { Header = "Move Here" });
-            ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
-            mi.Items.Add(new MenuItem() { Header = "Connect to Here" });
-            ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
-            mi.Items.Add(new MenuItem() { Header = "Connect from Here" });
-            ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
-            mi.Items.Add(new MenuItem() { Header = "Select as Target" });
-            ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
-            cm.Items.Add(mi);
-            sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
-            sp.Children.Add(new Label { Content = "Label: ", Padding = new Thickness(0) });
-            sp.Children.Add(new TextBox { Text = n.Label, Width = 150, Name = "Label", VerticalAlignment = VerticalAlignment.Center });
+            sp.Children.Add(new Label { Content = "ID: "+n.id + "   Label: ", Padding = new Thickness(0) });
+            sp.Children.Add(Utils.ContextMenuTextBox(n.Label, "Label", 150));
             cm.Items.Add(sp);
 
+            //The neuron model
             sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
             sp.Children.Add(new Label { Content = "Model: ", Padding = new Thickness(0) });
             ComboBox cb = new ComboBox()
@@ -198,6 +162,16 @@ namespace BrainSimulator
             cb.SelectionChanged += Cb_SelectionChanged;
             sp.Children.Add(cb);
             cm.Items.Add(sp);
+
+            cm.Items.Add(new Separator());
+
+            MenuItem mi = new MenuItem();
+            mi.Header = "Always Fire";
+            mi.Click += Mi_Click;
+            if (n.model != Neuron.modelType.LIF && n.model != Neuron.modelType.IF && n.model != Neuron.modelType.Random)
+                mi.IsEnabled = false;
+            cm.Items.Add(mi);
+
             CheckBox cbHistory = new CheckBox
             {
                 IsChecked = FiringHistory.NeuronIsInFiringHistory(n.id),
@@ -233,6 +207,92 @@ namespace BrainSimulator
                 mi.Items.Add(synapseMenuItem); ;
             }
             cm.Items.Add(mi);
+
+            mi = new MenuItem();
+            mi.Header = "Clipboard";
+            mi.Click += Mi_Click;
+            mi.Items.Add(new MenuItem() { Header = "Paste Here" });
+            ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
+            mi.Items.Add(new MenuItem() { Header = "Move Here" });
+            ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
+            mi.Items.Add(new MenuItem() { Header = "Connect to Here" });
+            ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
+            mi.Items.Add(new MenuItem() { Header = "Connect from Here" });
+            ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
+            mi.Items.Add(new MenuItem() { Header = "Select as Target" });
+            ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
+            cm.Items.Add(mi);
+            SetCustomCMItems(cm,n);
+        }
+
+        //This creates or updates the portion of the context menu content which depends on the model type
+        private static void SetCustomCMItems(ContextMenu cm, Neuron n)
+        {
+            while (cm.Items[2].GetType().Name != "Separator")
+                cm.Items.RemoveAt(2);
+
+            //The charge value formatted based on the model
+            StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
+            sp.Children.Add(new Label { Content = "Charge: ", Padding = new Thickness(0) });
+            string format = "f2";
+            if (n.Model == Neuron.modelType.FloatValue) format = "f4";
+            else if (n.model == Neuron.modelType.Color) format = "X8";
+            sp.Children.Add(Utils.ContextMenuTextBox(n.LastCharge.ToString(format), "CurrentCharge", 60));
+            cm.Items.Insert(2,sp);
+
+            if (n.Model == Neuron.modelType.LIF)
+            {
+                sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
+                sp.Children.Add(new Label { Content = "Leak Rate: ", Padding = new Thickness(0) });
+                sp.Children.Add(Utils.ContextMenuTextBox(n.LeakRate.ToString("f2"), "LeakRate", 60));
+                cm.Items.Insert(3,sp);
+
+                sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
+                sp.Children.Add(new Label { Content = "Axon Delay: ", Padding = new Thickness(0) });
+                sp.Children.Add(Utils.ContextMenuTextBox(n.axonDelay.ToString(), "AxonDelay", 60));
+                cm.Items.Insert(4,sp);
+            }
+            else if (n.model == Neuron.modelType.Random)
+            {
+                sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
+                sp.Children.Add(new Label { Content = "Mean: ", Padding = new Thickness(0) });
+                sp.Children.Add(Utils.ContextMenuTextBox(n.axonDelay.ToString(), "AxonDelay", 60));
+                cm.Items.Insert(3, sp);
+
+                sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
+                sp.Children.Add(new Label { Content = "Std Dev: ", Padding = new Thickness(0) });
+                sp.Children.Add(Utils.ContextMenuTextBox(n.LeakRate.ToString("f2"), "LeakRate", 60));
+                cm.Items.Insert(4, sp);
+            }
+            else if (n.model == Neuron.modelType.Burst)
+            {
+                if (n.axonDelay < 1) n.axonDelay = 5;
+                sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
+                sp.Children.Add(new Label { Content = "Count: ", Padding = new Thickness(0) });
+                sp.Children.Add(Utils.ContextMenuTextBox(n.axonDelay.ToString(), "AxonDelay", 60));
+                cm.Items.Insert(3, sp);
+
+                if (n.leakRate < 1) n.leakRate = 1;
+                sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
+                sp.Children.Add(new Label { Content = "Rate: ", Padding = new Thickness(0) });
+                sp.Children.Add(Utils.ContextMenuTextBox(n.LeakRate.ToString("f0"), "LeakRate", 60));
+                cm.Items.Insert(4, sp);
+            }
+
+        }
+
+        private static void Cm_Opened(object sender, RoutedEventArgs e)
+        {
+            //when the context menu opens, focus on the label and position text cursor to end
+            if (sender is ContextMenu cm)
+            {
+                Control cc = Utils.FindByName(cm, "Label");
+                if (cc is TextBox tb)
+                {
+                    tb.Focus();
+                    tb.Select(tb.Text.Length, 0);
+                }
+            }
         }
 
         private static void CbHistory_Checked(object sender, RoutedEventArgs e)
@@ -260,12 +320,29 @@ namespace BrainSimulator
                 Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronID);
                 Control cc = Utils.FindByName(cm, "Label");
                 if (cc is TextBox tb)
-                    n.Label = tb.Text;
+                {
+                    string newLabel = tb.Text;
+                    if (int.TryParse(newLabel, out int dummy))
+                        newLabel = "_"+ newLabel; 
+                    n.Label = newLabel;
+                }
                 cc = Utils.FindByName(cm, "CurrentCharge");
                 if (cc is TextBox tb1)
                 {
-                    float.TryParse(tb1.Text, out float newCharge);
-                    n.SetValue(newCharge);
+                    if (n.model == Neuron.modelType.Color)
+                    {
+                        try
+                        {
+                            uint newCharge = Convert.ToUInt32(tb1.Text, 16);
+                            n.LastChargeInt = (int)newCharge;
+                        }
+                        catch { };
+                    }
+                    else
+                    {
+                        float.TryParse(tb1.Text, out float newCharge);
+                        n.SetValue(newCharge);
+                    }
                 }
                 cc = Utils.FindByName(cm, "LeakRate");
                 if (cc is TextBox tb2)
@@ -277,6 +354,13 @@ namespace BrainSimulator
                         SetModelAndLeakrate(n);
                     }
                     n.LeakRate = leakRate;
+                }
+                cc = Utils.FindByName(cm, "AxonDelay");
+                if (cc is TextBox tb3)
+                {
+                    int.TryParse(tb3.Text, out int axonDelay);
+                    n.AxonDelay = axonDelay;
+                    SetModelAndLeakrate(n);
                 }
                 cc = Utils.FindByName(cm, "History");
                 if (cc is CheckBox cb1)
@@ -316,7 +400,6 @@ namespace BrainSimulator
                             else
                                 FiringHistory.RemoveNeuronFromHistoryWindow(n1.id);
                         }
-                        //n1.KeepHistory = (bool)cb1.IsChecked;
                     }
                 }
             }
@@ -340,12 +423,21 @@ namespace BrainSimulator
             ListBoxItem lbi = (ListBoxItem)cb.SelectedItem;
             Neuron.modelType nm = (Neuron.modelType)System.Enum.Parse(typeof(Neuron.modelType), lbi.Content.ToString());
             Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronID);
+            if (nm == Neuron.modelType.Random)
+            {
+                n.LeakRate = 0;
+                n.AxonDelay = 1;
+            }
+            else
+            {
+                n.LeakRate = 0.1f;
+                n.AxonDelay = 0;
+            }
             n.Model = nm;
             SetModelAndLeakrate(n);
-            cm.IsOpen = false;
+            SetCustomCMItems(cm, n);
         }
 
-        static Random rand = new Random();
         private static void SetModelAndLeakrate(Neuron n)
         {
             bool neuronInSelection = false;
@@ -362,12 +454,9 @@ namespace BrainSimulator
                 theNeuronArrayView.theSelection.EnumSelectedNeurons();
                 for (Neuron n1 = theNeuronArrayView.theSelection.GetSelectedNeuron(); n1 != null; n1 = theNeuronArrayView.theSelection.GetSelectedNeuron())
                 {
-                    if (n.Model == Neuron.modelType.Random)
-                    {
-                        n1.currentCharge = (float)rand.NextDouble();
-                    }
                     n1.Model = n.Model;
                     n1.LeakRate = n.LeakRate;
+                    n1.AxonDelay = n.AxonDelay;
                 }
                 MainWindow.Update();
             }
@@ -430,10 +519,28 @@ namespace BrainSimulator
             Neuron n = MainWindow.theNeuronArray.GetNeuron(i);
             if ((string)mi.Header == "Always Fire")
             {
-                if (n.FindSynapse(i) == null)
-                    n.AddSynapse(i, 1, MainWindow.theNeuronArray, true);
-                else
-                    n.DeleteSynapse(i);
+                if (n.model != Neuron.modelType.Random)
+                {
+                    n.Model = Neuron.modelType.Random;
+                    n.AxonDelay = MainWindow.theNeuronArray.RefractoryDelay;
+                    n.LeakRate = 0;
+                    //n.SetValue(1);
+                }
+                else //toggle the leakrate
+                {
+                    if (n.LeakRate == 0) 
+                        n.LeakRate = -1;
+                    else 
+                        n.LeakRate = 0;
+                    n.SetValue(0);
+                    cmCancelled = true;
+                }
+
+                Control cc = Utils.FindByName(cm, "CurrentCharge");
+                if (cc is TextBox tb)
+                {
+                    tb.Text = n.currentCharge.ToString();
+                }
             }
             if ((string)mi.Header == "Paste Here")
             {
@@ -475,7 +582,5 @@ namespace BrainSimulator
             Neuron n = MainWindow.theNeuronArray.GetNeuron(i);
             n.Label = tb.Text;
         }
-
-
     }
 }

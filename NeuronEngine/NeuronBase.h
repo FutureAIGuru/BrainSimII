@@ -13,12 +13,12 @@ namespace NeuronEngine
 	class NeuronBase
 	{
 	public:
-		enum class modelType {Std,Color,FloatValue,LIF,Random};
+		enum class modelType {Std,Color,FloatValue,LIF,Random,Burst};
 
 		//the ending value of a neuron 
 		float lastCharge = 0;
 
-		//an empty vector takes up memory so this is a pointer to the vector which is allocated if needed
+		//an empty vector takes up memory so this is a pointer to the vector which is allocated only if needed
 		std::vector<SynapseBase>* synapses = NULL;
 
 	private:
@@ -29,10 +29,11 @@ namespace NeuronEngine
 		
 		float leakRate = 0.1f; //used only by LIF model
 		int nextFiring = 0; //used only by Random model && continuous model
-		int randomRate = 100;
 		long long lastFired = 0; //timestamp of last firing
 		int id = -1; //an illegal value which will trap
 		wchar_t* label = NULL;
+		int axonDelay = 0;
+		int axonCounter = 0;
 		
 		std::vector<SynapseBase>* synapsesFrom = NULL;
 
@@ -71,6 +72,8 @@ namespace NeuronEngine
 
 		__declspec(dllexport)  float GetLeakRate();
 		__declspec(dllexport)  void SetLeakRate(float value);
+		__declspec(dllexport)  int GetAxonDelay();
+		__declspec(dllexport)  void SetAxonDelay(int value);
 		__declspec(dllexport)  long long GetLastFired();
 
 		__declspec(dllexport)  void AddToCurrentValue(float weight);
@@ -89,6 +92,7 @@ namespace NeuronEngine
 		{
 			return *this;
 		}
+
 	};
 }
 

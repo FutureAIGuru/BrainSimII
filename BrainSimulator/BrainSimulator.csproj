@@ -127,6 +127,10 @@
       <DependentUpon>ModuleDescription.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\ModuleBoundary.cs" />
+    <Compile Include="Modules\ModuleCamera.cs" />
+    <Compile Include="Modules\ModuleCameraDlg.xaml.cs">
+      <DependentUpon>ModuleCameraDlg.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\ModuleStrokeFinderDlg.xaml.cs">
       <DependentUpon>ModuleStrokeFinderDlg.xaml</DependentUpon>
     </Compile>
@@ -155,9 +159,6 @@
       <DependentUpon>Module3DSimDlg.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\ModuleArm.cs" />
-    <Compile Include="Modules\ModuleCameraDlg.xaml.cs">
-      <DependentUpon>ModuleCameraDlg.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Modules\Module2DModelDlg.xaml.cs">
       <DependentUpon>Module2DModelDlg.xaml</DependentUpon>
     </Compile>
@@ -176,7 +177,6 @@
     <Compile Include="Modules\Module2DVision.cs" />
     <Compile Include="Modules\ModuleBehavior.cs" />
     <Compile Include="Modules\ModuleUKS.cs" />
-    <Compile Include="Modules\ModuleCamera.cs" />
     <Compile Include="Modules\ModuleMoveObject.cs" />
     <Compile Include="Modules\ModuleNavigate.cs" />
     <Compile Include="Modules\ModuleHearWords.cs" />
@@ -258,6 +258,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Modules\ModuleCameraDlg.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Modules\ModuleStrokeFinderDlg.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -277,10 +281,6 @@
     <Page Include="Modules\Module3DSimDlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Modules\ModuleCameraDlg.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Modules\Module2DModelDlg.xaml">
       <Generator>MSBuild:Compile</Generator>

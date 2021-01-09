@@ -15,11 +15,11 @@
         <Label x:Name="label" Content="Columns:" HorizontalAlignment="Left" Height="30" Margin="278,65,0,0" VerticalAlignment="Top" Width="70" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
         <Label x:Name="label1" Content="Rows:" HorizontalAlignment="Left" Height="23" Margin="290,31,0,0" VerticalAlignment="Top" Width="58" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
         <CheckBox x:Name="checkBoxSynapses" Content="Create Random Synapses" HorizontalAlignment="Left" Height="19" Margin="291,105,0,0" VerticalAlignment="Top" Width="164"/>
-        <ProgressBar x:Name="progressBar" Height="22" Margin="32,0,12,218.2" VerticalAlignment="Bottom" RenderTransformOrigin="1.147,2.444"/>
+        <ProgressBar x:Name="progressBar" Height="22" Margin="18,0,26,223" VerticalAlignment="Bottom" RenderTransformOrigin="1.147,2.444"/>
         <TextBox  x:Name="textBoxSynapses"  HorizontalAlignment="Left" Height="19" Margin="314,129,0,0" TextAlignment="Right"
                   TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="52" RenderTransformOrigin="0.121,2.239"/>
         <Label Content="Per Neuron" HorizontalAlignment="Left" Height="24" Margin="362,125,0,0" VerticalAlignment="Top" Width="93"/>
-        <TextBox HorizontalAlignment="Left" Margin="32,213,0,107" x:Name="ServerList" TextWrapping="Wrap" Text="No Servers Detected" Width="437"/>
+        <TextBox HorizontalAlignment="Left" Margin="18,208,0,112" x:Name="ServerList" TextWrapping="Wrap" Text="No Servers Detected" Width="437"/>
         <Button Content="Refresh" x:Name="buttonRefresh" IsEnabled="false" HorizontalAlignment="Left" Margin="32,0,0,79" Width="56" Click="Button_Refresh" Height="23" VerticalAlignment="Bottom"/>
         <CheckBox Content="Use Servers" x:Name="cbUseServers" HorizontalAlignment="Left" Margin="167,0,0,70" Width="111" Height="27" VerticalAlignment="Bottom" Checked="CheckBoxUseServers_Checked" Unchecked="CheckBoxUseServers_Unchecked"/>
         <Button Content="Speed Test" x:Name="buttonSpeedTest" IsEnabled="false" HorizontalAlignment="Left" Margin="93,0,0,79" Width="69" Click="Button_Click" Height="23" VerticalAlignment="Bottom"/>

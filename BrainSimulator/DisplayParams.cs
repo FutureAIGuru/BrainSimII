@@ -4,6 +4,8 @@
 //  
 
 using System.Windows;
+using System.Xml.Serialization;
+
 namespace BrainSimulator
 {
     public class DisplayParams
@@ -21,8 +23,10 @@ namespace BrainSimulator
         public bool ShowNeuronOutlines() { return neuronDisplaySize > 15; }
         public bool ShowNeuronCircles() { return neuronDisplaySize > 10; }
         public bool ShowNeuronLabels() { return neuronDisplaySize > 20; }
-        public bool ShowNeurons() { return neuronDisplaySize > 4; }
+        public bool ShowNeurons() { return neuronDisplaySize > 6; }
 
+        [XmlIgnore]
+        public int maxSynapsesToDisplay = 2000;
 
         public float NeuronDisplaySize
         {

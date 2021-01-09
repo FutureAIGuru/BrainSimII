@@ -23,6 +23,7 @@ namespace BrainSimulator
         public int LastSelectedNeuron { get { return FirstSelectedNeuron + (Height - 1) + Rows * (Width - 1); } }
         public int Width { get => width; set => width = value; }
         public int Height { get => height; set => height = value; }
+        public System.Windows.Media.Imaging.WriteableBitmap bitmap = null;
 
 
         public NeuronSelectionRectangle(int iFirstSelectedNeuron, int width, int height)
@@ -30,6 +31,11 @@ namespace BrainSimulator
             FirstSelectedNeuron = iFirstSelectedNeuron;
             Height = height;
             Width = width;
+        }
+
+        public int GetNeuronIndex(int x,int y)
+        {
+            return firstSelectedNeuron + x * (MainWindow.theNeuronArray.rows) + y;
         }
 
         public IEnumerable<int> NeuronInRectangle()

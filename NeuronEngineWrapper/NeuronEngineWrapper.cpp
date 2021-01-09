@@ -39,6 +39,10 @@ namespace NeuronEngine
 		{
 			return theNeuronArray->GetGeneration();
 		}
+		void NeuronArrayBase::SetGeneration(long long i)
+		{
+			theNeuronArray->SetGeneration(i);
+		}
 		int NeuronArrayBase::GetFiredCount()
 		{
 			return theNeuronArray->GetFiredCount();
@@ -50,6 +54,14 @@ namespace NeuronEngine
 		int NeuronArrayBase::GetThreadCount()
 		{
 			return theNeuronArray->GetThreadCount();
+		}
+		void NeuronArrayBase::SetRefractoryDelay(int i)
+		{
+			theNeuronArray->SetRefractoryDelay(i);
+		}
+		int NeuronArrayBase::GetRefractoryDelay()
+		{
+			return theNeuronArray->GetRefractoryDelay();
 		}
 		float NeuronArrayBase::GetNeuronLastCharge(int i)
 		{
@@ -80,6 +92,16 @@ namespace NeuronEngine
 		{
 			NeuronBase* n = theNeuronArray->GetNeuron(i);
 			n->SetLeakRate(value);
+		}
+		int NeuronArrayBase::GetNeuronAxonDelay(int i)
+		{
+			NeuronBase* n = theNeuronArray->GetNeuron(i);
+			return n->GetAxonDelay();
+		}
+		void NeuronArrayBase::SetNeuronAxonDelay(int i, int value)
+		{
+			NeuronBase* n = theNeuronArray->GetNeuron(i);
+			n->SetAxonDelay(value);
 		}
 		long long NeuronArrayBase::GetNeuronLastFired(int i)
 		{
@@ -230,7 +252,7 @@ namespace NeuronEngine
 
 		struct Neuron {
 			int id;  bool inUse; float lastCharge; float currentCharge;
-			float leakRate; NeuronBase::modelType model; long long lastFired;
+			float leakRate; int axonDelay; NeuronBase::modelType model; long long lastFired;
 		};
 		cli::array<byte>^ NeuronArrayBase::GetNeuron(int src)
 		{
@@ -246,6 +268,7 @@ namespace NeuronEngine
 			n1.leakRate = n->GetLeakRate();
 			n1.lastFired = n->GetLastFired();
 			n1.model = n->GetModel();
+			n1.axonDelay = n->GetAxonDelay();
 			byte* firstElem = (byte*)&n1;
 			for (int i = 0; i < sizeof(Neuron); i++)
 			{

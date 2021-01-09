@@ -20,16 +20,18 @@ namespace BrainSimulator.Modules
         {
             Init();  //be sure to leave this here
             string tempString = "";
-            ModuleView naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
+            ModuleView naKB = theNeuronArray.FindAreaByLabel("ModuleUKS2");
             if (naKB == null) return;
-            for (int i = 0; i < naKB.NeuronCount; i++)
-            {
-                Neuron n = naKB.GetNeuronAt(i);
-                if (n.Fired())
+            for (int x = 0; x < naKB.Width; x+= 2)
+                for (int y = 0; y < naKB.Height; y++)
                 {
-                    tempString += " " + n.Label;
+                    Neuron n = naKB.GetNeuronAt(x,y);
+                    if (n.Fired())
+                    {
+                        tempString += " " + n.Label;
+                    }
+
                 }
-            }
             if (tempString != "" && tempString != history.LastOrDefault())
             {
                 lock (history)
@@ -38,16 +40,17 @@ namespace BrainSimulator.Modules
                 }
             }
             tempString = ">>>>";
-            ModuleView naKBOut = theNeuronArray.FindAreaByLabel("KBOut");
-            if (naKBOut == null) return;
-            for (int i = 0; i < naKBOut.NeuronCount; i++)
-            {
-                Neuron n = naKBOut.GetNeuronAt(i);
-                if (n.Fired())
+            for (int x = 1; x < naKB.Width; x += 2)
+                for (int y = 0; y < naKB.Height; y++)
                 {
-                    tempString += " " + n.Label;
+                    Neuron n = naKB.GetNeuronAt(x, y);
+                    if (n.Fired())
+                    {
+                        Neuron n1 = naKB.GetNeuronAt(x-1, y);
+                        tempString += " " + n1.Label;
+                    }
+
                 }
-            }
             if (tempString != ">>>>")
             {
                 lock (history)

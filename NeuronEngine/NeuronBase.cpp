@@ -60,6 +60,14 @@ namespace NeuronEngine
 	{
 		leakRate = value;
 	}
+	int NeuronBase::GetAxonDelay()
+	{
+		return axonDelay;
+	}
+	void NeuronBase::SetAxonDelay(int value)
+	{
+		axonDelay = value;
+	}
 	long long NeuronBase::GetLastFired()
 	{
 		return lastFired;
@@ -256,9 +264,78 @@ namespace NeuronEngine
 
 	}
 
+	//get a random number with a normal distribution around 
+	double rand_normal(double mean, double stddev)
+	{//Box muller method
+		static double n2 = 0.0;
+		static int n2_cached = 0;
+		if (!n2_cached)
+		{
+			double x, y, r;
+			do
+			{
+				x = 2.0 * rand() / RAND_MAX - 1;
+				y = 2.0 * rand() / RAND_MAX - 1;
+
+				r = x * x + y * y;
+			} while (r == 0.0 || r > 1.0);
+			{
+				double d = sqrt(-2.0 * log(r) / r);
+				double n1 = x * d;
+				n2 = y * d;
+				double result = n1 * stddev + mean;
+				n2_cached = 1;
+				return result;
+			}
+		}
+		else
+		{
+			n2_cached = 0;
+			return n2 * stddev + mean;
+		}
+	}
+
+	//This is a placeholder which handles synapse weight learning
+	//It is called if a Hebbian synapse fires and either DOES or DOES NOT cause firing in the target
+	//Consider it to be a lookup table until we figure out how weights actually vary
+	//It has the problem that it can be dependent on neuron processing order
+	float NewHebbianWeight(float y, float offset)
+	{
+		float w = y;
+		if (w >= 1)
+		{
+			if (offset < 0)
+				w -= .01;
+		}
+		else if (w >= 0.5)
+		{
+			if (offset > 0) w += .105;
+			else w -= .1;
+		}
+		else if (w > .33)
+		{
+			if (offset > 0) w += .16;
+			else w -= .033;
+		}
+		else if (w >= .25)
+		{
+			if (offset > 0) w += .24;
+			else w -= .0625;
+		}
+		else
+		{
+			if (offset > 0)
+				w += .05;
+			else w -= .01;
+		}
+		if (w < 0) w = 0;
+		if (w > 1) w = 1;
+		return w;
+	}
+
 	//neuron firing is two-phase so that the network is independent of neuron order
 	//When you call this, the neuron is added to fireList2 by the caller.
-	bool NeuronBase::Fire1(long long generation)
+	bool NeuronBase::Fire1(long long cycle)
 	{
 		if (model == modelType::Color)
 		{
@@ -269,12 +346,41 @@ namespace NeuronEngine
 		if (model == modelType::Random)
 		{
 			nextFiring--;
-			if (nextFiring <= 0)
+			if (leakRate >= 0 && nextFiring <= 0) //leakrate is the std.deviation
 			{
 				currentCharge = threshold;
-				nextFiring = (int)(rand() % randomRate);
+				double newNormal = rand_normal((double)axonDelay, (double)leakRate);
+				if (newNormal < 1) newNormal = 1;
+				nextFiring = (int)newNormal;
 			}
+			if (leakRate >= 0) //a negative leakrate means "disabled"
+				NeuronArrayBase::AddNeuronToFireList1(id);
 		}
+		if (model == modelType::Burst)
+		{
+			//force internal firing
+			if (axonCounter > 0)
+			{
+				nextFiring--;
+				if (nextFiring <= 0) //Firing Rate
+				{
+					axonCounter--;
+					currentCharge = threshold;
+					if (axonCounter > 0)
+						nextFiring = (int)leakRate;
+				}
+				NeuronArrayBase::AddNeuronToFireList1(id);
+			}
+			else if (axonCounter == 0) axonCounter--;
+		}
+
+		//code to implement a refractory period
+		if (cycle < lastFired + NeuronArrayBase::GetRefractoryDelay())
+		{
+			currentCharge = 0;
+			NeuronArrayBase::AddNeuronToFireList1(id);
+		}
+
 		//check for firing
 		if (currentCharge < 0)currentCharge = 0;
 		if (currentCharge != lastCharge)
@@ -282,13 +388,38 @@ namespace NeuronEngine
 			lastCharge = currentCharge;
 			NeuronArrayBase::AddNeuronToFireList1(id);
 		}
+
+		if (model == modelType::LIF && axonCounter != 0)
+		{
+			axonCounter = axonCounter >> 1;
+			NeuronArrayBase::AddNeuronToFireList1(id);
+			if ((axonCounter & 0x001) != 0)
+			{
+				return true;
+			}
+		}
+
 		if (currentCharge >= threshold)
 		{
-			lastFired = generation;
+			if (model == modelType::LIF && axonDelay != 0)
+			{
+				axonCounter |= (1 << axonDelay);
+				lastFired = cycle;
+				currentCharge = 0;
+				NeuronArrayBase::AddNeuronToFireList1(id);
+				return false;
+			}
+			if (model == modelType::Burst && axonCounter < 0)
+			{
+				nextFiring = (int)leakRate;
+				if (nextFiring < 1) nextFiring = 1;
+				axonCounter = axonDelay-1;
+			}
+			lastFired = cycle;
 			currentCharge = 0;
 			return true;
 		}
-		if (model == modelType::LIF || model == modelType::Random)
+		if (model == modelType::LIF)
 		{
 			currentCharge = currentCharge * (1 - leakRate);
 			NeuronArrayBase::AddNeuronToFireList1(id);
@@ -296,12 +427,13 @@ namespace NeuronEngine
 		return false;
 	}
 
+
 	void NeuronBase::Fire2()
 	{
 		if (model == modelType::FloatValue) return;
 		if (model == modelType::Color && lastCharge != 0)
 			return;
-		else if (model != modelType::Color && lastCharge < threshold)
+		else if (model != modelType::Color && lastCharge < threshold && (axonCounter & 0x1) == 0)
 			return; //did the neuron fire?
 		NeuronArrayBase::AddNeuronToFireList1(id);
 		if (synapses != NULL)
@@ -324,24 +456,29 @@ namespace NeuronEngine
 						current = nTarget->currentCharge.load(std::memory_order_relaxed);
 						desired = current + s.GetWeight();
 					}
-					if (desired >= threshold)
+
+					//if (desired >= threshold) //this conditional improves performance but introduces a potental bug where accumulated charge might be negative
 						NeuronArrayBase::AddNeuronToFireList1(nTarget->id);
 
-					//for a random neuron, decrease the randomness if synapses caused a firing
-					if (nTarget->model == modelType::Random && desired >= threshold)
-					{
-						nTarget->randomRate = nTarget->randomRate * 2;
-						//nextFiring = (int)(rand() % randomRate);
-						nextFiring = 10000;
-					}
-					if (s.IsHebbian()) //old method needed for network graph demo
+					if (s.IsHebbian())
 					{
 						//did this neuron fire coincident with the target
-						if (nTarget->lastCharge >= threshold)
+						float weight = s.GetWeight();
+						if (nTarget->lastCharge >= threshold || desired >= threshold)
 						{
 							//strengthen the synapse
-							if (s.GetWeight() <= 1) synapses->at(i).SetWeight(1);
+							weight = NewHebbianWeight(weight, .1);
+							//weight = 1.05 - (1 - weight) * 0.9;
 						}
+						else
+						{
+							weight = NewHebbianWeight(weight, -.1);
+							//weaken the synapse
+							//weight = weight * 0.99 - 0.01;
+						}
+						//if (weight < 0) weight = 0;
+						//if (weight > 1) weight = 1;
+						synapses->at(i).SetWeight(weight);
 						//if (nTarget->currentCharge >= threshold) 
 						//{
 						//	//strengthen the synapse
@@ -359,51 +496,54 @@ namespace NeuronEngine
 				vectorLock = 0;
 			}
 		}
-
-		//another way of handling hebbian synapses
-		//if (synapsesFrom != NULL)
-		//{
-		//	int hebbianCount = 0;
-		//	for (int i = 0; i < synapsesFrom->size(); i++)
-		//	{
-		//		SynapseBase s = synapsesFrom->at(i);
-		//		if (s.IsHebbian()) hebbianCount++;
-		//	}
-		//	for (int i = 0; i < synapsesFrom->size(); i++)
-		//	{
-		//		SynapseBase s = synapsesFrom->at(i);
-		//		if (s.IsHebbian())
-		//		{
-		//			NeuronBase* nTarget = s.GetTarget();
-		//			while (nTarget->vectorLock.exchange(1) == 1) {}
-		//			float newWeight = s.GetWeight(); //target = .25 
-		//			if (nTarget->lastCharge >= threshold)
-		//			{
-		//				//hit
-		//				float target = 1.1f / hebbianCount;
-		//				newWeight = (newWeight+target)/2; 
-		//			}
-		//			else
-		//			{
-		//				//miss
-		//				float target = -.2f;
-		//				newWeight = (newWeight + target) / 2;
-		//			}
-		//			synapsesFrom->at(i).SetWeight(newWeight);
-		//			if (nTarget->synapses != NULL) //set the forward synapse weight
-		//			{
-		//				for (int j = 0; j < nTarget->synapses->size(); j++)
-		//				{
-		//					if (nTarget->synapses->at(j).GetTarget() == this)
-		//					{
-		//						nTarget->synapses->at(j).SetWeight(newWeight);
-		//						break;
-		//					}
-		//				}
-		//			}
-		//			nTarget->vectorLock = 0;
-		//		}
-		//	}
-		//}
 	}
+
+
+	//another way of handling hebbian synapses
+	//it workes from the target so it can weaken synapses from neurons which don't fire
+	//if (synapsesFrom != NULL)
+	//{
+	//	int hebbianCount = 0;
+	//	for (int i = 0; i < synapsesFrom->size(); i++)
+	//	{
+	//		SynapseBase s = synapsesFrom->at(i);
+	//		if (s.IsHebbian()) hebbianCount++;
+	//	}
+	//	for (int i = 0; i < synapsesFrom->size(); i++)
+	//	{
+	//		SynapseBase s = synapsesFrom->at(i);
+	//		if (s.IsHebbian())
+	//		{
+	//			NeuronBase* nTarget = s.GetTarget();
+	//			while (nTarget->vectorLock.exchange(1) == 1) {}
+	//			float newWeight = s.GetWeight(); //target = .25 
+	//			if (nTarget->lastCharge >= threshold)
+	//			{
+	//				//hit
+	//				float target = 1.1f / hebbianCount;
+	//				newWeight = (newWeight+target)/2; 
+	//			}
+	//			else
+	//			{
+	//				//miss
+	//				float target = -.2f;
+	//				newWeight = (newWeight + target) / 2;
+	//			}
+	//			synapsesFrom->at(i).SetWeight(newWeight);
+	//			if (nTarget->synapses != NULL) //set the forward synapse weight
+	//			{
+	//				for (int j = 0; j < nTarget->synapses->size(); j++)
+	//				{
+	//					if (nTarget->synapses->at(j).GetTarget() == this)
+	//					{
+	//						nTarget->synapses->at(j).SetWeight(newWeight);
+	//						break;
+	//					}
+	//				}
+	//			}
+	//			nTarget->vectorLock = 0;
+	//		}
+	//	}
+	//}
 }
+

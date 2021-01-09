@@ -14,6 +14,7 @@ namespace NeuronEngine
 	std::vector<unsigned long long> NeuronArrayBase::fireList1;
 	std::vector<unsigned long long> NeuronArrayBase::fireList2;
 	bool NeuronArrayBase::clearFireListNeeded;
+	int NeuronArrayBase::refractoryDelay = 0;
 
 	std::string NeuronArrayBase::GetRemoteFiringString()
 	{
@@ -70,7 +71,11 @@ namespace NeuronEngine
 	}
 	long long NeuronArrayBase::GetGeneration()
 	{
-		return generation;
+		return cycle;
+	}
+	void NeuronArrayBase::SetGeneration(long long i)
+	{
+		cycle = i;
 	}
 	NeuronBase* NeuronArrayBase::GetNeuron(int i)
 	{
@@ -176,7 +181,7 @@ namespace NeuronEngine
 		if (clearFireListNeeded) 
 			ClearFireLists();
 		clearFireListNeeded = false;
-		generation++;
+		cycle++;
 		firedCount = 0;
 
 		parallel_for(0, threadCount, [&](int value) {
@@ -197,6 +202,14 @@ namespace NeuronEngine
 	void NeuronArrayBase::SetThreadCount(int i)
 	{
 		threadCount = i;
+	}
+	int NeuronArrayBase::GetRefractoryDelay()
+	{
+		return refractoryDelay;
+	}
+	void NeuronArrayBase::SetRefractoryDelay(int i)
+	{
+		refractoryDelay = i;
 	}
 	void NeuronArrayBase::AddNeuronToFireList1(int id)
 	{
@@ -233,7 +246,7 @@ namespace NeuronEngine
 				{
 					int neuronID = i * 64 + j;
 					NeuronBase* theNeuron = GetNeuron(neuronID);
-					if (!theNeuron->Fire1(generation))
+					if (!theNeuron->Fire1(cycle))
 					{
 						tempVal &= ~bitMask; //clear the bit if not firing for 2nd phase
 					}

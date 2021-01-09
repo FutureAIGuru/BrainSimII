@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -26,10 +27,8 @@ namespace BrainSimulator
             return list.ToArray();
         }
 
-
         public static bool Load(ref NeuronArray theNeuronArray, string fileName)
         {
-
             FileStream file = File.Open(fileName, FileMode.Open);
 
             XmlSerializer reader1 = new XmlSerializer(typeof(NeuronArray), GetModuleTypes());
@@ -50,12 +49,17 @@ namespace BrainSimulator
 
             for (int i = 0; i < neuronNodes.Count; i++)
             {
+                var progress = i / (float)neuronNodes.Count;
+                if (i % 1000 == 0)
+                    MainWindow.thisWindow.SetProgress(progress);
+
                 XmlElement neuronNode = (XmlElement)neuronNodes[i];
                 XmlNodeList idNodes = neuronNode.GetElementsByTagName("Id");
-                if (idNodes.Count < 1) continue;
-                int id = -1;
-                int.TryParse(idNodes[0].InnerText, out id);
+                int id = i; //this is a hack to read files where all neurons were included but no Id's
+                if (idNodes.Count > 0) 
+                    int.TryParse(idNodes[0].InnerText, out id);
                 if (id == -1) continue;
+
                 Neuron n = theNeuronArray.GetNeuron(id);
                 n.Owner = theNeuronArray;
                 n.id = id;
@@ -75,6 +79,10 @@ namespace BrainSimulator
                         case "LeakRate":
                             float.TryParse(node.InnerText, out float leakRate);
                             n.leakRate = leakRate;
+                            break;
+                        case "AxonDelay":
+                            int .TryParse(node.InnerText, out int axonDelay);
+                            n.axonDelay = axonDelay;
                             break;
                         case "LastCharge":
                             if (n.model != Neuron.modelType.Color)
@@ -123,6 +131,7 @@ namespace BrainSimulator
                 }
                 theNeuronArray.SetCompleteNeuron(n);
             }
+            MainWindow.thisWindow.SetProgress(-1);
             return true;
         }
 
@@ -132,8 +141,16 @@ namespace BrainSimulator
             FileStream file = File.Create(tempFile);
 
             Type[] extraTypes = GetModuleTypes();
-            XmlSerializer writer = new XmlSerializer(typeof(NeuronArray), extraTypes);
-            writer.Serialize(file, theNeuronArray);
+            try
+            {
+                XmlSerializer writer = new XmlSerializer(typeof(NeuronArray), extraTypes);
+                writer.Serialize(file, theNeuronArray);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Xml file write failed because: "+e.Message);
+                return false;
+            }
             file.Position = 0; ;
 
             XmlDocument xmldoc = new XmlDocument();
@@ -145,13 +162,14 @@ namespace BrainSimulator
 
             for (int i = 0; i < theNeuronArray.arraySize; i++)
             {
-                Neuron n = theNeuronArray.GetCompleteNeuron(i);
+                Neuron n = theNeuronArray.GetNeuronForDrawing(i);
                 if (n.inUse)
                 {
+                    n = theNeuronArray.GetCompleteNeuron(i);
                     string label = theNeuronArray.GetNeuronLabel(n.id);
                     //this is needed bacause inUse is true if any synapse points to this neuron--we don't need to bother with that if it's the only thing 
                     if (n.synapses.Count != 0 || label != "" || n.lastCharge != 0 || n.leakRate != 0.1f
-                        || n.model != Neuron.modelType.Std)
+                        || n.model != Neuron.modelType.IF)
                     {
                         XmlNode neuronNode = xmldoc.CreateNode("element", "Neuron", "");
                         neuronsNode.AppendChild(neuronNode);
@@ -160,7 +178,7 @@ namespace BrainSimulator
                         attrNode.InnerText = n.id.ToString();
                         neuronNode.AppendChild(attrNode);
 
-                        if (n.model != Neuron.modelType.Std)
+                        if (n.model != Neuron.modelType.IF)
                         {
                             attrNode = xmldoc.CreateNode("element", "Model", "");
                             attrNode.InnerText = n.model.ToString();
@@ -182,6 +200,12 @@ namespace BrainSimulator
                         {
                             attrNode = xmldoc.CreateNode("element", "LeakRate", "");
                             attrNode.InnerText = n.leakRate.ToString();
+                            neuronNode.AppendChild(attrNode);
+                        }
+                        if (n.axonDelay != 0)
+                        {
+                            attrNode = xmldoc.CreateNode("element", "AxonDelay", "");
+                            attrNode.InnerText = n.axonDelay.ToString();
                             neuronNode.AppendChild(attrNode);
                         }
                         if (label != "")

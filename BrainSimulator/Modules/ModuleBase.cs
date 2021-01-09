@@ -488,7 +488,7 @@ namespace BrainSimulator.Modules
             {
                 n.DeleteAllSynapes();
                 n.Label = "";
-                n.Model = Neuron.modelType.Std;
+                n.Model = Neuron.modelType.IF;
                 n.SetValue(0);
                 n.LastCharge = 0;
             }

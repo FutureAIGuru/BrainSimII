@@ -112,7 +112,7 @@ namespace BrainSimulator.Modules
                         int val = GetAveragePixel(bitmap1, x, y, vRatio, hRatio);
                         //                        System.Drawing.Color c = bitmap1.GetPixel(x, y);
                         //                        int val = Utils.ColorToInt(c);
-                        if (val != 0xffffff) val = 0;
+                        //if (val != 0xffffff) val = 0;
                         n.LastChargeInt = val;
                     }
             }

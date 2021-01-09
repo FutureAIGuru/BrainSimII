@@ -20,17 +20,33 @@ namespace BrainSimulator
             set { SetValue(AreaNumberProperty, value); }
         }
 
-        public static void CreateContextMenu(int i, ModuleView nr, Rectangle r) //for a selection
+        public static void CreateContextMenu(int i, ModuleView nr, FrameworkElement r) //for a selection
         {
             ContextMenu cm = new ContextMenu();
             StackPanel sp;
             cm.SetValue(AreaNumberProperty, i);
             MenuItem mi = new MenuItem();
+            if (i < 0)
+            {
+                mi = new MenuItem();
+                mi.Header = "Cut";
+                mi.Click += Mi_Click;
+                cm.Items.Add(mi);
+                mi = new MenuItem();
+                mi.Header = "Copy";
+                mi.Click += Mi_Click;
+                cm.Items.Add(mi);
+            }
+            mi = new MenuItem();
             mi.Header = "Delete";
             mi.Click += Mi_Click;
             cm.Items.Add(mi);
             if (i < 0)
             {
+                mi = new MenuItem();
+                mi.Header = "Clear Selection";
+                mi.Click += Mi_Click;
+                cm.Items.Add(mi);
                 mi = new MenuItem();
                 mi.Header = "Reset Hebbian Weights";
                 mi.Click += Mi_Click;
@@ -99,14 +115,6 @@ namespace BrainSimulator
             cb.Name = "AreaType";
             cb.SelectionChanged += Cb_SelectionChanged;
             sp.Children.Add(cb);
-
-
-            TextBox tb2 = new TextBox();
-            tb2.Text = "";
-            tb2.Name = "CommandParams";
-            if (nr.CommandLine.IndexOf(" ") > 0) tb2.Text = nr.CommandLine.Substring(nr.CommandLine.IndexOf(" ") + 1);
-            tb2.Width = 200;
-            cm.Items.Add(tb2);
 
             if (i >= 0)
             {            //color picker
@@ -215,6 +223,7 @@ namespace BrainSimulator
                     commandLine += " " + tb3.Text;
                 if ((label == "new" || label == "") && commandLine != "")
                     label = commandLine;
+
                 cc = Utils.FindByName(cm, "AreaColor");
                 if (cc is ComboBox cb1)
                     color = ((SolidColorBrush)((ComboBoxItem)cb1.SelectedValue).Background).Color;
@@ -299,14 +308,26 @@ namespace BrainSimulator
             //Handle delete  & initialize commands
             if (sender is MenuItem mi)
             {
+                if ((string)mi.Header == "Cut")
+                {
+                    MainWindow.arrayView.CutNeurons();
+                    MainWindow.Update();
+                }
+                if ((string)mi.Header == "Copy")
+                {
+                    MainWindow.arrayView.CopyNeurons();
+                }
+                if ((string)mi.Header == "Clear Selection")
+                {
+                    MainWindow.arrayView.ClearSelection();
+                    MainWindow.Update();
+                }
                 if ((string)mi.Header == "Delete")
                 {
                     int i = (int)mi.Parent.GetValue(AreaNumberProperty);
                     if (i < 0)
                     {
-                        i = -i - 1;
-                        MainWindow.arrayView.theSelection.selectedRectangles.RemoveAt(i);
-                        deleted = true;
+                        MainWindow.arrayView.DeleteSelection();
                     }
                     else
                     {

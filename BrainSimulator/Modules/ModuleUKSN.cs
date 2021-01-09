@@ -30,7 +30,7 @@ namespace BrainSimulator.Modules
         {
             base.Fire();
 
-            //LearnWordLinks();
+            LearnWordLinks();
 
             //ShowReferences();
 

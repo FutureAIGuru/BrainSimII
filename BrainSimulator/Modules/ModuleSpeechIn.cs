@@ -70,8 +70,15 @@ namespace BrainSimulator.Modules
             recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(Recognizer_SpeechRecognized);
 
             // Configure input to the speech recognizer.  
-            recognizer.SetInputToDefaultAudioDevice();
-
+            try
+            {
+                recognizer.SetInputToDefaultAudioDevice();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Speech Recognition could not start because: " + e.Message);
+                return;
+            }
             //// Start asynchronous, continuous speech recognition.  
             recognizer.RecognizeAsync(RecognizeMode.Multiple);
         }
@@ -183,6 +190,18 @@ namespace BrainSimulator.Modules
         void Recognizer_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
             string text = e.Result.Text;
+
+            //get the audio to do something
+/*            RecognizedAudio ra = e.Result.GetAudioForWordRange(e.Result.Words[0], e.Result.Words[e.Result.Words.Count-1]);
+            System.IO.MemoryStream stream = new System.IO.MemoryStream();
+            ra.WriteToAudioStream(stream);
+            stream.Position = 0;
+            byte[] rawBytes = new byte[stream.Length];
+            stream.Read(rawBytes, 0, (int)stream.Length);
+            System.IO.FileStream fStream = new System.IO.FileStream(@"C:\Users\c_sim\Documents\BrainSim\xx.wav",System.IO.FileMode.CreateNew);
+            ra.WriteToAudioStream(fStream);
+            fStream.Close();
+*/
 
             string debug = "";
             foreach (RecognizedWordUnit w in e.Result.Words)

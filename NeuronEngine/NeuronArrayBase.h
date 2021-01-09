@@ -24,12 +24,15 @@ namespace NeuronEngine
 		__declspec(dllexport) long GetNeuronsInUseCount();
 		__declspec(dllexport) void Fire();
 		__declspec(dllexport) long long GetGeneration();
+		__declspec(dllexport) void SetGeneration(long long i);
 		__declspec(dllexport) int GetFiredCount();
 		__declspec(dllexport) int GetThreadCount();
 		__declspec(dllexport) void SetThreadCount(int i);
 		__declspec(dllexport) void GetBounds(int taskID, int& start, int& end);
 		__declspec(dllexport) std::string GetRemoteFiringString();
 		__declspec(dllexport) SynapseBase GetRemoteFiringSynapse();
+		__declspec(dllexport) static int GetRefractoryDelay();
+		__declspec(dllexport) static void SetRefractoryDelay(int i);
 
 
 	private:
@@ -37,7 +40,8 @@ namespace NeuronEngine
 		int threadCount = 124;
 		std::vector<NeuronBase> neuronArray;
 		std::atomic<long> firedCount = 0;
-		long generation = 0;
+		long long cycle = 0;
+		static int refractoryDelay;
 
 		static std::vector<unsigned long long> fireList1;
 		static std::vector<unsigned long long> fireList2;

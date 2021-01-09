@@ -228,7 +228,7 @@ namespace BrainSimulator
                 Neuron n = MainWindow.theNeuronArray.GetNeuron(nID);
                 n.CurrentCharge = 0;
                 n.LastCharge = 0;
-                n.Model = Neuron.modelType.Std;
+                n.Model = Neuron.modelType.IF;
                 if (deleteSynapses)
                 {
                     n.DeleteAllSynapes();

@@ -21,7 +21,8 @@ namespace BrainSimulator
             "RGB value (no processing)",
             "Float value (no procesing",
             "Leaky Integrate & Fire",
-            "Fires at random intervals"
+            "Fires at random intervals",
+            "Fires a burst"
         };
 
         public NeuronArray Owner { set => ownerArray = value; }
@@ -61,13 +62,15 @@ namespace BrainSimulator
             Update();
         }
 
-        public enum modelType { Std, Color, FloatValue, LIF, Random };
+        public enum modelType { IF, Color, FloatValue, LIF, Random, Burst };
 
         public int Id { get => id; set => id = value; }
         public string Label { get => label; set { label = value; Update(); } }
 
-        //Used by LIF, Random neurons
         public float LeakRate { get => leakRate; set { leakRate = value; Update(); } }
+        public int AxonDelay { get => axonDelay; 
+            set { axonDelay = value; Update(); } 
+        }
 
         public modelType Model { get => (Neuron.modelType)model; set { model = (modelType)value; Update(); } }
 
@@ -90,7 +93,7 @@ namespace BrainSimulator
         public void Reset()
         {
             Label = "";
-            model = modelType.Std;
+            model = modelType.IF;
             SetValue(0);
         }
 
@@ -103,9 +106,9 @@ namespace BrainSimulator
             ownerArray.AddSynapse(Id, targetNeuron, weight, false, false);
         }
         //TODO...eliminated this
-        public void AddSynapse(int targetNeuron, float weight, NeuronArray theNeuronArray, bool addUndoInfo = false)
+        public void AddSynapse(int targetNeuron, float weight, NeuronArray theNeuronArray, bool addUndoInfo = false, bool isHebbian = false)
         {
-            ownerArray.AddSynapse(Id, targetNeuron, weight, false, false);
+            ownerArray.AddSynapse(Id, targetNeuron, weight, isHebbian, false);
             if (addUndoInfo)
             {
                 MainWindow.theNeuronArray.AddSynapseUndo(Id, targetNeuron, weight, true);
@@ -175,7 +178,7 @@ namespace BrainSimulator
             label = "";
             currentCharge = 0;
             lastCharge = 0;
-            model = modelType.Std;
+            model = modelType.IF;
             LeakRate = 0.1f;
             DeleteAllSynapes();
             MainWindow.theNeuronArray.SetCompleteNeuron(this);

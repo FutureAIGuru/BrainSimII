@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using static System.Math;
+using System.Windows.Input;
 
 namespace BrainSimulator
 {
@@ -54,6 +55,11 @@ namespace BrainSimulator
     {
         [DllImport("Kernel32.dll", CallingConvention = CallingConvention.Winapi)]
         public static extern void GetSystemTimePreciseAsFileTime(out long filetime);
+        public static long GetPreciseTime()
+        {
+            GetSystemTimePreciseAsFileTime(out long fileTime);
+            return fileTime;
+        }
 
         public static void Noop()
         {
@@ -100,7 +106,7 @@ namespace BrainSimulator
         public static int ColorToInt(Color theColor)
         {
             int retVal = 0;
-            //retVal += theColor.A << 24; ??
+            //retVal += theColor.A << 24; do we need "a" value?
             retVal += theColor.R << 16;
             retVal += theColor.G << 8;
             retVal += theColor.B;
@@ -393,5 +399,26 @@ namespace BrainSimulator
                 return newPoint;
             }
         }
+
+        //This textbox has a special action to cope with peculiar focus issues when a textbox is placed on a context menu
+        public static TextBox ContextMenuTextBox(string content, string name, float width)
+        {
+            TextBox tb = new TextBox()
+            {
+                Text = content,
+                Name = name,
+                Width = width,
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+            tb.PreviewLostKeyboardFocus += Tb_PreviewLostKeyboardFocus;
+            return tb;
+        }
+
+        private static void Tb_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (!(e.NewFocus is TextBox))
+                e.Handled = true;
+        }
+
     }
 }

@@ -70,7 +70,7 @@ namespace BrainSimulator
 
         private void UpdateServerTextBox()
         {
-            if (MainWindow.useServers)
+            if (cbUseServers.IsChecked == true)
             {
                 NeuronClient.GetServerList();
                 Thread.Sleep(1000);
@@ -81,6 +81,7 @@ namespace BrainSimulator
                     int.TryParse(textBoxColumns.Text, out cols);
                     int.TryParse(textBoxRows.Text, out rows);
                     ServerList.Text = "";
+                    MainWindow.useServers = true;
                     int numServers = NeuronClient.serverList.Count;
                     int neuronsNeeded = rows * cols;
                     for (int i = 0; i < numServers; i++)
@@ -123,7 +124,7 @@ namespace BrainSimulator
             MainWindow.arrayView.Dp.NeuronDisplaySize = 62;
             MainWindow.arrayView.Dp.DisplayOffset = new Point(0, 0);
 
-            if (MainWindow.useServers)
+            if (MainWindow.useServers && NeuronClient.serverList.Count > 0)
             {
                 //TODO: Replace this with a multicolumn UI
                 MainWindow.theNeuronArray.Initialize(arraySize, rows);
@@ -168,7 +169,6 @@ namespace BrainSimulator
 
                 barUpdateTimer.Tick += Dt_Tick;
                 barUpdateTimer.Start();
-
             }
         }
 
@@ -221,7 +221,7 @@ namespace BrainSimulator
                 while (targetNeuron < 0) targetNeuron += arraySize;
                 while (targetNeuron >= arraySize) targetNeuron -= arraySize;
                 float weight = (rand.Next(521) / 1000f) - .2605f;
-                MainWindow.theNeuronArray.AddSynapse(i, targetNeuron, weight, false, true);
+                MainWindow.theNeuronArray.AddSynapse(i, targetNeuron, weight, false, false);
             }
         }
 
@@ -276,11 +276,12 @@ namespace BrainSimulator
 
         private void CheckBoxUseServers_Checked(object sender, RoutedEventArgs e)
         {
-            MainWindow.useServers = true;
             buttonSpeedTest.IsEnabled = MainWindow.useServers;
             buttonRefresh.IsEnabled = MainWindow.useServers;
             NeuronClient.Init();
             UpdateServerTextBox();
+            if (NeuronClient.serverList.Count > 0)  
+                MainWindow.useServers = true;
         }
 
         private void CheckBoxUseServers_Unchecked(object sender, RoutedEventArgs e)

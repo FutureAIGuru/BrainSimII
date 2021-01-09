@@ -29,7 +29,10 @@ namespace NeuronEngine
 			int GetArraySize();
 			int GetThreadCount();
 			void SetThreadCount(int i);
+			int GetRefractoryDelay();
+			void SetRefractoryDelay(int i);
 			long long GetGeneration();
+			void SetGeneration(long long i);
 			int GetFiredCount();
 			long long GetTotalSynapses();
 			long GetTotalNeuronsInUse();
@@ -50,6 +53,8 @@ namespace NeuronEngine
 			void SetNeuronModel(int i, int model);
 			float GetNeuronLeakRate(int i);
 			void SetNeuronLeakRate(int i, float value);
+			int GetNeuronAxonDelay(int i);
+			void SetNeuronAxonDelay(int i, int value);
 			long long GetNeuronLastFired(int i);
 			cli::array<byte>^ GetSynapses(int src);
 			cli::array<byte>^ GetSynapsesFrom(int src);

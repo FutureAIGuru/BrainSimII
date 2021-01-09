@@ -13,6 +13,7 @@ namespace BrainSimulator
         public float lastCharge;
         public float currentCharge;
         public float leakRate;
+        public int axonDelay;
         public Neuron.modelType model;
         public long lastFired;
     };
@@ -37,6 +38,7 @@ namespace BrainSimulator
                 SetNeuronLabel(i, n.label);
                 SetNeuronLeakRate(i, n.leakRate);
                 SetNeuronModel(i, (int)n.model);
+                SetNeuronAxonDelay(i, n.axonDelay);
             }
         }
         public Neuron GetNeuronForDrawing(int i)
@@ -88,6 +90,7 @@ namespace BrainSimulator
                 retVal.inUse = n.inUse;
                 retVal.leakRate = n.leakRate;
                 retVal.model = n.model;
+                retVal.axonDelay = n.axonDelay;
 
                 retVal.label = GetNeuronLabel(i);
                 retVal.synapses = GetSynapsesList(i);

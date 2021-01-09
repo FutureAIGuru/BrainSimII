@@ -23,7 +23,8 @@ namespace BrainSimulator.Modules
                 {
                     if (n.Label == word)
                     {
-                        n.CurrentCharge = 1;
+                        n.SetValue(1);
+//                        n.CurrentCharge = 1;
                         break;
                     }
                     else if (n.Label == "")

@@ -37,7 +37,10 @@ namespace BrainSimulator.Modules
 
         public ModuleBase() { }
 
-        abstract public void Fire();
+        virtual public void Fire()
+        {
+            Init();
+        }
 
         virtual public void Initialize()
         {

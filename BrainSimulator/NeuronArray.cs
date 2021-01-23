@@ -14,6 +14,7 @@ namespace BrainSimulator
         public bool hideNotes = false;
         public long Generation = 0;
         public int EngineSpeed = 250;
+        public bool EngineIsPaused = false;
         public int arraySize;
         public int rows;
 

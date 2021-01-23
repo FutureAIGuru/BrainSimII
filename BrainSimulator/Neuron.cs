@@ -170,6 +170,7 @@ namespace BrainSimulator
             n.lastCharge = this.lastCharge;
             n.currentCharge = this.currentCharge;
             n.LeakRate = this.LeakRate;
+            n.axonDelay = this.axonDelay;
             n.model = this.model;
             n.synapsesFrom = new List<Synapse>(); ;
         }
@@ -180,6 +181,7 @@ namespace BrainSimulator
             lastCharge = 0;
             model = modelType.IF;
             LeakRate = 0.1f;
+            AxonDelay = 0;
             DeleteAllSynapes();
             MainWindow.theNeuronArray.SetCompleteNeuron(this);
             synapses = new List<Synapse>();

@@ -245,6 +245,15 @@ namespace BrainSimulator
                     }
                 }
             }
+            //a way to get the xml as a string
+            //using (var stringWriter = new StringWriter())
+            //using (var xmlTextWriter = XmlWriter.Create(stringWriter))
+            //{
+            //    xmldoc.WriteTo(xmlTextWriter);
+            //    xmlTextWriter.Flush();
+            //    string xxx = stringWriter.GetStringBuilder().ToString();
+            //}
+
             file.Position = 0;
             xmldoc.Save(file);
             file.Close();

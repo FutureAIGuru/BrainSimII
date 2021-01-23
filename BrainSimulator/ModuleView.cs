@@ -112,8 +112,8 @@ namespace BrainSimulator
             Point p2 = dp.pointFromNeuron(LastNeuron);
             p2.X += dp.NeuronDisplaySize;
             p2.Y += dp.NeuronDisplaySize;
-            r.Width = p2.X - p1.X;
-            r.Height = p2.Y - p1.Y;
+            r.Width = Math.Abs(p2.X - p1.X);
+            r.Height = Math.Abs(p2.Y - p1.Y);
             Canvas.SetTop(r, p1.Y);
             Canvas.SetLeft(r, p1.X);
             return r;

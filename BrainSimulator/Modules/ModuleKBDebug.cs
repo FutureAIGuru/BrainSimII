@@ -20,7 +20,7 @@ namespace BrainSimulator.Modules
         {
             Init();  //be sure to leave this here
             string tempString = "";
-            ModuleView naKB = theNeuronArray.FindAreaByLabel("ModuleUKS2");
+            ModuleView naKB = theNeuronArray.FindAreaByLabel("Module2DKB");
             if (naKB == null) return;
             for (int x = 0; x < naKB.Width; x+= 2)
                 for (int y = 0; y < naKB.Height; y++)

@@ -5,25 +5,39 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrainSimulator"
         mc:Ignorable="d"
-        Title="Create New Neuron Array" Height="451.2" Width="491.2">
+        Title="Create New Neuron Array" Height="451.2" Width="491.2"
+        Background="LightGray">
     <Grid Margin="0,0,0,2" HorizontalAlignment="Left" Width="481">
-        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Height="149" Margin="32,19,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="246"/>
-        <Button x:Name="buttonOK" Content="_OK" IsDefault="True" HorizontalAlignment="Left" Margin="102,0,0,16.2" Width="87" Click="ButtonOK_Click" Height="27" VerticalAlignment="Bottom"/>
-        <Button x:Name="buttonCancel" Content="_Cancel" HorizontalAlignment="Left" Margin="259,0,0,16.2" Width="87" Click="ButtonCancel_Click" IsCancel="True" Height="27" VerticalAlignment="Bottom"/>
-        <TextBox x:Name="textBoxRows" HorizontalAlignment="Left" Height="20" Margin="353,34,0,0" TextWrapping="Wrap" Text="15" VerticalAlignment="Top" Width="55" VerticalContentAlignment="Center" />
-        <TextBox x:Name="textBoxColumns" HorizontalAlignment="Left" Height="20" Margin="353,70,0,0" TextWrapping="Wrap" Text="30" VerticalAlignment="Top" Width="55" />
-        <Label x:Name="label" Content="Columns:" HorizontalAlignment="Left" Height="30" Margin="278,65,0,0" VerticalAlignment="Top" Width="70" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
-        <Label x:Name="label1" Content="Rows:" HorizontalAlignment="Left" Height="23" Margin="290,31,0,0" VerticalAlignment="Top" Width="58" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
-        <CheckBox x:Name="checkBoxSynapses" Content="Create Random Synapses" HorizontalAlignment="Left" Height="19" Margin="291,105,0,0" VerticalAlignment="Top" Width="164"/>
-        <ProgressBar x:Name="progressBar" Height="22" Margin="18,0,26,223" VerticalAlignment="Bottom" RenderTransformOrigin="1.147,2.444"/>
-        <TextBox  x:Name="textBoxSynapses"  HorizontalAlignment="Left" Height="19" Margin="314,129,0,0" TextAlignment="Right"
-                  TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="52" RenderTransformOrigin="0.121,2.239"/>
-        <Label Content="Per Neuron" HorizontalAlignment="Left" Height="24" Margin="362,125,0,0" VerticalAlignment="Top" Width="93"/>
-        <TextBox HorizontalAlignment="Left" Margin="18,208,0,112" x:Name="ServerList" TextWrapping="Wrap" Text="No Servers Detected" Width="437"/>
-        <Button Content="Refresh" x:Name="buttonRefresh" IsEnabled="false" HorizontalAlignment="Left" Margin="32,0,0,79" Width="56" Click="Button_Refresh" Height="23" VerticalAlignment="Bottom"/>
-        <CheckBox Content="Use Servers" x:Name="cbUseServers" HorizontalAlignment="Left" Margin="167,0,0,70" Width="111" Height="27" VerticalAlignment="Bottom" Checked="CheckBoxUseServers_Checked" Unchecked="CheckBoxUseServers_Unchecked"/>
-        <Button Content="Speed Test" x:Name="buttonSpeedTest" IsEnabled="false" HorizontalAlignment="Left" Margin="93,0,0,79" Width="69" Click="Button_Click" Height="23" VerticalAlignment="Bottom"/>
-        <Label Content="" x:Name="PingLabel" HorizontalAlignment="Left" Height="27" Margin="32,0,0,52" VerticalAlignment="Bottom" Width="437"/>
-        <Label Content="Range: 0-1450 bytes/packet" x:Name="PingLabel1" Visibility="Hidden" HorizontalAlignment="Left" Height="28" Margin="278,311,0,0" VerticalAlignment="Top" Width="191"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="226*"/>
+            <ColumnDefinition Width="255*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Height="149" Margin="32,19,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="246" Grid.ColumnSpan="2"/>
+        <Button x:Name="buttonOK" Content="_OK" IsDefault="True" HorizontalAlignment="Left" Margin="102,0,0,16" Width="87" Click="ButtonOK_Click" Height="27" VerticalAlignment="Bottom"/>
+        <Button x:Name="buttonCancel" Content="_Cancel" HorizontalAlignment="Left" Margin="33,0,0,16" Width="87" Click="ButtonCancel_Click" IsCancel="True" Height="27" VerticalAlignment="Bottom" Grid.Column="1"/>
+        <TextBox x:Name="textBoxRows" HorizontalAlignment="Left" Height="20" Margin="127,34,0,0" TextWrapping="Wrap" Text="15" VerticalAlignment="Top" Width="55" VerticalContentAlignment="Center" Grid.Column="1" />
+        <TextBox x:Name="textBoxColumns" HorizontalAlignment="Left" Height="20" Margin="127,70,0,0" TextWrapping="Wrap" Text="30" VerticalAlignment="Top" Width="55" Grid.Column="1" />
+        <Label x:Name="label" Content="Columns:" HorizontalAlignment="Left" Height="30" Margin="52,65,0,0" VerticalAlignment="Top" Width="70" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Column="1"/>
+        <Label x:Name="label1" Content="Rows:" HorizontalAlignment="Left" Height="23" Margin="64,31,0,0" VerticalAlignment="Top" Width="58" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Column="1"/>
+        <CheckBox x:Name="checkBoxSynapses" Content="Create Random Synapses" HorizontalAlignment="Left" Height="19" Margin="65,105,0,0" VerticalAlignment="Top" Width="164" Grid.Column="1"/>
+        <ProgressBar x:Name="progressBar" Margin="18,179,26,0" RenderTransformOrigin="1.147,2.444" Grid.ColumnSpan="2" Height="22" VerticalAlignment="Top"/>
+        <TextBox  x:Name="textBoxSynapses"  HorizontalAlignment="Left" Height="19" Margin="88,129,0,0" TextAlignment="Right"
+                  TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="52" RenderTransformOrigin="0.121,2.239" Grid.Column="1"/>
+        <Label Content="Per Neuron" HorizontalAlignment="Left" Height="24" Margin="136,125,0,0" VerticalAlignment="Top" Width="93" Grid.Column="1"/>
+        <TextBox HorizontalAlignment="Left" Margin="18,0,0,89" x:Name="ServerList" TextWrapping="Wrap" Text="No Servers Detected" Width="437" Grid.ColumnSpan="2" Height="98" VerticalAlignment="Bottom"/>
+        <Button Content="Refresh" x:Name="buttonRefresh" IsEnabled="false" HorizontalAlignment="Left" Margin="32,0,0,60" Width="56" Click="Button_Refresh" Height="24" VerticalAlignment="Bottom"/>
+        <CheckBox Content="Use Servers" x:Name="cbUseServers" HorizontalAlignment="Left" Margin="18,0,0,178" Width="111" Height="27" VerticalAlignment="Bottom" Checked="CheckBoxUseServers_Checked" Unchecked="CheckBoxUseServers_Unchecked"/>
+        <Button Content="Speed Test" x:Name="buttonSpeedTest" IsEnabled="false" HorizontalAlignment="Left" Margin="102,0,0,60" Width="69" Click="Button_Click" Height="24" VerticalAlignment="Bottom"/>
+        <Label Content="" x:Name="PingLabel" Height="27" Margin="180,0,-137,57" VerticalAlignment="Bottom" Grid.ColumnSpan="2"/>
+        <Label Content="Range: 0-1450 bytes/packet" x:Name="PingLabel1" Visibility="Hidden" HorizontalAlignment="Left" Height="28" Margin="52,311,0,0" VerticalAlignment="Top" Width="191" Grid.Column="1"/>
+        <StackPanel Orientation="Horizontal" Width="134" HorizontalAlignment="Left" Margin="65,148,0,0" Height="24" VerticalAlignment="Top" Grid.Column="1" >
+            <Label Content="Refractory Cycles:  " Padding="0,4,0,0"/>
+            <TextBox Text="0" VerticalAlignment="Center" Width="16" x:Name="Refractory" IsEnabled="False"/>
+            <StackPanel>
+                <RepeatButton Content="^" Height="12" Interval="250" VerticalContentAlignment="Bottom" Padding="0,-1" Click="Button_RefractoryUpClick"/>
+                <RepeatButton Content="˅" Height="12" Interval="250" VerticalContentAlignment="Top" Padding="-1,-3,0,0" Click="Button_RefractoryDnClick"/>
+            </StackPanel>
+        </StackPanel>
+
     </Grid>
 </Window>

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrainSimulator"
         mc:Ignorable="d"
+        Background="LightGray"
         Title="Network Properties" Height="268" Width="378">
     <Grid Margin="15">
         <Grid.ColumnDefinitions>
@@ -26,7 +27,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Label Name="lbl1"        Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" >File Name:</Label>
+        <Label Name="lbl1"        Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" >File Path:</Label>
         <TextBox Name="txtFileName" Grid.Row="0" Grid.Column="3" IsReadOnly="true" MinWidth="250" VerticalAlignment="Center">Answer</TextBox>
         <Label Name="lbl2"        Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" >Rows:</Label>
         <TextBox Name="txtRows" Grid.Row="1" Grid.Column="3" IsReadOnly="true" MinWidth="250" VerticalAlignment="Center">Answer</TextBox>
@@ -39,7 +40,7 @@
         <Label Name="lbl6"        Grid.Row="5" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" >Synapses:</Label>
         <TextBox Name="txtSynapses" Grid.Row="5" Grid.Column="3" IsReadOnly="true" MinWidth="250" VerticalAlignment="Center">Answer</TextBox>
 
-        <Button IsDefault="True" x:Name="btnDialogOk" Click="btnDialogOk_Click" MinWidth="60" Margin="10,5,125,-31" Content="_Ok" Grid.Column="3" Grid.Row="9"/>
+        <Button IsDefault="True" x:Name="btnDialogOk" IsCancel="True" Click="btnDialogOk_Click" MinWidth="60" Margin="10,5,125,-31" Content="_Ok" Grid.Column="3" Grid.Row="9"/>
 
     </Grid>
 </Window>

@@ -102,6 +102,7 @@ namespace BrainSimulator
         BackgroundWorker bgw = new BackgroundWorker();
         int rows;
         int cols;
+        int refractory = 0;
         private void ButtonOK_Click(object sender, RoutedEventArgs e)
         {
             buttonOK.IsEnabled = false;
@@ -109,13 +110,19 @@ namespace BrainSimulator
             MainWindow.CloseHistoryWindow();
             MainWindow.CloseNotesWindow();
             if (MainWindow.theNeuronArray != null)
-                MainWindow.theNeuronArray.Modules.Clear();
+            {
+                lock (MainWindow.theNeuronArray.Modules)
+                {
+                    MainWindow.theNeuronArray.Modules.Clear();
+                }
+            }
             MainWindow.arrayView.ClearSelection();
             MainWindow.theNeuronArray = new NeuronArray();
 
             if (!int.TryParse(textBoxColumns.Text, out cols)) return;
             if (!int.TryParse(textBoxRows.Text, out rows)) return;
             if (checkBoxSynapses.IsChecked == true) doSynapses = true;
+            if (!int.TryParse(Refractory.Text, out refractory)) return;
 
             arraySize = rows * cols;
             progressBar.Maximum = arraySize;
@@ -164,6 +171,7 @@ namespace BrainSimulator
                 
                 GC.Collect(3, GCCollectionMode.Forced, true);
                 MainWindow.theNeuronArray.Initialize(arraySize, rows);
+                MainWindow.theNeuronArray.RefractoryDelay = refractory;
                 bgw.DoWork += AsyncCreateNeurons;
                 bgw.RunWorkerAsync();
 
@@ -290,6 +298,21 @@ namespace BrainSimulator
             buttonSpeedTest.IsEnabled = MainWindow.useServers;
             buttonRefresh.IsEnabled = MainWindow.useServers;
             UpdateServerTextBox();
+        }
+
+
+        //engine Refractory up/dn  buttons 
+        private void Button_RefractoryUpClick(object sender, RoutedEventArgs e)
+        {
+            refractory++;
+            Refractory.Text = refractory.ToString();
+        }
+
+        private void Button_RefractoryDnClick(object sender, RoutedEventArgs e)
+        {
+            refractory--;
+            if (refractory < 0) refractory = 0;
+            Refractory.Text = refractory.ToString();
         }
     }
 }

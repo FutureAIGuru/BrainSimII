@@ -117,11 +117,14 @@ namespace BrainSimulator
             ((DispatcherTimer)sender).Stop();
             if (theNeuronArray != null)
             {
-                foreach (ModuleView na in theNeuronArray.Modules)
+                lock (theNeuronArray.Modules)
                 {
-                    if (na.TheModule != null)
+                    foreach (ModuleView na in theNeuronArray.Modules)
                     {
-                        na.TheModule.SetDlgOwner(this);
+                        if (na.TheModule != null)
+                        {
+                            na.TheModule.SetDlgOwner(this);
+                        }
                     }
                 }
             }
@@ -269,6 +272,7 @@ namespace BrainSimulator
 
             Update();
             SetShowSynapsesCheckBox(theNeuronArray.ShowSynapses);
+            SetPlayPauseButtonImage(theNeuronArray.EngineIsPaused);
             OpenHistoryWindow();
             ResumeEngine();
         }
@@ -436,6 +440,7 @@ namespace BrainSimulator
             if (result ?? false)// System.Windows.Forms.DialogResult.OK)
             {
                 SaveFile(saveFileDialog1.FileName);
+                AddFileToMRUList(currentFileName);
                 setTitleBar();
             }
         }
@@ -510,12 +515,12 @@ namespace BrainSimulator
 
         public static void SuspendEngine()
         {
-            if (engineDelay == 2000) return; //already suspended
+            if (engineIsPaused) return; //already suspended
                                              //suspend the engine...
-            if (MainWindow.theNeuronArray != null)
-                MainWindow.theNeuronArray.EngineSpeed = engineDelay;
+            if (theNeuronArray != null)
+                theNeuronArray.EngineSpeed = engineDelay;
             engineDelay = 2000;
-            while (!engineIsWaiting)
+            while (theNeuronArray != null && !engineIsPaused)
             {
                 Thread.Sleep(100);
                 System.Windows.Forms.Application.DoEvents();
@@ -525,7 +530,7 @@ namespace BrainSimulator
         public static void ResumeEngine()
         {
             //resume the engine
-            if (MainWindow.theNeuronArray != null)
+            if (theNeuronArray != null && !theNeuronArray.EngineIsPaused)
             {
                 engineDelay = MainWindow.theNeuronArray.EngineSpeed;
                 Application.Current.Dispatcher.Invoke((Action)delegate
@@ -549,7 +554,7 @@ namespace BrainSimulator
             });
 
         }
-        static bool engineIsWaiting = false;
+        static bool engineIsPaused = false;
         static long engineElapsed = 0;
         static long displayElapsed = 0;
         private void EngineLoop()
@@ -558,12 +563,11 @@ namespace BrainSimulator
             {
                 if (theNeuronArray == null)
                 {
-                    engineIsWaiting = true;
                     Thread.Sleep(100);
                 }
                 else if (engineDelay > 1000)
                 {
-                    engineIsWaiting = true;
+                    engineIsPaused = true;
                     if (updateDisplay)
                     {
                         Application.Current.Dispatcher.Invoke((Action)delegate
@@ -577,7 +581,7 @@ namespace BrainSimulator
                 }
                 else
                 {
-                    engineIsWaiting = false;
+                    engineIsPaused = false;
                     if (theNeuronArray != null)
                     {
                         long start = Utils.GetPreciseTime();
@@ -603,7 +607,7 @@ namespace BrainSimulator
             }
         }
 
-        //engine speed up/dn  buttons on the menu
+        //engine Refractory up/dn  buttons on the menu
         private void Button_RefractoryUpClick(object sender, RoutedEventArgs e)
         {
             theNeuronArray.RefractoryDelay++;
@@ -719,7 +723,11 @@ namespace BrainSimulator
         private void MainMenu_MouseEnter(object sender, MouseEventArgs e)
         {
             LoadMRUMenu();
-            if (!engineIsWaiting)
+            if (theNeuronArray != null) ThreadCount.Text = theNeuronArray.GetThreadCount().ToString();
+            else ThreadCount.Text = "";
+            if (theNeuronArray != null) Refractory.Text = theNeuronArray.GetRefractoryDelay().ToString();
+            else Refractory.Text = "";
+            if (!engineIsPaused)
             {
                 EnableMenuItem(MainMenu.Items, "Run", false);
                 EnableMenuItem(MainMenu.Items, "Pause", true);
@@ -870,11 +878,14 @@ namespace BrainSimulator
         {
             if (theNeuronArray != null)
             {
-                foreach (ModuleView na in theNeuronArray.Modules)
+                lock (theNeuronArray.Modules)
                 {
-                    if (na.TheModule != null)
+                    foreach (ModuleView na in theNeuronArray.Modules)
                     {
-                        na.TheModule.CloseDlg();
+                        if (na.TheModule != null)
+                        {
+                            na.TheModule.CloseDlg();
+                        }
                     }
                 }
             }
@@ -953,15 +964,17 @@ namespace BrainSimulator
             }
 
         }
-
         private void ButtonInit_Click(object sender, RoutedEventArgs e)
         {
             if (theNeuronArray == null) return;
             SuspendEngine();
-            foreach (ModuleView na in theNeuronArray.Modules)
+            lock (theNeuronArray.Modules)
             {
-                if (na.TheModule != null)
-                    na.TheModule.Init(true);
+                foreach (ModuleView na in theNeuronArray.Modules)
+                {
+                    if (na.TheModule != null)
+                        na.TheModule.Init(true);
+                }
             }
             theNeuronArray.Generation = 0;
             theNeuronArray.SetGeneration(0);
@@ -971,17 +984,17 @@ namespace BrainSimulator
 
         private void PlayPause_Click(object sender, RoutedEventArgs e)
         {
-            if (imagePause.Visibility == Visibility.Visible)
+            if (!theNeuronArray.EngineIsPaused)
             {
-                imagePause.Visibility = Visibility.Collapsed;
-                imagePlay.Visibility = Visibility.Visible;
+                SetPlayPauseButtonImage(true);
                 SuspendEngine();
                 theNeuronArrayView.UpdateNeuronColors();
+                theNeuronArray.EngineIsPaused = true;
             }
             else
             {
-                imagePause.Visibility = Visibility.Visible;
-                imagePlay.Visibility = Visibility.Collapsed;
+                SetPlayPauseButtonImage(false);
+                theNeuronArray.EngineIsPaused = false;
                 ResumeEngine();
             }
         }
@@ -990,10 +1003,10 @@ namespace BrainSimulator
         {
             if (theNeuronArray != null)
             {
-                if (!engineIsWaiting)
+                if (!theNeuronArray.EngineIsPaused)
                 {
-                    imagePause.Visibility = Visibility.Collapsed;
-                    imagePlay.Visibility = Visibility.Visible;
+                    SetPlayPauseButtonImage(true);
+                    theNeuronArray.EngineIsPaused = true;
                     SuspendEngine();
                     theNeuronArrayView.UpdateNeuronColors();
                 }
@@ -1003,6 +1016,20 @@ namespace BrainSimulator
                     theNeuronArrayView.UpdateNeuronColors();
                 }
             }
+        }
+        public void SetPlayPauseButtonImage(bool play)
+        {
+            if (play)
+            {
+                imagePause.Visibility = Visibility.Collapsed;
+                imagePlay.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                imagePause.Visibility = Visibility.Visible;
+                imagePlay.Visibility = Visibility.Collapsed;
+            }
+
         }
 
         private void ButtonPan_Click(object sender, RoutedEventArgs e)
@@ -1141,5 +1168,16 @@ namespace BrainSimulator
             }
         }
 
+        private void ThreadCount_TextChanged(object sender, TextChangedEventArgs e)
+        {
+           if (sender is TextBox tb)
+            {
+                if (int.TryParse(tb.Text, out int newThreadCount))
+                {
+                    if (newThreadCount > 0 && newThreadCount < 512)
+                        theNeuronArray.SetThreadCount(newThreadCount);
+                }
+            }
+        }
     }
 }

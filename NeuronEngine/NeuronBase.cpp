@@ -299,38 +299,27 @@ namespace NeuronEngine
 	//It is called if a Hebbian synapse fires and either DOES or DOES NOT cause firing in the target
 	//Consider it to be a lookup table until we figure out how weights actually vary
 	//It has the problem that it can be dependent on neuron processing order
-	float NewHebbianWeight(float y, float offset)
+	const int ranges = 5;
+	float cutoffs[ranges] = { 1,.5,.33,.25,0 };
+	float posIncr[ranges] = { 0,.105,.16,.24,.05 };
+	float negIncr[ranges] = { -.01,-.1,-.033,-.0625,-.01 };
+	float NewHebbianWeight(float y, float offset) //sign of float is all that's presently used
 	{
-		float w = y;
-		if (w >= 1)
+		int i = 0;
+		for (i = 0; i < ranges; i++)
 		{
-			if (offset < 0)
-				w -= .01;
+			if (y >= cutoffs[i])
+			{
+				if (offset > 0)
+					y += posIncr[i];
+				else
+					y += negIncr[i];
+				if (y < 0)y = 0;
+				if (y > 1) y = 1;
+				break;
+			}
 		}
-		else if (w >= 0.5)
-		{
-			if (offset > 0) w += .105;
-			else w -= .1;
-		}
-		else if (w > .33)
-		{
-			if (offset > 0) w += .16;
-			else w -= .033;
-		}
-		else if (w >= .25)
-		{
-			if (offset > 0) w += .24;
-			else w -= .0625;
-		}
-		else
-		{
-			if (offset > 0)
-				w += .05;
-			else w -= .01;
-		}
-		if (w < 0) w = 0;
-		if (w > 1) w = 1;
-		return w;
+		return y;
 	}
 
 	//neuron firing is two-phase so that the network is independent of neuron order

@@ -30,7 +30,7 @@ namespace BrainSimulator.Modules
             }
         }
         //probably a bad thing to use both attribs and sequenceItems
-        public void AddThing(string parent, string name, string[] attribs = null, string[] sequenceItems = null)
+        public void AddNode(string parent, string name, string[] attribs = null, string[] sequenceItems = null)
         {
             int parentRow = -1;
             int newRow = -1;
@@ -141,9 +141,9 @@ namespace BrainSimulator.Modules
             //AddThing("Attribute", "Size");
             //AddThing("Size", "Big");
             //AddThing("Size", "Little");
-            AddThing("Attribute", "Color");
-            AddThing("Color", "Red");
-            AddThing("Color", "Blue");
+            AddNode("Attribute", "Color");
+            AddNode("Color", "Red");
+            AddNode("Color", "Blue");
             //AddThing("Attribute", "Shape");
             //AddThing("Shape", "Square");
             //AddThing("Shape", "Circle");
@@ -166,13 +166,13 @@ namespace BrainSimulator.Modules
 
 
 
-            AddThing("Attribute", "word");
-            AddThing("word", "Mary");
-            AddThing("word", "had");
-            AddThing("word", "a");
-            AddThing("word", "little");
-            AddThing("word", "lamb");
-            AddThing("Sequence", "M1", null, new string[] { "Mary", "had", "a", "little", "lamb" });
+            AddNode("Attribute", "word");
+            AddNode("word", "Mary");
+            AddNode("word", "had");
+            AddNode("word", "a");
+            AddNode("word", "little");
+            AddNode("word", "lamb");
+            AddNode("Sequence", "M1", null, new string[] { "Mary", "had", "a", "little", "lamb" });
 
         }
 
@@ -368,7 +368,7 @@ namespace BrainSimulator.Modules
                 int rowParent = FindRowByLabel(words[1]);
                 if (rowParent != -1)
                 {
-                    AddThing(words[1], words[2]);
+                    AddNode(words[1], words[2]);
                     //      toSpeak = words[1] + " " + words[2] + " added";
                 }
                 else

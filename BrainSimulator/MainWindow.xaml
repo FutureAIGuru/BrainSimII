@@ -17,23 +17,24 @@
                     <MenuItem Header="Save _As" Click="buttonSaveAs_Click"/>
                     <Separator />
                     <MenuItem Header="_Properties" Click="MenuItemProperties_Click"/>
-                    <MenuItem Header="_Notes" Click="MenuItemNotes_Click" />
                     <Separator />
-                    <MenuItem Header="Recent" x:Name="MRUListMenu" />
+                    <MenuItem Header="Recent" x:Name="MRUListMenu">
+                    </MenuItem>
+                    <MenuItem Header="Library">
+                        <MenuItem Header="BasicNeurons" Click="buttonLoad_Click"/>
+                        <MenuItem Header="CameraTest" Click="buttonLoad_Click"/>
+                        <MenuItem Header="SpeechTest" Click="buttonLoad_Click"/>
+                        <MenuItem Header="SimVision" Click="buttonLoad_Click"/>
+                        <MenuItem Header="Imagination" Click="buttonLoad_Click"/>
+                        <MenuItem Header="BabyTalk" Click="buttonLoad_Click"/>
+                        <MenuItem Header="Maze" Click="buttonLoad_Click"/>
+                        <MenuItem Header="Sallie" Click="buttonLoad_Click"/>
+                        <MenuItem Header="3DSim" Click="buttonLoad_Click"/>
+                        <MenuItem Header="NeuralGraph" Click="buttonLoad_Click"/>
+                        <MenuItem Header="ObjectMotion" Click="buttonLoad_Click"/>
+                    </MenuItem>
                     <Separator />
                     <MenuItem Header="_Exit" Click="button_Exit_Click"/>
-                    <Separator />
-                    <MenuItem Header="BasicNeurons" Click="buttonLoad_Click"/>
-                    <MenuItem Header="CameraTest" Click="buttonLoad_Click"/>
-                    <MenuItem Header="SpeechTest" Click="buttonLoad_Click"/>
-                    <MenuItem Header="SimVision" Click="buttonLoad_Click"/>
-                    <MenuItem Header="Imagination" Click="buttonLoad_Click"/>
-                    <MenuItem Header="BabyTalk" Click="buttonLoad_Click"/>
-                    <MenuItem Header="Maze" Click="buttonLoad_Click"/>
-                    <MenuItem Header="Sallie" Click="buttonLoad_Click"/>
-                    <MenuItem Header="3DSim" Click="buttonLoad_Click"/>
-                    <MenuItem Header="NeuralGraph" Click="buttonLoad_Click"/>
-                    <MenuItem Header="ObjectMotion" Click="buttonLoad_Click"/>
                 </MenuItem>
                 <MenuItem Header="Edit">
                     <MenuItem Header=" Undo"  Click="MenuItem_UndoSynapse" />
@@ -47,9 +48,11 @@
                     <Separator />
                     <MenuItem Header="Load Clipboard" Click="button_LoadClipboard_Click" ToolTip="Load clipboard from file"/>
                     <MenuItem Header="Save Clipboard" Click="button_ClipboardSave_Click" ToolTip="Save clipboard to file"/>
+                    <Separator/>
+                    <MenuItem Header="_Notes" Click="MenuItemNotes_Click" />
                 </MenuItem>
                 <MenuItem Header="Neuron Engine" StaysOpenOnClick="True">
-                    <MenuItem Header="Initialize" Click="ButtonInit_Click"/>
+                    <MenuItem Header="Reset" Click="ButtonInit_Click"/>
                     <MenuItem Header="Run" Click="PlayPause_Click"/>
                     <MenuItem Header="Pause" Click="PlayPause_Click" />
                     <MenuItem Header="Step" Click="ButtonSingle_Click"/>
@@ -68,7 +71,10 @@
                             <RepeatButton Content="^" Height="12" Interval="250" VerticalContentAlignment="Bottom" Padding="0,-1" Click="Button_RefractoryUpClick"/>
                             <RepeatButton Content="˅" Height="12" Interval="250" VerticalContentAlignment="Top" Padding="-1,-3,0,0" Click="Button_RefractoryDnClick"/>
                         </StackPanel>
-
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Width="100" >
+                        <Label Content="Threads:  " Padding="0,4,0,0"/>
+                        <TextBox Text="-1" VerticalAlignment="Center" Width="37" x:Name="ThreadCount" TextChanged="ThreadCount_TextChanged"/>
                     </StackPanel>
                 </MenuItem>
                 <MenuItem Header=" Help">

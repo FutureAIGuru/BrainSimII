@@ -85,6 +85,7 @@ namespace BrainSimulator
             cm.SetValue(TargetIDProperty, s.TargetNeuron);
             cm.SetValue(WeightValProperty, s.Weight);
             cm.Closed += Cm_Closed;
+            cm.PreviewKeyDown += Cm_PreviewKeyDown;
 
             Neuron nSource = MainWindow.theNeuronArray.GetNeuron(i);
             Neuron nTarget = MainWindow.theNeuronArray.GetNeuron(s.targetNeuron);
@@ -172,6 +173,19 @@ namespace BrainSimulator
             mi = new MenuItem();
         }
 
+        private static void Cm_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            ContextMenu cm = sender as ContextMenu;
+            if (e.Key == Key.Delete)
+            {
+                MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).DeleteSynapse((int)cm.GetValue(TargetIDProperty));
+                MainWindow.Update();
+                cm.IsOpen = false;
+            }
+            if (e.Key == Key.Enter)
+                cm.IsOpen = false;
+                
+        }
 
         private static void cbHebbianChecked(object sender, RoutedEventArgs e)
         {

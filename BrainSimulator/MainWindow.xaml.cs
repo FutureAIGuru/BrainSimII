@@ -96,7 +96,7 @@ namespace BrainSimulator
 
             splashScreen.Left = 300;
             splashScreen.Top = 300;
-            //splashScreen.Show();
+            splashScreen.Show();
             DispatcherTimer splashHide = new DispatcherTimer
             {
                 Interval = new TimeSpan(0, 0, 3),
@@ -128,7 +128,7 @@ namespace BrainSimulator
                     }
                 }
             }
-            else
+            if (currentFileName == "")
             {
                 bool showHelp = (bool)Properties.Settings.Default["ShowHelp"];
                 if (showHelp)

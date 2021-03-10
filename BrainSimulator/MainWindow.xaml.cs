@@ -193,7 +193,7 @@ namespace BrainSimulator
                 {
                     if (theNeuronArray != null)
                     {
-                        theNeuronArray.UndoSynapse();
+                        theNeuronArray.Undo();
                         theNeuronArrayView.Update();
                     }
                 }
@@ -231,7 +231,7 @@ namespace BrainSimulator
             {
                 if (theNeuronArray != null)
                 {
-                    theNeuronArray.UndoSynapse();
+                    theNeuronArray.Undo();
                     theNeuronArrayView.Update();
                 }
             }
@@ -780,6 +780,15 @@ namespace BrainSimulator
             {
                 EnableMenuItem(MainMenu.Items, " Paste", true);
             }
+            if (theNeuronArray.UndoPossible())
+            {
+                EnableMenuItem(MainMenu.Items, " Undo", true);
+            }
+            else
+            {
+                EnableMenuItem(MainMenu.Items, " Undo", false);
+
+            }
 
             if (myClipBoard == null)
             {
@@ -895,9 +904,9 @@ namespace BrainSimulator
         {
             theNeuronArrayView.MoveNeurons();
         }
-        private void MenuItem_UndoSynapse(object sender, RoutedEventArgs e)
+        private void MenuItem_Undo(object sender, RoutedEventArgs e)
         {
-            theNeuronArray.UndoSynapse();
+            theNeuronArray.Undo();
             theNeuronArrayView.Update();
         }
 
@@ -916,10 +925,12 @@ namespace BrainSimulator
         private void MenuItem_DeleteNeurons(object sender, RoutedEventArgs e)
         {
             theNeuronArrayView.DeleteSelection();
+            Update();
         }
         private void MenuItem_ClearSelection(object sender, RoutedEventArgs e)
         {
             theNeuronArrayView.ClearSelection();
+            Update();
         }
         private void Button_HelpAbout_Click(object sender, RoutedEventArgs e)
         {

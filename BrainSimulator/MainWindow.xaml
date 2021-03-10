@@ -37,7 +37,7 @@
                     <MenuItem Header="_Exit" Click="button_Exit_Click"/>
                 </MenuItem>
                 <MenuItem Header="Edit">
-                    <MenuItem Header=" Undo"  Click="MenuItem_UndoSynapse" />
+                    <MenuItem Header=" Undo"  Click="MenuItem_Undo" />
                     <Separator />
                     <MenuItem Header=" Cut"  Click="MenuItem_CutNeurons" />
                     <MenuItem Header=" Copy"  Click="MenuItem_CopyNeurons" />
@@ -102,10 +102,10 @@
         <Button x:Name="buttonPan" HorizontalAlignment="Left" Height="22" Margin="71,37,0,0" VerticalAlignment="Top" Width="22" Click="ButtonPan_Click" ToolTip="Pan the display with the mouse (Shift+mouse move)">
             <Image x:Name="image2" Height="18" Width="18" Source="Resources/Hand.png"/>
         </Button>
-        <Button x:Name="buttonZoomOut" HorizontalAlignment="Left" Height="22" Margin="121,37,0,0" VerticalAlignment="Top" Width="22" ToolTip="Zoom Out (Shift+mouse wheel" PreviewMouseLeftButtonDown="ButtonZoomOut_PreviewMouseLeftButtonDown">
+        <Button x:Name="buttonZoomOut" HorizontalAlignment="Left" Height="22" Margin="121,37,0,0" VerticalAlignment="Top" Width="22" ToolTip="Zoom Out (Also mouse wheel" PreviewMouseLeftButtonDown="ButtonZoomOut_PreviewMouseLeftButtonDown">
             <Image x:Name="image4" Height="18" Width="18" Source="Resources/ZoomOut.png"/>
         </Button>
-        <Button x:Name="buttonZoomIn" HorizontalAlignment="Left" Height="22" Margin="96,37,0,0" VerticalAlignment="Top" Width="22" ToolTip="Zoom In (Shift+mouse wheel" PreviewMouseLeftButtonDown="ButtonZoomIn_PreviewMouseLeftButtonDown">
+        <Button x:Name="buttonZoomIn" HorizontalAlignment="Left" Height="22" Margin="96,37,0,0" VerticalAlignment="Top" Width="22" ToolTip="Zoom In (Also mouse wheel" PreviewMouseLeftButtonDown="ButtonZoomIn_PreviewMouseLeftButtonDown">
             <Image x:Name="image5" Height="18" Width="18" Source="Resources/ZoomIn.png"/>
         </Button>
         <Label x:Name="label1" Content="Speed:" HorizontalAlignment="Left" Height="30" Margin="497,34,0,0" VerticalAlignment="Top" Width="56"/>

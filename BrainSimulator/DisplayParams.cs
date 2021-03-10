@@ -26,7 +26,7 @@ namespace BrainSimulator
         public bool ShowNeurons() { return neuronDisplaySize > 6; }
 
         [XmlIgnore]
-        public int maxSynapsesToDisplay = 2000;
+        public int maxSynapsesToDisplay = 1000;
 
         public float NeuronDisplaySize
         {

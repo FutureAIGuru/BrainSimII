@@ -251,9 +251,10 @@ namespace BrainSimulator
 
                 if (newSourceID != sourceID || newTargetID != targetID)
                 {
-                    MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).DeleteSynapse((int)cm.GetValue(TargetIDProperty));
+                    MainWindow.theNeuronArray.SetUndoPoint();
+                    MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).DeleteSynapseWithUndo((int)cm.GetValue(TargetIDProperty));
                     Neuron nNewSource = MainWindow.theNeuronArray.GetNeuron(newSourceID);
-                    nNewSource.AddSynapse(newTargetID, theNeuronArrayView.lastSynapseWeight, theNeuronArrayView.lastSynapseHebbian);
+                    nNewSource.AddSynapseWithUndo(newTargetID, theNeuronArrayView.lastSynapseWeight, theNeuronArrayView.lastSynapseHebbian);
                 }
                 MainWindow.Update();
             }
@@ -272,7 +273,7 @@ namespace BrainSimulator
             //theNeuronArrayView.lastSynapseHebbian = cm.Items
             int id = (int)cm.GetValue(SourceIDProperty);
             Neuron n = MainWindow.theNeuronArray.GetNeuron(id);
-            n.AddSynapse((int)cm.GetValue(TargetIDProperty), newWeight, MainWindow.theNeuronArray, true);
+            n.AddSynapseWithUndo((int)cm.GetValue(TargetIDProperty), newWeight,  true);
         }
 
         public static void GetSynapseInfo(object sender)
@@ -298,7 +299,11 @@ namespace BrainSimulator
         {
             MenuItem mi = sender as MenuItem;
             ContextMenu cm = mi.Parent as ContextMenu;
-            theNeuronArrayView.StepAndRepeat((int)cm.GetValue(SourceIDProperty), (int)cm.GetValue(TargetIDProperty), (float)cm.GetValue(WeightValProperty));
+            theNeuronArrayView.StepAndRepeat(
+                (int)cm.GetValue(SourceIDProperty), 
+                (int)cm.GetValue(TargetIDProperty), 
+                (float)cm.GetValue(WeightValProperty),
+                false); //TODO: handle hebbian/model
         }
 
         public static void NewValue_Click(object sender, RoutedEventArgs e)
@@ -311,8 +316,10 @@ namespace BrainSimulator
                 bool isHebbian = (bool)cbIsHebbian.IsChecked;
                 float weight = 0;
                 float.TryParse((string)mi.Header, out weight);
+
+                MainWindow.theNeuronArray.SetUndoPoint();
                 MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).
-                    AddSynapse((int)cm.GetValue(TargetIDProperty), weight, isHebbian);
+                    AddSynapseWithUndo((int)cm.GetValue(TargetIDProperty), weight, isHebbian);
                 theNeuronArrayView.lastSynapseWeight = weight;
                 theNeuronArrayView.lastSynapseHebbian = isHebbian;
                 MainWindow.Update();
@@ -321,9 +328,10 @@ namespace BrainSimulator
 
         public static void DeleteSynapse_Click(object sender, RoutedEventArgs e)
         {
+            MainWindow.theNeuronArray.SetUndoPoint();
             MenuItem mi = (MenuItem)sender;
             ContextMenu cm = mi.Parent as ContextMenu;
-            MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).DeleteSynapse((int)cm.GetValue(TargetIDProperty));
+            MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).DeleteSynapseWithUndo((int)cm.GetValue(TargetIDProperty));
             MainWindow.Update();
         }
 

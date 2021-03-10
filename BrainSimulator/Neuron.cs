@@ -68,8 +68,10 @@ namespace BrainSimulator
         public string Label { get => label; set { label = value; Update(); } }
 
         public float LeakRate { get => leakRate; set { leakRate = value; Update(); } }
-        public int AxonDelay { get => axonDelay; 
-            set { axonDelay = value; Update(); } 
+        public int AxonDelay
+        {
+            get => axonDelay;
+            set { axonDelay = value; Update(); }
         }
 
         public modelType Model { get => (Neuron.modelType)model; set { model = (modelType)value; Update(); } }
@@ -105,15 +107,25 @@ namespace BrainSimulator
         {
             ownerArray.AddSynapse(Id, targetNeuron, weight, false, false);
         }
-        //TODO...eliminated this
-        public void AddSynapse(int targetNeuron, float weight, NeuronArray theNeuronArray, bool addUndoInfo = false, bool isHebbian = false)
+
+        public void AddSynapseWithUndo(int targetNeuron, float weight, bool isHebbian = false)
         {
+            //TODO, first check to see if a synapse already exists and save the old weight
+            Synapse s = FindSynapse(targetNeuron);
+            if (s != null)
+                MainWindow.theNeuronArray.AddSynapseUndo(Id, targetNeuron, s.weight,s.isHebbian,false, false);
+            else
+                MainWindow.theNeuronArray.AddSynapseUndo(Id, targetNeuron, 0, false, true, false);
+
             ownerArray.AddSynapse(Id, targetNeuron, weight, isHebbian, false);
-            if (addUndoInfo)
-            {
-                MainWindow.theNeuronArray.AddSynapseUndo(Id, targetNeuron, weight, true);
-            }
+
         }
+
+        public void AddUndoInfo()
+        {
+            MainWindow.theNeuronArray.AddNeuronUndo(this);
+        }
+
         public void DeleteAllSynapes()
         {
             foreach (Synapse s in Synapses)
@@ -129,6 +141,14 @@ namespace BrainSimulator
         public override string ToString()
         {
             return "n:" + Id;
+        }
+        public void DeleteSynapseWithUndo(int targetNeuron)
+        {
+            Synapse s = FindSynapse(targetNeuron);
+            if (s != null)
+                MainWindow.theNeuronArray.AddSynapseUndo(id, targetNeuron, s.weight, s.isHebbian, false, true);
+
+            DeleteSynapse(targetNeuron);
         }
         public void DeleteSynapse(int targetNeuron)
         {
@@ -173,6 +193,18 @@ namespace BrainSimulator
             n.axonDelay = this.axonDelay;
             n.model = this.model;
             n.synapsesFrom = new List<Synapse>(); ;
+        }
+        public Neuron Copy()
+        {
+            Neuron n = new Neuron();
+            n.id = this.id;
+            n.label = this.label;
+            n.lastCharge = this.lastCharge;
+            n.currentCharge = this.currentCharge;
+            n.LeakRate = this.LeakRate;
+            n.axonDelay = this.axonDelay;
+            n.model = this.model;
+            return n;
         }
         public void Clear()
         {

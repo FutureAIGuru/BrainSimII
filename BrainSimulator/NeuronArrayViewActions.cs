@@ -15,7 +15,6 @@ namespace BrainSimulator
         {
             theSelection.selectedRectangles.Clear();
             targetNeuronIndex = -1;
-            //Update();
         }
 
         //copy the selection to a clipboard
@@ -121,11 +120,11 @@ namespace BrainSimulator
 
         public void PasteNeurons(bool pasteSynapses = true)
         {
-            NeuronArray myClipBoard;
-            myClipBoard = MainWindow.myClipBoard;
+            NeuronArray myClipBoard = MainWindow.myClipBoard;
 
             if (targetNeuronIndex == -1) return;
             if (myClipBoard == null) return;
+
             //We are pasting neurons from the clipboard.  
             //The arrays have different sizes so we may by row-col.
 
@@ -149,26 +148,28 @@ namespace BrainSimulator
 
             if (!IsDestinationClear(targetNeurons, 0, true))
             {
-                MessageBoxResult result = MessageBox.Show("Some desination is are in use and will be overwritten, continue?", "Continue", MessageBoxButton.YesNo);
+                MessageBoxResult result = MessageBox.Show("Some desination neurons are in use and will be overwritten, continue?", "Continue", MessageBoxButton.YesNo);
                 if (result == MessageBoxResult.No) return;
             }
 
-            //now past the neurons
+            MainWindow.theNeuronArray.SetUndoPoint();
+            //now paste the neurons
             for (int i = 0; i < myClipBoard.arraySize; i++)
             {
                 if (myClipBoard.GetNeuron(i) != null)
                 {
                     int destID = GetNeuronArrayId(i);
+                    MainWindow.theNeuronArray.GetNeuron(destID).AddUndoInfo();
 
                     Neuron sourceNeuron = myClipBoard.GetNeuron(i).Clone();
                     sourceNeuron.id = destID;
                     MainWindow.theNeuronArray.SetNeuron(destID, sourceNeuron);
-                    //MainWindow.theNeuronArray.GetNeuron(destID).Id = destID;
+
                     if (pasteSynapses)
                     {
                         foreach (Synapse s in myClipBoard.GetNeuron(i).Synapses)
                         {
-                            MainWindow.theNeuronArray.GetNeuron(destID).AddSynapse(GetNeuronArrayId(s.TargetNeuron), s.Weight);
+                            MainWindow.theNeuronArray.GetNeuron(destID).AddSynapseWithUndo(GetNeuronArrayId(s.TargetNeuron), s.Weight, s.isHebbian);
                         }
                     }
                 }
@@ -197,11 +198,12 @@ namespace BrainSimulator
         public void ConnectFromHere()
         {
             if (targetNeuronIndex == -1) return;
+            MainWindow.theNeuronArray.SetUndoPoint();
             Neuron targetNeuron = MainWindow.theNeuronArray.GetNeuron(targetNeuronIndex);
             List<int> neuronsInSelection = theSelection.EnumSelectedNeurons();
             for (int i = 0; i < neuronsInSelection.Count; i++)
             {
-                targetNeuron.AddSynapse(neuronsInSelection[i], lastSynapseWeight, lastSynapseHebbian);
+                targetNeuron.AddSynapseWithUndo(neuronsInSelection[i], lastSynapseWeight, lastSynapseHebbian);
             }
             Update();
         }
@@ -209,29 +211,31 @@ namespace BrainSimulator
         public void ConnectToHere()
         {
             if (targetNeuronIndex == -1) return;
+            MainWindow.theNeuronArray.SetUndoPoint();
             List<int> neuronsInSelection = theSelection.EnumSelectedNeurons();
             for (int i = 0; i < neuronsInSelection.Count; i++)
             {
                 Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronsInSelection[i]);
-                n.AddSynapse(targetNeuronIndex, lastSynapseWeight,lastSynapseHebbian);
+                n.AddSynapseWithUndo(targetNeuronIndex, lastSynapseWeight, lastSynapseHebbian);
             }
             Update();
         }
 
 
-        public void DeleteSelection(bool deleteSynapses = true)
+        public void DeleteSelection()
         {
+            MainWindow.theNeuronArray.SetUndoPoint();
             List<int> neuronsToDelete = theSelection.EnumSelectedNeurons();
             foreach (int nID in neuronsToDelete)
             {
                 Neuron n = MainWindow.theNeuronArray.GetNeuron(nID);
+                for (int i = 0; i < n.synapses.Count; i++)
+                    n.DeleteSynapseWithUndo(n.synapses[i].targetNeuron);
+                n.AddUndoInfo();
                 n.CurrentCharge = 0;
                 n.LastCharge = 0;
                 n.Model = Neuron.modelType.IF;
-                if (deleteSynapses)
-                {
-                    n.DeleteAllSynapes();
-                }
+
                 n.Label = "";
                 n.Update();
             }
@@ -274,6 +278,8 @@ namespace BrainSimulator
                 if (maxRow < trow - row0) maxRow = trow - row0;
             }
 
+            int offset = targetNeuronIndex - theSelection.selectedRectangles[0].FirstSelectedNeuron;
+            if (offset == 0) return;
 
             MainWindow.theNeuronArray.GetNeuronLocation(targetNeuronIndex, out int col, out int row);
             if (col + maxCol >= MainWindow.theNeuronArray.Cols ||
@@ -283,15 +289,15 @@ namespace BrainSimulator
                 return;
             }
 
-            int offset = targetNeuronIndex - theSelection.selectedRectangles[0].FirstSelectedNeuron;
-
             if (!IsDestinationClear(neuronsToMove, offset))
             {
-                MessageBoxResult result = MessageBox.Show("Some desination is are in use and will be overwritten, continue?", "Continue", MessageBoxButton.YesNo);
+                MessageBoxResult result = MessageBox.Show("Some desination neurons are in use and will be overwritten, continue?", "Continue", MessageBoxButton.YesNo);
                 if (result == MessageBoxResult.No) return;
             }
 
-            //change the order of copying to to keep from overwriting ourselves
+            MainWindow.theNeuronArray.SetUndoPoint();
+
+            //change the order of copying to keep from overwriting ourselves
             if (offset > 0) neuronsToMove.Reverse();
             foreach (int source in neuronsToMove)
             {
@@ -319,6 +325,9 @@ namespace BrainSimulator
 
         public void MoveOneNeuron(Neuron n, Neuron nNewLocation)
         {
+            n.AddUndoInfo();
+            nNewLocation.AddUndoInfo();
+
             //copy the neuron attributes and delete them from the old neuron.
             n.Copy(nNewLocation);
             MainWindow.theNeuronArray.SetCompleteNeuron(nNewLocation);
@@ -334,34 +343,35 @@ namespace BrainSimulator
             {
                 Synapse s = n.Synapses[k];
                 if (s.targetNeuron != n.id)
-                    nNewLocation.AddSynapse(s.targetNeuron, s.weight, s.isHebbian);
+                    nNewLocation.AddSynapseWithUndo(s.targetNeuron, s.weight, s.isHebbian);
                 else
-                    nNewLocation.AddSynapse(nNewLocation.id, s.weight, s.isHebbian);
-
+                    nNewLocation.AddSynapseWithUndo(nNewLocation.id, s.weight, s.isHebbian);
+                n.DeleteSynapseWithUndo(n.synapses[k].targetNeuron);
             }
 
             //for all the synapses coming into this neuron, change the synapse target to new location
             for (int k = 0; k < n.SynapsesFrom.Count; k++)
             {
                 Synapse reverseSynapse = n.SynapsesFrom[k]; //(from synapses are sort-of backward
-                if (reverseSynapse.targetNeuron != -1)
+                if (reverseSynapse.targetNeuron != -1) //?
                 {
                     Neuron sourceNeuron = MainWindow.theNeuronArray.GetNeuron(reverseSynapse.targetNeuron);
-                    sourceNeuron.DeleteSynapse(n.id);
+                    sourceNeuron.DeleteSynapseWithUndo(n.id);
                     if (sourceNeuron.id != n.id)
-                        sourceNeuron.AddSynapse(nNewLocation.id, reverseSynapse.weight, reverseSynapse.isHebbian);
+                        sourceNeuron.AddSynapseWithUndo(nNewLocation.id, reverseSynapse.weight, reverseSynapse.isHebbian);
                 }
             }
+
             n.Clear();
         }
 
-        public void StepAndRepeat(int source, int target, float weight)
+        public void StepAndRepeat(int source, int target, float weight, bool isHebbian)
         {
             int distance = target - source;
             theSelection.EnumSelectedNeurons();
             for (Neuron n = theSelection.GetSelectedNeuron(); n != null; n = theSelection.GetSelectedNeuron())
             {
-                n.AddSynapse(theSelection.selectedNeuronIndex + distance, weight, MainWindow.theNeuronArray, true);
+                n.AddSynapseWithUndo(theSelection.selectedNeuronIndex + distance, weight, isHebbian);
             }
             Update();
         }

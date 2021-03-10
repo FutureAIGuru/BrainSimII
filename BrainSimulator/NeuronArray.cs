@@ -45,14 +45,40 @@ namespace BrainSimulator
                 base.Initialize(count);
         }
 
-        //this list keeps track of changed synapses for undo
+        //these lists keep track of changed synapses and neurons for undo
+        List<UndoPoint> undoList = new List<UndoPoint>(); //checkpoints for multi-undos 
+        List<SynapseUndo> synapseUndoInfo = new List<SynapseUndo>();
+        List<NeuronUndo> neuronUndoInfo = new List<NeuronUndo>();
+
+        //what can be undone?
+        //synapse change/add/delete
+        //neuron change
+        //multi synapse actions
+        //multi neuron actions
+        //cut => combo (what was in the selection before?)
+        //paste => combo (what was in the target before?)
+        //move => combo (what was in the target AND selection before?)
+
+
         struct SynapseUndo
         {
             public int source, target;
             public float weight;
             public bool newSynapse;
+            public bool delSynapse;
+            public bool isHebbian;
+            //TODO add model
         }
-        List<SynapseUndo> synapseUndoInfo = new List<SynapseUndo>();
+        struct NeuronUndo
+        {
+            public Neuron previousNeuron;
+        }
+        struct UndoPoint
+        {
+            public int synapsePoint;
+            public int neuronPoint;
+        }
+
 
 
         public NeuronArray()
@@ -119,6 +145,7 @@ namespace BrainSimulator
             else
                 base.DeleteSynapse(src, dest);
         }
+
         //fires all the modules
         private void HandleProgrammedActions()
         {
@@ -135,47 +162,18 @@ namespace BrainSimulator
             }
         }
 
-
         //needs a complete match
         public ModuleView FindAreaByLabel(string label)
         {
             return modules.Find(na => na.Label.Trim() == label);
         }
 
-
-        public void AddSynapseUndo(int source, int target, float weight, bool newSynapse)
-        {
-            SynapseUndo s;
-            s = new SynapseUndo
-            {
-                source = source,
-                target = target,
-                weight = weight,
-                newSynapse = newSynapse
-            };
-            synapseUndoInfo.Add(s);
-        }
-        public void UndoSynapse()
-        {
-            if (synapseUndoInfo.Count == 0) return;
-            SynapseUndo s = synapseUndoInfo.Last();
-            synapseUndoInfo.Remove(s);
-            Neuron n = GetNeuron(s.source);
-            if (s.newSynapse)
-            {
-                n.DeleteSynapse(s.target);
-            }
-            else //TODO: not used
-            {
-                n.AddSynapse(s.target, s.weight, this, true);
-                synapseUndoInfo.RemoveAt(synapseUndoInfo.Count - 1);
-            }
-        }
-
-        public void SetNeuron(int i, Neuron n) //TODO Implement
+        public void SetNeuron(int i, Neuron n)
         {
             SetCompleteNeuron(n);
         }
+
+
         public int GetNeuronIndex(int x, int y)
         {
             return x * rows + y;
@@ -185,6 +183,80 @@ namespace BrainSimulator
         {
             x = index / rows;
             y = index % rows;
+        }
+
+
+        /// UNDO Handling from here on out
+
+        public void AddSynapseUndo(int source, int target, float weight, bool isHebbian, bool newSynapse,bool delSynapse)
+        {
+            SynapseUndo s;
+            s = new SynapseUndo
+            {
+                source = source,
+                target = target,
+                weight = weight,
+                isHebbian = isHebbian,
+                newSynapse = newSynapse,
+                delSynapse = delSynapse,
+            };
+            synapseUndoInfo.Add(s);
+        }
+        public void AddNeuronUndo(Neuron n)
+        {
+            Neuron n1 = n.Copy();
+            neuronUndoInfo.Add(new NeuronUndo { previousNeuron = n1 });
+        }
+
+        public void Undo()
+        {
+            if (undoList.Count == 0) return;
+            int synapsePoint = undoList.Last().synapsePoint;
+            int neuronPoint = undoList.Last().neuronPoint;
+            undoList.RemoveAt(undoList.Count - 1);
+
+            while (neuronUndoInfo.Count > neuronPoint)
+                UndoNeuron();
+            while (synapseUndoInfo.Count > synapsePoint)
+                UndoSynapse();
+        }
+
+        public void SetUndoPoint()
+        {
+            undoList.Add(new UndoPoint { synapsePoint = synapseUndoInfo.Count, neuronPoint=neuronUndoInfo.Count});
+        }
+        public bool UndoPossible()
+        {
+            return undoList.Count != 0;
+        }
+        private void UndoNeuron()
+        {
+            if (neuronUndoInfo.Count == 0) return;
+            NeuronUndo n = neuronUndoInfo.Last();
+            neuronUndoInfo.RemoveAt(neuronUndoInfo.Count-1);
+            Neuron n1 = n.previousNeuron.Copy();
+            n1.Update();
+        }
+        private void UndoSynapse()
+        {
+            if (synapseUndoInfo.Count == 0) return;
+            SynapseUndo s = synapseUndoInfo.Last();
+            synapseUndoInfo.RemoveAt(synapseUndoInfo.Count-1);
+
+            Neuron n = GetNeuron(s.source);
+            if (s.newSynapse) //the synapse was added so delete it
+            {
+                n.DeleteSynapse(s.target);
+            }
+            else if (s.delSynapse) //the synapse was deleted so add it back
+            {
+                n.AddSynapse(s.target, s.weight,s.isHebbian);
+            }
+            else //weight/type changed 
+            {
+                n.AddSynapse(s.target, s.weight,s.isHebbian);
+            }
+            n.Update();
         }
     }
 }

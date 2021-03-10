@@ -66,8 +66,7 @@ namespace BrainSimulator
             public float weight;
             public bool newSynapse;
             public bool delSynapse;
-            public bool isHebbian;
-            //TODO add model
+            public Synapse.modelType model;
         }
         struct NeuronUndo
         {
@@ -131,12 +130,12 @@ namespace BrainSimulator
             HandleProgrammedActions();
             FiringHistory.UpdateFiringHistory();
         }
-        new public void AddSynapse(int src, int dest, float weight, bool isHebbian, bool noBackPtr)
+        new public void AddSynapse(int src, int dest, float weight, Synapse.modelType model, bool noBackPtr)
         {
             if (MainWindow.useServers)
-                NeuronClient.AddSynapse(src, dest, weight, isHebbian, noBackPtr);
+                NeuronClient.AddSynapse(src, dest, weight, model, noBackPtr);
             else
-                base.AddSynapse(src, dest, weight, isHebbian, noBackPtr);
+                base.AddSynapse(src, dest, weight, (int)model, noBackPtr);
         }
         new public void DeleteSynapse(int src, int dest)
         {
@@ -188,7 +187,7 @@ namespace BrainSimulator
 
         /// UNDO Handling from here on out
 
-        public void AddSynapseUndo(int source, int target, float weight, bool isHebbian, bool newSynapse,bool delSynapse)
+        public void AddSynapseUndo(int source, int target, float weight,Synapse.modelType model, bool newSynapse,bool delSynapse)
         {
             SynapseUndo s;
             s = new SynapseUndo
@@ -196,7 +195,7 @@ namespace BrainSimulator
                 source = source,
                 target = target,
                 weight = weight,
-                isHebbian = isHebbian,
+                model = model,
                 newSynapse = newSynapse,
                 delSynapse = delSynapse,
             };
@@ -250,11 +249,11 @@ namespace BrainSimulator
             }
             else if (s.delSynapse) //the synapse was deleted so add it back
             {
-                n.AddSynapse(s.target, s.weight,s.isHebbian);
+                n.AddSynapse(s.target, s.weight,s.model);
             }
             else //weight/type changed 
             {
-                n.AddSynapse(s.target, s.weight,s.isHebbian);
+                n.AddSynapse(s.target, s.weight,s.model);
             }
             n.Update();
         }

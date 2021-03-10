@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <atomic>
+#include "SynapseBase.h"
 
 
 namespace NeuronEngine { class SynapseBase; }
@@ -58,8 +59,8 @@ namespace NeuronEngine
 		__declspec(dllexport)  float GetCurrentCharge();
 		__declspec(dllexport)  void SetCurrentCharge(float value);
 
-		__declspec(dllexport)  void AddSynapse(NeuronBase* n, float weight, bool isHebbian = false, bool noBackPtr = true);
-		__declspec(dllexport)  void AddSynapseFrom(NeuronBase* n, float weight, bool isHebbian = false);
+		__declspec(dllexport)  void AddSynapse(NeuronBase* n, float weight, SynapseBase::modelType model = SynapseBase::modelType::Fixed, bool noBackPtr = true);
+		__declspec(dllexport)  void AddSynapseFrom(NeuronBase* n, float weight, SynapseBase::modelType model = SynapseBase::modelType::Fixed);
 		__declspec(dllexport)  void DeleteSynapse(NeuronBase* n);
 		__declspec(dllexport)  std::vector<SynapseBase> GetSynapses();
 		__declspec(dllexport)  std::vector<SynapseBase> GetSynapsesFrom();
@@ -80,6 +81,8 @@ namespace NeuronEngine
 
 		__declspec(dllexport)  bool Fire1(long long generation);
 		void Fire2();
+
+		float NewHebbianWeight(float y, float offset, SynapseBase::modelType model);
 
 
 		NeuronBase(const NeuronBase& t)

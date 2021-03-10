@@ -99,25 +99,25 @@ namespace BrainSimulator
             SetValue(0);
         }
 
-        public void AddSynapse(int targetNeuron, float weight, bool isHebbian)
+        public void AddSynapse(int targetNeuron, float weight, Synapse.modelType model)
         {
-            ownerArray.AddSynapse(Id, targetNeuron, weight, isHebbian, false);
+            ownerArray.AddSynapse(Id, targetNeuron, weight, model, false);
         }
         public void AddSynapse(int targetNeuron, float weight)
         {
-            ownerArray.AddSynapse(Id, targetNeuron, weight, false, false);
+            ownerArray.AddSynapse(Id, targetNeuron, weight, Synapse.modelType.Fixed, false);
         }
 
-        public void AddSynapseWithUndo(int targetNeuron, float weight, bool isHebbian = false)
+        public void AddSynapseWithUndo(int targetNeuron, float weight, Synapse.modelType model = Synapse.modelType.Fixed)
         {
             //TODO, first check to see if a synapse already exists and save the old weight
             Synapse s = FindSynapse(targetNeuron);
             if (s != null)
-                MainWindow.theNeuronArray.AddSynapseUndo(Id, targetNeuron, s.weight,s.isHebbian,false, false);
+                MainWindow.theNeuronArray.AddSynapseUndo(Id, targetNeuron, s.weight,s.model,false, false);
             else
-                MainWindow.theNeuronArray.AddSynapseUndo(Id, targetNeuron, 0, false, true, false);
+                MainWindow.theNeuronArray.AddSynapseUndo(Id, targetNeuron, 0, Synapse.modelType.Fixed, true, false);
 
-            ownerArray.AddSynapse(Id, targetNeuron, weight, isHebbian, false);
+            ownerArray.AddSynapse(Id, targetNeuron, weight, model, false);
 
         }
 
@@ -146,7 +146,7 @@ namespace BrainSimulator
         {
             Synapse s = FindSynapse(targetNeuron);
             if (s != null)
-                MainWindow.theNeuronArray.AddSynapseUndo(id, targetNeuron, s.weight, s.isHebbian, false, true);
+                MainWindow.theNeuronArray.AddSynapseUndo(id, targetNeuron, s.weight, s.model, false, true);
 
             DeleteSynapse(targetNeuron);
         }

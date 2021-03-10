@@ -160,13 +160,13 @@ namespace BrainSimulator
                 if (neuronID >= serverList[i].firstNeuron && neuronID < serverList[i].lastNeuron) return i;
             return -1;
         }
-        public static void AddSynapse(int src, int dest, float weight, bool isHebbian, bool noBackPtr)
+        public static void AddSynapse(int src, int dest, float weight, Synapse.modelType model, bool noBackPtr)
         {
             string command = "AddSynapse ";
             command += src + " ";
             command += dest + " ";
             command += weight + " ";
-            command += isHebbian + " ";
+            command += model + " ";
             int srcServer = GetServerIndex(src);
             SendToServer(serverList[srcServer].ipAddress, command);
             int destServer = GetServerIndex(dest);
@@ -271,7 +271,8 @@ namespace BrainSimulator
                         Synapse s = new Synapse();
                         int.TryParse(commands[i], out s.targetNeuron);
                         float.TryParse(commands[i + 1], out s.weight);
-                        bool.TryParse(commands[i + 2], out s.isHebbian);
+                        int.TryParse(commands[i + 2], out int modelInt);
+                        s.model = (Synapse.modelType)modelInt;
                         synapses.Add(s);
                     }
                     tempSynapses = synapses;
@@ -285,7 +286,8 @@ namespace BrainSimulator
                         Synapse s = new Synapse();
                         int.TryParse(commands[i], out s.targetNeuron);
                         float.TryParse(commands[i + 1], out s.weight);
-                        bool.TryParse(commands[i + 2], out s.isHebbian);
+                        int.TryParse(commands[i + 2], out int modelInt);
+                        s.model = (Synapse.modelType)modelInt;
                         synapses.Add(s);
                     }
                     tempSynapses = synapses;

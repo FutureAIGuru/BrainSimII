@@ -7,16 +7,18 @@ namespace NeuronEngine
 	class  __declspec(dllexport) SynapseBase
 	{
 	public:
+		enum class modelType { Fixed, Binary, Hebbian1};
+
 		void SetTarget(NeuronBase * target);
 		NeuronBase *GetTarget();
 		float GetWeight();
 		void SetWeight(float value);
-		void SetIsHebbian(bool value);
-		bool IsHebbian();
+		void SetModel(modelType value);
+		modelType GetModel();
 
 	private:
 		NeuronBase* targetNeuron = 0; //pointer to the target neuron
 		float weight = 0; //weight of the synapse
-		bool isHebbian = false; //can the synapse adjust its own weight
+		modelType model = modelType::Fixed;
 	};
 }

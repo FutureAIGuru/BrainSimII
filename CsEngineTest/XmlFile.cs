@@ -100,7 +100,9 @@ namespace CsEngineTest
                         theNeuronArray.SetNeuronModel(id, (int)n.Model);
                     foreach (S s in n.Synapses)
                     {
-                        theNeuronArray.AddSynapse(id, s.TargetNeuron, s.Weight, s.IsHebbian, false);
+                        int model = 0;
+                        if (s.IsHebbian) model = 1;
+                        theNeuronArray.AddSynapse(id, s.TargetNeuron, s.Weight, model, false);
                     }
                 }
 

@@ -282,8 +282,8 @@ namespace NeuronServer
                     int.TryParse(commands[1], out int src);
                     int.TryParse(commands[2], out int dest);
                     float.TryParse(commands[3], out float weight);
-                    bool.TryParse(commands[4], out bool isHebbian);
-                    AddSynapse(src, dest, weight, isHebbian);
+                    int.TryParse(commands[4], out int model);
+                    AddSynapse(src, dest, weight, model);
                     break;
 
                 case "DeleteSynapse":
@@ -344,7 +344,7 @@ namespace NeuronServer
             }
         }
 
-        private static void AddSynapse(int src, int dest, float weight, bool isHebbian)
+        private static void AddSynapse(int src, int dest, float weight, int model)
         {
             //set src and dest neuron #'s, zero-based for server
             if (src < firstNeuron || src >= lastNeuron)
@@ -357,11 +357,11 @@ namespace NeuronServer
                 dest = dest - firstNeuron;
             if (src >= 0)
             {
-                theNeuronArray.AddSynapse(src, dest, weight, isHebbian, true);
+                theNeuronArray.AddSynapse(src, dest, weight, model, true);
             }
             if (dest >= 0)
             {
-                theNeuronArray.AddSynapseFrom(src, dest, weight, isHebbian);
+                theNeuronArray.AddSynapseFrom(src, dest, weight, model);
             }
         }
 
@@ -516,7 +516,7 @@ namespace NeuronServer
                 while (targetNeuron >= arraySize) targetNeuron -= arraySize;
 
                 float weight = (rand.Next(521) / 1000f) - .2605f;
-                AddSynapse(i + firstNeuron, targetNeuron, weight, false);
+                AddSynapse(i + firstNeuron, targetNeuron, weight, 0);
             }
 
             //if (rand == null) rand = new Random();

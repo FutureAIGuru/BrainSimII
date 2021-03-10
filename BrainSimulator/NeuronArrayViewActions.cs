@@ -52,7 +52,7 @@ namespace BrainSimulator
                         //only copy synapses with both ends in the selection
                         if (neuronsToCopy.Contains(s.TargetNeuron))
                         {
-                            destNeuron.AddSynapse(GetClipboardId(X1o, Y1o, s.TargetNeuron), s.Weight, s.isHebbian);
+                            destNeuron.AddSynapse(GetClipboardId(X1o, Y1o, s.TargetNeuron), s.Weight, s.model);
                         }
                     }
             }
@@ -169,7 +169,7 @@ namespace BrainSimulator
                     {
                         foreach (Synapse s in myClipBoard.GetNeuron(i).Synapses)
                         {
-                            MainWindow.theNeuronArray.GetNeuron(destID).AddSynapseWithUndo(GetNeuronArrayId(s.TargetNeuron), s.Weight, s.isHebbian);
+                            MainWindow.theNeuronArray.GetNeuron(destID).AddSynapseWithUndo(GetNeuronArrayId(s.TargetNeuron), s.Weight, s.model);
                         }
                     }
                 }
@@ -203,7 +203,7 @@ namespace BrainSimulator
             List<int> neuronsInSelection = theSelection.EnumSelectedNeurons();
             for (int i = 0; i < neuronsInSelection.Count; i++)
             {
-                targetNeuron.AddSynapseWithUndo(neuronsInSelection[i], lastSynapseWeight, lastSynapseHebbian);
+                targetNeuron.AddSynapseWithUndo(neuronsInSelection[i], lastSynapseWeight, lastSynapseModel);
             }
             Update();
         }
@@ -216,7 +216,7 @@ namespace BrainSimulator
             for (int i = 0; i < neuronsInSelection.Count; i++)
             {
                 Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronsInSelection[i]);
-                n.AddSynapseWithUndo(targetNeuronIndex, lastSynapseWeight, lastSynapseHebbian);
+                n.AddSynapseWithUndo(targetNeuronIndex, lastSynapseWeight, lastSynapseModel);
             }
             Update();
         }
@@ -343,9 +343,9 @@ namespace BrainSimulator
             {
                 Synapse s = n.Synapses[k];
                 if (s.targetNeuron != n.id)
-                    nNewLocation.AddSynapseWithUndo(s.targetNeuron, s.weight, s.isHebbian);
+                    nNewLocation.AddSynapseWithUndo(s.targetNeuron, s.weight, s.model);
                 else
-                    nNewLocation.AddSynapseWithUndo(nNewLocation.id, s.weight, s.isHebbian);
+                    nNewLocation.AddSynapseWithUndo(nNewLocation.id, s.weight, s.model);
                 n.DeleteSynapseWithUndo(n.synapses[k].targetNeuron);
             }
 
@@ -358,20 +358,20 @@ namespace BrainSimulator
                     Neuron sourceNeuron = MainWindow.theNeuronArray.GetNeuron(reverseSynapse.targetNeuron);
                     sourceNeuron.DeleteSynapseWithUndo(n.id);
                     if (sourceNeuron.id != n.id)
-                        sourceNeuron.AddSynapseWithUndo(nNewLocation.id, reverseSynapse.weight, reverseSynapse.isHebbian);
+                        sourceNeuron.AddSynapseWithUndo(nNewLocation.id, reverseSynapse.weight, reverseSynapse.model);
                 }
             }
 
             n.Clear();
         }
 
-        public void StepAndRepeat(int source, int target, float weight, bool isHebbian)
+        public void StepAndRepeat(int source, int target, float weight, Synapse.modelType model )
         {
             int distance = target - source;
             theSelection.EnumSelectedNeurons();
             for (Neuron n = theSelection.GetSelectedNeuron(); n != null; n = theSelection.GetSelectedNeuron())
             {
-                n.AddSynapseWithUndo(theSelection.selectedNeuronIndex + distance, weight, isHebbian);
+                n.AddSynapseWithUndo(theSelection.selectedNeuronIndex + distance, weight, model);
             }
             Update();
         }

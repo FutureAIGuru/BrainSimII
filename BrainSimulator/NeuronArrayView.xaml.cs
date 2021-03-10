@@ -102,7 +102,7 @@ namespace BrainSimulator
 
             if (MainWindow.theNeuronArray == null) return;
 
-            Debug.WriteLine("Update " + MainWindow.theNeuronArray.Generation);
+            //Debug.WriteLine("Update " + MainWindow.theNeuronArray.Generation);
             dp.NeuronRows = MainWindow.theNeuronArray.rows;
             theCanvas.Children.Clear();
             if (dragRectangle != null) theCanvas.Children.Add(dragRectangle);
@@ -336,7 +336,7 @@ namespace BrainSimulator
             UpdateScrollbars();
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
-            Debug.WriteLine("Update Done " + elapsedMs + "ms");
+            //Debug.WriteLine("Update Done " + elapsedMs + "ms");
         }
 
 
@@ -621,7 +621,7 @@ namespace BrainSimulator
         DispatcherTimer mouseRepeatTimer = null;
 
         public float lastSynapseWeight = 1.0f;
-        public bool lastSynapseHebbian = false;
+        public Synapse.modelType lastSynapseModel = Synapse.modelType.Fixed;
         public void theCanvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (mouseRepeatTimer != null) mouseRepeatTimer.Stop();
@@ -688,7 +688,7 @@ namespace BrainSimulator
                         LimitMousePostion(ref p1);
                         int index = dp.NeuronFromPoint(p1);
                         MainWindow.theNeuronArray.SetUndoPoint();
-                        MainWindow.theNeuronArray.GetNeuron(mouseDownNeuronIndex).AddSynapseWithUndo(index, lastSynapseWeight, lastSynapseHebbian);
+                        MainWindow.theNeuronArray.GetNeuron(mouseDownNeuronIndex).AddSynapseWithUndo(index, lastSynapseWeight, lastSynapseModel);
                         MainWindow.theNeuronArray.ShowSynapses = true;
                         MainWindow.thisWindow.SetShowSynapsesCheckBox(true);
 
@@ -778,7 +778,7 @@ namespace BrainSimulator
                         if (synapseShape != null)
                             theCanvas.Children.Remove(synapseShape);
                         Shape l = SynapseView.GetSynapseShape
-                            (dp.pointFromNeuron(mouseDownNeuronIndex), dp.pointFromNeuron(currentNeuron), this, false);
+                            (dp.pointFromNeuron(mouseDownNeuronIndex), dp.pointFromNeuron(currentNeuron), this, Synapse.modelType.Fixed);
                         theCanvas.Children.Add(l);
                         synapseShape = l;
                     }

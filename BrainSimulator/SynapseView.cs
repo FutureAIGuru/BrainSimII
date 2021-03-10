@@ -43,6 +43,13 @@ namespace BrainSimulator
             set { SetValue(WeightValProperty, value); }
         }
 
+        public static readonly DependencyProperty ModelProperty =
+                DependencyProperty.Register("ModelVal", typeof(Synapse.modelType), typeof(MenuItem));
+        public Synapse.modelType ModelVal
+        {
+            get { return (Synapse.modelType)GetValue(ModelProperty); }
+            set { SetValue(ModelProperty, value); }
+        }
 
 
         static bool PtOnScreen(Point p)
@@ -60,7 +67,7 @@ namespace BrainSimulator
             Point p2 = dp.pointFromNeuron(s.TargetNeuron);
             if (!PtOnScreen(p1) && !PtOnScreen(p2)) return null;
 
-            Shape l = GetSynapseShape(p1, p2, theNeuronArrayView, s.isHebbian);
+            Shape l = GetSynapseShape(p1, p2, theNeuronArrayView, s.model);
             l.Stroke = new SolidColorBrush(Utils.RainbowColorFromValue(s.weight));
             if (l is Ellipse E)
             { }
@@ -77,15 +84,18 @@ namespace BrainSimulator
         public static void CreateContextMenu(int i, Synapse s, ContextMenu cm)
         {
             //set defaults for next synapse add
-            theNeuronArrayView.lastSynapseHebbian = s.isHebbian;
+            theNeuronArrayView.lastSynapseModel = s.model;
             theNeuronArrayView.lastSynapseWeight = s.weight;
 
 
             cm.SetValue(SourceIDProperty, i);
             cm.SetValue(TargetIDProperty, s.TargetNeuron);
             cm.SetValue(WeightValProperty, s.Weight);
+            cm.SetValue(ModelProperty, s.model);
+
             cm.Closed += Cm_Closed;
             cm.PreviewKeyDown += Cm_PreviewKeyDown;
+            cm.Opened += Cm_Opened;
 
             Neuron nSource = MainWindow.theNeuronArray.GetNeuron(i);
             Neuron nTarget = MainWindow.theNeuronArray.GetNeuron(s.targetNeuron);
@@ -105,6 +115,29 @@ namespace BrainSimulator
             sp.Children.Add(Utils.ContextMenuTextBox(target, "Target", 150));
             cm.Items.Add(sp);
 
+            //The Synapse model
+            sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
+            sp.Children.Add(new Label { Content = "Model: ", Padding = new Thickness(0) });
+            ComboBox cb = new ComboBox()
+            { Width = 100,
+            Name="Model"};
+            for (int index = 0; index < Enum.GetValues(typeof(Synapse.modelType)).Length; index++)
+            {
+                Synapse.modelType model = (Synapse.modelType)index;
+                cb.Items.Add(new ListBoxItem()
+                {
+                    Content = model.ToString(),
+                    ToolTip = Synapse.modelToolTip[index],
+                    Width = 100,
+                });
+            }
+            cb.SelectedIndex = (int)s.model;
+            cb.SelectionChanged += Cb_SelectionChanged;
+            sp.Children.Add(cb);
+            cm.Items.Add(sp);
+
+
+
             sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
             sp.Children.Add(new Label { Content = "Weight: ", Padding = new Thickness(0) });
 
@@ -113,16 +146,6 @@ namespace BrainSimulator
 
             sp.Children.Add(tb);
             cm.Items.Add(sp);
-
-            CheckBox cbHebbian = new CheckBox
-            {
-                IsChecked = s.isHebbian,
-                Content = "Hebbian Learning",
-                Name = "Hebbian",
-            };
-            cbHebbian.Checked += cbHebbianChecked;
-            cbHebbian.Unchecked += cbHebbianChecked;
-            cm.Items.Add(cbHebbian);
 
             MenuItem mi = new MenuItem();
             mi.Header = "Delete";
@@ -173,6 +196,20 @@ namespace BrainSimulator
             mi = new MenuItem();
         }
 
+        private static void Cm_Opened(object sender, RoutedEventArgs e)
+        {
+            //when the context menu opens, focus on the label and position text cursor to end
+            if (sender is ContextMenu cm)
+            {
+                Control cc = Utils.FindByName(cm, "Weight");
+                if (cc is TextBox tb)
+                {
+                    tb.Focus();
+                    tb.Select(tb.Text.Length, 0);
+                }
+            }
+        }
+
         private static void Cm_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             ContextMenu cm = sender as ContextMenu;
@@ -184,22 +221,26 @@ namespace BrainSimulator
             }
             if (e.Key == Key.Enter)
                 cm.IsOpen = false;
-                
+
         }
 
-        private static void cbHebbianChecked(object sender, RoutedEventArgs e)
+        private static void Cb_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            CheckBox cb = sender as CheckBox;
-            ContextMenu cm = cb.Parent as ContextMenu;
-            cm.IsOpen = false;
-            CheckBox cbHebbian = (CheckBox)Utils.FindByName(cm, "Hebbian");
+            ComboBox cb = sender as ComboBox;
+            StackPanel sp = cb.Parent as StackPanel;
+            ContextMenu cm = sp.Parent as ContextMenu;
+            ListBoxItem lbi = (ListBoxItem)cb.SelectedItem;
+            Synapse.modelType nm = (Synapse.modelType)System.Enum.Parse(typeof(Synapse.modelType), lbi.Content.ToString());
+
             Synapse s = MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).
                 FindSynapse((int)cm.GetValue(TargetIDProperty));
             if (s != null)
-                s.isHebbian = (bool)cb.IsChecked;
+                s.model = nm;
             Neuron n = MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty));
-            n.AddSynapse((int)cm.GetValue(TargetIDProperty), s.weight, s.isHebbian);
-            theNeuronArrayView.lastSynapseHebbian = s.isHebbian;
+
+            MainWindow.theNeuronArray.SetUndoPoint();
+            n.AddSynapseWithUndo((int)cm.GetValue(TargetIDProperty), s.weight, s.model);
+            theNeuronArrayView.lastSynapseModel = s.model;
         }
 
         private static void Cm_Closed(object sender, RoutedEventArgs e)
@@ -210,7 +251,6 @@ namespace BrainSimulator
             }
             if (sender is ContextMenu cm)
             {
-
                 int sourceID = (int)cm.GetValue(SourceIDProperty);
                 int targetID = (int)cm.GetValue(TargetIDProperty);
                 Neuron nSource = MainWindow.theNeuronArray.GetNeuron(sourceID);
@@ -254,7 +294,7 @@ namespace BrainSimulator
                     MainWindow.theNeuronArray.SetUndoPoint();
                     MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).DeleteSynapseWithUndo((int)cm.GetValue(TargetIDProperty));
                     Neuron nNewSource = MainWindow.theNeuronArray.GetNeuron(newSourceID);
-                    nNewSource.AddSynapseWithUndo(newTargetID, theNeuronArrayView.lastSynapseWeight, theNeuronArrayView.lastSynapseHebbian);
+                    nNewSource.AddSynapseWithUndo(newTargetID, theNeuronArrayView.lastSynapseWeight, theNeuronArrayView.lastSynapseModel);
                 }
                 MainWindow.Update();
             }
@@ -269,11 +309,12 @@ namespace BrainSimulator
             float newWeight = -20;
             float.TryParse(tb.Text, out newWeight);
             if (newWeight == -20) return;
+
             theNeuronArrayView.lastSynapseWeight = newWeight;
-            //theNeuronArrayView.lastSynapseHebbian = cm.Items
             int id = (int)cm.GetValue(SourceIDProperty);
+            Synapse.modelType model = (Synapse.modelType) cm.GetValue(ModelProperty);
             Neuron n = MainWindow.theNeuronArray.GetNeuron(id);
-            n.AddSynapseWithUndo((int)cm.GetValue(TargetIDProperty), newWeight,  true);
+            n.AddSynapseWithUndo((int)cm.GetValue(TargetIDProperty), newWeight, model );
         }
 
         public static void GetSynapseInfo(object sender)
@@ -300,30 +341,33 @@ namespace BrainSimulator
             MenuItem mi = sender as MenuItem;
             ContextMenu cm = mi.Parent as ContextMenu;
             theNeuronArrayView.StepAndRepeat(
-                (int)cm.GetValue(SourceIDProperty), 
-                (int)cm.GetValue(TargetIDProperty), 
+                (int)cm.GetValue(SourceIDProperty),
+                (int)cm.GetValue(TargetIDProperty),
                 (float)cm.GetValue(WeightValProperty),
-                false); //TODO: handle hebbian/model
+                Synapse.modelType.Fixed); //TODO: handle hebbian/model
         }
 
         public static void NewValue_Click(object sender, RoutedEventArgs e)
         {
             MenuItem mi = (MenuItem)sender;
             ContextMenu cm = mi.Parent as ContextMenu;
-            Control cc = Utils.FindByName(cm, "Hebbian");
-            if (cc is CheckBox cbIsHebbian)
+            Synapse.modelType model = Synapse.modelType.Fixed;
+            Control cc = Utils.FindByName(cm, "Model");
+            if (cc is ComboBox cb)
             {
-                bool isHebbian = (bool)cbIsHebbian.IsChecked;
-                float weight = 0;
-                float.TryParse((string)mi.Header, out weight);
-
-                MainWindow.theNeuronArray.SetUndoPoint();
-                MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).
-                    AddSynapseWithUndo((int)cm.GetValue(TargetIDProperty), weight, isHebbian);
-                theNeuronArrayView.lastSynapseWeight = weight;
-                theNeuronArrayView.lastSynapseHebbian = isHebbian;
-                MainWindow.Update();
+                ListBoxItem lbi = (ListBoxItem)cb.SelectedItem;
+                model = (Synapse.modelType)System.Enum.Parse(typeof(Synapse.modelType), lbi.Content.ToString());
             }
+
+            float weight = 0;
+            float.TryParse((string)mi.Header, out weight);
+
+            MainWindow.theNeuronArray.SetUndoPoint();
+            MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).
+                AddSynapseWithUndo((int)cm.GetValue(TargetIDProperty), weight, model);
+            theNeuronArrayView.lastSynapseWeight = weight;
+            theNeuronArrayView.lastSynapseModel = model;
+            MainWindow.Update();
         }
 
         public static void DeleteSynapse_Click(object sender, RoutedEventArgs e)
@@ -336,7 +380,7 @@ namespace BrainSimulator
         }
 
 
-        public static Shape GetSynapseShape(Point p1, Point p2, NeuronArrayView theNeuronDisplayView, bool isHebbian)
+        public static Shape GetSynapseShape(Point p1, Point p2, NeuronArrayView theNeuronDisplayView, Synapse.modelType model)
         {
             //returns a line from the source to the destination (with a link arrow at larger zooms
             //unless the source and destination are the same in which it returns an arc
@@ -352,7 +396,7 @@ namespace BrainSimulator
                 if (dp.ShowSynapseArrows())
                 {
                     Vector offset = new Vector(dp.NeuronDisplaySize / 2, dp.NeuronDisplaySize / 2);
-                    s = DrawLinkArrow(p1 + offset, p2 + offset, isHebbian);
+                    s = DrawLinkArrow(p1 + offset, p2 + offset, model != Synapse.modelType.Fixed);
                 }
             }
             else
@@ -390,7 +434,7 @@ namespace BrainSimulator
                 theCanvas.Cursor = Cursors.Arrow;
         }
 
-        public static Shape DrawLinkArrow(Point p1, Point p2, bool isHebbian) //helper to put an arrow in a synapse line
+        public static Shape DrawLinkArrow(Point p1, Point p2, bool canLearn) //helper to put an arrow in a synapse line
         {
             GeometryGroup lineGroup = new GeometryGroup();
             double theta = Math.Atan2((p2.Y - p1.Y), (p2.X - p1.X)) * 180 / Math.PI;
@@ -406,7 +450,7 @@ namespace BrainSimulator
             pathFigure.StartPoint = p;
             double arrowWidth = dp.NeuronDisplaySize / 20;
             double arrowLength = dp.NeuronDisplaySize / 15;
-            if (isHebbian)
+            if (canLearn)
             {
                 arrowWidth *= 2;
             }

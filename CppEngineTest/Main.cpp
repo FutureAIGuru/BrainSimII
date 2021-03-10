@@ -146,7 +146,7 @@ int main(int argc, char* argv[], char* envp[])
 				//int target = j;
 				if (target >= neuronArray->GetArraySize()) target -= neuronArray->GetArraySize();
 				if (target < 0) target += neuronArray->GetArraySize();
-				n->AddSynapse(neuronArray->GetNeuron(target), 1, false, true);
+				n->AddSynapse(neuronArray->GetNeuron(target), 1, SynapseBase::modelType::Fixed, true);
 				count++;
 				if (count % synapsesPerDot == 0) printf(".");
 			}

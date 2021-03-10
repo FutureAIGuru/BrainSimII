@@ -19,12 +19,13 @@ namespace NeuronEngine
 	{
 		weight = value;
 	}
-	bool SynapseBase::IsHebbian()
+
+	SynapseBase::modelType SynapseBase::GetModel()
 	{
-		return isHebbian;
+		return model;
 	}
-	void SynapseBase::SetIsHebbian(bool value)
+	void SynapseBase::SetModel(SynapseBase::modelType value)
 	{
-		isHebbian = value;
+		model = value;
 	}
 }

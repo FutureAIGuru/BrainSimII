@@ -18,6 +18,7 @@ namespace CsEngineTest
         public bool isHebbian;
     };
     public enum modelType { Std, Color, FloatValue, LIF, Random };
+    public enum synapseModelType { fixedWeight, binary, hebbian1 };
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class NeuronPartial

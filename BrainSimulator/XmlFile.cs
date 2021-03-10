@@ -117,14 +117,18 @@ namespace BrainSimulator
                                             float.TryParse(synapseAttribNode.InnerText, out float weight);
                                             s.weight = weight;
                                             break;
-                                        case "IsHebbian":
+                                        case "IsHebbian": //Obsolete: backwards compatibility
                                             bool.TryParse(synapseAttribNode.InnerText, out bool isheb);
-                                            s.isHebbian = isheb;
-
+                                            if (isheb) s.model = Synapse.modelType.Hebbian1;
+                                            else s.model = Synapse.modelType.Fixed;
+                                            break;
+                                        case "Model":
+                                            Enum.TryParse(synapseAttribNode.InnerText, out Synapse.modelType model);
+                                            s.model = model;
                                             break;
                                     }
                                 }
-                                n.AddSynapse(s.targetNeuron, s.weight, s.isHebbian);
+                                n.AddSynapse(s.targetNeuron, s.weight, s.model);
                             }
                             break;
                     }
@@ -234,10 +238,10 @@ namespace BrainSimulator
                                 attrNode.InnerText = s.targetNeuron.ToString();
                                 synapseNode.AppendChild(attrNode);
 
-                                if (s.isHebbian)
+                                if (s.model != Synapse.modelType.Fixed)
                                 {
-                                    attrNode = xmldoc.CreateNode("element", "IsHebbian", "");
-                                    attrNode.InnerText = "true";
+                                    attrNode = xmldoc.CreateNode("element", "Model", "");
+                                    attrNode.InnerText = s.model.ToString();
                                     synapseNode.AppendChild(attrNode);
                                 }
                             }

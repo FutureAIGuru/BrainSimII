@@ -25,7 +25,7 @@ namespace NeuronEngine
 		{
 			retVal += std::to_string(-(int)s.GetTarget()) + " ";
 			retVal += std::to_string((float)s.GetWeight()) + " ";
-			retVal += std::to_string((bool)s.IsHebbian()) + " ";
+			retVal += std::to_string((int)s.GetModel()) + " ";
 		}
 		return retVal;
 	}

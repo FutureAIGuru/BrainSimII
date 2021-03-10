@@ -162,23 +162,23 @@ namespace NeuronEngine
 			return ReturnArray(tempVec);
 		}
 
-		void NeuronArrayBase::AddSynapse(int src, int dest, float weight, bool isHebbian, bool noBackPtr)
+		void NeuronArrayBase::AddSynapse(int src, int dest, float weight, int model, bool noBackPtr)
 		{
 			if (src < 0)return;
 			NeuronBase* n = theNeuronArray->GetNeuron(src);
 			if (dest < 0)
-				n->AddSynapse((NeuronBase*)dest, weight, isHebbian, noBackPtr);
+				n->AddSynapse((NeuronBase*)dest, weight, (SynapseBase::modelType) model, noBackPtr);
 			else
-				n->AddSynapse(theNeuronArray->GetNeuron(dest), weight, isHebbian, noBackPtr);
+				n->AddSynapse(theNeuronArray->GetNeuron(dest), weight, (SynapseBase::modelType)model, noBackPtr);
 		}
-		void NeuronArrayBase::AddSynapseFrom(int src, int dest, float weight, bool isHebbian)
+		void NeuronArrayBase::AddSynapseFrom(int src, int dest, float weight, int model)
 		{
 			if (dest < 0)return;
 			NeuronBase* n = theNeuronArray->GetNeuron(dest);
 			if (src < 0)
-				n->AddSynapseFrom((NeuronBase*)src, weight, isHebbian);
+				n->AddSynapseFrom((NeuronBase*)src, weight, (SynapseBase::modelType)model);
 			else
-				n->AddSynapseFrom(theNeuronArray->GetNeuron(src), weight, isHebbian);
+				n->AddSynapseFrom(theNeuronArray->GetNeuron(src), weight, (SynapseBase::modelType)model);
 		}
 		void NeuronArrayBase::DeleteSynapse(int src, int dest)
 		{
@@ -228,7 +228,7 @@ namespace NeuronEngine
 			for (int j = 0; j < tempVec.size(); j++)
 			{
 				Synapse s;
-				s.isHebbian = tempVec.at(j).IsHebbian();
+				s.model = (int)tempVec.at(j).GetModel();
 				s.weight = tempVec.at(j).GetWeight();
 				//if the top bit of the target is not set, it's a raw pointer
 				//if it is set, this is the negative of a global neuron ID
@@ -237,10 +237,10 @@ namespace NeuronEngine
 					s.target = (int)(tempVec.at(j).GetTarget());
 				else
 					s.target = tempVec.at(j).GetTarget()->GetId();
-				if (tempVec.at(j).IsHebbian()) //this makes a bool clear all four bytes
-					s.isHebbian = 1;
-				else
-					s.isHebbian = 0;
+				//if (tempVec.at(j).IsHebbian()) //this makes a bool clear all four bytes
+				//	s.isHebbian = 1;
+				//else
+				//	s.isHebbian = 0;
 				byte* firstElem = (byte*)&s;
 				for (int i = 0; i < sizeof(Synapse); i++)
 				{

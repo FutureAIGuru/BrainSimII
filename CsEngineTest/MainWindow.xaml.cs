@@ -45,15 +45,15 @@ namespace CsEngineTest
             theNeuronArray.SetNeuronLabel(1, "George");
             string s2 = theNeuronArray.GetNeuronLabel(1);
 
-            theNeuronArray.AddSynapse(2, 4, .75f, true, false);
+            theNeuronArray.AddSynapse(2, 4, .75f, 1, false);
             List<Synapse> synapses2 = theNeuronArray.GetSynapsesList(2);
-            theNeuronArray.AddSynapse(1, 2, .5f, false, false);
+            theNeuronArray.AddSynapse(1, 2, .5f, 0, false);
             List<Synapse> synapses1 = theNeuronArray.GetSynapsesList(1);
-            theNeuronArray.AddSynapse(1, 3, .6f, false, false);
+            theNeuronArray.AddSynapse(1, 3, .6f, 0, false);
             synapses1 = theNeuronArray.GetSynapsesList(1);
-            theNeuronArray.AddSynapse(1, 4, .75f, true, false);
+            theNeuronArray.AddSynapse(1, 4, .75f, 1, false);
             synapses1 = theNeuronArray.GetSynapsesList(1);
-            theNeuronArray.AddSynapse(2, 4, .75f, true, false);
+            theNeuronArray.AddSynapse(2, 4, .75f, 1, false);
             long count = theNeuronArray.GetTotalSynapses();
             List<Synapse> synapses0 = theNeuronArray.GetSynapsesList(0);
             synapses1 = theNeuronArray.GetSynapsesList(1);
@@ -79,7 +79,7 @@ namespace CsEngineTest
                     int target = x + j;
                     if (target >= theNeuronArray.GetArraySize()) target -= theNeuronArray.GetArraySize();
                     if (target < 0) target += theNeuronArray.GetArraySize();
-                    theNeuronArray.AddSynapse(x, target, 1.0f, false, true);
+                    theNeuronArray.AddSynapse(x, target, 1.0f, 0, true);
                 }
             });
             for (int i = 0; i < neuronCount / 100; i++)

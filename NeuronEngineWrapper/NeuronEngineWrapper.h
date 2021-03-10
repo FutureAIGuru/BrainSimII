@@ -16,7 +16,7 @@ namespace NeuronEngine
 
 	namespace CLI
 	{
-		struct Synapse { int target; float weight; int isHebbian; };
+		struct Synapse { int target; float weight; int model; };
 
 		public ref class NeuronArrayBase
 		{
@@ -59,8 +59,8 @@ namespace NeuronEngine
 			cli::array<byte>^ GetSynapses(int src);
 			cli::array<byte>^ GetSynapsesFrom(int src);
 
-			void AddSynapse(int src, int dest, float weight, bool isHebbian, bool noBackPtr);
-			void AddSynapseFrom(int src, int dest, float weight, bool isHebbian);
+			void AddSynapse(int src, int dest, float weight, int model, bool noBackPtr);
+			void AddSynapseFrom(int src, int dest, float weight, int model);
 			void DeleteSynapse(int src, int dest);
 			void DeleteSynapseFrom(int src, int dest);
 

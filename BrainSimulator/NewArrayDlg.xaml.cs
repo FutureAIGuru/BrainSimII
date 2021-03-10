@@ -229,7 +229,7 @@ namespace BrainSimulator
                 while (targetNeuron < 0) targetNeuron += arraySize;
                 while (targetNeuron >= arraySize) targetNeuron -= arraySize;
                 float weight = (rand.Next(521) / 1000f) - .2605f;
-                MainWindow.theNeuronArray.AddSynapse(i, targetNeuron, weight, false, false);
+                MainWindow.theNeuronArray.AddSynapse(i, targetNeuron, weight, Synapse.modelType.Fixed, false);
             }
         }
 

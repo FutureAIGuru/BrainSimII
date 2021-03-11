@@ -79,6 +79,7 @@
                 </MenuItem>
                 <MenuItem Header=" Help">
                     <MenuItem Header="Getting Started" Click="MenuItemHelp_Click" />
+                    <MenuItem Header="Contents (online)" Click="MenuItemOnlineHelp_Click" />
                     <MenuItem Header="About" Click="Button_HelpAbout_Click"/>
                 </MenuItem>
             </Menu>

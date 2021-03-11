@@ -136,8 +136,6 @@ namespace BrainSimulator
             sp.Children.Add(cb);
             cm.Items.Add(sp);
 
-
-
             sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
             sp.Children.Add(new Label { Content = "Weight: ", Padding = new Thickness(0) });
 

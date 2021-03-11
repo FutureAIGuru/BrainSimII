@@ -13,7 +13,7 @@ namespace BrainSimulator
         {
             InitializeComponent();
             bool showHelp = (bool)Properties.Settings.Default["ShowHelp"];
-            dontShow.IsChecked = !showHelp;
+            theCheckBox.IsChecked = !showHelp;
             if (urlToShow == "")
             {
                 string fullpath = Path.GetFullPath("./resources/getting started.htm");
@@ -23,13 +23,17 @@ namespace BrainSimulator
             else
             {
                 theBrowser.Navigate(urlToShow);
+                theCheckBox.Visibility = Visibility.Collapsed;
             }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default["ShowHelp"] = !dontShow.IsChecked;
-            Properties.Settings.Default.Save();
+            if (theCheckBox.Visibility == Visibility.Visible)
+            {
+                Properties.Settings.Default["ShowHelp"] = !theCheckBox.IsChecked;
+                Properties.Settings.Default.Save();
+            }
             Close();
         }
     }

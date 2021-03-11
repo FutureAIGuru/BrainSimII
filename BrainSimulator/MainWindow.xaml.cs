@@ -1161,11 +1161,24 @@ namespace BrainSimulator
         private void MenuItemHelp_Click(object sender, RoutedEventArgs e)
         {
             Help p;
-            //for future of help system
-            //if (internetAvailable)
-            //    p = new Help("https://futureai.guru/help");
-            //else
             p = new Help();
+            try
+            {
+                p.Left = 200;
+                p.Top = 200;
+                p.Owner = this;
+                p.Show();
+            }
+            catch
+            {
+                MessageBox.Show("Help could not be displayed");
+            }
+        }
+
+        private void MenuItemOnlineHelp_Click(object sender, RoutedEventArgs e)
+        {
+            Help p;
+            p = new Help("https://futureai.guru/BrainSimHelp/ui.html");
             try
             {
                 p.Left = 200;

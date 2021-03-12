@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace BrainSimulator
 {
@@ -133,12 +134,14 @@ namespace BrainSimulator
 
         private static void R_MouseLeave(object sender, MouseEventArgs e)
         {
+            //Debug.WriteLine("NeuronView MouseLeave");
             if (theCanvas.Cursor != Cursors.Hand && !theNeuronArrayView.dragging && e.LeftButton != MouseButtonState.Pressed)
                 theCanvas.Cursor = Cursors.Cross;
         }
 
         private static void R_MouseEnter(object sender, MouseEventArgs e)
         {
+            //Debug.WriteLine("NeuronView MouseEnter");
             if (theCanvas.Cursor != Cursors.Hand && !theNeuronArrayView.dragging && e.LeftButton != MouseButtonState.Pressed)
                 theCanvas.Cursor = Cursors.UpArrow;
         }
@@ -379,6 +382,7 @@ namespace BrainSimulator
             if (cmCancelled)
             {
                 cmCancelled = false;
+                MainWindow.Update();
                 return;
             }
             if (sender is ContextMenu cm)

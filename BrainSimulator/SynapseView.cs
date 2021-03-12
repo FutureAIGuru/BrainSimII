@@ -245,6 +245,7 @@ namespace BrainSimulator
         {
             if ((Keyboard.GetKeyStates(Key.Escape) & KeyStates.Down) > 0)
             {
+                MainWindow.Update();
                 return;
             }
             if (sender is ContextMenu cm)

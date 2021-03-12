@@ -373,7 +373,7 @@ namespace BrainSimulator
             else
             {
                 //for small arrays, repaint everything so synapse weights will update
-                if (neuronsOnScreen.Count < 451)
+                if (false)// (neuronsOnScreen.Count < 451)
                 {
                     Update();
                     if (MainWindow.theNeuronArray != null)
@@ -719,7 +719,7 @@ namespace BrainSimulator
                     //get the neuron pointers from the drag rectangle and save in the selection array
                     int w = 1 + (lastSelectedNeuron - firstSelectedNeuron) / Rows;
                     int h = 1 + (lastSelectedNeuron - firstSelectedNeuron) % Rows;
-                    Debug.Write(firstSelectedNeuron + ", " + lastSelectedNeuron);
+                    //Debug.Write(firstSelectedNeuron + ", " + lastSelectedNeuron);
                     NeuronSelectionRectangle rr = new NeuronSelectionRectangle(firstSelectedNeuron, w, h);
                     theSelection.selectedRectangles.Add(rr);
                 }
@@ -756,6 +756,9 @@ namespace BrainSimulator
         }
         public void theCanvas_MouseMove(object sender, MouseEventArgs e)
         {
+            Point pt = e.GetPosition((UIElement)sender);
+            HitTestResult result = VisualTreeHelper.HitTest(theCanvas,pt);
+
             if (mouseRepeatTimer != null)
             {
                 if (mouseRepeatTimer.IsEnabled && mouseRepeatTimer.Interval == new TimeSpan(0, 0, 0, 0, 100)) return;
@@ -1087,12 +1090,14 @@ namespace BrainSimulator
 
         private void TheCanvas_MouseEnter(object sender, MouseEventArgs e)
         {
+            //Debug.WriteLine("NeuronArrayView:Canvas View MouseEnter");
             if (theCanvas.Cursor != Cursors.Hand)
                 theCanvas.Cursor = Cursors.Cross;
         }
 
         private void TheCanvas_MouseLeave(object sender, MouseEventArgs e)
         {
+            //Debug.WriteLine("NeuronArrayView:Canvas View MouseLeave");
             theCanvas.Cursor = Cursors.Arrow;
         }
 

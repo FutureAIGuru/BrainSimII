@@ -190,7 +190,10 @@ namespace BrainSimulator
         private static void Cm_Closed(object sender, RoutedEventArgs e)
         {
             if ((Keyboard.GetKeyStates(Key.Escape) & KeyStates.Down) > 0)
+            {
+                MainWindow.Update();
                 return;
+            }
             if (deleted)
             {
                 deleted = false;

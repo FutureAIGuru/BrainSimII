@@ -22,7 +22,8 @@ namespace BrainSimulator
             "Float value (no procesing",
             "Leaky Integrate & Fire",
             "Fires at random intervals",
-            "Fires a burst"
+            "Fires a burst,",
+                "Always fire"
         };
 
         public NeuronArray Owner { set => ownerArray = value; }
@@ -62,7 +63,7 @@ namespace BrainSimulator
             Update();
         }
 
-        public enum modelType { IF, Color, FloatValue, LIF, Random, Burst };
+        public enum modelType { IF, Color, FloatValue, LIF, Random, Burst,Always };
 
         public int Id { get => id; set => id = value; }
         public string Label { get => label; set { label = value; Update(); } }

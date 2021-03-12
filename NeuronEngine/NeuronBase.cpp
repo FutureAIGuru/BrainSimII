@@ -304,7 +304,7 @@ namespace NeuronEngine
 			return true;
 		}
 		if (model == modelType::FloatValue) return false;
-		if (model == modelType::Random)
+		if (model == modelType::Random || model == modelType::Always)
 		{
 			nextFiring--;
 			if (leakRate >= 0 && nextFiring <= 0) //leakrate is the std.deviation

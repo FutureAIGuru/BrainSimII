@@ -14,7 +14,7 @@ namespace NeuronEngine
 	class NeuronBase
 	{
 	public:
-		enum class modelType {Std,Color,FloatValue,LIF,Random,Burst};
+		enum class modelType {Std,Color,FloatValue,LIF,Random,Burst,Always};
 
 		//the ending value of a neuron 
 		float lastCharge = 0;

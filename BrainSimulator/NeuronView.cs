@@ -73,9 +73,7 @@ namespace BrainSimulator
             }
 
 
-            if (n.Label != "" || n.model == Neuron.modelType.Burst ||
-                n.model == Neuron.modelType.Random ||
-                n.model == Neuron.modelType.LIF
+            if (n.Label != "" || n.model != Neuron.modelType.IF
                 )
             {
                 l = new Label();
@@ -101,7 +99,10 @@ namespace BrainSimulator
 
         public static string GetNeuronLabel(Neuron n)
         {
-            string retVal = n.label;
+            string retVal = "";
+            if (!dp.ShowNeuronLabels()) return retVal;
+
+            retVal = n.label;
             if (n.model == Neuron.modelType.LIF)
             {
                 if (n.leakRate < 1)
@@ -113,6 +114,8 @@ namespace BrainSimulator
                 retVal += "\rB=" + n.axonDelay.ToString();
             if (n.model == Neuron.modelType.Random)
                 retVal += "\rR=" + n.axonDelay.ToString();
+            if (n.model == Neuron.modelType.Always)
+                retVal += "\rA=" + n.axonDelay.ToString();
             return retVal;
         }
 
@@ -187,11 +190,11 @@ namespace BrainSimulator
             cm.Items.Add(new Separator());
 
             MenuItem mi = new MenuItem();
-            mi.Header = "Always Fire";
-            mi.Click += Mi_Click;
-            if (n.model != Neuron.modelType.LIF && n.model != Neuron.modelType.IF && n.model != Neuron.modelType.Random)
-                mi.IsEnabled = false;
-            cm.Items.Add(mi);
+            //mi.Header = "Always Fire";
+            //mi.Click += Mi_Click;
+            //if (n.model != Neuron.modelType.LIF && n.model != Neuron.modelType.IF && n.model != Neuron.modelType.Random)
+            //    mi.IsEnabled = false;
+            //cm.Items.Add(mi);
 
             CheckBox cbHistory = new CheckBox
             {
@@ -288,6 +291,13 @@ namespace BrainSimulator
                 sp.Children.Add(new Label { Content = "Axon Delay: ", Padding = new Thickness(0) });
                 sp.Children.Add(Utils.ContextMenuTextBox(n.axonDelay.ToString(), "AxonDelay", 60));
                 cm.Items.Insert(4, sp);
+            }
+            else if (n.model == Neuron.modelType.Always)
+            {
+                sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
+                sp.Children.Add(new Label { Content = "Delay: ", Padding = new Thickness(0) });
+                sp.Children.Add(Utils.ContextMenuTextBox(n.axonDelay.ToString(), "AxonDelay", 60));
+                cm.Items.Insert(3, sp);
             }
             else if (n.model == Neuron.modelType.Random)
             {
@@ -428,10 +438,12 @@ namespace BrainSimulator
                     float.TryParse(tb2.Text, out float leakRate);
                     if (n.LeakRate != leakRate)
                     {
-                        SetModelAndLeakrate(n,n.model,leakRate,n.axonDelay);
+                        SetModelAndLeakrate(n, n.model, leakRate, n.axonDelay);
                     }
                     n.LeakRate = leakRate;
                 }
+                else
+                    n.leakRate = 0;
                 cc = Utils.FindByName(cm, "AxonDelay");
                 if (cc is TextBox tb3)
                 {
@@ -566,31 +578,32 @@ namespace BrainSimulator
             }
             int i = (int)cm.GetValue(NeuronIDProperty);
             Neuron n = MainWindow.theNeuronArray.GetNeuron(i);
-            if ((string)mi.Header == "Always Fire")
-            {
-                if (n.model != Neuron.modelType.Random)
-                {
-                    n.Model = Neuron.modelType.Random;
-                    n.AxonDelay = MainWindow.theNeuronArray.RefractoryDelay;
-                    n.LeakRate = 0;
-                    //n.SetValue(1);
-                }
-                else //toggle the leakrate
-                {
-                    if (n.LeakRate == 0)
-                        n.LeakRate = -1;
-                    else
-                        n.LeakRate = 0;
-                    n.SetValue(0);
-                    cmCancelled = true;
-                }
+            //if ((string)mi.Header == "Always Fire")
+            //{
+            //    if (n.model != Neuron.modelType.Random)
+            //    {
+            //        n.Model = Neuron.modelType.Random;
+            //        n.AxonDelay = MainWindow.theNeuronArray.RefractoryDelay;
+            //        n.LeakRate = 0;
+            //        //n.SetValue(1);
+            //    }
+            //    else //toggle the leakrate
+            //    {
+            //        if (n.LeakRate == 0)
+            //            n.LeakRate = -1;
+            //        else
+            //            n.LeakRate = 0;
+            //        n.SetValue(0);
+            //        cmCancelled = true;
+            //    }
 
-                Control cc = Utils.FindByName(cm, "CurrentCharge");
-                if (cc is TextBox tb)
-                {
-                    tb.Text = n.currentCharge.ToString();
-                }
-            }
+            //    Control cc = Utils.FindByName(cm, "CurrentCharge");
+            //    if (cc is TextBox tb)
+            //    {
+            //        tb.Text = n.currentCharge.ToString();
+            //    }
+            //}
+
             if ((string)mi.Header == "Paste Here")
             {
                 theNeuronArrayView.targetNeuronIndex = i;

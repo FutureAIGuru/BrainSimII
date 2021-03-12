@@ -373,7 +373,7 @@ namespace BrainSimulator
             else
             {
                 //for small arrays, repaint everything so synapse weights will update
-                if (false)// (neuronsOnScreen.Count < 451)
+                if (neuronsOnScreen.Count < 451)
                 {
                     Update();
                     if (MainWindow.theNeuronArray != null)
@@ -393,28 +393,38 @@ namespace BrainSimulator
                     if (a.graphic is Shape e)
                     {
                         float x = n.lastCharge;
+                        SolidColorBrush newColor = null;
                         if (x != a.prevValue)
                         {
                             a.prevValue = x;
 
-                            SolidColorBrush newColor = NeuronView.GetNeuronColor(n);
+                            newColor = NeuronView.GetNeuronColor(n);
                             e.Fill = newColor;
                             if (n.lastCharge != 0 && e.Fill.Opacity != 1)
                                 e.Fill.Opacity = 1;
                         }
-                        if (a.label != null && NeuronView.GetNeuronLabel(n) != (string)a.label.Content)
+
+                        string newLabel = NeuronView.GetNeuronLabel(n);
+                        if (a.label != null &&  newLabel != (string)a.label.Content)
                         {
-                            a.label.Content = NeuronView.GetNeuronLabel(n);
+                            a.label.Content = newLabel;
                             if (e.Fill.Opacity != 1)
                                 e.Fill.Opacity = 1;
                         }
-                        if (a.label == null && n.label != "")
+                        if (a.label == null && newLabel != "")
                         {
                             UIElement l = NeuronView.GetNeuronView(n, this, out Label lbl);
                             if (e.Fill.Opacity != 1)
                                 e.Fill.Opacity = 1;
                             a.label = lbl;
                             theCanvas.Children.Add(lbl);
+                        }
+                        if (newColor != null && a.label != null)
+                        {
+                            if (newColor.Color == Colors.White)
+                                a.label.Foreground = new SolidColorBrush( Colors.Black);
+                            else
+                                a.label.Foreground = new SolidColorBrush(Colors.White);
                         }
                     }
                 }

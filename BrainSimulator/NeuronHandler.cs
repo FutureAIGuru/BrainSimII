@@ -56,6 +56,8 @@ namespace BrainSimulator
                 retVal.inUse = GetNeuronInUse(i);
                 retVal.label = GetNeuronLabel(i);
                 retVal.model = (Neuron.modelType)GetNeuronModel(i);
+                retVal.leakRate = GetNeuronLeakRate(i);
+                retVal.axonDelay = GetNeuronAxonDelay(i);
                 return retVal;
             }
         }

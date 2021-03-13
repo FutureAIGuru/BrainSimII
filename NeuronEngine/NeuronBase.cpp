@@ -447,9 +447,14 @@ namespace NeuronEngine
 	//Consider it to be a lookup table until we figure out how weights actually vary
 	//It has the problem that it can be dependent on neuron processing order
 	const int ranges = 7;
+	//SAVE (SEEMS TO WORK)
 	float cutoffs[ranges] = { 1,    .5,  .34,   .25,     .2,  .15,    0 };
 	float posIncr[ranges] = { 0,    .1,   .05,  .025,   .01,  .012,   .01 };
 	float negIncr[ranges] = { -.01,-.1, -.017, -.00625,-.002, -.002,  -.001 };
+	//play with this for experimentation
+	//float cutoffs[ranges] = { .5,   .25,     .2,  0,   -.2 , 0, .1 };
+	//float posIncr[ranges] = { 0,    .1,   .05,  .025,   .01,  .012,   .01 };
+	//float negIncr[ranges] = { -.01,-.1, -.017, -.00625,-.002, -.002,  -.001 };
 	float NeuronBase::NewHebbianWeight(float y, float offset, SynapseBase::modelType model) //sign of float is all that's presently used
 	{
 		if (model == SynapseBase::modelType::Binary)

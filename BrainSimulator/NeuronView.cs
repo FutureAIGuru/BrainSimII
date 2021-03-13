@@ -163,8 +163,11 @@ namespace BrainSimulator
 
             //The neuron label
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
-            sp.Children.Add(new Label { Content = "ID: " + n.id + "   Label: ", Padding = new Thickness(0) });
-            sp.Children.Add(Utils.ContextMenuTextBox(n.Label, "Label", 150));
+            sp.Children.Add(new Label { Content = "ID: " + n.id + "   Label: ",VerticalAlignment=VerticalAlignment.Center, Padding = new Thickness(0) });
+            TextBox tb = Utils.ContextMenuTextBox(n.Label, "Label", 150);
+            tb.TextChanged += Tb_TextChanged;
+            sp.Children.Add(tb);
+            sp.Children.Add(new Label { Content = "Warning:\rDuplicate Label",FontSize=8,Name="DupWarn",Visibility=Visibility.Hidden });
             cm.Items.Add(sp);
 
             //The neuron model
@@ -190,12 +193,6 @@ namespace BrainSimulator
             cm.Items.Add(new Separator());
 
             MenuItem mi = new MenuItem();
-            //mi.Header = "Always Fire";
-            //mi.Click += Mi_Click;
-            //if (n.model != Neuron.modelType.LIF && n.model != Neuron.modelType.IF && n.model != Neuron.modelType.Random)
-            //    mi.IsEnabled = false;
-            //cm.Items.Add(mi);
-
             CheckBox cbHistory = new CheckBox
             {
                 IsChecked = FiringHistory.NeuronIsInFiringHistory(n.id),
@@ -251,6 +248,31 @@ namespace BrainSimulator
             ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
             cm.Items.Add(mi);
             SetCustomCMItems(cm, n);
+        }
+
+        private static void Tb_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (sender is TextBox tb)
+            {
+                string neuronLabel = tb.Text;
+                Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronLabel);
+                if (n == null || neuronLabel == "")
+                {
+                    tb.Background = new SolidColorBrush(Colors.White);
+                    if (tb.Parent is StackPanel  sp)
+                    {
+                        ((Label)sp.Children[2]).Visibility = Visibility.Hidden;
+                    }
+                }
+                else
+                {
+                    tb.Background = new SolidColorBrush(Colors.Pink);
+                    if (tb.Parent is StackPanel sp)
+                    {
+                        ((Label)sp.Children[2]).Visibility = Visibility.Visible;
+                    }
+                }
+            }
         }
 
         private static void Cm_PreviewKeyDown(object sender, KeyEventArgs e)

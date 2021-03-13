@@ -508,7 +508,7 @@ namespace BrainSimulator
             }
             if (theNeuronArrayView.targetNeuronIndex < 0) return;
 
-            theNeuronArrayView.PasteNeurons(true);
+            theNeuronArrayView.PasteNeurons();
             theNeuronArrayView.Update();
         }
 

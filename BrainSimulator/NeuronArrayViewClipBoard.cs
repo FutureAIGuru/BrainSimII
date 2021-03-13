@@ -4,6 +4,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
+using System;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -11,6 +12,16 @@ namespace BrainSimulator
 {
     public partial class NeuronArrayView
     {
+        struct BoundarySynapse
+        {
+            public int innerNeuronID;
+            public string outerNeuronName;
+            public float weight;
+            public Synapse.modelType model;
+        }
+        List<BoundarySynapse> boundarySynapsesOut = new List<BoundarySynapse>();
+        List<BoundarySynapse> boundarySynapsesIn = new List<BoundarySynapse>();
+
         public void ClearSelection()
         {
             theSelection.selectedRectangles.Clear();
@@ -27,6 +38,8 @@ namespace BrainSimulator
             NeuronArray myClipBoard;
             myClipBoard = MainWindow.myClipBoard;
             myClipBoard.Initialize((X2o - X1o + 1) * (Y2o - Y1o + 1), (Y2o - Y1o + 1));
+            boundarySynapsesOut.Clear();
+            boundarySynapsesIn.Clear();
 
             //copy the neurons
             foreach (int nID in neuronsToCopy)
@@ -39,6 +52,7 @@ namespace BrainSimulator
                 destNeuron.Id = destId;
                 myClipBoard.SetNeuron(destId, destNeuron);
             }
+
             //copy the synapses (this is two-pass so we make sure all neurons exist prior to copying
             foreach (int nID in neuronsToCopy)
             {
@@ -53,6 +67,38 @@ namespace BrainSimulator
                         if (neuronsToCopy.Contains(s.TargetNeuron))
                         {
                             destNeuron.AddSynapse(GetClipboardId(X1o, Y1o, s.TargetNeuron), s.Weight, s.model);
+                        }
+                        else
+                        {
+                            string targetName = MainWindow.theNeuronArray.GetNeuron(s.targetNeuron).label;
+                            if (targetName != "")
+                            {
+                                boundarySynapsesOut.Add(new BoundarySynapse
+                                {
+                                    innerNeuronID = destNeuron.id,
+                                    outerNeuronName = targetName,
+                                    weight = s.weight,
+                                    model = s.model
+                                });
+                            }
+                        }
+                    }
+                if (sourceNeuron.SynapsesFrom != null)
+                    foreach (Synapse s in sourceNeuron.SynapsesFrom)
+                    {
+                        if (!neuronsToCopy.Contains(s.TargetNeuron))
+                        {
+                            string sourceName = MainWindow.theNeuronArray.GetNeuron(s.targetNeuron).label;
+                            if (sourceName != "")
+                            {
+                                boundarySynapsesIn.Add(new BoundarySynapse
+                                {
+                                    innerNeuronID = destNeuron.id,
+                                    outerNeuronName = sourceName,
+                                    weight = s.weight,
+                                    model = s.model
+                                });
+                            }
                         }
                     }
             }
@@ -118,7 +164,7 @@ namespace BrainSimulator
             }
         }
 
-        public void PasteNeurons(bool pasteSynapses = true)
+        public void PasteNeurons()
         {
             NeuronArray myClipBoard = MainWindow.myClipBoard;
 
@@ -163,16 +209,43 @@ namespace BrainSimulator
 
                     Neuron sourceNeuron = myClipBoard.GetNeuron(i).Clone();
                     sourceNeuron.id = destID;
+                    while (sourceNeuron.label != "" && MainWindow.theNeuronArray.GetNeuron(sourceNeuron.label) != null)
+                    {
+                        int num = 0;
+                        int digitCount = 0;
+                        while (Char.IsDigit(sourceNeuron.label[sourceNeuron.label.Length - 1]))
+                        {
+                            int.TryParse(sourceNeuron.label[sourceNeuron.label.Length - 1].ToString(), out int digit);
+                            num = num + (int)Math.Pow(10, digitCount) * digit;
+                            digitCount++;
+                            sourceNeuron.label = sourceNeuron.label.Substring(0, sourceNeuron.label.Length - 1);
+                        }
+                        num++;
+                        sourceNeuron.label = sourceNeuron.label + num.ToString();
+                    }
                     MainWindow.theNeuronArray.SetNeuron(destID, sourceNeuron);
 
-                    if (pasteSynapses)
+                    foreach (Synapse s in myClipBoard.GetNeuron(i).Synapses)
                     {
-                        foreach (Synapse s in myClipBoard.GetNeuron(i).Synapses)
-                        {
-                            MainWindow.theNeuronArray.GetNeuron(destID).AddSynapseWithUndo(GetNeuronArrayId(s.TargetNeuron), s.Weight, s.model);
-                        }
+                        MainWindow.theNeuronArray.GetNeuron(destID).AddSynapseWithUndo(GetNeuronArrayId(s.TargetNeuron), s.Weight, s.model);
                     }
                 }
+            }
+
+            //handle boundary synapses
+            foreach (BoundarySynapse b in boundarySynapsesOut)
+            {
+                int sourceID = GetNeuronArrayId(b.innerNeuronID);
+                Neuron targetNeuron = MainWindow.theNeuronArray.GetNeuron(b.outerNeuronName);
+                if (targetNeuron != null)
+                    MainWindow.theNeuronArray.GetNeuron(sourceID).AddSynapseWithUndo(targetNeuron.id, b.weight, b.model);
+            }
+            foreach (BoundarySynapse b in boundarySynapsesIn)
+            {
+                int targetID = GetNeuronArrayId(b.innerNeuronID);
+                Neuron sourceNeuron = MainWindow.theNeuronArray.GetNeuron(b.outerNeuronName);
+                if (sourceNeuron != null)
+                    sourceNeuron.AddSynapseWithUndo(targetID, b.weight, b.model);
             }
 
             //paste modules
@@ -222,13 +295,24 @@ namespace BrainSimulator
         }
 
 
-        public void DeleteSelection()
+        public void DeleteSelection(bool deleteBoundarySynapses = true)
         {
             MainWindow.theNeuronArray.SetUndoPoint();
             List<int> neuronsToDelete = theSelection.EnumSelectedNeurons();
             foreach (int nID in neuronsToDelete)
             {
                 Neuron n = MainWindow.theNeuronArray.GetNeuron(nID);
+                if (deleteBoundarySynapses)
+                {
+                    foreach(Synapse s in n.synapsesFrom)
+                    {
+                        Neuron source = MainWindow.theNeuronArray.GetNeuron(s.targetNeuron);
+                        if (source != null && theSelection.NeuronInSelection(source.id)==0)
+                        {
+                            source.DeleteSynapseWithUndo(n.id);
+                        }
+                    }
+                }
                 for (int i = 0; i < n.synapses.Count; i++)
                     n.DeleteSynapseWithUndo(n.synapses[i].targetNeuron);
                 n.AddUndoInfo();
@@ -365,7 +449,7 @@ namespace BrainSimulator
             n.Clear();
         }
 
-        public void StepAndRepeat(int source, int target, float weight, Synapse.modelType model )
+        public void StepAndRepeat(int source, int target, float weight, Synapse.modelType model)
         {
             int distance = target - source;
             theSelection.EnumSelectedNeurons();

@@ -373,7 +373,8 @@ namespace BrainSimulator
             else
             {
                 //for small arrays, repaint everything so synapse weights will update
-                if (neuronsOnScreen.Count < 451)
+                //if (false)
+        if(neuronsOnScreen.Count < 451)
                 {
                     Update();
                     if (MainWindow.theNeuronArray != null)
@@ -657,7 +658,7 @@ namespace BrainSimulator
                     Neuron n = MainWindow.theNeuronArray.GetNeuron(mouseDownNeuronIndex);
                     if (n != null)
                     {
-                        if (n.Model == Neuron.modelType.Random)
+                        if (n.Model == Neuron.modelType.Random || n.model == Neuron.modelType.Always)
                         {
                             if (n.LeakRate < 0) n.LeakRate = 0;
                             else n.LeakRate = -1;

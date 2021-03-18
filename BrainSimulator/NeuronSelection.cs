@@ -47,6 +47,21 @@ namespace BrainSimulator
             return neuronsInSelection;
         }
 
+        List<int> selectedNeurons = new List<int>();
+        public IEnumerable<Neuron> Neurons
+        {
+            get
+            {
+                if (selectedNeurons.Count == 0)
+                {
+                    selectedNeurons = EnumSelectedNeurons();
+                }
+                for (int i = 0; i < selectedNeurons.Count; i++)
+                    yield return MainWindow.theNeuronArray.GetNeuron(selectedNeurons[i]);
+                selectedNeurons.Clear();
+            }
+        }
+
         public Neuron GetSelectedNeuron()
         {
             position++;

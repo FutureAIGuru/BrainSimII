@@ -246,6 +246,8 @@ namespace BrainSimulator
             ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
             mi.Items.Add(new MenuItem() { Header = "From Here to Selection" });
             ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
+            mi.Items.Add(new MenuItem() { Header = "Mutual Suppression" });
+            ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
             cm.Items.Add(mi);
             SetCustomCMItems(cm, n);
         }
@@ -501,8 +503,8 @@ namespace BrainSimulator
             int newAxonDelay = 0;
             if (nm == Neuron.modelType.Random)
             {
-                newLeakRate = 0;
-                newAxonDelay = 1;
+                newLeakRate = 3;
+                newAxonDelay = 10;
             }
             SetModelAndLeakrate(n,nm,newLeakRate,newAxonDelay);
             SetCustomCMItems(cm, n);
@@ -600,31 +602,6 @@ namespace BrainSimulator
             }
             int i = (int)cm.GetValue(NeuronIDProperty);
             Neuron n = MainWindow.theNeuronArray.GetNeuron(i);
-            //if ((string)mi.Header == "Always Fire")
-            //{
-            //    if (n.model != Neuron.modelType.Random)
-            //    {
-            //        n.Model = Neuron.modelType.Random;
-            //        n.AxonDelay = MainWindow.theNeuronArray.RefractoryDelay;
-            //        n.LeakRate = 0;
-            //        //n.SetValue(1);
-            //    }
-            //    else //toggle the leakrate
-            //    {
-            //        if (n.LeakRate == 0)
-            //            n.LeakRate = -1;
-            //        else
-            //            n.LeakRate = 0;
-            //        n.SetValue(0);
-            //        cmCancelled = true;
-            //    }
-
-            //    Control cc = Utils.FindByName(cm, "CurrentCharge");
-            //    if (cc is TextBox tb)
-            //    {
-            //        tb.Text = n.currentCharge.ToString();
-            //    }
-            //}
 
             if ((string)mi.Header == "Paste Here")
             {
@@ -648,6 +625,11 @@ namespace BrainSimulator
             {
                 theNeuronArrayView.targetNeuronIndex = i;
                 theNeuronArrayView.ConnectFromHere();
+            }
+            if ((string)mi.Header == "Mutual Suppression")
+            {
+                theNeuronArrayView.targetNeuronIndex = i;
+                theNeuronArrayView.MutualSuppression();
             }
         }
     }

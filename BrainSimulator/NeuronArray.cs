@@ -130,7 +130,7 @@ namespace BrainSimulator
             HandleProgrammedActions();
             FiringHistory.UpdateFiringHistory();
         }
-        new public void AddSynapse(int src, int dest, float weight, Synapse.modelType model, bool noBackPtr)
+        public void AddSynapse(int src, int dest, float weight, Synapse.modelType model, bool noBackPtr)
         {
             if (MainWindow.useServers)
                 NeuronClient.AddSynapse(src, dest, weight, model, noBackPtr);

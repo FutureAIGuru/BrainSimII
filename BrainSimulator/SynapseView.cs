@@ -151,13 +151,6 @@ namespace BrainSimulator
             cm.Items.Add(mi);
 
             mi = new MenuItem();
-            mi.Header = "Step & Repeat";
-            mi.Click += StepAndRepeatSynapse_Click;
-            cm.Items.Add(mi);
-            if (MainWindow.thisWindow.theNeuronArrayView.theSelection.selectedRectangles.Count == 0)
-                mi.IsEnabled = false;
-
-            mi = new MenuItem();
             mi.Header = "1";
             mi.Click += NewValue_Click;
             cm.Items.Add(mi);

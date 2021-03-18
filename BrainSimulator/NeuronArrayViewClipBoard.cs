@@ -459,5 +459,23 @@ namespace BrainSimulator
             }
             Update();
         }
+        public void MutualSuppression()
+        {
+            MainWindow.theNeuronArray.SetUndoPoint();
+
+            List<int> neuronsInSelection = theSelection.EnumSelectedNeurons();
+            for (int i = 0; i < neuronsInSelection.Count; i++) 
+            {
+                Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronsInSelection[i]);
+                foreach (Neuron n1 in theSelection.Neurons)
+                {
+                    if (n.id != n1.id)
+                    {
+                        n.AddSynapseWithUndo(n1.id, -1, Synapse.modelType.Fixed);
+                    }
+                }
+            }
+            Update();
+        }
     }
 }

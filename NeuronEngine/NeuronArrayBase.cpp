@@ -23,7 +23,7 @@ namespace NeuronEngine
 		int count = 0;
 		while (remoteQueue.try_pop(s) && count++ < 90) //splits up long strings for transmission
 		{
-			retVal += std::to_string(-(int)s.GetTarget()) + " ";
+			retVal += std::to_string(-(long long)s.GetTarget()) + " ";
 			retVal += std::to_string((float)s.GetWeight()) + " ";
 			retVal += std::to_string((int)s.GetModel()) + " ";
 		}

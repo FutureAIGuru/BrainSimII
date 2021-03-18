@@ -24,7 +24,6 @@ namespace BrainSimulator.Modules
     {
         //fill this method in with code which will execute
         //once for each cycle of the engine
-        int numDirs = 16;
 
         public class Stroke
         {
@@ -296,7 +295,6 @@ namespace BrainSimulator.Modules
         }
 
         //convert cluster to relative strokes
-        int sCount = 0;
         void ConvertClusterToRelativeStrokes()
         {
             ModuleUKS uks = (ModuleUKS)FindModuleByType(typeof(ModuleUKS));

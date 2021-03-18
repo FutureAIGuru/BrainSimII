@@ -48,6 +48,10 @@ namespace BrainSimulator
                 mi.Click += Mi_Click;
                 cm.Items.Add(mi);
                 mi = new MenuItem();
+                mi.Header = "Mutual Suppression";
+                mi.Click += Mi_Click;
+                cm.Items.Add(mi);
+                mi = new MenuItem();
                 mi.Header = "Reset Hebbian Weights";
                 mi.Click += Mi_Click;
                 cm.Items.Add(mi);
@@ -323,6 +327,11 @@ namespace BrainSimulator
                 if ((string)mi.Header == "Clear Selection")
                 {
                     MainWindow.arrayView.ClearSelection();
+                    MainWindow.Update();
+                }
+                if ((string)mi.Header == "Mutual Suppression")
+                {
+                    MainWindow.arrayView.MutualSuppression();
                     MainWindow.Update();
                 }
                 if ((string)mi.Header == "Delete")

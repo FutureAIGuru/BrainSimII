@@ -227,6 +227,10 @@ namespace BrainSimulator
             {
                 theNeuronArrayView.CutNeurons();
             }
+            if (ctrlPressed && e.Key == Key.M)
+            {
+                theNeuronArrayView.MoveNeurons();
+            }
             if (ctrlPressed && e.Key == Key.Z)
             {
                 if (theNeuronArray != null)
@@ -987,8 +991,9 @@ namespace BrainSimulator
                         na.TheModule.Init(true);
                 }
             }
-            theNeuronArray.Generation = 0;
-            theNeuronArray.SetGeneration(0);
+            //doing this messes up because LastFired is not reset
+//            theNeuronArray.Generation = 0;
+//            theNeuronArray.SetGeneration(0);
             theNeuronArrayView.Update();
             ResumeEngine();
         }

@@ -10,7 +10,7 @@ I appreciate your interest in this project and hope your experience will be posi
 4.	*Software Modules and Applications.* To speed AGI development, over 50 Modules perform a variety of AI tasks. Combined with the Neuron Engine, applications already demonstrate vision, mobility, internal modelling, and planning.
 	
 The **Brain Simulator** implements an artificial entity named “Sallie” who lives in a simulated world and can integrate input from multiple senses. She can recognize objects with binocular vision and associate them with words she hears, plan a sequence of actions, and manipulate objects to achieve a goal. As she advances to understanding her world, interfaces already exist for cameras, microphones, and robotic control to bring AGI to life.
-**
+
 
 Again, thanks for your interest!
-Charlie Simon, original creator of the Brain Simulator
+Charlie Simon, originator of the Brain Simulator

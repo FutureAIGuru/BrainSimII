@@ -1197,6 +1197,16 @@ namespace BrainSimulator
             }
         }
 
+        private void MenuItemOnlineBugs_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/FutureAIGuru/BrainSimII/issues");
+        }
+
+        private void MenuItemOnlineDiscussions_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://facebook.com/groups/BrainSim");
+        }
+
         private void ThreadCount_TextChanged(object sender, TextChangedEventArgs e)
         {
            if (sender is TextBox tb)

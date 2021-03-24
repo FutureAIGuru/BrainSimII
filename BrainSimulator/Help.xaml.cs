@@ -36,5 +36,12 @@ namespace BrainSimulator
             }
             Close();
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            string fullpath = Path.GetFullPath("./resources/getting started.htm");
+            Uri theUri = new Uri("file:///" + fullpath);
+            theBrowser.Navigate(theUri);
+        }
     }
 }

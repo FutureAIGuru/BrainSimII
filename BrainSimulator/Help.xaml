@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrainSimulator"
         mc:Ignorable="d"
-        Title="Brain Simulator II Help" Height="600" Width="800">
+        Title="Brain Simulator II Help" Height="600" Width="800" Closing="Window_Closing">
     <Grid>
         <WebBrowser Name="theBrowser" Margin="48,40,55,75"/>
         <Button Name="theButton" Content="OK" Height="29" Width="120" Margin="339,0,0,21" IsCancel="True" VerticalAlignment="Bottom" Click="Button_Click" HorizontalAlignment="Left"/>

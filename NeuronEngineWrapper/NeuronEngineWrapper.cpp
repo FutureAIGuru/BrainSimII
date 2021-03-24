@@ -167,7 +167,7 @@ namespace NeuronEngine
 			if (src < 0)return;
 			NeuronBase* n = theNeuronArray->GetNeuron(src);
 			if (dest < 0)
-				n->AddSynapse((NeuronBase*)dest, weight, (SynapseBase::modelType) model, noBackPtr);
+				n->AddSynapse((NeuronBase*)(long long)dest, weight, (SynapseBase::modelType) model, noBackPtr);
 			else
 				n->AddSynapse(theNeuronArray->GetNeuron(dest), weight, (SynapseBase::modelType)model, noBackPtr);
 		}
@@ -176,7 +176,7 @@ namespace NeuronEngine
 			if (dest < 0)return;
 			NeuronBase* n = theNeuronArray->GetNeuron(dest);
 			if (src < 0)
-				n->AddSynapseFrom((NeuronBase*)src, weight, (SynapseBase::modelType)model);
+				n->AddSynapseFrom((NeuronBase*)(long long)src, weight, (SynapseBase::modelType)model);
 			else
 				n->AddSynapseFrom(theNeuronArray->GetNeuron(src), weight, (SynapseBase::modelType)model);
 		}
@@ -185,7 +185,7 @@ namespace NeuronEngine
 			if (src < 0) return;
 			NeuronBase* n = theNeuronArray->GetNeuron(src);
 			if (dest < 0)
-				n->DeleteSynapse((NeuronBase*)dest);
+				n->DeleteSynapse((NeuronBase*)(long long)dest);
 			else
 				n->DeleteSynapse(theNeuronArray->GetNeuron(dest));
 		}
@@ -194,7 +194,7 @@ namespace NeuronEngine
 			if (dest < 0)return;
 			NeuronBase* n = theNeuronArray->GetNeuron(dest);
 			if (src < 0)
-				n->DeleteSynapse((NeuronBase*)src);
+				n->DeleteSynapse((NeuronBase*)(long long)src);
 			else
 				n->DeleteSynapse(theNeuronArray->GetNeuron(src));
 		}
@@ -234,13 +234,9 @@ namespace NeuronEngine
 				//if it is set, this is the negative of a global neuron ID
 				NeuronBase* target = tempVec.at(j).GetTarget();
 				if (((long long)target >> 63) != 0 || target == NULL)
-					s.target = (int)(tempVec.at(j).GetTarget());
+					s.target = (int)(long long)(tempVec.at(j).GetTarget());
 				else
 					s.target = tempVec.at(j).GetTarget()->GetId();
-				//if (tempVec.at(j).IsHebbian()) //this makes a bool clear all four bytes
-				//	s.isHebbian = 1;
-				//else
-				//	s.isHebbian = 0;
 				byte* firstElem = (byte*)&s;
 				for (int i = 0; i < sizeof(Synapse); i++)
 				{

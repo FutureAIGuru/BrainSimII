@@ -518,15 +518,18 @@ namespace NeuronEngine
 	double cutoffs1[ranges1] = { 1,    .5,  .34,   .25,     .2,  .15,    0 };
 	double posIncr1[ranges1] = { 0,    .1,   .05,  .025,   .01,  .012,   .01 };
 	double negIncr1[ranges1] = { -.01,-.1, -.017, -.00625,-.002, -.002,  -.001 };
-	
+
 	//play with this for experimentation
 	const int ranges2 = 7;
 	double cutoffs2[ranges2] = { .5,   .25,    .1,  0,   -.1 ,-.25, -1 };
 	double posIncr2[ranges2] = { .2,    .1,   .05,  .05,  .05,  .1,   .5 };
-	double negIncr2[ranges2] = { -.1, -.05, -.01, -.01,  -.02, -.025,  -.1 };
+	//	double negIncr2[ranges2] = { -.5, -.1, -.05, -.05,  -.05, -.1,  -.2 };
+	double negIncr2[ranges2] = { -.25, -.05, -.025, -.025,  -.025, -.05,  -.1 };
+	//	double negIncr2[ranges2] = { -.125, -.025, -.0125, -.0125,  -.0125, -.025,  -.05 };
 
-	float NeuronBase::NewHebbianWeight(float weight, float offset, SynapseBase::modelType model, int numberOfSynapses) //sign of float is all that's presently used
+	float NeuronBase::NewHebbianWeight(float weight, float offset, SynapseBase::modelType model, int numberOfSynapses1) //sign of float is all that's presently used
 	{
+		float numberOfSynapses = numberOfSynapses1/2.0;
 		float y = weight * numberOfSynapses;
 		if (model == SynapseBase::modelType::Binary)
 		{
@@ -553,25 +556,53 @@ namespace NeuronEngine
 		}
 		else if (model == SynapseBase::modelType::Hebbian2)
 		{
-			int i = 0;
+
 			float maxVal = 1.0f / numberOfSynapses;
-			for (i = 0; i < ranges2; i++)
+			float curWeight = weight * numberOfSynapses;
+			float x = 0;
+			if (curWeight >= 1)
 			{
-				if (y >= cutoffs2[i])
-				{
-					if (offset > 0)
-						y += (float)posIncr2[i];
-					else
-						y += (float)negIncr2[i];
-					y = y / numberOfSynapses;
-					if (y < -maxVal)y = -maxVal;
-					if (y > maxVal) y = maxVal;
-					break;
-				}
+				curWeight = 1;
 			}
+			else if (curWeight <= -1)
+			{
+				curWeight = -1;
+			}
+			//			else
+			x = atanh(curWeight);
+
+			if (offset > 0)
+			{
+				x += offset;
+				curWeight = tanh(x);
+			}
+			else
+			{
+				x += offset;
+				curWeight = tanh(x);
+			}
+			y = curWeight / numberOfSynapses;
+			if (y < -maxVal)y = -maxVal;
+			if (y > maxVal ) y = maxVal;
+			//int i = 0;
+			//for (i = 0; i < ranges2; i++)
+			//{
+			//	if (y >= cutoffs2[i])
+			//	{
+			//		if (offset > 0)
+			//			y += (float)posIncr2[i];
+			//		else
+			//			y += (float)negIncr2[i];
+			//		y = y / numberOfSynapses;
+			//		if (y < -maxVal)y = -maxVal;
+			//		if (y > maxVal) y = maxVal;
+			//		break;
+			//	}
+			//}
 		}
 		return y;
 	}
+
 
 }
 

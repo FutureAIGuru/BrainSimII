@@ -8,7 +8,7 @@
         Title="Brain Simulator II" Height="520.771" Width="756.667" KeyUp="Window_KeyUp" KeyDown="Window_KeyDown" 
         Closing="Window_Closing" Loaded="Window_Loaded" ContentRendered="Window_ContentRendered" WindowState="Maximized" MouseEnter="Window_MouseEnter" MouseLeave="Window_MouseLeave">
     <Grid Margin="0,0,3.4,1.2">
-        <DockPanel VerticalAlignment="Top" Margin="0,1,-1.4,0">
+        <DockPanel VerticalAlignment="Top" Margin="0,1,-1,0">
             <Menu DockPanel.Dock="Top" x:Name="MainMenu" MouseEnter="MainMenu_MouseEnter" Height="26" Margin="0,0" VerticalAlignment="Top" >
                 <MenuItem Header="_File">
                     <MenuItem Header="_New" Click="button_FileNew_Click"/>
@@ -86,33 +86,27 @@
                 </MenuItem>
             </Menu>
         </DockPanel>
-        <local:NeuronArrayView x:Name="theNeuronArrayView" Margin="0,69,-0.4,17.8" ClipToBounds="True" />
-        <Slider x:Name="slider" Margin="539,39,0,0" ValueChanged="slider_ValueChanged" IsSnapToTickEnabled="True" Value="5" HorizontalAlignment="Left" Width="140" ToolTip="Change the engine speed" RenderTransformOrigin="1.814,0.625" Height="24" VerticalAlignment="Top"/>
-        <Button x:Name="buttonSingle" Margin="474,37,0,0" Click="ButtonSingle_Click" HorizontalAlignment="Left" Width="22" Height="22" VerticalAlignment="Top" ToolTip="Run the engine one cycle">
-            <Image x:Name="image" Height="15" Width="18" Source="Resources/Step.png"/>
+        <local:NeuronArrayView x:Name="theNeuronArrayView" Margin="0,69,0,17.8" ClipToBounds="True" />
+        <Button x:Name="buttonInit" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xEB9E;" HorizontalAlignment="Left" Margin="423,35,0,0" VerticalAlignment="Top" Click="ButtonInit_Click" ToolTip="Reset all modules" >
         </Button>
-        <Label x:Name="labelDisplayStatus" Content="Display status" Margin="227,33,0,0" Width="191" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <Label x:Name="labelEngineStatus" Content="Initializing" Margin="684,34,-115.4,0" Height="30" VerticalAlignment="Top"/>
-        <Button x:Name="buttonInit" HorizontalAlignment="Left" Margin="420,37,0,0" VerticalAlignment="Top" Width="22" Click="ButtonInit_Click" Height="22" ToolTip="Reset all modules">
-            <Image x:Name="image1" Height="15" Width="18" Source="Resources/Rewind.png"/>
+        <Button x:Name="buttonPlayPause" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE769;" HorizontalAlignment="Left" Margin="450,35,0,0" VerticalAlignment="Top" Click="PlayPause_Click" ToolTip="Pause/Continue the neural engine" >
         </Button>
-        <Button x:Name="buttonPlayPause" HorizontalAlignment="Left" Margin="447,37,0,0" VerticalAlignment="Top" Width="22" Height="22" Click="PlayPause_Click" ToolTip="Pause/Continue the neural engine">
-            <StackPanel HorizontalAlignment="Center" Height="15" VerticalAlignment="Top" Width="19">
-                <Image x:Name="imagePause" Height="15" Width="18" Source="Resources/Pause.png" Margin="2,0"/>
-                <Image x:Name="imagePlay" Height="15" Width="18" Source="Resources/Play.png" Visibility="Collapsed"/>
-            </StackPanel>
+        <Slider x:Name="slider" Margin="542,37,0,0" ValueChanged="slider_ValueChanged" IsSnapToTickEnabled="True" Value="5" HorizontalAlignment="Left" Width="140" ToolTip="Change the engine speed" RenderTransformOrigin="1.814,0.625" Height="24" VerticalAlignment="Top" />
+        <Button x:Name="buttonSingle" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE893;" Margin="477,35,0,0" Click="ButtonSingle_Click" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Run the engine one cycle" >
         </Button>
-        <Button x:Name="buttonPan" HorizontalAlignment="Left" Height="22" Margin="71,37,0,0" VerticalAlignment="Top" Width="22" Click="ButtonPan_Click" ToolTip="Pan the display with the mouse (Shift+mouse move)">
-            <Image x:Name="image2" Height="18" Width="18" Source="Resources/Hand.png"/>
-        </Button>
-        <Button x:Name="buttonZoomOut" HorizontalAlignment="Left" Height="22" Margin="121,37,0,0" VerticalAlignment="Top" Width="22" ToolTip="Zoom Out (Also mouse wheel" PreviewMouseLeftButtonDown="ButtonZoomOut_PreviewMouseLeftButtonDown">
-            <Image x:Name="image4" Height="18" Width="18" Source="Resources/ZoomOut.png"/>
-        </Button>
-        <Button x:Name="buttonZoomIn" HorizontalAlignment="Left" Height="22" Margin="96,37,0,0" VerticalAlignment="Top" Width="22" ToolTip="Zoom In (Also mouse wheel" PreviewMouseLeftButtonDown="ButtonZoomIn_PreviewMouseLeftButtonDown">
-            <Image x:Name="image5" Height="18" Width="18" Source="Resources/ZoomIn.png"/>
-        </Button>
-        <Label x:Name="label1" Content="Speed:" HorizontalAlignment="Left" Height="30" Margin="497,34,0,0" VerticalAlignment="Top" Width="56"/>
-        <CheckBox x:Name="checkBox" Content="Synapses" HorizontalAlignment="Left" Height="21" Margin="150,39,0,0" VerticalAlignment="Top" Width="72" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
-        <ProgressBar x:Name="progressBar" Maximum="1" HorizontalAlignment="Left" Margin="85,0,0,2.8" Width="137" Height="13" VerticalAlignment="Bottom"/>
+        <Label x:Name="label1" Content="Speed:" HorizontalAlignment="Left" Height="30" Margin="501,32,0,0" VerticalAlignment="Top" Width="56"/>
+
+        <Label x:Name="labelDisplayStatus" Content="Display status" Margin="230,34,0,0" Width="191" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <Label x:Name="labelEngineStatus" Content="Initializing" Margin="687,34,-195.4,0" Height="30" VerticalAlignment="Top" />
+
+        <Button x:Name="SaveButton" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;" VerticalAlignment="Top" Margin="36,35,0,0" Click="buttonSave_Click" ToolTip="Save File" HorizontalAlignment="Left" />
+        <Button x:Name="OpenButton" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE8E5;" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="11,35,0,0" Click="buttonLoad_Click" ToolTip="Open File"/>
+
+        <Button x:Name="buttonPan" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xF271;" HorizontalAlignment="Left" Margin="75,35,0,0" VerticalAlignment="Top" Click="ButtonPan_Click" ToolTip="Pan the display with the mouse (Shift+mouse move)" />
+        <Button x:Name="buttonZoomOut" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE71F;" HorizontalAlignment="Left" Margin="124,35,0,0" VerticalAlignment="Top" ToolTip="Zoom Out (Also mouse wheel)" PreviewMouseLeftButtonDown="ButtonZoomOut_PreviewMouseLeftButtonDown" />
+        <Button x:Name="buttonZoomIn" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE8A3;" HorizontalAlignment="Left" Margin="99,35,0,0" VerticalAlignment="Top" ToolTip="Zoom In (Also mouse wheel)" PreviewMouseLeftButtonDown="ButtonZoomIn_PreviewMouseLeftButtonDown" />
+
+        <CheckBox x:Name="checkBox" Content="Synapses" HorizontalAlignment="Left" Height="21" Margin="153,40,0,0" VerticalAlignment="Top" Width="72" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" />
+        <ProgressBar x:Name="progressBar" Maximum="1" HorizontalAlignment="Left" Margin="9,0,0,2.8" Width="137" Height="13" VerticalAlignment="Bottom" />
     </Grid>
 </Window>

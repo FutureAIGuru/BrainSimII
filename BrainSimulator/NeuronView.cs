@@ -105,7 +105,9 @@ namespace BrainSimulator
             retVal = n.label;
             if (n.model == Neuron.modelType.LIF)
             {
-                if (n.leakRate < 1)
+                if (n.leakRate == 0)
+                    retVal += "\rD=" + n.axonDelay.ToString();
+                else if (n.leakRate < 1)
                     retVal += "\rL=" + n.leakRate.ToString("f2").Substring(1);
                 else
                     retVal += "\rL=" + n.leakRate.ToString("f1");
@@ -163,11 +165,11 @@ namespace BrainSimulator
 
             //The neuron label
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
-            sp.Children.Add(new Label { Content = "ID: " + n.id + "   Label: ",VerticalAlignment=VerticalAlignment.Center, Padding = new Thickness(0) });
+            sp.Children.Add(new Label { Content = "ID: " + n.id + "   Label: ", VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) });
             TextBox tb = Utils.ContextMenuTextBox(n.Label, "Label", 150);
             tb.TextChanged += Tb_TextChanged;
             sp.Children.Add(tb);
-            sp.Children.Add(new Label { Content = "Warning:\rDuplicate Label",FontSize=8,Name="DupWarn",Visibility=Visibility.Hidden });
+            sp.Children.Add(new Label { Content = "Warning:\rDuplicate Label", FontSize = 8, Name = "DupWarn", Visibility = Visibility.Hidden });
             cm.Items.Add(sp);
 
             //The neuron model
@@ -261,7 +263,7 @@ namespace BrainSimulator
                 if (n == null || neuronLabel == "")
                 {
                     tb.Background = new SolidColorBrush(Colors.White);
-                    if (tb.Parent is StackPanel  sp)
+                    if (tb.Parent is StackPanel sp)
                     {
                         ((Label)sp.Children[2]).Visibility = Visibility.Hidden;
                     }
@@ -474,7 +476,7 @@ namespace BrainSimulator
                     int.TryParse(tb3.Text, out int axonDelay);
                     if (axonDelay != n.axonDelay)
                     {
-                        SetModelAndLeakrate(n,n.model,n.leakRate,axonDelay);
+                        SetModelAndLeakrate(n, n.model, n.leakRate, axonDelay);
                     }
                 }
             }
@@ -506,11 +508,11 @@ namespace BrainSimulator
                 newLeakRate = 3;
                 newAxonDelay = 10;
             }
-            SetModelAndLeakrate(n,nm,newLeakRate,newAxonDelay);
+            SetModelAndLeakrate(n, nm, newLeakRate, newAxonDelay);
             SetCustomCMItems(cm, n);
         }
 
-        private static void SetModelAndLeakrate(Neuron n, Neuron.modelType newModel, float newLeakRate, int  newAxonDelay)
+        private static void SetModelAndLeakrate(Neuron n, Neuron.modelType newModel, float newLeakRate, int newAxonDelay)
         {
             bool neuronInSelection = false;
             foreach (NeuronSelectionRectangle sr in theNeuronArrayView.theSelection.selectedRectangles)

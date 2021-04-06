@@ -14,15 +14,16 @@ namespace BrainSimulator
     {
         public static readonly DependencyProperty AreaNumberProperty =
     DependencyProperty.Register("AreaNumber", typeof(int), typeof(MenuItem));
-        public int AreaNumber
-        {
-            get { return (int)GetValue(AreaNumberProperty); }
-            set { SetValue(AreaNumberProperty, value); }
-        }
+        //public int AreaNumber
+        //{
+        //    get { return (int)GetValue(AreaNumberProperty); }
+        //    set { SetValue(AreaNumberProperty, value); }
+        //}
 
-        public static void CreateContextMenu(int i, ModuleView nr, FrameworkElement r) //for a selection
+        public static void CreateContextMenu(int i, ModuleView nr, FrameworkElement r,ContextMenu cm = null) //for a selection
         {
-            ContextMenu cm = new ContextMenu();
+            if (cm == null)
+                cm = new ContextMenu();
             StackPanel sp;
             cm.SetValue(AreaNumberProperty, i);
             MenuItem mi = new MenuItem();
@@ -178,7 +179,7 @@ namespace BrainSimulator
                     ((MenuItem)cm.Items[cm.Items.Count - 1]).Click += Mi_Click;
                 }
             }
-            r.ContextMenu = cm;
+            //r.ContextMenu = cm;
             cm.Closed += Cm_Closed;
         }
 
@@ -401,6 +402,8 @@ namespace BrainSimulator
                                 if (s.model != Synapse.modelType.Fixed)
                                 {
                                     s.Weight = 0;
+                                    //TODO: Add some UI for this:
+                                    //s.model = Synapse.modelType.Hebbian2;
                                     n.AddSynapse(s.targetNeuron, s.weight, s.model);
                                 }
                             }

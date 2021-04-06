@@ -132,6 +132,7 @@
       <DependentUpon>ModuleCameraDlg.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\ModuleColorComponent.cs" />
+    <Compile Include="Modules\ModulePatternGenerator.cs" />
     <Compile Include="Modules\ModuleStrokeFinderDlg.xaml.cs">
       <DependentUpon>ModuleStrokeFinderDlg.xaml</DependentUpon>
     </Compile>
@@ -210,6 +211,8 @@
     <Compile Include="NeuronArrayView.xaml.cs">
       <DependentUpon>NeuronArrayView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NeuronArrayViewMouse.cs" />
+    <Compile Include="NeuronArrayViewZoomPan.cs" />
     <Compile Include="NeuronClient.cs" />
     <Compile Include="NeuronHandler.cs" />
     <Compile Include="NeuronSelection.cs" />

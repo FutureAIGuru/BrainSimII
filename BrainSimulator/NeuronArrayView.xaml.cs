@@ -20,20 +20,6 @@ namespace BrainSimulator
 
         private DisplayParams dp = new DisplayParams();
 
-        //for pan
-        Point lastPositionOnCanvas = new Point(0, 0); //temp position used for calculating pan positions
-        Point lastPositionOnGrid = new Point(0, 0); //temp position used for calculating pan positions
-        Vector CanvasOffset = new Vector(0, 0);
-
-        //for scrollbars
-        double scrollBarVOldValue = 0;
-        double scrollBarHOldValue = 0;
-        DispatcherTimer scrollBarRepeatTimer = new DispatcherTimer();
-
-        //these are used to handle scaling with the mouse wheel
-        DispatcherTimer zoomRepeatTimer = new DispatcherTimer();
-        float scale = 1;
-
         public int targetNeuronIndex = -1;
 
         //needed for handling selections of areas of neurons
@@ -170,7 +156,8 @@ namespace BrainSimulator
                     r.MouseLeave += R_MouseLeave;
                     theCanvas.Children.Add(r);
 
-                    ModuleView.CreateContextMenu(i, nr, r);
+                    //                    ModuleView.CreateContextMenu(i, nr, r);
+                    r.SetValue(ModuleView.AreaNumberProperty, i);
 
                     TextBlock tb = new TextBlock();
                     tb.Text = nr.Label;
@@ -185,6 +172,7 @@ namespace BrainSimulator
             {
                 Rectangle r = theSelection.selectedRectangles[i].GetRectangle(dp);
                 r.Fill = new SolidColorBrush(Colors.Pink);
+                r.SetValue(ModuleView.AreaNumberProperty, -i - 1);
 
                 theCanvas.Children.Add(r);
                 ModuleView nr = new ModuleView
@@ -195,7 +183,7 @@ namespace BrainSimulator
                     Color = Utils.ColorToInt(Colors.Aquamarine),
                     CommandLine = ""
                 };
-                ModuleView.CreateContextMenu(-i - 1, nr, r);
+                r.MouseDown += theCanvas_MouseDown;
                 r.MouseLeave += R_MouseLeave;
 
                 if (!dp.ShowNeurons())
@@ -228,7 +216,8 @@ namespace BrainSimulator
                     Canvas.SetLeft(img, Canvas.GetLeft(r));
                     Canvas.SetTop(img, Canvas.GetTop(r));
                     theCanvas.Children.Add(img);
-                    ModuleView.CreateContextMenu(-i - 1, nr, img);
+                    img.SetValue(ModuleView.AreaNumberProperty, -i - 1);
+                    img.MouseDown += theCanvas_MouseDown;
                 }
             }
 
@@ -376,7 +365,7 @@ namespace BrainSimulator
             {
                 //for small arrays, repaint everything so synapse weights will update
                 //if (false) //use this for testing of 
-                if (neuronsOnScreen.Count < 451)
+                if (neuronsOnScreen.Count < 451 && scale == 1)
                 {
                     Update();
                     if (MainWindow.theNeuronArray != null)
@@ -386,7 +375,7 @@ namespace BrainSimulator
                     }
                     return;
                 }
-                targetNeuronCanvas.Children.Clear();
+
                 SetTargetNeuronSymbol();
 
                 for (int i = 0; i < neuronsOnScreen.Count; i++)
@@ -491,7 +480,7 @@ namespace BrainSimulator
 
         private void SetTargetNeuronSymbol()
         {
-            if (targetNeuronIndex != -1)
+            if (targetNeuronIndex != -1 && scale == 1)
             {
                 Ellipse r = new Ellipse();
                 Point p1 = dp.pointFromNeuron(targetNeuronIndex);
@@ -499,19 +488,15 @@ namespace BrainSimulator
                 Canvas.SetTop(r, p1.Y);
                 Canvas.SetLeft(r, p1.X);
                 r.Fill = new SolidColorBrush(Colors.LightBlue);
+                targetNeuronCanvas.Children.Clear();
                 targetNeuronCanvas.Children.Add(r);
             }
         }
 
-        public bool dragging = false;
-        int mouseDownNeuronIndex = -1;
-        static Shape synapseShape = null;  //the shape of the synapses being rubber-banded 
-                                           //(so it can be added/removed easily from the canvas)
 
-        private void R_MouseLeave(object sender, MouseEventArgs e)
+        private void theCanvas_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!dragging && theCanvas.Cursor != Cursors.Hand)
-                theCanvas.Cursor = Cursors.Cross;
+            if (MainWindow.theNeuronArray == null) return;
         }
         private void theCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -519,511 +504,6 @@ namespace BrainSimulator
             SynapseView.theCanvas = theCanvas;//??
             if (MainWindow.theNeuronArray == null) return;
             Update();
-        }
-
-        private void theCanvas_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (MainWindow.theNeuronArray == null) return;
-        }
-
-        private void TheCanvas_MouseEnter(object sender, MouseEventArgs e)
-        {
-            //Debug.WriteLine("NeuronArrayView:Canvas View MouseEnter");
-            if (theCanvas.Cursor != Cursors.Hand)
-                theCanvas.Cursor = Cursors.Cross;
-        }
-
-        private void TheCanvas_MouseLeave(object sender, MouseEventArgs e)
-        {
-            //Debug.WriteLine("NeuronArrayView:Canvas View MouseLeave");
-            theCanvas.Cursor = Cursors.Arrow;
-        }
-
-
-        public void theCanvas_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (MainWindow.theNeuronArray == null) return;
-            //Debug.WriteLine("theCanvas_MouseDown" + MainWindow.theNeuronArray.Generation);
-            Point currentPosition = e.GetPosition(theCanvas);
-            LimitMousePostion(ref currentPosition);
-            mouseDownNeuronIndex = dp.NeuronFromPoint(currentPosition);
-
-            if (e.RightButton == MouseButtonState.Pressed)
-            {
-                if (sender is Label l)
-                {
-                    l.ContextMenu = new ContextMenu();
-                    Neuron n1 = MainWindow.theNeuronArray.GetNeuron(mouseDownNeuronIndex);
-                    NeuronView.CreateContextMenu(mouseDownNeuronIndex, n1, l.ContextMenu);
-                    l.ContextMenu.IsOpen = true;
-                    e.Handled = true;
-                }
-                else if (sender is Shape s)
-                {
-
-                    if ((s is Path || s is Line ||
-                        (s is Ellipse && (int)s.GetValue(SynapseView.SourceIDProperty) != 0))) // a synapse
-                    {
-                        int source = (int)s.GetValue(SynapseView.SourceIDProperty);
-                        int target = (int)s.GetValue(SynapseView.TargetIDProperty);
-                        float weight = (float)s.GetValue(SynapseView.WeightValProperty);
-                        Neuron n1 = MainWindow.theNeuronArray.GetCompleteNeuron(source);
-                        n1 = MainWindow.theNeuronArray.AddSynapses(n1);
-                        Synapse s1 = n1.FindSynapse(target);
-                        s.ContextMenu = new ContextMenu();
-                        SynapseView.CreateContextMenu(source, s1, s.ContextMenu);
-                    }
-                    else if (s is Ellipse) // a neuron 
-                    {
-                        s.ContextMenu = new ContextMenu();
-                        Neuron n1 = MainWindow.theNeuronArray.GetNeuron(mouseDownNeuronIndex);
-                        NeuronView.CreateContextMenu(mouseDownNeuronIndex, n1, s.ContextMenu);
-                        targetNeuronIndex = mouseDownNeuronIndex;
-                    }
-                    if (s.ContextMenu != null)
-                        s.ContextMenu.IsOpen = true;
-                    e.Handled = true;
-                }
-                else
-                {
-                }
-                return;
-            }
-
-            Neuron n = null;
-            if (mouseDownNeuronIndex >= 0 && mouseDownNeuronIndex < MainWindow.theNeuronArray.arraySize)
-                n = MainWindow.theNeuronArray.GetNeuron(mouseDownNeuronIndex) as Neuron;
-
-            if (theCanvas.Cursor == Cursors.Cross)
-            {
-                //          Debug.WriteLine("dragStart" + MainWindow.theNeuronArray.Generation);
-                if (dragRectangle != null)
-                {
-                    theCanvas.Children.Remove(dragRectangle);
-                }
-
-                if (!MainWindow.ctrlPressed)
-                {
-                    theSelection.selectedRectangles.Clear();
-                }
-                else Update();
-
-                //snap to neuron point
-                currentPosition = dp.pointFromNeuron(mouseDownNeuronIndex);
-
-                //build the draggable selection rectangle
-                dragRectangle = new Rectangle();
-                dragRectangle.Width = dragRectangle.Height = dp.NeuronDisplaySize;
-                dragRectangle.Stroke = new SolidColorBrush(Colors.Red);
-                dragRectangle.Fill = new SolidColorBrush(Colors.Red);
-                dragRectangle.Fill.Opacity = 0.5;
-                Canvas.SetLeft(dragRectangle, currentPosition.X);
-                Canvas.SetTop(dragRectangle, currentPosition.Y);
-                theCanvas.Children.Add(dragRectangle);
-                firstSelectedNeuron = mouseDownNeuronIndex;
-                lastSelectedNeuron = mouseDownNeuronIndex;
-                Mouse.Capture(theCanvas);
-            }
-
-            if (theCanvas.Cursor == Cursors.ScrollAll)
-            {
-                dragging = true;
-            }
-            if (theCanvas.Cursor == Cursors.UpArrow)
-            {
-                Mouse.Capture(theCanvas);
-                if (mouseRepeatTimer == null)
-                    mouseRepeatTimer = new DispatcherTimer();
-                if (mouseRepeatTimer.IsEnabled)
-                    mouseRepeatTimer.Stop();
-                mouseRepeatTimer.Interval = new TimeSpan(0, 0, 0, 0, 250);
-                mouseRepeatTimer.Tick += MouseRepeatTimer_Tick;
-                mouseRepeatTimer.Start();
-                dragging = true;
-                targetNeuronIndex = mouseDownNeuronIndex;
-            }
-            if (theCanvas.Cursor == Cursors.Hand)
-            {
-                StartPan(e.GetPosition((UIElement)theCanvas.Parent));
-                Mouse.Capture(theCanvas);
-            }
-        }
-
-        private void MouseRepeatTimer_Tick(object sender, EventArgs e)
-        {
-            if (mouseDownNeuronIndex < 0) return;
-            Neuron n = MainWindow.theNeuronArray.GetNeuron(mouseDownNeuronIndex);
-            n.SetValue(1);
-            mouseRepeatTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
-        }
-
-        DispatcherTimer mouseRepeatTimer = null;
-
-        public float lastSynapseWeight = 1.0f;
-        public Synapse.modelType lastSynapseModel = Synapse.modelType.Fixed;
-        public void theCanvas_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            if (mouseRepeatTimer != null) mouseRepeatTimer.Stop();
-            if (MainWindow.theNeuronArray == null) return;
-            //Debug.WriteLine("theCanvas_MouseUp" + MainWindow.theNeuronArray.Generation);
-            if (e.ChangedButton == MouseButton.Right) return;
-            Point currentPosition = e.GetPosition(theCanvas);
-            LimitMousePostion(ref currentPosition);
-            int mouseUpNeuronIndex = dp.NeuronFromPoint(currentPosition);
-
-
-            if (theCanvas.Cursor == Cursors.Cross)
-            {
-                FinishSelection();
-                Update();
-            }
-
-            //we clicked on a neuron...is it a fire or a synapse drag?
-            if (theCanvas.Cursor == Cursors.UpArrow)
-            {
-                if (synapseShape == null && mouseDownNeuronIndex > -1)  //if no synapseshape exists, then were just clicking in a nueron
-                {
-                    Neuron n = MainWindow.theNeuronArray.GetNeuron(mouseDownNeuronIndex);
-                    if (n != null)
-                    {
-                        if (n.Model == Neuron.modelType.Random || n.model == Neuron.modelType.Always)
-                        {
-                            if (n.LeakRate < 0) n.LeakRate = 0;
-                            else n.LeakRate = -1;
-                        }
-                        else if (n.Model != Neuron.modelType.Color)
-                        {
-                            if (n.LastCharge < .99)
-                            {
-                                n.CurrentCharge = 1;
-                                n.LastCharge = 1;
-                            }
-                            else
-                            {
-                                n.CurrentCharge = 0;
-                                n.LastCharge = 0;
-                            }
-                        }
-                        else
-                        {
-                            if (n.LastChargeInt == 0)
-                            {
-                                n.LastChargeInt = 0xffffff;
-                            }
-                            else
-                            {
-                                n.LastChargeInt = 0;
-                            }
-                        }
-                        n.Update();
-                        e.Handled = true;
-                    }
-                }
-                else
-                {
-                    if (mouseDownNeuronIndex > -1)
-                    {
-                        Point p1 = e.GetPosition(theCanvas);
-                        LimitMousePostion(ref p1);
-                        int index = dp.NeuronFromPoint(p1);
-                        MainWindow.theNeuronArray.SetUndoPoint();
-                        MainWindow.theNeuronArray.GetNeuron(mouseDownNeuronIndex).AddSynapseWithUndo(index, lastSynapseWeight, lastSynapseModel);
-                        MainWindow.theNeuronArray.ShowSynapses = true;
-                        MainWindow.thisWindow.SetShowSynapsesCheckBox(true);
-
-                    }
-                    synapseShape = null;
-                    mouseDownNeuronIndex = -1;
-                    e.Handled = true;
-                    Update();
-                }
-            }
-
-            if (theCanvas.Cursor == Cursors.Hand)
-            {
-                FinishPan();
-                e.Handled = true;
-            }
-            mouseDownNeuronIndex = -1;
-            dragging = false;
-            Mouse.Capture(null);
-        }
-
-        private void FinishSelection()
-        {
-            if (dragRectangle != null)
-            {
-                try
-                {
-                    //get the neuron pointers from the drag rectangle and save in the selection array
-                    int w = 1 + (lastSelectedNeuron - firstSelectedNeuron) / Rows;
-                    int h = 1 + (lastSelectedNeuron - firstSelectedNeuron) % Rows;
-                    //Debug.Write(firstSelectedNeuron + ", " + lastSelectedNeuron);
-                    NeuronSelectionRectangle rr = new NeuronSelectionRectangle(firstSelectedNeuron, w, h);
-                    theSelection.selectedRectangles.Add(rr);
-                }
-                catch
-                {
-                    dragRectangle = null;
-                }
-                dragRectangle = null;
-            }
-        }
-
-        //keep any mouse operations within the bounds of the neruon array
-        private void LimitMousePostion(ref Point p1)
-        {
-            if (p1.X < dp.DisplayOffset.X) p1.X = dp.DisplayOffset.X;
-            if (p1.Y < dp.DisplayOffset.Y) p1.Y = dp.DisplayOffset.Y;
-            float width = dp.NeuronDisplaySize * MainWindow.theNeuronArray.arraySize / dp.NeuronRows - 1;
-            float height = dp.NeuronDisplaySize * dp.NeuronRows - 1;
-            if (p1.X > dp.DisplayOffset.X + width) p1.X = dp.DisplayOffset.X + width;
-            if (p1.Y > dp.DisplayOffset.Y + height) p1.Y = dp.DisplayOffset.Y + height;
-
-        }
-
-        ModuleView na = null;
-        //whatever the first & last selected neurons, this sorts out the upper-left and lower right
-        private void SetFirstLastSelectedNeurons(int newPosition)
-        {
-            int y1 = mouseDownNeuronIndex % Rows;
-            int x1 = mouseDownNeuronIndex / Rows;
-            int y2 = newPosition % Rows;
-            int x2 = newPosition / Rows;
-            firstSelectedNeuron = Math.Min(x1, x2) * Rows + Math.Min(y1, y2);
-            lastSelectedNeuron = Math.Max(x1, x2) * Rows + Math.Max(y1, y2);
-        }
-        public void theCanvas_MouseMove(object sender, MouseEventArgs e)
-        {
-            Point pt = e.GetPosition((UIElement)sender);
-            HitTestResult result = VisualTreeHelper.HitTest(theCanvas, pt);
-
-            if (mouseRepeatTimer != null)
-            {
-                if (mouseRepeatTimer.IsEnabled && mouseRepeatTimer.Interval == new TimeSpan(0, 0, 0, 0, 100)) return;
-                mouseRepeatTimer.Stop();
-            }
-            if (MainWindow.theNeuronArray == null) return;
-            if (e.RightButton == MouseButtonState.Pressed) return;
-
-            Point currentPosition = e.GetPosition(theCanvas);
-            LimitMousePostion(ref currentPosition);
-            int currentNeuron = dp.NeuronFromPoint(currentPosition);
-
-            //are we dragging a synapse? rubber-band it
-            if (e.LeftButton == MouseButtonState.Pressed && theCanvas.Cursor == Cursors.UpArrow && dragging)
-            {
-                if (mouseDownNeuronIndex > -1)
-                {
-                    if (synapseShape != null || (mouseDownNeuronIndex != currentNeuron))
-                    {
-                        if (synapseShape != null)
-                            theCanvas.Children.Remove(synapseShape);
-                        Shape l = SynapseView.GetSynapseShape
-                            (dp.pointFromNeuron(mouseDownNeuronIndex), dp.pointFromNeuron(currentNeuron), this, Synapse.modelType.Fixed);
-                        theCanvas.Children.Add(l);
-                        synapseShape = l;
-                    }
-                }
-            }
-            else if (e.LeftButton != MouseButtonState.Pressed) //we may have missed a mouse-up event...clear out the rubber-banding
-            {
-                synapseShape = null;
-                mouseDownNeuronIndex = -1;
-            }
-
-            if (theCanvas.Cursor == Cursors.Cross || theCanvas.Cursor == Cursors.ScrollN || theCanvas.Cursor == Cursors.ScrollS || theCanvas.Cursor == Cursors.ScrollE ||
-                theCanvas.Cursor == Cursors.ScrollW || theCanvas.Cursor == Cursors.ScrollNW || theCanvas.Cursor == Cursors.ScrollNE ||
-                theCanvas.Cursor == Cursors.ScrollSW || theCanvas.Cursor == Cursors.ScrollSE || theCanvas.Cursor == Cursors.ScrollAll)
-            {
-                //set the cursor if are we inside an existing module rectangle?
-                if (e.LeftButton != MouseButtonState.Pressed)
-                {
-                    na = null;
-                    ////is the mouse in a module?
-                    for (int i = 0; i < MainWindow.theNeuronArray.modules.Count; i++)
-                    {
-                        Rectangle r = MainWindow.theNeuronArray.modules[i].GetRectangle(dp);
-                        double left = Canvas.GetLeft(r);
-                        double top = Canvas.GetTop(r);
-                        if (SetScrollCursor(currentPosition, r, left, top))
-                        {
-                            na = MainWindow.theNeuronArray.modules[i];
-                            firstSelectedNeuron = currentNeuron;
-                        }
-                    }
-                }
-
-                //handle the creation/updating of a selection rectangle
-                if (e.LeftButton == MouseButtonState.Pressed && dragRectangle != null)
-                {
-                    //Get the first & last selected neurons
-                    SetFirstLastSelectedNeurons(currentNeuron);
-
-                    //update graphic rectangle 
-                    Point p1 = dp.pointFromNeuron(firstSelectedNeuron);
-                    Point p2 = dp.pointFromNeuron(lastSelectedNeuron);
-                    dragRectangle.Width = p2.X - p1.X + dp.NeuronDisplaySize;
-                    dragRectangle.Height = p2.Y - p1.Y + dp.NeuronDisplaySize;
-                    Canvas.SetLeft(dragRectangle, p1.X);
-                    Canvas.SetTop(dragRectangle, p1.Y);
-                    if (!theCanvas.Children.Contains(dragRectangle))
-                        theCanvas.Children.Add(dragRectangle);
-                }
-            }
-
-            //handle moving of a module
-            if (e.LeftButton == MouseButtonState.Pressed && theCanvas.Cursor == Cursors.ScrollAll && na != null)
-            {
-                if (currentNeuron != firstSelectedNeuron)
-                {
-                    int newFirst = na.FirstNeuron + currentNeuron - firstSelectedNeuron;
-                    int newLast = na.LastNeuron + currentNeuron - firstSelectedNeuron;
-                    na.GetAbsNeuronLocation(newFirst, out int xf, out int yf);
-                    na.GetAbsNeuronLocation(newLast, out int xl, out int yl);
-
-                    if (newFirst >= 0 && newLast < MainWindow.theNeuronArray.arraySize &&
-                            xf <= xl && yf <= yl)
-                    {
-                        //move all the neurons
-                        int delta = currentNeuron - firstSelectedNeuron;
-                        if (delta > 0) //move all the nerons...opposite order depending on the direction of the move
-                        {
-                            for (int i = na.NeuronCount - 1; i >= 0; i--)
-                            {
-                                Neuron src = na.GetNeuronAt(i);
-                                Neuron dest = MainWindow.theNeuronArray.GetNeuron(src.Id + delta);
-                                MainWindow.thisWindow.theNeuronArrayView.MoveOneNeuron(src, dest);
-                            }
-                        }
-                        else
-                        {
-                            for (int i = 0; i < na.NeuronCount; i++)
-                            {
-                                Neuron src = na.GetNeuronAt(i);
-                                Neuron dest = MainWindow.theNeuronArray.GetNeuron(src.Id + delta);
-                                MainWindow.thisWindow.theNeuronArrayView.MoveOneNeuron(src, dest);
-                            }
-                        }
-
-                        //move the box
-                        na.FirstNeuron += currentNeuron - firstSelectedNeuron;
-                        SortAreas();
-                        Update();
-                    }
-                    firstSelectedNeuron = currentNeuron;
-                }
-            }
-            //handle sizing of a module
-            if (e.LeftButton == MouseButtonState.Pressed && na != null &&
-                (theCanvas.Cursor == Cursors.ScrollN ||
-                theCanvas.Cursor == Cursors.ScrollS ||
-                theCanvas.Cursor == Cursors.ScrollE ||
-                theCanvas.Cursor == Cursors.ScrollW ||
-                theCanvas.Cursor == Cursors.ScrollNW ||
-                theCanvas.Cursor == Cursors.ScrollNE ||
-                theCanvas.Cursor == Cursors.ScrollSW ||
-              theCanvas.Cursor == Cursors.ScrollSE)
-                )
-            {
-                //TODO: Add rearrangement of neurons
-                //TODO: Add clone of neurons to handle ALL properties
-                dragging = true;
-                na.GetBounds(out int X1, out int Y1, out int X2, out int Y2);
-                na.GetAbsNeuronLocation(firstSelectedNeuron, out int Xf, out int Yf);
-                na.GetAbsNeuronLocation(currentNeuron, out int Xc, out int Yc);
-                na.GetAbsNeuronLocation(na.LastNeuron, out int Xl, out int Yl);
-                int minHeight = na.TheModule.MinHeight;
-                int minWidth = na.TheModule.MinWidth;
-
-                //move the top?
-                if (theCanvas.Cursor == Cursors.ScrollN || theCanvas.Cursor == Cursors.ScrollNE || theCanvas.Cursor == Cursors.ScrollNW)
-                {
-                    if (Yc != Yf)
-                    {
-                        int newTop = Y1 + Yc - Yf;
-                        if (newTop <= Y2)
-                        {
-                            na.Height -= Yc - Yf;
-                            if (na.Height < minHeight)
-                                na.Height = minHeight;
-                            else
-                            {
-                                na.FirstNeuron += Yc - Yf;
-                                firstSelectedNeuron = currentNeuron;
-                            }
-                            SortAreas();
-                            Update();
-                        }
-                    }
-                }
-                //move the left?
-                if (theCanvas.Cursor == Cursors.ScrollW || theCanvas.Cursor == Cursors.ScrollNW || theCanvas.Cursor == Cursors.ScrollSW)
-                {
-                    if (Xc != Xf)
-                    {
-                        int newLeft = X1 + Xc - Xf;
-                        if (newLeft <= X2)
-                        {
-                            na.Width -= Xc - Xf;
-                            if (na.Width < minWidth)
-                                na.Width = minWidth;
-                            else
-                            {
-                                na.FirstNeuron += (Xc - Xf) * MainWindow.theNeuronArray.rows;
-                                firstSelectedNeuron = currentNeuron;
-                            }
-                            SortAreas();
-                            Update();
-                        }
-                    }
-                }
-                //Move the Right
-                if (theCanvas.Cursor == Cursors.ScrollE || theCanvas.Cursor == Cursors.ScrollNE || theCanvas.Cursor == Cursors.ScrollSE)
-                {
-                    if (Xc != Xf)
-                    {
-                        int newRight = X2 + Xc - Xf;
-                        if (newRight >= X1)
-                        {
-                            na.Width += Xc - Xf;
-                            if (na.Width < minWidth)
-                                na.Width = minWidth;
-                            else
-                                firstSelectedNeuron = currentNeuron;
-                            Update();
-                        }
-                    }
-                }
-                //Move the Bottom
-                if (theCanvas.Cursor == Cursors.ScrollS || theCanvas.Cursor == Cursors.ScrollSE || theCanvas.Cursor == Cursors.ScrollSW)
-                {
-                    if (Yc != Yf)
-                    {
-                        int newBottom = Y2 + Yc - Yf;
-                        if (newBottom >= Y1)
-                        {
-                            na.Height += Yc - Yf;
-                            if (na.Height < minHeight)
-                                na.Height = minHeight;
-                            else
-                                firstSelectedNeuron = currentNeuron;
-                            Update();
-                        }
-                    }
-                }
-            }
-
-            if (theCanvas.Cursor == Cursors.Hand)
-                if (e.LeftButton == MouseButtonState.Pressed)
-                {
-                    ContinuePan(e.GetPosition((UIElement)theCanvas.Parent));
-                    //lastPositionOnGrid = e.GetPosition((UIElement)theCanvas.Parent);
-                }
-                else
-                {
-                    lastPositionOnCanvas = new Point(0, 0);
-                }
         }
 
         public static void SortAreas()
@@ -1034,204 +514,7 @@ namespace BrainSimulator
             }
         }
 
-        private bool SetScrollCursor(Point currentPosition, Rectangle r, double left, double top)
-        {
-            if (currentPosition.X > left && currentPosition.X < left + r.Width &&
-                currentPosition.Y > top && currentPosition.Y < top + r.Height)
-            {
-                double edgeToler = dp.NeuronDisplaySize / 2.5;
-                if (edgeToler < 8) edgeToler = 8;
-                bool nearTop = currentPosition.Y - top < edgeToler;
-                bool nearBottom = top + r.Height - currentPosition.Y < edgeToler;
-                bool nearLeft = currentPosition.X - left < edgeToler;
-                bool nearRight = left + r.Width - currentPosition.X < edgeToler;
-
-                if (nearTop && nearLeft) theCanvas.Cursor = Cursors.ScrollNW;
-                else if (nearTop && nearRight) theCanvas.Cursor = Cursors.ScrollNE;
-                else if (nearBottom && nearLeft) theCanvas.Cursor = Cursors.ScrollSW;
-                else if (nearBottom && nearRight) theCanvas.Cursor = Cursors.ScrollSE;
-                else if (nearTop) theCanvas.Cursor = Cursors.ScrollN;
-                else if (nearBottom) theCanvas.Cursor = Cursors.ScrollS;
-                else if (nearLeft) theCanvas.Cursor = Cursors.ScrollW;
-                else if (nearRight) theCanvas.Cursor = Cursors.ScrollE;
-                else theCanvas.Cursor = Cursors.ScrollAll;
-                return true;
-            }
-            return false;
-        }
 
 
-        //ZOOM
-        float GetNextZoomLevel(float change) //change is the number of steps
-        {
-            float currentValue = dp.NeuronDisplaySize;
-            var currentN = Math.Log10(currentValue);
-            currentN += change / 20.0;
-            currentValue = (float)Math.Pow(10, currentN);
-            return currentValue;
-        }
-        public void Zoom(int change)
-        {
-            dp.DisplayOffset = (Point)(((Vector)dp.DisplayOffset) * (dp.NeuronDisplaySize + change) / dp.NeuronDisplaySize);
-            dp.NeuronDisplaySize = GetNextZoomLevel((float)change);
-
-            Update();
-        }
-        public void theCanvas_MouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            //if (!MainWindow.shiftPressed) return;
-            if (sender != theCanvas) return;
-            //zoom in-out the display
-            float oldNeuronDisplaySize = dp.NeuronDisplaySize;
-            dp.NeuronDisplaySize = GetNextZoomLevel(e.Delta / 120f);
-            Point mousePostion = e.GetPosition(theCanvas);
-            Vector v = (Vector)mousePostion;
-            v -= (Vector)dp.DisplayOffset;
-            v *= dp.NeuronDisplaySize / oldNeuronDisplaySize;
-            dp.DisplayOffset = mousePostion - v;
-
-            scale *= dp.NeuronDisplaySize / oldNeuronDisplaySize;
-            scale = (scale - 1) * .1f + 1;  //TODO: don't know why this should be here
-            ScaleTransform st = new ScaleTransform(scale, scale, mousePostion.X, mousePostion.Y);
-            theCanvas.RenderTransform = st;
-
-            //start a timer to do an update so we don't get an update for every wheel click
-            zoomRepeatTimer.Stop();
-            zoomRepeatTimer.Interval = TimeSpan.FromMilliseconds(250);
-            zoomRepeatTimer.Start();
-            MainWindow.UpdateDisplayLabel(dp.NeuronDisplaySize);
-        }
-
-        //get here if the repeat timer expires so do an Update
-        private void Dt_Tick(object sender, EventArgs e)
-        {
-            zoomRepeatTimer.Stop();
-            scale = 1;
-            theCanvas.RenderTransform = new ScaleTransform(1, 1);
-            Update();
-        }
-
-        //sets neuron 0 to the upper left of the neuron array display
-        public void Origin()
-        {
-            dp.DisplayOffset = new Point(0, 0);
-            dp.NeuronDisplaySize = 25;
-        }
-
-        //PAN
-        private void StartPan(Point currentPositionOnGrid)
-        {
-            scrolling = true;
-            lastPositionOnGrid = currentPositionOnGrid;
-            lastPositionOnCanvas = new Point(0, 0);
-            CanvasOffset = new Vector(0, 0);
-        }
-
-        private void ContinuePan(Point currentPositionOnGrid)
-        {
-            //this shifts the display with a transform (but doesn't repaint to fill in the edges
-            Vector v = lastPositionOnGrid - currentPositionOnGrid;
-            if (v.X != 0 || v.Y != 0)
-            {
-                CanvasOffset -= v;
-                TranslateTransform tt = new TranslateTransform(CanvasOffset.X, CanvasOffset.Y);
-                theCanvas.RenderTransform = tt;
-            }
-            lastPositionOnGrid = currentPositionOnGrid;
-        }
-
-
-        private void FinishPan()
-        {
-            theCanvas.RenderTransform = new TranslateTransform(0, 0);
-            dp.DisplayOffset += CanvasOffset;
-            CanvasOffset = new Vector(0, 0);
-            Update();
-            theCanvas.Cursor = Cursors.Cross;
-            scrolling = false;
-        }
-
-
-        //SCROLLBAR FUNCTIONS
-        //set up the scrollbars to match the coordinates of the display
-        private void UpdateScrollbars()
-        {
-            //without this the scrollbar thumbbars flicker
-            if (scrolling) return; //to get rid of this, we'll need to take the display translation transformation into account
-
-            NeuronArray theNeuronArray = MainWindow.theNeuronArray;
-            double totalWidth = theNeuronArray.arraySize / theNeuronArray.rows * dp.NeuronDisplaySize;
-            double visibleWidth = theCanvas.ActualWidth;
-            scrollBarH.Minimum = -visibleWidth + 3 * dp.NeuronDisplaySize;
-            scrollBarH.Maximum = totalWidth - 3 * dp.NeuronDisplaySize;
-            scrollBarH.Value = -dp.DisplayOffset.X;
-            scrollBarH.ViewportSize = visibleWidth;
-            scrollBarH.SmallChange = dp.NeuronDisplaySize * 1.1;
-            scrollBarH.LargeChange = visibleWidth;
-            scrollBarHOldValue = scrollBarH.Value;
-
-            double totalHeight = theNeuronArray.rows * dp.NeuronDisplaySize;
-            double visibleHeight = theCanvas.ActualHeight;
-            scrollBarV.Minimum = -visibleHeight + 3 * dp.NeuronDisplaySize;
-            scrollBarV.Maximum = totalHeight - 3 * dp.NeuronDisplaySize;
-            scrollBarV.Value = -dp.DisplayOffset.Y;
-            scrollBarV.ViewportSize = visibleHeight;
-            scrollBarV.SmallChange = dp.NeuronDisplaySize * 1.1;
-            scrollBarV.LargeChange = visibleHeight;
-            scrollBarVOldValue = scrollBarV.Value;
-        }
-
-        private void ScrollBarH_Scroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
-        {
-            if (e.ScrollEventType == System.Windows.Controls.Primitives.ScrollEventType.EndScroll)
-            {
-                scrollBarRepeatTimer.Stop();
-                FinishPan();
-                return;
-            }
-            double value = e.NewValue;
-            Point simMousePosition = new Point(-scrollBarHOldValue, -scrollBarVOldValue);
-            if (!scrollBarRepeatTimer.IsEnabled)
-            {
-                scrollBarRepeatTimer.Tick += ScrollBarRepeatTimer_Tick;
-                scrollBarRepeatTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
-                StartPan(simMousePosition);
-            }
-            simMousePosition.X = -value;
-            scrollBarHOldValue = value;
-            ContinuePan(simMousePosition);
-            scrollBarRepeatTimer.Start();
-        }
-
-        private void ScrollBarV_Scroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
-        {
-            if (e.ScrollEventType == System.Windows.Controls.Primitives.ScrollEventType.EndScroll)
-            {
-                scrollBarRepeatTimer.Stop();
-                FinishPan();
-                return;
-            }
-            double value = e.NewValue;
-            Point simMousePosition = new Point(-scrollBarHOldValue, -scrollBarVOldValue);
-            if (!scrollBarRepeatTimer.IsEnabled)
-            {
-                scrollBarRepeatTimer.Tick += ScrollBarRepeatTimer_Tick;
-                scrollBarRepeatTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
-                StartPan(simMousePosition);
-            }
-            simMousePosition.Y = -value;
-            scrollBarVOldValue = value;
-            ContinuePan(simMousePosition);
-            scrollBarRepeatTimer.Start();
-        }
-
-        private void ScrollBarRepeatTimer_Tick(object sender, EventArgs e)
-        {
-            if (!scrollBarRepeatTimer.IsEnabled) return; //there are spurious extra events after the stop
-            scrollBarRepeatTimer.Stop();
-            FinishPan();
-        }
-
-        bool scrolling = false;
     }
 }

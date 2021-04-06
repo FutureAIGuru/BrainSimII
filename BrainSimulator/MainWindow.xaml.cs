@@ -386,7 +386,9 @@ namespace BrainSimulator
             else
             {
 
-                string fileName = (string)(sender as MenuItem).Header;
+                string fileName = "_Open";
+                if (sender is MenuItem mainMenu)
+                    fileName=(string)mainMenu.Header;
                 if (fileName == "_Open")
                 {
                     OpenFileDialog openFileDialog1 = new OpenFileDialog
@@ -1035,15 +1037,19 @@ namespace BrainSimulator
         }
         public void SetPlayPauseButtonImage(bool play)
         {
+            string playIcon = "\uE768";
+            string pauseIcon = "\uE769";
             if (play)
             {
-                imagePause.Visibility = Visibility.Collapsed;
-                imagePlay.Visibility = Visibility.Visible;
+                buttonPlayPause.Content = playIcon;
+                //imagePause.Visibility = Visibility.Collapsed;
+                //imagePlay.Visibility = Visibility.Visible;
             }
             else
             {
-                imagePause.Visibility = Visibility.Visible;
-                imagePlay.Visibility = Visibility.Collapsed;
+                buttonPlayPause.Content = pauseIcon;
+                //imagePause.Visibility = Visibility.Visible;
+                //imagePlay.Visibility = Visibility.Collapsed;
             }
 
         }

@@ -263,6 +263,7 @@ namespace BrainSimulator
                         }
                         n.Update();
                         e.Handled = true;
+                        Update();
                     }
                 }
                 else

@@ -392,6 +392,7 @@ namespace BrainSimulator
                 }
                 if ((string)mi.Header == "Reset Hebbian Weights")
                 {
+                    MainWindow.theNeuronArray.SetUndoPoint();
                     foreach (NeuronSelectionRectangle sr in MainWindow.arrayView.theSelection.selectedRectangles)
                     {
                         foreach (int Id in sr.NeuronInRectangle())
@@ -401,10 +402,10 @@ namespace BrainSimulator
                             {
                                 if (s.model != Synapse.modelType.Fixed)
                                 {
-                                    s.Weight = 0;
                                     //TODO: Add some UI for this:
                                     //s.model = Synapse.modelType.Hebbian2;
-                                    n.AddSynapse(s.targetNeuron, s.weight, s.model);
+                                    n.AddSynapseWithUndo(s.targetNeuron, 0, s.model);
+                                    s.Weight = 0;
                                 }
                             }
                         }

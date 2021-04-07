@@ -484,7 +484,9 @@ namespace NeuronEngine
 					NeuronBase* nTarget = s.GetTarget();
 					//did this neuron fire coincident or just after the target (the source since these are FROM synapses)
 					float weight = s.GetWeight();
-					if (nTarget->lastFired > lastFired - 3)
+					int delay = 1;
+					if (s.GetModel() == SynapseBase::modelType::Hebbian2) delay = 8;
+					if (nTarget->lastFired >= lastFired - delay)
 					{
 						//strengthen the synapse
 						weight = NewHebbianWeight(weight, .1f, s.GetModel(), numHebbian);

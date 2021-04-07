@@ -154,8 +154,14 @@ namespace BrainSimulator
         //for UI performance, the context menu is not attached to a neuron when the neuron is created but
         //is built on the fly when a neuron is right-clicked.  Hence the public-static
         static bool cmCancelled = false;
+        static bool labelChanged = false;
+        static bool modelChanged = false;
+        static bool historyChanged = false;
         public static void CreateContextMenu(int i, Neuron n, ContextMenu cm)
         {
+            labelChanged = false;
+            modelChanged = false;
+            historyChanged = false;
             n = MainWindow.theNeuronArray.AddSynapses(n);
             cm.SetValue(NeuronIDProperty, n.Id);
             cm.Closed += Cm_Closed;
@@ -176,7 +182,7 @@ namespace BrainSimulator
             sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
             sp.Children.Add(new Label { Content = "Model: ", Padding = new Thickness(0) });
             ComboBox cb = new ComboBox()
-            { Width = 100 };
+            { Width = 100, Name = "Model" };
             for (int index = 0; index < Enum.GetValues(typeof(Neuron.modelType)).Length; index++)
             {
                 Neuron.modelType model = (Neuron.modelType)index;
@@ -206,7 +212,7 @@ namespace BrainSimulator
             cm.Items.Add(cbHistory);
 
             mi = new MenuItem();
-            mi.Header = "Synapses";
+            mi.Header = "Synapses Out";
             foreach (Synapse s in n.Synapses)
             {
                 string targetLabel = MainWindow.theNeuronArray.GetNeuron(s.targetNeuron).Label;
@@ -251,11 +257,18 @@ namespace BrainSimulator
             mi.Items.Add(new MenuItem() { Header = "Mutual Suppression" });
             ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
             cm.Items.Add(mi);
-            SetCustomCMItems(cm, n);
+            SetCustomCMItems(cm, n, n.model);
         }
 
+        private static void CbHistory_Checked(object sender, RoutedEventArgs e)
+        {
+            historyChanged = true;
+        }
+
+        //this checks the name against existing names and warns on duplicates
         private static void Tb_TextChanged(object sender, TextChangedEventArgs e)
         {
+            labelChanged = true;
             if (sender is TextBox tb)
             {
                 string neuronLabel = tb.Text;
@@ -286,7 +299,7 @@ namespace BrainSimulator
         }
 
         //This creates or updates the portion of the context menu content which depends on the model type
-        private static void SetCustomCMItems(ContextMenu cm, Neuron n)
+        private static void SetCustomCMItems(ContextMenu cm, Neuron n, Neuron.modelType newModel)
         {
             while (cm.Items[2].GetType().Name != "Separator")
                 cm.Items.RemoveAt(2);
@@ -294,7 +307,7 @@ namespace BrainSimulator
             //The charge value formatted based on the model
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
             sp.Children.Add(new Label { Content = "Charge: ", Padding = new Thickness(0) });
-            if (n.model == Neuron.modelType.Color)
+            if (newModel == Neuron.modelType.Color)
             {
                 sp.Children.Add(Utils.ContextMenuTextBox(n.LastChargeInt.ToString("X8"), "CurrentCharge", 60));
             }
@@ -306,7 +319,7 @@ namespace BrainSimulator
             }
             cm.Items.Insert(2, sp);
 
-            if (n.Model == Neuron.modelType.LIF)
+            if (newModel == Neuron.modelType.LIF)
             {
                 sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
                 sp.Children.Add(new Label { Content = "Leak Rate: ", Padding = new Thickness(0) });
@@ -318,14 +331,14 @@ namespace BrainSimulator
                 sp.Children.Add(Utils.ContextMenuTextBox(n.axonDelay.ToString(), "AxonDelay", 60));
                 cm.Items.Insert(4, sp);
             }
-            else if (n.model == Neuron.modelType.Always)
+            else if (newModel == Neuron.modelType.Always)
             {
                 sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
                 sp.Children.Add(new Label { Content = "Delay: ", Padding = new Thickness(0) });
                 sp.Children.Add(Utils.ContextMenuTextBox(n.axonDelay.ToString(), "AxonDelay", 60));
                 cm.Items.Insert(3, sp);
             }
-            else if (n.model == Neuron.modelType.Random)
+            else if (newModel == Neuron.modelType.Random)
             {
                 sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
                 sp.Children.Add(new Label { Content = "Mean: ", Padding = new Thickness(0) });
@@ -337,7 +350,7 @@ namespace BrainSimulator
                 sp.Children.Add(Utils.ContextMenuTextBox(n.LeakRate.ToString("f2"), "LeakRate", 60));
                 cm.Items.Insert(4, sp);
             }
-            else if (n.model == Neuron.modelType.Burst)
+            else if (newModel == Neuron.modelType.Burst)
             {
                 if (n.axonDelay < 1) n.axonDelay = 5;
                 sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
@@ -368,50 +381,6 @@ namespace BrainSimulator
             }
         }
 
-        //check & unchecked both land ere
-        private static void CbHistory_Checked(object sender, RoutedEventArgs e)
-        {
-            CheckBox cb = sender as CheckBox;
-            ContextMenu cm = cb.Parent as ContextMenu;
-            int neuronID = (int)cm.GetValue(NeuronIDProperty);
-            Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronID);
-            bool KeepHistory = (bool)cb.IsChecked;
-            if (!KeepHistory)
-            {
-                FiringHistory.RemoveNeuronFromHistoryWindow(n.Id);
-                if (FiringHistory.history.Count == 0 && MainWindow.fwWindow != null && MainWindow.fwWindow.IsVisible)
-                {
-                    MainWindow.fwWindow.Close();
-                    MainWindow.fwWindow = null;
-                }
-            }
-            else  //make sure a window is open
-            {
-                FiringHistory.AddNeuronToHistoryWindow(n.id);
-                OpenHistoryWindow();
-            }
-            //if there is a selection, set all the keepHistory values to match
-            bool neuronInSelection = false;
-            foreach (NeuronSelectionRectangle sr in theNeuronArrayView.theSelection.selectedRectangles)
-            {
-                if (sr.NeuronIsInSelection(neuronID))
-                {
-                    neuronInSelection = true;
-                    break;
-                }
-            }
-            if (neuronInSelection)
-            {
-                theNeuronArrayView.theSelection.EnumSelectedNeurons();
-                for (Neuron n1 = theNeuronArrayView.theSelection.GetSelectedNeuron(); n1 != null; n1 = theNeuronArrayView.theSelection.GetSelectedNeuron())
-                {
-                    if (KeepHistory)
-                        FiringHistory.AddNeuronToHistoryWindow(n1.id);
-                    else
-                        FiringHistory.RemoveNeuronFromHistoryWindow(n1.id);
-                }
-            }
-        }
 
         private static void Cm_Closed(object sender, RoutedEventArgs e)
         {
@@ -423,9 +392,10 @@ namespace BrainSimulator
             }
             if (sender is ContextMenu cm)
             {
-
+                MainWindow.theNeuronArray.SetUndoPoint();
                 int neuronID = (int)cm.GetValue(NeuronIDProperty);
                 Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronID);
+                n.AddUndoInfo();
 
                 Control cc = Utils.FindByName(cm, "Label");
                 if (cc is TextBox tb)
@@ -433,12 +403,23 @@ namespace BrainSimulator
                     string newLabel = tb.Text;
                     if (int.TryParse(newLabel, out int dummy))
                         newLabel = "_" + newLabel;
-                    if (n.label != newLabel)
+                    if (labelChanged)
                     {
                         MainWindow.theNeuronArray.SetUndoPoint();
-                        n.AddUndoInfo();
+                        n.Label = newLabel;
+                        SetValueInSelectedNeurons(n, "label");
                     }
-                    n.Label = newLabel;
+                }
+                cc = Utils.FindByName(cm, "Model");
+                if (cc is ComboBox cb0)
+                {
+                    ListBoxItem lbi = (ListBoxItem)cb0.SelectedItem;
+                    Neuron.modelType nm = (Neuron.modelType)System.Enum.Parse(typeof(Neuron.modelType), lbi.Content.ToString());
+                    if (modelChanged)
+                    {
+                        n.model = nm;
+                        SetValueInSelectedNeurons(n, "model");
+                    }
                 }
                 cc = Utils.FindByName(cm, "CurrentCharge");
                 if (cc is TextBox tb1)
@@ -448,14 +429,24 @@ namespace BrainSimulator
                         try
                         {
                             uint newCharge = Convert.ToUInt32(tb1.Text, 16);
-                            n.LastChargeInt = (int)newCharge;
+                            if (newCharge != (uint)n.LastChargeInt)
+                            {
+                                n.SetValueInt((int)newCharge);
+                                n.lastCharge = newCharge;
+                                SetValueInSelectedNeurons(n, "currentCharge");
+                            }
                         }
                         catch { };
                     }
                     else
                     {
                         float.TryParse(tb1.Text, out float newCharge);
-                        n.SetValue(newCharge);
+                        if (newCharge != n.currentCharge)
+                        {
+                            n.SetValue(newCharge);
+                            n.lastCharge = newCharge;
+                            SetValueInSelectedNeurons(n, "currentCharge");
+                        }
                     }
                 }
                 cc = Utils.FindByName(cm, "LeakRate");
@@ -464,9 +455,9 @@ namespace BrainSimulator
                     float.TryParse(tb2.Text, out float leakRate);
                     if (n.LeakRate != leakRate)
                     {
-                        SetModelAndLeakrate(n, n.model, leakRate, n.axonDelay);
+                        n.LeakRate = leakRate;
+                        SetValueInSelectedNeurons(n, "leakRate");
                     }
-                    n.LeakRate = leakRate;
                 }
                 else
                     n.leakRate = 0;
@@ -476,9 +467,26 @@ namespace BrainSimulator
                     int.TryParse(tb3.Text, out int axonDelay);
                     if (axonDelay != n.axonDelay)
                     {
-                        SetModelAndLeakrate(n, n.model, n.leakRate, axonDelay);
+                        n.axonDelay = axonDelay;
+                        SetValueInSelectedNeurons(n, "axonDelay");
                     }
                 }
+                cc = Utils.FindByName(cm, "History");
+                if (cc is CheckBox cb1)
+                {
+                    if (historyChanged)
+                    {
+                        if (cb1.IsChecked == true)
+                        {
+                            FiringHistory.AddNeuronToHistoryWindow(n.id);
+                            OpenHistoryWindow();
+                        }
+                        else
+                            FiringHistory.RemoveNeuronFromHistoryWindow(n.id);
+                        SetValueInSelectedNeurons(n, "history");
+                    }
+                }
+                n.Update();
             }
             MainWindow.Update();
         }
@@ -490,9 +498,10 @@ namespace BrainSimulator
             MainWindow.fwWindow.Show();
         }
 
-        //change the model for all selected neurons if this one is in the selection
+        //change the model and update the context menu
         private static void Cb_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            modelChanged = true;
             ComboBox cb = sender as ComboBox;
             StackPanel sp = cb.Parent as StackPanel;
             ContextMenu cm = sp.Parent as ContextMenu;
@@ -501,52 +510,96 @@ namespace BrainSimulator
             Neuron.modelType nm = (Neuron.modelType)System.Enum.Parse(typeof(Neuron.modelType), lbi.Content.ToString());
 
             Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronID);
-            float newLeakRate = .1f;
-            int newAxonDelay = 0;
-            if (nm == Neuron.modelType.Random)
+            SetCustomCMItems(cm, n, nm);
+        }
+        private static void SetValueInSelectedNeurons(Neuron n, string property)
+        {
+            bool neuronInSelection = NeuronInSelection(n.id);
+            if (neuronInSelection)
             {
-                newLeakRate = 3;
-                newAxonDelay = 10;
+                List<int> theNeurons = theNeuronArrayView.theSelection.EnumSelectedNeurons();
+                //special case for label because they are auto-incremented, 
+                //clear all the labels first to avoid collisions
+                if (property == "label")
+                {
+                    for (int i = 0; i < theNeurons.Count; i++)
+                    {
+                        Neuron n1 = MainWindow.theNeuronArray.GetNeuron(theNeurons[i]);
+                        if (n1.id != n.id)
+                        {
+                            n1.label = "";
+                            n1.Update();
+                        }
+                    }
+                }
+                for (int i = 0; i < theNeurons.Count; i++)
+                {
+                    Neuron n1 = MainWindow.theNeuronArray.GetNeuron(theNeurons[i]);
+                    n1.AddUndoInfo();
+                    switch (property)
+                    {
+                        case "currentCharge":
+                            if (n.model == Neuron.modelType.Color)
+                                n1.SetValueInt(n.LastChargeInt);
+                            else
+                            {
+                                n1.currentCharge = n.currentCharge;
+                                n1.lastCharge = n.currentCharge;
+                            }
+                            break;
+                        case "leakRate": n1.leakRate = n.leakRate; break;
+                        case "axonDelay": n1.axonDelay = n.axonDelay; break;
+                        case "model": n1.model = n.model; break;
+                        case "history":
+                            if (FiringHistory.NeuronIsInFiringHistory(n.id))
+                            {
+                                FiringHistory.AddNeuronToHistoryWindow(n1.id);
+                                OpenHistoryWindow();
+                            }
+                            else
+                                FiringHistory.RemoveNeuronFromHistoryWindow(n1.id);
+                            break;
+                        case "label":
+                            if (n.label == "")
+                                n1.label = "";
+                            else if (n.id != n1.id)
+                            {
+                                string newLabel = n.label;
+                                while (MainWindow.theNeuronArray.GetNeuron(newLabel) != null)
+                                {
+                                    int num = 0;
+                                    int digitCount = 0;
+                                    while (Char.IsDigit(newLabel[newLabel.Length - 1]))
+                                    {
+                                        int.TryParse(newLabel[newLabel.Length - 1].ToString(), out int digit);
+                                        num = num + (int)Math.Pow(10, digitCount) * digit;
+                                        digitCount++;
+                                        newLabel = newLabel.Substring(0, newLabel.Length - 1);
+                                    }
+                                    num++;
+                                    newLabel = newLabel + num.ToString();
+                                }
+                                n1.label = newLabel;
+                            }
+                            break;
+                    }
+                    n1.Update();
+                }
             }
-            SetModelAndLeakrate(n, nm, newLeakRate, newAxonDelay);
-            SetCustomCMItems(cm, n);
         }
 
-        private static void SetModelAndLeakrate(Neuron n, Neuron.modelType newModel, float newLeakRate, int newAxonDelay)
+        private static bool NeuronInSelection(int id)
         {
             bool neuronInSelection = false;
             foreach (NeuronSelectionRectangle sr in theNeuronArrayView.theSelection.selectedRectangles)
             {
-                if (sr.NeuronIsInSelection(n.Id))
+                if (sr.NeuronIsInSelection(id))
                 {
                     neuronInSelection = true;
                     break;
                 }
             }
-            if (neuronInSelection)
-            {
-                MainWindow.theNeuronArray.SetUndoPoint();
-                List<int> theNeurons = theNeuronArrayView.theSelection.EnumSelectedNeurons();
-                for (int i = 0; i < theNeurons.Count; i++)
-                {
-                    Neuron n1 = MainWindow.theNeuronArray.GetNeuron(theNeurons[i]);
-                    n1.AddUndoInfo();
-                    n1.Model = newModel;
-                    n1.LeakRate = newLeakRate;
-                    n1.AxonDelay = newAxonDelay;
-                    n1.Update();
-                }
-                MainWindow.Update();
-            }
-            else
-            {
-                MainWindow.theNeuronArray.SetUndoPoint();
-                n.AddUndoInfo();
-                n.model = newModel;
-                n.leakRate = newLeakRate;
-                n.axonDelay = newAxonDelay;
-                n.Update();
-            }
+            return neuronInSelection;
         }
 
         private static void SynapseFromMenuItem_PreviewMouseRightButtonDown1(object sender, MouseButtonEventArgs e)

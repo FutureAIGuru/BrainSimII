@@ -442,26 +442,22 @@ namespace NeuronEngine
 					//if (desired >= threshold) //this conditional improves performance but introduces a potental bug where accumulated charge might be negative
 					NeuronArrayBase::AddNeuronToFireList1(nTarget->id);
 
-					//if (s.GetModel() != SynapseBase::modelType::Fixed)
-					//{
-					//	//did this neuron fire just after the target
-					//	float weight = s.GetWeight();
-					//	if (lastFired > nTarget->lastFired + 2)
-					//	{
-					//		//strengthen the synapse
-					//		weight = NewHebbianWeight(weight, -.1f, s.GetModel(),1);
-					//		synapses->at(i).SetWeight(weight);
-					//	}
-					//}
-
-
-					//	else
-					//	{
-					//		//weaken the synapse
-					//		weight = NewHebbianWeight(weight, -.1f, s.GetModel());
-					//	}
-					//	synapses->at(i).SetWeight(weight);
-					//}
+					if (s.GetModel() == SynapseBase::modelType::Hebbian1)
+					{
+						//did this neuron fire just after the target
+						float weight = s.GetWeight();
+						if (desired >= threshold)
+						{
+							//strengthen the synapse
+							weight = NewHebbianWeight(weight, .1f, s.GetModel(),1);
+						}
+						else
+						{
+							//weaken the synapse
+							weight = NewHebbianWeight(weight, -.1f, s.GetModel(),1);
+						}
+						synapses->at(i).SetWeight(weight);
+					}
 				}
 				vectorLock = 0;
 			}
@@ -479,13 +475,18 @@ namespace NeuronEngine
 			for (int i = 0; i < synapsesFrom->size(); i++) //process all the synapses sourced by this neuron
 			{
 				SynapseBase s = synapsesFrom->at(i);
-				if (s.GetModel() != SynapseBase::modelType::Fixed)
+				if (s.GetModel() == SynapseBase::modelType::Hebbian2 || s.GetModel() == SynapseBase::modelType::Binary)
 				{
 					NeuronBase* nTarget = s.GetTarget();
 					//did this neuron fire coincident or just after the target (the source since these are FROM synapses)
 					float weight = s.GetWeight();
 					int delay = 1;
-					if (s.GetModel() == SynapseBase::modelType::Hebbian2) delay = 8;
+					if (s.GetModel() == SynapseBase::modelType::Hebbian2) delay = 6;
+/*					if (s.GetModel() == SynapseBase::modelType::Hebbian2 && nTarget->lastFired <= lastFired - 100)
+					{
+						weight = NewHebbianWeight(weight, 0, s.GetModel(), numHebbian);
+					}
+					else */
 					if (nTarget->lastFired >= lastFired - delay)
 					{
 						//strengthen the synapse
@@ -573,14 +574,14 @@ namespace NeuronEngine
 			//			else
 			x = atanh(curWeight);
 
-			if (offset > 0)
+			if (offset != 0)
 			{
 				x += offset;
 				curWeight = tanh(x);
 			}
 			else
 			{
-				x += offset;
+				x *= 0.5;
 				curWeight = tanh(x);
 			}
 			y = curWeight / numberOfSynapses;

@@ -11,17 +11,38 @@
         <DockPanel VerticalAlignment="Top" Margin="0,1,-1,0">
             <Menu DockPanel.Dock="Top" x:Name="MainMenu" MouseEnter="MainMenu_MouseEnter" Height="26" Margin="0,0" VerticalAlignment="Top" >
                 <MenuItem Header="_File">
-                    <MenuItem Header="_New" Click="button_FileNew_Click"/>
-                    <MenuItem Header="_Open" Click="buttonLoad_Click"/>
-                    <MenuItem Header="_Save" Click="buttonSave_Click"/>
-                    <MenuItem Header="Save _As" Click="buttonSaveAs_Click"/>
+                    <MenuItem Header="_New" Click="button_FileNew_Click">
+                        <MenuItem.Icon>
+                            <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xF61B;</TextBlock>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="_Open" Click="buttonLoad_Click" >
+                        <MenuItem.Icon>
+                            <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE8E5;</TextBlock>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="_Save" Click="buttonSave_Click">
+                        <MenuItem.Icon>
+                            <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE74E;</TextBlock>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Save _As" Click="buttonSaveAs_Click">
+                        <MenuItem.Icon>
+                            <Image Source="resources/diskette.png"></Image>
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <Separator />
-                    <MenuItem Header="_Properties" Click="MenuItemProperties_Click"/>
+                    <MenuItem Header="_Properties" Click="MenuItemProperties_Click">
+                        <MenuItem.Icon>
+                            <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE71D;</TextBlock>
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <Separator />
                     <MenuItem Header="Recent" x:Name="MRUListMenu">
                     </MenuItem>
                     <MenuItem Header="Library">
                         <MenuItem Header="BasicNeurons" Click="buttonLoad_Click"/>
+                        <MenuItem Header="HebbianSynapses" Click="buttonLoad_Click"/>
                         <MenuItem Header="CameraTest" Click="buttonLoad_Click"/>
                         <MenuItem Header="SpeechTest" Click="buttonLoad_Click"/>
                         <MenuItem Header="SimVision" Click="buttonLoad_Click"/>
@@ -34,28 +55,84 @@
                         <MenuItem Header="ObjectMotion" Click="buttonLoad_Click"/>
                     </MenuItem>
                     <Separator />
-                    <MenuItem Header="_Exit" Click="button_Exit_Click"/>
+                    <MenuItem Header="_Exit" Click="button_Exit_Click">
+                        <MenuItem.Icon>
+                            <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE711;</TextBlock>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="Edit">
-                    <MenuItem Header=" Undo"  Click="MenuItem_Undo" />
+                    <MenuItem Header=" Undo"  Click="MenuItem_Undo" >
+                        <MenuItem.Icon>
+                            <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE7A7;</TextBlock>
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <Separator />
-                    <MenuItem Header=" Cut"  Click="MenuItem_CutNeurons" />
-                    <MenuItem Header=" Copy"  Click="MenuItem_CopyNeurons" />
-                    <MenuItem Header=" Paste"  Click="MenuItem_PasteNeurons" />
-                    <MenuItem Header=" Delete"  Click="MenuItem_DeleteNeurons" />
-                    <MenuItem Header=" Move" Click="MenuItem_MoveNeurons" />
-                    <MenuItem Header=" Clear Selection" Click="MenuItem_ClearSelection" />
+                    <MenuItem Header=" Cut"  Click="MenuItem_CutNeurons" >
+                        <MenuItem.Icon>
+                            <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE8C6;</TextBlock>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header=" Copy"  Click="MenuItem_CopyNeurons" >
+                        <MenuItem.Icon>
+                            <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE8C8;</TextBlock>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header=" Paste"  Click="MenuItem_PasteNeurons" >
+                        <MenuItem.Icon>
+                            <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE77F;</TextBlock>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header=" Delete"  Click="MenuItem_DeleteNeurons" >
+                        <MenuItem.Icon>
+                            <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE74D;</TextBlock>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header=" Move" Click="MenuItem_MoveNeurons" >
+                        <MenuItem.Icon>
+                            <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE8F3;</TextBlock>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header=" Clear Selection" Click="MenuItem_ClearSelection" ></MenuItem>
                     <Separator />
-                    <MenuItem Header="Load Clipboard" Click="button_LoadClipboard_Click" ToolTip="Load clipboard from file"/>
-                    <MenuItem Header="Save Clipboard" Click="button_ClipboardSave_Click" ToolTip="Save clipboard to file"/>
+                    <MenuItem Header="Load Clipboard" Click="button_LoadClipboard_Click" ToolTip="Load clipboard from file" >
+                        <MenuItem.Icon>
+                            <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE896;</TextBlock>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Save Clipboard" Click="button_ClipboardSave_Click" ToolTip="Save clipboard to file">
+                        <MenuItem.Icon>
+                            <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE898;</TextBlock>
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <Separator/>
-                    <MenuItem Header="_Notes" Click="MenuItemNotes_Click" />
+                    <MenuItem Header="_Notes" Click="MenuItemNotes_Click" >
+                        <MenuItem.Icon>
+                            <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE70F;</TextBlock>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="Neuron Engine" StaysOpenOnClick="True">
-                    <MenuItem Header="Reset" Click="ButtonInit_Click"/>
-                    <MenuItem Header="Run" Click="PlayPause_Click"/>
-                    <MenuItem Header="Pause" Click="PlayPause_Click" />
-                    <MenuItem Header="Step" Click="ButtonSingle_Click"/>
+                    <MenuItem Header="Reset" Click="ButtonInit_Click">
+                        <MenuItem.Icon>
+                            <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xEB9E;</TextBlock>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Run" Click="PlayPause_Click">
+                        <MenuItem.Icon>
+                            <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE768;</TextBlock>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Pause" Click="PlayPause_Click" >
+                        <MenuItem.Icon>
+                            <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE769;</TextBlock>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Step" Click="ButtonSingle_Click">
+                        <MenuItem.Icon>
+                            <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE893;</TextBlock>
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <StackPanel Orientation="Horizontal" Width="72" >
                         <Label Content="Speed:  " Padding="0,4,0,0"/>
                         <TextBox Text="23" VerticalAlignment="Center" Width="16" x:Name="EngineSpeed" IsEnabled="False"/>
@@ -79,25 +156,42 @@
                 </MenuItem>
                 <MenuItem Header=" Help">
                     <MenuItem Header="Getting Started" Click="MenuItemHelp_Click" />
-                    <MenuItem Header="Contents (online)" Click="MenuItemOnlineHelp_Click" />
-                    <MenuItem Header="Report bugs, request features (online)" Click="MenuItemOnlineBugs_Click" />
-                    <MenuItem Header="Join discussion (online)" Click="MenuItemOnlineDiscussions_Click" />
+                    <MenuItem Header="Register" Click="MenuItemRegister_Click" >
+                        <MenuItem.Icon>
+                            <Image Source="/resources/mailing-list-icon-17.jpg"></Image>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Contents (online)" Click="MenuItemOnlineHelp_Click" >
+                        <MenuItem.Icon>
+                            <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE897;</TextBlock>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Report bugs, request features (online)" Click="MenuItemOnlineBugs_Click" >
+                        <MenuItem.Icon>
+                            <Image Source="/resources/github-logo.png"></Image>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Join discussion (online)" Click="MenuItemOnlineDiscussions_Click" >
+                        <MenuItem.Icon>
+                            <Image Source="resources/facebook (1).png"></Image>
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <MenuItem Header="About" Click="Button_HelpAbout_Click"/>
                 </MenuItem>
             </Menu>
         </DockPanel>
         <local:NeuronArrayView x:Name="theNeuronArrayView" Margin="0,69,0,17.8" ClipToBounds="True" />
-        <Button x:Name="buttonInit" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xEB9E;" HorizontalAlignment="Left" Margin="423,35,0,0" VerticalAlignment="Top" Click="ButtonInit_Click" ToolTip="Reset all modules" >
+        <Button x:Name="buttonInit" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xEB9E;" HorizontalAlignment="Left" Margin="435,35,0,0" VerticalAlignment="Top" Click="ButtonInit_Click" ToolTip="Reset all modules" >
         </Button>
-        <Button x:Name="buttonPlayPause" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE769;" HorizontalAlignment="Left" Margin="450,35,0,0" VerticalAlignment="Top" Click="PlayPause_Click" ToolTip="Pause/Continue the neural engine" >
+        <Button x:Name="buttonPlayPause" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE769;" HorizontalAlignment="Left" Margin="462,35,0,0" VerticalAlignment="Top" Click="PlayPause_Click" ToolTip="Pause/Continue the neural engine" >
         </Button>
-        <Slider x:Name="slider" Margin="542,37,0,0" ValueChanged="slider_ValueChanged" IsSnapToTickEnabled="True" Value="5" HorizontalAlignment="Left" Width="140" ToolTip="Change the engine speed" RenderTransformOrigin="1.814,0.625" Height="24" VerticalAlignment="Top" />
-        <Button x:Name="buttonSingle" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE893;" Margin="477,35,0,0" Click="ButtonSingle_Click" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Run the engine one cycle" >
+        <Slider x:Name="slider" Margin="554,37,0,0" ValueChanged="slider_ValueChanged" IsSnapToTickEnabled="True" Value="5" HorizontalAlignment="Left" Width="140" ToolTip="Change the engine speed" RenderTransformOrigin="1.814,0.625" Height="24" VerticalAlignment="Top" />
+        <Button x:Name="buttonSingle" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE893;" Margin="489,35,0,0" Click="ButtonSingle_Click" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Run the engine one cycle" >
         </Button>
-        <Label x:Name="label1" Content="Speed:" HorizontalAlignment="Left" Height="30" Margin="501,32,0,0" VerticalAlignment="Top" Width="56"/>
+        <Label x:Name="label1" Content="Speed:" HorizontalAlignment="Left" Height="30" Margin="513,32,0,0" VerticalAlignment="Top" Width="56"/>
 
-        <Label x:Name="labelDisplayStatus" Content="Display status" Margin="230,34,0,0" Width="191" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" />
-        <Label x:Name="labelEngineStatus" Content="Initializing" Margin="687,34,-195.4,0" Height="30" VerticalAlignment="Top" />
+        <Label x:Name="labelDisplayStatus" Content="Display status" Margin="242,34,0,0" Width="191" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <Label x:Name="labelEngineStatus" Content="Initializing" Margin="699,34,-207.4,0" Height="30" VerticalAlignment="Top" />
 
         <Button x:Name="SaveButton" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;" VerticalAlignment="Top" Margin="36,35,0,0" Click="buttonSave_Click" ToolTip="Save File" HorizontalAlignment="Left" />
         <Button x:Name="OpenButton" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE8E5;" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="11,35,0,0" Click="buttonLoad_Click" ToolTip="Open File"/>
@@ -106,7 +200,7 @@
         <Button x:Name="buttonZoomOut" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE71F;" HorizontalAlignment="Left" Margin="124,35,0,0" VerticalAlignment="Top" ToolTip="Zoom Out (Also mouse wheel)" PreviewMouseLeftButtonDown="ButtonZoomOut_PreviewMouseLeftButtonDown" />
         <Button x:Name="buttonZoomIn" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE8A3;" HorizontalAlignment="Left" Margin="99,35,0,0" VerticalAlignment="Top" ToolTip="Zoom In (Also mouse wheel)" PreviewMouseLeftButtonDown="ButtonZoomIn_PreviewMouseLeftButtonDown" />
 
-        <CheckBox x:Name="checkBox" Content="Synapses" HorizontalAlignment="Left" Height="21" Margin="153,40,0,0" VerticalAlignment="Top" Width="72" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" />
+        <CheckBox x:Name="checkBox" Content="All Synapses" HorizontalAlignment="Left" Height="21" Margin="153,40,0,0" VerticalAlignment="Top" Width="91" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" />
         <ProgressBar x:Name="progressBar" Maximum="1" HorizontalAlignment="Left" Margin="9,0,0,2.8" Width="137" Height="13" VerticalAlignment="Bottom" />
     </Grid>
 </Window>

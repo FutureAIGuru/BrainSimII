@@ -440,6 +440,8 @@
     <Content Include="Networks\BasicNeurons.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\mailing-list-icon-17.jpg" />
+    <Resource Include="Resources\github-logo.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Networks\Commands.txt">
@@ -452,6 +454,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Networks\HebbianSynapses.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Networks\Imagination.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -481,6 +486,9 @@
   <ItemGroup>
     <Resource Include="Resources\charactergrowfont.png" />
     <Resource Include="Resources\charactershrinkfont.png" />
+    <Resource Include="Resources\facebook.png" />
+    <Resource Include="Resources\facebook %281%29.png" />
+    <Resource Include="Resources\diskette.png" />
     <Content Include="Resources\Getting Started.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

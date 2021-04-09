@@ -98,6 +98,11 @@ namespace BrainSimulator
                                 n.currentCharge = lastChargeInt; //current charge is not used on color neurons
                             }
                             break;
+                        case "ShowSynapses":
+                            bool.TryParse(node.InnerText, out bool showSynapses);
+                            if (showSynapses)
+                                MainWindow.arrayView.AddShowSynapses(n.id);
+                            break;
                         case "Synapses":
                             theNeuronArray.SetCompleteNeuron(n);
                             XmlNodeList synapseNodess = node.GetElementsByTagName("Synapse");
@@ -216,6 +221,12 @@ namespace BrainSimulator
                         {
                             attrNode = xmldoc.CreateNode("element", "Label", "");
                             attrNode.InnerText = label;
+                            neuronNode.AppendChild(attrNode);
+                        }
+                        if (MainWindow.arrayView.IsShowingSnapses(n.id))
+                        {
+                            attrNode = xmldoc.CreateNode("element", "ShowSynapses", "");
+                            attrNode.InnerText = "True";
                             neuronNode.AppendChild(attrNode);
                         }
                         if (n.synapses.Count > 0)

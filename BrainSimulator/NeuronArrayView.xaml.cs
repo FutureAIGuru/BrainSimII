@@ -43,6 +43,21 @@ namespace BrainSimulator
             }
         };
 
+        List<int> showSynapses = new List<int>();
+        public void AddShowSynapses(int neuronID)
+        {
+            if (!showSynapses.Contains(neuronID))
+                showSynapses.Add(neuronID);
+        }
+        public void RemoveShowSynapses (int neuronID)
+        {
+            showSynapses.Remove(neuronID);
+        }
+        public bool IsShowingSnapses (int neuronID)
+        {
+            return showSynapses.Contains(neuronID);
+        }
+
         public NeuronArrayView()
         {
             InitializeComponent();
@@ -271,8 +286,8 @@ namespace BrainSimulator
                                         lbl.Foreground = new SolidColorBrush(Colors.Black);
                                     labelCanvas.Children.Add(lbl);
                                 }
-                                if (MainWindow.theNeuronArray.ShowSynapses && synapseCount < dp.maxSynapsesToDisplay &&
-                                    dp.ShowSynapses() && n.inUse)
+                                if (synapseCount < dp.maxSynapsesToDisplay &&
+                                    dp.ShowSynapses() && (MainWindow.theNeuronArray.ShowSynapses || IsShowingSnapses(n.id)))
                                 {
                                     if (MainWindow.useServers)
                                         n = theNeuronArray.AddSynapses(n);

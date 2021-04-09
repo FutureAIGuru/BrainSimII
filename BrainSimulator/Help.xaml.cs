@@ -43,5 +43,10 @@ namespace BrainSimulator
             Uri theUri = new Uri("file:///" + fullpath);
             theBrowser.Navigate(theUri);
         }
+
+        private void registerButton_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://futureai.guru/BrainSimRegister.aspx");
+        }
     }
 }

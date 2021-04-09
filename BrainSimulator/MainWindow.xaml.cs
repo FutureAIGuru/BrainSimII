@@ -786,7 +786,7 @@ namespace BrainSimulator
             {
                 EnableMenuItem(MainMenu.Items, " Paste", true);
             }
-            if (theNeuronArray.UndoPossible())
+            if (theNeuronArray != null && theNeuronArray.UndoPossible())
             {
                 EnableMenuItem(MainMenu.Items, " Undo", true);
             }
@@ -1206,6 +1206,11 @@ namespace BrainSimulator
         private void MenuItemOnlineBugs_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/FutureAIGuru/BrainSimII/issues");
+        }
+
+        private void MenuItemRegister_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://futureai.guru/BrainSimRegister.aspx");
         }
 
         private void MenuItemOnlineDiscussions_Click(object sender, RoutedEventArgs e)

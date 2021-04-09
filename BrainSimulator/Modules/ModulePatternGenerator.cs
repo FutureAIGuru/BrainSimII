@@ -40,7 +40,7 @@ namespace BrainSimulator.Modules
                     }
                     counter++;
                     if (counter > 15) counter = 0;
-                    //randNumber = counter;
+                    randNumber = counter;
                 }
                 else
                 {

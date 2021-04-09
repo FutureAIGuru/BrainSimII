@@ -106,7 +106,6 @@ namespace BrainSimulator
                 }
                 else if (sender is Shape s)
                 {
-
                     if ((s is Path || s is Line ||
                         (s is Ellipse && (int)s.GetValue(SynapseView.SourceIDProperty) != 0))) // a synapse
                     {
@@ -274,10 +273,8 @@ namespace BrainSimulator
                         LimitMousePostion(ref p1);
                         int index = dp.NeuronFromPoint(p1);
                         MainWindow.theNeuronArray.SetUndoPoint();
+                        MainWindow.arrayView.AddShowSynapses(mouseDownNeuronIndex);
                         MainWindow.theNeuronArray.GetNeuron(mouseDownNeuronIndex).AddSynapseWithUndo(index, lastSynapseWeight, lastSynapseModel);
-                        MainWindow.theNeuronArray.ShowSynapses = true;
-                        MainWindow.thisWindow.SetShowSynapsesCheckBox(true);
-
                     }
                     synapseShape = null;
                     mouseDownNeuronIndex = -1;
@@ -367,7 +364,12 @@ namespace BrainSimulator
                         if (synapseShape != null)
                             theCanvas.Children.Remove(synapseShape);
                         Shape l = SynapseView.GetSynapseShape
-                            (dp.pointFromNeuron(mouseDownNeuronIndex), dp.pointFromNeuron(currentNeuron), this, Synapse.modelType.Fixed);
+                            (dp.pointFromNeuron(mouseDownNeuronIndex),
+                            dp.pointFromNeuron(currentNeuron),
+                            this,
+                            lastSynapseModel
+                            );
+                        l.Stroke = new SolidColorBrush(Utils.RainbowColorFromValue(lastSynapseWeight));
                         theCanvas.Children.Add(l);
                         synapseShape = l;
                     }

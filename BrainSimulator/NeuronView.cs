@@ -440,6 +440,7 @@ namespace BrainSimulator
         {
             if (sender is ContextMenu cm)
             {
+                if (!cm.IsOpen) return;
                 cm.IsOpen = false;
                 if (cmCancelled)
                 {

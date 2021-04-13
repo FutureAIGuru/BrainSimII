@@ -42,6 +42,37 @@ namespace BrainSimulator
 
         private void btnDialogOk_Click(object sender, RoutedEventArgs e)
         {
+            int.TryParse(txtColumns.Text, out int newCols);
+            int.TryParse(txtRows.Text, out int newRows);
+            int oldCols = MainWindow.theNeuronArray.arraySize / MainWindow.theNeuronArray.rows;
+            int oldRows = MainWindow.theNeuronArray.rows;
+            if (newCols < oldCols || newRows < oldRows)
+            {
+                MessageBox.Show("Can only make neuron array bigger.");
+                return;
+            }
+            if (newCols != oldCols || newRows != oldRows)
+            {
+                MainWindow.arrayView.ClearSelection();
+                NeuronSelectionRectangle rr = new NeuronSelectionRectangle(0, oldCols,oldRows);
+                MainWindow.arrayView.theSelection.selectedRectangles.Add(rr);
+                MainWindow.arrayView.CopyNeurons();
+                MainWindow.arrayView.ClearSelection();
+                MainWindow.theNeuronArray = new NeuronArray();
+                MainWindow.theNeuronArray.Initialize(newRows * newCols,newRows);
+                MainWindow.theNeuronArray.rows = newRows;
+                MainWindow.arrayView.targetNeuronIndex = 0;
+                MainWindow.arrayView.PasteNeurons();
+                MainWindow.theNeuronArray.ShowSynapses = true;
+                MainWindow.showSynapses = true;
+                MainWindow.arrayView.ClearShowingSynapses();
+                FiringHistory.ClearAll();
+                MainWindow.CloseHistoryWindow();
+            }
+            this.Close();
+        }
+        private void btnDialogCancel_Click(object sender, RoutedEventArgs e)
+        {
             this.Close();
         }
     }

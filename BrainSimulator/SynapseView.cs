@@ -83,6 +83,7 @@ namespace BrainSimulator
         //these aren't added to synapses (for performance) but are built on the fly if the user right-clicks
         public static void CreateContextMenu(int i, Synapse s, ContextMenu cm)
         {
+            cmCancelled = false;   
             //set defaults for next synapse add
             theNeuronArrayView.lastSynapseModel = s.model;
             theNeuronArrayView.lastSynapseWeight = s.weight;
@@ -185,6 +186,17 @@ namespace BrainSimulator
             mi.Click += NewValue_Click;
             cm.Items.Add(mi);
             mi = new MenuItem();
+
+            sp = new StackPanel { Orientation = Orientation.Horizontal };
+            Button b0 = new Button { Content = "OK", Width = 100, Height = 25, Margin = new Thickness(10) };
+            b0.Click += B0_Click;
+            sp.Children.Add(b0);
+            b0 = new Button { Content = "Cancel", Width = 100, Height = 25, Margin = new Thickness(10) };
+            b0.Click += B0_Click;
+            sp.Children.Add(b0);
+
+            cm.Items.Add(sp);
+
         }
 
         private static void Cm_Opened(object sender, RoutedEventArgs e)
@@ -210,9 +222,6 @@ namespace BrainSimulator
                 MainWindow.Update();
                 cm.IsOpen = false;
             }
-            if (e.Key == Key.Enter)
-                cm.IsOpen = false;
-
         }
 
         private static void Cb_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -234,15 +243,17 @@ namespace BrainSimulator
             theNeuronArrayView.lastSynapseModel = s.model;
         }
 
+        static bool cmCancelled = false;
         private static void Cm_Closed(object sender, RoutedEventArgs e)
         {
-            if ((Keyboard.GetKeyStates(Key.Escape) & KeyStates.Down) > 0)
-            {
-                MainWindow.Update();
-                return;
-            }
             if (sender is ContextMenu cm)
             {
+                if (cmCancelled || (Keyboard.GetKeyStates(Key.Escape) & KeyStates.Down) > 0)
+                {
+                    cm.IsOpen = false;
+                    MainWindow.Update();
+                    return;
+                }
                 int sourceID = (int)cm.GetValue(SourceIDProperty);
                 int targetID = (int)cm.GetValue(TargetIDProperty);
                 Neuron nSource = MainWindow.theNeuronArray.GetNeuron(sourceID);
@@ -280,6 +291,13 @@ namespace BrainSimulator
                         }
                     }
                 }
+                if (newSourceID < 0 || newSourceID >= MainWindow.theNeuronArray.arraySize ||
+                    newTargetID < 0 || newTargetID >= MainWindow.theNeuronArray.arraySize
+                    )
+                {
+                    MessageBox.Show("Neuron outside array boundary!");
+                    return;
+                }
 
                 if (newSourceID != sourceID || newTargetID != targetID)
                 {
@@ -288,7 +306,23 @@ namespace BrainSimulator
                     Neuron nNewSource = MainWindow.theNeuronArray.GetNeuron(newSourceID);
                     nNewSource.AddSynapseWithUndo(newTargetID, theNeuronArrayView.lastSynapseWeight, theNeuronArrayView.lastSynapseModel);
                 }
+                cm.IsOpen = false;
                 MainWindow.Update();
+            }
+        }
+        private static void B0_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button b)
+            {
+                if (b.Parent is StackPanel sp)
+                {
+                    if (sp.Parent is ContextMenu cm)
+                    {
+                        if ((string)b.Content == "Cancel")
+                            cmCancelled = true;
+                        Cm_Closed(cm, e);
+                    }
+                }
             }
         }
 

@@ -14,14 +14,10 @@ namespace BrainSimulator
     {
         public static readonly DependencyProperty AreaNumberProperty =
     DependencyProperty.Register("AreaNumber", typeof(int), typeof(MenuItem));
-        //public int AreaNumber
-        //{
-        //    get { return (int)GetValue(AreaNumberProperty); }
-        //    set { SetValue(AreaNumberProperty, value); }
-        //}
 
         public static void CreateContextMenu(int i, ModuleView nr, FrameworkElement r,ContextMenu cm = null) //for a selection
         {
+            cmCancelled = false;
             if (cm == null)
                 cm = new ContextMenu();
             StackPanel sp;
@@ -179,7 +175,17 @@ namespace BrainSimulator
                     ((MenuItem)cm.Items[cm.Items.Count - 1]).Click += Mi_Click;
                 }
             }
-            //r.ContextMenu = cm;
+
+            sp = new StackPanel { Orientation = Orientation.Horizontal };
+            Button b0 = new Button { Content = "OK", Width = 100, Height = 25, Margin = new Thickness(10) };
+            b0.Click += B0_Click;
+            sp.Children.Add(b0);
+            b0 = new Button { Content = "Cancel", Width = 100, Height = 25, Margin = new Thickness(10) };
+            b0.Click += B0_Click;
+            sp.Children.Add(b0);
+
+            cm.Items.Add(sp);
+
             cm.Closed += Cm_Closed;
         }
 
@@ -190,6 +196,24 @@ namespace BrainSimulator
                     if (sp.Parent is ContextMenu cm)
                         cm.IsOpen = false;
         }
+
+        static bool cmCancelled = false;
+        private static void B0_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button b)
+            {
+                if (b.Parent is StackPanel sp)
+                {
+                    if (sp.Parent is ContextMenu cm)
+                    {
+                        if ((string)b.Content == "Cancel")
+                            cmCancelled = true;
+                        Cm_Closed(cm, e);
+                    }
+                }
+            }
+        }
+
 
         static bool deleted = false;
         private static void Cm_Closed(object sender, RoutedEventArgs e)
@@ -205,6 +229,9 @@ namespace BrainSimulator
             }
             else if (sender is ContextMenu cm)
             {
+                cm.IsOpen = false;
+                if (cmCancelled) return;
+
                 int i = (int)cm.GetValue(AreaNumberProperty);
                 string label = "";
                 string commandLine = "";

@@ -57,6 +57,10 @@ namespace BrainSimulator
         {
             return showSynapses.Contains(neuronID);
         }
+        public void ClearShowingSynapses()
+        {
+            showSynapses.Clear();
+        }
 
         public NeuronArrayView()
         {

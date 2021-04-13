@@ -2,6 +2,7 @@
 #include "NeuronBase.h"
 #include "SynapseBase.h"
 #include "NeuronArrayBase.h"
+#include <cmath>
 
 namespace NeuronEngine
 {
@@ -298,6 +299,7 @@ namespace NeuronEngine
 	//When you call this, the neuron is added to fireList2 by the caller.
 	bool NeuronBase::Fire1(long long cycle)
 	{
+		if (signbit(leakRate))return false;
 		if (model == modelType::Color)
 		{
 			NeuronArrayBase::AddNeuronToFireList1(id);
@@ -449,12 +451,12 @@ namespace NeuronEngine
 						if (desired >= threshold)
 						{
 							//strengthen the synapse
-							weight = NewHebbianWeight(weight, .1f, s.GetModel(),1);
+							weight = NewHebbianWeight(weight, .1f, s.GetModel(), 1);
 						}
 						else
 						{
 							//weaken the synapse
-							weight = NewHebbianWeight(weight, -.1f, s.GetModel(),1);
+							weight = NewHebbianWeight(weight, -.1f, s.GetModel(), 1);
 						}
 						synapses->at(i).SetWeight(weight);
 					}
@@ -482,11 +484,11 @@ namespace NeuronEngine
 					float weight = s.GetWeight();
 					int delay = 1;
 					if (s.GetModel() == SynapseBase::modelType::Hebbian2) delay = 6;
-/*					if (s.GetModel() == SynapseBase::modelType::Hebbian2 && nTarget->lastFired <= lastFired - 100)
-					{
-						weight = NewHebbianWeight(weight, 0, s.GetModel(), numHebbian);
-					}
-					else */
+					/*					if (s.GetModel() == SynapseBase::modelType::Hebbian2 && nTarget->lastFired <= lastFired - 100)
+										{
+											weight = NewHebbianWeight(weight, 0, s.GetModel(), numHebbian);
+										}
+										else */
 					if (nTarget->lastFired >= lastFired - delay)
 					{
 						//strengthen the synapse
@@ -532,7 +534,7 @@ namespace NeuronEngine
 
 	float NeuronBase::NewHebbianWeight(float weight, float offset, SynapseBase::modelType model, int numberOfSynapses1) //sign of float is all that's presently used
 	{
-		float numberOfSynapses = numberOfSynapses1/2.0;
+		float numberOfSynapses = numberOfSynapses1 / 2.0;
 		float y = weight * numberOfSynapses;
 		if (model == SynapseBase::modelType::Binary)
 		{
@@ -586,7 +588,7 @@ namespace NeuronEngine
 			}
 			y = curWeight / numberOfSynapses;
 			if (y < -maxVal)y = -maxVal;
-			if (y > maxVal ) y = maxVal;
+			if (y > maxVal) y = maxVal;
 			//int i = 0;
 			//for (i = 0; i < ranges2; i++)
 			//{

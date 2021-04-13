@@ -77,5 +77,10 @@ namespace BrainSimulator
                 history[i].Samples.Clear();
             }
         }
+        public static void ClearAll()
+        {
+            Clear();
+            history.Clear();
+        }
     }
 }

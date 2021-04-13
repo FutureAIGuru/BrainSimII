@@ -440,6 +440,9 @@
     <Content Include="Networks\BasicNeurons.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\ZoomIn_16x.png" />
+    <Resource Include="Resources\Icons\Pause_16x.png" />
+    <Resource Include="Resources\Icons\SaveAs_16x.png" />
     <Resource Include="Resources\mailing-list-icon-17.jpg" />
     <Resource Include="Resources\github-logo.png" />
   </ItemGroup>
@@ -493,6 +496,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

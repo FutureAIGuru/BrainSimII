@@ -65,11 +65,13 @@ namespace BrainSimulator.Modules
 
         public override void Initialize()
         {
+            var x = CameraService.DefaultCamera;
             if (CameraService.AvailableCameras.Count > 0)
                 theCamera = CameraService.AvailableCameras[0];
             else
             {
                 MessageBox.Show("No camera found");
+                running = true;
                 return;
             }
             startCapturing();
@@ -113,12 +115,13 @@ namespace BrainSimulator.Modules
             try
             {
                 Camera c = theCamera;
+                c.Dispose();
                 if (_frameSource == null)
                 {
                     setFrameSource(new CameraFrameSource(c));
                     _frameSource.Camera.CaptureWidth = 640;//640;
                     _frameSource.Camera.CaptureHeight = 360;// 480;
-                    _frameSource.Camera.Fps = 50;
+                    _frameSource.Camera.Fps = 24;
                     _frameSource.NewFrame += OnImageCaptured;
                     _frameSource.StartFrameCapture();
                 }

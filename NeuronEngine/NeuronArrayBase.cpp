@@ -51,8 +51,9 @@ namespace NeuronEngine
 	{
 		arraySize = theSize;
 		int expandedSize = arraySize;
-		if (expandedSize % 64 != 0) expandedSize += 64;
-
+		if (expandedSize % 64 != 0) 
+			expandedSize = ((expandedSize / 64)+1) * 64;
+		arraySize = expandedSize;
 		neuronArray.reserve(expandedSize);
 		for (int i = 0; i < expandedSize; i++)
 		{

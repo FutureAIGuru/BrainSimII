@@ -134,6 +134,8 @@ namespace BrainSimulator
             SolidColorBrush s1 = new SolidColorBrush(c);
             if (!n.inUse && n.Model == Neuron.modelType.IF)
                 s1.Opacity = .50;
+            if ((n.leakRate < 0) || float.IsNegativeInfinity(1.0f/n.leakRate))
+                s1 = new SolidColorBrush(Colors.LightSalmon);
             return s1;
         }
 
@@ -157,14 +159,18 @@ namespace BrainSimulator
         static bool chargeChanged = false;
         static bool labelChanged = false;
         static bool modelChanged = false;
+        static bool enabledChanged = false;
         static bool historyChanged = false;
         static bool synapsesChanged = false;
         static bool leakRateChanged = false;
         static bool axonDelayChanged = false;
         public static void CreateContextMenu(int i, Neuron n, ContextMenu cm)
         {
+            cmCancelled = false;
+
             labelChanged = false;
             modelChanged = false;
+            enabledChanged = false;
             historyChanged = false;
             synapsesChanged = false;
             chargeChanged = false;
@@ -212,12 +218,22 @@ namespace BrainSimulator
             MenuItem mi = new MenuItem();
             CheckBox cbShowSynapses = new CheckBox
             {
+                IsChecked = (n.leakRate > 0) || float.IsPositiveInfinity(1.0f / n.leakRate),
+                Content = "Enabled",
+                Name = "Enabled",
+            };
+            cbShowSynapses.Checked += CbCheckedChanged;
+            cbShowSynapses.Unchecked += CbCheckedChanged;
+            cm.Items.Add(cbShowSynapses);
+
+            cbShowSynapses = new CheckBox
+            {
                 IsChecked = MainWindow.arrayView.IsShowingSnapses(n.id),
                 Content = "Show Synapses",
                 Name = "Synapses",
             };
-            cbShowSynapses.Checked += CbHistory_Checked;
-            cbShowSynapses.Unchecked += CbHistory_Checked;
+            cbShowSynapses.Checked += CbCheckedChanged;
+            cbShowSynapses.Unchecked += CbCheckedChanged;
             cm.Items.Add(cbShowSynapses);
 
             mi = new MenuItem();
@@ -227,8 +243,8 @@ namespace BrainSimulator
                 Content = "Record Firing History",
                 Name = "History",
             };
-            cbHistory.Checked += CbHistory_Checked;
-            cbHistory.Unchecked += CbHistory_Checked;
+            cbHistory.Checked += CbCheckedChanged;
+            cbHistory.Unchecked += CbCheckedChanged;
             cm.Items.Add(cbHistory);
 
             mi = new MenuItem();
@@ -277,7 +293,36 @@ namespace BrainSimulator
             mi.Items.Add(new MenuItem() { Header = "Mutual Suppression" });
             ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
             cm.Items.Add(mi);
+
+
+            sp = new StackPanel { Orientation = Orientation.Horizontal };
+            Button b0 = new Button { Content = "OK", Width = 100, Height = 25, Margin = new Thickness(10) };
+            b0.Click += B0_Click;
+            sp.Children.Add(b0);
+            b0 = new Button { Content = "Cancel", Width = 100, Height = 25, Margin = new Thickness(10) };
+            b0.Click += B0_Click;
+            sp.Children.Add(b0);
+
+            cm.Items.Add(sp);
+
             SetCustomCMItems(cm, n, n.model);
+
+        }
+
+        private static void B0_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button b)
+            {
+                if (b.Parent is StackPanel sp)
+                {
+                    if (sp.Parent is ContextMenu cm)
+                    {
+                        if ((string)b.Content == "Cancel")
+                            cmCancelled = true;
+                        Cm_Closed(cm, e);
+                    }
+                }
+            }
         }
 
         //This creates or updates the portion of the context menu content which depends on the model type
@@ -309,7 +354,7 @@ namespace BrainSimulator
             {
                 sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
                 sp.Children.Add(new Label { Content = "Leak Rate: ", Padding = new Thickness(0) });
-                TextBox tb0 = Utils.ContextMenuTextBox(n.LeakRate.ToString("f2"), "LeakRate", 60);
+                TextBox tb0 = Utils.ContextMenuTextBox(Math.Abs(n.LeakRate).ToString("f2"), "LeakRate", 60);
                 tb0.TextChanged += Tb0_LeakRateChanged;
                 sp.Children.Add(tb0);
                 cm.Items.Insert(3, sp);
@@ -341,7 +386,7 @@ namespace BrainSimulator
 
                 sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
                 sp.Children.Add(new Label { Content = "Std Dev: ", Padding = new Thickness(0) });
-                TextBox tb0 = Utils.ContextMenuTextBox(n.LeakRate.ToString("f2"), "LeakRate", 60);
+                TextBox tb0 = Utils.ContextMenuTextBox(Math.Abs(n.LeakRate).ToString("f2"), "LeakRate", 60);
                 tb0.TextChanged += Tb0_LeakRateChanged;
                 sp.Children.Add(tb0);
                 cm.Items.Insert(4, sp);
@@ -359,7 +404,7 @@ namespace BrainSimulator
                 if (n.leakRate < 1) n.leakRate = 1;
                 sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
                 sp.Children.Add(new Label { Content = "Rate: ", Padding = new Thickness(0) });
-                TextBox tb0 = Utils.ContextMenuTextBox(n.LeakRate.ToString("f0"), "LeakRate", 60);
+                TextBox tb0 = Utils.ContextMenuTextBox(Math.Abs(n.LeakRate).ToString("f0"), "LeakRate", 60);
                 tb0.TextChanged += Tb0_LeakRateChanged;
                 sp.Children.Add(tb0);
                 cm.Items.Insert(4, sp);
@@ -391,17 +436,16 @@ namespace BrainSimulator
             }
         }
 
-
         private static void Cm_Closed(object sender, RoutedEventArgs e)
         {
-            if (cmCancelled)
-            {
-                cmCancelled = false;
-                MainWindow.Update();
-                return;
-            }
             if (sender is ContextMenu cm)
             {
+                cm.IsOpen = false;
+                if (cmCancelled)
+                {
+                    MainWindow.Update();
+                    return;
+                }
                 MainWindow.theNeuronArray.SetUndoPoint();
                 int neuronID = (int)cm.GetValue(NeuronIDProperty);
                 Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronID);
@@ -495,12 +539,27 @@ namespace BrainSimulator
                         SetValueInSelectedNeurons(n, "synapses");
                     }
                 }
-                cc = Utils.FindByName(cm, "History");
+
+                cc = Utils.FindByName(cm, "Enabled");
                 if (cc is CheckBox cb1)
+                {
+                    if (enabledChanged)
+                    {
+                        if (cb1.IsChecked == true)
+                            n.leakRate = Math.Abs(n.leakRate);
+                        else
+                            n.leakRate = Math.Abs(n.leakRate) * -1.0f;
+
+                        SetValueInSelectedNeurons(n, "enable");
+                    }
+                }
+
+                cc = Utils.FindByName(cm, "History");
+                if (cc is CheckBox cb3)
                 {
                     if (historyChanged)
                     {
-                        if (cb1.IsChecked == true)
+                        if (cb3.IsChecked == true)
                         {
                             FiringHistory.AddNeuronToHistoryWindow(n.id);
                             OpenHistoryWindow();
@@ -515,10 +574,13 @@ namespace BrainSimulator
             MainWindow.Update();
         }
 
-        private static void CbHistory_Checked(object sender, RoutedEventArgs e)
+
+        private static void CbCheckedChanged(object sender, RoutedEventArgs e)
         {
             if (sender is CheckBox cb)
             {
+                if (cb.Name == "Enabled")
+                    enabledChanged = true;
                 if (cb.Name == "History")
                     historyChanged = true;
                 if (cb.Name == "Synapses")
@@ -624,6 +686,7 @@ namespace BrainSimulator
                         case "leakRate": n1.leakRate = n.leakRate; break;
                         case "axonDelay": n1.axonDelay = n.axonDelay; break;
                         case "model": n1.model = n.model; break;
+                        case "enable": n1.leakRate = n.leakRate; break;
                         case "history":
                             if (FiringHistory.NeuronIsInFiringHistory(n.id))
                             {

@@ -176,6 +176,14 @@ namespace BrainSimulator
             }
             if (theCanvas.Cursor == Cursors.UpArrow)
             {
+                if (e.ClickCount == 2 && sender is Canvas)
+                {
+                    //double-click detected
+                    n = MainWindow.theNeuronArray.GetNeuron(mouseDownNeuronIndex);
+                    n.leakRate = -n.leakRate;
+                    n.Update();
+                }
+
                 Mouse.Capture(theCanvas);
                 if (mouseRepeatTimer == null)
                     mouseRepeatTimer = new DispatcherTimer();

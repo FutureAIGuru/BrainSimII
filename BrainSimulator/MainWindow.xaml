@@ -28,7 +28,8 @@
                     </MenuItem>
                     <MenuItem Header="Save _As" Click="buttonSaveAs_Click">
                         <MenuItem.Icon>
-                            <Image Source="resources/diskette.png"></Image>
+                            <!--<Image Source="resources/diskette.png"></Image>-->
+                            <Image Source="resources/icons/saveAs_16x.png"></Image>
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator />
@@ -120,7 +121,8 @@
                     </MenuItem>
                     <MenuItem Header="Run" Click="PlayPause_Click">
                         <MenuItem.Icon>
-                            <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE768;</TextBlock>
+                            <Image Source="/resources/icons/pause_16x.png"></Image>
+                            <!--<TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE768;</TextBlock>-->
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="Pause" Click="PlayPause_Click" >
@@ -184,6 +186,8 @@
         <Button x:Name="buttonInit" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xEB9E;" HorizontalAlignment="Left" Margin="435,35,0,0" VerticalAlignment="Top" Click="ButtonInit_Click" ToolTip="Reset all modules" >
         </Button>
         <Button x:Name="buttonPlayPause" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE769;" HorizontalAlignment="Left" Margin="462,35,0,0" VerticalAlignment="Top" Click="PlayPause_Click" ToolTip="Pause/Continue the neural engine" >
+        <!--<Button x:Name="buttonPlayPause" HorizontalAlignment="Left" Margin="462,35,0,0" VerticalAlignment="Top" Click="PlayPause_Click" ToolTip="Pause/Continue the neural engine" >
+            <Image Source="/resources/icons/pause_16x.png" Height="20"></Image>-->
         </Button>
         <Slider x:Name="slider" Margin="554,37,0,0" ValueChanged="slider_ValueChanged" IsSnapToTickEnabled="True" Value="5" HorizontalAlignment="Left" Width="140" ToolTip="Change the engine speed" RenderTransformOrigin="1.814,0.625" Height="24" VerticalAlignment="Top" />
         <Button x:Name="buttonSingle" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE893;" Margin="489,35,0,0" Click="ButtonSingle_Click" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Run the engine one cycle" >
@@ -198,7 +202,11 @@
 
         <Button x:Name="buttonPan" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xF271;" HorizontalAlignment="Left" Margin="75,35,0,0" VerticalAlignment="Top" Click="ButtonPan_Click" ToolTip="Pan the display with the mouse (Shift+mouse move)" />
         <Button x:Name="buttonZoomOut" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE71F;" HorizontalAlignment="Left" Margin="124,35,0,0" VerticalAlignment="Top" ToolTip="Zoom Out (Also mouse wheel)" PreviewMouseLeftButtonDown="ButtonZoomOut_PreviewMouseLeftButtonDown" />
-        <Button x:Name="buttonZoomIn" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE8A3;" HorizontalAlignment="Left" Margin="99,35,0,0" VerticalAlignment="Top" ToolTip="Zoom In (Also mouse wheel)" PreviewMouseLeftButtonDown="ButtonZoomIn_PreviewMouseLeftButtonDown" />
+        <!--<Button x:Name="buttonZoomIn" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE8A3;" HorizontalAlignment="Left" Margin="99,35,0,0" VerticalAlignment="Top" ToolTip="Zoom In (Also mouse wheel)" PreviewMouseLeftButtonDown="ButtonZoomIn_PreviewMouseLeftButtonDown" >-->
+
+        <Button x:Name="buttonZoomIn" HorizontalAlignment="Left" Margin="99,35,0,0" VerticalAlignment="Top" ToolTip="Zoom In (Also mouse wheel)" PreviewMouseLeftButtonDown="ButtonZoomIn_PreviewMouseLeftButtonDown" >
+            <Image Source="/resources/icons/ZoomIn_16x.png" Height="20"></Image>
+        </Button>
 
         <CheckBox x:Name="checkBox" Content="All Synapses" HorizontalAlignment="Left" Height="21" Margin="153,40,0,0" VerticalAlignment="Top" Width="91" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" />
         <ProgressBar x:Name="progressBar" Maximum="1" HorizontalAlignment="Left" Margin="9,0,0,2.8" Width="137" Height="13" VerticalAlignment="Bottom" />

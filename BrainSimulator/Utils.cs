@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using static System.Math;
 using System.Windows.Input;
+using System.Collections.Generic;
 
 namespace BrainSimulator
 {
@@ -416,8 +417,71 @@ namespace BrainSimulator
 
         private static void Tb_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            if (!(e.NewFocus is TextBox))
+            if (!(e.NewFocus is TextBox) && !(e.NewFocus is ComboBox))
                 e.Handled = true;
+        }
+
+        public static void AddToValues(float value, List<float> values)
+        {
+            if (!values.Contains(value))
+            {
+                values.Add(value);
+                values.Sort();
+                values.Reverse();
+            }
+        }
+        public static MenuItem CreateComboBox(string cbName, float value, List<float> values, string format, string label, int textWidth, RoutedEventHandler theEventHandler)
+        {
+            StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
+            sp.Children.Add(new Label { Content = label, Padding = new Thickness(0) });
+            ComboBox theCombo = new ComboBox { IsEditable = true, Width = textWidth, Name = cbName };
+            theCombo.Text = format.IndexOf("X") == -1 ? value.ToString(format) : ((int)value).ToString(format);
+            for (int i = 0; i < values.Count; i++)
+                theCombo.Items.Add(format.IndexOf("X") == -1 ? values[i].ToString(format) : ((int)values[i]).ToString(format));
+            theCombo.AddHandler(TextBox.TextChangedEvent, theEventHandler);
+            theCombo.AddHandler(ComboBox.SelectionChangedEvent, theEventHandler);
+            sp.Children.Add(theCombo);
+            return new MenuItem { StaysOpenOnClick = true, Header = sp };
+        }
+
+        public static void ValidateInput(ComboBox cb, float min, float max, string validation = "")
+        {
+            //this hack finds the textbox within a combobox
+            var textbox = (TextBox)cb.Template.FindName("PART_EditableTextBox", cb);
+            if (textbox != null)
+            {
+                Border parent = (Border)textbox.Parent;
+                if (validation == "")
+                {
+                    if (!float.TryParse(textbox.Text, out float x))
+                        parent.Background = new SolidColorBrush(Colors.Pink);
+                    else if (x > max || x < min)
+                        parent.Background = new SolidColorBrush(Colors.Yellow);
+                    else
+                        parent.Background = new SolidColorBrush(Colors.LightGreen);
+                }
+                else if (validation == "Int")
+                {
+                    if (!int.TryParse(textbox.Text, out int x))
+                        parent.Background = new SolidColorBrush(Colors.Pink);
+                    else if (x > max || x < min)
+                        parent.Background = new SolidColorBrush(Colors.Yellow);
+                    else
+                        parent.Background = new SolidColorBrush(Colors.LightGreen);
+                }
+                else if (validation == "Hex")
+                {
+                    try
+                    {
+                        uint newCharge = Convert.ToUInt32(textbox.Text, 16);
+                        parent.Background = new SolidColorBrush(Colors.LightGreen);
+                    }
+                    catch
+                    {
+                        parent.Background = new SolidColorBrush(Colors.Pink);
+                    }
+                }
+            }
         }
 
     }

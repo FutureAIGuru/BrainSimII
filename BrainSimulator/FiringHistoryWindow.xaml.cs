@@ -56,8 +56,14 @@ namespace BrainSimulator
             long minX = FiringHistory.EarliestValue();
             if (minX <= maxX) //any samples?
             {
-                Point windowSize = new Point(theCanvas.ActualWidth, theCanvas.ActualHeight);
-                double xScale = windowSize.X / (maxX - minX);
+                long sampleCount = maxX - minX;
+                if (sampleCount > 100 && wheelScale == 0)
+                {
+                    theCanvas.Width = scroller.ActualWidth * (float)sampleCount / 100f;
+                    scroller.ScrollToRightEnd();
+                }
+                Point windowSize = new Point(theCanvas.Width, theCanvas.ActualHeight);
+                double xScale = windowSize.X / (float)sampleCount;
                 double yDelta = .9 * windowSize.Y / (FiringHistory.history.Count);
 
                 //TODO:  The commented-out lines will create a smooth curve instead of the line approximation
@@ -69,27 +75,6 @@ namespace BrainSimulator
                     double yPos2 = yPos0 + yDelta / 20;
                     double yPos3 = yPos0 + yDelta / 10;
                     //PointCollection pc = new PointCollection();
-
-                    theCanvas.Children.Add(new Line
-                    {
-                        X1 = 0,
-                        X2 = theCanvas.Width,
-                        Y1 = yPos0,
-                        Y2 = yPos0,
-                        Stroke = Brushes.Green,
-                        StrokeDashArray = new DoubleCollection { 3, 5 },
-                        StrokeThickness = 2,
-                    });
-                    theCanvas.Children.Add(new Line
-                    {
-                        X1 = 0,
-                        X2 = theCanvas.Width,
-                        Y1 = yPos0 - yDelta / 3,
-                        Y2 = yPos0 - yDelta / 3,
-                        Stroke = Brushes.Red,
-                        StrokeDashArray = new DoubleCollection { 3, 5 },
-                        StrokeThickness = 2,
-                    });
 
                     Polyline pl = new Polyline()
                     {
@@ -146,7 +131,7 @@ namespace BrainSimulator
                         lastValue = value;
                     }
 
-                    pl.Points.Add(new Point(theCanvas.Width, yPos0));
+                    //pl.Points.Add(new Point(theCanvas.Width, yPos0));
                     //pc.Add(new Point(theCanvas.Width, yPos0));
 
                     //PolyBezierSegment pbs = new PolyBezierSegment { Points = pc };
@@ -252,7 +237,8 @@ namespace BrainSimulator
         double wheelScale = 0;
         private void TheCanvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            wheelScale += e.Delta / 120;
+            wheelScale = theCanvas.Width / scroller.ActualWidth;
+            wheelScale += e.Delta / 60;
             if (wheelScale < 0) wheelScale = 0;
             theCanvas.Width = scroller.ActualWidth * (1 + wheelScale);
             theCanvas.Children.Clear();
@@ -270,11 +256,6 @@ namespace BrainSimulator
 
         private void RemoveTags_Click(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i < FiringHistory.history.Count; i++)
-            {
-                int nID = FiringHistory.history[i].NeuronID;
-                //TODOMainWindow.theNeuronArray.GetNeuron(nID).KeepHistory = false;
-            }
             FiringHistory.history.Clear();
             this.Close();
         }

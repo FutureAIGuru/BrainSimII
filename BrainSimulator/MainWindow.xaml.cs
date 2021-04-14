@@ -305,8 +305,10 @@ namespace BrainSimulator
 
             theNeuronArray.displayParams = theNeuronArrayView.Dp;
             if (XmlFile.Save(theNeuronArray, fileName))
+            {
                 currentFileName = fileName;
-
+                SetCurrentFileNameToProperties();
+            }
             ResumeEngine();
         }
         private void SaveClipboardToFile(string fileName)
@@ -483,8 +485,7 @@ namespace BrainSimulator
                 {
                     Update();
                     currentFileName = "";
-                    Properties.Settings.Default["CurrentFile"] = currentFileName;
-                    Properties.Settings.Default.Save();
+                    SetCurrentFileNameToProperties();
                     setTitleBar();
                     if (theNeuronArray.networkNotes != "")
                         MenuItemNotes_Click(null, null);
@@ -492,6 +493,13 @@ namespace BrainSimulator
             }
             ResumeEngine();
         }
+
+        private static void SetCurrentFileNameToProperties()
+        {
+            Properties.Settings.Default["CurrentFile"] = currentFileName;
+            Properties.Settings.Default.Save();
+        }
+
         private void button_Exit_Click(object sender, RoutedEventArgs e)
         {
             Properties.Settings.Default.Save();

@@ -15,7 +15,8 @@ namespace BrainSimulator
         struct BoundarySynapse
         {
             public int innerNeuronID;
-            public string outerNeuronName;
+            //public string outerNeuronName;
+            public int outerNeuronID;
             public float weight;
             public Synapse.modelType model;
         }
@@ -76,7 +77,7 @@ namespace BrainSimulator
                                 boundarySynapsesOut.Add(new BoundarySynapse
                                 {
                                     innerNeuronID = destNeuron.id,
-                                    outerNeuronName = targetName,
+                                    outerNeuronID = s.targetNeuron,
                                     weight = s.weight,
                                     model = s.model
                                 });
@@ -94,10 +95,10 @@ namespace BrainSimulator
                                 boundarySynapsesIn.Add(new BoundarySynapse
                                 {
                                     innerNeuronID = destNeuron.id,
-                                    outerNeuronName = sourceName,
+                                    outerNeuronID = s.targetNeuron,
                                     weight = s.weight,
                                     model = s.model
-                                });
+                                }); ;
                             }
                         }
                     }
@@ -213,7 +214,7 @@ namespace BrainSimulator
                     {
                         int num = 0;
                         int digitCount = 0;
-                        while (Char.IsDigit(sourceNeuron.label[sourceNeuron.label.Length - 1]))
+                        while (sourceNeuron.Label != "" && Char.IsDigit(sourceNeuron.label[sourceNeuron.label.Length - 1]))
                         {
                             int.TryParse(sourceNeuron.label[sourceNeuron.label.Length - 1].ToString(), out int digit);
                             num = num + (int)Math.Pow(10, digitCount) * digit;
@@ -236,14 +237,14 @@ namespace BrainSimulator
             foreach (BoundarySynapse b in boundarySynapsesOut)
             {
                 int sourceID = GetNeuronArrayId(b.innerNeuronID);
-                Neuron targetNeuron = MainWindow.theNeuronArray.GetNeuron(b.outerNeuronName);
+                Neuron targetNeuron = MainWindow.theNeuronArray.GetNeuron(b.outerNeuronID);
                 if (targetNeuron != null)
                     MainWindow.theNeuronArray.GetNeuron(sourceID).AddSynapseWithUndo(targetNeuron.id, b.weight, b.model);
             }
             foreach (BoundarySynapse b in boundarySynapsesIn)
             {
                 int targetID = GetNeuronArrayId(b.innerNeuronID);
-                Neuron sourceNeuron = MainWindow.theNeuronArray.GetNeuron(b.outerNeuronName);
+                Neuron sourceNeuron = MainWindow.theNeuronArray.GetNeuron(b.outerNeuronID);
                 if (sourceNeuron != null)
                     sourceNeuron.AddSynapseWithUndo(targetID, b.weight, b.model);
             }

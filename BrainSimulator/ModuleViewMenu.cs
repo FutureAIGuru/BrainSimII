@@ -184,7 +184,7 @@ namespace BrainSimulator
             b0.Click += B0_Click;
             sp.Children.Add(b0);
 
-            cm.Items.Add(sp);
+            cm.Items.Add(new MenuItem {Header = sp, StaysOpenOnClick = true });
 
             cm.Closed += Cm_Closed;
         }
@@ -204,11 +204,14 @@ namespace BrainSimulator
             {
                 if (b.Parent is StackPanel sp)
                 {
-                    if (sp.Parent is ContextMenu cm)
+                    if (sp.Parent is MenuItem mi)
                     {
-                        if ((string)b.Content == "Cancel")
-                            cmCancelled = true;
-                        Cm_Closed(cm, e);
+                        if (mi.Parent is ContextMenu cm)
+                        {
+                            if ((string)b.Content == "Cancel")
+                                cmCancelled = true;
+                            Cm_Closed(cm, e);
+                        }
                     }
                 }
             }

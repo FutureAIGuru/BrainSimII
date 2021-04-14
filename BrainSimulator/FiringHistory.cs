@@ -5,6 +5,7 @@ namespace BrainSimulator
 {
     class FiringHistory
     {
+        const int maxSamples = 1000;
         public class Sample
         {
             public long generation = 0;
@@ -63,10 +64,9 @@ namespace BrainSimulator
             foreach (NeuronHistory active in history)
             {
                 float lastCharge = MainWindow.theNeuronArray.GetNeuronLastCharge(active.NeuronID);
-               // if (lastCharge >= 1)
-                {
-                    active.Samples.Add(new Sample { generation = MainWindow.theNeuronArray.Generation, value = lastCharge });
-                }
+                if (active.Samples.Count > maxSamples)
+                    active.Samples.RemoveAt(0);
+                active.Samples.Add(new Sample { generation = MainWindow.theNeuronArray.Generation, value = lastCharge });
             }
         }
 

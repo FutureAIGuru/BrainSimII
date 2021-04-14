@@ -49,11 +49,11 @@ namespace BrainSimulator
             if (!showSynapses.Contains(neuronID))
                 showSynapses.Add(neuronID);
         }
-        public void RemoveShowSynapses (int neuronID)
+        public void RemoveShowSynapses(int neuronID)
         {
             showSynapses.Remove(neuronID);
         }
-        public bool IsShowingSnapses (int neuronID)
+        public bool IsShowingSnapses(int neuronID)
         {
             return showSynapses.Contains(neuronID);
         }
@@ -85,9 +85,15 @@ namespace BrainSimulator
             Canvas.SetLeft(labelCanvas, 0);
             Canvas.SetTop(labelCanvas, 0);
 
-            Canvas synapseCanvas = new Canvas();
-            Canvas.SetLeft(synapseCanvas, 0);
-            Canvas.SetTop(synapseCanvas, 0);
+
+            //Two canvases for synapses, ALL is for synapses behing neurons, Special is for synapses in front of neurons
+            Canvas allSynapsesCanvas = new Canvas();
+            Canvas.SetLeft(allSynapsesCanvas, 0);
+            Canvas.SetTop(allSynapsesCanvas, 0);
+
+            Canvas specialSynapsesCanvas = new Canvas();
+            Canvas.SetLeft(specialSynapsesCanvas, 0);
+            Canvas.SetTop(specialSynapsesCanvas, 0);
 
 
             int neuronCanvasCount = 2;
@@ -304,7 +310,10 @@ namespace BrainSimulator
                                             Shape l1 = SynapseView.GetSynapseView(neuronID, p1, s, this);
                                             if (l1 != null)
                                             {
-                                                synapseCanvas.Children.Add(l1);
+                                                if (IsShowingSnapses(n.id))
+                                                    specialSynapsesCanvas.Children.Add(l1);
+                                                else
+                                                    allSynapsesCanvas.Children.Add(l1);
                                                 synapseCount++;
                                             }
                                         }
@@ -320,7 +329,7 @@ namespace BrainSimulator
                                             Synapse s1 = new Synapse() { targetNeuron = neuronID, Weight = s.Weight };
                                             Shape l1 = SynapseView.GetSynapseView(s.targetNeuron, p2, s1, this);
                                             if (l1 != null)
-                                                synapseCanvas.Children.Add(l1);
+                                                allSynapsesCanvas.Children.Add(l1);
                                         }
                                     }
                                 }
@@ -333,12 +342,13 @@ namespace BrainSimulator
             theCanvas.Children.Add(targetNeuronCanvas);
             theCanvas.Children.Add(legendCanvas);
 
+            theCanvas.Children.Add(allSynapsesCanvas);
             for (int i = 0; i < neuronCanvasCount; i++)
             {
                 theCanvas.Children.Add(neuronCanvas[i]);
             }
 
-            theCanvas.Children.Add(synapseCanvas);
+            theCanvas.Children.Add(specialSynapsesCanvas);
             theCanvas.Children.Add(labelCanvas);
             if (synapseShape != null) //synapse rubber-banding
                 theCanvas.Children.Add(synapseShape);

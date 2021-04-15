@@ -58,7 +58,7 @@ namespace BrainSimulator
         DispatcherTimer zoomInOutTimer;
         int zoomAomunt = 0;
 
-//        public static bool showSynapses = false;
+        //        public static bool showSynapses = false;
 
 
         public MainWindow()
@@ -390,7 +390,7 @@ namespace BrainSimulator
 
                 string fileName = "_Open";
                 if (sender is MenuItem mainMenu)
-                    fileName=(string)mainMenu.Header;
+                    fileName = (string)mainMenu.Header;
                 if (fileName == "_Open")
                 {
                     OpenFileDialog openFileDialog1 = new OpenFileDialog
@@ -530,7 +530,7 @@ namespace BrainSimulator
         public static void SuspendEngine()
         {
             if (engineIsPaused) return; //already suspended
-                                             //suspend the engine...
+                                        //suspend the engine...
             if (theNeuronArray != null)
                 theNeuronArray.EngineSpeed = engineDelay;
             engineDelay = 2000;
@@ -737,7 +737,7 @@ namespace BrainSimulator
         private void MainMenu_MouseEnter(object sender, MouseEventArgs e)
         {
             LoadMRUMenu();
-            if (theNeuronArray != null) ThreadCount.Text = theNeuronArray.GetThreadCount().ToString();
+            if (theNeuronArray != null && !useServers) ThreadCount.Text = theNeuronArray.GetThreadCount().ToString();
             else ThreadCount.Text = "";
             if (theNeuronArray != null) Refractory.Text = theNeuronArray.GetRefractoryDelay().ToString();
             else Refractory.Text = "";
@@ -750,6 +750,24 @@ namespace BrainSimulator
             {
                 EnableMenuItem(MainMenu.Items, "Run", true);
                 EnableMenuItem(MainMenu.Items, "Pause", false);
+            }
+            if (useServers)
+            {
+                var tb0 = Utils.FindByName(MainMenu, "ThreadCount");
+                if (tb0.Parent is UIElement ui)
+                    ui.Visibility = Visibility.Collapsed;
+                tb0 = Utils.FindByName(MainMenu, "Refractory");
+                if (tb0.Parent is UIElement ui1)
+                    ui1.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                var tb0 = Utils.FindByName(MainMenu, "ThreadCount");
+                if (tb0.Parent is UIElement ui)
+                    ui.Visibility = Visibility.Visible;
+                tb0 = Utils.FindByName(MainMenu, "Refractory");
+                if (tb0.Parent is UIElement ui1)
+                    ui1.Visibility = Visibility.Visible;
             }
             if (theNeuronArray == null)
             {
@@ -780,13 +798,13 @@ namespace BrainSimulator
                 EnableMenuItem(MainMenu.Items, " Cut", true);
                 EnableMenuItem(MainMenu.Items, " Copy", true);
                 EnableMenuItem(MainMenu.Items, " Delete", true);
-                if (arrayView.targetNeuronIndex < 0)    
+                if (arrayView.targetNeuronIndex < 0)
                     EnableMenuItem(MainMenu.Items, " Move", false);
                 else
                     EnableMenuItem(MainMenu.Items, " Move", true);
                 EnableMenuItem(MainMenu.Items, " Clear Selection", true);
             }
-            if (arrayView.targetNeuronIndex < 0 || myClipBoard  == null)
+            if (arrayView.targetNeuronIndex < 0 || myClipBoard == null)
             {
                 EnableMenuItem(MainMenu.Items, " Paste", false);
             }
@@ -829,7 +847,7 @@ namespace BrainSimulator
             engineTimerMovingAverage.RemoveAt(0);
             engineTimerMovingAverage.Add((int)engineElapsed);
             thisWindow.labelEngineStatus.Content = "Running, Speed: " + thisWindow.slider.Value + "  Cycle: " + theNeuronArray.Generation.ToString("N0") +
-            "  "+firedCount.ToString("N0") + " Neurons Fired  " + (engineTimerMovingAverage.Average() / 10000f).ToString("F2") + "ms";
+            "  " + firedCount.ToString("N0") + " Neurons Fired  " + (engineTimerMovingAverage.Average() / 10000f).ToString("F2") + "ms";
         }
         static public void UpdateDisplayLabel(float zoomLevel)
         {
@@ -849,7 +867,6 @@ namespace BrainSimulator
             if (zoomLevel < .1f) formatString = "N3";
             thisWindow.labelDisplayStatus.Content = "Zoom Level: " + zoomLevel.ToString(formatString) + ",  " + (displayTimerMovingAverage.Average() / 10000f).ToString("F2") + "ms";
         }
-
 
         public static void Update()
         {
@@ -1002,8 +1019,8 @@ namespace BrainSimulator
                 }
             }
             //doing this messes up because LastFired is not reset
-//            theNeuronArray.Generation = 0;
-//            theNeuronArray.SetGeneration(0);
+            //            theNeuronArray.Generation = 0;
+            //            theNeuronArray.SetGeneration(0);
             theNeuronArrayView.Update();
             ResumeEngine();
         }
@@ -1105,7 +1122,7 @@ namespace BrainSimulator
         private void Window_MouseEnter(object sender, MouseEventArgs e)
         {
             Debug.WriteLine("MainWindow MouseEnter");
-            Keyboard.ClearFocus(); 
+            Keyboard.ClearFocus();
             Keyboard.Focus(this);
             this.Focus();
             mouseInWindow = true;
@@ -1226,7 +1243,7 @@ namespace BrainSimulator
 
         private void ThreadCount_TextChanged(object sender, TextChangedEventArgs e)
         {
-           if (sender is TextBox tb)
+            if (sender is TextBox tb)
             {
                 if (int.TryParse(tb.Text, out int newThreadCount))
                 {

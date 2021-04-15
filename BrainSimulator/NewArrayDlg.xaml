@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrainSimulator"
         mc:Ignorable="d"
-        Title="Create New Neuron Array" Height="451.2" Width="491.2"
+        Title="Create New Neuron Network" Height="451.2" Width="491.2"
         Background="LightGray">
     <Grid Margin="0,0,0,2" HorizontalAlignment="Left" Width="481">
         <Grid.ColumnDefinitions>

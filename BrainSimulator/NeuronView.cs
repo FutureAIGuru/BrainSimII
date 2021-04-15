@@ -298,6 +298,19 @@ namespace BrainSimulator
             ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
             cm.Items.Add(mi);
 
+            if (NeuronInSelection(n.id))
+            {
+                cbShowSynapses = new CheckBox
+                {
+                    IsChecked = true,
+                    Content = "Apply changes to all neurons in selection",
+                    Name = "ApplyToSelection",
+                };
+                cbShowSynapses.Checked += CbCheckedChanged;
+                cbShowSynapses.Unchecked += CbCheckedChanged;
+                cm.Items.Add(new MenuItem { StaysOpenOnClick = true, Header = cbShowSynapses });
+            }
+
 
             sp = new StackPanel { Orientation = Orientation.Horizontal };
             Button b0 = new Button { Content = "OK", Width = 100, Height = 25, Margin = new Thickness(10) };
@@ -355,7 +368,6 @@ namespace BrainSimulator
                     Utils.CreateComboBox("CurrentCharge", n.lastCharge, currentChargeValues, floatFormatString, "Charge: ", 80, ComboBox_ContentChanged));
 
             }
-            //cm.Items.Insert(3, sp);
 
             if (newModel == Neuron.modelType.LIF)
             {
@@ -367,7 +379,7 @@ namespace BrainSimulator
             else if (newModel == Neuron.modelType.Always)
             {
                 cm.Items.Insert(3,
-                    Utils.CreateComboBox("AxonDelay", n.axonDelay, alwaysDelayValues , intFormatString, "Period: ", 80, ComboBox_ContentChanged));
+                    Utils.CreateComboBox("AxonDelay", n.axonDelay, alwaysDelayValues, intFormatString, "Period: ", 80, ComboBox_ContentChanged));
             }
             else if (newModel == Neuron.modelType.Random)
             {
@@ -381,16 +393,16 @@ namespace BrainSimulator
                 cm.Items.Insert(3,
                     Utils.CreateComboBox("AxonDelay", n.axonDelay, alwaysDelayValues, intFormatString, "Count: ", 80, ComboBox_ContentChanged));
                 cm.Items.Insert(4,
-                    Utils.CreateComboBox("LeakRate", Math.Abs(n.leakRate), axonDelayValues, intFormatString, "Rate: ", 80, ComboBox_ContentChanged));                
+                    Utils.CreateComboBox("LeakRate", Math.Abs(n.leakRate), axonDelayValues, intFormatString, "Rate: ", 80, ComboBox_ContentChanged));
             }
         }
-        static List<float> leakRateValues = new List<float>() { 0, 0.1f, 0.5f, 1.0f};
+        static List<float> leakRateValues = new List<float>() { 0, 0.1f, 0.5f, 1.0f };
         static List<float> axonDelayValues = new List<float>() { 0, 1, 4, 10 };
         static List<float> meanValues = new List<float>() { 0, 1, 4, 10 };
         static List<float> stdDevValues = new List<float>() { 0, 1, 4, 10 };
-        static List<float> currentChargeValues = new List<float>() { 0, 1,};
+        static List<float> currentChargeValues = new List<float>() { 0, 1, };
         static List<float> colorValues = new List<float>() { 0x00, 0xffffff };
-        static List<float> alwaysDelayValues = new List<float>() { 0,1,2,3};
+        static List<float> alwaysDelayValues = new List<float>() { 0, 1, 2, 3 };
 
         const string intFormatString = "F0";
         const string floatFormatString = "F2";
@@ -460,7 +472,12 @@ namespace BrainSimulator
                 Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronID);
                 n.AddUndoInfo();
 
-                Control cc = Utils.FindByName(cm, "Label");
+                bool applyToAll = false;
+                Control cc = Utils.FindByName(cm, "ApplyToSelection");
+                if (cc is CheckBox cb)
+                    if (cb.IsChecked == true) applyToAll = true;
+
+                cc = Utils.FindByName(cm, "Label");
                 if (cc is TextBox tb)
                 {
                     string newLabel = tb.Text;
@@ -470,6 +487,7 @@ namespace BrainSimulator
                     {
                         MainWindow.theNeuronArray.SetUndoPoint();
                         n.Label = newLabel;
+                        if (applyToAll)
                         SetValueInSelectedNeurons(n, "label");
                     }
                 }
@@ -481,7 +499,8 @@ namespace BrainSimulator
                     if (modelChanged)
                     {
                         n.model = nm;
-                        SetValueInSelectedNeurons(n, "model");
+                        if (applyToAll)
+                            SetValueInSelectedNeurons(n, "model");
                     }
                 }
                 cc = Utils.FindByName(cm, "CurrentCharge");
@@ -496,7 +515,8 @@ namespace BrainSimulator
                             {
                                 n.SetValueInt((int)newCharge);
                                 n.lastCharge = newCharge;
-                                SetValueInSelectedNeurons(n, "currentCharge");
+                                if (applyToAll)
+                                    SetValueInSelectedNeurons(n, "currentCharge");
                                 Utils.AddToValues(newCharge, colorValues);
                             }
                         }
@@ -509,7 +529,8 @@ namespace BrainSimulator
                         {
                             n.SetValue(newCharge);
                             n.lastCharge = newCharge;
-                            SetValueInSelectedNeurons(n, "currentCharge");
+                            if (applyToAll)
+                                SetValueInSelectedNeurons(n, "currentCharge");
                             Utils.AddToValues(newCharge, currentChargeValues);
                         }
                     }
@@ -521,7 +542,8 @@ namespace BrainSimulator
                     if (leakRateChanged)
                     {
                         n.LeakRate = leakRate;
-                        SetValueInSelectedNeurons(n, "leakRate");
+                        if (applyToAll)
+                            SetValueInSelectedNeurons(n, "leakRate");
                         if (n.model == Neuron.modelType.LIF)
                             Utils.AddToValues(leakRate, leakRateValues);
                         if (n.model == Neuron.modelType.Random)
@@ -539,7 +561,8 @@ namespace BrainSimulator
                     if (axonDelayChanged)
                     {
                         n.axonDelay = axonDelay;
-                        SetValueInSelectedNeurons(n, "axonDelay");
+                        if (applyToAll)
+                            SetValueInSelectedNeurons(n, "axonDelay");
                         if (n.model == Neuron.modelType.Random)
                             Utils.AddToValues(axonDelay, meanValues);
                         else if (n.model == Neuron.modelType.Always)
@@ -561,7 +584,8 @@ namespace BrainSimulator
                         }
                         else
                             MainWindow.arrayView.RemoveShowSynapses(n.id);
-                        SetValueInSelectedNeurons(n, "synapses");
+                        if (applyToAll)
+                            SetValueInSelectedNeurons(n, "synapses");
                     }
                 }
 
@@ -575,7 +599,8 @@ namespace BrainSimulator
                         else
                             n.leakRate = Math.Abs(n.leakRate) * -1.0f;
 
-                        SetValueInSelectedNeurons(n, "enable");
+                        if (applyToAll)
+                            SetValueInSelectedNeurons(n, "enable");
                     }
                 }
 
@@ -591,7 +616,8 @@ namespace BrainSimulator
                         }
                         else
                             FiringHistory.RemoveNeuronFromHistoryWindow(n.id);
-                        SetValueInSelectedNeurons(n, "history");
+                        if (applyToAll)
+                            SetValueInSelectedNeurons(n, "history");
                     }
                 }
                 n.Update();

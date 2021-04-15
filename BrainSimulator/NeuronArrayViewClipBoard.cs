@@ -368,15 +368,18 @@ namespace BrainSimulator
 
             MainWindow.theNeuronArray.GetNeuronLocation(targetNeuronIndex, out int col, out int row);
             if (col + maxCol >= MainWindow.theNeuronArray.Cols ||
-                row + maxRow >= MainWindow.theNeuronArray.rows)
+                row + maxRow >= MainWindow.theNeuronArray.rows ||
+                row < 0 || 
+                col < 0)
             {
-                MessageBoxResult result = MessageBox.Show("Move would exceed neuron array boundary!", "Error", MessageBoxButton.OK);
+                if (!dragging)
+                     MessageBox.Show("Move would exceed neuron array boundary!", "Error", MessageBoxButton.OK);
                 return;
             }
 
             if (!IsDestinationClear(neuronsToMove, offset))
             {
-                MessageBoxResult result = MessageBox.Show("Some desination neurons are in use and will be overwritten, continue?\nYou can also right-click the final destination neuron and select 'Move Here.'", "Continue", MessageBoxButton.YesNo);
+                MessageBoxResult result = MessageBox.Show("Some desination neurons are in use and will be overwritten, continue?\n\nYou can also right-click the final destination neuron and select 'Move Here.'", "Continue", MessageBoxButton.YesNo);
                 if (result == MessageBoxResult.No) return;
             }
 

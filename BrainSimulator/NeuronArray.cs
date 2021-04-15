@@ -66,12 +66,7 @@ namespace BrainSimulator
             return null;
         }
 
-        //OBSOLETE
-        public void ChangeArraySize(int newSize)
-        {
-            //            Array.Resize(ref MainWindow.theNeuronArray.neuronArray, newSize);
-        }
-
+  
         public void GetCounts(out long synapseCount, out int useCount)
         {
             synapseCount = GetTotalSynapses(); ;

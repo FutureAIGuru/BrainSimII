@@ -288,12 +288,12 @@ namespace BrainSimulator
 
         private void CheckBoxUseServers_Checked(object sender, RoutedEventArgs e)
         {
-            buttonSpeedTest.IsEnabled = MainWindow.useServers;
-            buttonRefresh.IsEnabled = MainWindow.useServers;
             NeuronClient.Init();
             UpdateServerTextBox();
             if (NeuronClient.serverList.Count > 0)
                 MainWindow.useServers = true;
+            buttonSpeedTest.IsEnabled = MainWindow.useServers;
+            buttonRefresh.IsEnabled = MainWindow.useServers;
         }
 
         private void CheckBoxUseServers_Unchecked(object sender, RoutedEventArgs e)

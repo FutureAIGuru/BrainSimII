@@ -143,7 +143,7 @@
                             <RepeatButton Content="˅" Height="12" Interval="250" VerticalContentAlignment="Top" Padding="-1,-3,0,0" Click="Button_EngineSpeedDnClick"/>
                         </StackPanel>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Width="100" >
+                    <StackPanel Orientation="Horizontal" Width="100" x:Name="RefractoryGroup">
                         <Label Content="Refractory:  " Padding="0,4,0,0"/>
                         <TextBox Text="0" VerticalAlignment="Center" Width="16" x:Name="Refractory" IsEnabled="False"/>
                         <StackPanel>
@@ -151,7 +151,7 @@
                             <RepeatButton Content="˅" Height="12" Interval="250" VerticalContentAlignment="Top" Padding="-1,-3,0,0" Click="Button_RefractoryDnClick"/>
                         </StackPanel>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Width="100" >
+                    <StackPanel Orientation="Horizontal" Width="100" x:Name="ThreadCountGroup" >
                         <Label Content="Threads:  " Padding="0,4,0,0"/>
                         <TextBox Text="-1" VerticalAlignment="Center" Width="37" x:Name="ThreadCount" TextChanged="ThreadCount_TextChanged"/>
                     </StackPanel>

@@ -68,20 +68,24 @@ namespace BrainSimulator
                 }
                 sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
                 sp.Children.Add(new Label { Content = "Width: ", VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) });
-                sp.Children.Add(new TextBox { Text = nr.Width.ToString(), Width = 60, Name = "AreaWidth", VerticalAlignment = VerticalAlignment.Center });
+                TextBox tb0 = new TextBox { Text = nr.Width.ToString(), Width = 60, Name = "AreaWidth", VerticalAlignment = VerticalAlignment.Center };
+                tb0.TextChanged += TextChanged;
+                sp.Children.Add(tb0);
                 sp.Children.Add(new Label { Content = "Height: " });
-                sp.Children.Add(new TextBox { Text = nr.Height.ToString(), Width = 60, Name = "AreaHeight", VerticalAlignment = VerticalAlignment.Center });
-                cm.Items.Add(sp);
+                TextBox tb1 = new TextBox { Text = nr.Height.ToString(), Width = 60, Name = "AreaHeight", VerticalAlignment = VerticalAlignment.Center };
+                tb1.TextChanged += TextChanged;
+                sp.Children.Add(tb1);
+                cm.Items.Add(new MenuItem { Header = sp, StaysOpenOnClick = true });
 
                 sp = new StackPanel { Orientation = Orientation.Horizontal };
                 sp.Children.Add(new Label { Content = "Name: ", Padding = new Thickness(0) });
                 sp.Children.Add(new TextBox { Text = nr.Label, Width = 140, Name = "AreaName", Padding = new Thickness(0) });
-                cm.Items.Add(sp);
+                cm.Items.Add(new MenuItem { Header = sp, StaysOpenOnClick = true });
             }
 
             sp = new StackPanel { Orientation = Orientation.Horizontal };
             sp.Children.Add(new Label { Content = "Type: ", VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) });
-            cm.Items.Add(sp);
+            cm.Items.Add(new MenuItem { Header = sp, StaysOpenOnClick = true });
 
             ComboBox cb = new ComboBox();
             //get list of available NEW modules...these are assignable to a "ModuleBase" 
@@ -115,7 +119,7 @@ namespace BrainSimulator
             cb.Width = 180;
             cb.Name = "AreaType";
             cb.SelectionChanged += Cb_SelectionChanged;
-            sp.Children.Add(cb);
+            sp.Children.Add(new MenuItem { Header = cb, StaysOpenOnClick = true });
 
             if (i >= 0)
             {            //color picker
@@ -158,7 +162,7 @@ namespace BrainSimulator
                     cb.Items.Add(cbi);
                 }
                 cb.SelectedIndex = sel;
-                cm.Items.Add(cb);
+                cm.Items.Add(new MenuItem { Header = cb, StaysOpenOnClick = true });
             }
             if (i >= 0 && MainWindow.theNeuronArray.Modules[i].TheModule != null)
             {
@@ -189,12 +193,65 @@ namespace BrainSimulator
             cm.Closed += Cm_Closed;
         }
 
+        private static void TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (sender is TextBox tb)
+                if (tb.Parent is StackPanel sp)
+                    if (sp.Parent is MenuItem mi)
+                        if (mi.Parent is ContextMenu cm)
+                        {
+                            if (tb.Name == "AreaWidth")
+                            {
+                                int i = (int)cm.GetValue(AreaNumberProperty);
+                                ModuleView theModuleView = MainWindow.theNeuronArray.modules[i];
+                                MainWindow.theNeuronArray.GetNeuronLocation(MainWindow.theNeuronArray.modules[i].firstNeuron, out int col, out int row);
+                                if (!float.TryParse(tb.Text, out float width))
+                                    tb.Background = new SolidColorBrush(Colors.Pink);
+                                else
+                                {
+                                    if (width < theModuleView.TheModule.MinWidth)
+                                        tb.Background = new SolidColorBrush(Colors.Pink);
+                                    else
+                                    {
+                                        if (width + col > MainWindow.theNeuronArray.Cols)
+                                            tb.Background = new SolidColorBrush(Colors.Pink);
+                                        else
+                                            tb.Background = new SolidColorBrush(Colors.LightGreen);
+
+                                    }
+                                }
+                            }
+                            if (tb.Name == "AreaHeight")
+                            {
+                                int i = (int)cm.GetValue(AreaNumberProperty);
+                                ModuleView theModuleView = MainWindow.theNeuronArray.modules[i];
+                                MainWindow.theNeuronArray.GetNeuronLocation(MainWindow.theNeuronArray.modules[i].firstNeuron, out int col, out int row);
+                                if (!float.TryParse(tb.Text, out float height))
+                                    tb.Background = new SolidColorBrush(Colors.Pink);
+                                else
+                                {
+                                    if (height < theModuleView.TheModule.MinHeight)
+                                        tb.Background = new SolidColorBrush(Colors.Pink);
+                                    else
+                                    {
+                                        if (height + row > MainWindow.theNeuronArray.rows)
+                                            tb.Background = new SolidColorBrush(Colors.Pink);
+                                        else
+                                            tb.Background = new SolidColorBrush(Colors.LightGreen);
+
+                                    }
+                                }
+                            }
+                        }
+        }
+
         private static void Cb_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (sender is ComboBox cb)
                 if (cb.Parent is StackPanel sp)
-                    if (sp.Parent is ContextMenu cm)
-                        cm.IsOpen = false;
+                    if (sp.Parent is MenuItem mi)
+                        if (mi.Parent is ContextMenu cm)
+                            cm.IsOpen = false;
         }
 
         static bool cmCancelled = false;
@@ -232,6 +289,7 @@ namespace BrainSimulator
             }
             else if (sender is ContextMenu cm)
             {
+                if (!cm.IsOpen) return;
                 cm.IsOpen = false;
                 if (cmCancelled) return;
 
@@ -289,12 +347,12 @@ namespace BrainSimulator
 
                     bool dimsChanged = false;
 
-                    if (width + col >= MainWindow.theNeuronArray.Cols)
+                    if (width + col > MainWindow.theNeuronArray.Cols)
                     {
                         width = MainWindow.theNeuronArray.Cols - col;
                         dimsChanged = true;
                     }
-                    if (height + row >= MainWindow.theNeuronArray.rows)
+                    if (height + row > MainWindow.theNeuronArray.rows)
                     {
                         height = MainWindow.theNeuronArray.rows - row;
                         dimsChanged = true;

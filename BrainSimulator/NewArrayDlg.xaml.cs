@@ -109,6 +109,7 @@ namespace BrainSimulator
             MainWindow.CloseAllModuleDialogs();
             MainWindow.CloseHistoryWindow();
             MainWindow.CloseNotesWindow();
+            MainWindow.arrayView.ClearShowingSynapses();
             if (MainWindow.theNeuronArray != null)
             {
                 lock (MainWindow.theNeuronArray.Modules)
@@ -168,7 +169,6 @@ namespace BrainSimulator
             }
             else
             {
-                
                 GC.Collect(3, GCCollectionMode.Forced, true);
                 MainWindow.theNeuronArray.Initialize(arraySize, rows);
                 MainWindow.theNeuronArray.RefractoryDelay = refractory;
@@ -177,6 +177,10 @@ namespace BrainSimulator
 
                 barUpdateTimer.Tick += Dt_Tick;
                 barUpdateTimer.Start();
+
+                MainWindow.theNeuronArray.ShowSynapses = doSynapses;
+                MainWindow.thisWindow.SetShowSynapsesCheckBox(doSynapses);
+
             }
         }
 
@@ -288,7 +292,7 @@ namespace BrainSimulator
             buttonRefresh.IsEnabled = MainWindow.useServers;
             NeuronClient.Init();
             UpdateServerTextBox();
-            if (NeuronClient.serverList.Count > 0)  
+            if (NeuronClient.serverList.Count > 0)
                 MainWindow.useServers = true;
         }
 

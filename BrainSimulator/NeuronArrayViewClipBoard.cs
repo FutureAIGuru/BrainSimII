@@ -389,6 +389,11 @@ namespace BrainSimulator
                 Neuron sourceNeuron = MainWindow.theNeuronArray.GetNeuron(source);
                 Neuron destNeuron = MainWindow.theNeuronArray.GetNeuron(source + offset);
                 MoveOneNeuron(sourceNeuron, destNeuron);
+                if (MainWindow.arrayView.IsShowingSnapses(source))
+                {
+                    MainWindow.arrayView.RemoveShowSynapses(source);
+                    MainWindow.arrayView.AddShowSynapses(source + offset);
+                }
             }
 
             foreach (ModuleView mv in MainWindow.theNeuronArray.modules)
@@ -402,7 +407,10 @@ namespace BrainSimulator
             try
             {
                 targetNeuronIndex = -1;
-                theSelection.selectedRectangles.Clear();
+                foreach(NeuronSelectionRectangle nsr in theSelection.selectedRectangles)
+                {
+                    nsr.FirstSelectedNeuron += offset;
+                }
                 Update();
             }
             catch { }

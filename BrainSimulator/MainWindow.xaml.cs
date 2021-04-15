@@ -58,7 +58,7 @@ namespace BrainSimulator
         DispatcherTimer zoomInOutTimer;
         int zoomAomunt = 0;
 
-        public static bool showSynapses = false;
+//        public static bool showSynapses = false;
 
 
         public MainWindow()
@@ -1119,7 +1119,6 @@ namespace BrainSimulator
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            showSynapses = true;
             if (theNeuronArray == null) return;
             theNeuronArray.ShowSynapses = true;
             Update();
@@ -1127,7 +1126,6 @@ namespace BrainSimulator
 
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            showSynapses = false;
             if (theNeuronArray == null) return;
             theNeuronArray.ShowSynapses = false;
             Update();

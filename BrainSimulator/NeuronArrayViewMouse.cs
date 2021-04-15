@@ -409,6 +409,20 @@ namespace BrainSimulator
                             firstSelectedNeuron = currentNeuron;
                         }
                     }
+                    foreach (NeuronSelectionRectangle nsr in theSelection.selectedRectangles)
+                    {
+                        Rectangle r = nsr.GetRectangle(dp);
+                        double left = Canvas.GetLeft(r);
+                        double top = Canvas.GetTop(r);
+                        if (currentPosition.X >= left &&
+                            currentPosition.X <= left + r.Width &&
+                            currentPosition.Y >= top &&
+                            currentPosition.Y <= top + r.Height)
+                        {
+                            theCanvas.Cursor = Cursors.ScrollAll;
+                        }
+                    }
+
                 }
 
                 //handle the creation/updating of a selection rectangle
@@ -427,6 +441,20 @@ namespace BrainSimulator
                     if (!theCanvas.Children.Contains(dragRectangle))
                         theCanvas.Children.Add(dragRectangle);
                 }
+            }
+            //handle moving a selection
+            if (e.LeftButton == MouseButtonState.Pressed && theCanvas.Cursor == Cursors.ScrollAll && na == null)
+            {
+                if (currentNeuron != mouseDownNeuronIndex)
+                {
+                    if (theSelection.selectedRectangles.Count > 0)
+                    {
+                        int offset = currentNeuron - mouseDownNeuronIndex;
+                        targetNeuronIndex = theSelection.selectedRectangles[0].FirstSelectedNeuron +offset;
+                        MoveNeurons();
+                    }
+                }
+                mouseDownNeuronIndex = currentNeuron;
             }
 
             //handle moving of a module

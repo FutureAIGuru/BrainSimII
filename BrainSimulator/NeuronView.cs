@@ -761,7 +761,7 @@ namespace BrainSimulator
             }
         }
 
-        private static bool NeuronInSelection(int id)
+        public static bool NeuronInSelection(int id)
         {
             bool neuronInSelection = false;
             foreach (NeuronSelectionRectangle sr in theNeuronArrayView.theSelection.selectedRectangles)

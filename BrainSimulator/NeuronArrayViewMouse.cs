@@ -147,11 +147,12 @@ namespace BrainSimulator
                     theCanvas.Children.Remove(dragRectangle);
                 }
 
+                MainWindow.theNeuronArray.SetUndoPoint();
+                MainWindow.theNeuronArray.AddSelectionUndo();
                 if (!MainWindow.ctrlPressed)
-                {
                     theSelection.selectedRectangles.Clear();
-                }
-                else Update();
+                else
+                    Update();
 
                 //snap to neuron point
                 currentPosition = dp.pointFromNeuron(mouseDownNeuronIndex);
@@ -173,6 +174,7 @@ namespace BrainSimulator
             if (theCanvas.Cursor == Cursors.ScrollAll)
             {
                 dragging = true;
+                MainWindow.theNeuronArray.SetUndoPoint();
             }
             if (theCanvas.Cursor == Cursors.UpArrow)
             {
@@ -223,6 +225,7 @@ namespace BrainSimulator
             Point currentPosition = e.GetPosition(theCanvas);
             LimitMousePostion(ref currentPosition);
             int mouseUpNeuronIndex = dp.NeuronFromPoint(currentPosition);
+            dragging = false;
 
 
             if (theCanvas.Cursor == Cursors.Cross)
@@ -396,6 +399,7 @@ namespace BrainSimulator
                 //set the cursor if are we inside an existing module rectangle?
                 if (e.LeftButton != MouseButtonState.Pressed)
                 {
+                    bool cursorSet = false;
                     na = null;
                     ////is the mouse in a module?
                     for (int i = 0; i < MainWindow.theNeuronArray.modules.Count; i++)
@@ -405,10 +409,12 @@ namespace BrainSimulator
                         double top = Canvas.GetTop(r);
                         if (SetScrollCursor(currentPosition, r, left, top))
                         {
+                            cursorSet = true;
                             na = MainWindow.theNeuronArray.modules[i];
                             firstSelectedNeuron = currentNeuron;
                         }
                     }
+                    //is the mouse in a selection?
                     foreach (NeuronSelectionRectangle nsr in theSelection.selectedRectangles)
                     {
                         Rectangle r = nsr.GetRectangle(dp);
@@ -420,9 +426,10 @@ namespace BrainSimulator
                             currentPosition.Y <= top + r.Height)
                         {
                             theCanvas.Cursor = Cursors.ScrollAll;
+                            cursorSet = true;
                         }
                     }
-
+                    if (!cursorSet) theCanvas.Cursor = Cursors.Cross;
                 }
 
                 //handle the creation/updating of a selection rectangle
@@ -449,9 +456,10 @@ namespace BrainSimulator
                 {
                     if (theSelection.selectedRectangles.Count > 0)
                     {
+                        MainWindow.theNeuronArray.AddSelectionUndo();
                         int offset = currentNeuron - mouseDownNeuronIndex;
                         targetNeuronIndex = theSelection.selectedRectangles[0].FirstSelectedNeuron +offset;
-                        MoveNeurons();
+                        MoveNeurons(true);
                     }
                 }
                 mouseDownNeuronIndex = currentNeuron;

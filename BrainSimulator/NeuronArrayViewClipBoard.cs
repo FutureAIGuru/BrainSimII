@@ -347,7 +347,7 @@ namespace BrainSimulator
         }
 
         //move the neurons from the selected area to the second (start point) and stretch all the synapses
-        public void MoveNeurons()
+        public void MoveNeurons(bool dragging = false)
         {
             if (theSelection.selectedNeuronIndex == -1) return;
             if (theSelection.selectedRectangles.Count == 0) return;
@@ -376,12 +376,15 @@ namespace BrainSimulator
 
             if (!IsDestinationClear(neuronsToMove, offset))
             {
-                MessageBoxResult result = MessageBox.Show("Some desination neurons are in use and will be overwritten, continue?", "Continue", MessageBoxButton.YesNo);
+                MessageBoxResult result = MessageBox.Show("Some desination neurons are in use and will be overwritten, continue?\nYou can also right-click the final destination neuron and select 'Move Here.'", "Continue", MessageBoxButton.YesNo);
                 if (result == MessageBoxResult.No) return;
             }
 
-            MainWindow.theNeuronArray.SetUndoPoint();
-
+            if (!dragging)
+            {
+                MainWindow.theNeuronArray.SetUndoPoint();
+                MainWindow.theNeuronArray.AddSelectionUndo();
+            }
             //change the order of copying to keep from overwriting ourselves
             if (offset > 0) neuronsToMove.Reverse();
             foreach (int source in neuronsToMove)

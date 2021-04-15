@@ -17,8 +17,6 @@ namespace BrainSimulator
     public class SynapseView : DependencyObject
     {
         public static DisplayParams dp;
-        static int selectedSynapseSource = -1;
-        static int selectedSynapseTarget = -1;
         static NeuronArrayView theNeuronArrayView = null;
         public static Canvas theCanvas;
 
@@ -351,6 +349,8 @@ namespace BrainSimulator
             MenuItem mi = (MenuItem)sender;
             ContextMenu cm = mi.Parent as ContextMenu;
             MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).DeleteSynapseWithUndo((int)cm.GetValue(TargetIDProperty));
+            cm.IsOpen = false;
+            cmCancelled = true;
             MainWindow.Update();
         }
 

@@ -34,7 +34,7 @@ namespace BrainSimulator
         }
 
         private int refractoryDelay = 0;
-        public int RefractoryDelay 
+        public int RefractoryDelay
         { get => refractoryDelay; set { refractoryDelay = value; SetRefractoryDelay(refractoryDelay); } }
 
         public void Initialize(int count, int inRows)
@@ -43,39 +43,6 @@ namespace BrainSimulator
             arraySize = count;
             if (!MainWindow.useServers)
                 base.Initialize(count);
-        }
-
-        //these lists keep track of changed synapses and neurons for undo
-        List<UndoPoint> undoList = new List<UndoPoint>(); //checkpoints for multi-undos 
-        List<SynapseUndo> synapseUndoInfo = new List<SynapseUndo>();
-        List<NeuronUndo> neuronUndoInfo = new List<NeuronUndo>();
-
-        //what can be undone?
-        //synapse change/add/delete
-        //neuron change
-        //multi synapse actions
-        //multi neuron actions
-        //cut => combo (what was in the selection before?)
-        //paste => combo (what was in the target before?)
-        //move => combo (what was in the target AND selection before?)
-
-
-        struct SynapseUndo
-        {
-            public int source, target;
-            public float weight;
-            public bool newSynapse;
-            public bool delSynapse;
-            public Synapse.modelType model;
-        }
-        struct NeuronUndo
-        {
-            public Neuron previousNeuron;
-        }
-        struct UndoPoint
-        {
-            public int synapsePoint;
-            public int neuronPoint;
         }
 
 
@@ -187,7 +154,47 @@ namespace BrainSimulator
 
         /// UNDO Handling from here on out
 
-        public void AddSynapseUndo(int source, int target, float weight,Synapse.modelType model, bool newSynapse,bool delSynapse)
+        struct SynapseUndo
+        {
+            public int source, target;
+            public float weight;
+            public bool newSynapse;
+            public bool delSynapse;
+            public Synapse.modelType model;
+        }
+        struct NeuronUndo
+        {
+            public Neuron previousNeuron;
+            public bool neuronIsShowingSynapses;
+        }
+        struct SelectUndo
+        {
+            public NeuronSelection selectionState;
+        }
+        struct UndoPoint
+        {
+            public int synapsePoint;
+            public int neuronPoint;
+            public int selectionPoint;
+        }
+
+        //these lists keep track of changed synapses and neurons for undo
+        List<UndoPoint> undoList = new List<UndoPoint>(); //checkpoints for multi-undos 
+        List<SynapseUndo> synapseUndoInfo = new List<SynapseUndo>();
+        List<NeuronUndo> neuronUndoInfo = new List<NeuronUndo>();
+        List<SelectUndo> selectionUndoInfo = new List<SelectUndo>();
+
+        //what can be undone?
+        //synapse change/add/delete
+        //neuron change
+        //multi synapse actions
+        //multi neuron actions
+        //cut => combo (what was in the selection before?)
+        //paste => combo (what was in the target before?)
+        //move => combo (what was in the target AND selection before?)
+
+
+        public void AddSynapseUndo(int source, int target, float weight, Synapse.modelType model, bool newSynapse, bool delSynapse)
         {
             SynapseUndo s;
             s = new SynapseUndo
@@ -204,7 +211,18 @@ namespace BrainSimulator
         public void AddNeuronUndo(Neuron n)
         {
             Neuron n1 = n.Copy();
-            neuronUndoInfo.Add(new NeuronUndo { previousNeuron = n1 });
+            neuronUndoInfo.Add(new NeuronUndo { previousNeuron = n1,neuronIsShowingSynapses=MainWindow.arrayView.IsShowingSnapses(n1.id) });
+        }
+        public void AddSelectionUndo()
+        {
+            SelectUndo s1 = new SelectUndo();
+            s1.selectionState = new NeuronSelection();
+            foreach (NeuronSelectionRectangle nsr in MainWindow.arrayView.theSelection.selectedRectangles)
+            {
+                NeuronSelectionRectangle nsr1 = new NeuronSelectionRectangle(nsr.FirstSelectedNeuron,nsr.Height,nsr.Width);
+                s1.selectionState.selectedRectangles.Add(nsr1);
+            }
+            selectionUndoInfo.Add(s1);
         }
 
         public void Undo()
@@ -212,17 +230,32 @@ namespace BrainSimulator
             if (undoList.Count == 0) return;
             int synapsePoint = undoList.Last().synapsePoint;
             int neuronPoint = undoList.Last().neuronPoint;
+            int selectionPoint = undoList.Last().selectionPoint;
             undoList.RemoveAt(undoList.Count - 1);
 
             while (neuronUndoInfo.Count > neuronPoint)
                 UndoNeuron();
             while (synapseUndoInfo.Count > synapsePoint)
                 UndoSynapse();
+            while (selectionUndoInfo.Count > selectionPoint)
+                UndoSelection();
+
         }
 
         public void SetUndoPoint()
         {
-            undoList.Add(new UndoPoint { synapsePoint = synapseUndoInfo.Count, neuronPoint=neuronUndoInfo.Count});
+            //only add if this is different from the latest
+            if (undoList.Count > 0 &&
+                undoList.Last().synapsePoint == synapseUndoInfo.Count &&
+                undoList.Last().neuronPoint == neuronUndoInfo.Count &&
+                undoList.Last().selectionPoint == selectionUndoInfo.Count
+                ) return;
+            undoList.Add(new UndoPoint
+            {
+                synapsePoint = synapseUndoInfo.Count,
+                neuronPoint = neuronUndoInfo.Count,
+                selectionPoint = selectionUndoInfo.Count
+            });
         }
         public bool UndoPossible()
         {
@@ -232,15 +265,28 @@ namespace BrainSimulator
         {
             if (neuronUndoInfo.Count == 0) return;
             NeuronUndo n = neuronUndoInfo.Last();
-            neuronUndoInfo.RemoveAt(neuronUndoInfo.Count-1);
+            neuronUndoInfo.RemoveAt(neuronUndoInfo.Count - 1);
             Neuron n1 = n.previousNeuron.Copy();
+            if (n.neuronIsShowingSynapses)
+                MainWindow.arrayView.AddShowSynapses(n1.id);
             n1.Update();
+        }
+        private void UndoSelection()
+        {
+            MainWindow.arrayView.theSelection.selectedRectangles.Clear();
+            SelectUndo s1 = new SelectUndo();
+            foreach (NeuronSelectionRectangle nsr in selectionUndoInfo.Last().selectionState.selectedRectangles)
+            {
+                NeuronSelectionRectangle nsr1 = new NeuronSelectionRectangle(nsr.FirstSelectedNeuron, nsr.Height, nsr.Width);
+                MainWindow.arrayView.theSelection.selectedRectangles.Add(nsr1);
+            }
+            selectionUndoInfo.RemoveAt(selectionUndoInfo.Count - 1);
         }
         private void UndoSynapse()
         {
             if (synapseUndoInfo.Count == 0) return;
             SynapseUndo s = synapseUndoInfo.Last();
-            synapseUndoInfo.RemoveAt(synapseUndoInfo.Count-1);
+            synapseUndoInfo.RemoveAt(synapseUndoInfo.Count - 1);
 
             Neuron n = GetNeuron(s.source);
             if (s.newSynapse) //the synapse was added so delete it
@@ -249,11 +295,11 @@ namespace BrainSimulator
             }
             else if (s.delSynapse) //the synapse was deleted so add it back
             {
-                n.AddSynapse(s.target, s.weight,s.model);
+                n.AddSynapse(s.target, s.weight, s.model);
             }
             else //weight/type changed 
             {
-                n.AddSynapse(s.target, s.weight,s.model);
+                n.AddSynapse(s.target, s.weight, s.model);
             }
             n.Update();
         }

@@ -15,7 +15,7 @@ namespace BrainSimulator
         public float leakRate;
         public int axonDelay;
         public Neuron.modelType model;
-        public int dummy; //TODO :Don't know why this is here, it is not required for alighment
+        public int dummy; //TODO :Don't know why this is here, it is not required for alignment
         public long lastFired;
     };
 

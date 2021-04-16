@@ -58,8 +58,6 @@ namespace BrainSimulator
         DispatcherTimer zoomInOutTimer;
         int zoomAomunt = 0;
 
-        //        public static bool showSynapses = false;
-
 
         public MainWindow()
         {
@@ -115,6 +113,9 @@ namespace BrainSimulator
             Application.Current.MainWindow = this;
             splashScreen.Close();
             ((DispatcherTimer)sender).Stop();
+            
+            //this is here because the file can be loaded before the mainwindow displays so
+            //module dialogs may open before their owner so theis happens a few seconds later
             if (theNeuronArray != null)
             {
                 lock (theNeuronArray.Modules)
@@ -134,7 +135,6 @@ namespace BrainSimulator
                 if (showHelp)
                     MenuItemHelp_Click(null, null);
             }
-            OpenHistoryWindow();
         }
 
         public static void CloseHistoryWindow()
@@ -144,24 +144,6 @@ namespace BrainSimulator
             FiringHistory.history.Clear();
             FiringHistory.Clear();
         }
-
-        private void OpenHistoryWindow()
-        {
-            return;
-            //if (Application.Current.MainWindow != this) return;
-            //if (theNeuronArray != null)
-            //{
-            //    bool history = false;
-            //    foreach (Neuron n in theNeuronArray.Neurons())
-            //    {
-            //        if (n.KeepHistory)
-            //            history = true;
-            //    }
-            //    if (history)
-            //        NeuronView.OpenHistoryWindow();
-            //}
-        }
-
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
         {
@@ -227,6 +209,10 @@ namespace BrainSimulator
             {
                 theNeuronArrayView.CutNeurons();
             }
+            if (ctrlPressed && e.Key == Key.A)
+            {
+                MenuItem_SelectAll(null, null);
+            }
             if (ctrlPressed && e.Key == Key.M)
             {
                 theNeuronArrayView.MoveNeurons();
@@ -277,7 +263,6 @@ namespace BrainSimulator
             Update();
             SetShowSynapsesCheckBox(theNeuronArray.ShowSynapses);
             SetPlayPauseButtonImage(theNeuronArray.EngineIsPaused);
-            OpenHistoryWindow();
             ResumeEngine();
         }
 
@@ -344,6 +329,7 @@ namespace BrainSimulator
                 });
             ResumeEngine();
         }
+
         private void MRUListItem_Click(object sender, RoutedEventArgs e)
         {
             if (PromptToSaveChanges())
@@ -689,6 +675,8 @@ namespace BrainSimulator
             displayUpdateTimer.Start();
         }
 
+        //this is a flag to say it's time to update the display  
+        //at the end of the next engine cycle
         static bool updateDisplay = false;
         private void DisplayUpdate_TimerTick(object sender, EventArgs e)
         {
@@ -973,11 +961,9 @@ namespace BrainSimulator
         }
 
         //this reloads the file which was being used on the previous run of the program
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-        }
         private void Window_ContentRendered(object sender, EventArgs e)
         {
+            //if the left shift key is pressed, don't load the file
             if (Keyboard.IsKeyUp(Key.LeftShift))
             {
                 try
@@ -1041,6 +1027,22 @@ namespace BrainSimulator
                 ResumeEngine();
             }
         }
+        public void SetPlayPauseButtonImage(bool play)
+        {
+            string playIcon = "\uE768";
+            string pauseIcon = "\uE769";
+            if (play)
+            {
+                buttonPlay.IsEnabled = true;
+                buttonPause.IsEnabled = false;
+            }
+            else
+            {
+                buttonPlay.IsEnabled = false;
+                buttonPause.IsEnabled = true;
+            }
+
+        }
 
         private void ButtonSingle_Click(object sender, RoutedEventArgs e)
         {
@@ -1060,64 +1062,22 @@ namespace BrainSimulator
                 }
             }
         }
-        public void SetPlayPauseButtonImage(bool play)
-        {
-            string playIcon = "\uE768";
-            string pauseIcon = "\uE769";
-            if (play)
-            {
-                buttonPlayPause.Content = playIcon;
-                //imagePause.Visibility = Visibility.Collapsed;
-                //imagePlay.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                buttonPlayPause.Content = pauseIcon;
-                //imagePause.Visibility = Visibility.Visible;
-                //imagePlay.Visibility = Visibility.Collapsed;
-            }
-
-        }
-
         private void ButtonPan_Click(object sender, RoutedEventArgs e)
         {
             theNeuronArrayView.theCanvas.Cursor = Cursors.Hand;
         }
 
-        private void ButtonZoomIn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void ButtonZoomIn_Click(object sender, RoutedEventArgs e)
         {
-            StartZoom(1);
+            theNeuronArrayView.Zoom(1);
         }
 
-        private void ButtonZoomOut_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void ButtonZoomOut_Click(object sender, RoutedEventArgs e)
         {
-            StartZoom(-1);
+            theNeuronArrayView.Zoom(-1);
         }
 
-        private void StartZoom(int amount)
-        {
-            zoomInOutTimer = new DispatcherTimer();
-            zoomInOutTimer.Interval = new TimeSpan(0, 0, 0, 0, 250);
-            zoomInOutTimer.Tick += ZoomInOutTimer_Tick;
-            CaptureMouse();
-            zoomAomunt = amount;
-            theNeuronArrayView.Zoom(zoomAomunt);
-            zoomInOutTimer.Start();
-        }
-
-        private void ZoomInOutTimer_Tick(object sender, EventArgs e)
-        {
-            if (Mouse.LeftButton == MouseButtonState.Pressed)
-            {
-                theNeuronArrayView.Zoom(zoomAomunt);
-            }
-            else
-            {
-                zoomInOutTimer.Stop();
-                ReleaseMouseCapture();
-            }
-        }
-
+        //This is here so we can capture the shift key to do a pan whenever the mouse in in the window
         bool mouseInWindow = false;
         private void Window_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -1252,5 +1212,14 @@ namespace BrainSimulator
                 }
             }
         }
+
+        private void MenuItem_SelectAll(object sender, RoutedEventArgs e)
+        {
+            arrayView.ClearSelection();
+            NeuronSelectionRectangle rr = new NeuronSelectionRectangle(0,theNeuronArray.Cols, theNeuronArray.rows);
+            arrayView.theSelection.selectedRectangles.Add(rr);
+            Update();
+        }
+
     }
 }

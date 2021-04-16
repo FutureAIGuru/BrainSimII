@@ -110,7 +110,6 @@ namespace BrainSimulator
             Canvas.SetTop(targetNeuronCanvas, 0);
 
 
-
             if (MainWindow.theNeuronArray == null) return;
 
             //Debug.WriteLine("Update " + MainWindow.theNeuronArray.Generation);

@@ -440,6 +440,8 @@
     <Content Include="Networks\BasicNeurons.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\ZoomOriginalSize_16x.png" />
+    <Resource Include="Resources\Icons\QuickFind_16x.png" />
     <Resource Include="Resources\Icons\SelectAll_16x.png" />
     <Resource Include="Resources\Icons\Paste_16x.png" />
     <Resource Include="Resources\Icons\Copy_16x.png" />

@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrainSimulator"
         mc:Ignorable="d"
-        Title="Brain Simulator II" Height="520.771" Width="756.667" KeyUp="Window_KeyUp" KeyDown="Window_KeyDown" 
+        Title="Brain Simulator II" Height="520.771" Width="914.667" KeyUp="Window_KeyUp" KeyDown="Window_KeyDown" 
         Closing="Window_Closing" ContentRendered="Window_ContentRendered" WindowState="Maximized" MouseEnter="Window_MouseEnter" MouseLeave="Window_MouseLeave">
     <Grid Margin="0,0,3.4,1.2">
-        <DockPanel VerticalAlignment="Top" Margin="0,1,-1,0">
+        <DockPanel VerticalAlignment="Top" Margin="0,1,-1,0" Grid.ColumnSpan="3">
             <Menu DockPanel.Dock="Top" x:Name="MainMenu" MouseEnter="MainMenu_MouseEnter" Height="26" Margin="0,0" VerticalAlignment="Top" >
                 <MenuItem Header="_File">
                     <MenuItem Header="_New" Click="button_FileNew_Click">
@@ -66,9 +66,19 @@
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Header="Edit">
+                    <MenuItem Header="Find Neuron" x:Name="NeuronMenu">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/icons/quickFind_16x.png"></Image>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Find Module" x:Name="ModuleMenu">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/icons/quickFind_16x.png"></Image>
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <MenuItem Header=" Undo"  Click="MenuItem_Undo" >
                         <MenuItem.Icon>
-                            <Image Source="resources/icons/Undo_16x.png"></Image>
+                            <Image Source="/resources/icons/Undo_16x.png"></Image>
                             <!--<TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE7A7;</TextBlock>-->
                         </MenuItem.Icon>
                     </MenuItem>
@@ -192,44 +202,66 @@
                 </MenuItem>
             </Menu>
         </DockPanel>
-        <local:NeuronArrayView x:Name="theNeuronArrayView" Margin="0,69,0,17.8" ClipToBounds="True" />
-        <Button x:Name="buttonInit" HorizontalAlignment="Left" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xEB9E;" Foreground="#FF00539C" Margin="438,35,0,0" VerticalAlignment="Top" Click="ButtonInit_Click" ToolTip="Reset all modules" >
-            <!--<Image Source="/resources/Rewind.png" Height="20"></Image>-->
-        </Button>
+        <local:NeuronArrayView x:Name="theNeuronArrayView" Margin="0,71,0,15.8" ClipToBounds="True"></local:NeuronArrayView>
+                               
+                               
+        <!--The Toolbar-->
+            
+        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Height="30" Margin="7,36,-9,0" VerticalAlignment="Top">
+            <Button x:Name="NewButton" VerticalAlignment="Top" Click="button_FileNew_Click" ToolTip="New File">
+                <Image Source="/resources/icons/NewFile_16x.png" Height="20"></Image>
+            </Button>
+            <Button x:Name="OpenButton" VerticalAlignment="Top" Click="buttonLoad_Click" ToolTip="Open File">
+                <Image Source="/resources/icons/OpenFile_16x.png" Height="20"></Image>
+            </Button>
+            <Button x:Name="SaveButton" VerticalAlignment="Top" Click="buttonSave_Click" ToolTip="Save File" >
+                <Image Source="/resources/icons/Save_16x.png" Height="20"></Image>
+            </Button>
+            <Button x:Name="SaveAsButton" VerticalAlignment="Top" Click="buttonSaveAs_Click" ToolTip="Save File As"  >
+                <Image Source="/resources/icons/SaveAs_16x.png" Height="20"></Image>
+            </Button>
+            <Label Visibility="Hidden" Width="10"></Label>
+            <Button x:Name="buttonPan" VerticalAlignment="Top" Click="ButtonPan_Click" ToolTip="Pan the display with the mouse (Shift+mouse move)" >
+                <Image Source="/resources/icons/hand.png" Height="20"></Image>
+            </Button>
+            <RepeatButton x:Name="buttonZoomOut" Delay="500" Interval="100"  VerticalAlignment="Top" ToolTip="Zoom Out (Also mouse wheel)"  Click="ButtonZoomOut_Click" >
+                <Image Source="/resources/icons/ZoomOut_16x.png" Height="20"></Image>
+            </RepeatButton>
+            <RepeatButton x:Name="buttonZoomIn" Delay="500" Interval="100"  VerticalAlignment="Top" ToolTip="Zoom In (Also mouse wheel)" Click="ButtonZoomIn_Click" >
+                <Image Source="/resources/icons/ZoomIn_16x.png" Height="20"></Image>
+            </RepeatButton>
+            <Button x:Name="ZoomToOrigin" VerticalAlignment="Top" Click="ButtonZoomToOrigin_Click" ToolTip="Zoom to Origin" >
+                <Image Source="/resources/icons/ZoomoriginalSize_16x.png" Height="20"></Image>
+            </Button>
+            <Label Visibility="Hidden" Width="5"></Label>
+            <CheckBox x:Name="checkBox" Content="All Synapses" Height="18" VerticalAlignment="Center" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"  />
+            <Label Visibility="Hidden" Width="5"></Label>
+            <Label x:Name="labelDisplayStatus" Content="Display status" Width="191" Height="30" VerticalAlignment="center" Grid.ColumnSpan="2" />
 
-        <Button x:Name="buttonPause" HorizontalAlignment="Left" Margin="467,35,0,0" VerticalAlignment="Top" Click="PlayPause_Click" ToolTip="Pause the neural engine" >
-            <Image Source="/resources/icons/pause_16x.png" Height="20"></Image>
-        </Button>
-        <Button x:Name="buttonPlay" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE768;" Foreground="#FF00539C" HorizontalAlignment="Left" Margin="492,35,0,0" VerticalAlignment="Top" Click="PlayPause_Click" ToolTip="Resume the neural engine" >
-            <!--<Image Source="/resources/play.png" Height="20"></Image>-->
-        </Button>
-        <RepeatButton  x:Name="buttonSingle" Delay="500" Interval="500" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE893;" Foreground="#FF00539C" Margin="518,35,0,0" Click="ButtonSingle_Click" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Run the engine one cycle" >
-        </RepeatButton>
+            <Label Visibility="Hidden" Width="10"></Label>
+            <Button x:Name="buttonInit" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xEB9E;" Foreground="#FF00539C" VerticalAlignment="Top" Click="ButtonInit_Click" ToolTip="Reset all modules" Grid.Column="2" >
+                <!--<Image Source="/resources/Rewind.png" Height="20"></Image>-->
+            </Button>
 
-        <Slider x:Name="slider" Margin="584,37,0,0" ValueChanged="slider_ValueChanged" IsSnapToTickEnabled="True" Value="5" HorizontalAlignment="Left" Width="140" ToolTip="Change the engine speed" RenderTransformOrigin="1.814,0.625" Height="24" VerticalAlignment="Top" />
-        <Label x:Name="label1" Content="Speed:" HorizontalAlignment="Left" Height="30" Margin="542,32,0,0" VerticalAlignment="Top" Width="56"/>
+            <Button x:Name="buttonPause" VerticalAlignment="Top" Click="PlayPause_Click" ToolTip="Pause the neural engine" >
+                <Image Source="/resources/icons/pause_16x.png" Height="20"></Image>
+            </Button>
+            <Button x:Name="buttonPlay" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE768;" Foreground="#FF00539C" VerticalAlignment="Top" Click="PlayPause_Click" ToolTip="Resume the neural engine" Grid.Column="2" >
+                <!--<Image Source="/resources/play.png" Height="20"></Image>-->
+            </Button>
+            <RepeatButton  x:Name="buttonSingle" Delay="500" Interval="500" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE893;" Foreground="#FF00539C" Click="ButtonSingle_Click" VerticalAlignment="Top" ToolTip="Run the engine one cycle" Grid.Column="2" >
+            </RepeatButton>
+            <Label x:Name="label1" Content="Speed:" Height="30" VerticalAlignment="Top" />
+            <Slider x:Name="slider" ValueChanged="slider_ValueChanged" IsSnapToTickEnabled="True" Value="5" 
+                    Width="140" ToolTip="Change the engine speed" Height="25" VerticalAlignment="Bottom"  />
+            <Label Visibility="Hidden" Width="10"></Label>
+            <Label x:Name="labelEngineStatus" Content="Initializing" Height="30" VerticalAlignment="Top" />
 
-        <Label x:Name="labelDisplayStatus" Content="Display status" Margin="242,34,0,0" Width="191" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" />
-        <Label x:Name="labelEngineStatus" Content="Initializing" Margin="728,34,-237.4,0" Height="30" VerticalAlignment="Top" />
+        </StackPanel>
 
-        <Button x:Name="SaveButton" VerticalAlignment="Top" Margin="36,35,0,0" Click="buttonSave_Click" ToolTip="Save File" HorizontalAlignment="Left" >
-            <Image Source="/resources/icons/Save_16x.png" Height="20"></Image>
-        </Button>
-        <Button x:Name="OpenButton" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="11,35,0,0" Click="buttonLoad_Click" ToolTip="Open File">
-            <Image Source="/resources/icons/OpenFile_16x.png" Height="20"></Image>
-        </Button>
-
-        <Button x:Name="buttonPan" HorizontalAlignment="Left" Margin="75,35,0,0" VerticalAlignment="Top" Click="ButtonPan_Click" ToolTip="Pan the display with the mouse (Shift+mouse move)" >
-            <Image Source="/resources/icons/hand.png" Height="20"></Image>
-        </Button>
-        <RepeatButton x:Name="buttonZoomOut" Delay="500" Interval="100"  HorizontalAlignment="Left" Margin="124,35,0,0" VerticalAlignment="Top" ToolTip="Zoom Out (Also mouse wheel)"  Click="ButtonZoomOut_Click" >
-            <Image Source="/resources/icons/ZoomOut_16x.png" Height="20"></Image>
-        </RepeatButton>
-        <RepeatButton x:Name="buttonZoomIn" Delay="500" Interval="100"  HorizontalAlignment="Left" Margin="99,35,0,0" VerticalAlignment="Top" ToolTip="Zoom In (Also mouse wheel)" Click="ButtonZoomIn_Click" >
-            <Image Source="/resources/icons/ZoomIn_16x.png" Height="20"></Image>
-        </RepeatButton>
-
-        <CheckBox x:Name="checkBox" Content="All Synapses" HorizontalAlignment="Left" Height="21" Margin="153,40,0,0" VerticalAlignment="Top" Width="91" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" />
-        <ProgressBar x:Name="progressBar" Maximum="1" HorizontalAlignment="Left" Margin="9,0,0,2.8" Width="137" Height="13" VerticalAlignment="Bottom" />
+            <!--The Progress bar at the bottom-->
+        <ProgressBar x:Name="progressBar" Maximum="1" Margin="7,0,0,2.8" Width="137" Height="13" VerticalAlignment="Bottom" />
     </Grid>
+    
+    
 </Window>

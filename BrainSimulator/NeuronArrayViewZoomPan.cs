@@ -1,4 +1,9 @@
-﻿using System;
+﻿//
+// Copyright (c) Charles Simon. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+//  
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -26,6 +31,15 @@ namespace BrainSimulator
         //these are used to handle scaling with the mouse wheel
         DispatcherTimer zoomRepeatTimer = new DispatcherTimer();
         float scale = 1;
+
+        public double ActualHeight()
+        {
+            return theCanvas.ActualHeight;
+        }
+        public double ActualWidth()
+        {
+            return theCanvas.ActualWidth;
+        }
 
 
         //SCROLLBAR FUNCTIONS
@@ -111,6 +125,16 @@ namespace BrainSimulator
 
 
         //PAN
+
+        public void PanToNeuron(int nID)
+        {
+            Point p1 = dp.pointFromNeuron(nID);
+            p1.X -= 30;
+            p1.Y -= 30;
+            dp.DisplayOffset -= (Vector)p1;
+            Update();
+        }
+
         private void StartPan(Point currentPositionOnGrid)
         {
             scrolling = true;

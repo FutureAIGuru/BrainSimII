@@ -113,7 +113,7 @@ namespace BrainSimulator
             Application.Current.MainWindow = this;
             splashScreen.Close();
             ((DispatcherTimer)sender).Stop();
-            
+
             //this is here because the file can be loaded before the mainwindow displays so
             //module dialogs may open before their owner so theis happens a few seconds later
             if (theNeuronArray != null)
@@ -355,7 +355,66 @@ namespace BrainSimulator
                 MRUListMenu.Items.Add(mi);
             }
         }
+        private void LoadFindMenus()
+        {
+            if (theNeuronArray == null) return;
+            NeuronMenu.Items.Clear();
+            List<string> neuronLabelList = new List<string>();
+            for (int i = 0; i < theNeuronArray.arraySize; i++)
+            {
+                Neuron n = theNeuronArray.GetNeuron(i);
+                if (n.label != "" && n.label[0] != '_')
+                {
+                    string shortLabel = n.label;
+                    if (shortLabel.Length > 10) shortLabel = shortLabel.Substring(0, 10);
+                    shortLabel += " (" + i + ")";
+                    neuronLabelList.Add(shortLabel);
+                }
+            }
+            neuronLabelList.Sort();
+            NeuronMenu.IsEnabled = (neuronLabelList.Count == 0) ? false : true;
+            foreach (string s in neuronLabelList)
+            {
+                MenuItem mi = new MenuItem { Header = s };
+                mi.Click += NeuronMenu_Click;
+                NeuronMenu.Items.Add(mi);
+            }
 
+
+            ModuleMenu.Items.Clear();
+            List<string> moduleLabelList = new List<string>();
+            for (int i = 0; i < theNeuronArray.Modules.Count; i++)
+            {
+                ModuleView theModule = theNeuronArray.Modules[i];
+                string shortLabel = theModule.Label;
+                if (shortLabel.Length > 10) shortLabel = shortLabel.Substring(0, 10);
+                shortLabel += " (" + theModule.FirstNeuron + ")";
+                moduleLabelList.Add(shortLabel);
+            }
+            moduleLabelList.Sort();
+            ModuleMenu.IsEnabled = (moduleLabelList.Count == 0) ? false : true;
+            foreach (string s in moduleLabelList)
+            {
+                MenuItem mi = new MenuItem { Header = s };
+                mi.Click += NeuronMenu_Click;
+                ModuleMenu.Items.Add(mi);
+            }
+        }
+
+        private void NeuronMenu_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem mi)
+            {
+                string id = mi.Header.ToString();
+                id = id.Substring(id.LastIndexOf('(') + 1);
+                id = id.Substring(0, id.Length - 1);
+                if (int.TryParse(id, out int nID))
+                {
+                    theNeuronArrayView.targetNeuronIndex = nID;
+                    theNeuronArrayView.PanToNeuron(nID);
+                }
+            }
+        }
         private void AddFileToMRUList(string filePath)
         {
             StringCollection MRUList = (StringCollection)Properties.Settings.Default["MRUList"];
@@ -725,6 +784,7 @@ namespace BrainSimulator
         private void MainMenu_MouseEnter(object sender, MouseEventArgs e)
         {
             LoadMRUMenu();
+            LoadFindMenus();
             if (theNeuronArray != null && !useServers) ThreadCount.Text = theNeuronArray.GetThreadCount().ToString();
             else ThreadCount.Text = "";
             if (theNeuronArray != null) Refractory.Text = theNeuronArray.GetRefractoryDelay().ToString();
@@ -1077,6 +1137,19 @@ namespace BrainSimulator
             theNeuronArrayView.Zoom(-1);
         }
 
+        private void ButtonZoomToOrigin_Click(object sender, RoutedEventArgs e)
+        {
+            theNeuronArrayView.Dp.DisplayOffset = new Point(0, 0);
+            if (theNeuronArrayView.Dp.NeuronDisplaySize != 62)
+                theNeuronArrayView.Dp.NeuronDisplaySize = 62;
+            else
+            {
+                double size = Math.Min(theNeuronArrayView.ActualHeight()/(double)(theNeuronArray.rows),theNeuronArrayView.ActualWidth()/(double)(theNeuronArray.Cols));
+                theNeuronArrayView.Dp.NeuronDisplaySize = (float)size;
+            }
+            Update();
+        }
+
         //This is here so we can capture the shift key to do a pan whenever the mouse in in the window
         bool mouseInWindow = false;
         private void Window_MouseEnter(object sender, MouseEventArgs e)
@@ -1216,7 +1289,7 @@ namespace BrainSimulator
         private void MenuItem_SelectAll(object sender, RoutedEventArgs e)
         {
             arrayView.ClearSelection();
-            NeuronSelectionRectangle rr = new NeuronSelectionRectangle(0,theNeuronArray.Cols, theNeuronArray.rows);
+            NeuronSelectionRectangle rr = new NeuronSelectionRectangle(0, theNeuronArray.Cols, theNeuronArray.rows);
             arrayView.theSelection.selectedRectangles.Add(rr);
             Update();
         }

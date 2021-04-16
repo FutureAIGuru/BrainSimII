@@ -70,7 +70,7 @@ namespace BrainSimulator
                     switch (name)
                     {
                         case "Label":
-                            n.label = node.InnerText;
+                            n.Label = node.InnerText;
                             break;
                         case "Model":
                             Enum.TryParse(node.InnerText, out Neuron.modelType theModel);

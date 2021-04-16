@@ -359,17 +359,15 @@ namespace BrainSimulator
         {
             if (theNeuronArray == null) return;
             NeuronMenu.Items.Clear();
-            List<string> neuronLabelList = new List<string>();
-            for (int i = 0; i < theNeuronArray.arraySize; i++)
+
+            List<string> neuronLabelList = theNeuronArray.GetValuesFromLabelCache();
+            List<int> neuronIdList = theNeuronArray.GetKeysFromLabelCache();
+            for (int i = 0; i < neuronLabelList.Count; i++)
             {
-                Neuron n = theNeuronArray.GetNeuron(i);
-                if (n.label != "" && n.label[0] != '_')
-                {
-                    string shortLabel = n.label;
-                    if (shortLabel.Length > 10) shortLabel = shortLabel.Substring(0, 10);
-                    shortLabel += " (" + i + ")";
-                    neuronLabelList.Add(shortLabel);
-                }
+                string shortLabel = neuronLabelList[i];
+                if (shortLabel.Length > 20) shortLabel = shortLabel.Substring(0, 20);
+                shortLabel += " (" + neuronIdList[i] + ")";
+                neuronLabelList[i] = shortLabel;
             }
             neuronLabelList.Sort();
             NeuronMenu.IsEnabled = (neuronLabelList.Count == 0) ? false : true;
@@ -1144,7 +1142,7 @@ namespace BrainSimulator
                 theNeuronArrayView.Dp.NeuronDisplaySize = 62;
             else
             {
-                double size = Math.Min(theNeuronArrayView.ActualHeight()/(double)(theNeuronArray.rows),theNeuronArrayView.ActualWidth()/(double)(theNeuronArray.Cols));
+                double size = Math.Min(theNeuronArrayView.ActualHeight() / (double)(theNeuronArray.rows), theNeuronArrayView.ActualWidth() / (double)(theNeuronArray.Cols));
                 theNeuronArrayView.Dp.NeuronDisplaySize = (float)size;
             }
             Update();

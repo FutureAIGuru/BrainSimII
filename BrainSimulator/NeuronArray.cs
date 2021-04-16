@@ -33,6 +33,39 @@ namespace BrainSimulator
             get { return modules; }
         }
 
+        private Dictionary<int, string> labelCache = new Dictionary<int, string>();
+        public void AddLabelToCache(int nID, string label)
+        {
+            try
+            {
+                labelCache.Add(nID, label);
+            }
+            catch
+            {
+                labelCache[nID] = label;
+            }
+        }
+        public string GetLabelFromCache(int nID)
+        {
+            if (labelCache.ContainsKey(nID))
+                return labelCache[nID];
+            else
+                return "";
+        }
+
+        public void ClearLabelCache()
+        {
+            labelCache.Clear();
+        }
+        public List<string> GetValuesFromLabelCache()
+        {
+            return labelCache.Values.ToList();
+        }
+        public List<int> GetKeysFromLabelCache()
+        {
+            return labelCache.Keys.ToList();
+        }
+
         private int refractoryDelay = 0;
         public int RefractoryDelay
         { get => refractoryDelay; set { refractoryDelay = value; SetRefractoryDelay(refractoryDelay); } }
@@ -41,6 +74,7 @@ namespace BrainSimulator
         {
             rows = inRows;
             arraySize = count;
+            ClearLabelCache();
             if (!MainWindow.useServers)
                 base.Initialize(count);
         }
@@ -58,15 +92,20 @@ namespace BrainSimulator
         }
         public Neuron GetNeuron(string label)
         {
-            for (int i = 0; i < arraySize; i++)
+            if (labelCache.ContainsValue(label))
             {
-                Neuron n = GetNeuron(i);
-                if (n.label == label) return n;
+                int nID = labelCache.FirstOrDefault(x => x.Value == label).Key;
+                return GetNeuron(nID);
             }
+            //for (int i = 0; i < arraySize; i++)
+            //{
+            //    Neuron n = GetNeuron(i);
+            //    if (n.label == label) return n;
+            //}
             return null;
         }
 
-  
+
         public void GetCounts(out long synapseCount, out int useCount)
         {
             synapseCount = GetTotalSynapses(); ;
@@ -206,7 +245,7 @@ namespace BrainSimulator
         public void AddNeuronUndo(Neuron n)
         {
             Neuron n1 = n.Copy();
-            neuronUndoInfo.Add(new NeuronUndo { previousNeuron = n1,neuronIsShowingSynapses=MainWindow.arrayView.IsShowingSnapses(n1.id) });
+            neuronUndoInfo.Add(new NeuronUndo { previousNeuron = n1, neuronIsShowingSynapses = MainWindow.arrayView.IsShowingSnapses(n1.id) });
         }
         public void AddSelectionUndo()
         {
@@ -214,7 +253,7 @@ namespace BrainSimulator
             s1.selectionState = new NeuronSelection();
             foreach (NeuronSelectionRectangle nsr in MainWindow.arrayView.theSelection.selectedRectangles)
             {
-                NeuronSelectionRectangle nsr1 = new NeuronSelectionRectangle(nsr.FirstSelectedNeuron,nsr.Height,nsr.Width);
+                NeuronSelectionRectangle nsr1 = new NeuronSelectionRectangle(nsr.FirstSelectedNeuron, nsr.Height, nsr.Width);
                 s1.selectionState.selectedRectangles.Add(nsr1);
             }
             selectionUndoInfo.Add(s1);

@@ -74,8 +74,7 @@ namespace BrainSimulator
             }
 
 
-            if (n.Label != "" || n.model != Neuron.modelType.IF
-                )
+            if (n.Label != "" || n.model != Neuron.modelType.IF)
             {
                 l = new Label();
                 l.Content = n.Label;

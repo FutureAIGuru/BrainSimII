@@ -63,10 +63,23 @@ namespace BrainSimulator
             Update();
         }
 
-        public enum modelType { IF, Color, FloatValue, LIF, Random, Burst,Always };
+        public enum modelType { IF, Color, FloatValue, LIF, Random, Burst, Always };
 
         public int Id { get => id; set => id = value; }
-        public string Label { get => label; set { label = value; Update(); } }
+        public string Label
+        {
+            get
+            {
+                return MainWindow.theNeuronArray.GetLabelFromCache(Id);
+            }
+            set
+            {
+                label = value;
+                if (label != "")
+                    MainWindow.theNeuronArray.AddLabelToCache(Id, label);
+                Update();
+            }
+        }
 
         public float LeakRate { get => leakRate; set { leakRate = value; Update(); } }
         public int AxonDelay
@@ -114,7 +127,7 @@ namespace BrainSimulator
             //TODO, first check to see if a synapse already exists and save the old weight
             Synapse s = FindSynapse(targetNeuron);
             if (s != null)
-                MainWindow.theNeuronArray.AddSynapseUndo(Id, targetNeuron, s.weight,s.model,false, false);
+                MainWindow.theNeuronArray.AddSynapseUndo(Id, targetNeuron, s.weight, s.model, false, false);
             else
                 MainWindow.theNeuronArray.AddSynapseUndo(Id, targetNeuron, 0, Synapse.modelType.Fixed, true, false);
 

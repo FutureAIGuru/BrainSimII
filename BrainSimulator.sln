@@ -29,6 +29,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuronServer", "NeuronServe
 		{ED5BEA74-23FD-496D-87A7-88CB42D1E051} = {ED5BEA74-23FD-496D-87A7-88CB42D1E051}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer", "Installer", "{17040604-C861-4301-A4FC-2DEDD0241501}"
+	ProjectSection(SolutionItems) = preProject
+		Installer\_BRAINSIM2.nsi = Installer\_BRAINSIM2.nsi
+		Installer\Brain Simulator II Setup.exe = Installer\Brain Simulator II Setup.exe
+		Installer\bsicon.ico = Installer\bsicon.ico
+		Installer\licdata.txt = Installer\licdata.txt
+		Installer\nsicon.ico = Installer\nsicon.ico
+		Installer\SPLASH.bmp = Installer\SPLASH.bmp
+		Installer\SPLASH.wav = Installer\SPLASH.wav
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

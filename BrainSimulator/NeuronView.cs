@@ -77,7 +77,7 @@ namespace BrainSimulator
             if (n.Label != "" || n.model != Neuron.modelType.IF)
             {
                 l = new Label();
-                l.Content = n.Label;
+                //l.Content = n.Label;
                 l.FontSize = dp.NeuronDisplaySize * .25;
                 l.Foreground = Brushes.White;
                 Canvas.SetLeft(l, p.X + dp.NeuronDisplaySize * offset);
@@ -102,7 +102,7 @@ namespace BrainSimulator
             string retVal = "";
             if (!dp.ShowNeuronLabels()) return retVal;
 
-            retVal = n.label;
+            retVal = n.Label;
             if (n.model == Neuron.modelType.LIF)
             {
                 if (n.leakRate == 0)
@@ -716,7 +716,7 @@ namespace BrainSimulator
                         Neuron n1 = MainWindow.theNeuronArray.GetNeuron(theNeurons[i]);
                         if (n1.id != n.id)
                         {
-                            n1.label = "";
+                            n1.Label = "";
                             n1.Update();
                         }
                     }
@@ -777,7 +777,7 @@ namespace BrainSimulator
                                     num++;
                                     newLabel = newLabel + num.ToString();
                                 }
-                                n1.label = newLabel;
+                                n1.Label = newLabel;
                             }
                             break;
                     }

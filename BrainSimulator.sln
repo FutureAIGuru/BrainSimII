@@ -32,7 +32,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer", "Installer", "{17040604-C861-4301-A4FC-2DEDD0241501}"
 	ProjectSection(SolutionItems) = preProject
 		Installer\_BRAINSIM2.nsi = Installer\_BRAINSIM2.nsi
-		Installer\Brain Simulator II Setup.exe = Installer\Brain Simulator II Setup.exe
 		Installer\bsicon.ico = Installer\bsicon.ico
 		Installer\licdata.txt = Installer\licdata.txt
 		Installer\nsicon.ico = Installer\nsicon.ico

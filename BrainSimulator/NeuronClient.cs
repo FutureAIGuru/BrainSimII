@@ -19,13 +19,25 @@ namespace BrainSimulator
 
         static UdpClient serverClient = null; //listen only
         static UdpClient clientServer; //send/broadcasg only
-        static IPAddress broadCastAddress = IPAddress.Parse("192.168.0.255"); //TODO: get IP address of current network
+        static IPAddress broadCastAddress; 
 
         const int clientServerPort = 49002;
         const int serverClientPort = 49003;
         public static void Init()
         {
             if (serverClient != null) return; //already initialized
+
+            //what is my ipaddress
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    byte[] ips = ip.GetAddressBytes();
+                    broadCastAddress = IPAddress.Parse(ips[0] +"."+ ips[1] + ".0.255");
+                }
+            }
+
             serverClient = new UdpClient(serverClientPort);
             serverClient.Client.ReceiveBufferSize = 10000000;
 
@@ -113,7 +125,8 @@ namespace BrainSimulator
         {
             tempNeuron = null;
             Broadcast("GetNeuron " + id);
-            while (tempNeuron == null) Thread.Sleep(1);
+            while (tempNeuron == null) 
+                Thread.Sleep(1);
             return tempNeuron;
 
         }
@@ -140,7 +153,8 @@ namespace BrainSimulator
             }
 
             Broadcast("GetNeurons " + start + " " + remaining);
-            while (tempNeurons.Count < count) Thread.Sleep(1);
+            while (tempNeurons.Count < count) 
+                Thread.Sleep(1);
             tempNeurons.Sort((t1, t2) => t1.id.CompareTo(t2.id)); //the neurons may be returned in different order
             return tempNeurons;
         }
@@ -148,9 +162,11 @@ namespace BrainSimulator
         {
             string command = "SetNeuron ";
             command += n.id + " ";
+            command += (int)n.model + " ";
             command += n.currentCharge + " ";
             command += n.lastCharge + " ";
-            command += n.label.Replace(" ", "_");
+            command += n.leakRate + " ";
+            command += n.axonDelay + " ";
             Broadcast(command);
         }
 
@@ -166,7 +182,7 @@ namespace BrainSimulator
             command += src + " ";
             command += dest + " ";
             command += weight + " ";
-            command += model + " ";
+            command += (int)model + " ";
             int srcServer = GetServerIndex(src);
             SendToServer(serverList[srcServer].ipAddress, command);
             int destServer = GetServerIndex(dest);
@@ -244,21 +260,27 @@ namespace BrainSimulator
                 case "Neuron":
                     Neuron n = new Neuron();
                     int.TryParse(commands[1], out n.id);
-                    float.TryParse(commands[2], out n.lastCharge);
-                    n.label = commands[3].Replace("_", " ");
-                    bool.TryParse(commands[4], out n.inUse);
+                    int.TryParse(commands[2], out int tempModel);
+                    n.model = (Neuron.modelType)tempModel;
+                    float.TryParse(commands[3], out n.lastCharge);
+                    float.TryParse(commands[4], out n.leakRate);
+                    int.TryParse(commands[5], out n.axonDelay);
+                    bool.TryParse(commands[6], out n.inUse);
                     tempNeuron = n;
                     break;
 
                 case "Neurons":
                     int.TryParse(commands[1], out int count);
-                    for (int i = 2; i < commands.Length; i += 4)
+                    for (int i = 2; i < commands.Length; i += 6)
                     {
                         n = new Neuron();
                         int.TryParse(commands[i], out n.id);
-                        float.TryParse(commands[i + 1], out n.lastCharge);
-                        n.label = commands[i + 2].Replace("_", " ");
-                        bool.TryParse(commands[i + 3], out n.inUse);
+                        int.TryParse(commands[i+1], out tempModel);
+                        n.model = (Neuron.modelType)tempModel;
+                        float.TryParse(commands[i+2], out n.lastCharge);
+                        float.TryParse(commands[i+3], out n.leakRate);
+                        int.TryParse(commands[i+4], out n.axonDelay);
+                        bool.TryParse(commands[i+5], out n.inUse);
                         tempNeurons.Add(n);
                     }
                     break;

@@ -38,7 +38,7 @@ namespace BrainSimulator
             MainWindow.myClipBoard = new NeuronArray();
             NeuronArray myClipBoard;
             myClipBoard = MainWindow.myClipBoard;
-            myClipBoard.Initialize((X2o - X1o + 1) * (Y2o - Y1o + 1), (Y2o - Y1o + 1));
+            myClipBoard.Initialize((X2o - X1o + 1) * (Y2o - Y1o + 1), (Y2o - Y1o + 1),true);
             boundarySynapsesOut.Clear();
             boundarySynapsesIn.Clear();
 
@@ -51,6 +51,7 @@ namespace BrainSimulator
                 Neuron destNeuron = sourceNeuron.Clone();
                 destNeuron.Owner = myClipBoard;
                 destNeuron.Id = destId;
+                destNeuron.Label = sourceNeuron.Label;
                 myClipBoard.SetNeuron(destId, destNeuron);
             }
 
@@ -58,6 +59,11 @@ namespace BrainSimulator
             foreach (int nID in neuronsToCopy)
             {
                 Neuron sourceNeuron = MainWindow.theNeuronArray.GetNeuron(nID);
+                if (MainWindow.useServers)
+                {
+                    sourceNeuron.synapses = NeuronClient.GetSynapses(sourceNeuron.id);
+                }
+
                 int destId = GetClipboardId(X1o, Y1o, nID);
                 Neuron destNeuron = myClipBoard.GetNeuron(destId);
                 destNeuron.Owner = myClipBoard;
@@ -179,7 +185,7 @@ namespace BrainSimulator
             List<int> targetNeurons = new List<int>();
             for (int i = 0; i < myClipBoard.arraySize; i++)
             {
-                if (myClipBoard.GetNeuron(i) != null)
+                if (myClipBoard.GetNeuron(i,true) != null)
                 {
                     targetNeurons.Add(GetNeuronArrayId(i));
                 }
@@ -207,14 +213,17 @@ namespace BrainSimulator
                 {
                     int destID = GetNeuronArrayId(i);
                     MainWindow.theNeuronArray.GetNeuron(destID).AddUndoInfo();
+                    Neuron n = myClipBoard.GetCompleteNeuron(i,true);
+                    n.Owner = myClipBoard;
+                    n.synapses = myClipBoard.GetSynapsesList(i);
 
-                    Neuron sourceNeuron = myClipBoard.GetNeuron(i).Clone();
+                    Neuron sourceNeuron = n.Clone();
                     sourceNeuron.id = destID;
                     while (sourceNeuron.label != "" && MainWindow.theNeuronArray.GetNeuron(sourceNeuron.label) != null)
                     {
                         int num = 0;
                         int digitCount = 0;
-                        while (sourceNeuron.Label != "" && Char.IsDigit(sourceNeuron.label[sourceNeuron.label.Length - 1]))
+                        while (sourceNeuron.label != "" && Char.IsDigit(sourceNeuron.label[sourceNeuron.label.Length - 1]))
                         {
                             int.TryParse(sourceNeuron.label[sourceNeuron.label.Length - 1].ToString(), out int digit);
                             num = num + (int)Math.Pow(10, digitCount) * digit;
@@ -224,11 +233,15 @@ namespace BrainSimulator
                         num++;
                         sourceNeuron.label = sourceNeuron.label + num.ToString();
                     }
+                    sourceNeuron.Owner = MainWindow.theNeuronArray;
+                    sourceNeuron.Label = sourceNeuron.label;
                     MainWindow.theNeuronArray.SetNeuron(destID, sourceNeuron);
 
-                    foreach (Synapse s in myClipBoard.GetNeuron(i).Synapses)
+
+                    foreach (Synapse s in n.Synapses)
                     {
-                        MainWindow.theNeuronArray.GetNeuron(destID).AddSynapseWithUndo(GetNeuronArrayId(s.TargetNeuron), s.Weight, s.model);
+                        MainWindow.theNeuronArray.GetNeuron(destID).
+                            AddSynapseWithUndo(GetNeuronArrayId(s.TargetNeuron), s.Weight, s.model);
                     }
                 }
             }
@@ -425,7 +438,12 @@ namespace BrainSimulator
         public void MoveOneNeuron(Neuron n, Neuron nNewLocation)
         {
             n.AddUndoInfo();
-            nNewLocation.AddUndoInfo();
+            nNewLocation.AddUndoInfo(); 
+            if(MainWindow.useServers)
+            {
+                n.synapses = NeuronClient.GetSynapses(n.id);
+                n.synapsesFrom = NeuronClient.GetSynapsesFrom(n.id);
+            }
 
             //copy the neuron attributes and delete them from the old neuron.
             n.Copy(nNewLocation);

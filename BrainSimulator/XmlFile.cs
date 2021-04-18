@@ -30,7 +30,8 @@ namespace BrainSimulator
         public static bool Load(ref NeuronArray theNeuronArray, string fileName)
         {
             FileStream file = File.Open(fileName, FileMode.Open);
-
+            theNeuronArray = new NeuronArray();
+            
             XmlSerializer reader1 = new XmlSerializer(typeof(NeuronArray), GetModuleTypes());
             theNeuronArray = (NeuronArray)reader1.Deserialize(file);
             file.Close();
@@ -44,7 +45,7 @@ namespace BrainSimulator
             fs.Close();
 
             int arraySize = theNeuronArray.arraySize;
-            theNeuronArray.Initialize(arraySize);
+            theNeuronArray.Initialize(arraySize,theNeuronArray.rows);
             neuronNodes = xmldoc.GetElementsByTagName("Neuron");
 
             for (int i = 0; i < neuronNodes.Count; i++)
@@ -56,7 +57,7 @@ namespace BrainSimulator
                 XmlElement neuronNode = (XmlElement)neuronNodes[i];
                 XmlNodeList idNodes = neuronNode.GetElementsByTagName("Id");
                 int id = i; //this is a hack to read files where all neurons were included but no Id's
-                if (idNodes.Count > 0) 
+                if (idNodes.Count > 0)
                     int.TryParse(idNodes[0].InnerText, out id);
                 if (id == -1) continue;
 
@@ -81,7 +82,7 @@ namespace BrainSimulator
                             n.leakRate = leakRate;
                             break;
                         case "AxonDelay":
-                            int .TryParse(node.InnerText, out int axonDelay);
+                            int.TryParse(node.InnerText, out int axonDelay);
                             n.axonDelay = axonDelay;
                             break;
                         case "LastCharge":
@@ -157,7 +158,7 @@ namespace BrainSimulator
             }
             catch (Exception e)
             {
-                MessageBox.Show("Xml file write failed because: "+e.Message);
+                MessageBox.Show("Xml file write failed because: " + e.Message);
                 return false;
             }
             file.Position = 0; ;
@@ -175,7 +176,7 @@ namespace BrainSimulator
                 if (n.inUse)
                 {
                     n = theNeuronArray.GetCompleteNeuron(i);
-                    string label = theNeuronArray.GetNeuronLabel(n.id);
+                    string label = n.Label;// theNeuronArray.GetNeuronLabel(n.id);
                     //this is needed bacause inUse is true if any synapse points to this neuron--we don't need to bother with that if it's the only thing 
                     if (n.synapses.Count != 0 || label != "" || n.lastCharge != 0 || n.leakRate != 0.1f
                         || n.model != Neuron.modelType.IF)

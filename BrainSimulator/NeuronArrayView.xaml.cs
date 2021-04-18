@@ -298,7 +298,7 @@ namespace BrainSimulator
                                 if (synapseCount < dp.maxSynapsesToDisplay &&
                                     dp.ShowSynapses() && (MainWindow.theNeuronArray.ShowSynapses || IsShowingSnapses(n.id)))
                                 {
-                                    if (MainWindow.useServers)
+                                    if (MainWindow.useServers && n.inUse)
                                         n = theNeuronArray.AddSynapses(n);
                                     Point p1 = dp.pointFromNeuron(neuronID);
 
@@ -364,6 +364,8 @@ namespace BrainSimulator
         {
             if (MainWindow.useServers)
             {
+                Update();
+                return;
                 int index = 0; //current index into neuronsOnScreen array
                 int begin = 0; //beginning of a continuout sequences of neurons to retrieve
                 while (index < neuronsOnScreen.Count)
@@ -387,7 +389,6 @@ namespace BrainSimulator
                     }
                     index++;
                 }
-
             }
             else
             {

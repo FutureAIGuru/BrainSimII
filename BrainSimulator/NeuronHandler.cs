@@ -25,9 +25,9 @@ namespace BrainSimulator
         {
             return ConvertToNeuron(GetNeuron(i));
         }
-        public void SetCompleteNeuron(Neuron n)
+        public void SetCompleteNeuron( Neuron n)
         {
-            if (MainWindow.useServers)
+            if (MainWindow.useServers && n.Owner == MainWindow.theNeuronArray)
             {
                 NeuronClient.SetNeuron(n);
             }
@@ -36,7 +36,7 @@ namespace BrainSimulator
                 int i = n.id;
                 SetNeuronCurrentCharge(i, n.currentCharge);
                 SetNeuronLastCharge(i, n.lastCharge);
-                SetNeuronLabel(i, n.label);
+                //SetNeuronLabel(i, n.label);
                 SetNeuronLeakRate(i, n.leakRate);
                 SetNeuronModel(i, (int)n.model);
                 SetNeuronAxonDelay(i, n.axonDelay);
@@ -64,16 +64,16 @@ namespace BrainSimulator
         }
         public Neuron AddSynapses(Neuron n)
         {
-            if (MainWindow.useServers)
+            if (MainWindow.useServers && n.Owner == MainWindow.theNeuronArray)
             {
                 n.synapses = NeuronClient.GetSynapses(n.id);
                 n.synapsesFrom = NeuronClient.GetSynapsesFrom(n.id);
             }
             return n;
         }
-        public Neuron GetCompleteNeuron(int i)
+        public Neuron GetCompleteNeuron(int i, bool fromClipboard = false)
         {
-            if (MainWindow.useServers)
+            if (MainWindow.useServers && !fromClipboard)
             {
                 Neuron retVal = NeuronClient.GetNeuron(i);
                 //retVal.synapses = NeuronClient.GetSynapses(i);
@@ -95,7 +95,7 @@ namespace BrainSimulator
                 retVal.model = n.model;
                 retVal.axonDelay = n.axonDelay;
 
-                retVal.label = GetNeuronLabel(i);
+                retVal.label = retVal.Label;// GetNeuronLabel(i);
                 retVal.synapses = GetSynapsesList(i);
                 retVal.synapsesFrom = GetSynapsesFromList(i);
                 return retVal;

@@ -47,7 +47,6 @@ namespace NeuronServer
         const int serverServerPort = 49001;
         const int clientServerPort = 49002;
         const int serverClientPort = 49003;
-        static IPAddress broadCastAddress = IPAddress.Parse("192.168.0.255"); //TODO: get an IP address of current network
 
         static public NeuronArrayBase theNeuronArray = null;
 
@@ -64,6 +63,7 @@ namespace NeuronServer
             Console.WriteLine("Neuron Server Started");
 
 
+            //set up lists for moving averages
             elapsedFiring = new List<long>();
             for (int i = 0; i < 100; i++)
             {
@@ -226,11 +226,10 @@ namespace NeuronServer
                         int localID = neuronID - firstNeuron;
                         string retVal = "Neuron ";
                         retVal += neuronID + " ";
-                        retVal += theNeuronArray.GetNeuronLastCharge(localID) + " ";
-                        string label = theNeuronArray.GetNeuronLabel(localID);
-                        label = label.Replace(" ", "_");
-                        if (label == "") label = "_";
-                        retVal += label + " ";
+                        retVal += theNeuronArray.GetNeuronModel(neuronID) + " ";
+                        retVal += theNeuronArray.GetNeuronLastCharge(neuronID) + " ";
+                        retVal += theNeuronArray.GetNeuronLeakRate(neuronID) + " ";
+                        retVal += theNeuronArray.GetNeuronAxonDelay(neuronID) + " ";
                         retVal += theNeuronArray.GetNeuronInUse(localID);
                         SendToClient(retVal);
                     }
@@ -252,11 +251,10 @@ namespace NeuronServer
                             }
                             retVal += neuronID + " ";
                             int localID = neuronID - firstNeuron;
+                            retVal += theNeuronArray.GetNeuronModel(localID) + " ";
                             retVal += theNeuronArray.GetNeuronLastCharge(localID) + " ";
-                            string label = theNeuronArray.GetNeuronLabel(localID);
-                            label = label.Replace(" ", "_");
-                            if (label == "") label = "_";
-                            retVal += label + " ";
+                            retVal += theNeuronArray.GetNeuronLeakRate(localID) + " ";
+                            retVal += theNeuronArray.GetNeuronAxonDelay(localID) + " ";
                             retVal += theNeuronArray.GetNeuronInUse(localID) + " ";
                             neuronID++;
                         }
@@ -268,13 +266,17 @@ namespace NeuronServer
                     int.TryParse(commands[1], out neuronID);
                     if (neuronID >= firstNeuron && neuronID < lastNeuron)
                     {
-                        //TODO threshold and model
                         int localID = neuronID - firstNeuron;
-                        float.TryParse(commands[2], out float currentCharge);
-                        float.TryParse(commands[3], out float lastCharge);
+                        int.TryParse(commands[2], out int neuronModel);
+                        float.TryParse(commands[3], out float currentCharge);
+                        float.TryParse(commands[4], out float lastCharge);
+                        float.TryParse(commands[5], out float leakRate);
+                        int.TryParse(commands[6], out int axonDelay);
+                        theNeuronArray.SetNeuronModel(localID, neuronModel);
                         theNeuronArray.SetNeuronCurrentCharge(localID, currentCharge);
                         theNeuronArray.SetNeuronLastCharge(localID, lastCharge);
-                        theNeuronArray.SetNeuronLabel(localID, commands[4].Replace("_", " "));
+                        theNeuronArray.SetNeuronLeakRate(localID, leakRate);
+                        theNeuronArray.SetNeuronAxonDelay(localID, axonDelay);
                     }
                     break;
 
@@ -319,7 +321,7 @@ namespace NeuronServer
                         {
                             if (s.targetNeuron < 0) s.targetNeuron = -s.targetNeuron;
                             else s.targetNeuron = s.targetNeuron + firstNeuron;
-                            retVal += s.targetNeuron + " " + s.weight + " " + s.isHebbian + " ";
+                            retVal += s.targetNeuron + " " + s.weight + " " + s.model + " ";
                         }
                         SendToClient(retVal);
                     }
@@ -336,7 +338,7 @@ namespace NeuronServer
                         {
                             if (s.targetNeuron < 0) s.targetNeuron = -s.targetNeuron;
                             else s.targetNeuron = s.targetNeuron + firstNeuron;
-                            retVal += s.targetNeuron + " " + s.weight + " " + s.isHebbian + " ";
+                            retVal += s.targetNeuron + " " + s.weight + " " + s.model + " ";
                         }
                         SendToClient(retVal);
                     }
@@ -449,7 +451,7 @@ namespace NeuronServer
         {
             public int targetNeuron;
             public float weight;
-            public bool isHebbian;
+            public int model;
         }
 
         static byte[] ConvertSynapseListToByteArray(List<Synapse> synapses)
@@ -460,7 +462,7 @@ namespace NeuronServer
             {
                 writer.Write(synapses[i].targetNeuron);
                 writer.Write(synapses[i].weight);
-                writer.Write(synapses[i].isHebbian);
+                writer.Write(synapses[i].model);
             }
             return stream.ToArray();
         }
@@ -473,7 +475,7 @@ namespace NeuronServer
                 Synapse s = new Synapse();
                 s.targetNeuron = reader.ReadInt32();
                 s.weight = reader.ReadSingle();
-                s.isHebbian = reader.ReadBoolean();
+                s.model = reader.ReadInt32();
                 retVal.Add(s);
             }
             return retVal;

@@ -63,7 +63,7 @@ namespace BrainSimulator
         {
             foreach (NeuronHistory active in history)
             {
-                float lastCharge = MainWindow.theNeuronArray.GetNeuronLastCharge(active.NeuronID);
+                float lastCharge = MainWindow.theNeuronArray.GetNeuron(active.NeuronID).lastCharge;
                 if (active.Samples.Count > maxSamples)
                     active.Samples.RemoveAt(0);
                 active.Samples.Add(new Sample { generation = MainWindow.theNeuronArray.Generation, value = lastCharge });

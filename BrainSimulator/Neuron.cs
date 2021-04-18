@@ -26,7 +26,7 @@ namespace BrainSimulator
                 "Always fire"
         };
 
-        public NeuronArray Owner { set => ownerArray = value; }
+        public NeuronArray Owner { get => ownerArray; set => ownerArray = value; }
 
         //IMPORTANT:
         //Lastcharge is a stable readable value of the output of a neuron
@@ -70,14 +70,16 @@ namespace BrainSimulator
         {
             get
             {
-                return MainWindow.theNeuronArray.GetLabelFromCache(Id);
+                return ownerArray.GetLabelFromCache(Id);
             }
             set
             {
                 label = value;
                 if (label != "")
-                    MainWindow.theNeuronArray.AddLabelToCache(Id, label);
-                Update();
+                    ownerArray.AddLabelToCache(Id, label);
+                else
+                    ownerArray.RemoveLabelFromCache(Id);
+                //Update(); //since everthing is in a cache, we don't have to write it out
             }
         }
 
@@ -193,6 +195,7 @@ namespace BrainSimulator
         public Neuron Clone()
         {
             Neuron n = (Neuron)this.MemberwiseClone();
+            n.label = Label;
             n.synapses = new List<Synapse>();
             n.synapsesFrom = new List<Synapse>(); ;
             return n;
@@ -200,7 +203,7 @@ namespace BrainSimulator
         //copy this content to n
         public void Copy(Neuron n)
         {
-            n.label = this.label;
+            n.Label = this.Label;
             n.lastCharge = this.lastCharge;
             n.currentCharge = this.currentCharge;
             n.LeakRate = this.LeakRate;
@@ -222,7 +225,7 @@ namespace BrainSimulator
         }
         public void Clear()
         {
-            label = "";
+            Label = "";
             currentCharge = 0;
             lastCharge = 0;
             model = modelType.IF;

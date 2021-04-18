@@ -439,7 +439,7 @@ namespace BrainSimulator
                     OpenFileDialog openFileDialog1 = new OpenFileDialog
                     {
                         Filter = "XML Network Files|*.xml",
-                        Title = "Select a Brain Simulator File"
+                        Title = "Select a Brain Simulator File",
                     };
                     // Show the Dialog.  
                     // If the user clicked OK in the dialog and  
@@ -943,6 +943,9 @@ namespace BrainSimulator
         private bool PromptToSaveChanges()
         {
             if (theNeuronArray == null) return false;
+            MainWindow.theNeuronArray.GetCounts(out long synapseCount, out int neuronInUseCount);
+            if (neuronInUseCount == 0) return false;
+
             bool retVal = false;
             MessageBoxResult mbResult = System.Windows.MessageBox.Show(this, "Do you want to save changes?", "Save", MessageBoxButton.YesNoCancel,
             MessageBoxImage.Asterisk, MessageBoxResult.No);

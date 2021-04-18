@@ -364,8 +364,6 @@ namespace BrainSimulator
         {
             if (MainWindow.useServers)
             {
-                Update();
-                return;
                 int index = 0; //current index into neuronsOnScreen array
                 int begin = 0; //beginning of a continuout sequences of neurons to retrieve
                 while (index < neuronsOnScreen.Count)

@@ -65,6 +65,7 @@ namespace BrainSimulator
                 Point windowSize = new Point(theCanvas.Width, theCanvas.ActualHeight);
                 double xScale = windowSize.X / (float)sampleCount;
                 double yDelta = .9 * windowSize.Y / (FiringHistory.history.Count);
+                yDelta = Math.Min(yDelta, 200);
 
                 //TODO:  The commented-out lines will create a smooth curve instead of the line approximation
                 for (int i = 0; i < FiringHistory.history.Count; i++)
@@ -151,8 +152,8 @@ namespace BrainSimulator
                     Label l = new Label
                     {
                         Content = label,
-                        Foreground = new SolidColorBrush(Colors.White)
-                    };
+                        Foreground = new SolidColorBrush(Colors.White),
+                        FontSize = yDelta / 3                    };
                     l.MouseMove += L_MouseMove;
                     l.MouseLeftButtonUp += L_MouseLeftButtonUp;
                     Canvas.SetLeft(l, 10);

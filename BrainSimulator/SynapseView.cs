@@ -67,7 +67,7 @@ namespace BrainSimulator
             if (!PtOnScreen(p1) && !PtOnScreen(p2)) return null;
 
             Shape l = GetSynapseShape(p1, p2, theNeuronArrayView, s.model);
-            l.Stroke = l.Fill =  new SolidColorBrush(Utils.RainbowColorFromValue(s.weight));
+            l.Stroke = new SolidColorBrush(Utils.RainbowColorFromValue(s.weight));
             if (l is Ellipse E)
             { }
             else

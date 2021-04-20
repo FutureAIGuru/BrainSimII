@@ -364,12 +364,21 @@ namespace BrainSimulator
                 if (mouseRepeatTimer.IsEnabled && mouseRepeatTimer.Interval == new TimeSpan(0, 0, 0, 0, 100)) return;
                 mouseRepeatTimer.Stop();
             }
-            if (MainWindow.theNeuronArray == null) return;
+            if (MainWindow.theNeuronArray == null || 
+                MainWindow.theNeuronArray.rows == 0 ||
+                MainWindow.theNeuronArray.Cols == 0) 
+                return;
+
             if (e.RightButton == MouseButtonState.Pressed) return;
 
             Point currentPosition = e.GetPosition(theCanvas);
             LimitMousePostion(ref currentPosition);
             int currentNeuron = dp.NeuronFromPoint(currentPosition);
+
+            int y1 = currentNeuron % Rows;
+            int x1 = currentNeuron / Rows;
+            MainWindow.thisWindow.SetMouseStatus(currentNeuron, y1, x1);
+
 
             //are we dragging a synapse? rubber-band it
             if (e.LeftButton == MouseButtonState.Pressed && theCanvas.Cursor == Cursors.UpArrow && dragging)

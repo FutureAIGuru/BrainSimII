@@ -217,30 +217,33 @@ namespace BrainSimulator
                     float vRatio = (float)(r.Height / (float)nr.Height);
                     float hRatio = (float)(r.Width / (float)nr.Width);
 
-                    theSelection.selectedRectangles[i].bitmap = new System.Windows.Media.Imaging.WriteableBitmap(width, height, 96, 96, PixelFormats.Bgr32, null);
+                    if (height > 1 && width > 1)
+                    {
+                        theSelection.selectedRectangles[i].bitmap = new System.Windows.Media.Imaging.WriteableBitmap(width, height, 96, 96, PixelFormats.Bgr32, null);
 
-                    uint[] pixels = new uint[width * height]; ;
-                    for (int x = 0; x < width; x++)
-                        for (int y = 0; y < height; y++)
-                        {
+                        uint[] pixels = new uint[width * height]; ;
+                        for (int x = 0; x < width; x++)
+                            for (int y = 0; y < height; y++)
                             {
-                                int k = width * y + x;
-                                int index = theSelection.selectedRectangles[i].GetNeuronIndex((int)(x / hRatio), (int)(y / vRatio));
-                                Neuron n = MainWindow.theNeuronArray.GetNeuronForDrawing(index);
-                                uint val = (uint)Utils.ColorToInt(NeuronView.GetNeuronColor(n).Color);
-                                pixels[k] = val;
+                                {
+                                    int k = width * y + x;
+                                    int index = theSelection.selectedRectangles[i].GetNeuronIndex((int)(x / hRatio), (int)(y / vRatio));
+                                    Neuron n = MainWindow.theNeuronArray.GetNeuronForDrawing(index);
+                                    uint val = (uint)Utils.ColorToInt(NeuronView.GetNeuronColor(n).Color);
+                                    pixels[k] = val;
+                                }
                             }
-                        }
-                    // apply pixels to bitmap
-                    theSelection.selectedRectangles[i].bitmap.WritePixels(new Int32Rect(0, 0, width, height), pixels, width * 4, 0);
+                        // apply pixels to bitmap
+                        theSelection.selectedRectangles[i].bitmap.WritePixels(new Int32Rect(0, 0, width, height), pixels, width * 4, 0);
 
-                    Image img = new Image();
-                    img.Source = theSelection.selectedRectangles[i].bitmap;
-                    Canvas.SetLeft(img, Canvas.GetLeft(r));
-                    Canvas.SetTop(img, Canvas.GetTop(r));
-                    theCanvas.Children.Add(img);
-                    img.SetValue(ModuleView.AreaNumberProperty, -i - 1);
-                    img.MouseDown += theCanvas_MouseDown;
+                        Image img = new Image();
+                        img.Source = theSelection.selectedRectangles[i].bitmap;
+                        Canvas.SetLeft(img, Canvas.GetLeft(r));
+                        Canvas.SetTop(img, Canvas.GetTop(r));
+                        theCanvas.Children.Add(img);
+                        img.SetValue(ModuleView.AreaNumberProperty, -i - 1);
+                        img.MouseDown += theCanvas_MouseDown;
+                    }
                 }
             }
             if (dragRectangle != null) theCanvas.Children.Add(dragRectangle);
@@ -356,6 +359,10 @@ namespace BrainSimulator
             UpdateScrollbars();
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
+            if (synapseCount >= dp.maxSynapsesToDisplay)
+                MainWindow.thisWindow.SetStatusError("Too many synapses to display");
+            else
+                MainWindow.thisWindow.SetStatusError("");
             //Debug.WriteLine("Update Done " + elapsedMs + "ms");
         }
 

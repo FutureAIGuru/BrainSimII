@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace BrainSimulator
@@ -54,10 +55,7 @@ namespace BrainSimulator
         public static MainWindow thisWindow;
         Window splashScreen = new SplashScreeen();
 
-        //for autorepeat on the zoom in-out buttons
-        DispatcherTimer zoomInOutTimer;
-        int zoomAomunt = 0;
-
+        public ProgressDialog progressDialog;
 
         public MainWindow()
         {
@@ -75,6 +73,7 @@ namespace BrainSimulator
                     Application.Current.Shutdown(255);
                 };
 #endif
+
             engineThread = new Thread(new ThreadStart(EngineLoop)) { Name = "EngineThread" };
 
             InitializeComponent();
@@ -107,12 +106,14 @@ namespace BrainSimulator
                 Properties.Settings.Default.UpgradeRequired = false;
                 Properties.Settings.Default.Save();
             }
+            
         }
         private void SplashHide_Tick(object sender, EventArgs e)
         {
             Application.Current.MainWindow = this;
             splashScreen.Close();
             ((DispatcherTimer)sender).Stop();
+
 
             //this is here because the file can be loaded before the mainwindow displays so
             //module dialogs may open before their owner so theis happens a few seconds later
@@ -241,7 +242,9 @@ namespace BrainSimulator
             CloseAllModuleDialogs();
             SuspendEngine();
 
-            await Task.Run(delegate { XmlFile.Load(ref theNeuronArray, fileName); });
+            bool success = false;
+            await Task.Run(delegate {success = XmlFile.Load(ref theNeuronArray, fileName); });
+            //if (!success) return;
 
             currentFileName = fileName;
 
@@ -362,7 +365,7 @@ namespace BrainSimulator
 
             List<string> neuronLabelList = theNeuronArray.GetValuesFromLabelCache();
             List<int> neuronIdList = theNeuronArray.GetKeysFromLabelCache();
-            for (int i = 0; i < neuronLabelList.Count; i++)
+            for (int i = 0; i < neuronLabelList.Count && i < 100; i++)
             {
                 string shortLabel = neuronLabelList[i];
                 if (shortLabel.Length > 20) shortLabel = shortLabel.Substring(0, 20);
@@ -370,6 +373,8 @@ namespace BrainSimulator
                 neuronLabelList[i] = shortLabel;
             }
             neuronLabelList.Sort();
+            if (neuronLabelList.Count > 100)
+                neuronLabelList.RemoveRange(100, neuronLabelList.Count - 100);
             NeuronMenu.IsEnabled = (neuronLabelList.Count == 0) ? false : true;
             foreach (string s in neuronLabelList)
             {
@@ -597,20 +602,58 @@ namespace BrainSimulator
             }
         }
 
-        public void SetProgress(float value)
+        public void SetStatusError(string errMessage)
         {
-            Application.Current.Dispatcher.Invoke((Action)delegate
+            if (errMessage == "")
             {
-                if (value != -1)
-                {
-                    progressBar.Visibility = Visibility.Visible;
-                    progressBar.Value = value;
-                }
-                else
-                    progressBar.Visibility = Visibility.Hidden;
-            });
-
+                statusError.Background = new SolidColorBrush(Colors.LightGreen);
+                statusError.Text = errMessage;
+            }
+            else
+            {
+                statusError.Background = new SolidColorBrush(Colors.Pink);
+                statusError.Text = errMessage;
+            }
         }
+        public void SetMouseStatus(int id, int row, int col)
+        {
+            mousePosition.Text = "ID: " + id + "  Row: " + row + " Col: " + col;
+        }
+        public bool SetProgress(float value,string label)
+        {
+            bool retVal = false;
+            Dispatcher dispatcher = Dispatcher.FromThread(Thread.CurrentThread);
+            if (dispatcher != null)
+            {
+                retVal = progressDialog.SetProgress(value, label);
+                AllowUIToUpdate();
+            }
+            else
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    retVal = progressDialog.SetProgress(value, label);
+                });
+            }
+            return retVal;
+        }
+        void AllowUIToUpdate()
+        {
+            DispatcherFrame frame = new DispatcherFrame();
+            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Render, new DispatcherOperationCallback(delegate (object parameter)
+            {
+                frame.Continue = false;
+                return null;
+            }), null);
+
+            Dispatcher.PushFrame(frame);
+            //EDIT:
+            Application.Current.Dispatcher.Invoke(DispatcherPriority.Background,
+                                          new Action(delegate { }));
+        }
+
+
+
         static bool engineIsPaused = false;
         static long engineElapsed = 0;
         static long displayElapsed = 0;
@@ -1024,6 +1067,15 @@ namespace BrainSimulator
         //this reloads the file which was being used on the previous run of the program
         private void Window_ContentRendered(object sender, EventArgs e)
         {
+            progressDialog = new ProgressDialog();
+            progressDialog.Visibility = Visibility.Collapsed;
+            progressDialog.Top = 100;
+            progressDialog.Left = 100;
+            progressDialog.Owner = this;
+            progressDialog.Show();
+            progressDialog.Hide();
+
+
             //if the left shift key is pressed, don't load the file
             if (Keyboard.IsKeyUp(Key.LeftShift))
             {

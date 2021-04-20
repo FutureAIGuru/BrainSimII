@@ -48,6 +48,14 @@ namespace BrainSimulator
                 mi.Header = "Mutual Suppression";
                 mi.Click += Mi_Click;
                 cm.Items.Add(mi);
+
+                sp = new StackPanel { Orientation = Orientation.Horizontal };
+                sp.Children.Add(new Label { Content = "Random Synapses (Count): ", Padding = new Thickness(0) });
+                sp.Children.Add(new TextBox { Text = "10", Width = 60, Name = "RandomSynapseCount", Padding = new Thickness(0) });
+                mi = new MenuItem { Header = sp };
+                mi.Click += Mi_Click;
+                cm.Items.Add(mi);
+
                 mi = new MenuItem();
                 mi.Header = "Reset Hebbian Weights";
                 mi.Click += Mi_Click;
@@ -83,7 +91,7 @@ namespace BrainSimulator
                 cm.Items.Add(new MenuItem { Header = sp, StaysOpenOnClick = true });
             }
 
-            if (i <0)
+            if (i < 0)
             {
                 sp = new StackPanel { Orientation = Orientation.Horizontal };
                 sp.Children.Add(new Label { Content = "Convert to Module: ", VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) });
@@ -376,6 +384,7 @@ namespace BrainSimulator
                     width = MainWindow.arrayView.theSelection.selectedRectangles[i].Width;
                     height = MainWindow.arrayView.theSelection.selectedRectangles[i].Height;
                     NeuronSelectionRectangle nsr = MainWindow.arrayView.theSelection.selectedRectangles[i];
+                    MainWindow.arrayView.DeleteSelection();
                     MainWindow.arrayView.theSelection.selectedRectangles.RemoveAt(i);
                     CreateModule(label, commandLine, color, nsr.FirstSelectedNeuron, width, height);
                 }
@@ -410,6 +419,18 @@ namespace BrainSimulator
             //Handle delete  & initialize commands
             if (sender is MenuItem mi)
             {
+                if (mi.Header is StackPanel sp && sp.Children[0] is Label l && l.Content.ToString().StartsWith("Random"))
+                {
+                    if (sp.Children[1] is TextBox tb0)
+                    {
+                        if (int.TryParse(tb0.Text, out int count))
+                        {
+                            MainWindow.arrayView.CreateRandomSynapses(count);
+                            MainWindow.Update();
+                        }
+                    }
+                    return;
+                }
                 if ((string)mi.Header == "Cut")
                 {
                     MainWindow.arrayView.CutNeurons();
@@ -506,6 +527,7 @@ namespace BrainSimulator
         public static void DeleteModule(int i)
         {
             ModuleView mv = MainWindow.theNeuronArray.Modules[i];
+            mv.theModule.CloseDlg();
             foreach (Neuron n in mv.Neurons())
             {
                 n.Reset();

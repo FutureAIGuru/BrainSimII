@@ -29,6 +29,7 @@ namespace BrainSimulator
 
         public static bool Load(ref NeuronArray theNeuronArray, string fileName)
         {
+            MainWindow.thisWindow.SetProgress(0, "Loading Network File");
             FileStream file = File.Open(fileName, FileMode.Open);
             theNeuronArray = new NeuronArray();
             
@@ -51,8 +52,12 @@ namespace BrainSimulator
             for (int i = 0; i < neuronNodes.Count; i++)
             {
                 var progress = i / (float)neuronNodes.Count;
-                if (i % 1000 == 0)
-                    MainWindow.thisWindow.SetProgress(progress);
+                progress *= 100;
+                if (MainWindow.thisWindow.SetProgress(progress,""))
+                {
+                    MainWindow.thisWindow.SetProgress(100, "");
+                    return false;
+                }
 
                 XmlElement neuronNode = (XmlElement)neuronNodes[i];
                 XmlNodeList idNodes = neuronNode.GetElementsByTagName("Id");
@@ -141,12 +146,14 @@ namespace BrainSimulator
                 }
                 theNeuronArray.SetCompleteNeuron(n);
             }
-            MainWindow.thisWindow.SetProgress(-1);
+            MainWindow.thisWindow.SetProgress(100,"");
             return true;
         }
 
         public static bool Save(NeuronArray theNeuronArray, string fileName)
         {
+            MainWindow.thisWindow.SetProgress(0, "Saving Network File");
+
             string tempFile = System.IO.Path.GetTempFileName();
             FileStream file = File.Create(tempFile);
 
@@ -172,6 +179,13 @@ namespace BrainSimulator
 
             for (int i = 0; i < theNeuronArray.arraySize; i++)
             {
+                var progress = i / (float)theNeuronArray.arraySize;
+                progress *= 100;
+                if (MainWindow.thisWindow.SetProgress(progress, ""))
+                {
+                    MainWindow.thisWindow.SetProgress(100, "");
+                    return false;
+                }
                 Neuron n = theNeuronArray.GetNeuronForDrawing(i);
                 if (n.inUse)
                 {
@@ -275,6 +289,7 @@ namespace BrainSimulator
             file.Close();
             File.Copy(tempFile, fileName, true);
             File.Delete(tempFile);
+            MainWindow.thisWindow.SetProgress(100, "");
 
             return true;
         }

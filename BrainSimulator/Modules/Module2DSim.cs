@@ -677,6 +677,7 @@ namespace BrainSimulator.Modules
             MainWindow.SuspendEngine();
             Initialize();
             Module2DModel nmModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
+            if (nmModel == null) return;
             //clear out any existing 
             nmModel.Initialize();
 

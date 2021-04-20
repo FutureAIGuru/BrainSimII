@@ -12,6 +12,8 @@ using System.Windows.Threading;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace BrainSimulator
 {
@@ -21,7 +23,7 @@ namespace BrainSimulator
     public partial class NewArrayDlg : Window
     {
         private const int sizeCount = 1000;
-        string crlf = "\r\n\r\n";
+        string crlf = "\r\n";
         public bool returnValue = false;
         ulong approxSynapseSize = 16;
         ulong assumedSynapseCount = 20;
@@ -103,13 +105,12 @@ namespace BrainSimulator
             }
         }
 
-        BackgroundWorker bgw = new BackgroundWorker();
+        //        BackgroundWorker bgw = new BackgroundWorker();
         int rows;
         int cols;
         int refractory = 0;
         private void ButtonOK_Click(object sender, RoutedEventArgs e)
         {
-            buttonOK.IsEnabled = false;
             MainWindow.CloseAllModuleDialogs();
             MainWindow.CloseHistoryWindow();
             MainWindow.CloseNotesWindow();
@@ -126,13 +127,15 @@ namespace BrainSimulator
 
             if (!int.TryParse(textBoxColumns.Text, out cols)) return;
             if (!int.TryParse(textBoxRows.Text, out rows)) return;
-            if (checkBoxSynapses.IsChecked == true) doSynapses = true;
+            if (cols <= 0) return;
+            if (rows <= 0) return;
+            //if (checkBoxSynapses.IsChecked == true) doSynapses = true;
             if (!int.TryParse(Refractory.Text, out refractory)) return;
 
             arraySize = rows * cols;
-            progressBar.Maximum = arraySize;
+            //progressBar.Maximum = arraySize;
 
-            int.TryParse(textBoxSynapses.Text, out synapsesPerNeuron);
+            //int.TryParse(textBoxSynapses.Text, out synapsesPerNeuron);
             MainWindow.arrayView.Dp.NeuronDisplaySize = 62;
             MainWindow.arrayView.Dp.DisplayOffset = new Point(0, 0);
 
@@ -176,15 +179,15 @@ namespace BrainSimulator
                 GC.Collect(3, GCCollectionMode.Forced, true);
                 MainWindow.theNeuronArray.Initialize(arraySize, rows);
                 MainWindow.theNeuronArray.RefractoryDelay = refractory;
-                bgw.DoWork += AsyncCreateNeurons;
-                bgw.RunWorkerAsync();
+                //bgw.DoWork += AsyncCreateNeurons;
+                //bgw.RunWorkerAsync();
 
-                barUpdateTimer.Tick += Dt_Tick;
-                barUpdateTimer.Start();
+                //barUpdateTimer.Tick += Dt_Tick;
+                //barUpdateTimer.Start();
 
                 MainWindow.theNeuronArray.ShowSynapses = doSynapses;
                 MainWindow.thisWindow.SetShowSynapsesCheckBox(doSynapses);
-
+                Close();
             }
         }
 
@@ -193,9 +196,9 @@ namespace BrainSimulator
         int synapsesPerNeuron = 10;
         private void Dt_Tick(object sender, EventArgs e)
         {
-            progressBar.Maximum = MainWindow.theNeuronArray.arraySize * synapsesPerNeuron;
+            //progressBar.Maximum = MainWindow.theNeuronArray.arraySize * synapsesPerNeuron;
             MainWindow.theNeuronArray.GetCounts(out long synapseCount, out int useCount);
-            progressBar.Value = synapseCount;
+            //progressBar.Value = synapseCount;
             if (done)
             {
                 barUpdateTimer.Stop();
@@ -214,32 +217,32 @@ namespace BrainSimulator
             if (doSynapses)
             {
                 GC.Collect(3, GCCollectionMode.Forced, true);
-#if !DEBUG
-                Parallel.For(0, MainWindow.theNeuronArray.arraySize, i => CreateRandomSynapses(i));
-#else
-                for (int i = 0; i < MainWindow.theNeuronArray.arraySize; i++)
-                    CreateRandomSynapses(i);
-#endif
+                //#if !DEBUG
+                //                Parallel.For(0, MainWindow.theNeuronArray.arraySize, i => CreateRandomSynapses(i));
+                //#else
+                //                for (int i = 0; i < MainWindow.theNeuronArray.arraySize; i++)
+                //                    CreateRandomSynapses(i);
+                //#endif
             }
             done = true;
         }
 
-        private void CreateRandomSynapses(int i)
-        {
-            if (rand == null) rand = new Random();
-            for (int j = 0; j < synapsesPerNeuron; j++)
-            {
-                int targetNeuron = i + rand.Next() % (2 * synapsesPerNeuron) - synapsesPerNeuron;
-                int rowOffset = rand.Next() % 100 - 50;
-                int colOffset = rand.Next() % 100 - 50;
-                targetNeuron = i + (colOffset * rows) + rowOffset;
+        //private void CreateRandomSynapses(int i)
+        //{
+        //    if (rand == null) rand = new Random();
+        //    for (int j = 0; j < synapsesPerNeuron; j++)
+        //    {
+        //        int targetNeuron = i + rand.Next() % (2 * synapsesPerNeuron) - synapsesPerNeuron;
+        //        int rowOffset = rand.Next() % 100 - 50;
+        //        int colOffset = rand.Next() % 100 - 50;
+        //        targetNeuron = i + (colOffset * rows) + rowOffset;
 
-                while (targetNeuron < 0) targetNeuron += arraySize;
-                while (targetNeuron >= arraySize) targetNeuron -= arraySize;
-                float weight = (rand.Next(521) / 1000f) - .2605f;
-                MainWindow.theNeuronArray.AddSynapse(i, targetNeuron, weight, Synapse.modelType.Fixed, false);
-            }
-        }
+        //        while (targetNeuron < 0) targetNeuron += arraySize;
+        //        while (targetNeuron >= arraySize) targetNeuron -= arraySize;
+        //        float weight = (rand.Next(521) / 1000f) - .2605f;
+        //        MainWindow.theNeuronArray.AddSynapse(i, targetNeuron, weight, Synapse.modelType.Fixed, false);
+        //    }
+        //}
 
         private void Button_Refresh(object sender, RoutedEventArgs e)
         {
@@ -319,6 +322,27 @@ namespace BrainSimulator
             refractory--;
             if (refractory < 0) refractory = 0;
             Refractory.Text = refractory.ToString();
+        }
+
+        private void textBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (textBoxColumns == null || textBoxRows == null || LabelNeuronCount == null) return;
+            if (sender is TextBox tb)
+            {
+                if (!int.TryParse(tb.Text, out int value) || value <= 0)
+                    tb.Background = new SolidColorBrush(Colors.Pink);
+                else
+                    tb.Background = new SolidColorBrush(Colors.LightGreen);
+            }
+            if (int.TryParse(textBoxColumns.Text, out int cols) &&
+                int.TryParse(textBoxRows.Text, out int rows))
+            {
+                long total = (long)rows * (long)cols;
+                LabelNeuronCount.Content = "Neuron Count: " + total.ToString("##,#");
+
+            }
+            else
+                LabelNeuronCount.Content = "Neuron Count: ERROR";
         }
     }
 }

@@ -513,13 +513,37 @@ namespace BrainSimulator
             }
             Update();
         }
+
+        private Random rand;
+        public void CreateRandomSynapses(int synapsesPerNeuron)
+        {
+            MainWindow.theNeuronArray.SetUndoPoint();
+            MainWindow.thisWindow.SetProgress(0, "Allocating Random Synapses");
+            List<int> neuronsInSelection = theSelection.EnumSelectedNeurons();
+            for (int i = 0; i < neuronsInSelection.Count; i++)
+            {
+                if (MainWindow.thisWindow.SetProgress(100 * i / (float)neuronsInSelection.Count, "")) break;
+                Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronsInSelection[i]);
+                if (rand == null) rand = new Random();
+                for (int j = 0; j < synapsesPerNeuron; j++)
+                {
+                    int targetNeuron = neuronsInSelection[rand.Next(neuronsInSelection.Count-1)];
+                    float weight = (rand.Next(521) / 1000f) - .2605f;
+                    n.AddSynapseWithUndo(targetNeuron, weight, Synapse.modelType.Fixed);
+                }
+            }
+            MainWindow.thisWindow.SetProgress(100, "");
+            Update();
+        }
         public void MutualSuppression()
         {
             MainWindow.theNeuronArray.SetUndoPoint();
+            MainWindow.thisWindow.SetProgress(0, "Allocating Synapses");
 
             List<int> neuronsInSelection = theSelection.EnumSelectedNeurons();
             for (int i = 0; i < neuronsInSelection.Count; i++) 
             {
+                if (MainWindow.thisWindow.SetProgress(100 * i / (float)neuronsInSelection.Count, "")) break; 
                 Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronsInSelection[i]);
                 foreach (Neuron n1 in theSelection.Neurons)
                 {
@@ -529,6 +553,7 @@ namespace BrainSimulator
                     }
                 }
             }
+            MainWindow.thisWindow.SetProgress(100, "");
             Update();
         }
     }

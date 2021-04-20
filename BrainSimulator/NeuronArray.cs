@@ -78,7 +78,7 @@ namespace BrainSimulator
         public int RefractoryDelay
         { get => refractoryDelay; set { refractoryDelay = value; SetRefractoryDelay(refractoryDelay); } }
 
-        public void Initialize(int count, int inRows,bool clipBoard = false)
+        public void Initialize(int count, int inRows, bool clipBoard = false)
         {
             rows = inRows;
             arraySize = count;
@@ -95,9 +95,9 @@ namespace BrainSimulator
         {
         }
 
-        public new Neuron GetNeuron(int id,bool fromClipboard = false)
+        public new Neuron GetNeuron(int id, bool fromClipboard = false)
         {
-            Neuron n = GetCompleteNeuron(id,fromClipboard);
+            Neuron n = GetCompleteNeuron(id, fromClipboard);
             return n;
         }
         public Neuron GetNeuron(string label)
@@ -218,11 +218,17 @@ namespace BrainSimulator
         {
             public NeuronSelection selectionState;
         }
+        struct ModuleUndo
+        {
+            public int index;
+            public ModuleView moduleState;
+        }
         struct UndoPoint
         {
             public int synapsePoint;
             public int neuronPoint;
             public int selectionPoint;
+            public int modulePoint;
         }
 
         //these lists keep track of changed synapses and neurons for undo
@@ -230,6 +236,7 @@ namespace BrainSimulator
         List<SynapseUndo> synapseUndoInfo = new List<SynapseUndo>();
         List<NeuronUndo> neuronUndoInfo = new List<NeuronUndo>();
         List<SelectUndo> selectionUndoInfo = new List<SelectUndo>();
+        List<ModuleUndo> moduleUndoInfo = new List<ModuleUndo>();
 
         //what can be undone?
         //synapse change/add/delete
@@ -271,6 +278,24 @@ namespace BrainSimulator
             }
             selectionUndoInfo.Add(s1);
         }
+        public void AddModuleUndo(int index, ModuleView currentModule)
+        {
+            ModuleUndo m1 = new ModuleUndo();
+            m1.index = index;
+            if (currentModule == null)
+                m1.moduleState = null;
+            else
+                m1.moduleState = new ModuleView()
+                {
+                    Width = currentModule.Width,
+                    Height = currentModule.Height,
+                    FirstNeuron = currentModule.FirstNeuron,
+                    Color = currentModule.Color,
+                    CommandLine = currentModule.CommandLine,
+                    Label = currentModule.Label
+                };
+            moduleUndoInfo.Add(m1);
+        }
 
         public void Undo()
         {
@@ -278,6 +303,7 @@ namespace BrainSimulator
             int synapsePoint = undoList.Last().synapsePoint;
             int neuronPoint = undoList.Last().neuronPoint;
             int selectionPoint = undoList.Last().selectionPoint;
+            int modulePoint = undoList.Last().modulePoint;
             undoList.RemoveAt(undoList.Count - 1);
 
             while (neuronUndoInfo.Count > neuronPoint)
@@ -286,6 +312,8 @@ namespace BrainSimulator
                 UndoSynapse();
             while (selectionUndoInfo.Count > selectionPoint)
                 UndoSelection();
+            while (moduleUndoInfo.Count > modulePoint)
+                UndoModule();
 
         }
 
@@ -295,13 +323,15 @@ namespace BrainSimulator
             if (undoList.Count > 0 &&
                 undoList.Last().synapsePoint == synapseUndoInfo.Count &&
                 undoList.Last().neuronPoint == neuronUndoInfo.Count &&
-                undoList.Last().selectionPoint == selectionUndoInfo.Count
+                undoList.Last().selectionPoint == selectionUndoInfo.Count &&
+                undoList.Last().modulePoint == moduleUndoInfo.Count
                 ) return;
             undoList.Add(new UndoPoint
             {
                 synapsePoint = synapseUndoInfo.Count,
                 neuronPoint = neuronUndoInfo.Count,
-                selectionPoint = selectionUndoInfo.Count
+                selectionPoint = selectionUndoInfo.Count,
+                modulePoint = moduleUndoInfo.Count
             });
         }
         public bool UndoPossible()
@@ -314,6 +344,9 @@ namespace BrainSimulator
             NeuronUndo n = neuronUndoInfo.Last();
             neuronUndoInfo.RemoveAt(neuronUndoInfo.Count - 1);
             Neuron n1 = n.previousNeuron.Copy();
+            if (n1.Label != "") RemoveLabelFromCache(n1.Id);
+            if (n1.label != "") AddLabelToCache(n1.Id,n1.label);
+
             if (n.neuronIsShowingSynapses)
                 MainWindow.arrayView.AddShowSynapses(n1.id);
             n1.Update();
@@ -328,6 +361,26 @@ namespace BrainSimulator
                 MainWindow.arrayView.theSelection.selectedRectangles.Add(nsr1);
             }
             selectionUndoInfo.RemoveAt(selectionUndoInfo.Count - 1);
+        }
+        private void UndoModule()
+        {
+            if (moduleUndoInfo.Count == 0) return;
+            ModuleUndo m1 = moduleUndoInfo.Last();
+            if (m1.moduleState == null)
+            {
+                ModuleView.DeleteModule(m1.index);
+            }
+            else
+            {
+                modules[m1.index].Width = m1.moduleState.Width;
+                modules[m1.index].Height = m1.moduleState.Height;
+                modules[m1.index].FirstNeuron = m1.moduleState.FirstNeuron;
+                modules[m1.index].Color = m1.moduleState.Color;
+                modules[m1.index].CommandLine = m1.moduleState.CommandLine;
+                modules[m1.index].Label = m1.moduleState.Label;
+
+            }
+            moduleUndoInfo.RemoveAt(moduleUndoInfo.Count - 1);
         }
         private void UndoSynapse()
         {

@@ -435,10 +435,13 @@ namespace BrainSimulator
             catch { }
         }
 
-        public void MoveOneNeuron(Neuron n, Neuron nNewLocation)
+        public void MoveOneNeuron(Neuron n, Neuron nNewLocation, bool addUndo = true)
         {
-            n.AddUndoInfo();
-            nNewLocation.AddUndoInfo(); 
+            if (addUndo)
+            {
+                n.AddUndoInfo();
+                nNewLocation.AddUndoInfo();
+            }
             if(MainWindow.useServers)
             {
                 n.synapses = NeuronClient.GetSynapses(n.id);
@@ -459,11 +462,22 @@ namespace BrainSimulator
             for (int k = 0; k < n.Synapses.Count; k++)
             {
                 Synapse s = n.Synapses[k];
-                if (s.targetNeuron != n.id)
-                    nNewLocation.AddSynapseWithUndo(s.targetNeuron, s.weight, s.model);
+                if (addUndo)
+                {
+                    if (s.targetNeuron != n.id)
+                        nNewLocation.AddSynapseWithUndo(s.targetNeuron, s.weight, s.model);
+                    else
+                        nNewLocation.AddSynapseWithUndo(nNewLocation.id, s.weight, s.model);
+                    n.DeleteSynapseWithUndo(n.synapses[k].targetNeuron);
+                }
                 else
-                    nNewLocation.AddSynapseWithUndo(nNewLocation.id, s.weight, s.model);
-                n.DeleteSynapseWithUndo(n.synapses[k].targetNeuron);
+                {
+                    if (s.targetNeuron != n.id)
+                        nNewLocation.AddSynapse(s.targetNeuron, s.weight, s.model);
+                    else
+                        nNewLocation.AddSynapse(nNewLocation.id, s.weight, s.model);
+                    n.DeleteSynapse(n.synapses[k].targetNeuron);
+                }
             }
 
             //for all the synapses coming into this neuron, change the synapse target to new location
@@ -475,7 +489,14 @@ namespace BrainSimulator
                     Neuron sourceNeuron = MainWindow.theNeuronArray.GetNeuron(reverseSynapse.targetNeuron);
                     sourceNeuron.DeleteSynapseWithUndo(n.id);
                     if (sourceNeuron.id != n.id)
-                        sourceNeuron.AddSynapseWithUndo(nNewLocation.id, reverseSynapse.weight, reverseSynapse.model);
+                        if (addUndo)
+                        {
+                            sourceNeuron.AddSynapseWithUndo(nNewLocation.id, reverseSynapse.weight, reverseSynapse.model);
+                        }
+                        else
+                        {
+                            sourceNeuron.AddSynapse(nNewLocation.id, reverseSynapse.weight, reverseSynapse.model);
+                        }
                 }
             }
 

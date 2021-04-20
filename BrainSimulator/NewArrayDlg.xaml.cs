@@ -75,7 +75,10 @@ namespace BrainSimulator
                 NeuronClient.GetServerList();
                 Thread.Sleep(1000);
                 if (NeuronClient.serverList.Count == 0)
+                {
                     ServerList.Text = "No Servers Detected";
+                    buttonSpeedTest.IsEnabled = false;
+                }
                 else
                 {
                     int.TryParse(textBoxColumns.Text, out cols);
@@ -91,6 +94,7 @@ namespace BrainSimulator
                         s.lastNeuron = (i + 1) * neuronsNeeded / numServers;
                         ServerList.Text += s.ipAddress.ToString() + " " + s.name + " " + s.firstNeuron + " " + s.lastNeuron + "\n";
                     }
+                    buttonSpeedTest.IsEnabled = true;
                 }
             }
             else
@@ -292,14 +296,12 @@ namespace BrainSimulator
             UpdateServerTextBox();
             if (NeuronClient.serverList.Count > 0)
                 MainWindow.useServers = true;
-            buttonSpeedTest.IsEnabled = true;
-            buttonRefresh.IsEnabled = true;;
+            buttonRefresh.IsEnabled = true; ;
         }
 
         private void CheckBoxUseServers_Unchecked(object sender, RoutedEventArgs e)
         {
             MainWindow.useServers = false;
-            buttonSpeedTest.IsEnabled = MainWindow.useServers;
             buttonRefresh.IsEnabled = MainWindow.useServers;
             UpdateServerTextBox();
         }

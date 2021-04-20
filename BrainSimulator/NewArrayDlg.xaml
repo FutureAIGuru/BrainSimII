@@ -12,7 +12,7 @@
             <ColumnDefinition Width="226*"/>
             <ColumnDefinition Width="255*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Height="149" Margin="32,19,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="246" Grid.ColumnSpan="2"/>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Height="149" Margin="18,19,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="260" Grid.ColumnSpan="2"/>
         <Button x:Name="buttonOK" Content="_OK" IsDefault="True" HorizontalAlignment="Left" Margin="102,0,0,16" Width="87" Click="ButtonOK_Click" Height="27" VerticalAlignment="Bottom"/>
         <Button x:Name="buttonCancel" Content="_Cancel" HorizontalAlignment="Left" Margin="33,0,0,16" Width="87" Click="ButtonCancel_Click" IsCancel="True" Height="27" VerticalAlignment="Bottom" Grid.Column="1"/>
         <TextBox x:Name="textBoxRows" HorizontalAlignment="Left" Height="20" Margin="127,34,0,0" TextWrapping="Wrap" Text="15" VerticalAlignment="Top" Width="55" VerticalContentAlignment="Center" Grid.Column="1" />

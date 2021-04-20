@@ -15,7 +15,7 @@ namespace BrainSimulator
         public static readonly DependencyProperty AreaNumberProperty =
     DependencyProperty.Register("AreaNumber", typeof(int), typeof(MenuItem));
 
-        public static void CreateContextMenu(int i, ModuleView nr, FrameworkElement r,ContextMenu cm = null) //for a selection
+        public static void CreateContextMenu(int i, ModuleView nr, FrameworkElement r, ContextMenu cm = null) //for a selection
         {
             cmCancelled = false;
             if (cm == null)
@@ -83,48 +83,51 @@ namespace BrainSimulator
                 cm.Items.Add(new MenuItem { Header = sp, StaysOpenOnClick = true });
             }
 
-            sp = new StackPanel { Orientation = Orientation.Horizontal };
-            sp.Children.Add(new Label { Content = "Type: ", VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) });
-            cm.Items.Add(new MenuItem { Header = sp, StaysOpenOnClick = true });
-
-            ComboBox cb = new ComboBox();
-            //get list of available NEW modules...these are assignable to a "ModuleBase" 
-            var listOfBs = (from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
-                            from assemblyType in domainAssembly.GetTypes()
-                            where typeof(ModuleBase).IsAssignableFrom(assemblyType)
-                            orderby assemblyType.Name
-                            select assemblyType
-                            ).ToArray();
-            foreach (var v in listOfBs)
+            if (i <0)
             {
-                if (v.Name != "ModuleBase")
+                sp = new StackPanel { Orientation = Orientation.Horizontal };
+                sp.Children.Add(new Label { Content = "Convert to Module: ", VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) });
+                cm.Items.Add(new MenuItem { Header = sp, StaysOpenOnClick = true });
+
+                ComboBox cb = new ComboBox();
+                //get list of available NEW modules...these are assignable to a "ModuleBase" 
+                var listOfBs = (from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
+                                from assemblyType in domainAssembly.GetTypes()
+                                where typeof(ModuleBase).IsAssignableFrom(assemblyType)
+                                orderby assemblyType.Name
+                                select assemblyType
+                                ).ToArray();
+                foreach (var v in listOfBs)
                 {
-                    Type t = Type.GetType(v.FullName);
                     if (v.Name != "ModuleBase")
                     {
-                        ComboBoxItem cbi = new ComboBoxItem
+                        Type t = Type.GetType(v.FullName);
+                        if (v.Name != "ModuleBase")
                         {
-                            Content = v.Name,
-                        };
-                        cb.Items.Add(v.Name);
+                            ComboBoxItem cbi = new ComboBoxItem
+                            {
+                                Content = v.Name,
+                            };
+                            cb.Items.Add(v.Name);
+                        }
                     }
                 }
+                if (nr.TheModule != null)
+                {
+                    string cm1 = nr.TheModule.GetType().Name.ToString();
+                    if (cm1 != "")
+                        cb.SelectedValue = cm1;
+                }
+                cb.Width = 180;
+                cb.Name = "AreaType";
+                cb.SelectionChanged += Cb_SelectionChanged;
+                sp.Children.Add(new MenuItem { Header = cb, StaysOpenOnClick = true });
             }
-            if (nr.TheModule != null)
-            {
-                string cm1 = nr.TheModule.GetType().Name.ToString();
-                if (cm1 != "")
-                    cb.SelectedValue = cm1;
-            }
-            cb.Width = 180;
-            cb.Name = "AreaType";
-            cb.SelectionChanged += Cb_SelectionChanged;
-            sp.Children.Add(new MenuItem { Header = cb, StaysOpenOnClick = true });
 
             if (i >= 0)
             {            //color picker
                 Color c = Utils.IntToColor(nr.Color);
-                cb = new ComboBox();
+                ComboBox cb = new ComboBox();
                 cb.Width = 200;
                 cb.Name = "AreaColor";
                 PropertyInfo[] x1 = typeof(Colors).GetProperties();
@@ -188,7 +191,7 @@ namespace BrainSimulator
             b0.Click += B0_Click;
             sp.Children.Add(b0);
 
-            cm.Items.Add(new MenuItem {Header = sp, StaysOpenOnClick = true });
+            cm.Items.Add(new MenuItem { Header = sp, StaysOpenOnClick = true });
 
             cm.Closed += Cm_Closed;
         }
@@ -312,8 +315,8 @@ namespace BrainSimulator
                 if (cc is ComboBox cb && cb.SelectedValue != null)
                 {
                     commandLine = (string)cb.SelectedValue;
+                    if (commandLine == "") return;//something went wrong
                 }
-                if (commandLine == "") return;//something went wrong
                 cc = Utils.FindByName(cm, "CommandParams");
                 if (cc is TextBox tb3)
                     commandLine += " " + tb3.Text;
@@ -323,10 +326,12 @@ namespace BrainSimulator
                 cc = Utils.FindByName(cm, "AreaColor");
                 if (cc is ComboBox cb1)
                     color = ((SolidColorBrush)((ComboBoxItem)cb1.SelectedValue).Background).Color;
-                if (label == " " && commandLine == " ") return;
+                if (label == "" && commandLine == "") return;
                 if (i >= 0)
                 {
                     ModuleView theModuleView = MainWindow.theNeuronArray.modules[i];
+                    MainWindow.theNeuronArray.SetUndoPoint();
+                    MainWindow.theNeuronArray.AddModuleUndo(i, theModuleView);
                     //update the existing module
                     theModuleView.Label = label;
                     theModuleView.CommandLine = commandLine;
@@ -361,12 +366,13 @@ namespace BrainSimulator
                         MessageBox.Show("Dimensions reduced to stay within neuron array bondary.", "Warning", MessageBoxButton.OK);
                     theModuleView.Width = width;
                     theModuleView.Height = height;
-
                 }
                 else
                 {
-                    //convert a selection rectangle to a module
                     i = -i - 1;
+                    //convert a selection rectangle to a module
+                    MainWindow.theNeuronArray.SetUndoPoint();
+                    MainWindow.theNeuronArray.AddModuleUndo(MainWindow.theNeuronArray.modules.Count, null);
                     width = MainWindow.arrayView.theSelection.selectedRectangles[i].Width;
                     height = MainWindow.arrayView.theSelection.selectedRectangles[i].Height;
                     NeuronSelectionRectangle nsr = MainWindow.arrayView.theSelection.selectedRectangles[i];
@@ -432,13 +438,7 @@ namespace BrainSimulator
                     }
                     else
                     {
-                        ModuleView mv = MainWindow.theNeuronArray.Modules[i];
-                        foreach (Neuron n in mv.Neurons())
-                        {
-                            n.Reset();
-                            n.DeleteAllSynapes();
-                        }
-                        MainWindow.theNeuronArray.Modules.RemoveAt(i);
+                        DeleteModule(i);
                         deleted = true;
                     }
                 }
@@ -501,6 +501,17 @@ namespace BrainSimulator
                     MainWindow.Update();
                 }
             }
+        }
+
+        public static void DeleteModule(int i)
+        {
+            ModuleView mv = MainWindow.theNeuronArray.Modules[i];
+            foreach (Neuron n in mv.Neurons())
+            {
+                n.Reset();
+                n.DeleteAllSynapes();
+            }
+            MainWindow.theNeuronArray.Modules.RemoveAt(i);
         }
     }
 }

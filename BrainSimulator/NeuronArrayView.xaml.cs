@@ -115,7 +115,6 @@ namespace BrainSimulator
             //Debug.WriteLine("Update " + MainWindow.theNeuronArray.Generation);
             dp.NeuronRows = MainWindow.theNeuronArray.rows;
             theCanvas.Children.Clear();
-            if (dragRectangle != null) theCanvas.Children.Add(dragRectangle);
             neuronsOnScreen.Clear();
             int columns = MainWindow.theNeuronArray.arraySize / dp.NeuronRows;
 
@@ -244,6 +243,8 @@ namespace BrainSimulator
                     img.MouseDown += theCanvas_MouseDown;
                 }
             }
+            if (dragRectangle != null) theCanvas.Children.Add(dragRectangle);
+
 
             //highlight the "target" neuron
             SetTargetNeuronSymbol();

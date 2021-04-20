@@ -67,7 +67,7 @@ namespace BrainSimulator
             if (!PtOnScreen(p1) && !PtOnScreen(p2)) return null;
 
             Shape l = GetSynapseShape(p1, p2, theNeuronArrayView, s.model);
-            l.Stroke = new SolidColorBrush(Utils.RainbowColorFromValue(s.weight));
+            l.Stroke = l.Fill =  new SolidColorBrush(Utils.RainbowColorFromValue(s.weight));
             if (l is Ellipse E)
             { }
             else
@@ -77,6 +77,112 @@ namespace BrainSimulator
             l.SetValue(WeightValProperty, s.Weight);
 
             return l;
+        }
+        public static Shape GetSynapseShape(Point p1, Point p2, NeuronArrayView theNeuronDisplayView, Synapse.modelType model)
+        {
+            //returns a line from the source to the destination (with a link arrow at larger zooms
+            //unless the source and destination are the same in which it returns an arc
+            Shape s;
+            if (p1 != p2)
+            {
+                Line l = new Line();
+                l.X1 = p1.X + dp.NeuronDisplaySize / 2;
+                l.X2 = p2.X + dp.NeuronDisplaySize / 2;
+                l.Y1 = p1.Y + dp.NeuronDisplaySize / 2;
+                l.Y2 = p2.Y + dp.NeuronDisplaySize / 2;
+                s = l;
+                if (dp.ShowSynapseArrows())
+                {
+                    Vector offset = new Vector(dp.NeuronDisplaySize / 2, dp.NeuronDisplaySize / 2);
+                    s = DrawLinkArrow(p1 + offset, p2 + offset, model != Synapse.modelType.Fixed);
+                }
+            }
+            else
+            {
+                s = new Ellipse();
+                s.Height = s.Width = dp.NeuronDisplaySize * .6;
+                Canvas.SetTop(s, p1.Y + dp.NeuronDisplaySize / 4);
+                Canvas.SetLeft(s, p1.X + dp.NeuronDisplaySize / 2);
+            }
+            s.Stroke = Brushes.Red;
+            s.StrokeThickness = 1;
+            if (dp.ShowSynapseWideLines())
+            {
+                s.StrokeThickness = Math.Min(4, dp.NeuronDisplaySize / 15);
+            }
+            s.MouseDown += theNeuronDisplayView.theCanvas_MouseDown;
+            s.MouseUp += theNeuronDisplayView.theCanvas_MouseUp;
+            if (dp.ShowSynapseArrowCursor())
+            {
+                s.MouseEnter += S_MouseEnter;
+                s.MouseLeave += S_MouseLeave;
+            }
+            return s;
+        }
+        public static Shape DrawLinkArrow(Point p1, Point p2, bool canLearn) //helper to put an arrow in a synapse line
+        {
+            GeometryGroup lineGroup = new GeometryGroup();
+            double theta = Math.Atan2((p2.Y - p1.Y), (p2.X - p1.X)) * 180 / Math.PI;
+
+            PathGeometry pathGeometry = new PathGeometry();
+            PathFigure pathFigure = new PathFigure();
+            Vector v = p2 - p1;
+            double lengthFactor = (dp.NeuronDisplaySize / 2.75)/v.Length;
+            //lengthfactor = 0.5; //how it used to be
+            v = v * lengthFactor;
+       
+            Point p = new Point();
+            p = p2 - v;
+            pathFigure.StartPoint = p;
+            double arrowWidth = dp.NeuronDisplaySize / 20;
+            double arrowLength = dp.NeuronDisplaySize / 15;
+            if (canLearn)
+            {
+                arrowWidth *= 2;
+            }
+            Point lpoint = new Point(p.X + arrowWidth, p.Y + arrowLength);
+            Point rpoint = new Point(p.X - arrowWidth, p.Y + arrowLength);
+            LineSegment seg1 = new LineSegment();
+            seg1.Point = lpoint;
+            pathFigure.Segments.Add(seg1);
+
+            LineSegment seg2 = new LineSegment();
+            seg2.Point = rpoint;
+            pathFigure.Segments.Add(seg2);
+
+            LineSegment seg3 = new LineSegment();
+            seg3.Point = p;
+            pathFigure.Segments.Add(seg3);
+
+            pathGeometry.Figures.Add(pathFigure);
+            RotateTransform transform = new RotateTransform();
+            transform.Angle = theta + 90;
+            transform.CenterX = p.X;
+            transform.CenterY = p.Y;
+            pathGeometry.Transform = transform;
+            lineGroup.Children.Add(pathGeometry);
+
+            LineGeometry connectorGeometry = new LineGeometry();
+            connectorGeometry.StartPoint = p1;
+            connectorGeometry.EndPoint = p2;
+            lineGroup.Children.Add(connectorGeometry);
+
+            System.Windows.Shapes.Path path = new System.Windows.Shapes.Path();
+            path.Data = lineGroup;
+            path.StrokeThickness = 2;
+            return path;
+        }
+
+        private static void S_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (theCanvas.Cursor == Cursors.Arrow)// && theNeuronArrayView != null && !theNeuronArrayView.dragging)
+                theCanvas.Cursor = Cursors.Cross;
+        }
+
+        private static void S_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (e.RightButton != MouseButtonState.Pressed && e.LeftButton != MouseButtonState.Pressed && theCanvas.Cursor != Cursors.Hand)
+                theCanvas.Cursor = Cursors.Arrow;
         }
 
         //these aren't added to synapses (for performance) but are built on the fly if the user right-clicks
@@ -352,114 +458,6 @@ namespace BrainSimulator
             cm.IsOpen = false;
             cmCancelled = true;
             MainWindow.Update();
-        }
-
-
-        public static Shape GetSynapseShape(Point p1, Point p2, NeuronArrayView theNeuronDisplayView, Synapse.modelType model)
-        {
-            //returns a line from the source to the destination (with a link arrow at larger zooms
-            //unless the source and destination are the same in which it returns an arc
-            Shape s;
-            if (p1 != p2)
-            {
-                Line l = new Line();
-                l.X1 = p1.X + dp.NeuronDisplaySize / 2;
-                l.X2 = p2.X + dp.NeuronDisplaySize / 2;
-                l.Y1 = p1.Y + dp.NeuronDisplaySize / 2;
-                l.Y2 = p2.Y + dp.NeuronDisplaySize / 2;
-                s = l;
-                if (dp.ShowSynapseArrows())
-                {
-                    Vector offset = new Vector(dp.NeuronDisplaySize / 2, dp.NeuronDisplaySize / 2);
-                    s = DrawLinkArrow(p1 + offset, p2 + offset, model != Synapse.modelType.Fixed);
-                }
-            }
-            else
-            {
-                s = new Ellipse();
-                s.Height = s.Width = dp.NeuronDisplaySize * .6;
-                Canvas.SetTop(s, p1.Y + dp.NeuronDisplaySize / 4);
-                Canvas.SetLeft(s, p1.X + dp.NeuronDisplaySize / 2);
-            }
-            s.Stroke = Brushes.Red;
-            s.StrokeThickness = 1;
-            if (dp.ShowSynapseWideLines())
-            {
-                s.StrokeThickness = Math.Min(4, dp.NeuronDisplaySize / 15);
-            }
-            s.MouseDown += theNeuronDisplayView.theCanvas_MouseDown;
-            s.MouseUp += theNeuronDisplayView.theCanvas_MouseUp;
-            if (dp.ShowSynapseArrowCursor())
-            {
-                s.MouseEnter += S_MouseEnter;
-                s.MouseLeave += S_MouseLeave;
-            }
-            return s;
-        }
-
-        private static void S_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            if (theCanvas.Cursor == Cursors.Arrow)// && theNeuronArrayView != null && !theNeuronArrayView.dragging)
-                theCanvas.Cursor = Cursors.Cross;
-        }
-
-        private static void S_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            if (e.RightButton != MouseButtonState.Pressed && e.LeftButton != MouseButtonState.Pressed && theCanvas.Cursor != Cursors.Hand)
-                theCanvas.Cursor = Cursors.Arrow;
-        }
-
-        public static Shape DrawLinkArrow(Point p1, Point p2, bool canLearn) //helper to put an arrow in a synapse line
-        {
-            GeometryGroup lineGroup = new GeometryGroup();
-            double theta = Math.Atan2((p2.Y - p1.Y), (p2.X - p1.X)) * 180 / Math.PI;
-
-            PathGeometry pathGeometry = new PathGeometry();
-            PathFigure pathFigure = new PathFigure();
-            //            Point p = new Point(p1.X + ((p2.X - p1.X) / 1.35), p1.Y + ((p2.Y - p1.Y) / 1.35));
-            Vector v = p2 - p1;
-            //v = v / v.Length * (dp.NeuronDisplaySize / 2);
-            v = v / 2;
-            Point p = new Point();
-            p = p2 - v;
-            pathFigure.StartPoint = p;
-            double arrowWidth = dp.NeuronDisplaySize / 20;
-            double arrowLength = dp.NeuronDisplaySize / 15;
-            if (canLearn)
-            {
-                arrowWidth *= 2;
-            }
-            Point lpoint = new Point(p.X + arrowWidth, p.Y + arrowLength);
-            Point rpoint = new Point(p.X - arrowWidth, p.Y + arrowLength);
-            LineSegment seg1 = new LineSegment();
-            seg1.Point = lpoint;
-            pathFigure.Segments.Add(seg1);
-
-            LineSegment seg2 = new LineSegment();
-            seg2.Point = rpoint;
-            pathFigure.Segments.Add(seg2);
-
-            LineSegment seg3 = new LineSegment();
-            seg3.Point = p;
-            pathFigure.Segments.Add(seg3);
-
-            pathGeometry.Figures.Add(pathFigure);
-            RotateTransform transform = new RotateTransform();
-            transform.Angle = theta + 90;
-            transform.CenterX = p.X;
-            transform.CenterY = p.Y;
-            pathGeometry.Transform = transform;
-            lineGroup.Children.Add(pathGeometry);
-
-            LineGeometry connectorGeometry = new LineGeometry();
-            connectorGeometry.StartPoint = p1;
-            connectorGeometry.EndPoint = p2;
-            lineGroup.Children.Add(connectorGeometry);
-            System.Windows.Shapes.Path path = new System.Windows.Shapes.Path();
-            path.Data = lineGroup;
-            path.StrokeThickness = 2;
-            path.Stroke = path.Fill = Brushes.Red;
-            return path;
         }
 
     }

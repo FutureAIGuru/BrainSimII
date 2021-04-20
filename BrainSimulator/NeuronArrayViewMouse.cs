@@ -386,7 +386,7 @@ namespace BrainSimulator
                             this,
                             lastSynapseModel
                             );
-                        l.Stroke = new SolidColorBrush(Utils.RainbowColorFromValue(lastSynapseWeight));
+                        l.Stroke = l.Fill = new SolidColorBrush(Utils.RainbowColorFromValue(lastSynapseWeight));
                         theCanvas.Children.Add(l);
                         synapseShape = l;
                     }
@@ -407,19 +407,6 @@ namespace BrainSimulator
                 {
                     bool cursorSet = false;
                     na = null;
-                    ////is the mouse in a module?
-                    for (int i = 0; i < MainWindow.theNeuronArray.modules.Count; i++)
-                    {
-                        Rectangle r = MainWindow.theNeuronArray.modules[i].GetRectangle(dp);
-                        double left = Canvas.GetLeft(r);
-                        double top = Canvas.GetTop(r);
-                        if (SetScrollCursor(currentPosition, r, left, top))
-                        {
-                            cursorSet = true;
-                            na = MainWindow.theNeuronArray.modules[i];
-                            firstSelectedNeuron = currentNeuron;
-                        }
-                    }
                     //is the mouse in a selection?
                     foreach (NeuronSelectionRectangle nsr in theSelection.selectedRectangles)
                     {
@@ -433,6 +420,22 @@ namespace BrainSimulator
                         {
                             theCanvas.Cursor = Cursors.ScrollAll;
                             cursorSet = true;
+                        }
+                    }
+                    ////is the mouse in a module?
+                    if (!cursorSet)
+                    {
+                        for (int i = 0; i < MainWindow.theNeuronArray.modules.Count; i++)
+                        {
+                            Rectangle r = MainWindow.theNeuronArray.modules[i].GetRectangle(dp);
+                            double left = Canvas.GetLeft(r);
+                            double top = Canvas.GetTop(r);
+                            if (SetScrollCursor(currentPosition, r, left, top))
+                            {
+                                cursorSet = true;
+                                na = MainWindow.theNeuronArray.modules[i];
+                                firstSelectedNeuron = currentNeuron;
+                            }
                         }
                     }
                     if (!cursorSet) theCanvas.Cursor = Cursors.Cross;
@@ -476,6 +479,8 @@ namespace BrainSimulator
             {
                 if (currentNeuron != firstSelectedNeuron)
                 {
+                    int index = MainWindow.theNeuronArray.modules.IndexOf(na);
+                    MainWindow.theNeuronArray.AddModuleUndo(index,na);
                     int newFirst = na.FirstNeuron + currentNeuron - firstSelectedNeuron;
                     int newLast = na.LastNeuron + currentNeuron - firstSelectedNeuron;
                     na.GetAbsNeuronLocation(newFirst, out int xf, out int yf);

@@ -380,11 +380,11 @@ namespace BrainSimulator
                     i = -i - 1;
                     //convert a selection rectangle to a module
                     MainWindow.theNeuronArray.SetUndoPoint();
+                    MainWindow.arrayView.DeleteSelection(false);
                     MainWindow.theNeuronArray.AddModuleUndo(MainWindow.theNeuronArray.modules.Count, null);
                     width = MainWindow.arrayView.theSelection.selectedRectangles[i].Width;
                     height = MainWindow.arrayView.theSelection.selectedRectangles[i].Height;
                     NeuronSelectionRectangle nsr = MainWindow.arrayView.theSelection.selectedRectangles[i];
-                    MainWindow.arrayView.DeleteSelection();
                     MainWindow.arrayView.theSelection.selectedRectangles.RemoveAt(i);
                     CreateModule(label, commandLine, color, nsr.FirstSelectedNeuron, width, height);
                 }

@@ -309,9 +309,10 @@ namespace BrainSimulator
         }
 
 
-        public void DeleteSelection(bool deleteBoundarySynapses = true)
+        public void DeleteSelection(bool deleteBoundarySynapses = true, bool allowUndo = true)
         {
-            MainWindow.theNeuronArray.SetUndoPoint();
+            if (allowUndo)
+                MainWindow.theNeuronArray.SetUndoPoint();
             List<int> neuronsToDelete = theSelection.EnumSelectedNeurons();
             foreach (int nID in neuronsToDelete)
             {

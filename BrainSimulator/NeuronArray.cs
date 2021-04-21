@@ -65,6 +65,7 @@ namespace BrainSimulator
         {
             labelCache.Clear();
         }
+
         public List<string> GetValuesFromLabelCache()
         {
             return labelCache.Values.ToList();
@@ -73,6 +74,7 @@ namespace BrainSimulator
         {
             return labelCache.Keys.ToList();
         }
+
 
         private int refractoryDelay = 0;
         public int RefractoryDelay
@@ -306,14 +308,14 @@ namespace BrainSimulator
             int modulePoint = undoList.Last().modulePoint;
             undoList.RemoveAt(undoList.Count - 1);
 
+            while (moduleUndoInfo.Count > modulePoint)
+                UndoModule();
+            while (selectionUndoInfo.Count > selectionPoint)
+                UndoSelection();
             while (neuronUndoInfo.Count > neuronPoint)
                 UndoNeuron();
             while (synapseUndoInfo.Count > synapsePoint)
                 UndoSynapse();
-            while (selectionUndoInfo.Count > selectionPoint)
-                UndoSelection();
-            while (moduleUndoInfo.Count > modulePoint)
-                UndoModule();
 
         }
 

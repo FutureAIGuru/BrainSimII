@@ -92,7 +92,14 @@ namespace BrainSimulator
                 l.MouseDown += theNeuronArrayView.theCanvas_MouseDown;
                 l.MouseUp += theNeuronArrayView.theCanvas_MouseUp;
                 l.MouseMove += theNeuronArrayView.theCanvas_MouseMove;
-                l.Content = GetNeuronLabel(n);
+                string theLabel = GetNeuronLabel(n);
+                string theToolTip = n.ToolTip;
+                if (theToolTip != "")
+                {
+                    r.ToolTip = new ToolTip { Content = theToolTip};
+                    l.ToolTip = new ToolTip { Content = theToolTip };
+                }
+                l.Content = theLabel;
             }
             return r;
         }
@@ -144,6 +151,14 @@ namespace BrainSimulator
             //Debug.WriteLine("NeuronView MouseLeave");
             if (theCanvas.Cursor != Cursors.Hand && !theNeuronArrayView.dragging && e.LeftButton != MouseButtonState.Pressed)
                 theCanvas.Cursor = Cursors.Cross;
+            if (sender is FrameworkElement  s1)
+            {
+                if (s1.ToolTip != null)
+                {
+                    ToolTip x = (ToolTip)s1.ToolTip;
+                        x.IsOpen = false;
+                }
+            }
         }
 
         private static void R_MouseEnter(object sender, MouseEventArgs e)
@@ -151,6 +166,16 @@ namespace BrainSimulator
             //Debug.WriteLine("NeuronView MouseEnter");
             if (theCanvas.Cursor != Cursors.Hand && !theNeuronArrayView.dragging && e.LeftButton != MouseButtonState.Pressed)
                 theCanvas.Cursor = Cursors.UpArrow;
+           
+            if (sender is FrameworkElement s1 )
+            {
+                if (s1.ToolTip != null)
+                {
+                    ToolTip  x = (ToolTip) s1.ToolTip;
+                    if (!x.IsOpen)
+                        x.IsOpen = true;
+                }
+            }
         }
 
         //for UI performance, the context menu is not attached to a neuron when the neuron is created but
@@ -188,12 +213,18 @@ namespace BrainSimulator
             //The neuron label
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
             sp.Children.Add(new Label { Content = "ID: " + n.id + "   Label: ", VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) });
-            TextBox tb = Utils.ContextMenuTextBox(n.Label, "Label", 150);
+            TextBox tb = Utils.ContextMenuTextBox(n.Label, "Label", 170);
             tb.TextChanged += Tb_TextChanged;
             sp.Children.Add(tb);
             sp.Children.Add(new Label { Content = "Warning:\rDuplicate Label", FontSize = 8, Name = "DupWarn", Visibility = Visibility.Hidden });
-            //            cm.Items.Add(sp);
-            //MenuItem mi = new MenuItem { StaysOpenOnClick = true, Header = new TextBox { Text = "Harry" } };
+            cm.Items.Add(new MenuItem { StaysOpenOnClick = true, Header = sp });
+
+            //The neuron tooltip
+            sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
+            sp.Children.Add(new Label { Content = "Tooltip: ", VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) });
+            tb = Utils.ContextMenuTextBox(n.ToolTip, "ToolTip", 210);
+            tb.TextChanged += Tb_TextChanged;
+            sp.Children.Add(tb);
             cm.Items.Add(new MenuItem { StaysOpenOnClick = true, Header = sp });
 
             //The neuron model
@@ -216,9 +247,14 @@ namespace BrainSimulator
             sp.Children.Add(cb);
             cm.Items.Add(new MenuItem { StaysOpenOnClick = true, Header = sp });
 
+            MenuItem mi = new MenuItem { Header = "Clear" };
+            if (MainWindow.myClipBoard == null) mi.IsEnabled = false;
+            mi.Click += Mi_Click;
+            cm.Items.Add(mi);
+
             cm.Items.Add(new Separator());
 
-            MenuItem mi = new MenuItem();
+            mi = new MenuItem();
             CheckBox cbShowSynapses = new CheckBox
             {
                 IsChecked = (n.leakRate > 0) || float.IsPositiveInfinity(1.0f / n.leakRate),
@@ -487,7 +523,19 @@ namespace BrainSimulator
                         MainWindow.theNeuronArray.SetUndoPoint();
                         n.Label = newLabel;
                         if (applyToAll)
-                        SetValueInSelectedNeurons(n, "label");
+                            SetValueInSelectedNeurons(n, "label");
+                    }
+                }
+                cc = Utils.FindByName(cm, "ToolTip");
+                if (cc is TextBox tb1)
+                {
+                    string newLabel = tb1.Text;
+                    if (labelChanged)
+                    {
+                        MainWindow.theNeuronArray.SetUndoPoint();
+                        n.ToolTip = newLabel;
+                        if (applyToAll)
+                            SetValueInSelectedNeurons(n, "tooltip");
                     }
                 }
                 cc = Utils.FindByName(cm, "Model");
@@ -503,13 +551,13 @@ namespace BrainSimulator
                     }
                 }
                 cc = Utils.FindByName(cm, "CurrentCharge");
-                if (cc is ComboBox tb1)
+                if (cc is ComboBox cbb1)
                 {
                     if (n.model == Neuron.modelType.Color)
                     {
                         try
                         {
-                            uint newCharge = Convert.ToUInt32(tb1.Text, 16);
+                            uint newCharge = Convert.ToUInt32(cbb1.Text, 16);
                             if (chargeChanged)
                             {
                                 n.SetValueInt((int)newCharge);
@@ -523,7 +571,7 @@ namespace BrainSimulator
                     }
                     else
                     {
-                        float.TryParse(tb1.Text, out float newCharge);
+                        float.TryParse(cbb1.Text, out float newCharge);
                         if (chargeChanged)
                         {
                             n.SetValue(newCharge);
@@ -643,7 +691,7 @@ namespace BrainSimulator
         private static void Tb_TextChanged(object sender, TextChangedEventArgs e)
         {
             labelChanged = true;
-            if (sender is TextBox tb)
+            if (sender is TextBox tb && tb.Name == "Label")
             {
                 string neuronLabel = tb.Text;
                 Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronLabel);

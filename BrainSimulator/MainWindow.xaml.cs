@@ -198,6 +198,10 @@ namespace BrainSimulator
                     Update();
                 }
             }
+            if (e.Key == Key.F1)
+            {
+                MenuItemHelp_Click(null, null);
+            }
             if (ctrlPressed && e.Key == Key.C)
             {
                 theNeuronArrayView.CopyNeurons();

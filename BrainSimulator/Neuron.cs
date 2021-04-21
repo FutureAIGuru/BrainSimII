@@ -66,20 +66,62 @@ namespace BrainSimulator
         public enum modelType { IF, Color, FloatValue, LIF, Random, Burst, Always };
 
         public int Id { get => id; set => id = value; }
+
+        const string toolTipSeparator = "||?";
         public string Label
         {
             get
             {
-                return ownerArray.GetLabelFromCache(Id);
+                string theLabel = ownerArray.GetLabelFromCache(Id);
+                if (theLabel != "")
+                {
+                    int tooltipStart = theLabel.IndexOf(toolTipSeparator);
+                    if (tooltipStart != -1)
+                        theLabel = theLabel.Substring(0, tooltipStart);
+                }
+                return theLabel;
             }
             set
             {
-                label = value;
+                string theLabel = ownerArray.GetLabelFromCache(Id);
+                int tooltipStart = theLabel.IndexOf(toolTipSeparator);
+                if (tooltipStart != -1)
+                    label = value + toolTipSeparator +  theLabel.Substring(tooltipStart + toolTipSeparator.Length);
+                else
+                    label = value;
+
                 if (label != "")
                     ownerArray.AddLabelToCache(Id, label);
                 else
                     ownerArray.RemoveLabelFromCache(Id);
-                //Update(); //since everthing is in a cache, we don't have to write it out
+            }
+        }
+        public string ToolTip
+        {
+            get
+            {
+                string theToolTip = ownerArray.GetLabelFromCache(Id);
+                int tooltipStart = theToolTip.IndexOf(toolTipSeparator);
+                if (tooltipStart != -1)
+                    theToolTip = theToolTip.Substring(tooltipStart + toolTipSeparator.Length);
+                else
+                    theToolTip = "";
+                return theToolTip;
+            }
+            set
+            {
+                string theToolTip = ownerArray.GetLabelFromCache(Id);
+                int tooltipStart = theToolTip.IndexOf(toolTipSeparator);
+                if (tooltipStart != -1)
+                    theToolTip = theToolTip.Substring(0,tooltipStart);
+                if (value != "" || theToolTip != "")
+                {
+                    if (value != "")
+                        theToolTip = theToolTip + toolTipSeparator + value;
+                    ownerArray.AddLabelToCache(Id, theToolTip);
+                }
+                else
+                    ownerArray.RemoveLabelFromCache(Id);
             }
         }
 

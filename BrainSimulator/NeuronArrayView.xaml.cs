@@ -36,7 +36,10 @@ namespace BrainSimulator
         private List<NeuronOnScreen> neuronsOnScreen = new List<NeuronOnScreen>();
         public class NeuronOnScreen
         {
-            public int neuronIndex; public UIElement graphic; public float prevValue; public Label label;
+            public int neuronIndex; 
+            public UIElement graphic; 
+            public float prevValue; 
+            public Label label;
             public NeuronOnScreen(int index, UIElement e, float value, Label Label)
             {
                 neuronIndex = index; graphic = e; prevValue = value; label = Label;
@@ -442,6 +445,7 @@ namespace BrainSimulator
                         }
 
                         string newLabel = NeuronView.GetNeuronLabel(n);
+                        if (newLabel.IndexOf('|')!= -1) newLabel = newLabel.Substring(0, newLabel.IndexOf('|'));
                         if (a.label != null && newLabel != (string)a.label.Content)
                         {
                             a.label.Content = newLabel;

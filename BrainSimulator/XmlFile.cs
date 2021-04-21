@@ -187,10 +187,10 @@ namespace BrainSimulator
                     return false;
                 }
                 Neuron n = theNeuronArray.GetNeuronForDrawing(i);
-                if (n.inUse)
+                if (n.inUse || n.Label != "")
                 {
                     n = theNeuronArray.GetCompleteNeuron(i);
-                    string label = n.Label;// theNeuronArray.GetNeuronLabel(n.id);
+                    string label = n.Label;
                     //this is needed bacause inUse is true if any synapse points to this neuron--we don't need to bother with that if it's the only thing 
                     if (n.synapses.Count != 0 || label != "" || n.lastCharge != 0 || n.leakRate != 0.1f
                         || n.model != Neuron.modelType.IF)

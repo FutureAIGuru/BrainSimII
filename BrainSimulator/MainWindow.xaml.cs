@@ -622,8 +622,7 @@ namespace BrainSimulator
         public bool SetProgress(float value,string label)
         {
             bool retVal = false;
-            Dispatcher dispatcher = Dispatcher.FromThread(Thread.CurrentThread);
-            if (dispatcher != null)
+            if (Application.Current.Dispatcher.CheckAccess())
             {
                 retVal = progressDialog.SetProgress(value, label);
                 AllowUIToUpdate();

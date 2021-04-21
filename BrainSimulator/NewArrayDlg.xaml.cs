@@ -105,7 +105,6 @@ namespace BrainSimulator
             }
         }
 
-        //        BackgroundWorker bgw = new BackgroundWorker();
         int rows;
         int cols;
         int refractory = 0;
@@ -168,42 +167,22 @@ namespace BrainSimulator
                     return;
                 }
 
-                if (!doSynapses) synapsesPerNeuron = 0;
-                NeuronClient.InitServers(synapsesPerNeuron, arraySize);
+                NeuronClient.InitServers(0, arraySize);
                 NeuronClient.WaitForDoneOnAllServers();
                 returnValue = true;
                 Close();
+                returnValue = true;
             }
             else
             {
                 GC.Collect(3, GCCollectionMode.Forced, true);
                 MainWindow.theNeuronArray.Initialize(arraySize, rows);
                 MainWindow.theNeuronArray.RefractoryDelay = refractory;
-                //bgw.DoWork += AsyncCreateNeurons;
-                //bgw.RunWorkerAsync();
-
-                //barUpdateTimer.Tick += Dt_Tick;
-                //barUpdateTimer.Start();
-
-                MainWindow.theNeuronArray.ShowSynapses = doSynapses;
-                MainWindow.thisWindow.SetShowSynapsesCheckBox(doSynapses);
+         
+                MainWindow.theNeuronArray.ShowSynapses = false;
+                MainWindow.thisWindow.SetShowSynapsesCheckBox(false);
                 Close();
-            }
-        }
-
-        bool done = false;
-        bool doSynapses = false;
-        int synapsesPerNeuron = 10;
-        private void Dt_Tick(object sender, EventArgs e)
-        {
-            //progressBar.Maximum = MainWindow.theNeuronArray.arraySize * synapsesPerNeuron;
-            MainWindow.theNeuronArray.GetCounts(out long synapseCount, out int useCount);
-            //progressBar.Value = synapseCount;
-            if (done)
-            {
-                barUpdateTimer.Stop();
                 returnValue = true;
-                Close();
             }
         }
 
@@ -212,38 +191,7 @@ namespace BrainSimulator
             this.Close();
         }
 
-        private void AsyncCreateNeurons(object sender, DoWorkEventArgs e)
-        {
-            if (doSynapses)
-            {
-                GC.Collect(3, GCCollectionMode.Forced, true);
-                //#if !DEBUG
-                //                Parallel.For(0, MainWindow.theNeuronArray.arraySize, i => CreateRandomSynapses(i));
-                //#else
-                //                for (int i = 0; i < MainWindow.theNeuronArray.arraySize; i++)
-                //                    CreateRandomSynapses(i);
-                //#endif
-            }
-            done = true;
-        }
-
-        //private void CreateRandomSynapses(int i)
-        //{
-        //    if (rand == null) rand = new Random();
-        //    for (int j = 0; j < synapsesPerNeuron; j++)
-        //    {
-        //        int targetNeuron = i + rand.Next() % (2 * synapsesPerNeuron) - synapsesPerNeuron;
-        //        int rowOffset = rand.Next() % 100 - 50;
-        //        int colOffset = rand.Next() % 100 - 50;
-        //        targetNeuron = i + (colOffset * rows) + rowOffset;
-
-        //        while (targetNeuron < 0) targetNeuron += arraySize;
-        //        while (targetNeuron >= arraySize) targetNeuron -= arraySize;
-        //        float weight = (rand.Next(521) / 1000f) - .2605f;
-        //        MainWindow.theNeuronArray.AddSynapse(i, targetNeuron, weight, Synapse.modelType.Fixed, false);
-        //    }
-        //}
-
+ 
         private void Button_Refresh(object sender, RoutedEventArgs e)
         {
             UpdateServerTextBox();

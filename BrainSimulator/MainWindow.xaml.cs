@@ -560,7 +560,8 @@ namespace BrainSimulator
                 dlg.ShowDialog();
                 if (dlg.returnValue)
                 {
-                    Update();
+                    arrayView.Dp.NeuronDisplaySize = 62;
+                    ButtonZoomToOrigin_Click(null,null);
                     currentFileName = "";
                     SetCurrentFileNameToProperties();
                     setTitleBar();

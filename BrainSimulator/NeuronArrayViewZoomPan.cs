@@ -172,6 +172,9 @@ namespace BrainSimulator
             var currentN = Math.Log10(currentValue);
             currentN += change / 20.0;
             currentValue = (float)Math.Pow(10, currentN);
+            double size = Math.Min(ActualHeight() / (double)MainWindow.theNeuronArray.rows, ActualWidth() / (double)MainWindow.theNeuronArray.Cols);
+            if (currentValue < size/2) 
+                currentValue = (float)size/2;
             return currentValue;
         }
         public void Zoom(int change)

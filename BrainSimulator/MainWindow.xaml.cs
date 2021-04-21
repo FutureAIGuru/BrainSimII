@@ -106,7 +106,7 @@ namespace BrainSimulator
                 Properties.Settings.Default.UpgradeRequired = false;
                 Properties.Settings.Default.Save();
             }
-            
+
         }
         private void SplashHide_Tick(object sender, EventArgs e)
         {
@@ -243,10 +243,18 @@ namespace BrainSimulator
             SuspendEngine();
 
             bool success = false;
-            await Task.Run(delegate {success = XmlFile.Load(ref theNeuronArray, fileName); });
-            //if (!success) return;
-
+            await Task.Run(delegate { success = XmlFile.Load(ref theNeuronArray, fileName); });
+            if (!success)
+            {
+                Update();
+                return;
+            }
             currentFileName = fileName;
+
+            if (XmlFile.CanWriteTo(currentFileName))
+                SaveButton.IsEnabled = true;
+            else
+                SaveButton.IsEnabled = false;
 
             setTitleBar();
             await Task.Delay(1000).ContinueWith(t => ShowDialogs());
@@ -282,7 +290,7 @@ namespace BrainSimulator
             return true;
         }
 
-        private void SaveFile(string fileName)
+        private bool SaveFile(string fileName)
         {
             SuspendEngine();
             foreach (ModuleView na in theNeuronArray.modules)
@@ -296,8 +304,14 @@ namespace BrainSimulator
             {
                 currentFileName = fileName;
                 SetCurrentFileNameToProperties();
+                ResumeEngine();
+                return true;
             }
-            ResumeEngine();
+            else
+            {
+                ResumeEngine();
+                return false;
+            }
         }
         private void SaveClipboardToFile(string fileName)
         {
@@ -484,10 +498,23 @@ namespace BrainSimulator
 
         private void buttonSaveAs_Click(object sender, RoutedEventArgs e)
         {
+            string defaultPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            defaultPath += "\\BrainSim";
+            try
+            {
+                if (Directory.Exists(defaultPath)) defaultPath = "";
+                else Directory.CreateDirectory(defaultPath);
+            }
+            catch
+            {
+                //maybe myDocuments is readonly of offline? let the user do whatever they want
+                defaultPath = "";
+            }
             SaveFileDialog saveFileDialog1 = new SaveFileDialog
             {
                 Filter = "XML Network Files|*.xml",
-                Title = "Select a Brain Simulator File"
+                Title = "Select a Brain Simulator File",
+                InitialDirectory = defaultPath
             };
 
             // Show the Dialog.  
@@ -495,9 +522,11 @@ namespace BrainSimulator
             Nullable<bool> result = saveFileDialog1.ShowDialog();
             if (result ?? false)// System.Windows.Forms.DialogResult.OK)
             {
-                SaveFile(saveFileDialog1.FileName);
-                AddFileToMRUList(currentFileName);
-                setTitleBar();
+                if (SaveFile(saveFileDialog1.FileName))
+                {
+                    AddFileToMRUList(currentFileName);
+                    setTitleBar();
+                }
             }
         }
 
@@ -601,25 +630,26 @@ namespace BrainSimulator
                 });
             }
         }
-
-        public void SetStatusError(string errMessage)
+        public void SetStatus(string message)
         {
-            if (errMessage == "")
-            {
-                statusError.Background = new SolidColorBrush(Colors.LightGreen);
-                statusError.Text = errMessage;
-            }
-            else
-            {
-                statusError.Background = new SolidColorBrush(Colors.Pink);
-                statusError.Text = errMessage;
-            }
+            statusError.Background = new SolidColorBrush(Colors.LightGreen);
+            statusError.Text = message;
+        }
+        public void SetStatusWarning(string message)
+        {
+            statusError.Background = new SolidColorBrush(Colors.Yellow);
+            statusError.Text = message;
+        }
+        public void SetStatusError(string message)
+        {
+            statusError.Background = new SolidColorBrush(Colors.Pink);
+            statusError.Text = message;
         }
         public void SetMouseStatus(int id, int row, int col)
         {
             mousePosition.Text = "ID: " + id + "  Row: " + row + " Col: " + col;
         }
-        public bool SetProgress(float value,string label)
+        public bool SetProgress(float value, string label)
         {
             bool retVal = false;
             if (Application.Current.Dispatcher.CheckAccess())
@@ -829,6 +859,18 @@ namespace BrainSimulator
             else ThreadCount.Text = "";
             if (theNeuronArray != null) Refractory.Text = theNeuronArray.GetRefractoryDelay().ToString();
             else Refractory.Text = "";
+            if (currentFileName != "" &&
+                XmlFile.CanWriteTo(currentFileName, out string message)
+                && theNeuronArray != null)
+            {
+                EnableMenuItem(MainMenu.Items, "_Save", true);
+                SaveButton.IsEnabled = true;
+            }
+            else
+            {
+                EnableMenuItem(MainMenu.Items, "_Save", false);
+                SaveButton.IsEnabled = false;
+            }
             if (!engineIsPaused)
             {
                 EnableMenuItem(MainMenu.Items, "Run", false);
@@ -867,7 +909,6 @@ namespace BrainSimulator
             }
             else
             {
-                EnableMenuItem(MainMenu.Items, "_Save", true);
                 EnableMenuItem(MainMenu.Items, "Save _As", true);
                 EnableMenuItem(MainMenu.Items, "_Insert", true);
                 EnableMenuItem(MainMenu.Items, "_Properties", true);
@@ -985,6 +1026,7 @@ namespace BrainSimulator
         private bool PromptToSaveChanges()
         {
             if (theNeuronArray == null) return false;
+            if (!XmlFile.CanWriteTo(currentFileName, out string message)) return false;
             MainWindow.theNeuronArray.GetCounts(out long synapseCount, out int neuronInUseCount);
             if (neuronInUseCount == 0) return false;
 

@@ -29,10 +29,20 @@ namespace BrainSimulator
 
         public static bool Load(ref NeuronArray theNeuronArray, string fileName)
         {
+            FileStream file;
+            try
+            {
+                file = File.Open(fileName, FileMode.Open,FileAccess.Read);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Could not open file because: " + e.Message);
+                return false;
+            }
+
             MainWindow.thisWindow.SetProgress(0, "Loading Network File");
-            FileStream file = File.Open(fileName, FileMode.Open);
             theNeuronArray = new NeuronArray();
-            
+
             XmlSerializer reader1 = new XmlSerializer(typeof(NeuronArray), GetModuleTypes());
             theNeuronArray = (NeuronArray)reader1.Deserialize(file);
             file.Close();
@@ -46,14 +56,14 @@ namespace BrainSimulator
             fs.Close();
 
             int arraySize = theNeuronArray.arraySize;
-            theNeuronArray.Initialize(arraySize,theNeuronArray.rows);
+            theNeuronArray.Initialize(arraySize, theNeuronArray.rows);
             neuronNodes = xmldoc.GetElementsByTagName("Neuron");
 
             for (int i = 0; i < neuronNodes.Count; i++)
             {
                 var progress = i / (float)neuronNodes.Count;
                 progress *= 100;
-                if (MainWindow.thisWindow.SetProgress(progress,""))
+                if (MainWindow.thisWindow.SetProgress(progress, ""))
                 {
                     MainWindow.thisWindow.SetProgress(100, "");
                     return false;
@@ -146,12 +156,40 @@ namespace BrainSimulator
                 }
                 theNeuronArray.SetCompleteNeuron(n);
             }
-            MainWindow.thisWindow.SetProgress(100,"");
+            MainWindow.thisWindow.SetProgress(100, "");
             return true;
         }
 
+        public static bool CanWriteTo(string fileName)
+        {
+            return CanWriteTo(fileName, out _);
+        }
+        public static bool CanWriteTo(string fileName,out string message)
+        {
+            FileStream file1;
+            message = "";
+            try
+            {
+                file1 = File.Open(fileName, FileMode.Open);
+                file1.Close();
+                return true;
+            }
+            catch (Exception e)
+            {
+                message = e.Message;
+                return false;
+            }
+
+        }
         public static bool Save(NeuronArray theNeuronArray, string fileName)
         {
+            //Check for file access
+            if (!CanWriteTo(fileName,out string message))
+            {
+                MessageBox.Show("Could not save file because: " + message);
+                return false;
+            }
+
             MainWindow.thisWindow.SetProgress(0, "Saving Network File");
 
             string tempFile = System.IO.Path.GetTempFileName();
@@ -287,8 +325,17 @@ namespace BrainSimulator
             file.Position = 0;
             xmldoc.Save(file);
             file.Close();
-            File.Copy(tempFile, fileName, true);
-            File.Delete(tempFile);
+            try
+            {
+                File.Copy(tempFile, fileName, true);
+                File.Delete(tempFile);
+            }
+            catch(Exception e)
+            {
+                MainWindow.thisWindow.SetProgress(100, "");
+                MessageBox.Show("Could not save file because: " + e.Message);
+                return false;
+            }
             MainWindow.thisWindow.SetProgress(100, "");
 
             return true;

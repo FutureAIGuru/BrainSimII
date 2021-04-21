@@ -120,6 +120,7 @@ namespace BrainSimulator
 
             //draw some background grid and labels
             int boxSize = 250;
+            if (columns > 2500) boxSize = 1000;
             for (int i = 0; i <= theNeuronArray.rows; i += boxSize)
             {
                 Line l = new Line
@@ -156,11 +157,15 @@ namespace BrainSimulator
                     l.Content = refNo++;
                     l.FontSize = dp.NeuronDisplaySize * 10;
                     if (l.FontSize < 25) l.FontSize = 25;
+                    if (l.FontSize > boxSize * dp.NeuronDisplaySize * 0.75)
+                        l.FontSize = boxSize * dp.NeuronDisplaySize * 0.75;
                     l.Foreground = Brushes.White;
                     l.HorizontalAlignment = HorizontalAlignment.Center;
                     l.VerticalAlignment = VerticalAlignment.Center;
-                    Canvas.SetLeft(l, p.X);
-                    Canvas.SetTop(l, p.Y);
+                    l.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+
+                    Canvas.SetLeft(l, p.X - l.DesiredSize.Width / 2);
+                    Canvas.SetTop(l, p.Y - l.DesiredSize.Height / 2);
                     legendCanvas.Children.Add(l);
 
                 }
@@ -360,9 +365,14 @@ namespace BrainSimulator
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
             if (synapseCount >= dp.maxSynapsesToDisplay)
-                MainWindow.thisWindow.SetStatusError("Too many synapses to display");
+                MainWindow.thisWindow.SetStatusWarning("Too many synapses to display");
             else
-                MainWindow.thisWindow.SetStatusError("");
+            {
+                if (!dp.ShowNeurons())
+                    MainWindow.thisWindow.SetStatus("Grid Size: "+(boxSize * boxSize).ToString("#,##"));
+                else
+                    MainWindow.thisWindow.SetStatus("");
+            }
             //Debug.WriteLine("Update Done " + elapsedMs + "ms");
         }
 

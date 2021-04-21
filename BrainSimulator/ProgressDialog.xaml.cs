@@ -46,6 +46,8 @@ namespace BrainSimulator
         private void cancelButton_Click(object sender, RoutedEventArgs e)
         {
             cancelPressed = true;
+            this.Hide();
+            this.Visibility = Visibility.Collapsed;
         }
     }
 

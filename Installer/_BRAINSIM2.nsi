@@ -13,6 +13,8 @@
 
 !define DESCRIPTION "The experiment kit for AGI"
 
+!define BUILD_TYPE Release
+
 Name "${APP_NAME}"
 OutFile "$DESKTOP\${APP_NAME} Setup.exe"
 Icon bsicon.ico
@@ -99,12 +101,16 @@ Section    "Brain Simulator II" BRAINSIM2
 	SetShellVarContext current
 
     File /oname=$INSTDIR\bsicon.ico "bsicon.ico"
-    File /oname=$INSTDIR\BrainSimulator.exe "..\BrainSimulator\bin\x64\Debug\BrainSimulator.exe"
-    File /r /x /oname=$INSTDIR\Resources ..\BrainSimulator\bin\x64\Debug\Resources
-    File /oname=$INSTDIR\NeuronEngine.dll "..\BrainSimulator\bin\x64\Debug\NeuronEngine.dll"
-    File /oname=$INSTDIR\NeuronEngine.pdb "..\BrainSimulator\bin\x64\Debug\NeuronEngine.pdb"
-    File /oname=$INSTDIR\NeuronEngineWrapper.dll "..\BrainSimulator\bin\x64\Debug\NeuronEngineWrapper.dll"
-    File /oname=$INSTDIR\NeuronEngineWrapper.pdb "..\BrainSimulator\bin\x64\Debug\NeuronEngineWrapper.pdb"
+    File /oname=$INSTDIR\BrainSimulator.exe "..\BrainSimulator\bin\x64\${BUILD_TYPE}\BrainSimulator.exe"
+    File /r /x /oname=$INSTDIR\Resources ..\BrainSimulator\bin\x64\${BUILD_TYPE}\Resources
+    File /oname=$INSTDIR\NeuronEngine.dll "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngine.dll"
+    File /oname=$INSTDIR\NeuronEngine.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngine.pdb"
+    File /oname=$INSTDIR\NeuronEngineWrapper.dll "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngineWrapper.dll"
+    File /oname=$INSTDIR\NeuronEngineWrapper.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngineWrapper.pdb"
+    File /oname=$INSTDIR\WebCamLib.dll "..\BrainSimulator\bin\x64\${BUILD_TYPE}\WebCamLib.dll"
+    File /oname=$INSTDIR\WebCamLib.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\WebCamLib.pdb"
+    File /oname=$INSTDIR\Touchless.Vision.dll "..\BrainSimulator\bin\x64\${BUILD_TYPE}\Touchless.Vision.dll"
+    File /oname=$INSTDIR\Touchless.Vision.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\Touchless.Vision.pdb"
     createShortCut "$DESKTOP\Brain Simulator.lnk" "$INSTDIR\BrainSimulator.exe" "" "$INSTDIR\bsicon.ico"
 SectionEnd
 
@@ -112,11 +118,11 @@ Section "NeuronServer" NEURONSERVER
 	SetShellVarContext current
 
     File /oname=$INSTDIR\nsicon.ico "nsicon.ico"
-    File /oname=$INSTDIR\NeuronServer.exe "..\BrainSimulator\bin\x64\Debug\NeuronServer.exe"
-    File /oname=$INSTDIR\NeuronEngine.dll "..\BrainSimulator\bin\x64\Debug\NeuronEngine.dll"
-    File /oname=$INSTDIR\NeuronEngine.pdb "..\BrainSimulator\bin\x64\Debug\NeuronEngine.pdb"
-    File /oname=$INSTDIR\NeuronEngineWrapper.dll "..\BrainSimulator\bin\x64\Debug\NeuronEngineWrapper.dll"
-    File /oname=$INSTDIR\NeuronEngineWrapper.pdb "..\BrainSimulator\bin\x64\Debug\NeuronEngineWrapper.pdb"
+    File /oname=$INSTDIR\NeuronServer.exe "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronServer.exe"
+    File /oname=$INSTDIR\NeuronEngine.dll "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngine.dll"
+    File /oname=$INSTDIR\NeuronEngine.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngine.pdb"
+    File /oname=$INSTDIR\NeuronEngineWrapper.dll "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngineWrapper.dll"
+    File /oname=$INSTDIR\NeuronEngineWrapper.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngineWrapper.pdb"
     createShortCut "$DESKTOP\Neuron Server.lnk" "$INSTDIR\NeuronServer.exe" "" "$INSTDIR\nsicon.ico"
 SectionEnd
 
@@ -128,7 +134,7 @@ SectionEnd
 Section "Network Examples" NETWORKEXAMPLES
 	SetShellVarContext current
 
-    File /r /x /oname=$INSTDIR\Networks ..\BrainSimulator\bin\x64\Debug\Networks
+    File /r /x /oname=$INSTDIR\Networks ..\BrainSimulator\bin\x64\${BUILD_TYPE}\Networks
 SectionEnd
 
 !macro VerifyUserIsAdmin
@@ -179,6 +185,10 @@ section "uninstall"
     delete $INSTDIR\NeuronEngine.pdb
     delete $INSTDIR\NeuronEngineWrapper.dll
     delete $INSTDIR\NeuronEngineWrapper.pdb
+    delete $INSTDIR\WebCamLib.dll
+    delete $INSTDIR\WebCamLib.pdb
+    delete $INSTDIR\Touchless.Vision.dll
+    delete $INSTDIR\Touchless.Vision.pdb
     delete $INSTDIR\Networks\*.*
     delete $INSTDIR\Resources\*.*
     RMDIR $INSTDIR\Networks

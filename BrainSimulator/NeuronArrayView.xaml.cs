@@ -36,10 +36,17 @@ namespace BrainSimulator
         private List<NeuronOnScreen> neuronsOnScreen = new List<NeuronOnScreen>();
         public class NeuronOnScreen
         {
-            public int neuronIndex; 
-            public UIElement graphic; 
-            public float prevValue; 
+            public int neuronIndex;
+            public UIElement graphic;
+            public float prevValue;
             public Label label;
+            public List<synapseOnScreen> synapsesOnScreen = null;
+            public struct synapseOnScreen
+            {
+                public int target;
+                public float prevWeight;
+                public Shape graphic;
+            }
             public NeuronOnScreen(int index, UIElement e, float value, Label Label)
             {
                 neuronIndex = index; graphic = e; prevValue = value; label = Label;
@@ -299,14 +306,20 @@ namespace BrainSimulator
                             {
                                 int canvas = neuronID % neuronCanvasCount;
                                 neuronCanvas[canvas].Children.Add(l);
-                                if (l is Ellipse || l is Rectangle)
-                                    neuronsOnScreen.Add(new NeuronOnScreen(neuronID, l, -10, lbl));
+
                                 if (lbl != null && dp.ShowNeuronLabels())
                                 {
                                     if (l is Shape s && s.Fill is SolidColorBrush b && b.Color == Colors.White)
                                         lbl.Foreground = new SolidColorBrush(Colors.Black);
                                     labelCanvas.Children.Add(lbl);
                                 }
+
+                                NeuronOnScreen neuronScreenCache = null;
+                                if (n.inUse && (l is Ellipse || l is Rectangle))
+                                {
+                                    neuronScreenCache = new NeuronOnScreen(neuronID, l, -10, lbl);
+                                }
+
                                 if (synapseCount < dp.maxSynapsesToDisplay &&
                                     dp.ShowSynapses() && (MainWindow.theNeuronArray.ShowSynapses || IsShowingSnapses(n.id)))
                                 {
@@ -326,6 +339,13 @@ namespace BrainSimulator
                                                 else
                                                     allSynapsesCanvas.Children.Add(l1);
                                                 synapseCount++;
+                                                if (neuronScreenCache != null && s.model != Synapse.modelType.Fixed)
+                                                {
+                                                    if (neuronScreenCache.synapsesOnScreen == null)
+                                                        neuronScreenCache.synapsesOnScreen = new List<NeuronOnScreen.synapseOnScreen>();
+                                                    neuronScreenCache.synapsesOnScreen.Add(
+                                                        new NeuronOnScreen.synapseOnScreen { target = s.targetNeuron, prevWeight = s.weight, graphic = l1 });
+                                                }
                                             }
                                         }
                                     }
@@ -344,6 +364,9 @@ namespace BrainSimulator
                                         }
                                     }
                                 }
+                                if (neuronScreenCache != null)
+                                    neuronsOnScreen.Add(neuronScreenCache);
+
                             }
                         }
                     }
@@ -372,7 +395,7 @@ namespace BrainSimulator
             else
             {
                 if (!dp.ShowNeurons())
-                    MainWindow.thisWindow.SetStatus("Grid Size: "+(boxSize * boxSize).ToString("#,##"));
+                    MainWindow.thisWindow.SetStatus("Grid Size: " + (boxSize * boxSize).ToString("#,##"));
                 else
                     MainWindow.thisWindow.SetStatus("");
             }
@@ -381,6 +404,7 @@ namespace BrainSimulator
 
 
         //just update the colors of the neurons based on their current charge
+        //and synapses based on current weight
         public void UpdateNeuronColors()
         {
             if (MainWindow.useServers)
@@ -412,8 +436,8 @@ namespace BrainSimulator
             else
             {
                 //for small arrays, repaint everything so synapse weights will update
-                //if (false) //use this for testing of 
-                if (neuronsOnScreen.Count < 451 && scale == 1)
+                if (false) //use this for testing of 
+                //if (neuronsOnScreen.Count < 451 && scale == 1)
                 {
                     Update();
                     if (MainWindow.theNeuronArray != null)
@@ -430,6 +454,26 @@ namespace BrainSimulator
                 {
                     NeuronOnScreen a = neuronsOnScreen[i];
                     Neuron n = MainWindow.theNeuronArray.GetNeuronForDrawing(a.neuronIndex);
+                    if (neuronsOnScreen[i].synapsesOnScreen != null)
+                    {
+                        n.synapses = MainWindow.theNeuronArray.GetSynapsesList(n.id);
+                        for (int j = 0; j < neuronsOnScreen[i].synapsesOnScreen.Count; j++)
+                        {
+                            NeuronOnScreen.synapseOnScreen sOnS = neuronsOnScreen[i].synapsesOnScreen[j];
+                            foreach (Synapse s in n.synapses)
+                            {
+                                if (sOnS.target == s.targetNeuron)
+                                {
+                                    if (sOnS.prevWeight != s.weight)
+                                    {
+                                        sOnS.graphic.Stroke = sOnS.graphic.Fill = new SolidColorBrush(Utils.RainbowColorFromValue(s.weight));
+                                        sOnS.prevWeight = s.weight;
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
                     if (a.graphic is Shape e)
                     {
                         float x = n.lastCharge;
@@ -445,7 +489,7 @@ namespace BrainSimulator
                         }
 
                         string newLabel = NeuronView.GetNeuronLabel(n);
-                        if (newLabel.IndexOf('|')!= -1) newLabel = newLabel.Substring(0, newLabel.IndexOf('|'));
+                        if (newLabel.IndexOf('|') != -1) newLabel = newLabel.Substring(0, newLabel.IndexOf('|'));
                         if (a.label != null && newLabel != (string)a.label.Content)
                         {
                             a.label.Content = newLabel;

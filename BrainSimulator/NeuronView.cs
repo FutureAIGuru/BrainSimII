@@ -211,27 +211,36 @@ namespace BrainSimulator
             cm.StaysOpen = true;
 
             //The neuron label
-            StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
-            sp.Children.Add(new Label { Content = "ID: " + n.id + "   Label: ", VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) });
+            StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal,};
+            sp.Children.Add(new Label { Content = "ID: " + n.id + "   Label: ", VerticalAlignment = VerticalAlignment.Center,  });
             TextBox tb = Utils.ContextMenuTextBox(n.Label, "Label", 170);
             tb.TextChanged += Tb_TextChanged;
             sp.Children.Add(tb);
-            sp.Children.Add(new Label { Content = "Warning:\rDuplicate Label", FontSize = 8, Name = "DupWarn", Visibility = Visibility.Hidden });
-            cm.Items.Add(new MenuItem { StaysOpenOnClick = true, Header = sp });
+            sp.Children.Add(new Label { Content = "Warning: Duplicate Label", FontSize = 8, Name = "DupWarn", Visibility = Visibility.Hidden });
+            //sp.Children.Add(new Label { Content = "Tool Tip: "});
+            MenuItem mi1 = new MenuItem { StaysOpenOnClick = true, Header = sp };
+            //tb = Utils.ContextMenuTextBox(n.ToolTip, "ToolTip", 210);
+            //tb.Height = 100;
+            //tb.TextWrapping = TextWrapping.Wrap;
+            //tb.TextChanged += Tb_TextChanged;
+            //mi1.Items.Add(new MenuItem { StaysOpenOnClick = true, 
+            //    Header = tb});
+            cm.Items.Add(mi1);
 
-            //The neuron tooltip
-            sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
-            sp.Children.Add(new Label { Content = "Tooltip: ", VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) });
-            tb = Utils.ContextMenuTextBox(n.ToolTip, "ToolTip", 210);
-            tb.TextChanged += Tb_TextChanged;
-            sp.Children.Add(tb);
-            cm.Items.Add(new MenuItem { StaysOpenOnClick = true, Header = sp });
+            ////The neuron tooltip
+            //sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
+            //sp.Children.Add(new Label { Content = "Tooltip: ", VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) });
+            //tb = Utils.ContextMenuTextBox(n.ToolTip, "ToolTip", 210);
+            //tb.TextChanged += Tb_TextChanged;
+            //sp.Children.Add(tb);
+            //MenuItem mi0 = new MenuItem { StaysOpenOnClick = true, Header = sp };
+            //cm.Items.Add(mi0);
 
             //The neuron model
             sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
             sp.Children.Add(new Label { Content = "Model: ", Padding = new Thickness(0) });
             ComboBox cb = new ComboBox()
-            { Width = 100, Name = "Model" };
+            { Width = 80, Name = "Model" };
             for (int index = 0; index < Enum.GetValues(typeof(Neuron.modelType)).Length; index++)
             {
                 Neuron.modelType model = (Neuron.modelType)index;
@@ -245,16 +254,17 @@ namespace BrainSimulator
             cb.SelectedIndex = (int)n.Model;
             cb.SelectionChanged += Cb_SelectionChanged;
             sp.Children.Add(cb);
+            sp.Children.Add(new Label { Content = "Tooltip: ", VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) });
+            tb = Utils.ContextMenuTextBox(n.ToolTip, "ToolTip", 150);
+            tb.TextChanged += Tb_TextChanged;
+            sp.Children.Add(tb);
             cm.Items.Add(new MenuItem { StaysOpenOnClick = true, Header = sp });
 
-            MenuItem mi = new MenuItem { Header = "Clear" };
-            if (MainWindow.myClipBoard == null) mi.IsEnabled = false;
-            mi.Click += Mi_Click;
-            cm.Items.Add(mi);
-
+            cm.Items.Add(new Separator());
             cm.Items.Add(new Separator());
 
-            mi = new MenuItem();
+
+            MenuItem mi = new MenuItem();
             CheckBox cbShowSynapses = new CheckBox
             {
                 IsChecked = (n.leakRate > 0) || float.IsPositiveInfinity(1.0f / n.leakRate),
@@ -310,6 +320,10 @@ namespace BrainSimulator
                 synapseMenuItem.ToolTip = "L-click -> source neuron, R-Click -> edit synapse";
                 mi.Items.Add(synapseMenuItem); ;
             }
+            cm.Items.Add(mi);
+
+            mi = new MenuItem { Header = "Clear" };
+            mi.Click += Mi_Click;
             cm.Items.Add(mi);
 
             mi = new MenuItem { Header = "Paste Here" };
@@ -383,51 +397,61 @@ namespace BrainSimulator
         //This creates or updates the portion of the context menu content which depends on the model type
         private static void SetCustomCMItems(ContextMenu cm, Neuron n, Neuron.modelType newModel)
         {
-            while (cm.Items[2].GetType().Name != "Separator")
-                cm.Items.RemoveAt(2);
+            //find first seperator;
+            int insertPosition = 0;
+            for (int i = 0; i < cm.Items.Count; i++)
+            {
+                if (cm.Items[i].GetType() == typeof(Separator))
+                {
+                    insertPosition = i + 1;
+                    while (i + 1 < cm.Items.Count && cm.Items[i + 1].GetType() != typeof(Separator))
+                        cm.Items.RemoveAt(i + 1);
+                    break;
+                }
+            }
 
             //The charge value formatted based on the model
             if (newModel == Neuron.modelType.Color)
             {
-                cm.Items.Insert(2,
+                cm.Items.Insert(insertPosition,
                     Utils.CreateComboBox("CurrentCharge", n.LastChargeInt, colorValues, colorFormatString, "Content: ", 80, ComboBox_ContentChanged));
             }
             else if (newModel == Neuron.modelType.FloatValue)
             {
-                cm.Items.Insert(2,
+                cm.Items.Insert(insertPosition,
                     Utils.CreateComboBox("CurrentCharge", n.lastCharge, currentChargeValues, floatValueFormatString, "Content: ", 80, ComboBox_ContentChanged));
             }
             else
             {
-                cm.Items.Insert(2,
+                cm.Items.Insert(insertPosition,
                     Utils.CreateComboBox("CurrentCharge", n.lastCharge, currentChargeValues, floatFormatString, "Charge: ", 80, ComboBox_ContentChanged));
 
             }
 
             if (newModel == Neuron.modelType.LIF)
             {
-                cm.Items.Insert(3,
+                cm.Items.Insert(insertPosition+1,
                     Utils.CreateComboBox("LeakRate", Math.Abs(n.leakRate), leakRateValues, floatFormatString, "Leak Rate: ", 80, ComboBox_ContentChanged));
-                cm.Items.Insert(4,
+                cm.Items.Insert(insertPosition + 2,
                     Utils.CreateComboBox("AxonDelay", n.axonDelay, axonDelayValues, intFormatString, "AxonDelay: ", 80, ComboBox_ContentChanged));
             }
             else if (newModel == Neuron.modelType.Always)
             {
-                cm.Items.Insert(3,
+                cm.Items.Insert(insertPosition + 1,
                     Utils.CreateComboBox("AxonDelay", n.axonDelay, alwaysDelayValues, intFormatString, "Period: ", 80, ComboBox_ContentChanged));
             }
             else if (newModel == Neuron.modelType.Random)
             {
-                cm.Items.Insert(3,
+                cm.Items.Insert(insertPosition + 1,
                     Utils.CreateComboBox("AxonDelay", n.axonDelay, meanValues, intFormatString, "Mean: ", 80, ComboBox_ContentChanged));
-                cm.Items.Insert(4,
+                cm.Items.Insert(insertPosition + 2,
                     Utils.CreateComboBox("LeakRate", Math.Abs(n.leakRate), stdDevValues, floatFormatString, "Std Dev: ", 80, ComboBox_ContentChanged));
             }
             else if (newModel == Neuron.modelType.Burst)
             {
-                cm.Items.Insert(3,
+                cm.Items.Insert(insertPosition + 1,
                     Utils.CreateComboBox("AxonDelay", n.axonDelay, alwaysDelayValues, intFormatString, "Count: ", 80, ComboBox_ContentChanged));
-                cm.Items.Insert(4,
+                cm.Items.Insert(insertPosition + 2,
                     Utils.CreateComboBox("LeakRate", Math.Abs(n.leakRate), axonDelayValues, intFormatString, "Rate: ", 80, ComboBox_ContentChanged));
             }
         }

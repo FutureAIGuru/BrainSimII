@@ -25,6 +25,12 @@ namespace BrainSimulator
                 theBrowser.Navigate(urlToShow);
                 theCheckBox.Visibility = Visibility.Collapsed;
             }
+            theBrowser.Navigating += TheBrowser_Navigating;
+        }
+
+        private void TheBrowser_Navigating(object sender, System.Windows.Navigation.NavigatingCancelEventArgs e)
+        {
+            System.Diagnostics.Process.Start(e.Uri.ToString());
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

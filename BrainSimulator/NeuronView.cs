@@ -96,7 +96,7 @@ namespace BrainSimulator
                 string theToolTip = n.ToolTip;
                 if (theToolTip != "")
                 {
-                    r.ToolTip = new ToolTip { Content = theToolTip};
+                    r.ToolTip = new ToolTip { Content = theToolTip };
                     l.ToolTip = new ToolTip { Content = theToolTip };
                 }
                 l.Content = theLabel;
@@ -151,12 +151,12 @@ namespace BrainSimulator
             //Debug.WriteLine("NeuronView MouseLeave");
             if (theCanvas.Cursor != Cursors.Hand && !theNeuronArrayView.dragging && e.LeftButton != MouseButtonState.Pressed)
                 theCanvas.Cursor = Cursors.Cross;
-            if (sender is FrameworkElement  s1)
+            if (sender is FrameworkElement s1)
             {
                 if (s1.ToolTip != null)
                 {
                     ToolTip x = (ToolTip)s1.ToolTip;
-                        x.IsOpen = false;
+                    x.IsOpen = false;
                 }
             }
         }
@@ -166,12 +166,12 @@ namespace BrainSimulator
             //Debug.WriteLine("NeuronView MouseEnter");
             if (theCanvas.Cursor != Cursors.Hand && !theNeuronArrayView.dragging && e.LeftButton != MouseButtonState.Pressed)
                 theCanvas.Cursor = Cursors.UpArrow;
-           
-            if (sender is FrameworkElement s1 )
+
+            if (sender is FrameworkElement s1)
             {
                 if (s1.ToolTip != null)
                 {
-                    ToolTip  x = (ToolTip) s1.ToolTip;
+                    ToolTip x = (ToolTip)s1.ToolTip;
                     if (!x.IsOpen)
                         x.IsOpen = true;
                 }
@@ -211,30 +211,14 @@ namespace BrainSimulator
             cm.StaysOpen = true;
 
             //The neuron label
-            StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal,};
-            sp.Children.Add(new Label { Content = "ID: " + n.id + "   Label: ", VerticalAlignment = VerticalAlignment.Center,  });
+            StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, };
+            sp.Children.Add(new Label { Content = "ID: " + n.id + "   Label: ", VerticalAlignment = VerticalAlignment.Center, });
             TextBox tb = Utils.ContextMenuTextBox(n.Label, "Label", 170);
             tb.TextChanged += Tb_TextChanged;
             sp.Children.Add(tb);
             sp.Children.Add(new Label { Content = "Warning: Duplicate Label", FontSize = 8, Name = "DupWarn", Visibility = Visibility.Hidden });
-            //sp.Children.Add(new Label { Content = "Tool Tip: "});
             MenuItem mi1 = new MenuItem { StaysOpenOnClick = true, Header = sp };
-            //tb = Utils.ContextMenuTextBox(n.ToolTip, "ToolTip", 210);
-            //tb.Height = 100;
-            //tb.TextWrapping = TextWrapping.Wrap;
-            //tb.TextChanged += Tb_TextChanged;
-            //mi1.Items.Add(new MenuItem { StaysOpenOnClick = true, 
-            //    Header = tb});
             cm.Items.Add(mi1);
-
-            ////The neuron tooltip
-            //sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
-            //sp.Children.Add(new Label { Content = "Tooltip: ", VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) });
-            //tb = Utils.ContextMenuTextBox(n.ToolTip, "ToolTip", 210);
-            //tb.TextChanged += Tb_TextChanged;
-            //sp.Children.Add(tb);
-            //MenuItem mi0 = new MenuItem { StaysOpenOnClick = true, Header = sp };
-            //cm.Items.Add(mi0);
 
             //The neuron model
             sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
@@ -254,10 +238,13 @@ namespace BrainSimulator
             cb.SelectedIndex = (int)n.Model;
             cb.SelectionChanged += Cb_SelectionChanged;
             sp.Children.Add(cb);
-            sp.Children.Add(new Label { Content = "Tooltip: ", VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) });
-            tb = Utils.ContextMenuTextBox(n.ToolTip, "ToolTip", 150);
-            tb.TextChanged += Tb_TextChanged;
-            sp.Children.Add(tb);
+            if (n.Label != "" || n.ToolTip != "") //add the tooltip textbox if needed
+            {
+                sp.Children.Add(new Label { Content = "Tooltip: ", VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) });
+                tb = Utils.ContextMenuTextBox(n.ToolTip, "ToolTip", 150);
+                tb.TextChanged += Tb_TextChanged;
+                sp.Children.Add(tb);
+            }
             cm.Items.Add(new MenuItem { StaysOpenOnClick = true, Header = sp });
 
             cm.Items.Add(new Separator());
@@ -430,7 +417,7 @@ namespace BrainSimulator
 
             if (newModel == Neuron.modelType.LIF)
             {
-                cm.Items.Insert(insertPosition+1,
+                cm.Items.Insert(insertPosition + 1,
                     Utils.CreateComboBox("LeakRate", Math.Abs(n.leakRate), leakRateValues, floatFormatString, "Leak Rate: ", 80, ComboBox_ContentChanged));
                 cm.Items.Insert(insertPosition + 2,
                     Utils.CreateComboBox("AxonDelay", n.axonDelay, axonDelayValues, intFormatString, "AxonDelay: ", 80, ComboBox_ContentChanged));
@@ -536,6 +523,16 @@ namespace BrainSimulator
                 if (cc is CheckBox cb)
                     if (cb.IsChecked == true) applyToAll = true;
 
+                cc = Utils.FindByName(cm, "ToolTip");
+                if (cc is TextBox tb1)
+                {
+                    string newLabel = tb1.Text;
+                    if (labelChanged)
+                    {
+                        MainWindow.theNeuronArray.SetUndoPoint();
+                        n.ToolTip = newLabel;
+                    }
+                }
                 cc = Utils.FindByName(cm, "Label");
                 if (cc is TextBox tb)
                 {
@@ -548,18 +545,6 @@ namespace BrainSimulator
                         n.Label = newLabel;
                         if (applyToAll)
                             SetValueInSelectedNeurons(n, "label");
-                    }
-                }
-                cc = Utils.FindByName(cm, "ToolTip");
-                if (cc is TextBox tb1)
-                {
-                    string newLabel = tb1.Text;
-                    if (labelChanged)
-                    {
-                        MainWindow.theNeuronArray.SetUndoPoint();
-                        n.ToolTip = newLabel;
-                        if (applyToAll)
-                            SetValueInSelectedNeurons(n, "tooltip");
                     }
                 }
                 cc = Utils.FindByName(cm, "Model");
@@ -808,6 +793,7 @@ namespace BrainSimulator
                                 n1.lastCharge = n.currentCharge;
                             }
                             break;
+                        case "clear":n1.ClearWithUndo();break;
                         case "leakRate": n1.leakRate = n.leakRate; break;
                         case "axonDelay": n1.axonDelay = n.axonDelay; break;
                         case "model": n1.model = n.model; break;
@@ -934,6 +920,14 @@ namespace BrainSimulator
                 theNeuronArrayView.PasteNeurons();
                 theNeuronArrayView.targetNeuronIndex = -1;
                 cmCancelled = true;
+            }
+            if ((string)mi.Header == "Clear")
+            {
+                MainWindow.theNeuronArray.SetUndoPoint();
+                n.ClearWithUndo();
+                SetValueInSelectedNeurons(n, "clear");
+                cmCancelled = true;
+                MainWindow.Update();
             }
             if ((string)mi.Header == "Move Here")
             {

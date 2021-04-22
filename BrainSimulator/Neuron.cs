@@ -265,6 +265,20 @@ namespace BrainSimulator
             n.model = this.model;
             return n;
         }
+        public void ClearWithUndo()
+        {
+            MainWindow.theNeuronArray.AddNeuronUndo(this);
+            for (int i = 0; i < synapses.Count; i++)
+            {
+                DeleteSynapseWithUndo(synapses[i].targetNeuron);
+            }
+            for (int i = 0; i < synapsesFrom.Count; i++)
+            {
+                MainWindow.theNeuronArray.GetNeuron(synapsesFrom[i].targetNeuron).
+                    DeleteSynapseWithUndo(this.id);
+            }
+            Clear();
+        }
         public void Clear()
         {
             Label = "";

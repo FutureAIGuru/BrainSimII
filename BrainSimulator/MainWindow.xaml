@@ -9,18 +9,26 @@
         Closing="Window_Closing" ContentRendered="Window_ContentRendered" WindowState="Maximized" MouseEnter="Window_MouseEnter" MouseLeave="Window_MouseLeave">
     <DockPanel Margin="0,1,-1,3" Grid.ColumnSpan="3">
         <StatusBar DockPanel.Dock="Bottom">
-            <Label Width="100"></Label>
+            <Label Width="50" />
             <StatusBarItem>
-                <TextBlock x:Name="statusError" Background="LightGreen" Width="200" TextAlignment="Center"></TextBlock>
+                <TextBlock x:Name="KBStatus" Width="50"></TextBlock>
             </StatusBarItem>
             <Label Width="100"></Label>
             <StatusBarItem>
-                <TextBlock x:Name="mousePosition" Background="LightGreen" Width="200" TextAlignment="Center"></TextBlock>
+                <TextBlock x:Name="statusField0" Background="LightGreen" Width="250" TextAlignment="Center"></TextBlock>
             </StatusBarItem>
-            <Label Visibility="Hidden" Width="10"></Label>
-            <Label x:Name="labelDisplayStatus" Content="Display status" Width="191" Height="30" VerticalAlignment="center" Grid.ColumnSpan="2" />
-            <Label Visibility="Hidden" Width="10"></Label>
-            <Label x:Name="labelEngineStatus" Content="Initializing" Height="30" VerticalAlignment="Top" />
+            <Label Width="50"></Label>
+            <StatusBarItem>
+                <TextBlock x:Name="statusField1" Background="LightGreen" Width="250" TextAlignment="Center"></TextBlock>
+            </StatusBarItem>
+            <Label Width="50"></Label>
+            <StatusBarItem>
+                <TextBlock x:Name="statusField2" Background="LightGreen" Width="250" TextAlignment="Center"></TextBlock>
+            </StatusBarItem>
+            <Label Width="50"></Label>
+            <StatusBarItem>
+                <TextBlock x:Name="statusField3" Background="LightGreen" Width="400" TextAlignment="Center"></TextBlock>
+            </StatusBarItem>
         </StatusBar>
         <Menu DockPanel.Dock="Top" x:Name="MainMenu" MouseEnter="MainMenu_MouseEnter" Height="26" Margin="0,0" VerticalAlignment="Top" >
             <MenuItem Header="_File">

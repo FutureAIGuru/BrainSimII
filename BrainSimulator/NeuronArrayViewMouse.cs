@@ -372,13 +372,21 @@ namespace BrainSimulator
             if (e.RightButton == MouseButtonState.Pressed) return;
 
             Point currentPosition = e.GetPosition(theCanvas);
+            Point savePositiion = currentPosition;
             LimitMousePostion(ref currentPosition);
             int currentNeuron = dp.NeuronFromPoint(currentPosition);
 
-            int y1 = currentNeuron % Rows;
-            int x1 = currentNeuron / Rows;
-            MainWindow.thisWindow.SetMouseStatus(currentNeuron, y1, x1);
-
+            if (currentPosition == savePositiion)
+            {
+                int y1 = currentNeuron % Rows;
+                int x1 = currentNeuron / Rows;
+                string mouseStatus = "ID: " + currentNeuron + "  Row: " + y1 + " Col: " + x1;
+                MainWindow.thisWindow.SetStatus(1, mouseStatus, 0);
+            }
+            else
+            {
+                MainWindow.thisWindow.SetStatus(1, "Mouse outside neuron array", 1);
+            }
 
             //are we dragging a synapse? rubber-band it
             if (e.LeftButton == MouseButtonState.Pressed && theCanvas.Cursor == Cursors.UpArrow && dragging)

@@ -159,6 +159,7 @@ namespace BrainSimulator
                 if (Mouse.LeftButton != MouseButtonState.Pressed)
                     theNeuronArrayView.theCanvas.Cursor = Cursors.Cross;
             }
+            SetKBStatus();
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -230,6 +231,15 @@ namespace BrainSimulator
                     theNeuronArrayView.Update();
                 }
             }
+            SetKBStatus();
+        }
+
+        private void SetKBStatus()
+        {
+            string kbString = "";
+            if (ctrlPressed) kbString += "CTRL ";
+            if (shiftPressed) kbString += "SHFT ";
+            KBStatus.Text = kbString;
         }
 
         private void setTitleBar()
@@ -635,24 +645,25 @@ namespace BrainSimulator
                 });
             }
         }
-        public void SetStatus(string message)
+        public void SetStatus(int field, string message, int severity = 0)
         {
-            statusError.Background = new SolidColorBrush(Colors.LightGreen);
-            statusError.Text = message;
-        }
-        public void SetStatusWarning(string message)
-        {
-            statusError.Background = new SolidColorBrush(Colors.Yellow);
-            statusError.Text = message;
-        }
-        public void SetStatusError(string message)
-        {
-            statusError.Background = new SolidColorBrush(Colors.Pink);
-            statusError.Text = message;
-        }
-        public void SetMouseStatus(int id, int row, int col)
-        {
-            mousePosition.Text = "ID: " + id + "  Row: " + row + " Col: " + col;
+            TextBlock tb = null;
+            switch (field)
+            {
+                case 0: tb = statusField0; break;
+                case 1: tb = statusField1; break;
+                case 2: tb = statusField2; break;
+                case 3: tb = statusField3; break;
+            }
+            SolidColorBrush theColor = null;
+            switch (severity)
+            {
+                case 0: theColor = new SolidColorBrush(Colors.LightGreen); break;
+                case 1: theColor = new SolidColorBrush(Colors.Yellow); break;
+                case 2: theColor = new SolidColorBrush(Colors.Pink); break;
+            }
+            tb.Background = theColor;
+            tb.Text = message;
         }
         public bool SetProgress(float value, string label)
         {
@@ -706,7 +717,8 @@ namespace BrainSimulator
                     {
                         Application.Current.Dispatcher.Invoke((Action)delegate
                         {
-                            labelEngineStatus.Content = "Not Running   Cycle: " + theNeuronArray.Generation.ToString("N0");
+                            SetStatus(3, "Not Running   Cycle: " + theNeuronArray.Generation.ToString("N0"), 0);
+//                            labelEngineStatus.Content = "Not Running   Cycle: " + theNeuronArray.Generation.ToString("N0");
                         });
                         updateDisplay = false;
                         displayUpdateTimer.Start();
@@ -984,8 +996,11 @@ namespace BrainSimulator
             }
             engineTimerMovingAverage.RemoveAt(0);
             engineTimerMovingAverage.Add((int)engineElapsed);
-            thisWindow.labelEngineStatus.Content = "Running, Speed: " + thisWindow.slider.Value + "  Cycle: " + theNeuronArray.Generation.ToString("N0") +
+            string engineStatus = "Running, Speed: " + thisWindow.slider.Value + "  Cycle: " + theNeuronArray.Generation.ToString("N0") +
             "  " + firedCount.ToString("N0") + " Neurons Fired  " + (engineTimerMovingAverage.Average() / 10000f).ToString("F2") + "ms";
+            thisWindow.SetStatus(3, engineStatus, 0);
+            //thisWindow.labelEngineStatus.Content = "Running, Speed: " + thisWindow.slider.Value + "  Cycle: " + theNeuronArray.Generation.ToString("N0") +
+            //"  " + firedCount.ToString("N0") + " Neurons Fired  " + (engineTimerMovingAverage.Average() / 10000f).ToString("F2") + "ms";
         }
         static public void UpdateDisplayLabel(float zoomLevel)
         {
@@ -1003,7 +1018,8 @@ namespace BrainSimulator
             if (zoomLevel < 10) formatString = "N1";
             if (zoomLevel < 1) formatString = "N2";
             if (zoomLevel < .1f) formatString = "N3";
-            thisWindow.labelDisplayStatus.Content = "Zoom Level: " + zoomLevel.ToString(formatString) + ",  " + (displayTimerMovingAverage.Average() / 10000f).ToString("F2") + "ms";
+            string displayStatus= "Zoom Level: " + zoomLevel.ToString(formatString) + ",  " + (displayTimerMovingAverage.Average() / 10000f).ToString("F2") + "ms";
+            thisWindow.SetStatus(2, displayStatus, 0);
         }
 
         public static void Update()

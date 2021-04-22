@@ -419,6 +419,8 @@ namespace BrainSimulator
                         if (int.TryParse(tb0.Text, out int count))
                         {
                             MainWindow.arrayView.CreateRandomSynapses(count);
+                            MainWindow.theNeuronArray.ShowSynapses = true;
+                            MainWindow.thisWindow.SetShowSynapsesCheckBox(true);
                             MainWindow.Update();
                         }
                     }
@@ -441,6 +443,8 @@ namespace BrainSimulator
                 if ((string)mi.Header == "Mutual Suppression")
                 {
                     MainWindow.arrayView.MutualSuppression();
+                    MainWindow.theNeuronArray.ShowSynapses = true;
+                    MainWindow.thisWindow.SetShowSynapsesCheckBox(true);
                     MainWindow.Update();
                 }
                 if ((string)mi.Header == "Delete")

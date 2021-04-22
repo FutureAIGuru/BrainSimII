@@ -392,13 +392,13 @@ namespace BrainSimulator
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
             if (synapseCount >= dp.maxSynapsesToDisplay)
-                MainWindow.thisWindow.SetStatusWarning("Too many synapses to display");
+                MainWindow.thisWindow.SetStatus(0,"Too many synapses to display",1);
             else
             {
                 if (!dp.ShowNeurons())
-                    MainWindow.thisWindow.SetStatus("Grid Size: " + (boxSize * boxSize).ToString("#,##"));
+                    MainWindow.thisWindow.SetStatus(0,"Grid Size: " + (boxSize * boxSize).ToString("#,##"),1);
                 else
-                    MainWindow.thisWindow.SetStatus("");
+                    MainWindow.thisWindow.SetStatus(0,"OK",0);
             }
             //Debug.WriteLine("Update Done " + elapsedMs + "ms");
         }

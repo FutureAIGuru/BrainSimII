@@ -565,7 +565,7 @@ namespace BrainSimulator
                 if (dlg.returnValue)
                 {
                     arrayView.Dp.NeuronDisplaySize = 62;
-                    ButtonZoomToOrigin_Click(null,null);
+                    ButtonZoomToOrigin_Click(null, null);
                     currentFileName = "";
                     SetCurrentFileNameToProperties();
                     setTitleBar();
@@ -864,6 +864,7 @@ namespace BrainSimulator
             else ThreadCount.Text = "";
             if (theNeuronArray != null) Refractory.Text = theNeuronArray.GetRefractoryDelay().ToString();
             else Refractory.Text = "";
+
             if (currentFileName != "" &&
                 XmlFile.CanWriteTo(currentFileName, out string message)
                 && theNeuronArray != null)
@@ -918,6 +919,9 @@ namespace BrainSimulator
                 EnableMenuItem(MainMenu.Items, "_Insert", true);
                 EnableMenuItem(MainMenu.Items, "_Properties", true);
                 EnableMenuItem(MainMenu.Items, "_Notes", true);
+                MenuItem mi = (MenuItem)Utils.FindByName(MainMenu, "ShowSynapses");
+                if (mi != null)
+                    mi.IsChecked = theNeuronArray.ShowSynapses;
             }
             if (theNeuronArrayView.theSelection.selectedRectangles.Count == 0)
             {
@@ -1238,6 +1242,15 @@ namespace BrainSimulator
 
         private void ButtonZoomToOrigin_Click(object sender, RoutedEventArgs e)
         {
+            //both menu items come here as the button is a toggler
+            if (sender is MenuItem mi)
+            {
+                if (mi.Header.ToString() == "Show all")
+                    theNeuronArrayView.Dp.NeuronDisplaySize = 62;
+                else
+                    theNeuronArrayView.Dp.NeuronDisplaySize = 63;
+            }
+
             theNeuronArrayView.Dp.DisplayOffset = new Point(0, 0);
             if (theNeuronArrayView.Dp.NeuronDisplaySize != 62)
                 theNeuronArrayView.Dp.NeuronDisplaySize = 62;
@@ -1266,6 +1279,17 @@ namespace BrainSimulator
             mouseInWindow = false;
         }
 
+        private void Menu_ShowSynapses(object sender, RoutedEventArgs e)
+        {
+            if (theNeuronArray == null) return;
+            if (sender is MenuItem mi)
+            {
+                //single menu item comes here so must be toggled
+                theNeuronArray.ShowSynapses = !theNeuronArray.ShowSynapses;
+                SetShowSynapsesCheckBox(theNeuronArray.ShowSynapses);
+            }
+            Update();
+        }
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             if (theNeuronArray == null) return;

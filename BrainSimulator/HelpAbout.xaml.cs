@@ -21,7 +21,8 @@ namespace BrainSimulator
                                     .AddDays(version.Build).AddSeconds(version.Revision * 2);
             string displayableVersion = $"{version}\n({buildDate})";
             labelVersion.Content = "Version: " + displayableVersion;
-            labelContributors.Content = "cjs\n[add your name]\n\n\n";
+            labelContributors.Content = "Charlie Simon\n" + "André Slabber\n"+
+                "\n\nJoin and participate!\n";
         }
 
         private void ButtonOK_Click(object sender, RoutedEventArgs e)

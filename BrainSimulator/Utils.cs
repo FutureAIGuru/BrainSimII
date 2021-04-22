@@ -76,12 +76,14 @@ namespace BrainSimulator
                 {
                     if (v3 is Control c1)
                     {
-                        if (c1.Name == name) return c1;
+                        if (c1.Name == name) 
+                            return c1;
                     }
                     try
                     {
                         Control c2 = FindByName(v3, name);
-                        if (c2 != null) return c2;
+                        if (c2 != null) 
+                            return c2;
                     }
                     catch { }
                 }

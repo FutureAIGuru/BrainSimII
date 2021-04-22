@@ -194,15 +194,16 @@ namespace BrainSimulator
                     r.MouseLeave += R_MouseLeave;
                     theCanvas.Children.Add(r);
 
-                    //                    ModuleView.CreateContextMenu(i, nr, r);
                     r.SetValue(ModuleView.AreaNumberProperty, i);
 
                     TextBlock tb = new TextBlock();
                     tb.Text = nr.Label;
                     tb.Background = new SolidColorBrush(Colors.White);
+                    tb.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
                     Canvas.SetLeft(tb, Canvas.GetLeft(r));
-                    Canvas.SetTop(tb, Canvas.GetTop(r));
-                    theCanvas.Children.Add(tb);
+                    Canvas.SetTop(tb, Canvas.GetTop(r)-tb.DesiredSize.Height);
+                    labelCanvas.Children.Add(tb);
+//                    theCanvas.Children.Add(tb);
                 }
             }
             //draw any selection rectangle(s)

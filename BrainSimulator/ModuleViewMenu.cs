@@ -112,11 +112,8 @@ namespace BrainSimulator
                         Type t = Type.GetType(v.FullName);
                         if (v.Name != "ModuleBase")
                         {
-                            ComboBoxItem cbi = new ComboBoxItem
-                            {
-                                Content = v.Name,
-                            };
-                            cb.Items.Add(v.Name);
+                            string theName = v.Name.Replace("Module", "");
+                            cb.Items.Add(theName);
                         }
                     }
                 }
@@ -126,7 +123,7 @@ namespace BrainSimulator
                     if (cm1 != "")
                         cb.SelectedValue = cm1;
                 }
-                cb.Width = 180;
+                cb.Width = 80;
                 cb.Name = "AreaType";
                 cb.SelectionChanged += Cb_SelectionChanged;
                 sp.Children.Add(new MenuItem { Header = cb, StaysOpenOnClick = true });
@@ -322,14 +319,10 @@ namespace BrainSimulator
                 cc = Utils.FindByName(cm, "AreaType");
                 if (cc is ComboBox cb && cb.SelectedValue != null)
                 {
-                    commandLine = (string)cb.SelectedValue;
+                    commandLine = "Module"+(string)cb.SelectedValue;
                     if (commandLine == "") return;//something went wrong
+                    label = (string)cb.SelectedValue;
                 }
-                cc = Utils.FindByName(cm, "CommandParams");
-                if (cc is TextBox tb3)
-                    commandLine += " " + tb3.Text;
-                if ((label == "new" || label == "") && commandLine != "")
-                    label = commandLine;
 
                 cc = Utils.FindByName(cm, "AreaColor");
                 if (cc is ComboBox cb1)
@@ -394,21 +387,21 @@ namespace BrainSimulator
 
         public static void CreateModule(string label, string commandLine, Color color, int firstNeuron, int width, int height)
         {
-            ModuleView na = new ModuleView(firstNeuron, width, height, label, commandLine, Utils.ColorToInt(color));
-            if (na.Width < na.theModule.MinWidth) na.Width = na.theModule.MinWidth;
-            if (na.Height < na.theModule.MinHeight) na.Height = na.theModule.MinHeight;
-            MainWindow.theNeuronArray.modules.Add(na);
+            ModuleView mv = new ModuleView(firstNeuron, width, height, label, commandLine, Utils.ColorToInt(color));
+            if (mv.Width < mv.theModule.MinWidth) mv.Width = mv.theModule.MinWidth;
+            if (mv.Height < mv.theModule.MinHeight) mv.Height = mv.theModule.MinHeight;
+            MainWindow.theNeuronArray.modules.Add(mv);
             string[] Params = commandLine.Split(' ');
-            if (na.TheModule != null)
+            if (mv.TheModule != null)
             {
                 //MainWindow.theNeuronArray.areas[i].TheModule.Initialize(); //doesn't work with camera module
             }
             else
             {
                 Type t1x = Type.GetType("BrainSimulator.Modules." + Params[0]);
-                if (t1x != null && (na.TheModule == null || na.TheModule.GetType() != t1x))
+                if (t1x != null && (mv.TheModule == null || mv.TheModule.GetType() != t1x))
                 {
-                    na.TheModule = (ModuleBase)Activator.CreateInstance(t1x);
+                    mv.TheModule = (ModuleBase)Activator.CreateInstance(t1x);
                     //  MainWindow.theNeuronArray.areas[i].TheModule.Initialize();
                 }
             }
@@ -459,6 +452,8 @@ namespace BrainSimulator
                     }
                     else
                     {
+                        MainWindow.theNeuronArray.SetUndoPoint();
+                        MainWindow.theNeuronArray.AddModuleUndo(-1, MainWindow.theNeuronArray.modules[i]);
                         DeleteModule(i);
                         deleted = true;
                     }

@@ -49,6 +49,7 @@ namespace BrainSimulator
         public void theCanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (MainWindow.theNeuronArray == null) return;
+            MainWindow.theNeuronArray.SetUndoPoint();
             Debug.WriteLine("theCanvas_MouseDown" + MainWindow.theNeuronArray.Generation);
             Point currentPosition = e.GetPosition(theCanvas);
             LimitMousePostion(ref currentPosition);
@@ -180,7 +181,6 @@ namespace BrainSimulator
             if (theCanvas.Cursor == Cursors.ScrollAll)
             {
                 dragging = true;
-                MainWindow.theNeuronArray.SetUndoPoint();
             }
             if (theCanvas.Cursor == Cursors.UpArrow)
             {
@@ -364,9 +364,9 @@ namespace BrainSimulator
                 if (mouseRepeatTimer.IsEnabled && mouseRepeatTimer.Interval == new TimeSpan(0, 0, 0, 0, 100)) return;
                 mouseRepeatTimer.Stop();
             }
-            if (MainWindow.theNeuronArray == null || 
+            if (MainWindow.theNeuronArray == null ||
                 MainWindow.theNeuronArray.rows == 0 ||
-                MainWindow.theNeuronArray.Cols == 0) 
+                MainWindow.theNeuronArray.Cols == 0)
                 return;
 
             if (e.RightButton == MouseButtonState.Pressed) return;
@@ -476,7 +476,7 @@ namespace BrainSimulator
                     {
                         MainWindow.theNeuronArray.AddSelectionUndo();
                         int offset = currentNeuron - mouseDownNeuronIndex;
-                        targetNeuronIndex = theSelection.selectedRectangles[0].FirstSelectedNeuron +offset;
+                        targetNeuronIndex = theSelection.selectedRectangles[0].FirstSelectedNeuron + offset;
                         MoveNeurons(true);
                     }
                 }
@@ -489,7 +489,7 @@ namespace BrainSimulator
                 if (currentNeuron != firstSelectedNeuron)
                 {
                     int index = MainWindow.theNeuronArray.modules.IndexOf(na);
-                    MainWindow.theNeuronArray.AddModuleUndo(index,na);
+                    MainWindow.theNeuronArray.AddModuleUndo(index, na);
                     int newFirst = na.FirstNeuron + currentNeuron - firstSelectedNeuron;
                     int newLast = na.LastNeuron + currentNeuron - firstSelectedNeuron;
                     na.GetAbsNeuronLocation(newFirst, out int xf, out int yf);
@@ -500,6 +500,16 @@ namespace BrainSimulator
                     {
                         //move all the neurons
                         int delta = currentNeuron - firstSelectedNeuron;
+                        List<int> neuronsToMove = new List<int>();
+                        foreach (Neuron n in na.Neurons1) neuronsToMove.Add(n.id);
+                        if (!IsDestinationClear(neuronsToMove, delta))
+                        {
+                            MessageBoxResult result1 = MessageBox.Show("Some destination neurons are in use and will be overwritten, continue?", "Continue", MessageBoxButton.YesNo);
+                            if (result1 != MessageBoxResult.Yes)
+                            {
+                                return;
+                            }
+                        }
                         if (delta > 0) //move all the nerons...opposite order depending on the direction of the move
                         {
                             for (int i = na.NeuronCount - 1; i >= 0; i--)
@@ -518,13 +528,16 @@ namespace BrainSimulator
                                 MainWindow.thisWindow.theNeuronArrayView.MoveOneNeuron(src, dest);
                             }
                         }
-
                         //move the box
                         na.FirstNeuron += currentNeuron - firstSelectedNeuron;
                         SortAreas();
                         Update();
+                        firstSelectedNeuron = currentNeuron;
                     }
-                    firstSelectedNeuron = currentNeuron;
+                    else
+                    {
+                        MessageBox.Show("Module would be outside neuron array boundary.");
+                    }
                 }
             }
             //handle sizing of a module
@@ -548,15 +561,18 @@ namespace BrainSimulator
                 na.GetAbsNeuronLocation(na.LastNeuron, out int Xl, out int Yl);
                 int minHeight = na.TheModule.MinHeight;
                 int minWidth = na.TheModule.MinWidth;
+                int index = MainWindow.theNeuronArray.modules.IndexOf(na);
 
                 //move the top?
                 if (theCanvas.Cursor == Cursors.ScrollN || theCanvas.Cursor == Cursors.ScrollNE || theCanvas.Cursor == Cursors.ScrollNW)
                 {
+
                     if (Yc != Yf)
                     {
                         int newTop = Y1 + Yc - Yf;
                         if (newTop <= Y2)
                         {
+                            MainWindow.theNeuronArray.AddModuleUndo(index, na);
                             na.Height -= Yc - Yf;
                             if (na.Height < minHeight)
                                 na.Height = minHeight;
@@ -578,6 +594,7 @@ namespace BrainSimulator
                         int newLeft = X1 + Xc - Xf;
                         if (newLeft <= X2)
                         {
+                            MainWindow.theNeuronArray.AddModuleUndo(index, na);
                             na.Width -= Xc - Xf;
                             if (na.Width < minWidth)
                                 na.Width = minWidth;
@@ -599,6 +616,7 @@ namespace BrainSimulator
                         int newRight = X2 + Xc - Xf;
                         if (newRight >= X1)
                         {
+                            MainWindow.theNeuronArray.AddModuleUndo(index, na);
                             na.Width += Xc - Xf;
                             if (na.Width < minWidth)
                                 na.Width = minWidth;
@@ -616,6 +634,7 @@ namespace BrainSimulator
                         int newBottom = Y2 + Yc - Yf;
                         if (newBottom >= Y1)
                         {
+                            MainWindow.theNeuronArray.AddModuleUndo(index, na);
                             na.Height += Yc - Yf;
                             if (na.Height < minHeight)
                                 na.Height = minHeight;

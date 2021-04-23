@@ -37,7 +37,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer", "Installer", "{
 		Installer\licdata.txt = Installer\licdata.txt
 		Installer\nsicon.ico = Installer\nsicon.ico
 		Installer\SPLASH.bmp = Installer\SPLASH.bmp
-		..\..\..\Installer (003)\Installer\SPLASH.bmp = ..\..\..\Installer (003)\Installer\SPLASH.bmp
 		Installer\SPLASH.wav = Installer\SPLASH.wav
 	EndProjectSection
 EndProject

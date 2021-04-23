@@ -24,7 +24,15 @@ namespace BrainSimulator
     /// Interaction logic for MainWindow.xaml
     /// </summary>
 
-
+    public partial class App : Application
+    {
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            if (e.Args.Length == 1)
+                startupString = e.Args[0];
+        }
+        public static string startupString = "";
+    }
     public partial class MainWindow : Window
     {
         //Globals
@@ -1147,7 +1155,10 @@ namespace BrainSimulator
             {
                 try
                 {
-                    currentFileName = (string)Properties.Settings.Default["CurrentFile"];
+                    if (App.startupString != "")
+                        currentFileName = App.startupString;
+                    if (currentFileName == "")
+                        currentFileName = (string)Properties.Settings.Default["CurrentFile"];
                     if (currentFileName != "")
                     {
                         LoadFile(currentFileName);

@@ -16,8 +16,11 @@
 !define BUILD_TYPE Release
 
 Name "${APP_NAME}"
-OutFile "$DESKTOP\${APP_NAME} Setup.exe"
-Icon bsicon.ico
+OutFile "${APP_NAME} Setup.exe"
+
+!include "MUI.nsh"
+!define MUI_ICON "bsicon.ico"
+!define MUI_UNICON "bsicon.ico"
 
 ShowInstDetails show
 XPStyle on
@@ -61,9 +64,6 @@ Function .onInit
 	Pop $0
 	Delete $PLUGINSDIR\splash.bmp
 	Delete $PLUGINSDIR\splash.wav
-
-	; File /oname=$EXEDIR\licdata.txt "licdata.txt"
-
 FunctionEnd
 
 Page directory /ENABLECANCEL
@@ -73,9 +73,10 @@ Page instfiles /ENABLECANCEL
 Section
 	SetShellVarContext current
 	SetOutPath $INSTDIR
-	# createDirectory "$DESKTOP"
+	createDirectory "$SMPROGRAMS\${COMPANY_NAME}"
 	# Uninstaller - See function un.onInit and section "uninstall" for configuration
 	writeUninstaller "$INSTDIR\uninstall.exe"
+    File /oname=$INSTDIR\unicon.ico "unicon.ico"
 	  
 	# Registry information for add/remove programs
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANY_NAME} ${APP_NAME}" "DisplayName" "${APP_NAME}"
@@ -95,6 +96,8 @@ Section
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANY_NAME} ${APP_NAME}" "NoRepair" 1
 	# Set the INSTALLSIZE constant (!defined at the top of this script) so Add/Remove Programs can accurately report the size
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANY_NAME} ${APP_NAME}" "EstimatedSize" ${INSTALLSIZE}  
+    createShortCut "$SMPROGRAMS\${COMPANY_NAME}\Uninstall Brain Simulator II.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\unicon.ico"
+
 SectionEnd
 
 Section    "Brain Simulator II" BRAINSIM2
@@ -112,6 +115,7 @@ Section    "Brain Simulator II" BRAINSIM2
     File /oname=$INSTDIR\Touchless.Vision.dll "..\BrainSimulator\bin\x64\${BUILD_TYPE}\Touchless.Vision.dll"
     File /oname=$INSTDIR\Touchless.Vision.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\Touchless.Vision.pdb"
     createShortCut "$DESKTOP\Brain Simulator.lnk" "$INSTDIR\BrainSimulator.exe" "" "$INSTDIR\bsicon.ico"
+    createShortCut "$SMPROGRAMS\${COMPANY_NAME}\Brain Simulator.lnk" "$INSTDIR\BrainSimulator.exe" "" "$INSTDIR\bsicon.ico"
 SectionEnd
 
 Section "NeuronServer" NEURONSERVER
@@ -124,6 +128,7 @@ Section "NeuronServer" NEURONSERVER
     File /oname=$INSTDIR\NeuronEngineWrapper.dll "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngineWrapper.dll"
     File /oname=$INSTDIR\NeuronEngineWrapper.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngineWrapper.pdb"
     createShortCut "$DESKTOP\Neuron Server.lnk" "$INSTDIR\NeuronServer.exe" "" "$INSTDIR\nsicon.ico"
+    createShortCut "$SMPROGRAMS\${COMPANY_NAME}\Neuron Server.lnk" "$INSTDIR\NeuronServer.exe" "" "$INSTDIR\nsicon.ico"
 SectionEnd
 
 Section "EngineTest" ENGINETEST
@@ -189,6 +194,7 @@ section "uninstall"
     delete $INSTDIR\WebCamLib.pdb
     delete $INSTDIR\Touchless.Vision.dll
     delete $INSTDIR\Touchless.Vision.pdb
+    delete $INSTDIR\unicon.ico
     delete $INSTDIR\Networks\*.*
     delete $INSTDIR\Resources\*.*
     RMDIR $INSTDIR\Networks
@@ -197,7 +203,10 @@ section "uninstall"
 	# Remove Start Menu launchers
 	delete "$DESKTOP\Brain Simulator.lnk"
     delete "$DESKTOP\Neuron Server.lnk"
-	# RMDIR  "$DESKTOP"
+	delete "$SMPROGRAMS\${COMPANY_NAME}\Brain Simulator.lnk"
+    delete "$SMPROGRAMS\${COMPANY_NAME}\Neuron Server.lnk"
+    delete "$SMPROGRAMS\${COMPANY_NAME}\Uninstall Brain Simulator II.lnk"
+	RMDIR  "$SMPROGRAMS\${COMPANY_NAME}"
 
 	# Always delete uninstaller as the last action
 	delete $INSTDIR\uninstall.exe

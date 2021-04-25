@@ -168,17 +168,21 @@ namespace BrainSimulator
         {
             FileStream file1;
             message = "";
-            try
+            if (File.Exists(fileName))
             {
-                file1 = File.Open(fileName, FileMode.Open);
-                file1.Close();
-                return true;
+                try
+                {
+                    file1 = File.Open(fileName, FileMode.Open);
+                    file1.Close();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    message = e.Message;
+                    return false;
+                }
             }
-            catch (Exception e)
-            {
-                message = e.Message;
-                return false;
-            }
+            return true;
 
         }
         public static bool Save(NeuronArray theNeuronArray, string fileName)

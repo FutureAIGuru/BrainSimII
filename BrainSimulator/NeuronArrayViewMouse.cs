@@ -250,8 +250,14 @@ namespace BrainSimulator
                     {
                         if (n.Model == Neuron.modelType.Random || n.model == Neuron.modelType.Always)
                         {
-                            if (n.LeakRate < 0) n.LeakRate = 0;
-                            else n.LeakRate = -1;
+                            if (n.LeakRate < 0) 
+                                n.LeakRate = -n.LeakRate;
+                            else
+                            {
+                                n.CurrentCharge = 0;
+                                n.LastCharge = 0;
+                                n.LeakRate = -n.LeakRate;
+                            }
                         }
                         else if (n.Model != Neuron.modelType.Color)
                         {

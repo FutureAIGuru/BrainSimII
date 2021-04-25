@@ -8,7 +8,8 @@
         Title="Progress" Height="195.834" Width="353.167" >
     <Grid>
         <TextBlock Text="Label" x:Name="theLabel" TextWrapping="Wrap" Height="43" Margin="28,10,46,0" VerticalAlignment="Top"/>
-        <Button Content="Cancel" Name="cancelButton" HorizontalAlignment="Left" Height="33" Margin="95,104,0,0" VerticalAlignment="Top" Width="120" Click="cancelButton_Click"/>
+        <Button Content="Cancel" Name="cancelButton" HorizontalAlignment="Left" Height="33" Margin="109,115,0,0" VerticalAlignment="Top" Width="120" Click="cancelButton_Click"/>
         <ProgressBar x:Name="theProgressBar" HorizontalAlignment="Left" Height="20" Margin="28,65,0,0" VerticalAlignment="Top" Width="271"/>
+        <Label Content="Label" x:Name="timeLabel" HorizontalContentAlignment="Center"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="28,85,0,0" Width="271"/>
     </Grid>
 </Window>

@@ -27,11 +27,11 @@ namespace BrainSimulator.Modules
         {
             Init();  //be sure to leave this here
 
-            ModuleView naSource = theNeuronArray.FindAreaByLabel("ModuleImageFile");
+            ModuleView naSource = theNeuronArray.FindModuleByLabel("ModuleImageFile");
         }
         public override void Initialize()
         {
-            ModuleView naSource = theNeuronArray.FindAreaByLabel("ModuleImageFile");
+            ModuleView naSource = theNeuronArray.FindModuleByLabel("ModuleImageFile");
             foreach (Neuron n in naSource.Neurons1)
             {
                 n.Clear();

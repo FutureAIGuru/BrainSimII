@@ -46,7 +46,7 @@ namespace BrainSimulator.Modules
         public override void Fire()
         {
             Init();  //be sure to leave this here
-            ModuleView naSource = theNeuronArray.FindAreaByLabel("ModuleImageFile");
+            ModuleView naSource = theNeuronArray.FindModuleByLabel("ModuleImageFile");
             boundaries.Clear();
             foreach (Neuron n in na.Neurons1)
                 n.SetValue(0);
@@ -222,7 +222,7 @@ namespace BrainSimulator.Modules
         }
         private void SetTheNeuron(int x0, int y0)
         {
-            ModuleView naSource = theNeuronArray.FindAreaByLabel("ModuleImageFile");
+            ModuleView naSource = theNeuronArray.FindModuleByLabel("ModuleImageFile");
             //Set neuron
             int theHeight = naSource.Height;
             int theWidth = naSource.Width;

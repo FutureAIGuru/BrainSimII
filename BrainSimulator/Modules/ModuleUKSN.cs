@@ -148,7 +148,7 @@ namespace BrainSimulator.Modules
                     MainWindow.thisWindow.theNeuronArrayView.MoveOneNeuron(sourceNeuron, targetNeuron);
                 }
                 //repeat this process for the output array
-                ModuleView naModule = theNeuronArray.FindAreaByLabel("KBOut");
+                ModuleView naModule = theNeuronArray.FindModuleByLabel("KBOut");
                 if (naModule != null)
                 {
                     for (int j = i + 1; j < naModule.NeuronCount; j++)
@@ -172,7 +172,7 @@ namespace BrainSimulator.Modules
             {
                 n.DeleteAllSynapes();
             }
-            ModuleView na1 = theNeuronArray.FindAreaByLabel("KBOut");
+            ModuleView na1 = theNeuronArray.FindModuleByLabel("KBOut");
             if (na1 != null)
                 foreach (Neuron n in na1.Neurons())
                 {
@@ -190,7 +190,7 @@ namespace BrainSimulator.Modules
 
             //add connections from speakPhonemes to this module
 
-            ModuleView naPhonemes = theNeuronArray.FindAreaByLabel("ModuleSpeakPhonemes");
+            ModuleView naPhonemes = theNeuronArray.FindModuleByLabel("ModuleSpeakPhonemes");
             if (naPhonemes != null)
             {
                 Neuron n2 = GetNeuron(Labeled("SayRnd"));
@@ -230,7 +230,7 @@ namespace BrainSimulator.Modules
             }
             else
             {
-                ModuleView na1 = theNeuronArray.FindAreaByLabel("KBOut");
+                ModuleView na1 = theNeuronArray.FindModuleByLabel("KBOut");
                 if (na1 == null) return null;
                 return na1.GetNeuronAt(i);
             }
@@ -250,7 +250,7 @@ namespace BrainSimulator.Modules
         }
         private ModuleView GetOutputModule()
         {
-            return theNeuronArray.FindAreaByLabel("KBOut");
+            return theNeuronArray.FindModuleByLabel("KBOut");
         }
 
         //did the neuron associated with a thing fire?  

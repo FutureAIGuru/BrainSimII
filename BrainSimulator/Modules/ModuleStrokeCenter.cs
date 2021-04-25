@@ -33,7 +33,7 @@ namespace BrainSimulator.Modules
         public override void Fire()
         {
             Init();  //be sure to leave this here
-            ModuleView naSource = theNeuronArray.FindAreaByLabel("ModuleImageFile");
+            ModuleView naSource = theNeuronArray.FindModuleByLabel("ModuleImageFile");
             foreach (Neuron n in na.Neurons())
                 n.SetValueInt(0);
 
@@ -122,7 +122,7 @@ namespace BrainSimulator.Modules
             int maxSearch = 20;
             Point retVal = new Point(0, 0);
             length = -1;
-            ModuleView naSourceImage = theNeuronArray.FindAreaByLabel("ModuleImageFile");
+            ModuleView naSourceImage = theNeuronArray.FindModuleByLabel("ModuleImageFile");
             if (naSourceImage == null) return retVal;
             double dx = Cos(direction);
             double dy = Sin(direction);

@@ -36,11 +36,11 @@
         <Label Name="lbl4"        Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" >Neurons:</Label>
         <TextBox Name="txtNeurons" Grid.Row="3" IsEnabled="False" Grid.Column="3" MinWidth="250" IsReadOnly="true" VerticalAlignment="Center">Answer</TextBox>
         <Label Name="lbl5"        Grid.Row="4" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" >Neurons In Use:</Label>
-        <TextBox Name="txtNeuronsInUse" Grid.Row="4" Grid.Column="3" IsEnabled="False" IsReadOnly="true" MinWidth="250" VerticalAlignment="Center" Margin="1,4,-15,9">Answer</TextBox>
+        <TextBox Name="txtNeuronsInUse" Grid.Row="4" Grid.Column="3" IsEnabled="False" IsReadOnly="true" MinWidth="250" VerticalAlignment="Center" >Answer</TextBox>
         <Label Name="lbl6"        Grid.Row="5" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" >Synapses:</Label>
         <TextBox Name="txtSynapses" Grid.Row="5" IsEnabled="False" Grid.Column="3" IsReadOnly="true" MinWidth="250" VerticalAlignment="Center">Answer</TextBox>
 
-        <Button IsDefault="True" x:Name="btnDialogOk" IsCancel="True" Click="btnDialogOk_Click" MinWidth="60" Margin="66,5,173,-31" Content="OK" Grid.Column="1" Grid.Row="9" RenderTransformOrigin="1.03,0.339" Grid.ColumnSpan="3"/>
+        <Button IsDefault="True" x:Name="btnDialogOk" Click="btnDialogOk_Click" MinWidth="60" Margin="66,5,173,-31" Content="OK" Grid.Column="1" Grid.Row="9" RenderTransformOrigin="1.03,0.339" Grid.ColumnSpan="3"/>
         <Button x:Name="btnDialogCancel" IsCancel="True" Click="btnDialogCancel_Click" MinWidth="60" Margin="77,5,58,-31" Content="Cancel" Grid.Column="3" Grid.Row="9" RenderTransformOrigin="1.03,0.339"/>
 
     </Grid>

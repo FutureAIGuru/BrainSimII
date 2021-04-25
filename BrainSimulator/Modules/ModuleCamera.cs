@@ -70,7 +70,9 @@ namespace BrainSimulator.Modules
                 theCamera = CameraService.AvailableCameras[0];
             else
             {
-                MessageBox.Show("No camera found");
+                //TODO: make this a base class error display box
+                Application.Current.Dispatcher.Invoke(
+                    new Action(() => { MessageBox.Show(MainWindow.thisWindow, "No camera found"); }));
                 running = true;
                 return;
             }

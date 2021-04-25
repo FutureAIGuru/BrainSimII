@@ -3,8 +3,10 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Xml.Serialization;
 
 namespace BrainSimulator
@@ -166,19 +168,26 @@ namespace BrainSimulator
         {
             //lock (modules)
             {
-                for (int i = 0; i < modules.Count; i++)// each (ModuleView na in modules)
+                for (int i = 0; i < modules.Count; i++)
                 {
                     ModuleView na = modules[i];
                     if (na.TheModule != null)
                     {
-                        na.TheModule.Fire();
+                        try
+                        {
+                            na.TheModule.Fire();
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show("Module " + na.Label + " threw unhandled exception with message:\n" + e.Message);
+                        }
                     }
                 }
             }
         }
 
         //needs a complete match
-        public ModuleView FindAreaByLabel(string label)
+        public ModuleView FindModuleByLabel(string label)
         {
             return modules.Find(na => na.Label.Trim() == label);
         }
@@ -201,8 +210,8 @@ namespace BrainSimulator
         }
 
 
-        /// UNDO Handling from here on out
 
+        /// UNDO Handling from here on out
         struct SynapseUndo
         {
             public int source, target;
@@ -347,7 +356,7 @@ namespace BrainSimulator
             neuronUndoInfo.RemoveAt(neuronUndoInfo.Count - 1);
             Neuron n1 = n.previousNeuron.Copy();
             if (n1.Label != "") RemoveLabelFromCache(n1.Id);
-            if (n1.label != "") AddLabelToCache(n1.Id,n1.label);
+            if (n1.label != "") AddLabelToCache(n1.Id, n1.label);
 
             if (n.neuronIsShowingSynapses)
                 MainWindow.arrayView.AddShowSynapses(n1.id);
@@ -382,7 +391,7 @@ namespace BrainSimulator
                         Height = m1.moduleState.Height,
                         FirstNeuron = m1.moduleState.FirstNeuron,
                         Color = m1.moduleState.Color,
-                        CommandLine=m1.moduleState.CommandLine,
+                        CommandLine = m1.moduleState.CommandLine,
                         Label = m1.moduleState.Label,
                     };
                     // modules.Add(mv);

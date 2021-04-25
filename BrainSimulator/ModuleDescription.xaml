@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Module Description" Height="372.902" Width="579.72">
     <Grid Margin="0,0,0,0">
-        <Button x:Name="button" Content="OK" Margin="209,0,191,23" HorizontalAlignment="Center" MaxWidth="175" MinWidth="175" IsCancel="False" Click="Button_Click" Height="34" VerticalAlignment="Bottom" />
+        <Button x:Name="button" Content="OK" Margin="209,0,191,23" HorizontalAlignment="Center" MaxWidth="150" MinWidth="150" IsCancel="False" Click="Button_Click" Height="34" VerticalAlignment="Bottom" />
         <ScrollViewer CanContentScroll="True" Margin="20,20,20,100" >
             <TextBlock x:Name="textBlock" Margin="0,0,0,0" TextWrapping="Wrap" Text="TextBlock" />
         </ScrollViewer>

@@ -223,7 +223,7 @@
                         <Image Source="/resources/icons/ZoomoriginalSize_16x.png" Height="20"></Image>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Show Synapses" Name="ShowSynapses" IsCheckable="true" Checked="Menu_ShowSynapses" Unchecked="Menu_ShowSynapses"></MenuItem>
+                <MenuItem Header="Show Synapses" Name="ShowSynapses" IsCheckable="true" Click="Menu_ShowSynapses" ></MenuItem>
             </MenuItem>
             <MenuItem Header=" Help">
                 <MenuItem Header="Getting Started" Click="MenuItemHelp_Click" />

@@ -63,7 +63,7 @@ namespace BrainSimulator.Modules
                 n.Model = Neuron.modelType.FloatValue;
             }
 
-            ModuleView naSource = theNeuronArray.FindAreaByLabel("ModuleBoundary1");
+            ModuleView naSource = theNeuronArray.FindModuleByLabel("ModuleBoundary1");
             if (naSource == null) return;
 
             strokes.Clear();

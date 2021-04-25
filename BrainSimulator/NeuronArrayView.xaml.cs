@@ -374,10 +374,10 @@ namespace BrainSimulator
                 }
             }
 
-            theCanvas.Children.Add(targetNeuronCanvas);
             theCanvas.Children.Add(legendCanvas);
 
             theCanvas.Children.Add(allSynapsesCanvas);
+            theCanvas.Children.Add(targetNeuronCanvas);
             for (int i = 0; i < neuronCanvasCount; i++)
             {
                 theCanvas.Children.Add(neuronCanvas[i]);

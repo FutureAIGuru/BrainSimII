@@ -49,9 +49,7 @@ namespace BrainSimulator
             textBoxColumns.Text = "30";
 
 
-            ulong StartBytes = (ulong)System.GC.GetTotalMemory(true);
-            ulong StopBytes = (ulong)System.GC.GetTotalMemory(true);
-            ulong neuronSize1 = (StopBytes - StartBytes) / sizeCount;
+            ulong neuronSize1 = 55;
 
             ulong availablePhysicalMemory = new Microsoft.VisualBasic.Devices.ComputerInfo().AvailablePhysicalMemory;
             ulong totalPhysicalMemory = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;

@@ -29,7 +29,7 @@ namespace BrainSimulator.Modules
                 {
                     if (n.Label == "")
                     {
-                        ModuleView msi = theNeuronArray.FindAreaByLabel("ModuleSpeechIn");
+                        ModuleView msi = theNeuronArray.FindModuleByLabel("ModuleSpeechIn");
                         int i = na.GetNeuronOffset(n);
                         if (msi != null)
                             na.GetNeuronAt(i).Label = msi.GetNeuronAt(i).Label;
@@ -82,7 +82,7 @@ namespace BrainSimulator.Modules
             //temporarily assign output vocabulary to be identical to input vocabulary
             ClearNeurons();
 
-            ModuleView msi = theNeuronArray.FindAreaByLabel("ModuleSpeechIn");
+            ModuleView msi = theNeuronArray.FindModuleByLabel("ModuleSpeechIn");
             if (msi != null)
             {
                 for (int i = 0; i < na.NeuronCount && i < msi.NeuronCount; i++)

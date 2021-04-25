@@ -382,7 +382,7 @@ namespace BrainSimulator.Modules
 
         private void HandleSpeechIn1()
         {
-            ModuleView naIn = MainWindow.theNeuronArray.FindAreaByLabel("ModuleSpeechIn");
+            ModuleView naIn = MainWindow.theNeuronArray.FindModuleByLabel("ModuleSpeechIn");
             if (naIn == null) return;
 
             naIn.BeginEnum();
@@ -401,7 +401,7 @@ namespace BrainSimulator.Modules
         }
         public Neuron GetSpokenWord(string word)
         {
-            ModuleView naOut = MainWindow.theNeuronArray.FindAreaByLabel("ModuleSPeechOut");
+            ModuleView naOut = MainWindow.theNeuronArray.FindModuleByLabel("ModuleSPeechOut");
             Neuron n = null;
             if (naOut != null)
             {

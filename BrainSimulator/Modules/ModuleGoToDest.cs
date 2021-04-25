@@ -50,9 +50,9 @@ namespace BrainSimulator.Modules
             ///2) go to dest
             ///else recursive?
             ///
-            ModuleView naBehavior = MainWindow.theNeuronArray.FindAreaByLabel("ModuleBehavior");
+            ModuleView naBehavior = MainWindow.theNeuronArray.FindModuleByLabel("ModuleBehavior");
             ModuleBehavior nmBehavior = (ModuleBehavior)naBehavior.TheModule;
-            ModuleView naModel = theNeuronArray.FindAreaByLabel("Module2DModel");
+            ModuleView naModel = theNeuronArray.FindModuleByLabel("Module2DModel");
             Module2DModel nmModel = (Module2DModel)naModel.TheModule;
 
             if (!nmBehavior.IsIdle()) return;

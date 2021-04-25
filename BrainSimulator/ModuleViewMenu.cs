@@ -373,7 +373,7 @@ namespace BrainSimulator
                     i = -i - 1;
                     //convert a selection rectangle to a module
                     MainWindow.theNeuronArray.SetUndoPoint();
-                    MainWindow.arrayView.DeleteSelection(false);
+                    MainWindow.arrayView.DeleteSelection(true);
                     MainWindow.theNeuronArray.AddModuleUndo(MainWindow.theNeuronArray.modules.Count, null);
                     width = MainWindow.arrayView.theSelection.selectedRectangles[i].Width;
                     height = MainWindow.arrayView.theSelection.selectedRectangles[i].Height;

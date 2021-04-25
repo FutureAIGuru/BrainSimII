@@ -19,7 +19,7 @@ namespace BrainSimulator.Modules
         public override void Fire()
         {
             Init();  //be sure to leave this here
-            ModuleView naSource = theNeuronArray.FindAreaByLabel("ModuleImageFile");
+            ModuleView naSource = theNeuronArray.FindModuleByLabel("ModuleImageFile");
 
             if (naSource != null)
                 foreach (Neuron n in na.Neurons())

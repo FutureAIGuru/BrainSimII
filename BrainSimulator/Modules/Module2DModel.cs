@@ -609,7 +609,7 @@ namespace BrainSimulator.Modules
         //maintain a list of objects in the current visual field
         public void FireVisibleObjects()
         {
-            ModuleView naUKS = theNeuronArray.FindAreaByLabel("Module2DUKS");
+            ModuleView naUKS = theNeuronArray.FindModuleByLabel("Module2DUKS");
             if (naUKS == null) return;
             ModuleUKSN UKS = (ModuleUKSN)naUKS.TheModule;
             if (UKSSegments == null) return;
@@ -619,7 +619,7 @@ namespace BrainSimulator.Modules
             //for (int i = 0; i < UKSSegments.Count; i++)
             //    UKSSegments[i].RemoveReference(tVisible);
 
-            ModuleView naVision = theNeuronArray.FindAreaByLabel("Module2DVision");
+            ModuleView naVision = theNeuronArray.FindModuleByLabel("Module2DVision");
             if (naVision == null) return;
             int possibleViewAngles = naVision.Width;
             float deltaTheta = Module2DVision.fieldOfView / possibleViewAngles;

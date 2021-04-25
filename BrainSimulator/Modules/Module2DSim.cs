@@ -87,8 +87,8 @@ namespace BrainSimulator.Modules
         {
             Init();  //be sure to leave this here to enable use of the na variable
 
-            ModuleView naArmL = theNeuronArray.FindAreaByLabel("ModuleArmL");
-            ModuleView naArmR = theNeuronArray.FindAreaByLabel("ModuleArmR");
+            ModuleView naArmL = theNeuronArray.FindModuleByLabel("ModuleArmL");
+            ModuleView naArmR = theNeuronArray.FindModuleByLabel("ModuleArmR");
 
             texture = (int)GetNeuronValue("Texture");
 
@@ -285,7 +285,7 @@ namespace BrainSimulator.Modules
         //aroma is a field strength at a given position
         private void HandleAroma()
         {
-            ModuleView naSmell = theNeuronArray.FindAreaByLabel("Module2DSmell");
+            ModuleView naSmell = theNeuronArray.FindModuleByLabel("Module2DSmell");
             //find the aroma value
             if (naSmell != null)
             {

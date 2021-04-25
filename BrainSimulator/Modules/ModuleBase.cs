@@ -235,7 +235,7 @@ namespace BrainSimulator.Modules
         {
             ModuleView naModule;
             if (moduleName != null)
-                naModule = theNeuronArray.FindAreaByLabel(moduleName);
+                naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
                 naModule = na;
             if (naModule != null)
@@ -255,7 +255,7 @@ namespace BrainSimulator.Modules
             bool retVal = false;
             ModuleView naModule;
             if (moduleName != null)
-                naModule = theNeuronArray.FindAreaByLabel(moduleName);
+                naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
                 naModule = na;
             if (naModule != null)
@@ -279,7 +279,7 @@ namespace BrainSimulator.Modules
             float retVal = 0;
             ModuleView naModule;
             if (moduleName != null)
-                naModule = theNeuronArray.FindAreaByLabel(moduleName);
+                naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
                 naModule = na;
             if (naModule != null)
@@ -301,7 +301,7 @@ namespace BrainSimulator.Modules
             bool retVal = false;
             ModuleView naModule;
             if (moduleName != null)
-                naModule = theNeuronArray.FindAreaByLabel(moduleName);
+                naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
                 naModule = na;
             if (naModule != null)
@@ -323,7 +323,7 @@ namespace BrainSimulator.Modules
             bool retVal = false;
             ModuleView naModule;
             if (moduleName != null)
-                naModule = theNeuronArray.FindAreaByLabel(moduleName);
+                naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
                 naModule = na;
             if (naModule != null)
@@ -346,7 +346,7 @@ namespace BrainSimulator.Modules
             float retVal = 0;
             ModuleView naModule;
             if (moduleName != null)
-                naModule = theNeuronArray.FindAreaByLabel(moduleName);
+                naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
                 naModule = na;
             if (naModule != null)
@@ -365,7 +365,7 @@ namespace BrainSimulator.Modules
             int retVal = 0;
             ModuleView naModule;
             if (moduleName != null)
-                naModule = theNeuronArray.FindAreaByLabel(moduleName);
+                naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
                 naModule = na;
             if (naModule != null)
@@ -384,7 +384,7 @@ namespace BrainSimulator.Modules
             bool retVal = true;
             ModuleView naModule;
             if (moduleName != null)
-                naModule = theNeuronArray.FindAreaByLabel(moduleName);
+                naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
                 naModule = na;
             if (naModule != null)
@@ -410,7 +410,7 @@ namespace BrainSimulator.Modules
             float[] retVal;
             ModuleView naModule;
             if (moduleName != null)
-                naModule = theNeuronArray.FindAreaByLabel(moduleName);
+                naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
                 naModule = na;
             if (naModule != null)
@@ -440,7 +440,7 @@ namespace BrainSimulator.Modules
             bool retVal = true;
             ModuleView naModule;
             if (moduleName != null)
-                naModule = theNeuronArray.FindAreaByLabel(moduleName);
+                naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
                 naModule = na;
             if (naModule != null)
@@ -466,7 +466,7 @@ namespace BrainSimulator.Modules
             int retVal = 0;
             ModuleView naModule;
             if (moduleName != null)
-                naModule = theNeuronArray.FindAreaByLabel(moduleName);
+                naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
                 naModule = na;
             if (naModule != null) retVal = naModule.Width;
@@ -478,7 +478,7 @@ namespace BrainSimulator.Modules
             int retVal = 0;
             ModuleView naModule;
             if (moduleName != null)
-                naModule = theNeuronArray.FindAreaByLabel(moduleName);
+                naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
                 naModule = na;
             if (naModule != null) retVal = naModule.Height;

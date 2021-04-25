@@ -127,7 +127,7 @@ namespace BrainSimulator
             PathGeometry pathGeometry = new PathGeometry();
             PathFigure pathFigure = new PathFigure();
             Vector v = p2 - p1;
-            double lengthFactor = (dp.NeuronDisplaySize / 2.75)/v.Length;
+            double lengthFactor = ((dp.NeuronDisplaySize *0.7f / 2f)+3)/v.Length;
             //lengthfactor = 0.5; //how it used to be
             v = v * lengthFactor;
        

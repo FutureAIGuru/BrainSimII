@@ -244,7 +244,7 @@ namespace BrainSimulator.Modules
             float dist = (float)v.R;
             double angle = (float)v.Theta;
             double deltaAngle = angle - parent.entityDirection1;
-            ModuleView naGoToDest = MainWindow.theNeuronArray.FindAreaByLabel("ModuleGoToDest");
+            ModuleView naGoToDest = MainWindow.theNeuronArray.FindModuleByLabel("ModuleGoToDest");
             if (naGoToDest != null)
             {
                 naGoToDest.GetNeuronAt("Go").SetValue(1);
@@ -253,7 +253,7 @@ namespace BrainSimulator.Modules
             }
             else
             {
-                ModuleView naBehavior = MainWindow.theNeuronArray.FindAreaByLabel("ModuleBehavior");
+                ModuleView naBehavior = MainWindow.theNeuronArray.FindModuleByLabel("ModuleBehavior");
                 if (naBehavior != null)
                 {
                     naBehavior.GetNeuronAt("TurnTo").SetValue(1);

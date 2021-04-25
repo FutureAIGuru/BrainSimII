@@ -63,6 +63,8 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
     <Optimize>false</Optimize>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -125,6 +127,10 @@
     <Compile Include="HelpAbout.xaml.cs">
       <DependentUpon>HelpAbout.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainWindowEngine.cs" />
+    <Compile Include="MainWindowEventHandlers.cs" />
+    <Compile Include="MainWindowExtension.cs" />
+    <Compile Include="MainWindowFiles.cs" />
     <Compile Include="ModuleDescription.xaml.cs">
       <DependentUpon>ModuleDescription.xaml</DependentUpon>
     </Compile>
@@ -219,6 +225,7 @@
     <Compile Include="NeuronHandler.cs" />
     <Compile Include="NeuronSelection.cs" />
     <Compile Include="NeuronSelectionRectangle.cs" />
+    <Compile Include="NeuronViewMenu.cs" />
     <Compile Include="NeuronView.cs" />
     <Compile Include="NewArrayDlg.xaml.cs">
       <DependentUpon>NewArrayDlg.xaml</DependentUpon>

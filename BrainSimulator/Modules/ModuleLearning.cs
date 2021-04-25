@@ -41,7 +41,7 @@ namespace BrainSimulator.Modules
 
         public override void Initialize()
         {
-            ModuleView naKB = theNeuronArray.FindAreaByLabel("ModuleUKS");
+            ModuleView naKB = theNeuronArray.FindModuleByLabel("ModuleUKS");
             if (naKB != null)
             {
                 if (naKB.TheModule != null)

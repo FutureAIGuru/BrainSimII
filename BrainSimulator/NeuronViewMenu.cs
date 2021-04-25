@@ -59,17 +59,21 @@ namespace BrainSimulator
             cm.Items.Add(mi1);
 
             //apply to all in selection
-            if (NeuronInSelection(n.id))
+            CheckBox cbApplyToSelection = new CheckBox
             {
-                CheckBox cbApplyToSelection = new CheckBox
-                {
-                    IsChecked = true,
-                    Content = "Apply changes to all neurons in selection",
-                    Name = "ApplyToSelection",
-                };
-                cbApplyToSelection.Checked += CbCheckedChanged;
-                cbApplyToSelection.Unchecked += CbCheckedChanged;
-                cm.Items.Add(new MenuItem { StaysOpenOnClick = true, Header = cbApplyToSelection });
+                IsChecked = true,
+                Content = "Apply changes to all neurons in selection",
+                Name = "ApplyToSelection",
+            };
+            cbApplyToSelection.Checked += CbCheckedChanged;
+            cbApplyToSelection.Unchecked += CbCheckedChanged;
+            cm.Items.Add(new MenuItem { StaysOpenOnClick = true, Header = cbApplyToSelection });
+            if (MainWindow.arrayView.theSelection.selectedRectangles.Count > 0)
+                cbApplyToSelection.IsEnabled = true;
+            else
+            {
+                cbApplyToSelection.IsChecked = false;
+                cbApplyToSelection.IsEnabled = false;
             }
 
             //label
@@ -708,7 +712,7 @@ namespace BrainSimulator
         }
         private static void SetValueInSelectedNeurons(Neuron n, string property)
         {
-            bool neuronInSelection = NeuronInSelection(n.id);
+            bool neuronInSelection = true;//= NeuronInSelection(n.id);
             if (neuronInSelection)
             {
                 List<int> theNeurons = theNeuronArrayView.theSelection.EnumSelectedNeurons();

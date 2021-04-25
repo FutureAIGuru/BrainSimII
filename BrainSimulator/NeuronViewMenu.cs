@@ -52,16 +52,46 @@ namespace BrainSimulator
             cm.PreviewKeyDown += Cm_PreviewKeyDown;
             cmCancelled = false;
             cm.StaysOpen = true;
+            cm.Width = 300;
 
             //The neuron label
+            MenuItem mi1 = new MenuItem { Header = "ID: " + n.id, Padding = new Thickness(0) };
+            cm.Items.Add(mi1);
+
+            //apply to all in selection
+            if (NeuronInSelection(n.id))
+            {
+                CheckBox cbApplyToSelection = new CheckBox
+                {
+                    IsChecked = true,
+                    Content = "Apply changes to all neurons in selection",
+                    Name = "ApplyToSelection",
+                };
+                cbApplyToSelection.Checked += CbCheckedChanged;
+                cbApplyToSelection.Unchecked += CbCheckedChanged;
+                cm.Items.Add(new MenuItem { StaysOpenOnClick = true, Header = cbApplyToSelection });
+            }
+
+            //label
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, };
-            sp.Children.Add(new Label { Content = "ID: " + n.id + "   Label: ", VerticalAlignment = VerticalAlignment.Center, });
+            sp.Children.Add(new Label {Content =  "Label: ", Padding = new Thickness(0), VerticalAlignment = VerticalAlignment.Center, }); ;
             TextBox tb = Utils.ContextMenuTextBox(n.Label, "Label", 170);
             tb.TextChanged += Tb_TextChanged;
             sp.Children.Add(tb);
             sp.Children.Add(new Label { Content = "Warning: Duplicate Label", FontSize = 8, Name = "DupWarn", Visibility = Visibility.Hidden });
-            MenuItem mi1 = new MenuItem { StaysOpenOnClick = true, Header = sp };
+            mi1 = new MenuItem { StaysOpenOnClick = true, Header = sp };
             cm.Items.Add(mi1);
+
+            //tooltip
+            if (n.Label != "" || n.ToolTip != "") //add the tooltip textbox if needed
+            {
+                sp = new StackPanel { Orientation = Orientation.Horizontal };
+                sp.Children.Add(new Label { Content = "Tooltip: ", VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) });
+                tb = Utils.ContextMenuTextBox(n.ToolTip, "ToolTip", 150);
+                tb.TextChanged += Tb_TextChanged;
+                sp.Children.Add(tb);
+                cm.Items.Add(sp);
+            }
 
             //The neuron model
             sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
@@ -81,31 +111,24 @@ namespace BrainSimulator
             cb.SelectedIndex = (int)n.Model;
             cb.SelectionChanged += Cb_SelectionChanged;
             sp.Children.Add(cb);
-            if (n.Label != "" || n.ToolTip != "") //add the tooltip textbox if needed
-            {
-                sp.Children.Add(new Label { Content = "Tooltip: ", VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) });
-                tb = Utils.ContextMenuTextBox(n.ToolTip, "ToolTip", 150);
-                tb.TextChanged += Tb_TextChanged;
-                sp.Children.Add(tb);
-            }
             cm.Items.Add(new MenuItem { StaysOpenOnClick = true, Header = sp });
 
-            cm.Items.Add(new Separator());
-            cm.Items.Add(new Separator());
+            cm.Items.Add(new Separator { Visibility = Visibility.Collapsed });
+            cm.Items.Add(new Separator { Visibility = Visibility.Collapsed });
 
 
             MenuItem mi = new MenuItem();
-            CheckBox cbShowSynapses = new CheckBox
+            CheckBox cbEnableNeuron= new CheckBox
             {
                 IsChecked = (n.leakRate > 0) || float.IsPositiveInfinity(1.0f / n.leakRate),
                 Content = "Enabled",
                 Name = "Enabled",
             };
-            cbShowSynapses.Checked += CbCheckedChanged;
-            cbShowSynapses.Unchecked += CbCheckedChanged;
-            cm.Items.Add(new MenuItem { StaysOpenOnClick = true, Header = cbShowSynapses });
+            cbEnableNeuron.Checked += CbCheckedChanged;
+            cbEnableNeuron.Unchecked += CbCheckedChanged;
+            cm.Items.Add(new MenuItem { StaysOpenOnClick = true, Header = cbEnableNeuron });
 
-            cbShowSynapses = new CheckBox
+            CheckBox cbShowSynapses = new CheckBox
             {
                 IsChecked = MainWindow.arrayView.IsShowingSnapses(n.id),
                 Content = "Show Synapses",
@@ -126,8 +149,17 @@ namespace BrainSimulator
             cbHistory.Unchecked += CbCheckedChanged;
             cm.Items.Add(new MenuItem { StaysOpenOnClick = true, Header = cbHistory });
 
+            mi = new MenuItem { Header = "Clear Synapses" };
+            mi.Click += Mi_Click;
+            cm.Items.Add(mi);
+
+            cm.Items.Add(new Separator());
+            cm.Items.Add(new Separator());
+
             mi = new MenuItem();
             mi.Header = "Synapses Out";
+            mi.Width = 250;
+            mi.HorizontalAlignment = HorizontalAlignment.Left;
             foreach (Synapse s in n.Synapses)
             {
                 AddSynapseEntryToMenu(mi, s);
@@ -136,20 +168,12 @@ namespace BrainSimulator
 
             mi = new MenuItem();
             mi.Header = "Synapses In";
+            mi.Width = 250;
+            mi.HorizontalAlignment = HorizontalAlignment.Left;
             foreach (Synapse s in n.SynapsesFrom)
             {
                 AddSynapseEntryToMenu(mi, s);
-                //string targetLabel = MainWindow.theNeuronArray.GetNeuron(s.targetNeuron).Label;
-                ////MenuItem synapseMenuItem = new MenuItem() { Header = s.targetNeuron.ToString().PadLeft(8) + " " + s.Weight.ToString("F3").PadLeft(9) + " " + targetLabel, FontFamily = new FontFamily("Courier New") };
-                ////synapseMenuItem.Click += Mi_Click;
-                ////synapseMenuItem.PreviewMouseRightButtonDown += SynapseFromMenuItem_PreviewMouseRightButtonDown1;
-                ////synapseMenuItem.ToolTip = "L-click -> source neuron, R-Click -> edit synapse";
-                //mi.Items.Add(synapseMenuItem); ;
             }
-            cm.Items.Add(mi);
-
-            mi = new MenuItem { Header = "Clear" };
-            mi.Click += Mi_Click;
             cm.Items.Add(mi);
 
             mi = new MenuItem { Header = "Paste Here" };
@@ -164,6 +188,8 @@ namespace BrainSimulator
 
             mi = new MenuItem();
             mi.Header = "Connect Multiple Synapses";
+            mi.Width = 250;
+            mi.HorizontalAlignment = HorizontalAlignment.Left;
             mi.Click += Mi_Click;
             mi.Items.Add(new MenuItem() { Header = "From Selection to Here" });
             ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
@@ -172,20 +198,6 @@ namespace BrainSimulator
             mi.Items.Add(new MenuItem() { Header = "Mutual Suppression" });
             ((MenuItem)mi.Items[mi.Items.Count - 1]).Click += Mi_Click;
             cm.Items.Add(mi);
-
-            if (NeuronInSelection(n.id))
-            {
-                cbShowSynapses = new CheckBox
-                {
-                    IsChecked = true,
-                    Content = "Apply changes to all neurons in selection",
-                    Name = "ApplyToSelection",
-                };
-                cbShowSynapses.Checked += CbCheckedChanged;
-                cbShowSynapses.Unchecked += CbCheckedChanged;
-                cm.Items.Add(new MenuItem { StaysOpenOnClick = true, Header = cbShowSynapses });
-            }
-
 
             sp = new StackPanel { Orientation = Orientation.Horizontal };
             Button b0 = new Button { Content = "OK", Width = 100, Height = 25, Margin = new Thickness(10) };
@@ -822,11 +834,14 @@ namespace BrainSimulator
                 theNeuronArrayView.targetNeuronIndex = -1;
                 cmCancelled = true;
             }
-            if ((string)mi.Header == "Clear")
+            if ((string)mi.Header == "Clear Synapses")
             {
                 MainWindow.theNeuronArray.SetUndoPoint();
                 n.ClearWithUndo();
-                SetValueInSelectedNeurons(n, "clear");
+                Control cc = Utils.FindByName(cm, "ApplyToSelection");
+                if (cc is CheckBox cb)
+                    if (cb.IsChecked == true)
+                        SetValueInSelectedNeurons(n, "clear");
                 cmCancelled = true;
                 MainWindow.Update();
             }

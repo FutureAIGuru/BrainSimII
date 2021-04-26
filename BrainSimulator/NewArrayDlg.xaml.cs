@@ -59,9 +59,9 @@ namespace BrainSimulator
             ulong maxNeurons = availablePhysicalMemory / neuronSize;
 
             string text = "";
-            text += "Total Pysical Memory: " + totalPhysicalMemory.ToString("##,#") + crlf;
-            text += "Available Physical Memory: " + availablePhysicalMemory.ToString("##,#") + crlf;
-            text += "Max Neurons Possible in RAM: " + maxNeurons.ToString("##,#") + crlf;
+            text += "Total Memory: " + totalPhysicalMemory.ToString("##,#") + crlf;
+            text += "Available Memory: " + availablePhysicalMemory.ToString("##,#") + crlf;
+            text += "Max Neurons Possible: " + maxNeurons.ToString("##,#") + crlf;
             text += "Assuming average " + assumedSynapseCount + " synapses per neuron" + crlf;
             textBlock.Text = text;
 

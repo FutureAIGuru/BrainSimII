@@ -470,7 +470,17 @@ namespace BrainSimulator
                     }
                     else
                     {
-                        MainWindow.theNeuronArray.Modules[i].TheModule.Initialize();
+                        {
+                            try
+                            {
+                                MainWindow.theNeuronArray.Modules[i].TheModule.Initialize();
+                            }
+                            catch (Exception e1)
+                            {
+                                MessageBox.Show("Initialize failed on module " + MainWindow.theNeuronArray.Modules[i].Label + ".   Message: " + e1.Message);
+                            }
+                        }
+
                     }
                 }
                 if ((string)mi.Header == "Show Dialog")

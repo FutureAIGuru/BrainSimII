@@ -5,31 +5,42 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrainSimulator"
         mc:Ignorable="d"
-        Title="Brain Simulator II" Height="520.771" Width="914.667" KeyUp="Window_KeyUp" KeyDown="Window_KeyDown" 
+        Title="Brain Simulator II" Height="520.771" Width="1080" KeyUp="Window_KeyUp" KeyDown="Window_KeyDown" 
         Closing="Window_Closing" ContentRendered="Window_ContentRendered" WindowState="Maximized" MouseEnter="Window_MouseEnter" MouseLeave="Window_MouseLeave">
-    <DockPanel Margin="0,1,-1,3" Grid.ColumnSpan="3">
-        <StatusBar DockPanel.Dock="Bottom">
-            <Label Width="50" />
-            <StatusBarItem>
-                <TextBlock x:Name="KBStatus" Width="50"></TextBlock>
+    <DockPanel Margin="0,0,0,0" >
+        <StatusBar DockPanel.Dock="Bottom" HorizontalAlignment="Stretch">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                            <ColumnDefinition Width="2*"></ColumnDefinition>
+                            <ColumnDefinition Width="3*"></ColumnDefinition>
+                            <ColumnDefinition Width="3*"></ColumnDefinition>
+                            <ColumnDefinition Width="5*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+
+            <StatusBarItem Grid.Column="0">
+                <TextBlock x:Name="KBStatus" HorizontalAlignment="Stretch" Padding="20,0,20,0" ></TextBlock>
             </StatusBarItem>
-            <Label Width="100"></Label>
-            <StatusBarItem>
-                <TextBlock x:Name="statusField0" Background="LightGreen" Width="250" TextAlignment="Center"></TextBlock>
+            <StatusBarItem Grid.Column="1" >
+                <TextBlock x:Name="statusField0" HorizontalAlignment="Stretch" TextAlignment="Center" Background="LightGreen" Padding="20,0,20,0" ></TextBlock>
             </StatusBarItem>
-            <Label Width="50"></Label>
-            <StatusBarItem>
-                <TextBlock x:Name="statusField1" Background="LightGreen" Width="250" TextAlignment="Center"></TextBlock>
+            <StatusBarItem Grid.Column="2" >
+                <TextBlock x:Name="statusField1" HorizontalAlignment="Stretch" TextAlignment="Center" Background="LightGreen" Padding="20,0,20,0" ></TextBlock>
             </StatusBarItem>
-            <Label Width="50"></Label>
-            <StatusBarItem>
-                <TextBlock x:Name="statusField2" Background="LightGreen" Width="250" TextAlignment="Center"></TextBlock>
+            <StatusBarItem Grid.Column="3">
+                <TextBlock x:Name="statusField2" HorizontalAlignment="Stretch" Background="LightGreen" TextAlignment="Center" Padding="20,0,20,0" ></TextBlock>
             </StatusBarItem>
-            <Label Width="50"></Label>
-            <StatusBarItem>
-                <TextBlock x:Name="statusField3" Background="LightGreen" Width="400" TextAlignment="Center"></TextBlock>
+            <StatusBarItem Grid.Column="4" >
+                <TextBlock x:Name="statusField3" HorizontalAlignment="Stretch" Background="LightGreen" TextAlignment="Center" Padding="20,0,20,0" ></TextBlock>
             </StatusBarItem>
         </StatusBar>
+
+
         <Menu DockPanel.Dock="Top" x:Name="MainMenu" MouseEnter="MainMenu_MouseEnter" Height="26" Margin="0,0" VerticalAlignment="Top" >
             <MenuItem Header="_File">
                 <MenuItem Header="_New" Click="button_FileNew_Click">

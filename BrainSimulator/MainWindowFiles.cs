@@ -78,6 +78,16 @@ namespace BrainSimulator
             {
                 if (na.TheModule != null)
                     na.TheModule.SetUpAfterLoad();
+                {
+                    try
+                    {
+                        na.TheModule.SetUpAfterLoad();
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show("SetupAfterLoad failed on module " + na.Label + ".   Message: " + e.Message);
+                    }
+                }
             }
             return true;
         }
@@ -88,7 +98,16 @@ namespace BrainSimulator
             foreach (ModuleView na in theNeuronArray.modules)
             {
                 if (na.TheModule != null)
-                    na.TheModule.SetUpBeforeSave();
+                {
+                    try
+                    {
+                        na.TheModule.SetUpBeforeSave();
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show("SetupBeforeSave failed on module " + na.Label + ".   Message: " + e.Message);
+                    }
+                }
             }
 
             theNeuronArray.displayParams = theNeuronArrayView.Dp;

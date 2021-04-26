@@ -240,8 +240,8 @@
     <Compile Include="PropertiesDlg.xaml.cs">
       <DependentUpon>PropertiesDlg.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SplashScreeen.xaml.cs">
-      <DependentUpon>SplashScreeen.xaml</DependentUpon>
+    <Compile Include="SplashScreen.xaml.cs">
+      <DependentUpon>SplashScreen.xaml</DependentUpon>
     </Compile>
     <Compile Include="Synapse.cs" />
     <Compile Include="SynapseView.cs" />
@@ -339,7 +339,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SplashScreeen.xaml">
+    <Page Include="SplashScreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -376,9 +376,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="favicon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="SplashScreen.gif" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
@@ -457,6 +454,7 @@
     <Content Include="Networks\BasicNeurons.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Smoothed_Splash.bmp" />
     <Resource Include="Resources\Icons\ZoomOriginalSize_16x.png" />
     <Resource Include="Resources\Icons\QuickFind_16x.png" />
     <Resource Include="Resources\Icons\SelectAll_16x.png" />

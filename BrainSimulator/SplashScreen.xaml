@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrainSimulator"
         mc:Ignorable="d"
-        Title="SplashScreeen" Height="281" Width="500" WindowStyle="None" Topmost="true" HorizontalAlignment="Center" VerticalAlignment="Center">
+        Title="SplashScreen" Height="281" Width="500" WindowStyle="None" Topmost="true" HorizontalAlignment="Center" VerticalAlignment="Center">
     <Grid>
-        <Image Source="SplashScreen.gif" />
+        <Image Source="Smoothed_Splash.bmp" />
     </Grid>
 </Window>

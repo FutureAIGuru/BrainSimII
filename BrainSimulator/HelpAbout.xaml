@@ -9,9 +9,9 @@
     <Grid Margin="0,0,0,0">
 
         <Button x:Name="buttonOK" IsCancel="True" Content="OK" HorizontalAlignment="Left" Height="24" Margin="199,0,0,24" VerticalAlignment="Bottom" Width="93" Click="ButtonOK_Click"/>
-        <Image x:Name="image" Margin="19,19,168,117" Source="SplashScreen.gif"/>
         <Label x:Name="labelContributors" HorizontalAlignment="Left" Height="158" Margin="317,47,0,0" VerticalAlignment="Top" Width="141"/>
-        <Label x:Name="label" Content="Project Contributors:" HorizontalAlignment="Left" Height="23" Margin="317,19,0,0" VerticalAlignment="Top" Width="141" FontWeight="Bold"/>
-        <Label x:Name ="labelVersion" HorizontalAlignment="Left" Height="24" Margin="35,0,0,74" VerticalAlignment="Bottom" Width="423"/>
+        <Label x:Name="label" Content="Project Contributors:" HorizontalAlignment="Left" Height="28" Margin="317,19,0,0" VerticalAlignment="Top" Width="141" FontWeight="Bold"/>
+        <Label x:Name ="labelVersion" HorizontalAlignment="Left" Height="46" Margin="35,0,0,66" VerticalAlignment="Bottom" Width="423"/>
+        <Image x:Name="image_Copy" Margin="19,19,168,117" Source="Smoothed_Splash.bmp"/>
     </Grid>
 </Window>

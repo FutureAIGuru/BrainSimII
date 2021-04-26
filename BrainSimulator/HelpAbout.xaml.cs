@@ -19,10 +19,9 @@ namespace BrainSimulator
             Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             DateTime buildDate = new DateTime(2000, 1, 1)
                                     .AddDays(version.Build).AddSeconds(version.Revision * 2);
-            string displayableVersion = $"{version}\n({buildDate})";
+            string displayableVersion = $"{version.Major}.{version.Minor}.{version.Build}   ({buildDate})";
             labelVersion.Content = "Version: " + displayableVersion;
-            labelContributors.Content = "Charlie Simon\n" + "André Slabber\n"+
-                "\n\nJoin and participate!\n";
+            labelContributors.Content = "Charles J. Simon\nAndré Slabber\n\n\n";
         }
 
         private void ButtonOK_Click(object sender, RoutedEventArgs e)

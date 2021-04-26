@@ -1,5 +1,6 @@
 ﻿using BrainSimulator.Modules;
 using System;
+using System.Text;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -43,8 +44,8 @@ namespace BrainSimulator
             // first check if the required start tag is present in the file...
             byte[] buffer = new byte[60];
             file.Read(buffer, 0, 60);
-            string line = buffer.ToString();
-            if (line.Contains("<NeuronArray xmlns: xsd"))
+            string line = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+            if (line.Contains("NeuronArray"))
             {
                 file.Seek(0, SeekOrigin.Begin);
             }

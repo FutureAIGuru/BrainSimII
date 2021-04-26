@@ -152,7 +152,6 @@ namespace BrainSimulator
             LoadFile(currentFileName);
         }
 
-
         private static void SetCurrentFileNameToProperties()
         {
             Properties.Settings.Default["CurrentFile"] = currentFileName;

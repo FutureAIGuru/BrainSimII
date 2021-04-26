@@ -186,10 +186,18 @@ namespace BrainSimulator
             }
         }
 
-        //needs a complete match
         public ModuleView FindModuleByLabel(string label)
         {
-            return modules.Find(na => na.Label.Trim() == label);
+            ModuleView moduleView = modules.Find(na => na.Label.Trim() == label);
+            if (moduleView == null)
+            {
+                if (label.StartsWith("Module"))
+                {
+                    label = label.Replace("Module", "");
+                    moduleView = modules.Find(na => na.Label.Trim() == label);
+                }
+            }
+            return moduleView;
         }
 
         public void SetNeuron(int i, Neuron n)

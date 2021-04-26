@@ -441,12 +441,13 @@ namespace NeuronEngine
 						desired = current + s.GetWeight();
 					}
 
-					//if (desired >= threshold) //this conditional improves performance but introduces a potental bug where accumulated charge might be negative
+					//if (desired >= threshold) //this conditional improves performance but 
+					//introduces a potental bug where accumulated charge might be negative
 					NeuronArrayBase::AddNeuronToFireList1(nTarget->id);
 
 					if (s.GetModel() == SynapseBase::modelType::Hebbian1)
 					{
-						//did this neuron fire just after the target
+						//did the target neuron fire after this stimulation? 
 						float weight = s.GetWeight();
 						if (desired >= threshold)
 						{
@@ -489,28 +490,32 @@ namespace NeuronEngine
 											weight = NewHebbianWeight(weight, 0, s.GetModel(), numHebbian);
 										}
 										else */
-					if (nTarget->lastFired >= lastFired - delay)
+					if (s.GetModel() == SynapseBase::modelType::Hebbian2 ||
+						s.GetModel() == SynapseBase::modelType::Binary)
 					{
-						//strengthen the synapse
-						weight = NewHebbianWeight(weight, .1f, s.GetModel(), numHebbian);
-					}
-					else
-					{
-						//weaken the synapse
-						weight = NewHebbianWeight(weight, -.1f, s.GetModel(), numHebbian);
-					}
-					//update the synapse in "From"
-					synapsesFrom->at(i).SetWeight(weight);
-					//update the synapse in "To"
-					for (int i = 0; i < nTarget->synapses->size(); i++)
-					{
-						if (nTarget->synapses->at(i).GetTarget() == this)
+						if (nTarget->lastFired >= lastFired - delay)
 						{
-							while (nTarget->vectorLock.exchange(1) == 1) {}
-							nTarget->synapses->at(i).SetWeight(weight);
-							nTarget->vectorLock = 0;
+							//strengthen the synapse
+							weight = NewHebbianWeight(weight, .1f, s.GetModel(), numHebbian);
 						}
-					}
+						else
+						{
+							//weaken the synapse
+							weight = NewHebbianWeight(weight, -.1f, s.GetModel(), numHebbian);
+						}
+						//update the synapse in "From"
+						synapsesFrom->at(i).SetWeight(weight);
+						//update the synapse in "To"
+						for (int i = 0; i < nTarget->synapses->size(); i++)
+						{
+							if (nTarget->synapses->at(i).GetTarget() == this)
+							{
+								while (nTarget->vectorLock.exchange(1) == 1) {}
+								nTarget->synapses->at(i).SetWeight(weight);
+								nTarget->vectorLock = 0;
+							}
+						}
+				}
 				}
 			}
 			vectorLock = 0;

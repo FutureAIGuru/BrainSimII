@@ -51,6 +51,7 @@ namespace BrainSimulator.Modules
             ///else recursive?
             ///
             ModuleView naBehavior = MainWindow.theNeuronArray.FindModuleByLabel("ModuleBehavior");
+            if (naBehavior == null) return;
             ModuleBehavior nmBehavior = (ModuleBehavior)naBehavior.TheModule;
             ModuleView naModel = theNeuronArray.FindModuleByLabel("Module2DModel");
             Module2DModel nmModel = (Module2DModel)naModel.TheModule;

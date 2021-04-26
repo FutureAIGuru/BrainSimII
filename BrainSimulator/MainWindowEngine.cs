@@ -65,7 +65,6 @@ namespace BrainSimulator
                         Application.Current.Dispatcher.Invoke((Action)delegate
                         {
                             SetStatus(3, "Not Running   Cycle: " + theNeuronArray.Generation.ToString("N0"), 0);
-                            //                            labelEngineStatus.Content = "Not Running   Cycle: " + theNeuronArray.Generation.ToString("N0");
                         });
                         updateDisplay = false;
                         displayUpdateTimer.Start();

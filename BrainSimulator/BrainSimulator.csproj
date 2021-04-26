@@ -213,6 +213,7 @@
     <Compile Include="Modules\ModuleTurn.cs" />
     <Compile Include="Modules\PointPlus.cs" />
     <Compile Include="Modules\Thing.cs" />
+    <Compile Include="NeuronArrayUndo.cs" />
     <Compile Include="NeuronArrayViewClipBoard.cs" />
     <Compile Include="ModuleView.cs" />
     <Compile Include="NeuronArray.cs" />

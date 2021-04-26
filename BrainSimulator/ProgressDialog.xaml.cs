@@ -25,6 +25,7 @@ namespace BrainSimulator
         {
             InitializeComponent();
             startTime = DateTime.Now;
+            timeLabel.Content = "";
         }
         public bool SetProgress(float value, string label)
         {

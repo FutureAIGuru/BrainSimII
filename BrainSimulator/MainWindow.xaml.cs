@@ -284,9 +284,16 @@ namespace BrainSimulator
         /// <param name="value">0-100 the completion percent 0 initializes, 100 closes</param> 
         /// <param name="label"></param>
         /// <returns>true if the cancel button was pressed</returns>  
+        /// 
+        float prevValue = 0;
         public bool SetProgress(float value, string label)
         {
+            if (value != 0 && value != 100 && Math.Abs(prevValue - value ) < 1)
+            {
+                return false;
+            }
             bool retVal = false;
+            prevValue = value;
             if (Application.Current.Dispatcher.CheckAccess())
             {
                 retVal = progressDialog.SetProgress(value, label);

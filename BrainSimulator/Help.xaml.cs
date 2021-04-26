@@ -12,8 +12,6 @@ namespace BrainSimulator
         public Help(string urlToShow = "")
         {
             InitializeComponent();
-            bool showHelp = (bool)Properties.Settings.Default["ShowHelp"];
-            theCheckBox.IsChecked = !showHelp;
             if (urlToShow == "")
             {
                 string fullpath = Path.GetFullPath("./resources/getting started.htm");
@@ -23,7 +21,6 @@ namespace BrainSimulator
             else
             {
                 theBrowser.Navigate(urlToShow);
-                theCheckBox.Visibility = Visibility.Collapsed;
             }
             theBrowser.Navigating += TheBrowser_Navigating;
         }
@@ -45,9 +42,7 @@ namespace BrainSimulator
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            string fullpath = Path.GetFullPath("./resources/getting started.htm");
-            Uri theUri = new Uri("file:///" + fullpath);
-            theBrowser.Navigate(theUri);
+
         }
 
         private void registerButton_Click(object sender, RoutedEventArgs e)

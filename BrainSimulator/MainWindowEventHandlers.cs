@@ -650,36 +650,48 @@ namespace BrainSimulator
 
         private void MenuItemHelp_Click(object sender, RoutedEventArgs e)
         {
-            Help p;
-            p = new Help();
-            try
-            {
-                p.Left = 200;
-                p.Top = 200;
-                p.Owner = this;
-                p.Show();
-            }
-            catch
-            {
-                MessageBox.Show("Help could not be displayed");
-            }
+            // remove if new code is OK...
+            // Help p;
+
+            string fullpath = Path.GetFullPath("./Resources/Getting Started.htm");
+            Uri theUri = new Uri("file:///" + fullpath);
+            System.Diagnostics.Process.Start(theUri.ToString());
+
+            // remove if new code is OK...
+            // p = new Help(theUri.ToString());
+            // try
+            // {
+            //     p.Left = 200;
+            //     p.Top = 200;
+            //     p.Owner = this;
+            //     p.Show();
+            // }
+            // catch
+            // {
+            //     MessageBox.Show("Help could not be displayed");
+            // }
         }
 
         private void MenuItemOnlineHelp_Click(object sender, RoutedEventArgs e)
         {
-            Help p;
-            p = new Help("https://futureai.guru/BrainSimHelp/ui.html");
-            try
-            {
-                p.Left = 200;
-                p.Top = 200;
-                p.Owner = this;
-                p.Show();
-            }
-            catch
-            {
-                MessageBox.Show("Help could not be displayed");
-            }
+            // remove if new code is OK...
+            // Help p;
+            // p = new Help("https://futureai.guru/BrainSimHelp/ui.html");
+
+            System.Diagnostics.Process.Start("https://futureai.guru/BrainSimHelp/ui.html");
+
+            // remove if new code is OK...
+            //  try
+            //  {
+            //      p.Left = 200;
+            //      p.Top = 200;
+            //      p.Owner = this;
+            //      p.Show();
+            //  }
+            //  catch
+            //  {
+            //      MessageBox.Show("Help could not be displayed");
+            //  }
         }
 
         private void MenuItemOnlineBugs_Click(object sender, RoutedEventArgs e)

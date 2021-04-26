@@ -138,12 +138,6 @@ namespace BrainSimulator
                     }
                 }
             }
-            if (currentFileName == "")
-            {
-                bool showHelp = (bool)Properties.Settings.Default["ShowHelp"];
-                if (showHelp)
-                    MenuItemHelp_Click(null, null);
-            }
         }
 
         public static void CloseHistoryWindow()

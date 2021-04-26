@@ -40,6 +40,21 @@ namespace BrainSimulator
                 return false;
             }
 
+            // first check if the required start tag is present in the file...
+            byte[] buffer = new byte[60];
+            file.Read(buffer, 0, 60);
+            string line = buffer.ToString();
+            if (line.Contains("<NeuronArray xmlns: xsd"))
+            {
+                file.Seek(0, SeekOrigin.Begin);
+            }
+            else
+            {
+                file.Close();
+                MessageBox.Show("File is no valid Brain Simulator II XML file.");
+                return false;
+            }
+
             MainWindow.thisWindow.SetProgress(0, "Loading Network File");
             theNeuronArray = new NeuronArray();
 

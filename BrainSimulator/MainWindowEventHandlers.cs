@@ -150,37 +150,10 @@ namespace BrainSimulator
 
         private void buttonSaveAs_Click(object sender, RoutedEventArgs e)
         {
-            string defaultPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            defaultPath += "\\BrainSim";
-            try
-            {
-                if (Directory.Exists(defaultPath)) defaultPath = "";
-                else Directory.CreateDirectory(defaultPath);
-            }
-            catch
-            {
-                //maybe myDocuments is readonly of offline? let the user do whatever they want
-                defaultPath = "";
-            }
-            SaveFileDialog saveFileDialog1 = new SaveFileDialog
-            {
-                Filter = "XML Network Files|*.xml",
-                Title = "Select a Brain Simulator File",
-                InitialDirectory = defaultPath
-            };
-
-            // Show the Dialog.  
-            // If the user clicked OK in the dialog and  
-            Nullable<bool> result = saveFileDialog1.ShowDialog();
-            if (result ?? false)// System.Windows.Forms.DialogResult.OK)
-            {
-                if (SaveFile(saveFileDialog1.FileName))
-                {
-                    AddFileToMRUList(currentFileName);
-                    setTitleBar();
-                }
-            }
+            SaveAs();
         }
+
+
         private void NeuronMenu_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuItem mi)
@@ -286,6 +259,7 @@ namespace BrainSimulator
         private void button_Exit_Click(object sender, RoutedEventArgs e)
         {
             Properties.Settings.Default.Save();
+            this.Close();
         }
 
         private void button_LoadClipboard_Click(object sender, RoutedEventArgs e)

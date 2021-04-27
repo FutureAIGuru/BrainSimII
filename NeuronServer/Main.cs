@@ -50,27 +50,8 @@ namespace NeuronServer
         const int serverClientPort = 49003;
 
         static public NeuronArrayBase theNeuronArray = null;
-
         static void Main(string[] args)
         {
-            ////test of firewall rule addition
-            //INetFwRule firewallRule = (INetFwRule)Activator.CreateInstance(
-            //    Type.GetTypeFromProgID("HNetCfg.FWRule"));
-
-            //INetFwPolicy2 firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(
-            //    Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
-            //string strExeFilePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            //firewallRule.ApplicationName = "//App Executable Path";
-            //firewallRule.ApplicationName = "//NeuronServer";
-
-            //firewallRule.Action = NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
-            //firewallRule.Description = "Allow Neuron Server Test";
-            //firewallRule.Enabled = true;
-            //firewallRule.InterfaceTypes = "All";
-            //firewallRule.Name = $"// NeuronServer";
-            //firewallPolicy.Rules.Add(firewallRule);
-
-
 
             serverServer = new UdpClient(serverServerPort);
             serverServer.EnableBroadcast = true;

@@ -315,7 +315,13 @@ namespace BrainSimulator
             Application.Current.Dispatcher.Invoke(DispatcherPriority.Background,
                                           new Action(delegate { }));
         }
-
+        public static bool Busy()
+        {
+            if (thisWindow == null) return true;
+            if (thisWindow.progressDialog == null) return true;
+            if (thisWindow.progressDialog.Visibility == Visibility.Visible) return true;
+            return false;
+        }
 
         //Enable/disable menu item specified by "Entry"...pass in the Menu.Items as the root to search
         private void EnableMenuItem(ItemCollection mm, string Entry, bool enabled)

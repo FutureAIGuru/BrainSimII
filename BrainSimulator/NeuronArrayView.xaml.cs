@@ -121,6 +121,7 @@ namespace BrainSimulator
 
 
             if (MainWindow.theNeuronArray == null) return;
+            if (MainWindow.theNeuronArray.arraySize == 0) return;
 
             //Debug.WriteLine("Update " + MainWindow.theNeuronArray.Generation);
             dp.NeuronRows = MainWindow.theNeuronArray.rows;

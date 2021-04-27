@@ -421,7 +421,7 @@ namespace BrainSimulator
             progressDialog.Owner = this;
             progressDialog.Show();
             progressDialog.Hide();
-
+            progressDialog.SetProgress(0, "");
 
             //if the left shift key is pressed, don't load the file
             if (Keyboard.IsKeyUp(Key.LeftShift))

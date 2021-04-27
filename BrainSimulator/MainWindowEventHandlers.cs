@@ -457,7 +457,7 @@ namespace BrainSimulator
         }
         private void ButtonInit_Click(object sender, RoutedEventArgs e)
         {
-            if (theNeuronArray == null) return;
+            if (IsArrayEmpty()) return;
             SuspendEngine();
             lock (theNeuronArray.Modules)
             {
@@ -581,7 +581,7 @@ namespace BrainSimulator
 
         private void Menu_ShowSynapses(object sender, RoutedEventArgs e)
         {
-            if (theNeuronArray == null) return;
+            if (IsArrayEmpty()) return;
             if (sender is MenuItem mi)
             {
                 //single menu item comes here so must be toggled
@@ -592,14 +592,14 @@ namespace BrainSimulator
         }
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            if (theNeuronArray == null) return;
+            if (IsArrayEmpty()) return;
             theNeuronArray.ShowSynapses = true;
             Update();
         }
 
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            if (theNeuronArray == null) return;
+            if (IsArrayEmpty()) return;
             theNeuronArray.ShowSynapses = false;
             Update();
         }
@@ -614,7 +614,9 @@ namespace BrainSimulator
             PropertiesDlg p = new PropertiesDlg();
             try
             {
+                SuspendEngine();
                 p.ShowDialog();
+                ResumeEngine();
             }
             catch
             {

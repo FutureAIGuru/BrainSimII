@@ -119,9 +119,7 @@ namespace BrainSimulator
             Canvas.SetLeft(targetNeuronCanvas, 0);
             Canvas.SetTop(targetNeuronCanvas, 0);
 
-
-            if (MainWindow.theNeuronArray == null) return;
-            if (MainWindow.theNeuronArray.arraySize == 0) return;
+            if (MainWindow.IsArrayEmpty()) return;
 
             //Debug.WriteLine("Update " + MainWindow.theNeuronArray.Generation);
             dp.NeuronRows = MainWindow.theNeuronArray.rows;
@@ -591,13 +589,13 @@ namespace BrainSimulator
 
         private void theCanvas_Loaded(object sender, RoutedEventArgs e)
         {
-            if (MainWindow.theNeuronArray == null) return;
+            if (MainWindow.IsArrayEmpty()) return;
         }
         private void theCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             NeuronView.theCanvas = theCanvas;//??  
             SynapseView.theCanvas = theCanvas;//??
-            if (MainWindow.theNeuronArray == null) return;
+            if (MainWindow.IsArrayEmpty()) return;
             Update();
         }
 

@@ -237,7 +237,7 @@ namespace BrainSimulator
 
             if (theCanvas.Cursor == Cursors.Wait) return;
             if (mouseRepeatTimer != null) mouseRepeatTimer.Stop();
-            if (MainWindow.theNeuronArray == null) return;
+            if (MainWindow.IsArrayEmpty()) return;
             //Debug.WriteLine("theCanvas_MouseUp" + MainWindow.theNeuronArray.Generation);
             if (e.ChangedButton == MouseButton.Right) return;
             Point currentPosition = e.GetPosition(theCanvas);
@@ -385,9 +385,7 @@ namespace BrainSimulator
                 if (mouseRepeatTimer.IsEnabled && mouseRepeatTimer.Interval == new TimeSpan(0, 0, 0, 0, 100)) return;
                 mouseRepeatTimer.Stop();
             }
-            if (MainWindow.theNeuronArray == null ||
-                MainWindow.theNeuronArray.rows == 0 ||
-                MainWindow.theNeuronArray.Cols == 0)
+            if (MainWindow.IsArrayEmpty())
                 return;
 
             if (e.RightButton == MouseButtonState.Pressed) return;

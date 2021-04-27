@@ -496,7 +496,7 @@ namespace BrainSimulator
             }
         }
 
-        public static bool IsArrayEmpty()
+        public bool IsArrayEmpty()
         {
             if (MainWindow.theNeuronArray == null) return true;
             if (MainWindow.theNeuronArray.arraySize == 0) return true;

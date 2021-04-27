@@ -510,12 +510,5 @@ namespace BrainSimulator
             if (MainWindow.theNeuronArray.Cols == 0) return true;
             return false;
         }
-
-        public static bool IsProgressBarVisible()
-        {
-            if (MainWindow.thisWindow.progressDialog == null) return false;
-            if (MainWindow.thisWindow.progressDialog.Visibility == Visibility.Visible) return true;
-            return false;
-        }
     }
 }

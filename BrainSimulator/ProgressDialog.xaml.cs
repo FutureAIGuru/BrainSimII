@@ -104,6 +104,8 @@ namespace BrainSimulator
         {
             cancelPressed = true;
             startTime = DateTime.Now;
+            MainWindow.thisWindow.MainMenu.IsEnabled = true;
+            MainWindow.thisWindow.MainToolBar.IsEnabled = true;
             CancelProgressBar();
         }
 

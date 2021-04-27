@@ -38,6 +38,7 @@ namespace BrainSimulator
                 txtNeuronsInUse.Text = neuronInUseCount.ToString("N0");
                 txtSynapses.Text = synapseCount.ToString("N0");
             }
+//            Owner = MainWindow.thisWindow;
         }
 
         private void btnDialogOk_Click(object sender, RoutedEventArgs e)

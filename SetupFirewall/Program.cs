@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Principal;
 using System.Diagnostics;
+using NetFwTypeLib;
 
 namespace SetupFirewall
 {
@@ -17,17 +18,26 @@ namespace SetupFirewall
             return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
 
-        static void Main(string[] args)
+        public static bool Confirm(string prompt)
         {
-            Console.WriteLine("This program will modify your firewall rules to enable using the Brain Simulator II with the NeuronServer");
+            Console.WriteLine();
+            Console.WriteLine(prompt);
             Console.WriteLine("Do you want to continue? Y/N");
             ConsoleKeyInfo xx = new ConsoleKeyInfo();
             while (xx.Key != ConsoleKey.Y && xx.Key != ConsoleKey.N)
                 xx = Console.ReadKey();
-            if (xx.Key.ToString().ToLower() == "n") return;
+            if (xx.Key.ToString().ToLower() == "n") return false;
+            return true;
+        }
+
+        static void Main(string[] args)
+        {
+            if (!Confirm("This program will modify your firewall rules to enable using the Brain Simulator II with the NeuronServer")) return;
 
             if (!IsAdministrator())
             {
+                if (!Confirm("Administrative privelage is needed")) return;
+
                 var proc = new ProcessStartInfo();
                 proc.UseShellExecute = true;
                 proc.WorkingDirectory = Environment.CurrentDirectory;
@@ -45,22 +55,45 @@ namespace SetupFirewall
                 }
                 return;
             }
-            ////test of firewall rule addition
-            //INetFwRule firewallRule = (INetFwRule)Activator.CreateInstance(
-            //    Type.GetTypeFromProgID("HNetCfg.FWRule"));
 
-            //INetFwPolicy2 firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(
-            //    Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
+            if (!Confirm("Checking to see if rules already exist")) return;
+
+            //test of firewall rule addition
+            INetFwRule firewallRule = (INetFwRule)Activator.CreateInstance(
+                Type.GetTypeFromProgID("HNetCfg.FWRule"));
+            INetFwPolicy2 firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(
+                Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
+
+            INetFwRule theRule;
+            string theName = "BrainSimulatorXX.exe";
+            try
+            {
+                theRule = firewallPolicy.Rules.Item(theName);
+
+                while (theRule != null)
+                {
+                    firewallPolicy.Rules.Remove(theName);
+                    theRule = firewallPolicy.Rules.Item(theName);
+                }
+            }
+            catch (Exception e)
+            {
+                //get here if the rule doesn't exist
+            }
+
+
+//            if (!Confirm("Creating new rules")) return;
+
             //string strExeFilePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            //firewallRule.ApplicationName = "//App Executable Path";
-            //firewallRule.ApplicationName = "//NeuronServer";
-
-            //firewallRule.Action = NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
-            //firewallRule.Description = "Allow Neuron Server Test";
-            //firewallRule.Enabled = true;
-            //firewallRule.InterfaceTypes = "All";
-            //firewallRule.Name = $"// NeuronServer";
-            //firewallPolicy.Rules.Add(firewallRule);
+            firewallRule.ApplicationName = "BrainSimulator.exe";
+            firewallRule.Action = NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
+            firewallRule.Description = "Allow Brain Simulator on network";
+            firewallRule.Enabled = true;
+            firewallRule.Protocol = 17;
+            firewallRule.Profiles = 2;
+            firewallRule.InterfaceTypes = "all";
+            firewallRule.Name = theName;
+            firewallPolicy.Rules.Add(firewallRule);
 
 
 

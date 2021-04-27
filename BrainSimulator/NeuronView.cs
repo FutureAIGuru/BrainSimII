@@ -148,6 +148,10 @@ namespace BrainSimulator
 
         private static void R_MouseLeave(object sender, MouseEventArgs e)
         {
+            if (MainWindow.thisWindow.progressDialog.Visibility == Visibility.Visible) return;
+
+            if (theCanvas.Cursor == Cursors.Wait) return;
+
             //Debug.WriteLine("NeuronView MouseLeave");
             if (theCanvas.Cursor != Cursors.Hand && !theNeuronArrayView.dragging && e.LeftButton != MouseButtonState.Pressed)
                 theCanvas.Cursor = Cursors.Cross;
@@ -164,6 +168,10 @@ namespace BrainSimulator
         private static void R_MouseEnter(object sender, MouseEventArgs e)
         {
             //Debug.WriteLine("NeuronView MouseEnter");
+            if (MainWindow.thisWindow.progressDialog.Visibility == Visibility.Visible) return;
+
+            if (theCanvas.Cursor == Cursors.Wait) return;
+
             if (theCanvas.Cursor != Cursors.Hand && !theNeuronArrayView.dragging && e.LeftButton != MouseButtonState.Pressed)
                 theCanvas.Cursor = Cursors.UpArrow;
 

@@ -265,7 +265,7 @@
             <local:NeuronArrayView x:Name="theNeuronArrayView" Margin="0,36,0,0" ClipToBounds="True"></local:NeuronArrayView>
 
             <!--The Toolbar-->
-            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Height="30" Margin="7,5,-9,0" VerticalAlignment="Top">
+            <StackPanel x:Name="MainToolBar" Orientation="Horizontal" Grid.ColumnSpan="2" Height="30" Margin="7,5,-9,0" VerticalAlignment="Top">
                 <Button x:Name="NewButton" VerticalAlignment="Top" Click="button_FileNew_Click" ToolTip="New File">
                     <Image Source="/resources/icons/NewFile_16x.png" Height="20"></Image>
                 </Button>

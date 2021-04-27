@@ -28,6 +28,8 @@ namespace BrainSimulator
 
         private void TheCanvas_MouseEnter(object sender, MouseEventArgs e)
         {
+            if (MainWindow.thisWindow.progressDialog.Visibility == Visibility.Visible) return;
+
             //Debug.WriteLine("NeuronArrayView:Canvas View MouseEnter");
             if (theCanvas.Cursor != Cursors.Hand)
                 theCanvas.Cursor = Cursors.Cross;
@@ -35,6 +37,9 @@ namespace BrainSimulator
 
         private void TheCanvas_MouseLeave(object sender, MouseEventArgs e)
         {
+            if (MainWindow.thisWindow.progressDialog.Visibility == Visibility.Visible) return;
+
+            if (theCanvas.Cursor == Cursors.Wait) return;
             //Debug.WriteLine("NeuronArrayView:Canvas View MouseLeave");
             theCanvas.Cursor = Cursors.Arrow;
         }
@@ -42,12 +47,16 @@ namespace BrainSimulator
 
         private void R_MouseLeave(object sender, MouseEventArgs e)
         {
+            if (theCanvas.Cursor == Cursors.Wait) return;
             if (!dragging && theCanvas.Cursor != Cursors.Hand)
                 theCanvas.Cursor = Cursors.Cross;
         }
 
         public void theCanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (MainWindow.thisWindow.progressDialog.Visibility == Visibility.Visible) return;
+//            if (theCanvas.Cursor == Cursors.Wait) return;
+
             if (MainWindow.theNeuronArray == null) return;
             MainWindow.theNeuronArray.SetUndoPoint();
             Debug.WriteLine("theCanvas_MouseDown" + MainWindow.theNeuronArray.Generation);
@@ -224,6 +233,9 @@ namespace BrainSimulator
         public Synapse.modelType lastSynapseModel = Synapse.modelType.Fixed;
         public void theCanvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            if (MainWindow.thisWindow.progressDialog.Visibility == Visibility.Visible) return;
+
+            if (theCanvas.Cursor == Cursors.Wait) return;
             if (mouseRepeatTimer != null) mouseRepeatTimer.Stop();
             if (MainWindow.theNeuronArray == null) return;
             //Debug.WriteLine("theCanvas_MouseUp" + MainWindow.theNeuronArray.Generation);
@@ -362,6 +374,9 @@ namespace BrainSimulator
         }
         public void theCanvas_MouseMove(object sender, MouseEventArgs e)
         {
+            if (MainWindow.thisWindow.progressDialog.Visibility == Visibility.Visible) return;
+
+            if (theCanvas.Cursor == Cursors.Wait) return;
             Point pt = e.GetPosition((UIElement)sender);
             HitTestResult result = VisualTreeHelper.HitTest(theCanvas, pt);
 

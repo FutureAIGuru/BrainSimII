@@ -536,6 +536,7 @@ namespace BrainSimulator
             MainWindow.thisWindow.SetProgress(100, "");
             Update();
         }
+
         public void MutualSuppression()
         {
             MainWindow.theNeuronArray.SetUndoPoint();

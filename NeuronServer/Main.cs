@@ -1,4 +1,4 @@
-﻿using NetFwTypeLib;
+﻿
 using NeuronEngine.CLI;
 using System;
 using System.Collections.Generic;
@@ -35,7 +35,7 @@ namespace NeuronServer
         static int firstNeuron = -1;
         static int lastNeuron = -1;
 
-        //
+        
         const int maxDatagramSize = 1000;
 
         static IPAddress ipAddressClient = null;

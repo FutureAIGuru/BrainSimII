@@ -26,22 +26,27 @@ namespace BrainSimulator
             InitializeComponent();
             startTime = DateTime.Now;
             timeLabel.Content = "";
+            Owner = MainWindow.thisWindow;
         }
         public bool SetProgress(float value, string label)
         {
             if (value == 100)
             {
-                this.Hide();
                 this.Visibility = Visibility.Collapsed;
+                MainWindow.arrayView.theCanvas.Cursor = Cursors.AppStarting;
+                MainWindow.thisWindow.MainMenu.IsEnabled = true;
+                MainWindow.thisWindow.MainToolBar.IsEnabled = true;
             }
             else if (value == 0)
             {
-                this.Show();
                 this.Visibility = Visibility.Visible;
                 if (label != "")
                     theLabel.Text = label;
                 startTime = DateTime.Now;
                 cancelPressed = false;
+                MainWindow.arrayView.theCanvas.Cursor = Cursors.Wait;
+                MainWindow.thisWindow.MainMenu.IsEnabled = false;
+                MainWindow.thisWindow.MainToolBar.IsEnabled = false;
             }
             else
             {

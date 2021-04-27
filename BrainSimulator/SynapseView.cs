@@ -14,41 +14,20 @@ using System.Windows.Shapes;
 namespace BrainSimulator
 {
 
-    public class SynapseView : DependencyObject
+    public class SynapseView
     {
         public static DisplayParams dp;
         static NeuronArrayView theNeuronArrayView = null;
         public static Canvas theCanvas;
 
         public static readonly DependencyProperty SourceIDProperty =
-        DependencyProperty.Register("SourceID", typeof(int), typeof(MenuItem));
-        public int SourceID
-        {
-            get { return (int)GetValue(SourceIDProperty); }
-            set { SetValue(SourceIDProperty, value); }
-        }
+                DependencyProperty.Register("SourceID", typeof(int), typeof(MenuItem));
         public static readonly DependencyProperty TargetIDProperty =
                 DependencyProperty.Register("TargetID", typeof(int), typeof(MenuItem));
-        public int TargetID
-        {
-            get { return (int)GetValue(TargetIDProperty); }
-            set { SetValue(TargetIDProperty, value); }
-        }
         public static readonly DependencyProperty WeightValProperty =
                 DependencyProperty.Register("WeightVal", typeof(float), typeof(MenuItem));
-        public float WeightVal
-        {
-            get { return (int)GetValue(WeightValProperty); }
-            set { SetValue(WeightValProperty, value); }
-        }
-
         public static readonly DependencyProperty ModelProperty =
                 DependencyProperty.Register("ModelVal", typeof(Synapse.modelType), typeof(MenuItem));
-        public Synapse.modelType ModelVal
-        {
-            get { return (Synapse.modelType)GetValue(ModelProperty); }
-            set { SetValue(ModelProperty, value); }
-        }
 
 
         static bool PtOnScreen(Point p)
@@ -127,10 +106,10 @@ namespace BrainSimulator
             PathGeometry pathGeometry = new PathGeometry();
             PathFigure pathFigure = new PathFigure();
             Vector v = p2 - p1;
-            double lengthFactor = ((dp.NeuronDisplaySize *0.7f / 2f)+3)/v.Length;
+            double lengthFactor = ((dp.NeuronDisplaySize * 0.7f / 2f) + 3) / v.Length;
             //lengthfactor = 0.5; //how it used to be
             v = v * lengthFactor;
-       
+
             Point p = new Point();
             p = p2 - v;
             pathFigure.StartPoint = p;
@@ -175,9 +154,7 @@ namespace BrainSimulator
 
         private static void S_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (MainWindow.IsProgressBarVisible()) return;
-
-            if (theCanvas.Cursor == Cursors.Wait) return;
+            if (MainWindow.Busy()) return;
 
             if (theCanvas.Cursor == Cursors.Arrow)// && theNeuronArrayView != null && !theNeuronArrayView.dragging)
                 theCanvas.Cursor = Cursors.Cross;
@@ -185,9 +162,7 @@ namespace BrainSimulator
 
         private static void S_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (MainWindow.IsProgressBarVisible()) return;
-
-            if (theCanvas.Cursor == Cursors.Wait) return;
+            if (MainWindow.Busy()) return;
 
             if (e.RightButton != MouseButtonState.Pressed && e.LeftButton != MouseButtonState.Pressed && theCanvas.Cursor != Cursors.Hand)
                 theCanvas.Cursor = Cursors.Arrow;
@@ -281,7 +256,7 @@ namespace BrainSimulator
             if (sender is TextBox tb)
             {
                 //is numeric?
-                if (int.TryParse(tb.Text,out int newID))
+                if (int.TryParse(tb.Text, out int newID))
                 {
                     if (newID < 0 || newID >= MainWindow.theNeuronArray.arraySize)
                         tb.Background = new SolidColorBrush(Colors.Pink);
@@ -291,7 +266,7 @@ namespace BrainSimulator
                 else //is non-numeric
                 {
                     Neuron n = MainWindow.theNeuronArray.GetNeuron(tb.Text);
-                        {
+                    {
                         if (n == null)
                             tb.Background = new SolidColorBrush(Colors.Pink);
                         else
@@ -326,7 +301,7 @@ namespace BrainSimulator
                 if (cc is TextBox tb)
                 {
                     tb.Focus();
-                    tb.Select(0,tb.Text.Length);
+                    tb.Select(0, tb.Text.Length);
                 }
             }
         }

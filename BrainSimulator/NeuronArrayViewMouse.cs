@@ -28,7 +28,7 @@ namespace BrainSimulator
 
         private void TheCanvas_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (MainWindow.IsProgressBarVisible()) return;
+            if (MainWindow.Busy()) return;
 
             //Debug.WriteLine("NeuronArrayView:Canvas View MouseEnter");
             if (theCanvas.Cursor != Cursors.Hand)
@@ -37,8 +37,7 @@ namespace BrainSimulator
 
         private void TheCanvas_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (MainWindow.IsProgressBarVisible()) return;
-
+            if (MainWindow.Busy()) return;
             if (theCanvas.Cursor == Cursors.Wait) return;
             //Debug.WriteLine("NeuronArrayView:Canvas View MouseLeave");
             theCanvas.Cursor = Cursors.Arrow;
@@ -54,8 +53,9 @@ namespace BrainSimulator
 
         public void theCanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (MainWindow.IsProgressBarVisible()) return;
-//            if (theCanvas.Cursor == Cursors.Wait) return;
+            HitTestResult result = VisualTreeHelper.HitTest(theCanvas, e.GetPosition(theCanvas));
+
+            if (MainWindow.Busy()) return;
 
             if (MainWindow.theNeuronArray == null) return;
             MainWindow.theNeuronArray.SetUndoPoint();
@@ -233,9 +233,8 @@ namespace BrainSimulator
         public Synapse.modelType lastSynapseModel = Synapse.modelType.Fixed;
         public void theCanvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (MainWindow.IsProgressBarVisible()) return;
+            if (MainWindow.Busy()) return;
 
-            if (theCanvas.Cursor == Cursors.Wait) return;
             if (mouseRepeatTimer != null) mouseRepeatTimer.Stop();
             if (MainWindow.IsArrayEmpty()) return;
             //Debug.WriteLine("theCanvas_MouseUp" + MainWindow.theNeuronArray.Generation);
@@ -374,9 +373,8 @@ namespace BrainSimulator
         }
         public void theCanvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (MainWindow.IsProgressBarVisible()) return;
+            if (MainWindow.Busy()) return;
 
-            if (theCanvas.Cursor == Cursors.Wait) return;
             Point pt = e.GetPosition((UIElement)sender);
             HitTestResult result = VisualTreeHelper.HitTest(theCanvas, pt);
 

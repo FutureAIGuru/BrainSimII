@@ -614,7 +614,9 @@ namespace BrainSimulator
             PropertiesDlg p = new PropertiesDlg();
             try
             {
+                SuspendEngine();
                 p.ShowDialog();
+                ResumeEngine();
             }
             catch
             {

@@ -28,7 +28,7 @@ namespace BrainSimulator
 
         private void TheCanvas_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (MainWindow.thisWindow.progressDialog.Visibility == Visibility.Visible) return;
+            if (MainWindow.IsProgressBarVisible()) return;
 
             //Debug.WriteLine("NeuronArrayView:Canvas View MouseEnter");
             if (theCanvas.Cursor != Cursors.Hand)
@@ -37,7 +37,7 @@ namespace BrainSimulator
 
         private void TheCanvas_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (MainWindow.thisWindow.progressDialog.Visibility == Visibility.Visible) return;
+            if (MainWindow.IsProgressBarVisible()) return;
 
             if (theCanvas.Cursor == Cursors.Wait) return;
             //Debug.WriteLine("NeuronArrayView:Canvas View MouseLeave");
@@ -54,7 +54,7 @@ namespace BrainSimulator
 
         public void theCanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (MainWindow.thisWindow.progressDialog.Visibility == Visibility.Visible) return;
+            if (MainWindow.IsProgressBarVisible()) return;
 //            if (theCanvas.Cursor == Cursors.Wait) return;
 
             if (MainWindow.theNeuronArray == null) return;
@@ -233,7 +233,7 @@ namespace BrainSimulator
         public Synapse.modelType lastSynapseModel = Synapse.modelType.Fixed;
         public void theCanvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (MainWindow.thisWindow.progressDialog.Visibility == Visibility.Visible) return;
+            if (MainWindow.IsProgressBarVisible()) return;
 
             if (theCanvas.Cursor == Cursors.Wait) return;
             if (mouseRepeatTimer != null) mouseRepeatTimer.Stop();
@@ -374,7 +374,7 @@ namespace BrainSimulator
         }
         public void theCanvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (MainWindow.thisWindow.progressDialog.Visibility == Visibility.Visible) return;
+            if (MainWindow.IsProgressBarVisible()) return;
 
             if (theCanvas.Cursor == Cursors.Wait) return;
             Point pt = e.GetPosition((UIElement)sender);

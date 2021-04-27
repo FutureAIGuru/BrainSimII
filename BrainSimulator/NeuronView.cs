@@ -148,7 +148,7 @@ namespace BrainSimulator
 
         private static void R_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (MainWindow.thisWindow.progressDialog.Visibility == Visibility.Visible) return;
+            if (MainWindow.IsProgressBarVisible()) return;
 
             if (theCanvas.Cursor == Cursors.Wait) return;
 
@@ -168,7 +168,7 @@ namespace BrainSimulator
         private static void R_MouseEnter(object sender, MouseEventArgs e)
         {
             //Debug.WriteLine("NeuronView MouseEnter");
-            if (MainWindow.thisWindow.progressDialog.Visibility == Visibility.Visible) return;
+            if (MainWindow.IsProgressBarVisible()) return;
 
             if (theCanvas.Cursor == Cursors.Wait) return;
 

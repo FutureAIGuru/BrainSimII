@@ -175,7 +175,7 @@ namespace BrainSimulator
 
         private static void S_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (MainWindow.thisWindow.progressDialog.Visibility == Visibility.Visible) return;
+            if (MainWindow.IsProgressBarVisible()) return;
 
             if (theCanvas.Cursor == Cursors.Wait) return;
 
@@ -185,7 +185,7 @@ namespace BrainSimulator
 
         private static void S_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (MainWindow.thisWindow.progressDialog.Visibility == Visibility.Visible) return;
+            if (MainWindow.IsProgressBarVisible()) return;
 
             if (theCanvas.Cursor == Cursors.Wait) return;
 

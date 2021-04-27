@@ -186,7 +186,7 @@ namespace BrainSimulator
         }
         private void LoadFindMenus()
         {
-            if (theNeuronArray == null) return;
+            if (IsArrayEmpty()) return;
             NeuronMenu.Items.Clear();
 
             List<string> neuronLabelList = theNeuronArray.GetValuesFromLabelCache();
@@ -388,7 +388,7 @@ namespace BrainSimulator
                 if (tb0.Parent is UIElement ui1)
                     ui1.Visibility = Visibility.Visible;
             }
-            if (theNeuronArray == null)
+            if (IsArrayEmpty())
             {
                 EnableMenuItem(MainMenu.Items, "_Save", false);
                 EnableMenuItem(MainMenu.Items, "Save _As", false);
@@ -494,6 +494,15 @@ namespace BrainSimulator
                     }
                 }
             }
+        }
+
+        public static bool IsArrayEmpty()
+        {
+            if (MainWindow.theNeuronArray == null) return true;
+            if (MainWindow.theNeuronArray.arraySize == 0) return true;
+            if (MainWindow.theNeuronArray.rows == 0) return true;
+            if (MainWindow.theNeuronArray.Cols == 0) return true;
+            return false;
         }
     }
 }

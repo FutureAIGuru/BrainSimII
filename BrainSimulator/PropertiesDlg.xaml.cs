@@ -17,7 +17,7 @@ namespace BrainSimulator
         public PropertiesDlg()
         {
             InitializeComponent();
-            if (MainWindow.theNeuronArray == null)
+            if (MainWindow.IsArrayEmpty())
             { Close(); return; }
 
             txtFileName.Text = MainWindow.currentFileName;

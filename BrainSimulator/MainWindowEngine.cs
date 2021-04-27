@@ -53,7 +53,7 @@ namespace BrainSimulator
         {
             while (true)
             {
-                if (theNeuronArray == null)
+                if (IsArrayEmpty())
                 {
                     Thread.Sleep(100);
                 }

@@ -160,7 +160,7 @@ namespace BrainSimulator
 
         private bool PromptToSaveChanges()
         {
-            if (theNeuronArray == null) return false;
+            if (IsArrayEmpty()) return false;
             if (!XmlFile.CanWriteTo(currentFileName, out string message)) return false;
             MainWindow.theNeuronArray.GetCounts(out long synapseCount, out int neuronInUseCount);
             if (neuronInUseCount == 0) return false;

@@ -510,5 +510,14 @@ namespace BrainSimulator
             if (MainWindow.theNeuronArray.Cols == 0) return true;
             return false;
         }
+        
+        public void CreateEmptyNetwork()
+        {
+            theNeuronArray = new NeuronArray();
+            arrayView.Dp.NeuronDisplaySize = 62;
+            arrayView.Dp.DisplayOffset = new Point(0, 0);
+            theNeuronArray.Initialize(450, 15);
+            Update();
+        }
     }
 }

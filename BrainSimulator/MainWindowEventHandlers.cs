@@ -438,12 +438,7 @@ namespace BrainSimulator
                     }
                     else //force a new file creation on startup if no file name set
                     {
-                        theNeuronArray = new NeuronArray();
-                        arrayView.Dp.NeuronDisplaySize = 62;
-                        arrayView.Dp.DisplayOffset = new Point(0, 0);
-                        theNeuronArray.Initialize(450, 15);
-                        setTitleBar();
-                        Update();
+                        CreateEmptyNetwork();
                     }
                 }
                 //various errors might have happened so we'll just ignore them all and start with a fresh file 
@@ -730,6 +725,5 @@ namespace BrainSimulator
             arrayView.theSelection.selectedRectangles.Add(rr);
             Update();
         }
-
     }
 }

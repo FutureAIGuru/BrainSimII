@@ -38,7 +38,7 @@ namespace BrainSimulator
             await Task.Run(delegate { success = XmlFile.Load(ref theNeuronArray, fileName); });
             if (!success)
             {
-                Update();
+                CreateEmptyNetwork();
                 return;
             }
             currentFileName = fileName;

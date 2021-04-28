@@ -46,7 +46,7 @@ namespace BrainSimulator
             Point p2 = dp.pointFromNeuron(s.TargetNeuron);
             if (!PtOnScreen(p1) && !PtOnScreen(p2)) return null;
 
-            Shape l = GetSynapseShape(p1, p2, theNeuronArrayView, s.model);
+            Shape l = GetSynapseShape(p1, p2, s.model);
             l.Stroke = new SolidColorBrush(Utils.RainbowColorFromValue(s.weight));
             if (l is Ellipse E)
             { }
@@ -59,7 +59,7 @@ namespace BrainSimulator
 
             return l;
         }
-        public static Shape GetSynapseShape(Point p1, Point p2, NeuronArrayView theNeuronDisplayView, Synapse.modelType model)
+        public static Shape GetSynapseShape(Point p1, Point p2, Synapse.modelType model)
         {
             //returns a line from the source to the destination (with a link arrow at larger zooms
             //unless the source and destination are the same in which it returns an arc
@@ -91,8 +91,7 @@ namespace BrainSimulator
             {
                 s.StrokeThickness = Math.Min(4, dp.NeuronDisplaySize / 15);
             }
-            s.MouseDown += theNeuronDisplayView.theCanvas_MouseDown;
-            s.MouseUp += theNeuronDisplayView.theCanvas_MouseUp;
+
             return s;
         }
 

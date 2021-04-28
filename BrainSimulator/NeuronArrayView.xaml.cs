@@ -189,19 +189,19 @@ namespace BrainSimulator
                     SelectionRectangle nsr = new SelectionRectangle(nr.FirstNeuron, nr.Width, nr.Height);
                     Rectangle r = nsr.GetRectangle(dp);
                     r.Fill = new SolidColorBrush(Utils.IntToColor(nr.Color));
-                    //                    r.MouseDown += theCanvas_MouseDown;
-                    //                    r.MouseLeave += R_MouseLeave;
                     r.SetValue(ShapeType, shapeType.Module);
                     r.SetValue(ModuleView.AreaNumberProperty, i);
                     theCanvas.Children.Add(r);
 
-                    TextBlock tb = new TextBlock();
-                    tb.Text = nr.Label;
-                    tb.Background = new SolidColorBrush(Colors.White);
-                    tb.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-                    Canvas.SetLeft(tb, Canvas.GetLeft(r));
-                    Canvas.SetTop(tb, Canvas.GetTop(r)-tb.DesiredSize.Height);
-                    labelCanvas.Children.Add(tb);
+                    Label moduleLabel = new Label();
+                    moduleLabel.Content = nr.Label;
+                    moduleLabel.Background = new SolidColorBrush(Colors.White);
+                    moduleLabel.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+                    Canvas.SetLeft(moduleLabel, Canvas.GetLeft(r));
+                    Canvas.SetTop(moduleLabel, Canvas.GetTop(r)-moduleLabel.DesiredSize.Height);
+                    moduleLabel.SetValue(ShapeType, shapeType.Module);
+                    moduleLabel.SetValue(ModuleView.AreaNumberProperty, i);
+                    labelCanvas.Children.Add(moduleLabel);
                 }
             }
             //draw any selection rectangle(s)
@@ -257,7 +257,7 @@ namespace BrainSimulator
                         Canvas.SetTop(img, Canvas.GetTop(r));
                         theCanvas.Children.Add(img);
                         img.SetValue(ModuleView.AreaNumberProperty, -i - 1);
-                        img.MouseDown += theCanvas_MouseDown;
+                       // img.MouseDown += theCanvas_MouseDown;
                     }
                 }
             }

@@ -204,6 +204,7 @@
       <DependentUpon>ModuleSpeakPhonemes2Dlg.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\ModuleSpeakWords.cs" />
+    <Compile Include="NeuronArrayViewMouseActions.cs" />
     <Compile Include="SelectionView.cs" />
     <Compile Include="ModuleViewMenu.cs" />
     <Compile Include="Modules\ModuleGoToDest.cs" />

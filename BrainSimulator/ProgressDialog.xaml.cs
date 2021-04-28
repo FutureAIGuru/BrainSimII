@@ -36,7 +36,6 @@ namespace BrainSimulator
         {
             if (value == 100)
             {
-                this.Visibility = Visibility.Collapsed;
                 MainWindow.thisWindow.MainMenu.IsEnabled = true;
                 MainWindow.thisWindow.MainToolBar.IsEnabled = true;
                 cancelPressed = true;
@@ -44,9 +43,17 @@ namespace BrainSimulator
             }
             else if (value == 0)
             {
-                this.Visibility = Visibility.Visible;
-                if (label != "")
+                if (label == "")
+                {
+                    cancelPressed = true;
+                    CancelProgressBar();
+                    return cancelPressed;
+                }
+                else
+                {
                     theLabel.Text = label;
+                    this.Visibility = Visibility.Visible;
+                }
                 startTime = DateTime.Now;
                 MainWindow.thisWindow.MainMenu.IsEnabled = false;
                 MainWindow.thisWindow.MainToolBar.IsEnabled = false;

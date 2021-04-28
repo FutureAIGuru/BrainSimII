@@ -79,7 +79,7 @@ namespace BrainSimulator
         }
         struct SelectUndo
         {
-            public NeuronSelection selectionState;
+            public Selection selectionState;
         }
         struct ModuleUndo
         {
@@ -117,10 +117,10 @@ namespace BrainSimulator
         public void AddSelectionUndo()
         {
             SelectUndo s1 = new SelectUndo();
-            s1.selectionState = new NeuronSelection();
-            foreach (NeuronSelectionRectangle nsr in MainWindow.arrayView.theSelection.selectedRectangles)
+            s1.selectionState = new Selection();
+            foreach (SelectionRectangle nsr in MainWindow.arrayView.theSelection.selectedRectangles)
             {
-                NeuronSelectionRectangle nsr1 = new NeuronSelectionRectangle(nsr.FirstSelectedNeuron, nsr.Height, nsr.Width);
+                SelectionRectangle nsr1 = new SelectionRectangle(nsr.FirstSelectedNeuron, nsr.Height, nsr.Width);
                 s1.selectionState.selectedRectangles.Add(nsr1);
             }
             selectionUndoInfo.Add(s1);
@@ -161,9 +161,9 @@ namespace BrainSimulator
         {
             MainWindow.arrayView.theSelection.selectedRectangles.Clear();
             SelectUndo s1 = new SelectUndo();
-            foreach (NeuronSelectionRectangle nsr in selectionUndoInfo.Last().selectionState.selectedRectangles)
+            foreach (SelectionRectangle nsr in selectionUndoInfo.Last().selectionState.selectedRectangles)
             {
-                NeuronSelectionRectangle nsr1 = new NeuronSelectionRectangle(nsr.FirstSelectedNeuron, nsr.Height, nsr.Width);
+                SelectionRectangle nsr1 = new SelectionRectangle(nsr.FirstSelectedNeuron, nsr.Height, nsr.Width);
                 MainWindow.arrayView.theSelection.selectedRectangles.Add(nsr1);
             }
             selectionUndoInfo.RemoveAt(selectionUndoInfo.Count - 1);

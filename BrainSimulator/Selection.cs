@@ -8,11 +8,11 @@ using System.Linq;
 
 namespace BrainSimulator
 {
-    public class NeuronSelection
+    public class Selection
     {
 
         //array of rectangular selection areas
-        public List<NeuronSelectionRectangle> selectedRectangles = new List<NeuronSelectionRectangle>();
+        public List<SelectionRectangle> selectedRectangles = new List<SelectionRectangle>();
 
         //step counter 
         int position = -1;

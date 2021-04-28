@@ -162,7 +162,6 @@ namespace BrainSimulator
             dp.DisplayOffset += CanvasOffset;
             CanvasOffset = new Vector(0, 0);
             Update();
-            theCanvas.Cursor = Cursors.Cross;
             scrolling = false;
         }
 

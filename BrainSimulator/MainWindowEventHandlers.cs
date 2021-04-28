@@ -42,7 +42,7 @@ namespace BrainSimulator
             {
                 Debug.WriteLine("Left Shift released in display timer");
                 shiftPressed = false;
-                theNeuronArrayView.theCanvas.Cursor = Cursors.Cross;
+                //theNeuronArrayView.theCanvas.Cursor = Cursors.Cross;
             }
         }
 
@@ -726,7 +726,7 @@ namespace BrainSimulator
         private void MenuItem_SelectAll(object sender, RoutedEventArgs e)
         {
             arrayView.ClearSelection();
-            NeuronSelectionRectangle rr = new NeuronSelectionRectangle(0, theNeuronArray.Cols, theNeuronArray.rows);
+            SelectionRectangle rr = new SelectionRectangle(0, theNeuronArray.Cols, theNeuronArray.rows);
             arrayView.theSelection.selectedRectangles.Add(rr);
             Update();
         }

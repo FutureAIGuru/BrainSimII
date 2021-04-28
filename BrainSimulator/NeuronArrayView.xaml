@@ -8,8 +8,8 @@
              d:DesignHeight="100" d:DesignWidth="100" Background="Gray"  MouseWheel="theCanvas_MouseWheel" >
     <Grid >
         <Canvas HorizontalAlignment="Stretch" Background="Gray" VerticalAlignment="Stretch" Name="theCanvas" 
-                MouseWheel="theCanvas_MouseWheel" MouseDown="theCanvas_MouseDown" MouseUp="theCanvas_MouseUp" MouseMove="theCanvas_MouseMove" SizeChanged="theCanvas_SizeChanged" 
-                Loaded="theCanvas_Loaded" MouseEnter="TheCanvas_MouseEnter" MouseLeave="TheCanvas_MouseLeave" Margin="0,0,17,17">
+                MouseWheel="theCanvas_MouseWheel" MouseDown="theCanvas_MouseDown" MouseUp="theCanvas_MouseUp" MouseMove="theCanvas_MouseMove" 
+                SizeChanged="theCanvas_SizeChanged" Margin="0,0,17,17">
         </Canvas>
         <ScrollBar x:Name="scrollBarV" HorizontalAlignment="Right" Width="10" Margin="0,0,0,17" Scroll="ScrollBarV_Scroll" />
         <ScrollBar x:Name="scrollBarH" Height="10" Orientation="Horizontal" VerticalAlignment="bottom" Margin="0,0,17,0" Scroll="ScrollBarH_Scroll" />

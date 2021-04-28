@@ -37,7 +37,6 @@ namespace BrainSimulator
             if (value == 100)
             {
                 this.Visibility = Visibility.Collapsed;
-                MainWindow.arrayView.theCanvas.Cursor = Cursors.AppStarting;
                 MainWindow.thisWindow.MainMenu.IsEnabled = true;
                 MainWindow.thisWindow.MainToolBar.IsEnabled = true;
                 cancelPressed = true;
@@ -49,7 +48,6 @@ namespace BrainSimulator
                 if (label != "")
                     theLabel.Text = label;
                 startTime = DateTime.Now;
-                MainWindow.arrayView.theCanvas.Cursor = Cursors.Wait;
                 MainWindow.thisWindow.MainMenu.IsEnabled = false;
                 MainWindow.thisWindow.MainToolBar.IsEnabled = false;
                 theProgressBar.Value = 0;

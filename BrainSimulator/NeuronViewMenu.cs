@@ -799,7 +799,7 @@ namespace BrainSimulator
         public static bool NeuronInSelection(int id)
         {
             bool neuronInSelection = false;
-            foreach (NeuronSelectionRectangle sr in theNeuronArrayView.theSelection.selectedRectangles)
+            foreach (SelectionRectangle sr in theNeuronArrayView.theSelection.selectedRectangles)
             {
                 if (sr.NeuronIsInSelection(id))
                 {

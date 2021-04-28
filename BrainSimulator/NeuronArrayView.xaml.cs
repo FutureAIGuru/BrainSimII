@@ -28,7 +28,7 @@ namespace BrainSimulator
         int lastSelectedNeuron = -1;
 
         //keeps track of the multiple selection areas
-        public NeuronSelection theSelection = new NeuronSelection();
+        public Selection theSelection = new Selection();
 
         int Rows { get { return MainWindow.theNeuronArray.rows; } }
 
@@ -186,14 +186,14 @@ namespace BrainSimulator
                 for (int i = 0; i < MainWindow.theNeuronArray.Modules.Count; i++)
                 {
                     ModuleView nr = MainWindow.theNeuronArray.Modules[i];
-                    NeuronSelectionRectangle nsr = new NeuronSelectionRectangle(nr.FirstNeuron, nr.Width, nr.Height);
+                    SelectionRectangle nsr = new SelectionRectangle(nr.FirstNeuron, nr.Width, nr.Height);
                     Rectangle r = nsr.GetRectangle(dp);
                     r.Fill = new SolidColorBrush(Utils.IntToColor(nr.Color));
-                    r.MouseDown += theCanvas_MouseDown;
-                    r.MouseLeave += R_MouseLeave;
-                    theCanvas.Children.Add(r);
-
+                    //                    r.MouseDown += theCanvas_MouseDown;
+                    //                    r.MouseLeave += R_MouseLeave;
+                    r.SetValue(ShapeType, shapeType.Module);
                     r.SetValue(ModuleView.AreaNumberProperty, i);
+                    theCanvas.Children.Add(r);
 
                     TextBlock tb = new TextBlock();
                     tb.Text = nr.Label;
@@ -202,7 +202,6 @@ namespace BrainSimulator
                     Canvas.SetLeft(tb, Canvas.GetLeft(r));
                     Canvas.SetTop(tb, Canvas.GetTop(r)-tb.DesiredSize.Height);
                     labelCanvas.Children.Add(tb);
-//                    theCanvas.Children.Add(tb);
                 }
             }
             //draw any selection rectangle(s)
@@ -210,7 +209,8 @@ namespace BrainSimulator
             {
                 Rectangle r = theSelection.selectedRectangles[i].GetRectangle(dp);
                 r.Fill = new SolidColorBrush(Colors.Pink);
-                r.SetValue(ModuleView.AreaNumberProperty, -i - 1);
+                r.SetValue(ModuleView.AreaNumberProperty, i);
+                r.SetValue(ShapeType, shapeType.Selection);
 
                 theCanvas.Children.Add(r);
                 ModuleView nr = new ModuleView
@@ -221,8 +221,8 @@ namespace BrainSimulator
                     Color = Utils.ColorToInt(Colors.Aquamarine),
                     CommandLine = ""
                 };
-                r.MouseDown += theCanvas_MouseDown;
-                r.MouseLeave += R_MouseLeave;
+                //r.MouseDown += theCanvas_MouseDown;
+                //r.MouseLeave += R_MouseLeave;
 
                 if (!dp.ShowNeurons())
                 {
@@ -586,11 +586,6 @@ namespace BrainSimulator
             }
         }
 
-
-        private void theCanvas_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (MainWindow.IsArrayEmpty()) return;
-        }
         private void theCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             NeuronView.theCanvas = theCanvas;//??  

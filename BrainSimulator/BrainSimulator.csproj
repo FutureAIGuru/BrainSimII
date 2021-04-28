@@ -204,6 +204,7 @@
       <DependentUpon>ModuleSpeakPhonemes2Dlg.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\ModuleSpeakWords.cs" />
+    <Compile Include="SelectionView.cs" />
     <Compile Include="ModuleViewMenu.cs" />
     <Compile Include="Modules\ModuleGoToDest.cs" />
     <Compile Include="Modules\ModuleGraph.cs" />
@@ -224,8 +225,8 @@
     <Compile Include="NeuronArrayViewZoomPan.cs" />
     <Compile Include="NeuronClient.cs" />
     <Compile Include="NeuronHandler.cs" />
-    <Compile Include="NeuronSelection.cs" />
-    <Compile Include="NeuronSelectionRectangle.cs" />
+    <Compile Include="Selection.cs" />
+    <Compile Include="SelectionRectangle.cs" />
     <Compile Include="NeuronViewMenu.cs" />
     <Compile Include="NeuronView.cs" />
     <Compile Include="NewArrayDlg.xaml.cs">

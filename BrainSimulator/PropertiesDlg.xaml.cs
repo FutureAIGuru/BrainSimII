@@ -55,7 +55,7 @@ namespace BrainSimulator
             if (newCols != oldCols || newRows != oldRows)
             {
                 MainWindow.arrayView.ClearSelection();
-                NeuronSelectionRectangle rr = new NeuronSelectionRectangle(0, oldCols,oldRows);
+                SelectionRectangle rr = new SelectionRectangle(0, oldCols,oldRows);
                 MainWindow.arrayView.theSelection.selectedRectangles.Add(rr);
                 MainWindow.arrayView.CopyNeurons();
                 MainWindow.arrayView.ClearSelection();

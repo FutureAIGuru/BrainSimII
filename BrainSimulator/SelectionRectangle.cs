@@ -10,7 +10,7 @@ using System.Windows.Shapes;
 
 namespace BrainSimulator
 {
-    public class NeuronSelectionRectangle
+    public class SelectionRectangle
     {
         int firstSelectedNeuron;
 
@@ -26,7 +26,7 @@ namespace BrainSimulator
         public System.Windows.Media.Imaging.WriteableBitmap bitmap = null;
 
 
-        public NeuronSelectionRectangle(int iFirstSelectedNeuron, int width, int height)
+        public SelectionRectangle(int iFirstSelectedNeuron, int width, int height)
         {
             FirstSelectedNeuron = iFirstSelectedNeuron;
             Height = height;

@@ -15,7 +15,7 @@ using System.Xml.Serialization;
 namespace BrainSimulator
 {
 
-    public partial class ModuleView : DependencyObject, IComparable<ModuleView>
+    public partial class ModuleView :  IComparable<ModuleView>
     {
         int firstNeuron = 0;//, lastNeuron = 0;
         string label;
@@ -164,7 +164,7 @@ namespace BrainSimulator
 
         public void GetBounds(out int X1, out int Y1, out int X2, out int Y2)
         {
-            NeuronSelectionRectangle nsr = new NeuronSelectionRectangle(firstNeuron, Width, Height);
+            SelectionRectangle nsr = new SelectionRectangle(firstNeuron, Width, Height);
             nsr.GetSelectedArea(out X1, out Y1, out X2, out Y2);
         }
         public void GetAbsNeuronLocation(int index, out int X, out int Y)

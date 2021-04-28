@@ -427,7 +427,7 @@ namespace BrainSimulator
             try
             {
                 targetNeuronIndex = -1;
-                foreach(NeuronSelectionRectangle nsr in theSelection.selectedRectangles)
+                foreach(SelectionRectangle nsr in theSelection.selectedRectangles)
                 {
                     nsr.FirstSelectedNeuron += offset;
                 }

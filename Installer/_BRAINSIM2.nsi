@@ -26,6 +26,7 @@ ShowInstDetails show
 XPStyle on
 
 !include "LogicLib.nsh"
+!include "FileAssociation.nsh"
 
 !undef LOGICLIB_VERBOSITY
 !define LOGICLIB_VERBOSITY 4   ; For debugging - logiclib does with your code!
@@ -116,6 +117,7 @@ Section    "Brain Simulator II" BRAINSIM2
     File /oname=$INSTDIR\Touchless.Vision.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\Touchless.Vision.pdb"
     createShortCut "$DESKTOP\Brain Simulator.lnk" "$INSTDIR\BrainSimulator.exe" "" "$INSTDIR\bsicon.ico"
     createShortCut "$SMPROGRAMS\${COMPANY_NAME}\Brain Simulator.lnk" "$INSTDIR\BrainSimulator.exe" "" "$INSTDIR\bsicon.ico"
+	${registerExtension} "$INSTDIR\BrainSimulator.exe" ".xml" "XML File"
 SectionEnd
 
 Section "NeuronServer" NEURONSERVER
@@ -214,6 +216,8 @@ section "uninstall"
 	# Try to remove the install directory - this will only happen if it is empty
 	RMDIR $INSTDIR
 	RMDIR "$PROGRAMFILES64\${COMPANY_NAME}"
+	
+	${unregisterExtension} ".xml" "XML File"
 	
 	# Remove uninstaller information from the registry
 	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANY_NAME} ${APP_NAME}"

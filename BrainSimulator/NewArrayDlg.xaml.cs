@@ -27,14 +27,11 @@ namespace BrainSimulator
         public bool returnValue = false;
         ulong approxSynapseSize = 16;
         ulong assumedSynapseCount = 20;
+        ulong maxNeurons = 0;
         [ThreadStatic]
         static Random rand = new Random();
 
         int arraySize;
-
-        //for the progress bar
-        DispatcherTimer barUpdateTimer = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 1) };
-
 
         public NewArrayDlg()
         {
@@ -48,7 +45,6 @@ namespace BrainSimulator
             textBoxRows.Text = "15";
             textBoxColumns.Text = "30";
 
-
             ulong neuronSize1 = 55;
 
             ulong availablePhysicalMemory = new Microsoft.VisualBasic.Devices.ComputerInfo().AvailablePhysicalMemory;
@@ -56,7 +52,7 @@ namespace BrainSimulator
             long memoryCurrentlyInUse = GC.GetTotalMemory(true);
             //ulong neuronSize = approxNeuronSize + (approxSynapseSize * assumedSynapseCount);
             ulong neuronSize = neuronSize1 + (approxSynapseSize * assumedSynapseCount);
-            ulong maxNeurons = availablePhysicalMemory / neuronSize;
+            maxNeurons = availablePhysicalMemory / neuronSize;
 
             string text = "";
             text += "Total Memory: " + totalPhysicalMemory.ToString("##,#") + crlf;
@@ -285,7 +281,12 @@ namespace BrainSimulator
             {
                 long total = (long)rows * (long)cols;
                 LabelNeuronCount.Content = "Neuron Count: " + total.ToString("##,#");
-
+                if ((ulong)(rows * cols) > maxNeurons)
+                {
+                    LabelNeuronCount.Content = "Neuron Count > Estimated Maximum!";
+                    textBoxColumns.Background = new SolidColorBrush(Colors.Red);
+                    textBoxRows.Background = new SolidColorBrush(Colors.Red);
+                }
             }
             else
                 LabelNeuronCount.Content = "Neuron Count: ERROR";

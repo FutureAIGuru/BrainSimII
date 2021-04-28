@@ -2,6 +2,7 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -28,6 +29,16 @@ namespace BrainSimulator
             return list.ToArray();
         }
 
+        public static void RemoveFileFromMRUList(string filePath)
+        {
+            StringCollection MRUList = (StringCollection)Properties.Settings.Default["MRUList"];
+            if (MRUList == null)
+                MRUList = new StringCollection();
+            MRUList.Remove(filePath); //remove it if it's already there
+            Properties.Settings.Default["MRUList"] = MRUList;
+            Properties.Settings.Default.Save();
+        }
+
         public static bool Load(ref NeuronArray theNeuronArray, string fileName)
         {
             FileStream file;
@@ -38,6 +49,7 @@ namespace BrainSimulator
             catch (Exception e)
             {
                 MessageBox.Show("Could not open file because: " + e.Message);
+                RemoveFileFromMRUList(fileName);
                 return false;
             }
 

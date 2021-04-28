@@ -146,7 +146,7 @@ namespace BrainSimulator
             Properties.Settings.Default["MRUList"] = MRUList;
             Properties.Settings.Default.Save();
         }
-
+        
         private void LoadCurrentFile()
         {
             LoadFile(currentFileName);

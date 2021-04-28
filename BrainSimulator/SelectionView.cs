@@ -59,36 +59,34 @@ namespace BrainSimulator
             mi.Click += Mi_Click;
             cm.Items.Add(mi);
 
-            {
-                sp = new StackPanel { Orientation = Orientation.Horizontal };
-                sp.Children.Add(new Label { Content = "Convert to Module: ", VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) });
-                cm.Items.Add(new MenuItem { Header = sp, StaysOpenOnClick = true });
+            sp = new StackPanel { Orientation = Orientation.Horizontal };
+            sp.Children.Add(new Label { Content = "Convert to Module: ", VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) });
+            cm.Items.Add(new MenuItem { Header = sp, StaysOpenOnClick = true });
 
-                ComboBox cb = new ComboBox();
-                //get list of available NEW modules...these are assignable to a "ModuleBase" 
-                var listOfBs = (from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
-                                from assemblyType in domainAssembly.GetTypes()
-                                where typeof(ModuleBase).IsAssignableFrom(assemblyType)
-                                orderby assemblyType.Name
-                                select assemblyType
-                                ).ToArray();
-                foreach (var v in listOfBs)
+            ComboBox cb = new ComboBox();
+            //get list of available NEW modules...these are assignable to a "ModuleBase" 
+            var listOfBs = (from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
+                            from assemblyType in domainAssembly.GetTypes()
+                            where typeof(ModuleBase).IsAssignableFrom(assemblyType)
+                            orderby assemblyType.Name
+                            select assemblyType
+                            ).ToArray();
+            foreach (var v in listOfBs)
+            {
+                if (v.Name != "ModuleBase")
                 {
+                    Type t = Type.GetType(v.FullName);
                     if (v.Name != "ModuleBase")
                     {
-                        Type t = Type.GetType(v.FullName);
-                        if (v.Name != "ModuleBase")
-                        {
-                            string theName = v.Name.Replace("Module", "");
-                            cb.Items.Add(theName);
-                        }
+                        string theName = v.Name.Replace("Module", "");
+                        cb.Items.Add(theName);
                     }
                 }
-                cb.Width = 80;
-                cb.Name = "AreaType";
-                cb.SelectionChanged += Cb_SelectionChanged;
-                sp.Children.Add(new MenuItem { Header = cb, StaysOpenOnClick = true });
             }
+            cb.Width = 80;
+            cb.Name = "AreaType";
+            cb.SelectionChanged += Cb_SelectionChanged;
+            sp.Children.Add(new MenuItem { Header = cb, StaysOpenOnClick = true });
 
             sp = new StackPanel { Orientation = Orientation.Horizontal };
             Button b0 = new Button { Content = "OK", Width = 100, Height = 25, Margin = new Thickness(10) };
@@ -101,58 +99,6 @@ namespace BrainSimulator
             cm.Items.Add(new MenuItem { Header = sp, StaysOpenOnClick = true });
 
             cm.Closed += Cm_Closed;
-        }
-
-        private static void TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (sender is TextBox tb)
-                if (tb.Parent is StackPanel sp)
-                    if (sp.Parent is MenuItem mi)
-                        if (mi.Parent is ContextMenu cm)
-                        {
-                            if (tb.Name == "AreaWidth")
-                            {
-                                int i = (int)cm.GetValue(SelectionNumberProperty);
-                                ModuleView theModuleView = MainWindow.theNeuronArray.modules[i];
-                                MainWindow.theNeuronArray.GetNeuronLocation(MainWindow.theNeuronArray.modules[i].FirstNeuron, out int col, out int row);
-                                if (!float.TryParse(tb.Text, out float width))
-                                    tb.Background = new SolidColorBrush(Colors.Pink);
-                                else
-                                {
-                                    if (width < theModuleView.TheModule.MinWidth)
-                                        tb.Background = new SolidColorBrush(Colors.Pink);
-                                    else
-                                    {
-                                        if (width + col > MainWindow.theNeuronArray.Cols)
-                                            tb.Background = new SolidColorBrush(Colors.Pink);
-                                        else
-                                            tb.Background = new SolidColorBrush(Colors.LightGreen);
-
-                                    }
-                                }
-                            }
-                            if (tb.Name == "AreaHeight")
-                            {
-                                int i = (int)cm.GetValue(SelectionNumberProperty);
-                                ModuleView theModuleView = MainWindow.theNeuronArray.modules[i];
-                                MainWindow.theNeuronArray.GetNeuronLocation(MainWindow.theNeuronArray.modules[i].FirstNeuron, out int col, out int row);
-                                if (!float.TryParse(tb.Text, out float height))
-                                    tb.Background = new SolidColorBrush(Colors.Pink);
-                                else
-                                {
-                                    if (height < theModuleView.TheModule.MinHeight)
-                                        tb.Background = new SolidColorBrush(Colors.Pink);
-                                    else
-                                    {
-                                        if (height + row > MainWindow.theNeuronArray.rows)
-                                            tb.Background = new SolidColorBrush(Colors.Pink);
-                                        else
-                                            tb.Background = new SolidColorBrush(Colors.LightGreen);
-
-                                    }
-                                }
-                            }
-                        }
         }
 
         private static void Cb_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -209,16 +155,7 @@ namespace BrainSimulator
                 Color color = Colors.Wheat;
                 int width = 1, height = 1;
 
-                Control cc = Utils.FindByName(cm, "AreaName");
-                if (cc is TextBox tb)
-                    label = tb.Text;
-                cc = Utils.FindByName(cm, "AreaWidth");
-                if (cc is TextBox tb1)
-                    int.TryParse(tb1.Text, out width);
-                cc = Utils.FindByName(cm, "AreaHeight");
-                if (cc is TextBox tb2)
-                    int.TryParse(tb2.Text, out height);
-                cc = Utils.FindByName(cm, "AreaType");
+                Control cc = Utils.FindByName(cm, "AreaType");
                 if (cc is ComboBox cb && cb.SelectedValue != null)
                 {
                     commandLine = "Module" + (string)cb.SelectedValue;
@@ -226,9 +163,6 @@ namespace BrainSimulator
                     label = (string)cb.SelectedValue;
                 }
 
-                cc = Utils.FindByName(cm, "AreaColor");
-                if (cc is ComboBox cb1)
-                    color = ((SolidColorBrush)((ComboBoxItem)cb1.SelectedValue).Background).Color;
                 if (label == "" && commandLine == "") return;
                 //convert a selection rectangle to a module
                 MainWindow.theNeuronArray.SetUndoPoint();
@@ -308,63 +242,7 @@ namespace BrainSimulator
                 if ((string)mi.Header == "Delete")
                 {
                     int i = (int)mi.Parent.GetValue(SelectionNumberProperty);
-                    if (i < 0)
-                    {
                         MainWindow.arrayView.DeleteSelection();
-                    }
-                    else
-                    {
-                        MainWindow.theNeuronArray.SetUndoPoint();
-                        MainWindow.theNeuronArray.AddModuleUndo(-1, MainWindow.theNeuronArray.modules[i]);
-                        DeleteModule(i);
-                        deleted = true;
-                    }
-                }
-                if ((string)mi.Header == "Initialize")
-                {
-                    int i = (int)mi.Parent.GetValue(SelectionNumberProperty);
-                    if (i < 0)
-                    {
-                    }
-                    else
-                    {
-                        {
-                            try
-                            {
-                                MainWindow.theNeuronArray.Modules[i].TheModule.Initialize();
-                            }
-                            catch (Exception e1)
-                            {
-                                MessageBox.Show("Initialize failed on module " + MainWindow.theNeuronArray.Modules[i].Label + ".   Message: " + e1.Message);
-                            }
-                        }
-
-                    }
-                }
-                if ((string)mi.Header == "Show Dialog")
-                {
-                    int i = (int)mi.Parent.GetValue(SelectionNumberProperty);
-                    if (i < 0)
-                    {
-                    }
-                    else
-                    {
-                        MainWindow.theNeuronArray.Modules[i].TheModule.ShowDialog();
-                    }
-                }
-                if ((string)mi.Header == "Info...")
-                {
-                    int i = (int)mi.Parent.GetValue(SelectionNumberProperty);
-                    if (i < 0)
-                    {
-                    }
-                    else
-                    {
-                        ModuleView m = MainWindow.theNeuronArray.Modules[i];
-                        ModuleBase m1 = m.TheModule;
-                        ModuleDescription md = new ModuleDescription(m1.ShortDescription, m1.LongDescription);
-                        md.ShowDialog();
-                    }
                 }
                 if ((string)mi.Header == "Reset Hebbian Weights")
                 {
@@ -389,18 +267,6 @@ namespace BrainSimulator
                     MainWindow.Update();
                 }
             }
-        }
-
-        public static void DeleteModule(int i)
-        {
-            ModuleView mv = MainWindow.theNeuronArray.Modules[i];
-            mv.TheModule.CloseDlg();
-            foreach (Neuron n in mv.Neurons())
-            {
-                n.Reset();
-                n.DeleteAllSynapes();
-            }
-            MainWindow.theNeuronArray.Modules.RemoveAt(i);
         }
     }
 }

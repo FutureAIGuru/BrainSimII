@@ -294,10 +294,11 @@ namespace BrainSimulator
                 Update();
             }
 
-            //we clicked on a neuron...is it a fire or a synapse drag?
+            //we clicked on a neuron...was it a fire or a synapse drag?
             if (theCanvas.Cursor == Cursors.UpArrow)
             {
-                if (synapseShape == null && mouseDownNeuronIndex > -1)  //if no synapseshape exists, then were just clicking in a nueron
+                if (synapseShape == null && mouseDownNeuronIndex > -1) 
+                    //if no synapseshape exists, then were just clicking in a nueron
                 {
                     Neuron n = MainWindow.theNeuronArray.GetNeuron(mouseDownNeuronIndex);
                     if (n != null)
@@ -405,6 +406,7 @@ namespace BrainSimulator
         }
 
         //whatever the first & last selected neurons, this sorts out the upper-left and lower right
+        //that way, you can swipe a selection in any direction and it works
         private void SetFirstLastSelectedNeurons(int newPosition)
         {
             int y1 = mouseDownNeuronIndex % Rows;
@@ -576,15 +578,6 @@ namespace BrainSimulator
                 //handle sizing of a module
                 if (theShapeType == shapeType.Module &&  theCurrentModule != null &&
                     theCanvas.Cursor != Cursors.ScrollAll)
-                  //  (theCanvas.Cursor == Cursors.ScrollN ||
-                  //  theCanvas.Cursor == Cursors.ScrollS ||
-                  //  theCanvas.Cursor == Cursors.ScrollE ||
-                  //  theCanvas.Cursor == Cursors.ScrollW ||
-                  //  theCanvas.Cursor == Cursors.ScrollNW ||
-                  //  theCanvas.Cursor == Cursors.ScrollNE ||
-                  //  theCanvas.Cursor == Cursors.ScrollSW ||
-                  //theCanvas.Cursor == Cursors.ScrollSE)
-                  //  )
                 {
                     //TODO: Add rearrangement of neurons
                     //TODO: Add clone of neurons to handle ALL properties

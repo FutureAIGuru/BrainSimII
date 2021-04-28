@@ -93,13 +93,9 @@ namespace BrainSimulator
             }
             s.MouseDown += theNeuronDisplayView.theCanvas_MouseDown;
             s.MouseUp += theNeuronDisplayView.theCanvas_MouseUp;
-            //if (dp.ShowSynapseArrowCursor())
-            //{
-            //    s.MouseEnter += S_MouseEnter;
-            //    s.MouseLeave += S_MouseLeave;
-            //}
             return s;
         }
+
         public static Shape DrawLinkArrow(Point p1, Point p2, bool canLearn) //helper to put an arrow in a synapse line
         {
             GeometryGroup lineGroup = new GeometryGroup();
@@ -154,21 +150,6 @@ namespace BrainSimulator
             return path;
         }
 
-        //private static void S_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-        //{
-        //    if (MainWindow.Busy()) return;
-
-        //    if (theCanvas.Cursor == Cursors.Arrow)// && theNeuronArrayView != null && !theNeuronArrayView.dragging)
-        //        theCanvas.Cursor = Cursors.Cross;
-        //}
-
-        //private static void S_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-        //{
-        //    if (MainWindow.Busy()) return;
-
-        //    if (e.RightButton != MouseButtonState.Pressed && e.LeftButton != MouseButtonState.Pressed && theCanvas.Cursor != Cursors.Hand)
-        //        theCanvas.Cursor = Cursors.Arrow;
-        //}
 
         //these aren't added to synapses (for performance) but are built on the fly if the user right-clicks
         public static void CreateContextMenu(int i, Synapse s, ContextMenu cm)

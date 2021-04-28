@@ -191,7 +191,6 @@ namespace BrainSimulator
                     };
                     // modules.Add(mv);
                     ModuleView.CreateModule(mv.Label, mv.CommandLine, Utils.IntToColor(mv.Color), mv.FirstNeuron, mv.Width, mv.Height);
-
                 }
                 else
                 {

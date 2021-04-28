@@ -63,15 +63,6 @@ namespace BrainSimulator
             float offset = (1 - ellipseSize) / 2f;
             Canvas.SetLeft(r, p.X + dp.NeuronDisplaySize * offset);
             Canvas.SetTop(r, p.Y + dp.NeuronDisplaySize * offset);
-            //if (dp.ShowNeuronArrowCursor())
-            //{
-            //    //r.MouseDown += theNeuronArrayView.theCanvas_MouseDown;
-            //    //r.MouseUp += theNeuronArrayView.theCanvas_MouseUp;
-            //    //r.MouseWheel += theNeuronArrayView.theCanvas_MouseWheel;
-
-            //    //r.MouseEnter += R_MouseEnter;
-            //    //r.MouseLeave += R_MouseLeave;
-            //}
 
 
             if (n.Label != "" || n.model != Neuron.modelType.IF)
@@ -84,14 +75,6 @@ namespace BrainSimulator
                 Canvas.SetTop(l, p.Y + dp.NeuronDisplaySize * offset);
                 Canvas.SetZIndex(l, 100);
 
-                //if (dp.ShowNeuronArrowCursor())
-                //{
-                //    l.MouseEnter += R_MouseEnter;
-                //    l.MouseLeave += R_MouseLeave;
-                //}
-                //l.MouseDown += theNeuronArrayView.theCanvas_MouseDown;
-                //l.MouseUp += theNeuronArrayView.theCanvas_MouseUp;
-                //l.MouseMove += theNeuronArrayView.theCanvas_MouseMove;
                 string theLabel = GetNeuronLabel(n);
                 string theToolTip = n.ToolTip;
                 if (theToolTip != "")
@@ -160,25 +143,6 @@ namespace BrainSimulator
                 {
                     ToolTip x = (ToolTip)s1.ToolTip;
                     x.IsOpen = false;
-                }
-            }
-        }
-
-        private static void R_MouseEnter(object sender, MouseEventArgs e)
-        {
-            //Debug.WriteLine("NeuronView MouseEnter");
-            //if (MainWindow.Busy()) return;
-
-            //if (theCanvas.Cursor != Cursors.Hand && !theNeuronArrayView.dragging && e.LeftButton != MouseButtonState.Pressed)
-            //    theCanvas.Cursor = Cursors.UpArrow;
-
-            if (sender is FrameworkElement s1)
-            {
-                if (s1.ToolTip != null)
-                {
-                    ToolTip x = (ToolTip)s1.ToolTip;
-                    if (!x.IsOpen)
-                        x.IsOpen = true;
                 }
             }
         }

@@ -85,13 +85,14 @@ namespace BrainSimulator
                 timeRemaining = timeRemaining.AddSeconds(remainingTime.TotalSeconds);
                 if (startTime.Date == timeRemaining.Date)
                 {
+                    string[] finish = string.Concat(timeRemaining.ToLocalTime()).Split(' ');
                     timeLabel.Content = "Time Elapsed: " + string.Concat(elapsedTime.ToString()).Substring(0, 8) + 
-                                        "\nEstimated Completion: " + string.Concat(timeRemaining.TimeOfDay).Substring(0, 8);
+                                        "\nAppr. Finish Time: " + finish[1] + ' ' + finish[2];
                 }
                 else
                 {
-                    timeLabel.Content = "Time Elapsed: " + string.Concat(elapsedTime.ToString()).Substring(0, 8) + 
-                                        "\nEstimated Completion: " + string.Concat(timeRemaining);
+                    timeLabel.Content = "Time Elapsed: " + string.Concat(elapsedTime.ToString()).Substring(0, 8) +
+                                        "\nAppr. Finish Time: " + string.Concat(timeRemaining);
                 }
             }
             theProgressBar.Value = value;

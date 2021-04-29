@@ -41,7 +41,7 @@ namespace SetupFirewall
                 var proc = new ProcessStartInfo();
                 proc.UseShellExecute = true;
                 proc.WorkingDirectory = Environment.CurrentDirectory;
-                proc.FileName = System.Reflection.Assembly.GetExecutingAssembly().Location;// Application.ExecutablePath;
+                proc.FileName = System.Reflection.Assembly.GetExecutingAssembly().Location;
                 proc.Verb = "runas";
 
                 try
@@ -56,46 +56,52 @@ namespace SetupFirewall
                 return;
             }
 
-            if (!Confirm("If the rules already exist, delete them")) return;
-
+            string[] theName = { "BrainSimulator.exe", "NeuronServer.exe" };
             INetFwPolicy2 firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(
                 Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
-            INetFwRule theRule;
-            string[] theName = { "BrainSimulator.exe", "NeuronServer.exe" };
-            for (int i = 0; i < theName.Length; i++)
-            {
-                try
-                {
-                    theRule = firewallPolicy.Rules.Item(theName[i]);
 
-                    while (theRule != null)
-                    {
-                        firewallPolicy.Rules.Remove(theName[i]);
-                        Console.WriteLine("Deleted rule: " + theName[i]);
-                        theRule = firewallPolicy.Rules.Item(theName[i]);
-                    }
-                }
-                catch (Exception e)
+            if (Confirm("If the rules already exist, delete them? "))
+            {
+
+                INetFwRule theRule;
+                for (int i = 0; i < theName.Length; i++)
                 {
-                    //get here if the rule doesn't exist
+                    try
+                    {
+                        theRule = firewallPolicy.Rules.Item(theName[i]);
+
+                        while (theRule != null)
+                        {
+                            firewallPolicy.Rules.Remove(theName[i]);
+                            Console.WriteLine("Deleted rule: " + theName[i]);
+                            theRule = firewallPolicy.Rules.Item(theName[i]);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        //get here if the rule doesn't exist
+                    }
                 }
             }
 
             if (!Confirm("Creating new rules")) return;
+            string filePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            string directory = System.IO.Path.GetDirectoryName(filePath);
 
             try
             {
                 for (int i = 0; i < theName.Length; i++)
                 {
+                    string fullExecutable = directory + "\\" + theName[i];
                     INetFwRule firewallRule = (INetFwRule)Activator.CreateInstance(
                         Type.GetTypeFromProgID("HNetCfg.FWRule"));
-                    firewallRule.ApplicationName = theName[i];
+                    firewallRule.ApplicationName = fullExecutable;
                     firewallRule.Action = NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
                     firewallRule.Description = "Allow " + theName[i] + " to receive UDP packets";
                     firewallRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_IN; //or OUT
                     firewallRule.Enabled = true;
-                    firewallRule.Protocol = 17;
-                    firewallRule.Profiles = 2;
+                    firewallRule.Protocol = (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_UDP;// 17;
+                    firewallRule.Profiles = 6;
                     firewallRule.InterfaceTypes = "all";
                     firewallRule.Name = theName[i];
                     firewallPolicy.Rules.Add(firewallRule);

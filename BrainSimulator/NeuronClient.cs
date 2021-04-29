@@ -18,7 +18,7 @@ namespace BrainSimulator
     {
 
         static UdpClient serverClient = null; //listen only
-        static UdpClient clientServer; //send/broadcasg only
+        static UdpClient clientServer; //send/broadcast only
         static IPAddress broadCastAddress; 
 
         const int clientServerPort = 49002;
@@ -34,7 +34,7 @@ namespace BrainSimulator
                 if (ip.AddressFamily == AddressFamily.InterNetwork)
                 {
                     byte[] ips = ip.GetAddressBytes();
-                    broadCastAddress = IPAddress.Parse(ips[0] +"."+ ips[1] + ".0.255");
+                    broadCastAddress = IPAddress.Parse(ips[0] +"."+ ips[1] + "."+ips[2]+".255");
                 }
             }
 

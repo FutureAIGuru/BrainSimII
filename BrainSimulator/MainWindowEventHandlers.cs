@@ -17,6 +17,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using System.Runtime.InteropServices;
 
 namespace BrainSimulator
 {
@@ -645,50 +646,83 @@ namespace BrainSimulator
             }
         }
 
+        [DllImport("user32.dll", SetLastError = true)]
+        internal static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+        [DllImport("user32.dll")]
+        public static extern bool GetWindowRect(IntPtr hwnd, ref Rect rectangle);
+        [DllImport("User32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
         private void MenuItemHelp_Click(object sender, RoutedEventArgs e)
         {
             // remove if new code is OK...
             // Help p;
 
-            string fullpath = Path.GetFullPath("./Resources/Getting Started.htm");
-            Uri theUri = new Uri("file:///" + fullpath);
-            System.Diagnostics.Process.Start(theUri.ToString());
+            //string fullpath = Path.GetFullPath("./Resources/Getting Started.htm");
+            Uri theUri = new Uri("https://futureAI.guru/help/getting started.htm");
 
-            // remove if new code is OK...
-            // p = new Help(theUri.ToString());
-            // try
-            // {
-            //     p.Left = 200;
-            //     p.Top = 200;
-            //     p.Owner = this;
-            //     p.Show();
-            // }
-            // catch
-            // {
-            //     MessageBox.Show("Help could not be displayed");
-            // }
+            Process[] theProcesses1 = Process.GetProcesses();
+            Process latestProcess = null;
+            for (int i = 1; i < theProcesses1.Length; i++)
+            {
+                try
+                {
+                    if (theProcesses1[i].MainWindowTitle != "")
+                    {
+                        if (theProcesses1[i].MainWindowTitle.Contains("GettingStarted"))
+                            latestProcess = theProcesses1[i];
+                    }
+                }
+                catch (Exception e1)
+                { }
+            }
+
+            if (latestProcess == null)
+            {
+                Process p = new Process();
+                p.StartInfo.FileName = "https://futureai.guru/BrainSimHelp/gettingstarted.html";
+                p.Start();
+
+                Thread.Sleep(300); //gotta wait for the page to render before it shows in the processes list
+
+                theProcesses1 = Process.GetProcesses();
+                for (int i = 1; i < theProcesses1.Length; i++)
+                {
+                    try
+                    {
+                        if (theProcesses1[i].MainWindowTitle != "")
+                        {
+                            if (theProcesses1[i].MainWindowTitle.Contains("GettingStarted"))
+                                latestProcess = theProcesses1[i];
+                        }
+                    }
+                    catch (Exception e1)
+                    { }
+                }
+            }
+
+            try
+            {
+                if (latestProcess != null)
+                {
+                    IntPtr id = latestProcess.MainWindowHandle;
+
+                    Rect theRect = new Rect();
+                    GetWindowRect(id, ref theRect);
+
+                    bool retVal = MoveWindow(id, 300, 100, 1200, 700, true);
+                    SetForegroundWindow(id);
+                }
+            }
+            catch (Exception e1)
+            { }
         }
 
         private void MenuItemOnlineHelp_Click(object sender, RoutedEventArgs e)
         {
-            // remove if new code is OK...
-            // Help p;
-            // p = new Help("https://futureai.guru/BrainSimHelp/ui.html");
-
             System.Diagnostics.Process.Start("https://futureai.guru/BrainSimHelp/ui.html");
-
-            // remove if new code is OK...
-            //  try
-            //  {
-            //      p.Left = 200;
-            //      p.Top = 200;
-            //      p.Owner = this;
-            //      p.Show();
-            //  }
-            //  catch
-            //  {
-            //      MessageBox.Show("Help could not be displayed");
-            //  }
         }
 
         private void MenuItemOnlineBugs_Click(object sender, RoutedEventArgs e)

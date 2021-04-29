@@ -20,13 +20,13 @@ namespace SetupFirewall
 
         public static bool Confirm(string prompt)
         {
-            Console.WriteLine();
             Console.WriteLine(prompt);
-            Console.WriteLine("Do you want to continue? Y/N");
+            Console.WriteLine("    Do you want to continue? Y/N");
             ConsoleKeyInfo xx = new ConsoleKeyInfo();
             while (xx.Key != ConsoleKey.Y && xx.Key != ConsoleKey.N)
                 xx = Console.ReadKey();
             if (xx.Key.ToString().ToLower() == "n") return false;
+            Console.WriteLine();
             return true;
         }
 
@@ -56,47 +56,61 @@ namespace SetupFirewall
                 return;
             }
 
-            if (!Confirm("Checking to see if rules already exist")) return;
+            if (!Confirm("If the rules already exist, delete them")) return;
 
-            //test of firewall rule addition
-            INetFwRule firewallRule = (INetFwRule)Activator.CreateInstance(
-                Type.GetTypeFromProgID("HNetCfg.FWRule"));
             INetFwPolicy2 firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(
                 Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
-
             INetFwRule theRule;
-            string theName = "BrainSimulatorXX.exe";
+            string[] theName = { "BrainSimulator.exe", "NeuronServer.exe" };
+            for (int i = 0; i < theName.Length; i++)
+            {
+                try
+                {
+                    theRule = firewallPolicy.Rules.Item(theName[i]);
+
+                    while (theRule != null)
+                    {
+                        firewallPolicy.Rules.Remove(theName[i]);
+                        Console.WriteLine("Deleted rule: " + theName[i]);
+                        theRule = firewallPolicy.Rules.Item(theName[i]);
+                    }
+                }
+                catch (Exception e)
+                {
+                    //get here if the rule doesn't exist
+                }
+            }
+
+            if (!Confirm("Creating new rules")) return;
+
             try
             {
-                theRule = firewallPolicy.Rules.Item(theName);
-
-                while (theRule != null)
+                for (int i = 0; i < theName.Length; i++)
                 {
-                    firewallPolicy.Rules.Remove(theName);
-                    theRule = firewallPolicy.Rules.Item(theName);
+                    INetFwRule firewallRule = (INetFwRule)Activator.CreateInstance(
+                        Type.GetTypeFromProgID("HNetCfg.FWRule"));
+                    firewallRule.ApplicationName = theName[i];
+                    firewallRule.Action = NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
+                    firewallRule.Description = "Allow " + theName[i] + " to receive UDP packets";
+                    firewallRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_IN; //or OUT
+                    firewallRule.Enabled = true;
+                    firewallRule.Protocol = 17;
+                    firewallRule.Profiles = 2;
+                    firewallRule.InterfaceTypes = "all";
+                    firewallRule.Name = theName[i];
+                    firewallPolicy.Rules.Add(firewallRule);
+                    Console.WriteLine("Created rule: " + theName[i]);
+
                 }
+
+                Console.Write("Success...  press any key");
+                Console.ReadKey();
             }
             catch (Exception e)
             {
-                //get here if the rule doesn't exist
+                Console.Write("Failed because: "+e.Message +"press any key");
+                Console.ReadKey();
             }
-
-
-//            if (!Confirm("Creating new rules")) return;
-
-            //string strExeFilePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            firewallRule.ApplicationName = "BrainSimulator.exe";
-            firewallRule.Action = NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
-            firewallRule.Description = "Allow Brain Simulator on network";
-            firewallRule.Enabled = true;
-            firewallRule.Protocol = 17;
-            firewallRule.Profiles = 2;
-            firewallRule.InterfaceTypes = "all";
-            firewallRule.Name = theName;
-            firewallPolicy.Rules.Add(firewallRule);
-
-
-
         }
     }
 }

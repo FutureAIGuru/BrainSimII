@@ -98,7 +98,9 @@ Section
 	# Set the INSTALLSIZE constant (!defined at the top of this script) so Add/Remove Programs can accurately report the size
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANY_NAME} ${APP_NAME}" "EstimatedSize" ${INSTALLSIZE}  
     createShortCut "$SMPROGRAMS\${COMPANY_NAME}\Uninstall Brain Simulator II.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\unicon.ico"
-
+    File /oname=$INSTDIR\SetupFirewall.exe "..\BrainSimulator\bin\x64\${BUILD_TYPE}\SetupFirewall.exe"
+    File /oname=$INSTDIR\SetupFirewall.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\SetupFirewall.pdb"
+    createShortCut "$SMPROGRAMS\${COMPANY_NAME}\Setup Firewall.lnk" "$INSTDIR\SetupFirewall.exe" "" "$INSTDIR\bsicon.ico"
 SectionEnd
 
 Section    "Brain Simulator II" BRAINSIM2
@@ -106,6 +108,7 @@ Section    "Brain Simulator II" BRAINSIM2
 
     File /oname=$INSTDIR\bsicon.ico "bsicon.ico"
     File /oname=$INSTDIR\BrainSimulator.exe "..\BrainSimulator\bin\x64\${BUILD_TYPE}\BrainSimulator.exe"
+    File /oname=$INSTDIR\BrainSimulator.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\BrainSimulator.pdb"
     File /r /x /oname=$INSTDIR\Resources ..\BrainSimulator\bin\x64\${BUILD_TYPE}\Resources
     File /oname=$INSTDIR\NeuronEngine.dll "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngine.dll"
     File /oname=$INSTDIR\NeuronEngine.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngine.pdb"
@@ -122,7 +125,6 @@ SectionEnd
 
 Section "NeuronServer" NEURONSERVER
 	SetShellVarContext current
-
     File /oname=$INSTDIR\nsicon.ico "nsicon.ico"
     File /oname=$INSTDIR\NeuronServer.exe "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronServer.exe"
     File /oname=$INSTDIR\NeuronEngine.dll "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngine.dll"
@@ -181,7 +183,10 @@ functionEnd
 section "uninstall"
 	# Remove files
     delete $INSTDIR\bsicon.ico
+    delete $INSTDIR\SetupFirewall.exe
+    delete $INSTDIR\SetupFirewall.pdb
     delete $INSTDIR\BrainSimulator.exe
+    delete $INSTDIR\BrainSimulator.pdb
     delete $INSTDIR\NeuronEngine.dll
     delete $INSTDIR\NeuronEngine.pdb
     delete $INSTDIR\NeuronEngineWrapper.dll
@@ -205,6 +210,7 @@ section "uninstall"
 	# Remove Start Menu launchers
 	delete "$DESKTOP\Brain Simulator.lnk"
     delete "$DESKTOP\Neuron Server.lnk"
+	delete "$SMPROGRAMS\${COMPANY_NAME}\Setup Firewall.lnk"
 	delete "$SMPROGRAMS\${COMPANY_NAME}\Brain Simulator.lnk"
     delete "$SMPROGRAMS\${COMPANY_NAME}\Neuron Server.lnk"
     delete "$SMPROGRAMS\${COMPANY_NAME}\Uninstall Brain Simulator II.lnk"

@@ -32,6 +32,7 @@ namespace BrainSimulator
         static Random rand = new Random();
 
         int arraySize;
+        bool previousUseNeurons = false;
 
         public NewArrayDlg()
         {
@@ -61,6 +62,8 @@ namespace BrainSimulator
             text += "Assuming average " + assumedSynapseCount + " synapses per neuron" + crlf;
             textBlock.Text = text;
 
+            previousUseNeurons = MainWindow.useServers;
+            cbUseServers.IsChecked = MainWindow.useServers;
             UpdateServerTextBox();
         }
 
@@ -182,6 +185,7 @@ namespace BrainSimulator
 
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
         {
+            MainWindow.useServers = previousUseNeurons;
             this.Close();
         }
 

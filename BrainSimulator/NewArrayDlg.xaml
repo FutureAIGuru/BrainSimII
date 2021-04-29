@@ -20,7 +20,7 @@
         <TextBox KeyboardNavigation.IsTabStop="False" HorizontalAlignment="Left" Margin="18,0,0,89" x:Name="ServerList" TextWrapping="Wrap" Text="No Servers Detected" Width="437" Grid.ColumnSpan="2" Height="98" VerticalAlignment="Bottom"/>
         <Button Content="Refresh" KeyboardNavigation.IsTabStop="False" x:Name="buttonRefresh" IsEnabled="false" HorizontalAlignment="Left" Margin="32,0,0,60" Width="56" Click="Button_Refresh" Height="24" VerticalAlignment="Bottom"/>
         <CheckBox Content="Use Servers" KeyboardNavigation.IsTabStop="False" x:Name="cbUseServers" HorizontalAlignment="Left" Margin="18,0,0,178" Width="111" Height="27" VerticalAlignment="Bottom" Checked="CheckBoxUseServers_Checked" Unchecked="CheckBoxUseServers_Unchecked"/>
-        <Button Content="Speed Test" x:Name="buttonSpeedTest" KeyboardNavigation.IsTabStop="False" IsEnabled="false" HorizontalAlignment="Left" Margin="102,0,0,60" Width="69" Click="Button_Click" Height="24" VerticalAlignment="Bottom"/>
+        <Button Visibility="Hidden" Content="Speed Test" x:Name="buttonSpeedTest" KeyboardNavigation.IsTabStop="False" IsEnabled="false" HorizontalAlignment="Left" Margin="102,0,0,60" Width="69" Click="Button_Click" Height="24" VerticalAlignment="Bottom"/>
         <Label Content="" x:Name="PingLabel" Height="27" Margin="180,0,-137,57" VerticalAlignment="Bottom" Grid.ColumnSpan="2"/>
         <Label Content="Range: 0-1450 bytes/packet" x:Name="PingLabel1" Visibility="Hidden" HorizontalAlignment="Left" Height="28" Margin="52,311,0,0" VerticalAlignment="Top" Width="191" Grid.Column="1"/>
         <StackPanel Orientation="Horizontal" Width="134" HorizontalAlignment="Left" Margin="95,95,0,0" Height="24" VerticalAlignment="Top" Grid.Column="1" >

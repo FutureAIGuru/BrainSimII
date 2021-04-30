@@ -465,7 +465,7 @@ namespace BrainSimulator
                         na.TheModule.Init(true);
                 }
             }
-            //doing this messes up because LastFired is not reset
+            //TODO: doing this messes up because LastFired is not reset
             //            theNeuronArray.Generation = 0;
             //            theNeuronArray.SetGeneration(0);
             theNeuronArrayView.Update();
@@ -662,7 +662,6 @@ namespace BrainSimulator
             // remove if new code is OK...
             // Help p;
 
-            //string fullpath = Path.GetFullPath("./Resources/Getting Started.htm");
             Uri theUri = new Uri("https://futureAI.guru/help/getting started.htm");
 
             Process[] theProcesses1 = Process.GetProcesses();
@@ -681,27 +680,33 @@ namespace BrainSimulator
                 { }
             }
 
+
             if (latestProcess == null)
             {
                 Process p = new Process();
                 p.StartInfo.FileName = "https://futureai.guru/BrainSimHelp/gettingstarted.html";
                 p.Start();
 
-                Thread.Sleep(300); //gotta wait for the page to render before it shows in the processes list
+                //gotta wait for the page to render before it shows in the processes list
 
-                theProcesses1 = Process.GetProcesses();
-                for (int i = 1; i < theProcesses1.Length; i++)
+                DateTime starttTime = DateTime.Now;
+
+                while (latestProcess == null && DateTime.Now < starttTime + new TimeSpan(0,0,3))
                 {
-                    try
+                    theProcesses1 = Process.GetProcesses();
+                    for (int i = 1; i < theProcesses1.Length; i++)
                     {
-                        if (theProcesses1[i].MainWindowTitle != "")
+                        try
                         {
-                            if (theProcesses1[i].MainWindowTitle.Contains("GettingStarted"))
-                                latestProcess = theProcesses1[i];
+                            if (theProcesses1[i].MainWindowTitle != "")
+                            {
+                                if (theProcesses1[i].MainWindowTitle.Contains("GettingStarted"))
+                                    latestProcess = theProcesses1[i];
+                            }
                         }
+                        catch (Exception e1)
+                        { }
                     }
-                    catch (Exception e1)
-                    { }
                 }
             }
 
@@ -761,5 +766,12 @@ namespace BrainSimulator
             arrayView.theSelection.selectedRectangles.Add(rr);
             Update();
         }
+
+        private void cbShowHelpAtStartup_Checked(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default["ShowHelp"] = cbShowHelpAtStartup.IsChecked;
+            Properties.Settings.Default.Save();
+        }
+
     }
 }

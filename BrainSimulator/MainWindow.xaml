@@ -241,7 +241,14 @@
                 <MenuItem Header="Show Synapses" Name="ShowSynapses" IsCheckable="true" Click="Menu_ShowSynapses" ></MenuItem>
             </MenuItem>
             <MenuItem Header=" Help">
-                <MenuItem Header="Getting Started" Click="MenuItemHelp_Click" />
+                <MenuItem Click="MenuItemHelp_Click">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
+                            <Label Width="100" VerticalAlignment="Center" Padding="5,0,5,0">Getting Started</Label>
+                            <CheckBox x:Name="cbShowHelpAtStartup" Checked="cbShowHelpAtStartup_Checked" Unchecked="cbShowHelpAtStartup_Checked" VerticalAlignment="Center" Padding="5,0,5,0">Show at startup</CheckBox>
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
                 <MenuItem Header="Register" Click="MenuItemRegister_Click" >
                     <MenuItem.Icon>
                         <Image Source="/resources/mailing-list-icon-17.jpg"></Image>

@@ -122,6 +122,13 @@ namespace BrainSimulator
             splashScreen.Close();
             ((DispatcherTimer)sender).Stop();
 
+            bool showHelp = (bool)Properties.Settings.Default["ShowHelp"];
+            cbShowHelpAtStartup.IsChecked = showHelp;
+            if (showHelp)
+            {
+                MenuItemHelp_Click(null, null);
+            }
+
 
             //this is here because the file can be loaded before the mainwindow displays so
             //module dialogs may open before their owner so this happens a few seconds later
@@ -332,7 +339,7 @@ namespace BrainSimulator
                 if (m1.GetType() == typeof(MenuItem))
                 {
                     MenuItem m = (MenuItem)m1;
-                    if ((string)m.Header == Entry)
+                    if (m.Header.ToString() == Entry)
                     {
                         m.IsEnabled = enabled;
                         return;
@@ -520,5 +527,6 @@ namespace BrainSimulator
             theNeuronArray.Initialize(450, 15);
             Update();
         }
+
     }
 }

@@ -51,6 +51,7 @@ namespace BrainSimulator
                 }
                 else
                 {
+                    cancelPressed = false;
                     theLabel.Text = label;
                     this.Visibility = Visibility.Visible;
                 }

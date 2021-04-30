@@ -96,6 +96,23 @@ namespace BrainSimulator
             cb.SelectedIndex = sel;
             cm.Items.Add(new MenuItem { Header = cb, StaysOpenOnClick = true });
 
+            if (MainWindow.theNeuronArray.Modules[i].TheModule != null)
+            {
+                var t = MainWindow.theNeuronArray.Modules[i].TheModule.GetType();
+                Type t1 = Type.GetType(t.ToString() + "Dlg");
+                while (t1 == null && t.BaseType.Name != "ModuleBase")
+                {
+                    t = t.BaseType;
+                    t1 = Type.GetType(t.ToString() + "Dlg");
+                }
+                if (t1 != null)
+                {
+                    cm.Items.Add(new MenuItem { Header = "Show Dialog" });
+                    ((MenuItem)cm.Items[cm.Items.Count - 1]).Click += Mi_Click;
+                }
+            }
+
+
             sp = new StackPanel { Orientation = Orientation.Horizontal };
             Button b0 = new Button { Content = "OK", Width = 100, Height = 25, Margin = new Thickness(10) };
             b0.Click += B0_Click;

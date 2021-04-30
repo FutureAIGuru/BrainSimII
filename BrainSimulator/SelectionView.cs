@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -186,17 +187,21 @@ namespace BrainSimulator
             string[] Params = commandLine.Split(' ');
             if (mv.TheModule != null)
             {
-                //MainWindow.theNeuronArray.areas[i].TheModule.Initialize(); //doesn't work with camera module
+                MainWindow.SuspendEngine();
+                mv.TheModule.SetModuleView();
+                mv.TheModule.Initialize();
+                MainWindow.ResumeEngine();
             }
             else
             {
+                //This should never be reached
                 Type t1x = Type.GetType("BrainSimulator.Modules." + Params[0]);
                 if (t1x != null && (mv.TheModule == null || mv.TheModule.GetType() != t1x))
                 {
                     mv.TheModule = (ModuleBase)Activator.CreateInstance(t1x);
                     //  MainWindow.theNeuronArray.areas[i].TheModule.Initialize();
                 }
-            }
+            }            
         }
 
         private static void Mi_Click(object sender, RoutedEventArgs e)

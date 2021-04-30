@@ -118,7 +118,7 @@ namespace BrainSimulator.Modules
             {
                 Camera c = theCamera;
                 c.Dispose();
-                if (_frameSource == null)
+                //if (_frameSource == null)
                 {
                     setFrameSource(new CameraFrameSource(c));
                     _frameSource.Camera.CaptureWidth = 640;//640;

@@ -91,7 +91,7 @@ namespace BrainSimulator
             {
                 var progress = i / (float)neuronNodes.Count;
                 progress *= 100;
-                if (MainWindow.thisWindow.SetProgress(progress, ""))
+                if (progress != 0 && MainWindow.thisWindow.SetProgress(progress, ""))
                 {
                     MainWindow.thisWindow.SetProgress(100, "");
                     return false;

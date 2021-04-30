@@ -279,7 +279,7 @@ namespace BrainSimulator
         float prevValue = 0;
         public bool SetProgress(float value, string label)
         {
-            if (value < 100 && Math.Abs(prevValue - value ) < 0.1)
+            if (value != 0 && value < 100 && Math.Abs(prevValue - value ) < 0.1)
             {
                 return false;
             }

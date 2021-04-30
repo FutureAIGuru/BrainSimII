@@ -123,6 +123,9 @@ namespace BrainSimulator
         private bool SetScrollCursor(Point currentPosition, FrameworkElement theShape)
         {
             int moduleIndex = (int)theShape.GetValue(ModuleView.AreaNumberProperty);
+            //this addresses a problem if you delete a module and it's still on the screen for a moment
+            if (moduleIndex >= MainWindow.theNeuronArray.Modules.Count) return false;
+
             Rectangle theRect = MainWindow.theNeuronArray.Modules[moduleIndex].GetRectangle(dp);
             double left = Canvas.GetLeft(theRect);
             double top = Canvas.GetTop(theRect);

@@ -48,18 +48,7 @@ namespace BrainSimulator.Modules
 
         public void Init(bool forceInit = false)
         {
-            if (na == null)
-            {
-                //figure out which area is this one
-                foreach (ModuleView na1 in theNeuronArray.modules)
-                {
-                    if (na1.TheModule == this)
-                    {
-                        na = na1;
-                        break;
-                    }
-                }
-            }
+            SetModuleView();
 
             if (initialized && !forceInit) return;
             initialized = true;
@@ -72,6 +61,22 @@ namespace BrainSimulator.Modules
             {
                 ShowDialog();
                 dlgIsOpen = true;
+            }
+        }
+
+        public void SetModuleView()
+        {
+            if (na == null)
+            {
+                //figure out which area is this one
+                foreach (ModuleView na1 in theNeuronArray.modules)
+                {
+                    if (na1.TheModule == this)
+                    {
+                        na = na1;
+                        break;
+                    }
+                }
             }
         }
 

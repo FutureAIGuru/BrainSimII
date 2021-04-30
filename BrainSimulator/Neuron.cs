@@ -246,6 +246,7 @@ namespace BrainSimulator
         public void Copy(Neuron n)
         {
             n.Label = this.Label;
+            n.ToolTip = this.ToolTip;
             n.lastCharge = this.lastCharge;
             n.currentCharge = this.currentCharge;
             n.LeakRate = this.LeakRate;

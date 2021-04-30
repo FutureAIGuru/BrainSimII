@@ -399,6 +399,8 @@ namespace BrainSimulator
                 else
                     MainWindow.thisWindow.SetStatus(0,"OK",0);
             }
+            ulong availablePhysicalMemory = new Microsoft.VisualBasic.Devices.ComputerInfo().AvailablePhysicalMemory;
+            MainWindow.thisWindow.SetStatus(4, "Available Memory: " + availablePhysicalMemory.ToString("##,#"), 0);
             //Debug.WriteLine("Update Done " + elapsedMs + "ms");
         }
 

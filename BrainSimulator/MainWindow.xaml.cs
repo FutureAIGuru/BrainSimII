@@ -258,6 +258,7 @@ namespace BrainSimulator
                 case 1: tb = statusField1; break;
                 case 2: tb = statusField2; break;
                 case 3: tb = statusField3; break;
+                case 4: tb = statusField4; break;
             }
             SolidColorBrush theColor = null;
             switch (severity)

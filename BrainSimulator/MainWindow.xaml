@@ -18,6 +18,7 @@
                             <ColumnDefinition Width="3*"></ColumnDefinition>
                             <ColumnDefinition Width="3*"></ColumnDefinition>
                             <ColumnDefinition Width="5*"></ColumnDefinition>
+                            <ColumnDefinition Width="3*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                     </Grid>
                 </ItemsPanelTemplate>
@@ -37,6 +38,9 @@
             </StatusBarItem>
             <StatusBarItem Grid.Column="4" >
                 <TextBlock x:Name="statusField3" HorizontalAlignment="Stretch" Background="LightGreen" TextAlignment="Center" Padding="20,0,20,0" ></TextBlock>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="5" >
+                <TextBlock x:Name="statusField4" HorizontalAlignment="Stretch" Background="LightGreen" TextAlignment="Center" Padding="20,0,20,0" ></TextBlock>
             </StatusBarItem>
         </StatusBar>
 

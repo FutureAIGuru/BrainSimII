@@ -456,6 +456,8 @@
     <Content Include="Networks\BasicNeurons.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\youtube-24.ico" />
+    <Resource Include="Resources\github-9-24.ico" />
     <Resource Include="Smoothed_Splash.bmp" />
     <Resource Include="Resources\Icons\ZoomOriginalSize_16x.png" />
     <Resource Include="Resources\Icons\QuickFind_16x.png" />
@@ -475,7 +477,6 @@
     <Resource Include="Resources\Icons\Pause_16x.png" />
     <Resource Include="Resources\Icons\SaveAs_16x.png" />
     <Resource Include="Resources\mailing-list-icon-17.jpg" />
-    <Resource Include="Resources\github-logo.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Networks\Commands.txt">
@@ -520,12 +521,8 @@
   <ItemGroup>
     <Resource Include="Resources\charactergrowfont.png" />
     <Resource Include="Resources\charactershrinkfont.png" />
-    <Resource Include="Resources\facebook.png" />
-    <Resource Include="Resources\facebook %281%29.png" />
     <Resource Include="Resources\diskette.png" />
-    <Content Include="Resources\Getting Started.htm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="Resources\facebook-3-24.ico" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="NetFwTypeLib">

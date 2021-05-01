@@ -355,6 +355,25 @@ namespace BrainSimulator
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            //close any help window which was open.
+            Process[] theProcesses1 = Process.GetProcesses();
+            for (int i = 1; i < theProcesses1.Length; i++)
+            {
+                try
+                {
+                    if (theProcesses1[i].MainWindowTitle != "")
+                    {
+                        if (theProcesses1[i].MainWindowTitle.Contains("GettingStarted"))
+                        {
+                            theProcesses1[i].CloseMainWindow(); ;
+                        }
+                    }
+                }
+                catch (Exception e1)
+                { }
+            }
+
+
             if (theNeuronArray != null)
             {
                 if (PromptToSaveChanges())
@@ -745,6 +764,11 @@ namespace BrainSimulator
         private void MenuItemOnlineDiscussions_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://facebook.com/groups/BrainSim");
+        }
+
+        private void MenuItemYouTube_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.youtube.com/c/futureai");
         }
 
         private void ThreadCount_TextChanged(object sender, TextChangedEventArgs e)

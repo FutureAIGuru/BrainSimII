@@ -109,7 +109,6 @@ Section    "Brain Simulator II" BRAINSIM2
     File /oname=$INSTDIR\bsicon.ico "bsicon.ico"
     File /oname=$INSTDIR\BrainSimulator.exe "..\BrainSimulator\bin\x64\${BUILD_TYPE}\BrainSimulator.exe"
     File /oname=$INSTDIR\BrainSimulator.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\BrainSimulator.pdb"
-    File /r /x /oname=$INSTDIR\Resources ..\BrainSimulator\bin\x64\${BUILD_TYPE}\Resources
     File /oname=$INSTDIR\NeuronEngine.dll "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngine.dll"
     File /oname=$INSTDIR\NeuronEngine.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngine.pdb"
     File /oname=$INSTDIR\NeuronEngineWrapper.dll "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngineWrapper.dll"
@@ -203,9 +202,7 @@ section "uninstall"
     delete $INSTDIR\Touchless.Vision.pdb
     delete $INSTDIR\unicon.ico
     delete $INSTDIR\Networks\*.*
-    delete $INSTDIR\Resources\*.*
     RMDIR $INSTDIR\Networks
-    RMDIR $INSTDIR\Resources
 
 	# Remove Start Menu launchers
 	delete "$DESKTOP\Brain Simulator.lnk"

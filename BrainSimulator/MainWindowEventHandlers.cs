@@ -739,6 +739,7 @@ namespace BrainSimulator
                     GetWindowRect(id, ref theRect);
 
                     bool retVal = MoveWindow(id, 300, 100, 1200, 700, true);
+                    this.Activate();
                     SetForegroundWindow(id);
                 }
             }

@@ -47,25 +47,25 @@
 
         <Menu DockPanel.Dock="Top" x:Name="MainMenu" MouseEnter="MainMenu_MouseEnter" Height="26" Margin="0,0" VerticalAlignment="Top" >
             <MenuItem Header="_File">
-                <MenuItem Header="_New" Click="button_FileNew_Click">
+                <MenuItem Header="_New" Click="button_FileNew_Click" InputGestureText="Ctrl-N">
                     <MenuItem.Icon>
                         <Image Source="/resources/icons/newFile_16x.png"/>
                         <!--<TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xF61B;</TextBlock>-->
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Open" Click="buttonLoad_Click" >
+                <MenuItem Header="_Open" Click="buttonLoad_Click" InputGestureText="Ctrl-O">
                     <MenuItem.Icon>
                         <Image Source="/resources/icons/OpenFile_16x.png"/>
                         <!--<TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE8E5;</TextBlock>-->
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Save" Click="buttonSave_Click">
+                <MenuItem Header="_Save" Click="buttonSave_Click" InputGestureText="Ctrl-S">
                     <MenuItem.Icon>
                         <Image Source="/resources/icons/Save_16x.png"/>
                         <!--<TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE74E;</TextBlock>-->
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Save _As" Click="buttonSaveAs_Click">
+                <MenuItem Header="Save _As" Click="buttonSaveAs_Click" >
                     <MenuItem.Icon>
                         <!--<Image Source="resources/diskette.png"></Image>-->
                         <Image Source="resources/icons/saveAs_16x.png"></Image>
@@ -112,41 +112,41 @@
                         <Image Source="/Resources/icons/quickFind_16x.png"></Image>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header=" Undo"  Click="MenuItem_Undo" >
+                <MenuItem Header=" Undo"  Click="MenuItem_Undo" InputGestureText="Ctrl-Z">
                     <MenuItem.Icon>
                         <Image Source="/resources/icons/Undo_16x.png"></Image>
                         <!--<TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" >&#xE7A7;</TextBlock>-->
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator />
-                <MenuItem Header=" Cut"  Click="MenuItem_CutNeurons" >
+                <MenuItem Header=" Cut"  Click="MenuItem_CutNeurons" InputGestureText="Ctrl-X">
                     <MenuItem.Icon>
                         <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" Foreground="#FF00539C" >&#xE8C6;</TextBlock>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header=" Copy"  Click="MenuItem_CopyNeurons" >
+                <MenuItem Header=" Copy"  Click="MenuItem_CopyNeurons" InputGestureText="Ctrl-C">
                     <MenuItem.Icon>
                         <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" Foreground="#FF00539C" >&#xE8C8;</TextBlock>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header=" Paste"  Click="MenuItem_PasteNeurons" >
+                <MenuItem Header=" Paste"  Click="MenuItem_PasteNeurons" InputGestureText="Ctrl-V">
                     <MenuItem.Icon>
                         <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" Foreground="#FF00539C" >&#xE77F;</TextBlock>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header=" Delete"  Click="MenuItem_DeleteNeurons" >
+                <MenuItem Header=" Delete"  Click="MenuItem_DeleteNeurons" InputGestureText="DEL">
                     <MenuItem.Icon>
                         <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" Foreground="#FF00539C" >&#xE74D;</TextBlock>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header=" Move" Click="MenuItem_MoveNeurons" >
+                <MenuItem Header=" Move" Click="MenuItem_MoveNeurons" InputGestureText="Ctrl-M" >
                     <MenuItem.Icon>
                         <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" Foreground="#FF00539C" >&#xE8F3;</TextBlock>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header=" Clear Selection" Click="MenuItem_ClearSelection" >
+                <MenuItem Header=" Clear Selection" Click="MenuItem_ClearSelection" InputGestureText="ESC">
                 </MenuItem>
-                <MenuItem Header=" Select All" Click="MenuItem_SelectAll" >
+                <MenuItem Header=" Select All" Click="MenuItem_SelectAll" InputGestureText="Ctrl-A" >
                     <MenuItem.Icon>
                         <Image Source="/Resources/icons/SelectAll_16x.png"></Image>
                     </MenuItem.Icon>
@@ -241,10 +241,10 @@
                 <MenuItem Header="Show Synapses" Name="ShowSynapses" IsCheckable="true" Click="Menu_ShowSynapses" ></MenuItem>
             </MenuItem>
             <MenuItem Header=" Help">
-                <MenuItem Click="MenuItemHelp_Click">
+                <MenuItem Click="MenuItemHelp_Click" InputGestureText="F1">
                     <MenuItem.Header>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
-                            <Label Width="100" VerticalAlignment="Center" Padding="5,0,5,0">Getting Started</Label>
+                            <Label Width="100" VerticalAlignment="Center" Padding="0,0,5,0">Getting Started</Label>
                             <CheckBox x:Name="cbShowHelpAtStartup" Checked="cbShowHelpAtStartup_Checked" Unchecked="cbShowHelpAtStartup_Checked" VerticalAlignment="Center" Padding="5,0,5,0">Show at startup</CheckBox>
                         </StackPanel>
                     </MenuItem.Header>

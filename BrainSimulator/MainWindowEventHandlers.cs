@@ -107,6 +107,18 @@ namespace BrainSimulator
             {
                 MenuItemHelp_Click(null, null);
             }
+            if (ctrlPressed && e.Key == Key.O)
+            {
+                buttonLoad_Click(null, null);
+            }
+            if (ctrlPressed && e.Key == Key.N)
+            {
+                button_FileNew_Click(null, null);
+            }
+            if (ctrlPressed && e.Key == Key.S)
+            {
+                buttonSave_Click(null, null);
+            }
             if (ctrlPressed && e.Key == Key.C)
             {
                 theNeuronArrayView.CopyNeurons();
@@ -450,13 +462,14 @@ namespace BrainSimulator
             {
                 try
                 {
+                    string fileName = ""; //if the load is successful, currentfile will be set by the load process
                     if (App.startupString != "")
-                        currentFileName = App.startupString;
-                    if (currentFileName == "")
-                        currentFileName = (string)Properties.Settings.Default["CurrentFile"];
-                    if (currentFileName != "")
+                        fileName = App.startupString;
+                    if (fileName == "")
+                        fileName = (string)Properties.Settings.Default["CurrentFile"];
+                    if (fileName != "")
                     {
-                        LoadFile(currentFileName);
+                        LoadFile(fileName);
                     }
                     else //force a new file creation on startup if no file name set
                     {

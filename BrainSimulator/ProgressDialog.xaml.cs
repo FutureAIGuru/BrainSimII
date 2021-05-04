@@ -93,9 +93,8 @@ namespace BrainSimulator
                 timeRemaining = timeRemaining.AddSeconds(remainingTime.TotalSeconds);
                 if (startTime.Date == timeRemaining.Date)
                 {
-                    string[] finish = string.Concat(timeRemaining.ToLocalTime()).Split(' ');
                     timeLabel.Content = "Time Elapsed: " + string.Concat(elapsedTime.ToString()).Substring(0, 8) + 
-                                        "\nAppr. Finish Time: " + finish[1] + ' ' + finish[2];
+                                        "\nAppr. Finish Time: " + string.Concat(timeRemaining.ToShortTimeString());
                 }
                 else
                 {

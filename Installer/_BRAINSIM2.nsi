@@ -47,7 +47,10 @@ Function addLicense
     GetDlgItem $0 $0 1000
     System::Free $2
 exit:
- 
+FunctionEnd
+
+Function LaunchLink
+  ExecShell "" "$INSTDIR\BrainSimulator.exe"
 FunctionEnd
 
 !include "MUI2.nsh"
@@ -55,7 +58,7 @@ FunctionEnd
 !define MUI_PAGE_CUSTOMFUNCTION_SHOW addLicense
 !insertmacro MUI_PAGE_LICENSE licdata.txt
 !insertmacro MUI_LANGUAGE "English"
-
+  
 Function .onInit
 	# the plugins dir is automatically deleted when the installer exits
 	InitPluginsDir
@@ -70,6 +73,13 @@ FunctionEnd
 Page directory /ENABLECANCEL
 Page components "" "" ComponentsLeave /ENABLECANCEL
 Page instfiles /ENABLECANCEL
+    # These indented statements modify settings for MUI_PAGE_FINISH
+    !define MUI_FINISHPAGE_NOAUTOCLOSE
+    !define MUI_FINISHPAGE_RUN
+    !define MUI_FINISHPAGE_RUN_CHECKED
+    !define MUI_FINISHPAGE_RUN_TEXT "Start Brain Simulator II"
+    !define MUI_FINISHPAGE_RUN_FUNCTION "LaunchLink"
+!insertmacro MUI_PAGE_FINISH
 
 Section
 	SetShellVarContext current

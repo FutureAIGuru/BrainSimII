@@ -21,6 +21,13 @@ namespace BrainSimulator.Modules
         //[XlmIgnore] 
         //public theStatus = 1;
 
+        public override string ShortDescription { get => "TO DO: Short description of Module Boundary."; }
+        public override string LongDescription
+        {
+            get =>
+                "TO DO: Long description of Module Boundary.";
+        }
+
         //fill this method in with code which will execute
         //once for each cycle of the engine
         public override void Fire()

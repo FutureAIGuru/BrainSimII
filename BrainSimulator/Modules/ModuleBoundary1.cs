@@ -43,6 +43,13 @@ namespace BrainSimulator.Modules
         int lastInflection = 0; //used in predicting next point
         int mustExitDir = -10; //used in special case of corner points with 7 neighbors
 
+        public override string ShortDescription { get => "TO DO: Short description of Module Boundary1."; }
+        public override string LongDescription
+        {
+            get =>
+                "TO DO: Long description of Module Boundary1.";
+        }
+
         public override void Fire()
         {
             Init();  //be sure to leave this here

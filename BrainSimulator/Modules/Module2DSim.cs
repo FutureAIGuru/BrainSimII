@@ -35,12 +35,12 @@ namespace BrainSimulator.Modules
         public override string LongDescription
         {
             get =>
-                "This module uses no neurons of its own but fires neurons in various sensory modules if they are in the network. It has methods (Move and Turn and potentially others " +
+                "This module uses no neurons of its own but fires neurons in various sensory modules if they are in the network. It has methods (Move and Turn and potentially others) " +
                 "which can be called by other modules to move its point of view around the simulation. " +
                 "Shift-mouse wheel can zoom the display and Shift-left mouse button can drag (pan). " +
                 "Right-clicking in the dialog box can direct the entity to that location. " +
                 "Shift + Mouse motion or mouse wheel will pan or zoom the display. \n\n" +
-                "Obstacles are set with synapses and will show after initiiation. " +
+                "Obstacles are set with synapses and will show after initiation. " +
                 "\nWeight=1 movable.  \nWeight=-1 fixed \nWeight=(0,1) obstacle moves vertically spd=weight-.5 " +
                 "\nWeight=(-1,0) obstacle moves horizontally spd=weight-(-.5) \nSpeeds are adjusted with the slider."
                 ;

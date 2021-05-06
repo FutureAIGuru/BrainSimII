@@ -19,6 +19,13 @@ namespace BrainSimulator.Modules
         uint[] patterns = {0x0,0x1,0x2,0x4,0x8 };
         uint counter = 0;
 
+        public override string ShortDescription { get => "TO DO: Short description of Module PatternGenerator."; }
+        public override string LongDescription
+        {
+            get =>
+                "TO DO: Long description of Module PatternGenerator.";
+        }
+
         public override void Fire()
         {
             Init();  //be sure to leave this here

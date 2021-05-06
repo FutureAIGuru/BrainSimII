@@ -14,6 +14,14 @@ namespace BrainSimulator.Modules
         SpeechSynthesizer synth = null;
         string phraseToSpeak = "";
 
+        public override string ShortDescription { get => "Uses OS speech synhesis to say words."; }
+        public override string LongDescription
+        {
+            get =>
+                "This module uses the onboard OS Speech synthesis to speak (strings of) words, " +
+                "thus building entire sentences.";
+        }
+
         public override void Fire()
         {
             Init();  //be sure to leave this here

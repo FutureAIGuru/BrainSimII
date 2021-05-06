@@ -16,6 +16,13 @@ namespace BrainSimulator.Modules
 {
     public class ModuleGrayScale : ModuleBase
     {
+        public override string ShortDescription { get => "TO DO: Short description of Module GrayScale."; }
+        public override string LongDescription
+        {
+            get =>
+                "TO DO: Long description of Module GrayScale.";
+        }
+
         public override void Fire()
         {
             Init();  //be sure to leave this here

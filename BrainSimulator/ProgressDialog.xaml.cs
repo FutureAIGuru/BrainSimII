@@ -44,7 +44,7 @@ namespace BrainSimulator
             else if (value == 0)
             {
                 cancelPressed = false;
-                if (label == "")
+                if (label != "")
                     theLabel.Text = label;
                 this.Visibility = Visibility.Visible;
 

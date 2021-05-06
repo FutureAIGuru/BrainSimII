@@ -291,6 +291,11 @@ namespace BrainSimulator
                     textBoxColumns.Background = new SolidColorBrush(Colors.Red);
                     textBoxRows.Background = new SolidColorBrush(Colors.Red);
                 }
+                else
+                {
+                    textBoxColumns.Background = new SolidColorBrush(Colors.LightGreen);
+                    textBoxRows.Background = new SolidColorBrush(Colors.LightGreen);
+                }
             }
             else
                 LabelNeuronCount.Content = "Neuron Count: ERROR";

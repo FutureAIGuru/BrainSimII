@@ -11,7 +11,7 @@ namespace BrainSimulator.Modules
     {
         static public long immediateMemory = 2; //items are more-or-less simultaneous
         static public long shortTermMemory = 10;
-        public override string ShortDescription => "A Knowledge Graph UKS module expanded with a neuron arrays for intputs and outputs.";
+        public override string ShortDescription => "A Knowledge Graph UKS module expanded with a neuron arrays for inputs and outputs.";
         public override string LongDescription => "This is like a UKS module but expanded to be accessible via neuron firings instead of just programmatically. " + base.LongDescription;
 
         List<Thing> activeSequences = new List<Thing>();

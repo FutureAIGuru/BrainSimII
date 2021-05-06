@@ -41,6 +41,13 @@ namespace BrainSimulator.Modules
         }
         List<RealThing> thingsInReality = new List<RealThing>();
 
+        public override string ShortDescription { get => "TO DO: Short description of Module RealityModel."; }
+        public override string LongDescription
+        {
+            get =>
+                "TO DO: Long description of Module RealityModel.";
+        }
+
         override public void Fire()
         {
             Init();

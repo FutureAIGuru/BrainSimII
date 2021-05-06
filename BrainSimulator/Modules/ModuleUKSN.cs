@@ -13,7 +13,7 @@ namespace BrainSimulator.Modules
     {
         public long immediateMemory = 2; //items are more-or-less simultaneous
         public static long shortTermMemory = 10; //items are close in time
-        public override string ShortDescription => "A Knowledge Graph KB module expanded with a neuron arrays for intputs and outputs.";
+        public override string ShortDescription => "A Knowledge Graph KB module expanded with a neuron arrays for inputs and outputs.";
         public override string LongDescription => "This is like a KB module but expanded to be accessible via neuron firings instead of just programmatically. " + base.LongDescription;
 
         int EventCount = 0; //sequence # for labelling Event entries

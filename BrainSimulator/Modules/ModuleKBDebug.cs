@@ -14,6 +14,13 @@ namespace BrainSimulator.Modules
         [XmlIgnore]
         public List<string> history = new List<string>();
 
+        public override string ShortDescription { get => "Module KBDebug is used for debugging the UKS modules."; }
+        public override string LongDescription
+        {
+            get =>
+                "This module is used in debugging of the UKS, UKSN and UKS2 modules.";
+        }
+
         int maxLength = 100;
         //display history of KB
         public override void Fire()

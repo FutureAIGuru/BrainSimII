@@ -31,8 +31,8 @@ namespace BrainSimulator.Modules
         public Point dlgPos;
         public Point dlgSize;
         public bool dlgIsOpen = false;
-        public virtual string ShortDescription { get; }
-        public virtual string LongDescription { get; }
+        public virtual string ShortDescription { get => "The base class for all Modules."; }
+        public virtual string LongDescription { get => "This base class defines all common functionality for Modules."; }
 
 
         public ModuleBase() { }

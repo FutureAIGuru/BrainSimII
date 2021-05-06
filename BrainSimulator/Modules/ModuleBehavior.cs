@@ -12,7 +12,7 @@ namespace BrainSimulator.Modules
 {
     public class ModuleBehavior : ModuleBase
     {
-        public override string ShortDescription { get => "Handles a queue of behaviors"; }
+        public override string ShortDescription { get => "Handles a queue of behaviors."; }
         public override string LongDescription
         {
             get =>

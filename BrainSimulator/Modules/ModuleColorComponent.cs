@@ -37,6 +37,14 @@ namespace BrainSimulator.Modules
             minWidth = 1;
         }
 
+        public override string ShortDescription { get => "Module ColorComponent breaks a color into components."; }
+        public override string LongDescription
+        {
+            get =>
+                "The ColorComponent module has four labeled nerons that have the values of the red, green, blue and " +
+                "intensity values of a color that is fed in.";
+        }
+
         public override void Fire()
         {
             float min = 4;

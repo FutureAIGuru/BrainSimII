@@ -20,6 +20,14 @@ namespace BrainSimulator.Modules
         //[XlmIgnore] 
         //public theStatus = 1;
 
+        public override string ShortDescription { get => "Fires the Oldest Neuron."; }
+        public override string LongDescription
+        {
+            get =>
+                "The module FireOldest fires the oldest neuron in the module, which can be " +
+                "used to trigger functionality like forgetting something.";
+        }
+
         //fill this method in with code which will execute
         //once for each cycle of the engine
         public override void Fire()

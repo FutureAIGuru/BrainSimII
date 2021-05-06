@@ -40,6 +40,14 @@ namespace BrainSimulator.Modules
         int nextFreeNeuron = 1;
 
         Dictionary<string, int> wordDictionary = new Dictionary<string, int>();
+
+        public override string ShortDescription { get => "TO DO: Short description of Module Words."; }
+        public override string LongDescription
+        {
+            get =>
+                "TO DO: Long description of Module Words.";
+        }
+
         private void AddSynapse(string word, string nextWord)
         {
             word = TrimPunctuation(word);

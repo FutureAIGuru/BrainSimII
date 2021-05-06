@@ -25,6 +25,13 @@ namespace BrainSimulator.Modules
 
         Thing currentText = null;
 
+        public override string ShortDescription { get => "TO DO: Short description of Module Audible."; }
+        public override string LongDescription
+        {
+            get =>
+                "TO DO: Long description of Module Audible.";
+        }
+
         public override void Fire()
         {
             Init();  //be sure to leave this here

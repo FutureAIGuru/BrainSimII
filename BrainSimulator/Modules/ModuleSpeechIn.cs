@@ -19,6 +19,14 @@ namespace BrainSimulator.Modules
         //keeps the temporary phrase so it can be recognized across multiple engine cycles
         private List<string> words = new List<string>();
 
+        public override string ShortDescription { get => "Uses OS speech recognition to detect words."; }
+        public override string LongDescription
+        {
+            get =>
+                "This module uses the onboard OS Speech recognition to hear (strings of) words, " +
+                "in this case digits.";
+        }
+
         public override void Fire()
         {
             Init();

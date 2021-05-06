@@ -22,7 +22,7 @@ namespace BrainSimulator.Modules
         public override string LongDescription
         {
             get => "This module uses no neurons but can be called directly by other modules.\n\r" +
-"Within the Knoweldge Store, everything is a 'Thing' (see the source code for the 'Thing' object). Things may have parents, children, " +
+"Within the Knowledge Store, everything is a 'Thing' (see the source code for the 'Thing' object). Things may have parents, children, " +
 "references to other Things, and a 'value' which can be " +
 "any .NET object (with Color and Point being implemented). " +
 "It can search by value with an optional tolerance. A reference to another thing is done with a 'Link' " +

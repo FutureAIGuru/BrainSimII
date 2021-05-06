@@ -15,6 +15,13 @@ namespace BrainSimulator.Modules
 
         ModuleUKSN KB = null;
 
+        public override string ShortDescription { get => "TO DO: Short description of Module Learning."; }
+        public override string LongDescription
+        {
+            get =>
+                "TO DO: Long description of Module Learning.";
+        }
+
         //fill this method in with code which will execute
         //once for each cycle of the engine
         public override void Fire()

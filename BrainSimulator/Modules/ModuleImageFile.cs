@@ -26,6 +26,14 @@ namespace BrainSimulator.Modules
         int countDown = -1;
         List<string> fileList = null;
 
+        public override string ShortDescription { get => "ImageFile can import images into a set of neurons."; }
+        public override string LongDescription
+        {
+            get =>
+                "This module named ImageFile can import an image file or set of image files and will project" +
+                "them onto a rectangular area of Color neurons much like the Camera Module does.";
+        }
+
         //fill this method in with code which will execute
         //once for each cycle of the engine
         public override void Fire()

@@ -166,6 +166,7 @@ namespace BrainSimulator
             if (!XmlFile.CanWriteTo(currentFileName, out string message)) return false;
             MainWindow.theNeuronArray.GetCounts(out long synapseCount, out int neuronInUseCount);
             if (neuronInUseCount == 0) return false;
+            SuspendEngine();
 
             bool retVal = false;
             MessageBoxResult mbResult = System.Windows.MessageBox.Show(this, "Do you want to save changes?", "Save", MessageBoxButton.YesNoCancel,
@@ -184,6 +185,7 @@ namespace BrainSimulator
             {
                 retVal = true;
             }
+            ResumeEngine();
             return retVal;
         }
         private bool SaveAs()

@@ -19,18 +19,6 @@ namespace BrainSimulator.Modules
         //PRESENT VALUES:
         //assumes that highest intensity is 4 and lowest is 28 with 8 steps
 
-        public override string ShortDescription { get => "Converts a color neuron to 4 rate-encoded neurons"; }
-        public override string LongDescription
-        {
-            get =>
-                "This module receives input from the Touch and Vision modules and merges the information to maintain a representation of " +
-                "physical objects in the entity's environment. It also supports imaingation via the temporary addition of imagined objects " + "" +
-                "and the temporary change in point of view.\r\n" +
-                "\r\n" +
-                "";
-        }
-
-
         public ModuleColorComponent()
         {
             minHeight = 5;

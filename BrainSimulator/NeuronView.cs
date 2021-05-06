@@ -64,7 +64,6 @@ namespace BrainSimulator
             Canvas.SetLeft(r, p.X + dp.NeuronDisplaySize * offset);
             Canvas.SetTop(r, p.Y + dp.NeuronDisplaySize * offset);
 
-
             if (n.Label != "" || n.model != Neuron.modelType.IF)
             {
                 l = new Label();
@@ -131,20 +130,6 @@ namespace BrainSimulator
             if ((n.leakRate < 0) || float.IsNegativeInfinity(1.0f / n.leakRate))
                 s1 = new SolidColorBrush(Colors.LightSalmon);
             return s1;
-        }
-
-        private static void R_MouseLeave(object sender, MouseEventArgs e)
-        {
-            //clear any visible tooltip
-
-            if (sender is FrameworkElement s1)
-            {
-                if (s1.ToolTip != null)
-                {
-                    ToolTip x = (ToolTip)s1.ToolTip;
-                    x.IsOpen = false;
-                }
-            }
         }
     }
 }

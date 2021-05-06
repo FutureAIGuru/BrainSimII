@@ -30,7 +30,7 @@ namespace BrainSimulator
         {
             updateDisplay = true;
 
-            Debug.WriteLine("Display Update" + DateTime.Now);
+            //Debug.WriteLine("Display Update " + DateTime.Now);
 
             //this hack is here so that the shift key can be trapped before the window is activated
             //which is important for debugging so the zoom/pan will work on the first try

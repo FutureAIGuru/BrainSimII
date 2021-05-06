@@ -164,7 +164,7 @@ namespace BrainSimulator
 
             if (MainWindow.theNeuronArray == null) return;
             MainWindow.theNeuronArray.SetUndoPoint();
-            Debug.WriteLine("theCanvas_MouseDown" + MainWindow.theNeuronArray.Generation);
+            Debug.WriteLine("theCanvas_MouseDown" + MainWindow.theNeuronArray.Generation+ theShape + theShapeType);
             Point currentPosition = e.GetPosition(theCanvas);
             LimitMousePostion(ref currentPosition);
             mouseDownNeuronIndex = dp.NeuronFromPoint(currentPosition);
@@ -247,8 +247,8 @@ namespace BrainSimulator
                 if (theCanvas.Cursor == Cursors.Hand)
                 {
                     StartPan(e.GetPosition((UIElement)theCanvas.Parent));
-                    Mouse.Capture(theCanvas);
                 }
+                Mouse.Capture(theCanvas); //if you don't do this, you might lose the mouseup event
             }//end of left-button down
         }
 
@@ -347,11 +347,10 @@ namespace BrainSimulator
         public void theCanvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (MainWindow.Busy()) return;
-            //SetMouseCursorShape(e);
 
             if (mouseRepeatTimer != null) mouseRepeatTimer.Stop();
             if (MainWindow.IsArrayEmpty()) return;
-            //Debug.WriteLine("theCanvas_MouseUp" + MainWindow.theNeuronArray.Generation);
+            Debug.WriteLine("theCanvas_MouseUp" + MainWindow.theNeuronArray.Generation + currentOperation);
             if (e.ChangedButton == MouseButton.Right) return;
 
             Point currentPosition = e.GetPosition(theCanvas);

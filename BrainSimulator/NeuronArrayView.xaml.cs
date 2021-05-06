@@ -257,7 +257,6 @@ namespace BrainSimulator
                         Canvas.SetTop(img, Canvas.GetTop(r));
                         theCanvas.Children.Add(img);
                         img.SetValue(ModuleView.AreaNumberProperty, -i - 1);
-                       // img.MouseDown += theCanvas_MouseDown;
                     }
                 }
             }

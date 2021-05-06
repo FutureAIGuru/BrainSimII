@@ -39,6 +39,8 @@ namespace BrainSimulator
             if (!success)
             {
                 CreateEmptyNetwork();
+                Properties.Settings.Default["CurrentFile"] = currentFileName;
+                Properties.Settings.Default.Save();
                 return;
             }
             currentFileName = fileName;

@@ -55,6 +55,7 @@ namespace BrainSimulator
             l.SetValue(SourceIDProperty, i);
             l.SetValue(TargetIDProperty, s.TargetNeuron);
             l.SetValue(WeightValProperty, s.Weight);
+            l.SetValue(ModelProperty, s.model);
             l.SetValue(NeuronArrayView.ShapeType, NeuronArrayView.shapeType.Synapse);
 
             return l;
@@ -222,10 +223,10 @@ namespace BrainSimulator
             cm.Items.Add(mi);
 
             sp = new StackPanel { Orientation = Orientation.Horizontal };
-            Button b0 = new Button { Content = "OK", Width = 100, Height = 25, Margin = new Thickness(10) };
+            Button b0 = new Button { Content = "OK", Width = 100, Height = 25, Margin = new Thickness(10), IsDefault = true };
             b0.Click += B0_Click;
             sp.Children.Add(b0);
-            b0 = new Button { Content = "Cancel", Width = 100, Height = 25, Margin = new Thickness(10) };
+            b0 = new Button { Content = "Cancel", Width = 100, Height = 25, Margin = new Thickness(10), IsCancel = true };
             b0.Click += B0_Click;
             sp.Children.Add(b0);
 
@@ -265,7 +266,6 @@ namespace BrainSimulator
             if (sender is ComboBox cb)
             {
                 if (!cb.IsArrangeValid) return;
-                cb.IsDropDownOpen = true; ;
                 if (cb.Name == "SynapseWeight")
                 {
                     weightChanged = true;
@@ -279,9 +279,10 @@ namespace BrainSimulator
             //when the context menu opens, focus on the label and position text cursor to end
             if (sender is ContextMenu cm)
             {
-                Control cc = Utils.FindByName(cm, "Weight");
-                if (cc is TextBox tb)
+                if (Utils.FindByName(cm, "SynapseWeight") is ComboBox cc)
                 {
+                    //this hack finds the textbox within a combobox
+                    TextBox tb = (TextBox)cc.Template.FindName("PART_EditableTextBox", cc);
                     tb.Focus();
                     tb.Select(0, tb.Text.Length);
                 }
@@ -297,6 +298,44 @@ namespace BrainSimulator
                 MainWindow.Update();
                 cm.IsOpen = false;
             }
+            if (e.Key == Key.Enter)
+            {
+                cm.IsOpen = false;
+            }
+            //This hack is here because textboxes don't like to lose focus if the mouse moves aroundt the context menu
+            //When this becomes a window, all this will go away
+            if (e.Key == Key.Tab)
+            {
+                {
+                    var focussedControl = FocusManager.GetFocusedElement(cm);
+                    if (focussedControl is TextBox tb)
+                    {
+                        if (tb.Name == "Source")
+                        {
+                            Control tt = Utils.FindByName(cm, "Target");
+                            if (tt is TextBox tbtt)
+                            {
+                                tbtt.Focus();
+                                e.Handled = true;
+                            }
+                            else
+                            {
+                                Control cc = Utils.FindByName(cm, "Model");
+                                cc.Focus();
+                                e.Handled = true;
+                            }
+                        }
+                        else if (tb.Name == "Target")
+                        {
+                            Control cc = Utils.FindByName(cm, "Model");
+                            cc.Focus();
+                            e.Handled = true;
+
+                        }
+                    }
+                }
+            }
+
         }
 
         static bool cmCancelled = false;

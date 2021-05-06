@@ -43,18 +43,11 @@ namespace BrainSimulator
             }
             else if (value == 0)
             {
+                cancelPressed = false;
                 if (label == "")
-                {
-                    cancelPressed = true;
-                    CancelProgressBar();
-                    return cancelPressed;
-                }
-                else
-                {
-                    cancelPressed = false;
                     theLabel.Text = label;
-                    this.Visibility = Visibility.Visible;
-                }
+                this.Visibility = Visibility.Visible;
+
                 startTime = DateTime.Now;
                 MainWindow.thisWindow.MainMenu.IsEnabled = false;
                 MainWindow.thisWindow.MainToolBar.IsEnabled = false;

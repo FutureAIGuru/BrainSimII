@@ -412,7 +412,6 @@ namespace BrainSimulator
             if (sender is ComboBox cb)
             {
                 if (!cb.IsArrangeValid) return;
-                cb.IsDropDownOpen = true; ;
                 if (cb.Name == "LeakRate")
                 {
                     leakRateChanged = true;
@@ -426,6 +425,7 @@ namespace BrainSimulator
                 if (cb.Name == "CurrentCharge")
                 {
                     chargeChanged = true;
+
                     //all this to get the updated neuron model to set up the correct validation
                     string validation = "";
                     StackPanel sp = cb.Parent as StackPanel;
@@ -684,6 +684,40 @@ namespace BrainSimulator
                 if (sender is ContextMenu cm)
                 {
                     Cm_Closed(cm, e);
+                }
+            }
+            //This hack is here because textboxes don't like to lose focus if the mouse moves aroundt the context menu
+            //When this becomes a window, all this will go away
+            if (e.Key == Key.Tab)
+            {
+                if (sender is ContextMenu cm)
+                {
+                    var focussedControl = FocusManager.GetFocusedElement(cm);
+                    if (focussedControl is TextBox tb)
+                    {
+                        if (tb.Name == "Label")
+                        {
+                            Control tt = Utils.FindByName(cm, "ToolTip");
+                            if (tt is TextBox tbtt)
+                            {
+                                tbtt.Focus();
+                                e.Handled = true;
+                            }
+                            else
+                            {
+                                Control cc = Utils.FindByName(cm, "Model");
+                                cc.Focus();
+                                e.Handled = true;
+                            }
+                        }
+                        else if (tb.Name == "ToolTip")
+                        {
+                            Control cc = Utils.FindByName(cm, "Model");
+                            cc.Focus();
+                            e.Handled = true;
+
+                        }
+                    }
                 }
             }
         }

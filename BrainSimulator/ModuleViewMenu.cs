@@ -20,8 +20,10 @@ namespace BrainSimulator
             cmCancelled = false;
             if (cm == null)
                 cm = new ContextMenu();
-            StackPanel sp;
             cm.SetValue(AreaNumberProperty, i);
+            cm.PreviewKeyDown += Cm_PreviewKeyDown;
+            
+            StackPanel sp;
             MenuItem mi = new MenuItem();
             mi = new MenuItem();
             mi.Header = "Delete";
@@ -124,6 +126,15 @@ namespace BrainSimulator
             cm.Items.Add(new MenuItem { Header = sp, StaysOpenOnClick = true });
 
             cm.Closed += Cm_Closed;
+        }
+
+        private static void Cm_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            ContextMenu cm = sender as ContextMenu;
+            if (e.Key == Key.Enter)
+            {
+                Cm_Closed(sender,e);
+            }
         }
 
         private static void TextChanged(object sender, TextChangedEventArgs e)

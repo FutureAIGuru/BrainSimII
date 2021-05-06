@@ -151,32 +151,31 @@ namespace BrainSimulator
         {
             int source = (int)theShape.GetValue(SynapseView.SourceIDProperty);
             int target = (int)theShape.GetValue(SynapseView.TargetIDProperty);
+            lastSynapseWeight = (float)theShape.GetValue(SynapseView.WeightValProperty);
+            lastSynapseModel = (Synapse.modelType)theShape.GetValue(SynapseView.ModelProperty);
             Neuron n = MainWindow.theNeuronArray.GetNeuron(source);
             n.DeleteSynapse(target);
             mouseDownNeuronIndex = source;
             currentOperation = CurrentOperation.draggingSynapse;
-            Canvas parentCanvas = (Canvas) theShape.Parent;
+            Canvas parentCanvas = (Canvas)theShape.Parent;
             parentCanvas.Children.Remove(theShape);
         }
         private void DragSynapse(int currentNeuron)
         {
             if (mouseDownNeuronIndex > -1)
             {
-                if (synapseShape != null || (mouseDownNeuronIndex != currentNeuron))
-                {
-                    if (synapseShape != null)
-                        theCanvas.Children.Remove(synapseShape);
-                    Shape l = SynapseView.GetSynapseShape
-                        (dp.pointFromNeuron(mouseDownNeuronIndex),
-                        dp.pointFromNeuron(currentNeuron),
-                        lastSynapseModel
-                        );
-                    l.Stroke = new SolidColorBrush(Utils.RainbowColorFromValue(lastSynapseWeight));
-                    if (!(l is Ellipse))
-                        l.Fill = l.Stroke;
-                    theCanvas.Children.Add(l);
-                    synapseShape = l;
-                }
+                if (synapseShape != null)
+                    theCanvas.Children.Remove(synapseShape);
+                Shape l = SynapseView.GetSynapseShape
+                    (dp.pointFromNeuron(mouseDownNeuronIndex),
+                    dp.pointFromNeuron(currentNeuron),
+                    lastSynapseModel
+                    );
+                l.Stroke = new SolidColorBrush(Utils.RainbowColorFromValue(lastSynapseWeight));
+                if (!(l is Ellipse))
+                    l.Fill = l.Stroke;
+                theCanvas.Children.Add(l);
+                synapseShape = l;
             }
         }
         private void FinishDraggingSynapse(MouseButtonEventArgs e)

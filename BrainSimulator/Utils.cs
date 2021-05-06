@@ -432,7 +432,10 @@ namespace BrainSimulator
                 values.Reverse();
             }
         }
-        public static MenuItem CreateComboBox(string cbName, float value, List<float> values, string format, string label, int textWidth, RoutedEventHandler theEventHandler)
+
+        //there is a label followed by a combobox with provided values
+        public static MenuItem CreateComboBox(string cbName, float value, List<float> values, string format, string label, 
+            int textWidth, RoutedEventHandler theEventHandler)
         {
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
             sp.Children.Add(new Label { Content = label, Padding = new Thickness(0) });

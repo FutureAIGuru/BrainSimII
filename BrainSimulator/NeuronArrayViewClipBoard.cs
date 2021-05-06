@@ -523,12 +523,13 @@ namespace BrainSimulator
             List<int> neuronsInSelection = theSelection.EnumSelectedNeurons();
             for (int i = 0; i < neuronsInSelection.Count; i++)
             {
-                if (MainWindow.thisWindow.SetProgress(100f * i / (float)neuronsInSelection.Count, "")) break;
+                if (MainWindow.thisWindow.SetProgress(100f * i / (float)neuronsInSelection.Count, "")) 
+                    break;
                 Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronsInSelection[i]);
                 if (rand == null) rand = new Random();
                 for (int j = 0; j < synapsesPerNeuron; j++)
                 {
-                    int targetNeuron = neuronsInSelection[rand.Next(neuronsInSelection.Count-1)];
+                    int targetNeuron = neuronsInSelection[rand.Next(neuronsInSelection.Count)];
                     float weight = (rand.Next(521) / 1000f) - .2605f;
                     n.AddSynapseWithUndo(targetNeuron, weight, Synapse.modelType.Fixed);
                 }

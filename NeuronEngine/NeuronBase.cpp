@@ -238,9 +238,7 @@ namespace NeuronEngine
 			std::vector<SynapseBase> tempVec = std::vector<SynapseBase>();
 			return tempVec;
 		}
-		while (vectorLock.exchange(1) == 1) {}
 		std::vector<SynapseBase> tempVec = std::vector<SynapseBase>(*synapses);
-		vectorLock = 0;
 		return tempVec;
 	}
 	std::vector<SynapseBase> NeuronBase::GetSynapsesFrom()
@@ -250,10 +248,16 @@ namespace NeuronEngine
 			std::vector<SynapseBase> tempVec = std::vector<SynapseBase>();
 			return tempVec;
 		}
-		while (vectorLock.exchange(1) == 1) {}
 		std::vector<SynapseBase> tempVec = std::vector<SynapseBase>(*synapsesFrom);
-		vectorLock = 0;
 		return tempVec;
+	}
+	void NeuronBase::GetLock()
+	{
+		while (vectorLock.exchange(1) == 1) {}
+	}
+	void NeuronBase::ClearLock()
+	{
+		vectorLock = 0;
 	}
 
 	void NeuronBase::AddToCurrentValue(float weight)

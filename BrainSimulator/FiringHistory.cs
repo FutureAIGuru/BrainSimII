@@ -61,8 +61,10 @@ namespace BrainSimulator
 
         public static void UpdateFiringHistory()
         {
-            foreach (NeuronHistory active in history)
+            for (int i = 0; i < history.Count; i++)
+//          foreach (NeuronHistory active in history)
             {
+                NeuronHistory active = history[i];
                 float lastCharge = MainWindow.theNeuronArray.GetNeuron(active.NeuronID).lastCharge;
                 if (active.Samples.Count > maxSamples)
                     active.Samples.RemoveAt(0);

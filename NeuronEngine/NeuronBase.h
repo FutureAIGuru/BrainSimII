@@ -62,6 +62,8 @@ namespace NeuronEngine
 		__declspec(dllexport)  void AddSynapse(NeuronBase* n, float weight, SynapseBase::modelType model = SynapseBase::modelType::Fixed, bool noBackPtr = true);
 		__declspec(dllexport)  void AddSynapseFrom(NeuronBase* n, float weight, SynapseBase::modelType model = SynapseBase::modelType::Fixed);
 		__declspec(dllexport)  void DeleteSynapse(NeuronBase* n);
+		__declspec(dllexport)  void GetLock();
+		__declspec(dllexport)  void ClearLock();
 		__declspec(dllexport)  std::vector<SynapseBase> GetSynapses();
 		__declspec(dllexport)  std::vector<SynapseBase> GetSynapsesFrom();
 		__declspec(dllexport)  int GetSynapseCount();

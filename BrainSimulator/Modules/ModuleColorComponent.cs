@@ -20,22 +20,39 @@ namespace BrainSimulator.Modules
         //[XlmIgnore] 
         //public theStatus = 1;
 
+        //PRESENT VALUES:
+        //assumes that highest intensity is 4 and lowest is 28 with 8 steps
 
-        //fill this method in with code which will execute
-        //once for each cycle of the engine
+        public ModuleColorComponent()
+        {
+            minHeight = 5;
+            minWidth = 1;
+        }
+
         public override void Fire()
         {
+            float min = 4;
+            float  max = 24;
+            float steps = 7;
+            float variation = 2;
             Init();  //be sure to leave this here
             int theColor = na.GetNeuronAt(0, 0).LastChargeInt;
-            int b = (theColor & 0x000f0) >> 4;
-            int g = (theColor & 0xf000) >> 12;
-            int r = (theColor & 0xf00000) >> 20;
+            int b = (theColor & 0x000e0) >> 5;
+            int g = (theColor & 0xe000) >> 13;
+            int r = (theColor & 0xe00000) >> 21;
             int i = b > g ? b : g;
             i = i > r ? i : r;
-            na.GetNeuronAt(0, 1).AxonDelay = 16 - b;
-            na.GetNeuronAt(0, 2).AxonDelay = 16 - g;
-            na.GetNeuronAt(0, 3).AxonDelay = 16 - r;
-            na.GetNeuronAt(0, 4).AxonDelay = 16 - i;
+            //here rgbi have values of 0-7
+
+            Neuron n = na.GetNeuronAt("Blu");
+            na.GetNeuronAt(0, 1).AxonDelay = (int)(min + (max - b * (max / steps)));
+            na.GetNeuronAt(0, 1).LeakRate = variation;
+            na.GetNeuronAt(0, 2).AxonDelay = (int)(min + (max - g * (max / steps)));
+            na.GetNeuronAt(0, 2).LeakRate = variation;
+            na.GetNeuronAt(0, 3).AxonDelay = (int)(min + (max - r * (max / steps)));
+            na.GetNeuronAt(0, 3).LeakRate = variation;
+            na.GetNeuronAt(0, 4).AxonDelay = (int)(min + (max - i * (max / steps)));
+            na.GetNeuronAt(0, 4).LeakRate = variation;
         }
 
         //fill this method in with code which will execute once

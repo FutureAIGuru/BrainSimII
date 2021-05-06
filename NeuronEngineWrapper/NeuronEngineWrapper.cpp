@@ -203,14 +203,18 @@ namespace NeuronEngine
 		cli::array<byte>^ NeuronArrayBase::GetSynapses(int src)
 		{
 			NeuronBase* n = theNeuronArray->GetNeuron(src);
+			n->GetLock();
 			std::vector<SynapseBase> tempVec = n->GetSynapses();
+			n->ClearLock();
 			return ReturnArray(tempVec);
 
 		}
 		cli::array<byte>^ NeuronArrayBase::GetSynapsesFrom(int src)
 		{
 			NeuronBase* n = theNeuronArray->GetNeuron(src);
+			n->GetLock();
 			std::vector<SynapseBase> tempVec = n->GetSynapsesFrom();
+			n->ClearLock();
 			return ReturnArray(tempVec);
 		}
 

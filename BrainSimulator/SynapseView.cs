@@ -215,7 +215,7 @@ namespace BrainSimulator
             sp.Children.Add(cb);
             cm.Items.Add(new MenuItem { Header = sp, StaysOpenOnClick = true });
 
-            cm.Items.Add(Utils.CreateComboBox("SynapseWeight", s.weight, synapseWeightValues, "F3", "Weight: ", 100, ComboBox_ContentChanged));
+            cm.Items.Add(Utils.CreateComboBoxMenuItem("SynapseWeight", s.weight, synapseWeightValues, "F3", "Weight: ", 100, ComboBox_ContentChanged));
 
             MenuItem mi = new MenuItem();
             mi.Header = "Delete";

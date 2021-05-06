@@ -434,19 +434,25 @@ namespace BrainSimulator
         }
 
         //there is a label followed by a combobox with provided values
-        public static MenuItem CreateComboBox(string cbName, float value, List<float> values, string format, string label, 
+        public static MenuItem CreateComboBoxMenuItem(string cbName, float value, List<float> values, string format, string label, 
             int textWidth, RoutedEventHandler theEventHandler)
         {
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
             sp.Children.Add(new Label { Content = label, Padding = new Thickness(0) });
+            ComboBox theCombo = CreateComboBox(cbName, value, values, format, textWidth, theEventHandler);
+            sp.Children.Add(theCombo);
+            return new MenuItem { StaysOpenOnClick = true, Header = sp };
+        }
+
+        public static ComboBox CreateComboBox(string cbName, float value, List<float> values, string format, int textWidth, RoutedEventHandler theEventHandler)
+        {
             ComboBox theCombo = new ComboBox { IsEditable = true, Width = textWidth, Name = cbName };
             theCombo.Text = format.IndexOf("X") == -1 ? value.ToString(format) : ((int)value).ToString(format);
             for (int i = 0; i < values.Count; i++)
                 theCombo.Items.Add(format.IndexOf("X") == -1 ? values[i].ToString(format) : ((int)values[i]).ToString(format));
             theCombo.AddHandler(TextBox.TextChangedEvent, theEventHandler);
             theCombo.AddHandler(ComboBox.SelectionChangedEvent, theEventHandler);
-            sp.Children.Add(theCombo);
-            return new MenuItem { StaysOpenOnClick = true, Header = sp };
+            return theCombo;
         }
 
         public static void ValidateInput(ComboBox cb, float min, float max, string validation = "")

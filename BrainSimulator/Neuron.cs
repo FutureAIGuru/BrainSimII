@@ -67,7 +67,7 @@ namespace BrainSimulator
 
         public int Id { get => id; set => id = value; }
 
-        const string toolTipSeparator = "||?";
+        public const string toolTipSeparator = "||?";
         public string Label
         {
             get

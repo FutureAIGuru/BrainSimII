@@ -111,6 +111,13 @@ namespace BrainSimulator
                 int nID = labelCache.FirstOrDefault(x => x.Value == label).Key;
                 return GetNeuron(nID);
             }
+            else
+            {
+                string searchKey = label + Neuron.toolTipSeparator;
+                int nID = labelCache.FirstOrDefault(x => x.Value.StartsWith(searchKey)).Key;
+                if (nID != 0)
+                return GetNeuron(nID);
+            }
             return null;
         }
 

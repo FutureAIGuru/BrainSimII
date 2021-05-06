@@ -355,8 +355,29 @@ namespace BrainSimulator
             //The charge value formatted based on the model
             if (newModel == Neuron.modelType.Color)
             {
-                cm.Items.Insert(insertPosition,
-                    Utils.CreateComboBoxMenuItem("CurrentCharge", n.LastChargeInt, colorValues, colorFormatString, "Content: ", 80, ComboBox_ContentChanged));
+                StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
+                sp.Children.Add(new Label { Content = "Content: " });
+                ComboBox cb0 = (Utils.CreateComboBox("CurrentCharge", n.LastChargeInt, colorValues, colorFormatString, 80, ComboBox_ContentChanged));
+                sp.Children.Add(cb0);
+                for (int i = 0; i < cb0.Items.Count; i++)
+                {
+                    string cc = cb0.Items[i].ToString();
+                    cb0.Items[i] = new Label { Content = cc };
+                    if (int.TryParse(cc, System.Globalization.NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int colorValue))
+                    {
+                        System.Drawing.Color col = System.Drawing.ColorTranslator.FromWin32(colorValue);
+                        if (col.R * 0.2126 + col.G * 0.7152 + col.B * 0.0722 < 255 / 2)
+                        {
+                            //dark color
+                            ((Label)cb0.Items[i]).Foreground = new SolidColorBrush(Utils.IntToColor(0xffffff));
+                        }
+                         ((Label)cb0.Items[i]).Background = new SolidColorBrush(Utils.IntToColor(colorValue));
+                    }
+                }
+                //cm.Items.Insert(insertPosition,
+                //    Utils.CreateComboBoxMenuItem("CurrentCharge", n.LastChargeInt, colorValues, colorFormatString, "Content: ", 80, ComboBox_ContentChanged));
+                cm.Items.Insert(insertPosition + 1, new MenuItem { Header = sp, StaysOpenOnClick = true });
+
             }
             else if (newModel == Neuron.modelType.FloatValue)
             {
@@ -367,7 +388,6 @@ namespace BrainSimulator
             {
                 cm.Items.Insert(insertPosition,
                     Utils.CreateComboBoxMenuItem("CurrentCharge", n.lastCharge, currentChargeValues, floatFormatString, "Charge: ", 80, ComboBox_ContentChanged));
-
             }
 
             if (newModel == Neuron.modelType.LIF)
@@ -386,7 +406,7 @@ namespace BrainSimulator
                 Slider sl = new Slider { Width = 100, Margin = new Thickness(10, 4, 0, 0), Value = 10, Maximum = 10 };
                 sl.ValueChanged += Sl_ValueChanged;
                 sp.Children.Add(sl);
-                cm.Items.Insert(insertPosition + 1, new MenuItem { Header = sp,StaysOpenOnClick=true });
+                cm.Items.Insert(insertPosition + 1, new MenuItem { Header = sp, StaysOpenOnClick = true });
             }
             else if (newModel == Neuron.modelType.Random)
             {
@@ -416,7 +436,7 @@ namespace BrainSimulator
             if (cc is ComboBox tb3)
             {
                 int.TryParse(tb3.Text, out int axonDelay);
-                int newDelay = (int)( axonDelay * (float)sl.Value / 10.0f);
+                int newDelay = (int)(axonDelay * (float)sl.Value / 10.0f);
                 Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronID);
                 n.AxonDelay = newDelay;
                 n.Update();
@@ -838,7 +858,7 @@ namespace BrainSimulator
                                 MainWindow.arrayView.RemoveShowSynapses(n1.id);
                             break;
                         case "toolTip":
-                            n1.ToolTip= n.ToolTip;
+                            n1.ToolTip = n.ToolTip;
                             break;
                         case "label":
                             if (n.Label == "")

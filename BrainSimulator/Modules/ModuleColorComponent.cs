@@ -15,13 +15,21 @@ namespace BrainSimulator.Modules
 {
     public class ModuleColorComponent : ModuleBase
     {
-        //any public variable you create here will automatically be stored with the network
-        //unless you precede it with the [XmlIgnore] directive
-        //[XlmIgnore] 
-        //public theStatus = 1;
 
         //PRESENT VALUES:
         //assumes that highest intensity is 4 and lowest is 28 with 8 steps
+
+        public override string ShortDescription { get => "Converts a color neuron to 4 rate-encoded neurons"; }
+        public override string LongDescription
+        {
+            get =>
+                "This module receives input from the Touch and Vision modules and merges the information to maintain a representation of " +
+                "physical objects in the entity's environment. It also supports imaingation via the temporary addition of imagined objects " + "" +
+                "and the temporary change in point of view.\r\n" +
+                "\r\n" +
+                "";
+        }
+
 
         public ModuleColorComponent()
         {
@@ -34,14 +42,21 @@ namespace BrainSimulator.Modules
             float min = 4;
             float  max = 24;
             float steps = 7;
-            float variation = 2;
+            float variation = 0.5F;
             Init();  //be sure to leave this here
             int theColor = na.GetNeuronAt(0, 0).LastChargeInt;
-            int b = (theColor & 0x000e0) >> 5;
-            int g = (theColor & 0xe000) >> 13;
-            int r = (theColor & 0xe00000) >> 21;
-            int i = b > g ? b : g;
-            i = i > r ? i : r;
+            int b = (theColor & 0x000ff) >> 0;
+            int g = (theColor & 0xff00) >> 8;
+            int r = (theColor & 0xff0000) >> 16;
+
+            float luminance = 0.2126f * r + 0.7152f * g + 0.0722f * b;
+            int i = (int) luminance;
+            //here rgbi have values 0-255
+
+            b /= 32;
+            g /= 32;
+            r /= 32;
+            i /= 32;
             //here rgbi have values of 0-7
 
             Neuron n = na.GetNeuronAt("Blu");

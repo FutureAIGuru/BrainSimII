@@ -78,11 +78,17 @@ namespace BrainSimulator
             {
                 if (v.Name != "ModuleBase")
                 {
-                    Type t = Type.GetType(v.FullName);
+                    //Type t = Type.GetType(v.FullName);
                     if (v.Name != "ModuleBase")
                     {
+                        //get the tooltip
+                        Type t = Type.GetType("BrainSimulator.Modules." + v.Name);
+                        ModuleBase theModule = (Modules.ModuleBase)Activator.CreateInstance(t);
+                        string toolTip = theModule.ShortDescription;
+
+                        //make the combobox entry
                         string theName = v.Name.Replace("Module", "");
-                        cb.Items.Add(theName);
+                        cb.Items.Add(new Label { Content = theName, ToolTip = toolTip,Margin=new Thickness(0),Padding =  new Thickness(0)});
                     }
                 }
             }
@@ -170,9 +176,10 @@ namespace BrainSimulator
                 Control cc = Utils.FindByName(cm, "AreaType");
                 if (cc is ComboBox cb && cb.SelectedValue != null)
                 {
-                    commandLine = "Module" + (string)cb.SelectedValue;
+                    string moduleType = (string)((Label)cb.SelectedValue).Content;
+                    commandLine = "Module" + moduleType;
                     if (commandLine == "") return;//something went wrong
-                    label = (string)cb.SelectedValue;
+                    label = moduleType;
                 }
 
                 if (label == "" && commandLine == "") return;

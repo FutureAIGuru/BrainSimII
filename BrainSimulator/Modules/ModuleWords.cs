@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace BrainSimulator.Modules
 {
-    public class ModuleWorde : ModuleBase
+    public class ModuleWords : ModuleBase
     {
         //any public variable you create here will automatically be stored with the network
         //unless you precede it with the [XmlIgnore] directive
@@ -25,7 +25,12 @@ namespace BrainSimulator.Modules
             List<int> neuronsWhichFired = GetNeuronsWhichFired();
 
         }
-
+        
+        public ModuleWords()
+        {
+            minHeight = 10;
+           minWidth = 20;
+        }
         List<int> GetNeuronsWhichFired()
         {
             List<int> retVal = new List<int>();
@@ -41,7 +46,7 @@ namespace BrainSimulator.Modules
 
         Dictionary<string, int> wordDictionary = new Dictionary<string, int>();
 
-        public override string ShortDescription { get => "TO DO: Short description of Module Words."; }
+        public override string ShortDescription { get => "Read a .txt file and load the words into a TO DO: Short description of Module Words."; }
         public override string LongDescription
         {
             get =>
@@ -57,22 +62,27 @@ namespace BrainSimulator.Modules
             {
                 wordDictionary.Add(word, nextFreeNeuron);
                 wordNeuronID = nextFreeNeuron++;
-                na.GetNeuronAt(wordNeuronID).Label = word; //useful someday
+                if (na.GetNeuronAt(wordNeuronID) is Neuron n1)
+                    n1.Label = word; //useful someday
             }
             wordDictionary.TryGetValue(nextWord, out int nextWordNeuronID);
             if (nextWordNeuronID == 0) // if there is no neuron for the word, add one
             {
                 wordDictionary.Add(nextWord, nextFreeNeuron);
                 nextWordNeuronID = nextFreeNeuron++;
-                na.GetNeuronAt(nextWordNeuronID).Label = nextWord; //useful someday
+                if (na.GetNeuronAt(nextWordNeuronID) is Neuron n1)
+                    n1.Label = nextWord; //useful someday
             }
             Neuron n = na.GetNeuronAt(wordNeuronID);
             Neuron nNext = na.GetNeuronAt(nextWordNeuronID);
-            Synapse s = n.FindSynapse(nNext.id);
-            float weight = .1f;
-            if (s != null)
-                weight += .1f;
-            n.AddSynapse(nNext.id, weight);
+            if (n != null && nNext != null)
+            {
+                Synapse s = n.FindSynapse(nNext.id);
+                float weight = .1f;
+                if (s != null)
+                    weight += .1f;
+                n.AddSynapse(nNext.id, weight);
+            }
         }
 
         /// <summary>

@@ -131,7 +131,7 @@ namespace BrainSimulator
         //this gets the neuron with an index relative to the area itself
         public Neuron GetNeuronAt(int index)
         {
-            if (index > NeuronCount) return null;
+            if (index >= NeuronCount) return null;
             int neuronIndex = (index % Height) + (index / Height) * Rows + firstNeuron;
             return MainWindow.theNeuronArray.GetNeuron(neuronIndex);
         }

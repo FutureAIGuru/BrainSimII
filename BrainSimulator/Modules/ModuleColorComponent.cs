@@ -30,7 +30,8 @@ namespace BrainSimulator.Modules
         {
             get =>
                 "The ColorComponent module has four labeled nerons that have the values of the red, green, blue and " +
-                "intensity values of a color that is fed in.";
+                "intensity values of a color that is fed in. This somewhat emulates the signals which would be generated "+
+                "by cells in the retina.";
         }
 
         public override void Fire()

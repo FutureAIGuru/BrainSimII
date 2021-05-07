@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <NeuronArray xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <networkNotes>&lt;Section xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve" TextAlignment="Left" LineHeight="Auto" IsHyphenationEnabled="False" xml:lang="en-us" FlowDirection="LeftToRight" NumberSubstitution.CultureSource="Text" NumberSubstitution.Substitution="AsCulture" FontFamily="Segoe UI" FontStyle="Normal" FontWeight="Normal" FontStretch="Normal" FontSize="12" Foreground="#FF000000" Typography.StandardLigatures="True" Typography.ContextualLigatures="True" Typography.DiscretionaryLigatures="False" Typography.HistoricalLigatures="False" Typography.AnnotationAlternates="0" Typography.ContextualAlternates="True" Typography.HistoricalForms="False" Typography.Kerning="True" Typography.CapitalSpacing="False" Typography.CaseSensitiveForms="False" Typography.StylisticSet1="False" Typography.StylisticSet2="False" Typography.StylisticSet3="False" Typography.StylisticSet4="False" Typography.StylisticSet5="False" Typography.StylisticSet6="False" Typography.StylisticSet7="False" Typography.StylisticSet8="False" Typography.StylisticSet9="False" Typography.StylisticSet10="False" Typography.StylisticSet11="False" Typography.StylisticSet12="False" Typography.StylisticSet13="False" Typography.StylisticSet14="False" Typography.StylisticSet15="False" Typography.StylisticSet16="False" Typography.StylisticSet17="False" Typography.StylisticSet18="False" Typography.StylisticSet19="False" Typography.StylisticSet20="False" Typography.Fraction="Normal" Typography.SlashedZero="False" Typography.MathematicalGreek="False" Typography.EastAsianExpertForms="False" Typography.Variants="Normal" Typography.Capitals="Normal" Typography.NumeralStyle="Normal" Typography.NumeralAlignment="Normal" Typography.EastAsianWidths="Normal" Typography.EastAsianLanguage="Normal" Typography.StandardSwashes="0" Typography.ContextualSwashes="0" Typography.StylisticAlternates="0"&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Purpose:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Demonstrates the end-to-end intelligence model. Sallie can sense her environment through vision, touch, hearing, and smell can navigate around obstacles she sees and move toward goals.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Things to try:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Move and turn Sallie by using the controls at the upper left of the network. These are akin to the motor controls on a robot.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Rotate Sallie a full turn and see how object are mapped into her internal mental model. Notice that it is not terribly accurate as binocular depth perception had decreasing accuracy as the distance increases. Notice as Sallie approaches an obstacle, her perception of it position becomes progressively more accurate until she can touch it for the most accurate possible location information.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Enable learning by firing the "Color" neuron. This enables the simulator to say "This is [color]" based on the color direction in front of Sallie. Over time, Sallie can learn the names for colors. You can see the words the simulator is injecting into the audio stream in the Knowledge Store Debug window which shows the inputs and outputs to the Knowledge Store (as opposed to its content). &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Enable more learning by firing the "Action" neuron. The enables the simulator to send commands into Sallie's hearing stream and reward her when she responds correctly.  Over time she can learn to Go, Stop, Turn Right, Turn Left, and Say the color in front of her.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="14.25"&gt;Current state of development:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Once this network is complete, Sallie will be able to explore and manipulate her environment through several senses. She will be able to learn the limited language which goes along with the limitations in her abilities and her environment. She will be able to make sequences of decisions to further her goals. &lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run&gt;   Within these limits, she may appear to understand her environment and the words associated withit. After that, the environment can be expanded to three dimensions with more degrees of flexibility. Eventually, the simulation can be replaced with a simple robot operating in the real world.&lt;/Run&gt;&lt;/Paragraph&gt;&lt;Paragraph&gt;&lt;Run FontWeight="Bold" FontSize="12.75"&gt;Notes:&lt;/Run&gt;&lt;/Paragraph&gt;&lt;/Section&gt;</networkNotes>
-  <hideNotes>false</hideNotes>
-  <ShowSynapese>false</ShowSynapese>
-  <Generation>65</Generation>
+  <hideNotes>true</hideNotes>
+  <Generation>24</Generation>
   <EngineSpeed>250</EngineSpeed>
+  <EngineIsPaused>false</EngineIsPaused>
   <arraySize>10000</arraySize>
   <rows>100</rows>
-  <lastFireCount>3</lastFireCount>
+  <lastFireCount>185</lastFireCount>
   <displayParams>
     <NeuronDisplaySize>39</NeuronDisplaySize>
     <DisplayOffset>
@@ -19,8 +19,7 @@
   <ShowSynapses>true</ShowSynapses>
   <Modules>
     <ModuleView>
-      <AreaNumber>0</AreaNumber>
-      <Label>ModuleTurn </Label>
+      <Label>Turn </Label>
       <FirstNeuron>101</FirstNeuron>
       <Height>1</Height>
       <Width>5</Width>
@@ -40,8 +39,7 @@
       </TheModule>
     </ModuleView>
     <ModuleView>
-      <AreaNumber>0</AreaNumber>
-      <Label>Module2DVision </Label>
+      <Label>2DVision </Label>
       <FirstNeuron>107</FirstNeuron>
       <Height>2</Height>
       <Width>91</Width>
@@ -61,8 +59,7 @@
       </TheModule>
     </ModuleView>
     <ModuleView>
-      <AreaNumber>0</AreaNumber>
-      <Label>Module2DKB</Label>
+      <Label>2DKB</Label>
       <FirstNeuron>110</FirstNeuron>
       <Height>10</Height>
       <Width>11</Width>
@@ -124,7 +121,7 @@
               <int>5</int>
             </parents>
             <references />
-            <useCount>3</useCount>
+            <useCount>5</useCount>
           </SThing>
           <SThing>
             <label>Stop</label>
@@ -172,7 +169,7 @@
               <int>5</int>
             </parents>
             <references />
-            <useCount>1</useCount>
+            <useCount>2</useCount>
           </SThing>
           <SThing>
             <label>Go</label>
@@ -363,7 +360,12 @@
             <parents>
               <int>31</int>
             </parents>
-            <references />
+            <references>
+              <Point>
+                <X>47</X>
+                <Y>2</Y>
+              </Point>
+            </references>
             <useCount>0</useCount>
           </SThing>
           <SThing>
@@ -462,7 +464,7 @@
               <int>23</int>
             </parents>
             <references />
-            <useCount>12</useCount>
+            <useCount>18</useCount>
             <V xsi:type="xsd:int">255</V>
           </SThing>
           <SThing>
@@ -511,6 +513,19 @@
               </Point>
               <Point>
                 <X>6</X>
+                <Y>2</Y>
+              </Point>
+            </references>
+            <useCount>0</useCount>
+          </SThing>
+          <SThing>
+            <label>uu0</label>
+            <parents>
+              <int>8</int>
+            </parents>
+            <references>
+              <Point>
+                <X>12</X>
                 <Y>1</Y>
               </Point>
             </references>
@@ -521,8 +536,7 @@
       </TheModule>
     </ModuleView>
     <ModuleView>
-      <AreaNumber>0</AreaNumber>
-      <Label>ModuleMove </Label>
+      <Label>Move </Label>
       <FirstNeuron>202</FirstNeuron>
       <Height>5</Height>
       <Width>3</Width>
@@ -542,8 +556,7 @@
       </TheModule>
     </ModuleView>
     <ModuleView>
-      <AreaNumber>0</AreaNumber>
-      <Label>Module2DSim </Label>
+      <Label>2DSim </Label>
       <FirstNeuron>800</FirstNeuron>
       <Height>6</Height>
       <Width>6</Width>
@@ -816,12 +829,12 @@
         </objects>
         <armRelative>
           <Vector>
-            <X>0.7272857695853463</X>
-            <Y>0.58582846349182116</Y>
+            <X>0.53044563785776178</X>
+            <Y>0.64461025227131252</Y>
           </Vector>
           <Vector>
-            <X>0.43681068563903713</X>
-            <Y>-0.59939189601210718</Y>
+            <X>0.47755910273906432</X>
+            <Y>-0.25478745751097664</Y>
           </Vector>
         </armRelative>
         <entityPosition>
@@ -833,7 +846,6 @@
       </TheModule>
     </ModuleView>
     <ModuleView>
-      <AreaNumber>0</AreaNumber>
       <Label>KBOut</Label>
       <FirstNeuron>1310</FirstNeuron>
       <Height>10</Height>
@@ -851,11 +863,11 @@
           <Y>0</Y>
         </dlgSize>
         <dlgIsOpen>false</dlgIsOpen>
+        <doWork>true</doWork>
       </TheModule>
     </ModuleView>
     <ModuleView>
-      <AreaNumber>0</AreaNumber>
-      <Label>Module2DSmell </Label>
+      <Label>2DSmell </Label>
       <FirstNeuron>2002</FirstNeuron>
       <Height>1</Height>
       <Width>4</Width>
@@ -875,8 +887,7 @@
       </TheModule>
     </ModuleView>
     <ModuleView>
-      <AreaNumber>0</AreaNumber>
-      <Label>Module2DTouch </Label>
+      <Label>2DTouch </Label>
       <FirstNeuron>2104</FirstNeuron>
       <Height>2</Height>
       <Width>12</Width>
@@ -896,8 +907,7 @@
       </TheModule>
     </ModuleView>
     <ModuleView>
-      <AreaNumber>0</AreaNumber>
-      <Label>ModuleLearning </Label>
+      <Label>Learning </Label>
       <FirstNeuron>2120</FirstNeuron>
       <Height>2</Height>
       <Width>2</Width>
@@ -917,8 +927,7 @@
       </TheModule>
     </ModuleView>
     <ModuleView>
-      <AreaNumber>0</AreaNumber>
-      <Label>ModuleKBDebug </Label>
+      <Label>KBDebug </Label>
       <FirstNeuron>2510</FirstNeuron>
       <Height>2</Height>
       <Width>2</Width>
@@ -938,8 +947,7 @@
       </TheModule>
     </ModuleView>
     <ModuleView>
-      <AreaNumber>0</AreaNumber>
-      <Label>ModuleHearWords </Label>
+      <Label>HearWords </Label>
       <FirstNeuron>2513</FirstNeuron>
       <Height>6</Height>
       <Width>5</Width>
@@ -959,8 +967,7 @@
       </TheModule>
     </ModuleView>
     <ModuleView>
-      <AreaNumber>0</AreaNumber>
-      <Label>ModuleSpeechIn </Label>
+      <Label>SpeechIn </Label>
       <FirstNeuron>2620</FirstNeuron>
       <Height>7</Height>
       <Width>5</Width>
@@ -980,8 +987,7 @@
       </TheModule>
     </ModuleView>
     <ModuleView>
-      <AreaNumber>0</AreaNumber>
-      <Label>ModuleBehavior </Label>
+      <Label>Behavior </Label>
       <FirstNeuron>2910</FirstNeuron>
       <Height>1</Height>
       <Width>11</Width>
@@ -1001,8 +1007,7 @@
       </TheModule>
     </ModuleView>
     <ModuleView>
-      <AreaNumber>0</AreaNumber>
-      <Label>ModuleMotor </Label>
+      <Label>Motor </Label>
       <FirstNeuron>3114</FirstNeuron>
       <Height>6</Height>
       <Width>4</Width>
@@ -1022,8 +1027,7 @@
       </TheModule>
     </ModuleView>
     <ModuleView>
-      <AreaNumber>0</AreaNumber>
-      <Label>ModuleSpeakWords </Label>
+      <Label>SpeakWords </Label>
       <FirstNeuron>3221</FirstNeuron>
       <Height>2</Height>
       <Width>2</Width>
@@ -1043,8 +1047,7 @@
       </TheModule>
     </ModuleView>
     <ModuleView>
-      <AreaNumber>0</AreaNumber>
-      <Label>ModuleGoToDest </Label>
+      <Label>GoToDest </Label>
       <FirstNeuron>3412</FirstNeuron>
       <Height>2</Height>
       <Width>3</Width>
@@ -1064,8 +1067,7 @@
       </TheModule>
     </ModuleView>
     <ModuleView>
-      <AreaNumber>0</AreaNumber>
-      <Label>ModuleCommand </Label>
+      <Label>Command </Label>
       <FirstNeuron>3812</FirstNeuron>
       <Height>2</Height>
       <Width>2</Width>
@@ -1086,8 +1088,7 @@
       </TheModule>
     </ModuleView>
     <ModuleView>
-      <AreaNumber>0</AreaNumber>
-      <Label>Module2DModel </Label>
+      <Label>2DModel </Label>
       <FirstNeuron>4110</FirstNeuron>
       <Height>2</Height>
       <Width>2</Width>
@@ -1108,6 +1109,7 @@
       </TheModule>
     </ModuleView>
   </Modules>
+  <RefractoryDelay>0</RefractoryDelay>
   <Neurons>
     <Neuron>
       <Id>101</Id>
@@ -1116,15 +1118,15 @@
     </Neuron>
     <Neuron>
       <Id>107</Id>
-      <LastCharge>1.671168E+07</LastCharge>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LastCharge>16711680</LastCharge>
+      <LeakRate>0</LeakRate>
       <Label>Left</Label>
     </Neuron>
     <Neuron>
       <Id>108</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
       <Label>Rigit</Label>
     </Neuron>
     <Neuron>
@@ -1188,14 +1190,14 @@
     </Neuron>
     <Neuron>
       <Id>207</Id>
-      <LastCharge>1.671168E+07</LastCharge>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LastCharge>16711680</LastCharge>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>208</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>210</Id>
@@ -1249,8 +1251,8 @@
     </Neuron>
     <Neuron>
       <Id>301</Id>
-      <LeakRate>0</LeakRate>
       <Model>FloatValue</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>302</Id>
@@ -1264,8 +1266,8 @@
     </Neuron>
     <Neuron>
       <Id>304</Id>
-      <LeakRate>0</LeakRate>
       <Model>FloatValue</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>305</Id>
@@ -1279,14 +1281,14 @@
     </Neuron>
     <Neuron>
       <Id>307</Id>
-      <LastCharge>1.671168E+07</LastCharge>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LastCharge>16711680</LastCharge>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>308</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>310</Id>
@@ -1349,14 +1351,14 @@
     </Neuron>
     <Neuron>
       <Id>407</Id>
-      <LastCharge>1.671168E+07</LastCharge>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LastCharge>16711680</LastCharge>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>408</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>410</Id>
@@ -1410,14 +1412,14 @@
     </Neuron>
     <Neuron>
       <Id>507</Id>
-      <LastCharge>1.671168E+07</LastCharge>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LastCharge>16711680</LastCharge>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>508</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>510</Id>
@@ -1461,27 +1463,31 @@
     </Neuron>
     <Neuron>
       <Id>607</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>608</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>610</Id>
       <Label>si1</Label>
     </Neuron>
     <Neuron>
+      <Id>611</Id>
+      <Label>uu0</Label>
+    </Neuron>
+    <Neuron>
       <Id>707</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>708</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>800</Id>
@@ -1510,13 +1516,13 @@
     </Neuron>
     <Neuron>
       <Id>807</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>808</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>901</Id>
@@ -1536,13 +1542,13 @@
     </Neuron>
     <Neuron>
       <Id>907</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>908</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>1000</Id>
@@ -1554,23 +1560,23 @@
     </Neuron>
     <Neuron>
       <Id>1007</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>1008</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>1107</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>1108</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>1202</Id>
@@ -1590,23 +1596,23 @@
     </Neuron>
     <Neuron>
       <Id>1207</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>1208</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>1307</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>1308</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>1310</Id>
@@ -1665,13 +1671,13 @@
     </Neuron>
     <Neuron>
       <Id>1407</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>1408</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>1410</Id>
@@ -1740,13 +1746,13 @@
     </Neuron>
     <Neuron>
       <Id>1507</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>1508</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>1510</Id>
@@ -1800,13 +1806,13 @@
     </Neuron>
     <Neuron>
       <Id>1607</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>1608</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>1610</Id>
@@ -1855,13 +1861,13 @@
     </Neuron>
     <Neuron>
       <Id>1707</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>1708</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>1710</Id>
@@ -1905,47 +1911,51 @@
     </Neuron>
     <Neuron>
       <Id>1807</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>1808</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>1810</Id>
       <Label>si1</Label>
     </Neuron>
     <Neuron>
+      <Id>1811</Id>
+      <Label>uu0</Label>
+    </Neuron>
+    <Neuron>
       <Id>1907</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>1908</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2002</Id>
-      <LeakRate>0</LeakRate>
       <Model>FloatValue</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2007</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2008</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2102</Id>
-      <LeakRate>0</LeakRate>
       <Model>FloatValue</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2104</Id>
@@ -1959,19 +1969,19 @@
     </Neuron>
     <Neuron>
       <Id>2107</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2108</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2202</Id>
+      <Model>FloatValue</Model>
       <LastCharge>0.1</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>FloatValue</Model>
     </Neuron>
     <Neuron>
       <Id>2204</Id>
@@ -1979,19 +1989,19 @@
     </Neuron>
     <Neuron>
       <Id>2207</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2208</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2302</Id>
+      <Model>FloatValue</Model>
       <LastCharge>0.0065</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>FloatValue</Model>
     </Neuron>
     <Neuron>
       <Id>2304</Id>
@@ -1999,13 +2009,13 @@
     </Neuron>
     <Neuron>
       <Id>2307</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2308</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2404</Id>
@@ -2013,13 +2023,13 @@
     </Neuron>
     <Neuron>
       <Id>2407</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2408</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2504</Id>
@@ -2027,13 +2037,13 @@
     </Neuron>
     <Neuron>
       <Id>2507</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2508</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2513</Id>
@@ -2051,13 +2061,13 @@
     </Neuron>
     <Neuron>
       <Id>2607</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2608</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2620</Id>
@@ -2093,13 +2103,13 @@
     </Neuron>
     <Neuron>
       <Id>2707</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2708</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2720</Id>
@@ -2123,13 +2133,13 @@
     </Neuron>
     <Neuron>
       <Id>2807</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2808</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2904</Id>
@@ -2137,18 +2147,14 @@
       <Label>Done►</Label>
     </Neuron>
     <Neuron>
-      <Id>2905</Id>
-      <LastCharge>2</LastCharge>
-    </Neuron>
-    <Neuron>
       <Id>2907</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2908</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>2910</Id>
@@ -2161,13 +2167,13 @@
     </Neuron>
     <Neuron>
       <Id>3007</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>3008</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>3010</Id>
@@ -2181,14 +2187,14 @@
     </Neuron>
     <Neuron>
       <Id>3107</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>3108</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>3110</Id>
@@ -2368,19 +2374,19 @@
     </Neuron>
     <Neuron>
       <Id>3207</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>3208</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>3210</Id>
-      <LeakRate>0</LeakRate>
       <Model>FloatValue</Model>
+      <LeakRate>0</LeakRate>
       <Label>Theta</Label>
     </Neuron>
     <Neuron>
@@ -2419,14 +2425,14 @@
     </Neuron>
     <Neuron>
       <Id>3307</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>3308</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>3310</Id>
@@ -2459,19 +2465,19 @@
     </Neuron>
     <Neuron>
       <Id>3407</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>3408</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>3410</Id>
-      <LeakRate>0</LeakRate>
       <Model>FloatValue</Model>
+      <LeakRate>0</LeakRate>
       <Label>R</Label>
     </Neuron>
     <Neuron>
@@ -2505,14 +2511,14 @@
     </Neuron>
     <Neuron>
       <Id>3507</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>3508</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>3510</Id>
@@ -2521,20 +2527,20 @@
     </Neuron>
     <Neuron>
       <Id>3512</Id>
-      <LeakRate>0</LeakRate>
       <Model>FloatValue</Model>
+      <LeakRate>0</LeakRate>
       <Label>Theta</Label>
     </Neuron>
     <Neuron>
       <Id>3607</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>3608</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>3610</Id>
@@ -2543,20 +2549,20 @@
     </Neuron>
     <Neuron>
       <Id>3612</Id>
-      <LeakRate>0</LeakRate>
       <Model>FloatValue</Model>
+      <LeakRate>0</LeakRate>
       <Label>R</Label>
     </Neuron>
     <Neuron>
       <Id>3707</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>3708</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>3710</Id>
@@ -2565,14 +2571,14 @@
     </Neuron>
     <Neuron>
       <Id>3807</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>3808</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>3810</Id>
@@ -2581,44 +2587,44 @@
     </Neuron>
     <Neuron>
       <Id>3907</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>3908</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>3910</Id>
-      <LeakRate>0</LeakRate>
       <Model>FloatValue</Model>
+      <LeakRate>0</LeakRate>
       <Label>CollAngle</Label>
     </Neuron>
     <Neuron>
       <Id>4007</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>4008</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>4107</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>4108</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>4110</Id>
@@ -2631,15 +2637,15 @@
     </Neuron>
     <Neuron>
       <Id>4207</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>4208</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>4210</Id>
@@ -2648,563 +2654,563 @@
     </Neuron>
     <Neuron>
       <Id>4307</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>4308</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>4407</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>4408</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>4507</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>4508</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>4607</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
       <Label>  ||</Label>
     </Neuron>
     <Neuron>
       <Id>4608</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>4707</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>4708</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>4807</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>4808</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>4907</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>4908</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>5007</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>5008</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>5107</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>5108</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>5207</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>5208</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>5307</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>5308</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>5407</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>5408</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>5507</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>5508</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>5607</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>5608</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>5707</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>5708</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>5807</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>5808</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>5907</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>5908</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>6007</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>6008</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>6107</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>6108</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>6207</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>6208</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>6307</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>6308</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>6407</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>6408</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>6507</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>6508</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>6607</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>6608</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>6707</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>6708</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>6807</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>6808</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>6907</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>6908</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>7007</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>7008</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>7107</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>7108</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>7207</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>7208</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>7307</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>7308</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>7407</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>7408</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>7507</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>7508</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>7607</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>7608</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>7707</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>7708</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>7807</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>7808</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>7907</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>7908</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>8007</Id>
+      <Model>Color</Model>
       <LastCharge>255</LastCharge>
       <LeakRate>0</LeakRate>
-      <Model>Color</Model>
     </Neuron>
     <Neuron>
       <Id>8008</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>8107</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>8108</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>8207</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>8208</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>8307</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>8308</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>8407</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>8408</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>8507</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>8508</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>8607</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>8608</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>8707</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>8708</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>8807</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>8808</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>8907</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>8908</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>9007</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>9008</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>9107</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
     <Neuron>
       <Id>9108</Id>
-      <LeakRate>0</LeakRate>
       <Model>Color</Model>
+      <LeakRate>0</LeakRate>
     </Neuron>
   </Neurons>
 </NeuronArray>

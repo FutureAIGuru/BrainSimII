@@ -69,8 +69,8 @@ namespace BrainSimulator
         public ModuleView() { }
         public string Label { get => label.StartsWith("Module")?label.Replace("Module",""):label; set => label = value; }
         public int FirstNeuron { get => firstNeuron; set => firstNeuron = value; }
-        public int Height { get => height; set => height = value; }
-        public int Width { get => width; set => width = value; }
+        public int Height { get => height; set { height = value; if (TheModule != null) TheModule.SizeChanged(); } }
+        public int Width { get => width; set { width = value; if (TheModule != null) TheModule.SizeChanged(); } }
         public int Color { get => color; set => color = value; }
 
         public string CommandLine { get => commandLine; set => commandLine = value; }

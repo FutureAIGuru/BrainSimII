@@ -314,7 +314,7 @@ namespace BrainSimulator
                                 }
 
                                 NeuronOnScreen neuronScreenCache = null;
-                                if (n.inUse && (l is Ellipse || l is Rectangle))
+                                if ((n.inUse || n.Label != "") && (l is Ellipse || l is Rectangle))
                                 {
                                     neuronScreenCache = new NeuronOnScreen(neuronID, l, -10, lbl);
                                 }

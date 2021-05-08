@@ -245,6 +245,93 @@ namespace BrainSimulator
             mi.Items.Add(sp0);
         }
 
+        //This creates or updates the portion of the context menu content which depends on the model type
+        private static void SetCustomCMItems(ContextMenu cm, Neuron n, Neuron.modelType newModel)
+        {
+            //find first seperator;
+            int insertPosition = 0;
+            for (int i = 0; i < cm.Items.Count; i++)
+            {
+                if (cm.Items[i].GetType() == typeof(Separator))
+                {
+                    insertPosition = i + 1;
+                    while (i + 1 < cm.Items.Count && cm.Items[i + 1].GetType() != typeof(Separator))
+                        cm.Items.RemoveAt(i + 1);
+                    break;
+                }
+            }
+
+            //The charge value formatted based on the model
+            if (newModel == Neuron.modelType.Color)
+            {
+                StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
+                sp.Children.Add(new Label { Content = "Content: " });
+                ComboBox cb0 = (Utils.CreateComboBox("CurrentCharge", n.LastChargeInt, colorValues, colorFormatString, 80, ComboBox_ContentChanged));
+                sp.Children.Add(cb0);
+                for (int i = 0; i < cb0.Items.Count; i++)
+                {
+                    string cc = cb0.Items[i].ToString();
+                    cb0.Items[i] = new Label { Content = cc };
+                    if (int.TryParse(cc, System.Globalization.NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int colorValue))
+                    {
+                        System.Drawing.Color col = System.Drawing.ColorTranslator.FromWin32(colorValue);
+                        if (col.R * 0.2126 + col.G * 0.7152 + col.B * 0.0722 < 255 / 2)
+                        {
+                            //dark color
+                            ((Label)cb0.Items[i]).Foreground = new SolidColorBrush(Utils.IntToColor(0xffffff));
+                        }
+                         ((Label)cb0.Items[i]).Background = new SolidColorBrush(Utils.IntToColor(colorValue));
+                    }
+                }
+                cm.Items.Insert(insertPosition + 1, new MenuItem { Header = sp, StaysOpenOnClick = true });
+
+            }
+            else if (newModel == Neuron.modelType.FloatValue)
+            {
+                cm.Items.Insert(insertPosition,
+                    Utils.CreateComboBoxMenuItem("CurrentCharge", n.lastCharge, currentChargeValues, floatValueFormatString, "Content: ", 80, ComboBox_ContentChanged));
+            }
+            else
+            {
+                cm.Items.Insert(insertPosition,
+                    Utils.CreateComboBoxMenuItem("CurrentCharge", n.lastCharge, currentChargeValues, floatFormatString, "Charge: ", 80, ComboBox_ContentChanged));
+            }
+
+            if (newModel == Neuron.modelType.LIF)
+            {
+                cm.Items.Insert(insertPosition + 1,
+                    Utils.CreateComboBoxMenuItem("LeakRate", Math.Abs(n.leakRate), leakRateValues, floatFormatString, "Leak Rate: ", 80, ComboBox_ContentChanged));
+                cm.Items.Insert(insertPosition + 2,
+                    Utils.CreateComboBoxMenuItem("AxonDelay", n.axonDelay, axonDelayValues, intFormatString, "AxonDelay: ", 80, ComboBox_ContentChanged));
+            }
+            else if (newModel == Neuron.modelType.Always)
+            {
+                StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
+                sp.Children.Add(new Label { Content = "Period: " });
+                ComboBox cb0 = (Utils.CreateComboBox("AxonDelay", n.axonDelay, alwaysDelayValues, intFormatString, 80, ComboBox_ContentChanged));
+                sp.Children.Add(cb0);
+                Slider sl = new Slider { Width = 100, Margin = new Thickness(10, 4, 0, 0), Value = 10, Maximum = 10 };
+                sl.ValueChanged += Sl_ValueChanged;
+                sp.Children.Add(sl);
+                cm.Items.Insert(insertPosition + 1, new MenuItem { Header = sp, StaysOpenOnClick = true });
+            }
+            else if (newModel == Neuron.modelType.Random)
+            {
+                cm.Items.Insert(insertPosition + 1,
+                    Utils.CreateComboBoxMenuItem("AxonDelay", n.axonDelay, meanValues, intFormatString, "Mean: ", 80, ComboBox_ContentChanged));
+                cm.Items.Insert(insertPosition + 2,
+                    Utils.CreateComboBoxMenuItem("LeakRate", Math.Abs(n.leakRate), stdDevValues, floatFormatString, "Std Dev: ", 80, ComboBox_ContentChanged));
+            }
+            else if (newModel == Neuron.modelType.Burst)
+            {
+                cm.Items.Insert(insertPosition + 1,
+                    Utils.CreateComboBoxMenuItem("AxonDelay", n.axonDelay, alwaysDelayValues, intFormatString, "Count: ", 80, ComboBox_ContentChanged));
+                cm.Items.Insert(insertPosition + 2,
+                    Utils.CreateComboBoxMenuItem("LeakRate", Math.Abs(n.leakRate), axonDelayValues, intFormatString, "Rate: ", 80, ComboBox_ContentChanged));
+            }
+        }
+
+
         private static void SynapseEntry_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (sender is TextBlock tb0)
@@ -336,93 +423,6 @@ namespace BrainSimulator
             }
         }
 
-        //This creates or updates the portion of the context menu content which depends on the model type
-        private static void SetCustomCMItems(ContextMenu cm, Neuron n, Neuron.modelType newModel)
-        {
-            //find first seperator;
-            int insertPosition = 0;
-            for (int i = 0; i < cm.Items.Count; i++)
-            {
-                if (cm.Items[i].GetType() == typeof(Separator))
-                {
-                    insertPosition = i + 1;
-                    while (i + 1 < cm.Items.Count && cm.Items[i + 1].GetType() != typeof(Separator))
-                        cm.Items.RemoveAt(i + 1);
-                    break;
-                }
-            }
-
-            //The charge value formatted based on the model
-            if (newModel == Neuron.modelType.Color)
-            {
-                StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
-                sp.Children.Add(new Label { Content = "Content: " });
-                ComboBox cb0 = (Utils.CreateComboBox("CurrentCharge", n.LastChargeInt, colorValues, colorFormatString, 80, ComboBox_ContentChanged));
-                sp.Children.Add(cb0);
-                for (int i = 0; i < cb0.Items.Count; i++)
-                {
-                    string cc = cb0.Items[i].ToString();
-                    cb0.Items[i] = new Label { Content = cc };
-                    if (int.TryParse(cc, System.Globalization.NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int colorValue))
-                    {
-                        System.Drawing.Color col = System.Drawing.ColorTranslator.FromWin32(colorValue);
-                        if (col.R * 0.2126 + col.G * 0.7152 + col.B * 0.0722 < 255 / 2)
-                        {
-                            //dark color
-                            ((Label)cb0.Items[i]).Foreground = new SolidColorBrush(Utils.IntToColor(0xffffff));
-                        }
-                         ((Label)cb0.Items[i]).Background = new SolidColorBrush(Utils.IntToColor(colorValue));
-                    }
-                }
-                //cm.Items.Insert(insertPosition,
-                //    Utils.CreateComboBoxMenuItem("CurrentCharge", n.LastChargeInt, colorValues, colorFormatString, "Content: ", 80, ComboBox_ContentChanged));
-                cm.Items.Insert(insertPosition + 1, new MenuItem { Header = sp, StaysOpenOnClick = true });
-
-            }
-            else if (newModel == Neuron.modelType.FloatValue)
-            {
-                cm.Items.Insert(insertPosition,
-                    Utils.CreateComboBoxMenuItem("CurrentCharge", n.lastCharge, currentChargeValues, floatValueFormatString, "Content: ", 80, ComboBox_ContentChanged));
-            }
-            else
-            {
-                cm.Items.Insert(insertPosition,
-                    Utils.CreateComboBoxMenuItem("CurrentCharge", n.lastCharge, currentChargeValues, floatFormatString, "Charge: ", 80, ComboBox_ContentChanged));
-            }
-
-            if (newModel == Neuron.modelType.LIF)
-            {
-                cm.Items.Insert(insertPosition + 1,
-                    Utils.CreateComboBoxMenuItem("LeakRate", Math.Abs(n.leakRate), leakRateValues, floatFormatString, "Leak Rate: ", 80, ComboBox_ContentChanged));
-                cm.Items.Insert(insertPosition + 2,
-                    Utils.CreateComboBoxMenuItem("AxonDelay", n.axonDelay, axonDelayValues, intFormatString, "AxonDelay: ", 80, ComboBox_ContentChanged));
-            }
-            else if (newModel == Neuron.modelType.Always)
-            {
-                StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
-                sp.Children.Add(new Label { Content = "Period: " });
-                ComboBox cb0 = (Utils.CreateComboBox("AxonDelay", n.axonDelay, alwaysDelayValues, intFormatString, 80, ComboBox_ContentChanged));
-                sp.Children.Add(cb0);
-                Slider sl = new Slider { Width = 100, Margin = new Thickness(10, 4, 0, 0), Value = 10, Maximum = 10 };
-                sl.ValueChanged += Sl_ValueChanged;
-                sp.Children.Add(sl);
-                cm.Items.Insert(insertPosition + 1, new MenuItem { Header = sp, StaysOpenOnClick = true });
-            }
-            else if (newModel == Neuron.modelType.Random)
-            {
-                cm.Items.Insert(insertPosition + 1,
-                    Utils.CreateComboBoxMenuItem("AxonDelay", n.axonDelay, meanValues, intFormatString, "Mean: ", 80, ComboBox_ContentChanged));
-                cm.Items.Insert(insertPosition + 2,
-                    Utils.CreateComboBoxMenuItem("LeakRate", Math.Abs(n.leakRate), stdDevValues, floatFormatString, "Std Dev: ", 80, ComboBox_ContentChanged));
-            }
-            else if (newModel == Neuron.modelType.Burst)
-            {
-                cm.Items.Insert(insertPosition + 1,
-                    Utils.CreateComboBoxMenuItem("AxonDelay", n.axonDelay, alwaysDelayValues, intFormatString, "Count: ", 80, ComboBox_ContentChanged));
-                cm.Items.Insert(insertPosition + 2,
-                    Utils.CreateComboBoxMenuItem("LeakRate", Math.Abs(n.leakRate), axonDelayValues, intFormatString, "Rate: ", 80, ComboBox_ContentChanged));
-            }
-        }
 
         //get here if the user moved the slider for an Always firing neuron
         private static void Sl_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -449,7 +449,7 @@ namespace BrainSimulator
         static List<float> meanValues = new List<float>() { 0, 1, 4, 10 };
         static List<float> stdDevValues = new List<float>() { 0, 1, 4, 10 };
         static List<float> currentChargeValues = new List<float>() { 0, 1, };
-        static List<float> colorValues = new List<float>() { 0x00, 0xffffff };
+        static List<float> colorValues = new List<float>() { 0x00,0xff0000,0xff00,0xff,0xffff00,0xff00ff,0xffff, 0xffa500,0xffffff };
         static List<float> alwaysDelayValues = new List<float>() { 0, 1, 2, 3 };
 
         const string intFormatString = "F0";

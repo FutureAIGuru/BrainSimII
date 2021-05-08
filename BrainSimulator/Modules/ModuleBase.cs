@@ -22,9 +22,13 @@ namespace BrainSimulator.Modules
         public bool initialized = false;
 
         protected int minWidth = 2;
+        protected int maxWidth = 5;
         protected int minHeight = 2;
+        protected int maxHeight = 5;
         public int MinWidth => minWidth;
         public int MinHeight => minHeight;
+        public int MaxWidth => maxWidth;
+        public int MaxHeight => maxHeight;
 
 
         protected ModuleBaseDlg dlg = null;
@@ -205,6 +209,8 @@ namespace BrainSimulator.Modules
         { }
         //this is called to allow for any data massaging needed after loading the file
         public virtual void SetUpAfterLoad()
+        { }
+        public virtual void SizeChanged()
         { }
 
         public ModuleBase FindModuleByType(Type t)

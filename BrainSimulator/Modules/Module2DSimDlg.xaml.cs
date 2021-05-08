@@ -169,6 +169,7 @@ namespace BrainSimulator.Modules
             //draw the current field of view
             if ((bool)cbArcs.IsChecked)
             {
+
                 for (int i = 0; i < parent.currentView0.Count; i++)
                 {
                     try //TODO lock the list
@@ -322,6 +323,13 @@ namespace BrainSimulator.Modules
 
         private void CbArcs_Click(object sender, RoutedEventArgs e)
         {
+            //clear the arcs checkbox if there is no 2DVision module.
+            ModuleView naVision = MainWindow.theNeuronArray.FindModuleByLabel("Module2DVision");
+            if (naVision == null)
+            {
+                MessageBox.Show("Arcs can only show if 2DVision Module is loaded.");
+                cbArcs.IsChecked = false;
+            }
             Draw(false);
         }
     }

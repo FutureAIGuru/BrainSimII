@@ -742,7 +742,7 @@ namespace BrainSimulator
                     Cm_Closed(cm, e);
                 }
             }
-            //This hack is here because textboxes don't like to lose focus if the mouse moves aroundt the context menu
+            //This hack is here because textboxes don't like to lose focus if the mouse moves around the context menu
             //When this becomes a window, all this will go away
             if (e.Key == Key.Tab)
             {
@@ -863,8 +863,13 @@ namespace BrainSimulator
                         case "label":
                             if (n.Label == "")
                                 n1.Label = "";
-                            else if (n.id != n1.id)
+                            else
                             {
+                                if (theNeurons.Count == 1)
+                                {
+                                    n1.Label = n.Label;
+                                    break;
+                                }
                                 string newLabel = n.Label;
                                 while (MainWindow.theNeuronArray.GetNeuron(newLabel) != null)
                                 {
@@ -878,7 +883,8 @@ namespace BrainSimulator
                                         newLabel = newLabel.Substring(0, newLabel.Length - 1);
                                     }
                                     num++;
-                                    newLabel = newLabel + num.ToString();
+                                    if (theNeurons.Count > 1)
+                                        newLabel = newLabel + num.ToString();
                                 }
                                 n1.Label = newLabel;
                             }

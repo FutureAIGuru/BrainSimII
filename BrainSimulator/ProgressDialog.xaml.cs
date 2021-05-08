@@ -96,6 +96,7 @@ namespace BrainSimulator
                 }
             }
             theProgressBar.Value = value;
+            MainWindow.thisWindow.UpdateFreeMem();
             return cancelPressed;
         }
 

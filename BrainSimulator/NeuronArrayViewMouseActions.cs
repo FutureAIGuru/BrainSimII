@@ -349,7 +349,7 @@ namespace BrainSimulator
                 int newFirst = theCurrentModule.FirstNeuron + delta;
                 int newLast = theCurrentModule.LastNeuron + delta;
 
-                if (newFirst >= 0 && newLast < MainWindow.theNeuronArray.arraySize)// &&
+                if (newFirst >= 0 && newLast < MainWindow.theNeuronArray.arraySize)
                 {
                     //move all the neurons
                     List<int> neuronsToMove = new List<int>();
@@ -362,7 +362,7 @@ namespace BrainSimulator
                             return;
                         }
                     }
-                    if (delta > 0) //move all the nerons...opposite order depending on the direction of the move
+                    if (delta > 0) //move all the nuerons...opposite order depending on the direction of the move
                     {
                         for (int i = theCurrentModule.NeuronCount - 1; i >= 0; i--)
                         {
@@ -400,94 +400,123 @@ namespace BrainSimulator
 
         private void ResizeModule(FrameworkElement theShape, int currentNeuron)
         {
-            //TODO: Add rearrangement of neurons
-            //TODO: Add clone of neurons to handle ALL properties
-            int index = (int)theShape.GetValue(ModuleView.AreaNumberProperty);
-            ModuleView theCurrentModule = MainWindow.theNeuronArray.modules[index];
+            lock (MainWindow.theNeuronArray.modules)
+            {            //TODO: Add rearrangement of neurons
+                         //TODO: Add clone of neurons to handle ALL properties
+                int index = (int)theShape.GetValue(ModuleView.AreaNumberProperty);
+                ModuleView theCurrentModule = MainWindow.theNeuronArray.modules[index];
 
-            theCurrentModule.GetBounds(out int X1, out int Y1, out int X2, out int Y2);
-            theCurrentModule.GetAbsNeuronLocation(prevModuleMouseLocation, out int Xf, out int Yf);
-            theCurrentModule.GetAbsNeuronLocation(currentNeuron, out int Xc, out int Yc);
-            int minHeight = theCurrentModule.TheModule.MinHeight;
-            int minWidth = theCurrentModule.TheModule.MinWidth;
+                theCurrentModule.GetBounds(out int X1, out int Y1, out int X2, out int Y2);
+                theCurrentModule.GetAbsNeuronLocation(prevModuleMouseLocation, out int Xf, out int Yf);
+                theCurrentModule.GetAbsNeuronLocation(currentNeuron, out int Xc, out int Yc);
+                int minHeight = theCurrentModule.TheModule.MinHeight;
+                int minWidth = theCurrentModule.TheModule.MinWidth;
+                int maxHeight = theCurrentModule.TheModule.MaxHeight;
+                int maxWidth = theCurrentModule.TheModule.MaxWidth;
 
-            //move the top?
-            if (theCanvas.Cursor == Cursors.ScrollN || theCanvas.Cursor == Cursors.ScrollNE || theCanvas.Cursor == Cursors.ScrollNW)
-            {
-                if (Yc != Yf)
+                //move the top?
+                if (theCanvas.Cursor == Cursors.ScrollN || theCanvas.Cursor == Cursors.ScrollNE || theCanvas.Cursor == Cursors.ScrollNW)
                 {
-                    int newTop = Y1 + Yc - Yf;
-                    if (newTop <= Y2)
+                    if (Yc != Yf)
                     {
-                        MainWindow.theNeuronArray.AddModuleUndo(index, theCurrentModule);
-                        theCurrentModule.Height -= Yc - Yf;
-                        if (theCurrentModule.Height < minHeight)
-                            theCurrentModule.Height = minHeight;
-                        else
+                        int newTop = Y1 + Yc - Yf;
+                        if (newTop <= Y2)
                         {
-                            theCurrentModule.FirstNeuron += Yc - Yf;
-                            prevModuleMouseLocation = currentNeuron;
+                            MainWindow.theNeuronArray.AddModuleUndo(index, theCurrentModule);
+                            int newHeight = theCurrentModule.Height - (Yc - Yf);
+
+                            if (newHeight < minHeight)
+                                theCurrentModule.Height = minHeight;
+                            else if (newHeight > maxHeight)
+                                theCurrentModule.Height = maxHeight;
+
+                            //theCurrentModule.Height -= Yc - Yf;
+                            //if (theCurrentModule.Height < minHeight)
+                            //    theCurrentModule.Height = minHeight;
+                            else
+                            {
+                                theCurrentModule.Height = newHeight;
+                                MoveModule(theShape, currentNeuron);
+                                //theCurrentModule.FirstNeuron += Yc - Yf;
+                                prevModuleMouseLocation = currentNeuron;
+                            }
+                            SortAreas();
+                            Update();
                         }
-                        SortAreas();
-                        Update();
                     }
                 }
-            }
-            //move the left?
-            if (theCanvas.Cursor == Cursors.ScrollW || theCanvas.Cursor == Cursors.ScrollNW || theCanvas.Cursor == Cursors.ScrollSW)
-            {
-                if (Xc != Xf)
+                //move the left?
+                if (theCanvas.Cursor == Cursors.ScrollW || theCanvas.Cursor == Cursors.ScrollNW || theCanvas.Cursor == Cursors.ScrollSW)
                 {
-                    int newLeft = X1 + Xc - Xf;
-                    if (newLeft <= X2)
+                    if (Xc != Xf)
                     {
-                        MainWindow.theNeuronArray.AddModuleUndo(index, theCurrentModule);
-                        theCurrentModule.Width -= Xc - Xf;
-                        if (theCurrentModule.Width < minWidth)
-                            theCurrentModule.Width = minWidth;
-                        else
+                        int newLeft = X1 + Xc - Xf;
+                        if (newLeft <= X2)
                         {
-                            theCurrentModule.FirstNeuron += (Xc - Xf) * MainWindow.theNeuronArray.rows;
-                            prevModuleMouseLocation = currentNeuron;
+                            MainWindow.theNeuronArray.AddModuleUndo(index, theCurrentModule);
+                            int newWidth = theCurrentModule.Width -( Xc - Xf);
+
+                            if (newWidth < minWidth)
+                                theCurrentModule.Width = minWidth;
+                            else if (newWidth > maxWidth)
+                                theCurrentModule.Width = maxWidth;
+                            else
+                            {
+                                theCurrentModule.Width = newWidth;
+//                                theCurrentModule.FirstNeuron += (Xc - Xf) * MainWindow.theNeuronArray.rows;
+                                MoveModule(theShape, currentNeuron);
+                                prevModuleMouseLocation = currentNeuron;
+                            }
+                            SortAreas();
+                            Update();
                         }
-                        SortAreas();
-                        Update();
                     }
                 }
-            }
-            //Move the Right
-            if (theCanvas.Cursor == Cursors.ScrollE || theCanvas.Cursor == Cursors.ScrollNE || theCanvas.Cursor == Cursors.ScrollSE)
-            {
-                if (Xc != Xf)
+                //Move the Right
+                if (theCanvas.Cursor == Cursors.ScrollE || theCanvas.Cursor == Cursors.ScrollNE || theCanvas.Cursor == Cursors.ScrollSE)
                 {
-                    int newRight = X2 + Xc - Xf;
-                    if (newRight >= X1)
+                    if (Xc != Xf)
                     {
-                        MainWindow.theNeuronArray.AddModuleUndo(index, theCurrentModule);
-                        theCurrentModule.Width += Xc - Xf;
-                        if (theCurrentModule.Width < minWidth)
-                            theCurrentModule.Width = minWidth;
-                        else
-                            prevModuleMouseLocation = currentNeuron;
-                        Update();
+                        int newRight = X2 + Xc - Xf;
+                        if (newRight >= X1)
+                        {
+                            MainWindow.theNeuronArray.AddModuleUndo(index, theCurrentModule);
+                            int  newWidth = theCurrentModule.Width + Xc - Xf;
+
+                            if (newWidth < minWidth)
+                                theCurrentModule.Width = minWidth;
+                            else if (newWidth > maxWidth)
+                                theCurrentModule.Width = maxWidth;
+                            else
+                            {
+                                prevModuleMouseLocation = currentNeuron;
+                                theCurrentModule.Width = newWidth;
+                            }
+                            Update();
+                        }
                     }
                 }
-            }
-            //Move the Bottom
-            if (theCanvas.Cursor == Cursors.ScrollS || theCanvas.Cursor == Cursors.ScrollSE || theCanvas.Cursor == Cursors.ScrollSW)
-            {
-                if (Yc != Yf)
+                //Move the Bottom
+                if (theCanvas.Cursor == Cursors.ScrollS || theCanvas.Cursor == Cursors.ScrollSE || theCanvas.Cursor == Cursors.ScrollSW)
                 {
-                    int newBottom = Y2 + Yc - Yf;
-                    if (newBottom >= Y1)
+                    if (Yc != Yf)
                     {
-                        MainWindow.theNeuronArray.AddModuleUndo(index, theCurrentModule);
-                        theCurrentModule.Height += Yc - Yf;
-                        if (theCurrentModule.Height < minHeight)
-                            theCurrentModule.Height = minHeight;
-                        else
-                            prevModuleMouseLocation = currentNeuron;
-                        Update();
+                        int newBottom = Y2 + Yc - Yf;
+                        if (newBottom >= Y1)
+                        {
+                            int newHeight = theCurrentModule.Height + Yc - Yf;
+
+                            if (newHeight < minHeight)
+                                theCurrentModule.Height = minHeight;
+                            else if (newHeight > maxHeight)
+                                theCurrentModule.Height = maxHeight;
+                            else
+                            {
+                                prevModuleMouseLocation = currentNeuron;
+                                theCurrentModule.Height = newHeight;
+                            }
+                            Update();
+                        }
                     }
                 }
             }

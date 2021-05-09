@@ -22,9 +22,9 @@ namespace BrainSimulator.Modules
         public bool initialized = false;
 
         protected int minWidth = 2;
-        protected int maxWidth = 5;
+        protected int maxWidth = 100;
         protected int minHeight = 2;
-        protected int maxHeight = 5;
+        protected int maxHeight = 100;
         public int MinWidth => minWidth;
         public int MinHeight => minHeight;
         public int MaxWidth => maxWidth;

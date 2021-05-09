@@ -129,6 +129,10 @@ namespace BrainSimulator
             Rectangle theRect = MainWindow.theNeuronArray.Modules[moduleIndex].GetRectangle(dp);
             double left = Canvas.GetLeft(theRect);
             double top = Canvas.GetTop(theRect);
+            bool widthCanChange = MainWindow.theNeuronArray.Modules[moduleIndex].TheModule.MinWidth !=
+                MainWindow.theNeuronArray.Modules[moduleIndex].TheModule.MaxWidth;
+            bool heightCanChange = MainWindow.theNeuronArray.Modules[moduleIndex].TheModule.MinHeight !=
+                MainWindow.theNeuronArray.Modules[moduleIndex].TheModule.MaxHeight;
 
             if (currentPosition.X >= left && currentPosition.X <= left + theRect.Width &&
                 currentPosition.Y >= top && currentPosition.Y <= top + theRect.Height)
@@ -140,14 +144,14 @@ namespace BrainSimulator
                 bool nearLeft = currentPosition.X - left < edgeToler;
                 bool nearRight = left + theRect.Width - currentPosition.X < edgeToler;
 
-                if (nearTop && nearLeft) theCanvas.Cursor = Cursors.ScrollNW;
-                else if (nearTop && nearRight) theCanvas.Cursor = Cursors.ScrollNE;
-                else if (nearBottom && nearLeft) theCanvas.Cursor = Cursors.ScrollSW;
-                else if (nearBottom && nearRight) theCanvas.Cursor = Cursors.ScrollSE;
-                else if (nearTop) theCanvas.Cursor = Cursors.ScrollN;
-                else if (nearBottom) theCanvas.Cursor = Cursors.ScrollS;
-                else if (nearLeft) theCanvas.Cursor = Cursors.ScrollW;
-                else if (nearRight) theCanvas.Cursor = Cursors.ScrollE;
+                if (nearTop && nearLeft&&widthCanChange && heightCanChange) theCanvas.Cursor = Cursors.ScrollNW;
+                else if (nearTop && nearRight && widthCanChange && heightCanChange) theCanvas.Cursor = Cursors.ScrollNE;
+                else if (nearBottom && nearLeft && widthCanChange && heightCanChange) theCanvas.Cursor = Cursors.ScrollSW;
+                else if (nearBottom && nearRight && widthCanChange && heightCanChange) theCanvas.Cursor = Cursors.ScrollSE;
+                else if (nearTop && heightCanChange) theCanvas.Cursor = Cursors.ScrollN;
+                else if (nearBottom && heightCanChange) theCanvas.Cursor = Cursors.ScrollS;
+                else if (nearLeft && widthCanChange) theCanvas.Cursor = Cursors.ScrollW;
+                else if (nearRight && widthCanChange) theCanvas.Cursor = Cursors.ScrollE;
                 else theCanvas.Cursor = Cursors.ScrollAll;
             }
             else

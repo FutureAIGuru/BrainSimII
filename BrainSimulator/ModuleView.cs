@@ -15,7 +15,7 @@ using System.Xml.Serialization;
 namespace BrainSimulator
 {
 
-    public partial class ModuleView :  IComparable<ModuleView>
+    public partial class ModuleView : IComparable<ModuleView>
     {
         int firstNeuron = 0;//, lastNeuron = 0;
         string label;
@@ -34,7 +34,8 @@ namespace BrainSimulator
         }
         public IEnumerable<Neuron> Neurons1
         {
-            get {
+            get
+            {
                 for (int i = 0; i < NeuronCount; i++)
                     yield return GetNeuronAt(i);
             }
@@ -67,9 +68,22 @@ namespace BrainSimulator
         }
 
         public ModuleView() { }
-        public string Label { get => label.StartsWith("Module")?label.Replace("Module",""):label; set => label = value; }
+        public string Label { get => label.StartsWith("Module") ? label.Replace("Module", "") : label; set => label = value; }
         public int FirstNeuron { get => firstNeuron; set => firstNeuron = value; }
-        public int Height { get => height; set { height = value; if (TheModule != null) TheModule.SizeChanged(); } }
+        public int Height
+        {
+            get => height;
+            set
+            {
+                for (int row = value; row < height; row++)
+                {
+                    for (int col = 0; col < width; col++)
+                        GetNeuronAt(col, row).Clear();
+                }
+                height = value; 
+                if (TheModule != null) TheModule.SizeChanged();
+            }
+        }
         public int Width { get => width; set { width = value; if (TheModule != null) TheModule.SizeChanged(); } }
         public int Color { get => color; set => color = value; }
 

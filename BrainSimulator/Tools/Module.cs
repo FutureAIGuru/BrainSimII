@@ -28,7 +28,7 @@ namespace BrainSimulator.Modules
             minHeight = 2;
             maxHeight = 5;
             minWidth = 2;
-            maxHeight = 5;
+            maxWidth = 5;
         }
 
         public override string ShortDescription { get => "[Short Description Here]"; }
@@ -42,7 +42,7 @@ namespace BrainSimulator.Modules
             Init();  //be sure to leave this here
 
             //if you want the dlg to update, use the following code whenever any parameter changes
-            // call UpdateDialog
+            // UpdateDialog();
         }
 
         //fill this method in with code which will execute once
@@ -61,7 +61,7 @@ namespace BrainSimulator.Modules
         {
         }
 
-        //called whenever the size of the module rectangle changes, delete if not needed
+        //called whenever the size of the module rectangle changes
         //for example, you may choose to reinitialize whenever size changes
         //delete if not needed
         public override void SizeChanged()

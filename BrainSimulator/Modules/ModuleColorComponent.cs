@@ -21,8 +21,10 @@ namespace BrainSimulator.Modules
 
         public ModuleColorComponent()
         {
-            minHeight = 5;
+            minHeight = 4;
             minWidth = 1;
+            maxHeight = 4;
+            maxWidth = 1;
         }
 
         public override string ShortDescription { get => "Module ColorComponent breaks a color into components."; }
@@ -30,41 +32,50 @@ namespace BrainSimulator.Modules
         {
             get =>
                 "The ColorComponent module has four labeled nerons that have the values of the red, green, blue and " +
-                "intensity values of a color that is fed in. This somewhat emulates the signals which would be generated "+
+                "intensity values of a color that is fed in. This somewhat emulates the signals which would be generated " +
                 "by cells in the retina.";
         }
 
         public override void Fire()
         {
-            float min = 4;
-            float  max = 24;
+            float min = 4; // replace with refractory period
             float steps = 7;
-            float variation = 0.5F;
+            float variation = 0.2F;
             Init();  //be sure to leave this here
-            int theColor = na.GetNeuronAt(0, 0).LastChargeInt;
-            int b = (theColor & 0x000ff) >> 0;
-            int g = (theColor & 0xff00) >> 8;
-            int r = (theColor & 0xff0000) >> 16;
 
+            int theColor = na.GetNeuronAt(0, 0).LastChargeInt;
+            float r = (theColor & 0xff0000) >> 16;
+            float g = (theColor & 0xff00) >> 8;
+            float b = (theColor & 0x000ff) >> 0;
             float luminance = 0.2126f * r + 0.7152f * g + 0.0722f * b;
-            int i = (int) luminance;
+            int i = (int)luminance;
             //here rgbi have values 0-255
 
-            b /= 32;
-            g /= 32;
-            r /= 32;
-            i /= 32;
-            //here rgbi have values of 0-7
+            r /= 255;
+            g /= 255;
+            b /= 255;
+            i /= 255;
+            //here rgbi have values of 0-1
+            r *= r;
+            g *= g;
+            b *= b;
+            r = 1 - r;
+            g = 1 - g;
+            b = 1 - b;
+            i = 1 - i;
 
-            Neuron n = na.GetNeuronAt("Blu");
-            na.GetNeuronAt(0, 1).AxonDelay = (int)(min + (max - b * (max / steps)));
-            na.GetNeuronAt(0, 1).LeakRate = variation;
-            na.GetNeuronAt(0, 2).AxonDelay = (int)(min + (max - g * (max / steps)));
-            na.GetNeuronAt(0, 2).LeakRate = variation;
-            na.GetNeuronAt(0, 3).AxonDelay = (int)(min + (max - r * (max / steps)));
-            na.GetNeuronAt(0, 3).LeakRate = variation;
-            na.GetNeuronAt(0, 4).AxonDelay = (int)(min + (max - i * (max / steps)));
-            na.GetNeuronAt(0, 4).LeakRate = variation;
+            Neuron nR = na.GetNeuronAt("Red");
+            Neuron nG = na.GetNeuronAt("Grn");
+            Neuron nB = na.GetNeuronAt("Blu");
+            Neuron nI = na.GetNeuronAt("Int");
+            nR.AxonDelay = (int)(min + r * steps);
+            nR.LeakRate = variation;
+            nG.AxonDelay = (int)(min + g * steps);
+            nG.LeakRate = variation;
+            nB.AxonDelay = (int)(min + b * steps);
+            nB.LeakRate = variation;
+            nI.AxonDelay = (int)(min + i * steps);
+            nI.LeakRate = variation;
         }
 
         //fill this method in with code which will execute once

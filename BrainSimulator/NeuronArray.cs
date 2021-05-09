@@ -173,7 +173,8 @@ namespace BrainSimulator
         //fires all the modules
         private void HandleProgrammedActions()
         {
-            //lock (modules)
+            string message = "";
+            lock (modules)
             {
                 for (int i = 0; i < modules.Count; i++)
                 {
@@ -186,11 +187,13 @@ namespace BrainSimulator
                         }
                         catch (Exception e)
                         {
-                            MessageBox.Show("Module " + na.Label + " threw unhandled exception with message:\n" + e.Message);
+                            message = "Module " + na.Label + " threw unhandled exception with message:\n" + e.Message;
                         }
                     }
                 }
             }
+            if (message != "")  
+                MessageBox.Show(message);
         }
 
         public ModuleView FindModuleByLabel(string label)

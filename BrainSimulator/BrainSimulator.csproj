@@ -372,8 +372,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="Tools\BrainSimulator Module Dlg.zip" />
-    <None Include="Tools\BrainSimulator Module.zip" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -444,9 +442,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\ZoomOut.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Tools\VS Templates Readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Networks\3DSim.xml">

@@ -129,6 +129,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "testnets", "testnets", "{B4
 		AutomatedTests\testnets\EmptyOne.xml = AutomatedTests\testnets\EmptyOne.xml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5787F61C-7099-4728-A0D1-F723CFAD40CD}"
+	ProjectSection(SolutionItems) = preProject
+		BrainSimulator\Tools\BrainSimulator Module Dlg.zip = BrainSimulator\Tools\BrainSimulator Module Dlg.zip
+		BrainSimulator\Tools\BrainSimulator Module.zip = BrainSimulator\Tools\BrainSimulator Module.zip
+		BrainSimulator\Tools\Module.cs = BrainSimulator\Tools\Module.cs
+		BrainSimulator\Tools\ModuleDlg.xaml = BrainSimulator\Tools\ModuleDlg.xaml
+		BrainSimulator\Tools\ModuleDlg.xaml.cs = BrainSimulator\Tools\ModuleDlg.xaml.cs
+		BrainSimulator\Tools\VS Templates Readme.txt = BrainSimulator\Tools\VS Templates Readme.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

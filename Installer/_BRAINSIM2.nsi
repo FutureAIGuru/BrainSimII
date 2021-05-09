@@ -1,3 +1,8 @@
+#
+# Copyright (c) Andre Slabber. All rights reserved.  
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+#  
+
 !define LIC_NAME "licdata.txt"
 !define COMPANY_NAME  "FutureAI"
 !define APP_NAME "Brain Simulator II"

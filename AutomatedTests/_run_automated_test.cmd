@@ -1,0 +1,2 @@
+robot --exclude Faulty .
+pause

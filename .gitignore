@@ -263,3 +263,9 @@ __pycache__/
 /SizeTest2
 /Installer/Brain Simulator II Setup.exe
 Installer/licdata.txt
+
+# RobotFramework log files
+AutomatedTests/log.html
+AutomatedTests/report.html
+AutomatedTests/output.xml
+AutomatedTests/*.png

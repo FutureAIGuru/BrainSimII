@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<NeuronArray xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <networkNotes />
+  <hideNotes>false</hideNotes>
+  <Generation>119</Generation>
+  <EngineSpeed>250</EngineSpeed>
+  <EngineIsPaused>false</EngineIsPaused>
+  <arraySize>450</arraySize>
+  <rows>15</rows>
+  <lastFireCount>0</lastFireCount>
+  <displayParams>
+    <NeuronDisplaySize>62</NeuronDisplaySize>
+    <DisplayOffset>
+      <X>0</X>
+      <Y>0</Y>
+    </DisplayOffset>
+    <NeuronRows>15</NeuronRows>
+  </displayParams>
+  <ShowSynapses>false</ShowSynapses>
+  <Modules />
+  <RefractoryDelay>0</RefractoryDelay>
+  <Neurons />
+</NeuronArray>

@@ -45,6 +45,90 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SetupFirewall", "SetupFirew
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeightFinder", "WeightFinter\WeightFinder.csproj", "{380BD449-D57C-44D0-9D19-3A4787EC9898}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AutomatedTests", "AutomatedTests", "{A8AC78AC-3547-4430-94FE-853FB14F243B}"
+	ProjectSection(SolutionItems) = preProject
+		AutomatedTests\_run_automated_test.cmd = AutomatedTests\_run_automated_test.cmd
+		AutomatedTests\automatedtests.resource = AutomatedTests\automatedtests.resource
+		AutomatedTests\testkeywords.resource = AutomatedTests\testkeywords.resource
+		AutomatedTests\testset_1.robot = AutomatedTests\testset_1.robot
+		AutomatedTests\testset_2.robot = AutomatedTests\testset_2.robot
+		AutomatedTests\teststeps.py = AutomatedTests\teststeps.py
+		AutomatedTests\testtoolkit.py = AutomatedTests\testtoolkit.py
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ScreenFrags", "ScreenFrags", "{59BA341C-6E0D-4E9E-AB29-644769F87857}"
+	ProjectSection(SolutionItems) = preProject
+		AutomatedTests\screenfrags\brainsim_splash.png = AutomatedTests\screenfrags\brainsim_splash.png
+		AutomatedTests\screenfrags\brainsim_start.png = AutomatedTests\screenfrags\brainsim_start.png
+		AutomatedTests\screenfrags\brainsim_started.png = AutomatedTests\screenfrags\brainsim_started.png
+		AutomatedTests\screenfrags\brainsim_title.png = AutomatedTests\screenfrags\brainsim_title.png
+		AutomatedTests\screenfrags\bs2_edit_clear_selection_item.png = AutomatedTests\screenfrags\bs2_edit_clear_selection_item.png
+		AutomatedTests\screenfrags\bs2_edit_cut_item_disabled.png = AutomatedTests\screenfrags\bs2_edit_cut_item_disabled.png
+		AutomatedTests\screenfrags\bs2_edit_delete_item_disabled.png = AutomatedTests\screenfrags\bs2_edit_delete_item_disabled.png
+		AutomatedTests\screenfrags\bs2_edit_find_module_item_disabled.png = AutomatedTests\screenfrags\bs2_edit_find_module_item_disabled.png
+		AutomatedTests\screenfrags\bs2_edit_find_neuron_item_disabled.png = AutomatedTests\screenfrags\bs2_edit_find_neuron_item_disabled.png
+		AutomatedTests\screenfrags\bs2_edit_load_clipboard_item.png = AutomatedTests\screenfrags\bs2_edit_load_clipboard_item.png
+		AutomatedTests\screenfrags\bs2_edit_menu.png = AutomatedTests\screenfrags\bs2_edit_menu.png
+		AutomatedTests\screenfrags\bs2_edit_move_item_disabled.png = AutomatedTests\screenfrags\bs2_edit_move_item_disabled.png
+		AutomatedTests\screenfrags\bs2_edit_notes_item.png = AutomatedTests\screenfrags\bs2_edit_notes_item.png
+		AutomatedTests\screenfrags\bs2_edit_paste_item_disabled.png = AutomatedTests\screenfrags\bs2_edit_paste_item_disabled.png
+		AutomatedTests\screenfrags\bs2_edit_save_clipboard_item_disabled.png = AutomatedTests\screenfrags\bs2_edit_save_clipboard_item_disabled.png
+		AutomatedTests\screenfrags\bs2_edit_undo_item_disabled.png = AutomatedTests\screenfrags\bs2_edit_undo_item_disabled.png
+		AutomatedTests\screenfrags\bs2_engine_menu.png = AutomatedTests\screenfrags\bs2_engine_menu.png
+		AutomatedTests\screenfrags\bs2_engine_pause_item.png = AutomatedTests\screenfrags\bs2_engine_pause_item.png
+		AutomatedTests\screenfrags\bs2_engine_refractory_item.png = AutomatedTests\screenfrags\bs2_engine_refractory_item.png
+		AutomatedTests\screenfrags\bs2_engine_reset_item.png = AutomatedTests\screenfrags\bs2_engine_reset_item.png
+		AutomatedTests\screenfrags\bs2_engine_run_item_disabled.png = AutomatedTests\screenfrags\bs2_engine_run_item_disabled.png
+		AutomatedTests\screenfrags\bs2_engine_speed_item.png = AutomatedTests\screenfrags\bs2_engine_speed_item.png
+		AutomatedTests\screenfrags\bs2_engine_step_item.png = AutomatedTests\screenfrags\bs2_engine_step_item.png
+		AutomatedTests\screenfrags\bs2_engine_threads_item.png = AutomatedTests\screenfrags\bs2_engine_threads_item.png
+		AutomatedTests\screenfrags\bs2_file_exit_item.png = AutomatedTests\screenfrags\bs2_file_exit_item.png
+		AutomatedTests\screenfrags\bs2_file_library_item.png = AutomatedTests\screenfrags\bs2_file_library_item.png
+		AutomatedTests\screenfrags\bs2_file_menu.png = AutomatedTests\screenfrags\bs2_file_menu.png
+		AutomatedTests\screenfrags\bs2_file_new_item.png = AutomatedTests\screenfrags\bs2_file_new_item.png
+		AutomatedTests\screenfrags\bs2_file_open_item.png = AutomatedTests\screenfrags\bs2_file_open_item.png
+		AutomatedTests\screenfrags\bs2_file_properties_item.png = AutomatedTests\screenfrags\bs2_file_properties_item.png
+		AutomatedTests\screenfrags\bs2_file_recent_item.png = AutomatedTests\screenfrags\bs2_file_recent_item.png
+		AutomatedTests\screenfrags\bs2_file_save_item_disabled.png = AutomatedTests\screenfrags\bs2_file_save_item_disabled.png
+		AutomatedTests\screenfrags\bs2_file_saveas_item.png = AutomatedTests\screenfrags\bs2_file_saveas_item.png
+		AutomatedTests\screenfrags\bs2_help_about_item.png = AutomatedTests\screenfrags\bs2_help_about_item.png
+		AutomatedTests\screenfrags\bs2_help_contents_item.png = AutomatedTests\screenfrags\bs2_help_contents_item.png
+		AutomatedTests\screenfrags\bs2_help_facebook_item.png = AutomatedTests\screenfrags\bs2_help_facebook_item.png
+		AutomatedTests\screenfrags\bs2_help_getting_started_item.png = AutomatedTests\screenfrags\bs2_help_getting_started_item.png
+		AutomatedTests\screenfrags\bs2_help_menu.png = AutomatedTests\screenfrags\bs2_help_menu.png
+		AutomatedTests\screenfrags\bs2_help_register_item.png = AutomatedTests\screenfrags\bs2_help_register_item.png
+		AutomatedTests\screenfrags\bs2_help_report_bugs_item.png = AutomatedTests\screenfrags\bs2_help_report_bugs_item.png
+		AutomatedTests\screenfrags\bs2_help_show_at_startup_checked.png = AutomatedTests\screenfrags\bs2_help_show_at_startup_checked.png
+		AutomatedTests\screenfrags\bs2_help_show_at_startup_unchecked.png = AutomatedTests\screenfrags\bs2_help_show_at_startup_unchecked.png
+		AutomatedTests\screenfrags\bs2_help_watch_youtube_item.png = AutomatedTests\screenfrags\bs2_help_watch_youtube_item.png
+		AutomatedTests\screenfrags\bs2_view_menu.png = AutomatedTests\screenfrags\bs2_view_menu.png
+		AutomatedTests\screenfrags\bs2_view_origin_item.png = AutomatedTests\screenfrags\bs2_view_origin_item.png
+		AutomatedTests\screenfrags\bs2_view_show_all_item.png = AutomatedTests\screenfrags\bs2_view_show_all_item.png
+		AutomatedTests\screenfrags\bs2_view_show_synapses_checked.png = AutomatedTests\screenfrags\bs2_view_show_synapses_checked.png
+		AutomatedTests\screenfrags\bs2_view_show_synapses_unchecked.png = AutomatedTests\screenfrags\bs2_view_show_synapses_unchecked.png
+		AutomatedTests\screenfrags\bs2_view_start_pan_item.png = AutomatedTests\screenfrags\bs2_view_start_pan_item.png
+		AutomatedTests\screenfrags\bs2_view_zoom_in_item.png = AutomatedTests\screenfrags\bs2_view_zoom_in_item.png
+		AutomatedTests\screenfrags\bs2_view_zoom_out_item.png = AutomatedTests\screenfrags\bs2_view_zoom_out_item.png
+		AutomatedTests\screenfrags\bws2_edit_copy_item_disabled.png = AutomatedTests\screenfrags\bws2_edit_copy_item_disabled.png
+		AutomatedTests\screenfrags\cancel_button.png = AutomatedTests\screenfrags\cancel_button.png
+		AutomatedTests\screenfrags\close_icon.png = AutomatedTests\screenfrags\close_icon.png
+		AutomatedTests\screenfrags\emptyone_loaded.png = AutomatedTests\screenfrags\emptyone_loaded.png
+		AutomatedTests\screenfrags\minimize_icon.png = AutomatedTests\screenfrags\minimize_icon.png
+		AutomatedTests\screenfrags\neuronserver_start.png = AutomatedTests\screenfrags\neuronserver_start.png
+		AutomatedTests\screenfrags\neuronserver_started.png = AutomatedTests\screenfrags\neuronserver_started.png
+		AutomatedTests\screenfrags\neuronserver_title.png = AutomatedTests\screenfrags\neuronserver_title.png
+		AutomatedTests\screenfrags\no_button_default.png = AutomatedTests\screenfrags\no_button_default.png
+		AutomatedTests\screenfrags\restore_icon.png = AutomatedTests\screenfrags\restore_icon.png
+		AutomatedTests\screenfrags\save_question.png = AutomatedTests\screenfrags\save_question.png
+		AutomatedTests\screenfrags\testnet_emptyone.png = AutomatedTests\screenfrags\testnet_emptyone.png
+		AutomatedTests\screenfrags\yes_button.png = AutomatedTests\screenfrags\yes_button.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "testnets", "testnets", "{B48F32C5-4EAE-4B6F-B8F7-4397978D8B92}"
+	ProjectSection(SolutionItems) = preProject
+		AutomatedTests\testnets\EmptyOne.xml = AutomatedTests\testnets\EmptyOne.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -124,6 +208,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{59BA341C-6E0D-4E9E-AB29-644769F87857} = {A8AC78AC-3547-4430-94FE-853FB14F243B}
+		{B48F32C5-4EAE-4B6F-B8F7-4397978D8B92} = {A8AC78AC-3547-4430-94FE-853FB14F243B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5BA1730C-CB74-487C-8891-72E18E8B28B7}

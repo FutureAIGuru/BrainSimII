@@ -80,11 +80,24 @@ namespace BrainSimulator
                     for (int col = 0; col < width; col++)
                         GetNeuronAt(col, row).Clear();
                 }
-                height = value; 
+                height = value;
                 if (TheModule != null) TheModule.SizeChanged();
             }
         }
-        public int Width { get => width; set { width = value; if (TheModule != null) TheModule.SizeChanged(); } }
+        public int Width
+        {
+            get => width;
+            set
+            {
+                for (int col = value; col < width; col++)
+                {
+                    for (int row = 0; row < height; row++)
+                        GetNeuronAt(col, row).Clear();
+                }
+                width = value; 
+                if (TheModule != null) TheModule.SizeChanged();
+            }
+        }
         public int Color { get => color; set => color = value; }
 
         public string CommandLine { get => commandLine; set => commandLine = value; }

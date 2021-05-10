@@ -496,11 +496,11 @@ namespace BrainSimulator.Modules
             return retVal;
         }
 
-        protected void ClearNeurons()
+        protected void ClearNeurons(bool deleteIncoming = true)
         {
             foreach (Neuron n in na.Neurons())
             {
-                n.DeleteAllSynapes();
+                n.DeleteAllSynapes(deleteIncoming);
                 n.Label = "";
                 n.Model = Neuron.modelType.IF;
                 n.SetValue(0);

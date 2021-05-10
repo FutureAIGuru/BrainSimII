@@ -348,8 +348,11 @@ namespace BrainSimulator
                 int delta = currentNeuron - prevModuleMouseLocation;
                 int newFirst = theCurrentModule.FirstNeuron + delta;
                 int newLast = theCurrentModule.LastNeuron + delta;
+                MainWindow.theNeuronArray.GetNeuronLocation(newFirst, out int col0, out int row0);
+                MainWindow.theNeuronArray.GetNeuronLocation(newLast, out int col1, out int row1);
 
-                if (newFirst >= 0 && newLast < MainWindow.theNeuronArray.arraySize)
+
+                if (newFirst >= 0  && row1 > row0 && newLast < MainWindow.theNeuronArray.arraySize)
                 {
                     //move all the neurons
                     List<int> neuronsToMove = new List<int>();
@@ -388,7 +391,7 @@ namespace BrainSimulator
                 }
                 else
                 {
-                    MessageBox.Show("Module would be outside neuron array boundary.");
+                   // MessageBox.Show("Module would be outside neuron array boundary.");
                 }
             }
 
@@ -429,10 +432,6 @@ namespace BrainSimulator
                                 theCurrentModule.Height = minHeight;
                             else if (newHeight > maxHeight)
                                 theCurrentModule.Height = maxHeight;
-
-                            //theCurrentModule.Height -= Yc - Yf;
-                            //if (theCurrentModule.Height < minHeight)
-                            //    theCurrentModule.Height = minHeight;
                             else
                             {
                                 theCurrentModule.Height = newHeight;
@@ -463,7 +462,6 @@ namespace BrainSimulator
                             else
                             {
                                 theCurrentModule.Width = newWidth;
-//                                theCurrentModule.FirstNeuron += (Xc - Xf) * MainWindow.theNeuronArray.rows;
                                 MoveModule(theShape, currentNeuron);
                                 prevModuleMouseLocation = currentNeuron;
                             }

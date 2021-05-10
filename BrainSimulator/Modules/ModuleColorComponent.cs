@@ -21,9 +21,9 @@ namespace BrainSimulator.Modules
 
         public ModuleColorComponent()
         {
-            minHeight = 4;
+            minHeight = 5;
             minWidth = 1;
-            maxHeight = 4;
+            maxHeight = 5;
             maxWidth = 1;
         }
 

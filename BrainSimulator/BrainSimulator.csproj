@@ -139,6 +139,8 @@
     <Compile Include="Modules\ModuleCameraDlg.xaml.cs">
       <DependentUpon>ModuleCameraDlg.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\ModuleChain.cs" />
+    <Compile Include="Modules\ModuleChainCounter.cs" />
     <Compile Include="Modules\ModuleColorComponent.cs" />
     <Compile Include="Modules\ModuleColorIdentifier.cs" />
     <Compile Include="Modules\ModulePatternGenerator.cs" />

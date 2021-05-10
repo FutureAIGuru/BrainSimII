@@ -6,9 +6,6 @@
 *** Settings ***
 Documentation		This testset runs with Brain Simulator II started with the shift key down, so no network is loaded.
 
-Resource			testkeywords.resource
-Resource 			automatedtests.resource
-
 Library   			testtoolkit.py
 Library   			teststeps.py
 

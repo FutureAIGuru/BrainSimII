@@ -6,9 +6,6 @@
 *** Settings ***
 Documentation		This testset runs with no setup or teardown whatsoever, basic tests for starting and stopping programs.
 
-Resource			testkeywords.resource
-Resource 			automatedtests.resource
-
 Library   			testtoolkit.py
 Library   			teststeps.py
 
@@ -19,14 +16,25 @@ Are Prerequisites Taken Care Of?
 	${Result}    		Check Test Requirements
 	Should Be True		${Result}
 	
-Can We Start And Stop Brain Simulator II?
+Can We Start Brain Simulator II?
 	[Tags]				Wip
-	${Result}    		Can We Start And Stop Brain Simulator 2
+	${Result}    		Start Brain Simulator
 	Should Be True		${Result}
 
-Can We Start And Stop Neuron Server?
+Can We Stop Brain Simulator II?
 	[Tags]				Wip
-	${Result}    		Can We Start And Stop Neuron Server
+	${Result}    		Stop Brain Simulator
 	Should Be True		${Result}
+
+Can We Start Neuron Server?
+	[Tags]				Wip
+	${Result}    		Start Neuron Server
+	Should Be True		${Result}
+
+Can We Stop Neuron Server?
+	[Tags]				Wip
+	${Result}    		Stop Neuron Server
+	Should Be True		${Result}
+
 
 	

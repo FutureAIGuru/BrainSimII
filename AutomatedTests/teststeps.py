@@ -46,7 +46,7 @@ def start_brain_simulator_without_network():
     while tk.locate_center('brainsim_splash') is None and timeout < 20:
         time.sleep(1)
         timeout += 1
-    if tk.wait_for_center('brainsim_splash'):
+    if tk.wait_for_center('brainsim_splash') is None:
         return False
     pyautogui.keyUp('shift')
     return True
@@ -68,8 +68,6 @@ def start_neuronserver():
     return True
 
 def stop_neuronserver():
-    if not tk.wait_and_click('neuronserver_title'):
-        return False
     if not tk.wait_and_click('close_icon'):
         return False
     if not tk.wait_for_center('neuronserver_start'):

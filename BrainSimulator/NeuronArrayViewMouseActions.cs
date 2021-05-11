@@ -160,9 +160,10 @@ namespace BrainSimulator
             Canvas parentCanvas = (Canvas)theShape.Parent;
             parentCanvas.Children.Remove(theShape);
         }
+
         private void DragSynapse(int currentNeuron)
         {
-            if (mouseDownNeuronIndex > -1)
+            if (mouseDownNeuronIndex > -1 && (currentNeuron != mouseDownNeuronIndex || synapseShape != null))
             {
                 if (synapseShape != null)
                     theCanvas.Children.Remove(synapseShape);
@@ -208,26 +209,6 @@ namespace BrainSimulator
         }
 
 
-        private void FinishSelection()
-        {
-            if (dragRectangle != null)
-            {
-                try
-                {
-                    //get the neuron pointers from the drag rectangle and save in the selection array
-                    int w = 1 + (lastSelectedNeuron - firstSelectedNeuron) / Rows;
-                    int h = 1 + (lastSelectedNeuron - firstSelectedNeuron) % Rows;
-                    //Debug.Write(firstSelectedNeuron + ", " + lastSelectedNeuron);
-                    SelectionRectangle rr = new SelectionRectangle(firstSelectedNeuron, w, h);
-                    theSelection.selectedRectangles.Add(rr);
-                }
-                catch
-                {
-                    dragRectangle = null;
-                }
-                dragRectangle = null;
-            }
-        }
         //whatever the first & last selected neurons, this sorts out the upper-left and lower right
         //that way, you can swipe a selection in any direction and it works
         private void SetFirstLastSelectedNeurons(int newPosition)
@@ -247,12 +228,15 @@ namespace BrainSimulator
         }
         private Point StartNewSelectionDrag()
         {
-            Point currentPosition;
+            //snap to neuron point
+            Point currentPosition = dp.pointFromNeuron(mouseDownNeuronIndex);
             currentOperation = CurrentOperation.draggingNewSelection;
             if (dragRectangle != null)
             {
                 theCanvas.Children.Remove(dragRectangle);
+                dragRectangle = null;
             }
+
             MainWindow.theNeuronArray.SetUndoPoint();
             MainWindow.theNeuronArray.AddSelectionUndo();
             if (!MainWindow.ctrlPressed)
@@ -260,9 +244,12 @@ namespace BrainSimulator
             else
                 Update();
 
-            //snap to neuron point
-            currentPosition = dp.pointFromNeuron(mouseDownNeuronIndex);
+            //currentPosition = CreateDragRectangle(currentPosition);
+            return currentPosition;
+        }
 
+        private Point CreateDragRectangle(Point currentPosition)
+        {
             //build the draggable selection rectangle
             dragRectangle = new Rectangle();
             dragRectangle.Width = dragRectangle.Height = dp.NeuronDisplaySize;
@@ -277,8 +264,15 @@ namespace BrainSimulator
             Mouse.Capture(theCanvas);
             return currentPosition;
         }
+
         private void DragNewSelection(int currentNeuron)
         {
+            if (dragRectangle == null)
+            {
+                Point currentPosition = dp.pointFromNeuron(mouseDownNeuronIndex);
+                CreateDragRectangle(currentPosition);
+            }
+
             //Get the first & last selected neurons
             SetFirstLastSelectedNeurons(currentNeuron);
 
@@ -291,6 +285,26 @@ namespace BrainSimulator
             Canvas.SetTop(dragRectangle, p1.Y);
             if (!theCanvas.Children.Contains(dragRectangle))
                 theCanvas.Children.Add(dragRectangle);
+        }
+        private void FinishSelection()
+        {
+            if (dragRectangle != null)
+            {
+                try
+                {
+                    //get the neuron pointers from the drag rectangle and save in the selection array
+                    int w = 1 + (lastSelectedNeuron - firstSelectedNeuron) / Rows;
+                    int h = 1 + (lastSelectedNeuron - firstSelectedNeuron) % Rows;
+                    //Debug.Write(firstSelectedNeuron + ", " + lastSelectedNeuron);
+                    SelectionRectangle rr = new SelectionRectangle(firstSelectedNeuron, w, h);
+                    theSelection.selectedRectangles.Add(rr);
+                }
+                catch
+                {
+                    dragRectangle = null;
+                }
+                dragRectangle = null;
+            }
         }
 
 
@@ -352,7 +366,7 @@ namespace BrainSimulator
                 MainWindow.theNeuronArray.GetNeuronLocation(newLast, out int col1, out int row1);
 
 
-                if (newFirst >= 0  && row1 > row0 && newLast < MainWindow.theNeuronArray.arraySize)
+                if (newFirst >= 0 && row1 > row0 && newLast < MainWindow.theNeuronArray.arraySize)
                 {
                     //move all the neurons
                     List<int> neuronsToMove = new List<int>();
@@ -391,7 +405,7 @@ namespace BrainSimulator
                 }
                 else
                 {
-                   // MessageBox.Show("Module would be outside neuron array boundary.");
+                    // MessageBox.Show("Module would be outside neuron array boundary.");
                 }
             }
 
@@ -453,7 +467,7 @@ namespace BrainSimulator
                         if (newLeft <= X2)
                         {
                             MainWindow.theNeuronArray.AddModuleUndo(index, theCurrentModule);
-                            int newWidth = theCurrentModule.Width -( Xc - Xf);
+                            int newWidth = theCurrentModule.Width - (Xc - Xf);
 
                             if (newWidth < minWidth)
                                 theCurrentModule.Width = minWidth;
@@ -479,7 +493,7 @@ namespace BrainSimulator
                         if (newRight >= X1)
                         {
                             MainWindow.theNeuronArray.AddModuleUndo(index, theCurrentModule);
-                            int  newWidth = theCurrentModule.Width + Xc - Xf;
+                            int newWidth = theCurrentModule.Width + Xc - Xf;
 
                             if (newWidth < minWidth)
                                 theCurrentModule.Width = minWidth;

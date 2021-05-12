@@ -281,7 +281,7 @@
             <local:NeuronArrayView x:Name="theNeuronArrayView" Margin="0,36,0,0" ClipToBounds="True"></local:NeuronArrayView>
 
             <!--The Toolbar-->
-            <StackPanel x:Name="MainToolBar" Orientation="Horizontal" Grid.ColumnSpan="2" Height="30" Margin="7,5,-9,0" VerticalAlignment="Top">
+            <DockPanel x:Name="MainToolBar" Grid.ColumnSpan="2" Height="30" Margin="7,5,0,0" VerticalAlignment="Top">
                 <Button x:Name="NewButton" VerticalAlignment="Top" Click="button_FileNew_Click" ToolTip="New File">
                     <Image Source="/resources/icons/NewFile_16x.png" Height="20"></Image>
                 </Button>
@@ -322,11 +322,36 @@
                 </Button>
                 <RepeatButton  x:Name="buttonSingle" Delay="500" Interval="500" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE893;" Foreground="#FF00539C" Click="ButtonSingle_Click" VerticalAlignment="Top" ToolTip="Run the engine one cycle" Grid.Column="2" >
                 </RepeatButton>
-                <Label x:Name="label1" Content="Speed:" Height="30" VerticalAlignment="Top" />
+                <Label x:Name="label1" Content="Speed:" Height="30" VerticalAlignment="Center" />
                 <Slider x:Name="slider" ValueChanged="slider_ValueChanged" IsSnapToTickEnabled="True" Value="5" 
                     Width="140" ToolTip="Change the engine speed" Height="25" VerticalAlignment="Bottom"  />
-
-            </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Label VerticalAlignment="Center">Add Synapse With—Weight:</Label>
+                    <ComboBox x:FieldModifier="public" Name="SynapseWeight" VerticalContentAlignment="Center" Width="60" Height="26" IsEditable="True">
+                        <ComboBoxItem IsSelected="true">1.00</ComboBoxItem>
+                        <ComboBoxItem>0.90</ComboBoxItem>
+                        <ComboBoxItem>0.50</ComboBoxItem>
+                        <ComboBoxItem>0.334</ComboBoxItem>
+                        <ComboBoxItem>0.25</ComboBoxItem>
+                        <ComboBoxItem>0.20</ComboBoxItem>
+                        <ComboBoxItem>0.167</ComboBoxItem>
+                        <ComboBoxItem>0.125</ComboBoxItem>
+                        <ComboBoxItem>0.10</ComboBoxItem>
+                        <ComboBoxItem>0.00</ComboBoxItem>
+                        <ComboBoxItem>-1.00</ComboBoxItem>
+                    </ComboBox>
+                    <Label VerticalAlignment="Center">Model:</Label>
+                    <ComboBox x:Name="SynapseModel"  Width="80" Height="26" VerticalContentAlignment="Center">
+                        <ComboBoxItem IsSelected="True">Fixed</ComboBoxItem>
+                        <ComboBoxItem>Binary</ComboBoxItem>
+                        <ComboBoxItem>Hebbian1</ComboBoxItem>
+                        <ComboBoxItem>Hebbian2</ComboBoxItem>
+                    </ComboBox>
+                    <Label Width="10"></Label>
+                    <CheckBox x:Name="SynapseUpdate" VerticalAlignment="Center">Update from click</CheckBox>
+                    <Label Width="30"></Label>
+                </StackPanel>
+            </DockPanel>
         </Grid>
     </DockPanel>
 

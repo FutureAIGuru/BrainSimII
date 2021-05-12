@@ -178,6 +178,7 @@ namespace BrainSimulator
             if (targetNeuronIndex == -1) return;
             if (myClipBoard == null) return;
 
+
             //We are pasting neurons from the clipboard.  
             //The arrays have different sizes so we may by row-col.
 
@@ -205,6 +206,7 @@ namespace BrainSimulator
                 if (result == MessageBoxResult.No) return;
             }
 
+            MainWindow.SuspendEngine();
             MainWindow.theNeuronArray.SetUndoPoint();
             //now paste the neurons
             for (int i = 0; i < myClipBoard.arraySize; i++)
@@ -278,7 +280,7 @@ namespace BrainSimulator
 
                 MainWindow.theNeuronArray.modules.Add(newMV);
             }
-
+            MainWindow.ResumeEngine();
             Update();
         }
 
@@ -290,7 +292,7 @@ namespace BrainSimulator
             List<int> neuronsInSelection = theSelection.EnumSelectedNeurons();
             for (int i = 0; i < neuronsInSelection.Count; i++)
             {
-                targetNeuron.AddSynapseWithUndo(neuronsInSelection[i], lastSynapseWeight, lastSynapseModel);
+                targetNeuron.AddSynapseWithUndo(neuronsInSelection[i], LastSynapseWeight, LastSynapseModel);
             }
             Update();
         }
@@ -303,7 +305,7 @@ namespace BrainSimulator
             for (int i = 0; i < neuronsInSelection.Count; i++)
             {
                 Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronsInSelection[i]);
-                n.AddSynapseWithUndo(targetNeuronIndex, lastSynapseWeight, lastSynapseModel);
+                n.AddSynapseWithUndo(targetNeuronIndex, LastSynapseWeight, LastSynapseModel);
             }
             Update();
         }

@@ -21,9 +21,9 @@ namespace BrainSimulator.Modules
 
         public ModuleColorComponent()
         {
-            minHeight = 4;
+            minHeight = 5;
             minWidth = 1;
-            maxHeight = 4;
+            maxHeight = 5;
             maxWidth = 1;
         }
 
@@ -68,6 +68,10 @@ namespace BrainSimulator.Modules
             Neuron nG = na.GetNeuronAt("Grn");
             Neuron nB = na.GetNeuronAt("Blu");
             Neuron nI = na.GetNeuronAt("Int");
+            if (nR == null) return;
+            if (nG == null) return;
+            if (nB == null) return;
+            if (nI == null) return;
             nR.AxonDelay = (int)(min + r * steps);
             nR.LeakRate = variation;
             nG.AxonDelay = (int)(min + g * steps);

@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Xml.Serialization;
@@ -116,7 +117,7 @@ namespace BrainSimulator
                 string searchKey = label + Neuron.toolTipSeparator;
                 int nID = labelCache.FirstOrDefault(x => x.Value.StartsWith(searchKey)).Key;
                 if (nID != 0)
-                return GetNeuron(nID);
+                    return GetNeuron(nID);
             }
             return null;
         }
@@ -173,12 +174,18 @@ namespace BrainSimulator
         //fires all the modules
         private void HandleProgrammedActions()
         {
+            int badModule = -1;
             string message = "";
             lock (modules)
             {
+                List<int> firstNeurons = new List<int>();
+                for (int i = 0; i < modules.Count; i++)
+                    firstNeurons.Add(modules[i].FirstNeuron);
+                firstNeurons.Sort();
+
                 for (int i = 0; i < modules.Count; i++)
                 {
-                    ModuleView na = modules[i];
+                    ModuleView na = modules.Find(x => x.FirstNeuron == firstNeurons[i]);
                     if (na.TheModule != null)
                     {
                         try
@@ -187,13 +194,29 @@ namespace BrainSimulator
                         }
                         catch (Exception e)
                         {
-                            message = "Module " + na.Label + " threw unhandled exception with message:\n" + e.Message;
+                            // Get stack trace for the exception with source file information
+                            var st = new StackTrace(e, true);
+                            // Get the top stack frame
+                            var frame = st.GetFrame(0);
+                            // Get the line number from the stack frame
+                            var line = frame.GetFileLineNumber();
+
+                            message = "Module " + na.Label + " threw an unhandled exception with the message:\n" + e.Message;
+                            message += "\nat line " + line;
+                            message += "\n\n Would you like to remove it from this network?";
+                            badModule = i;
                         }
                     }
                 }
             }
-            if (message != "")  
-                MessageBox.Show(message);
+            if (message != "")
+            {
+                MessageBoxResult mbr = MessageBox.Show(message, "Remove Module?", MessageBoxButton.YesNo);
+                if (mbr == MessageBoxResult.Yes)
+                {
+                    ModuleView.DeleteModule(badModule);
+                }
+            }
         }
 
         public ModuleView FindModuleByLabel(string label)

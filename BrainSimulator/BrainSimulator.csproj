@@ -139,10 +139,14 @@
     <Compile Include="Modules\ModuleCameraDlg.xaml.cs">
       <DependentUpon>ModuleCameraDlg.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\ModuleChain.cs" />
+    <Compile Include="Modules\ModuleChainCounter.cs" />
     <Compile Include="Modules\ModuleColorComponent.cs" />
     <Compile Include="Modules\ModuleColorIdentifier.cs" />
     <Compile Include="Modules\ModulePatternGenerator.cs" />
+    <Compile Include="Modules\ModuleRateDecoder2.cs" />
     <Compile Include="Modules\ModuleRateDecoder.cs" />
+    <Compile Include="Modules\ModuleShortTermMemory.cs" />
     <Compile Include="Modules\ModuleStrokeFinderDlg.xaml.cs">
       <DependentUpon>ModuleStrokeFinderDlg.xaml</DependentUpon>
     </Compile>

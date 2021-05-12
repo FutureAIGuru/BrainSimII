@@ -593,16 +593,5 @@ namespace BrainSimulator
             if (MainWindow.IsArrayEmpty()) return;
             Update();
         }
-
-        public static void SortAreas()
-        {
-            lock (MainWindow.theNeuronArray.Modules)
-            {
-                MainWindow.theNeuronArray.Modules.Sort();
-            }
-        }
-
-
-
     }
 }

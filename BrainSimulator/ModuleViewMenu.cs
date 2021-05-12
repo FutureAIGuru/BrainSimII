@@ -22,7 +22,7 @@ namespace BrainSimulator
                 cm = new ContextMenu();
             cm.SetValue(AreaNumberProperty, i);
             cm.PreviewKeyDown += Cm_PreviewKeyDown;
-            
+
             StackPanel sp;
             MenuItem mi = new MenuItem();
             mi = new MenuItem();
@@ -133,7 +133,7 @@ namespace BrainSimulator
             ContextMenu cm = sender as ContextMenu;
             if (e.Key == Key.Enter)
             {
-                Cm_Closed(sender,e);
+                Cm_Closed(sender, e);
             }
         }
 
@@ -256,43 +256,43 @@ namespace BrainSimulator
                     color = ((SolidColorBrush)((ComboBoxItem)cb1.SelectedValue).Background).Color;
                 if (label == "" && commandLine == "") return;
 
-                    ModuleView theModuleView = MainWindow.theNeuronArray.modules[i];
-                    MainWindow.theNeuronArray.SetUndoPoint();
-                    MainWindow.theNeuronArray.AddModuleUndo(i, theModuleView);
-                    //update the existing module
-                    theModuleView.Label = label;
-                    theModuleView.CommandLine = commandLine;
-                    theModuleView.Color = Utils.ColorToInt(color);
+                ModuleView theModuleView = MainWindow.theNeuronArray.modules[i];
+                MainWindow.theNeuronArray.SetUndoPoint();
+                MainWindow.theNeuronArray.AddModuleUndo(i, theModuleView);
+                //update the existing module
+                theModuleView.Label = label;
+                theModuleView.CommandLine = commandLine;
+                theModuleView.Color = Utils.ColorToInt(color);
 
-                    //did we change the module type?
-                    string[] Params = commandLine.Split(' ');
-                    Type t1x = Type.GetType("BrainSimulator.Modules." + Params[0]);
-                    if (t1x != null && (MainWindow.theNeuronArray.modules[i].TheModule == null || MainWindow.theNeuronArray.modules[i].TheModule.GetType() != t1x))
-                    {
-                        MainWindow.theNeuronArray.modules[i].TheModule = (ModuleBase)Activator.CreateInstance(t1x);
-                        MainWindow.theNeuronArray.modules[i].label = Params[0];
-                    }
+                //did we change the module type?
+                string[] Params = commandLine.Split(' ');
+                Type t1x = Type.GetType("BrainSimulator.Modules." + Params[0]);
+                if (t1x != null && (MainWindow.theNeuronArray.modules[i].TheModule == null || MainWindow.theNeuronArray.modules[i].TheModule.GetType() != t1x))
+                {
+                    MainWindow.theNeuronArray.modules[i].TheModule = (ModuleBase)Activator.CreateInstance(t1x);
+                    MainWindow.theNeuronArray.modules[i].label = Params[0];
+                }
 
-                    MainWindow.theNeuronArray.GetNeuronLocation(MainWindow.theNeuronArray.modules[i].firstNeuron, out int col, out int row);
-                    if (width < theModuleView.TheModule.MinWidth) width = theModuleView.TheModule.MinWidth;
-                    if (height < theModuleView.TheModule.MinHeight) height = theModuleView.TheModule.MinHeight;
+                MainWindow.theNeuronArray.GetNeuronLocation(MainWindow.theNeuronArray.modules[i].firstNeuron, out int col, out int row);
+                if (width < theModuleView.TheModule.MinWidth) width = theModuleView.TheModule.MinWidth;
+                if (height < theModuleView.TheModule.MinHeight) height = theModuleView.TheModule.MinHeight;
 
-                    bool dimsChanged = false;
+                bool dimsChanged = false;
 
-                    if (width + col > MainWindow.theNeuronArray.Cols)
-                    {
-                        width = MainWindow.theNeuronArray.Cols - col;
-                        dimsChanged = true;
-                    }
-                    if (height + row > MainWindow.theNeuronArray.rows)
-                    {
-                        height = MainWindow.theNeuronArray.rows - row;
-                        dimsChanged = true;
-                    }
-                    if (dimsChanged)
-                        MessageBox.Show("Dimensions reduced to stay within neuron array bondary.", "Warning", MessageBoxButton.OK);
-                    theModuleView.Width = width;
-                    theModuleView.Height = height;
+                if (width + col > MainWindow.theNeuronArray.Cols)
+                {
+                    width = MainWindow.theNeuronArray.Cols - col;
+                    dimsChanged = true;
+                }
+                if (height + row > MainWindow.theNeuronArray.rows)
+                {
+                    height = MainWindow.theNeuronArray.rows - row;
+                    dimsChanged = true;
+                }
+                if (dimsChanged)
+                    MessageBox.Show("Dimensions reduced to stay within neuron array bondary.", "Warning", MessageBoxButton.OK);
+                theModuleView.Width = width;
+                theModuleView.Height = height;
             }
             MainWindow.Update();
         }
@@ -300,22 +300,16 @@ namespace BrainSimulator
         public static void CreateModule(string label, string commandLine, Color color, int firstNeuron, int width, int height)
         {
             ModuleView mv = new ModuleView(firstNeuron, width, height, label, commandLine, Utils.ColorToInt(color));
+       
             if (mv.Width < mv.theModule.MinWidth) mv.Width = mv.theModule.MinWidth;
             if (mv.Height < mv.theModule.MinHeight) mv.Height = mv.theModule.MinHeight;
             MainWindow.theNeuronArray.modules.Add(mv);
             string[] Params = commandLine.Split(' ');
-            if (mv.TheModule != null)
+            Type t1x = Type.GetType("BrainSimulator.Modules." + Params[0]);
+            if (t1x != null && (mv.TheModule == null || mv.TheModule.GetType() != t1x))
             {
-                //MainWindow.theNeuronArray.areas[i].TheModule.Initialize(); //doesn't work with camera module
-            }
-            else
-            {
-                Type t1x = Type.GetType("BrainSimulator.Modules." + Params[0]);
-                if (t1x != null && (mv.TheModule == null || mv.TheModule.GetType() != t1x))
-                {
-                    mv.TheModule = (ModuleBase)Activator.CreateInstance(t1x);
-                    //  MainWindow.theNeuronArray.areas[i].TheModule.Initialize();
-                }
+                mv.TheModule = (ModuleBase)Activator.CreateInstance(t1x);
+                //  MainWindow.theNeuronArray.areas[i].TheModule.Initialize();
             }
         }
 

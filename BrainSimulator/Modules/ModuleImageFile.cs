@@ -77,8 +77,8 @@ namespace BrainSimulator.Modules
             foreach (Neuron n in na.Neurons())
             {
                 n.Model = Neuron.modelType.Color;
-                na.GetNeuronLocation(n, out int x, out int y);
-                n.Label = x + "," + y;
+            //    na.GetNeuronLocation(n, out int x, out int y);
+            //    n.Label = x + "," + y;
             }
             fileList = null;
             fileCounter = 0;

@@ -88,7 +88,7 @@ namespace BrainSimulator
 
                         //make the combobox entry
                         string theName = v.Name.Replace("Module", "");
-                        cb.Items.Add(new Label { Content = theName, ToolTip = toolTip,Margin=new Thickness(0),Padding =  new Thickness(0)});
+                        cb.Items.Add(new Label { Content = theName, ToolTip = toolTip, Margin = new Thickness(0), Padding = new Thickness(0) });
                     }
                 }
             }
@@ -183,43 +183,46 @@ namespace BrainSimulator
                 }
 
                 if (label == "" && commandLine == "") return;
+
+                //check to see if the module will fit in the array
+                Type t = Type.GetType("BrainSimulator.Modules." + commandLine);
+                Modules.ModuleBase tempModule = (Modules.ModuleBase)Activator.CreateInstance(t);
+                SelectionRectangle nsr = MainWindow.arrayView.theSelection.selectedRectangles[i];
+                MainWindow.theNeuronArray.GetNeuronLocation(nsr.FirstSelectedNeuron, out int col, out int row);
+                if (row + tempModule.MinHeight > MainWindow.theNeuronArray.rows ||
+                    col + tempModule.MinWidth > MainWindow.theNeuronArray.Cols)
+                {
+                    MessageBox.Show("Minimum size would exceed neuron array boundary.");
+                    return;
+                }
+
+
                 //convert a selection rectangle to a module
                 MainWindow.theNeuronArray.SetUndoPoint();
+
+                //clear out the underlying neurons
                 MainWindow.arrayView.DeleteSelection(true);
                 MainWindow.theNeuronArray.AddModuleUndo(MainWindow.theNeuronArray.modules.Count, null);
                 width = MainWindow.arrayView.theSelection.selectedRectangles[i].Width;
                 height = MainWindow.arrayView.theSelection.selectedRectangles[i].Height;
-                SelectionRectangle nsr = MainWindow.arrayView.theSelection.selectedRectangles[i];
-                MainWindow.arrayView.theSelection.selectedRectangles.RemoveAt(i);
                 CreateModule(label, commandLine, color, nsr.FirstSelectedNeuron, width, height);
+                MainWindow.arrayView.theSelection.selectedRectangles.RemoveAt(i);
             }
             MainWindow.Update();
         }
 
         public static void CreateModule(string label, string commandLine, Color color, int firstNeuron, int width, int height)
         {
+
             ModuleView mv = new ModuleView(firstNeuron, width, height, label, commandLine, Utils.ColorToInt(color));
             if (mv.Width < mv.TheModule.MinWidth) mv.Width = mv.TheModule.MinWidth;
             if (mv.Height < mv.TheModule.MinHeight) mv.Height = mv.TheModule.MinHeight;
             MainWindow.theNeuronArray.modules.Add(mv);
-            string[] Params = commandLine.Split(' ');
-            if (mv.TheModule != null)
-            {
-                MainWindow.SuspendEngine();
-                mv.TheModule.SetModuleView();
-                mv.TheModule.Initialize();
-                MainWindow.ResumeEngine();
-            }
-            else
-            {
-                //This should never be reached
-                Type t1x = Type.GetType("BrainSimulator.Modules." + Params[0]);
-                if (t1x != null && (mv.TheModule == null || mv.TheModule.GetType() != t1x))
-                {
-                    mv.TheModule = (ModuleBase)Activator.CreateInstance(t1x);
-                    //  MainWindow.theNeuronArray.areas[i].TheModule.Initialize();
-                }
-            }            
+            MainWindow.SuspendEngine();
+            mv.TheModule.SetModuleView();
+            mv.TheModule.Initialize();
+            MainWindow.ResumeEngine();
+            return;
         }
 
         private static void Mi_Click(object sender, RoutedEventArgs e)
@@ -265,7 +268,7 @@ namespace BrainSimulator
                 if ((string)mi.Header == "Delete")
                 {
                     int i = (int)mi.Parent.GetValue(SelectionNumberProperty);
-                        MainWindow.arrayView.DeleteSelection();
+                    MainWindow.arrayView.DeleteSelection();
                 }
                 if ((string)mi.Header == "Reset Hebbian Weights")
                 {

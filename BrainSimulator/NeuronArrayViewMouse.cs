@@ -26,7 +26,6 @@ namespace BrainSimulator
                 DependencyProperty.Register("ShapeType", typeof(shapeType), typeof(Shape));
 
 
-
         //State
         private enum CurrentOperation { idle, draggingSynapse, draggingNewSelection, movingSelection, movingModule, sizingModule, panning };
         private CurrentOperation currentOperation = CurrentOperation.idle;
@@ -34,8 +33,50 @@ namespace BrainSimulator
 
 
         //current default synapse params
-        public float lastSynapseWeight = 1.0f;
-        public Synapse.modelType lastSynapseModel = Synapse.modelType.Fixed;
+        public float LastSynapseWeight
+        {
+            get
+            {
+                if (float.TryParse(MainWindow.thisWindow.SynapseWeight.Text, out float theWeight))
+                    return theWeight;
+                return 1;
+            }
+            set
+            {
+                if (MainWindow.thisWindow.SynapseUpdate.IsChecked == true)
+                {
+                    if (!MainWindow.thisWindow.SynapseWeight.Items.Contains(value))
+                    {
+                        MainWindow.thisWindow.SynapseWeight.Items.Add(value);
+                    }
+                    MainWindow.thisWindow.SynapseWeight.SelectedItem = value;
+                }
+            }
+        }
+        public Synapse.modelType LastSynapseModel
+        {
+            get
+            {
+                if (Enum.TryParse(MainWindow.thisWindow.SynapseModel.Text, out Synapse.modelType theModel))
+                    return theModel;
+                return Synapse.modelType.Fixed;
+            }
+            set
+            {
+                if (MainWindow.thisWindow.SynapseUpdate.IsChecked == true)
+                {
+                    //TODO figure out why you can't just set the SelectedValue... if you try, it's just null
+                    string s = value.ToString();
+                    foreach (ComboBoxItem x in MainWindow.thisWindow.SynapseModel.Items)
+                    {
+                        if (x.Content.ToString() == s)
+                        {
+                            MainWindow.thisWindow.SynapseModel.SelectedItem = x;
+                        }
+                    }
+                }
+            }
+        }
 
         int mouseDownNeuronIndex = -1;
         static Shape synapseShape = null;  //the shape of the synapses being rubber-banded 
@@ -54,8 +95,11 @@ namespace BrainSimulator
                 if (currentOperation == CurrentOperation.draggingSynapse) return shapeType.Synapse;
                 if (currentOperation == CurrentOperation.movingModule) return shapeType.Module;
                 if (currentOperation == CurrentOperation.draggingNewSelection) return shapeType.Selection;
-                if (currentOperation == CurrentOperation.movingSelection) return shapeType.Selection;
-                if (currentOperation == CurrentOperation.sizingModule) return shapeType.Module;
+                if (!MainWindow.ctrlPressed)
+                {
+                    if (currentOperation == CurrentOperation.movingSelection) return shapeType.Selection;
+                    if (currentOperation == CurrentOperation.sizingModule) return shapeType.Module;
+                }
             }
 
             //don't change the cursor if dragging, panning
@@ -104,8 +148,16 @@ namespace BrainSimulator
                         theCanvas.Cursor = Cursors.UpArrow;
                         break;
                     case shapeType.Module: //for a module, set directional stretch arrow cursors
-                        theCanvas.Cursor = Cursors.ScrollAll;
-                        SetScrollCursor(e.GetPosition(this), theShape);
+                        if (!MainWindow.ctrlPressed)
+                        {
+                            theCanvas.Cursor = Cursors.ScrollAll;
+                            SetScrollCursor(e.GetPosition(this), theShape);
+                        }
+                        else //ctrl pressed
+                        {
+                            theCanvas.Cursor = Cursors.Cross;
+                            st = shapeType.Canvas;
+                        }
                         break;
                     case shapeType.Selection: //TODO add directional arrow code
                         theCanvas.Cursor = Cursors.ScrollAll;
@@ -144,7 +196,7 @@ namespace BrainSimulator
                 bool nearLeft = currentPosition.X - left < edgeToler;
                 bool nearRight = left + theRect.Width - currentPosition.X < edgeToler;
 
-                if (nearTop && nearLeft&&widthCanChange && heightCanChange) theCanvas.Cursor = Cursors.ScrollNW;
+                if (nearTop && nearLeft && widthCanChange && heightCanChange) theCanvas.Cursor = Cursors.ScrollNW;
                 else if (nearTop && nearRight && widthCanChange && heightCanChange) theCanvas.Cursor = Cursors.ScrollNE;
                 else if (nearBottom && nearLeft && widthCanChange && heightCanChange) theCanvas.Cursor = Cursors.ScrollSW;
                 else if (nearBottom && nearRight && widthCanChange && heightCanChange) theCanvas.Cursor = Cursors.ScrollSE;
@@ -168,7 +220,7 @@ namespace BrainSimulator
 
             if (MainWindow.theNeuronArray == null) return;
             MainWindow.theNeuronArray.SetUndoPoint();
-            Debug.WriteLine("theCanvas_MouseDown" + MainWindow.theNeuronArray.Generation+ theShape + theShapeType);
+            Debug.WriteLine("theCanvas_MouseDown" + MainWindow.theNeuronArray.Generation + theShape + theShapeType);
             Point currentPosition = e.GetPosition(theCanvas);
             LimitMousePostion(ref currentPosition);
             mouseDownNeuronIndex = dp.NeuronFromPoint(currentPosition);
@@ -366,7 +418,7 @@ namespace BrainSimulator
                 FinishSelection();
                 Update();
             }
-            else if (currentOperation == CurrentOperation.draggingSynapse && 
+            else if (currentOperation == CurrentOperation.draggingSynapse &&
                 synapseShape != null)
             {
                 FinishDraggingSynapse(e);

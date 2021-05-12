@@ -189,3 +189,68 @@ def check_help_menu():
         return False
     return True
 
+def check_icon_bar():
+    if not tk.wait_and_click('brainsim_title'):
+        return False
+    if not tk.wait_for_center('bs2_icon_new_enabled'):
+        return False
+    if not tk.wait_for_center('bs2_icon_open_enabled'):
+        return False
+    if not tk.wait_for_center('bs2_icon_save_disabled'):
+        return False
+    if not tk.wait_for_center('bs2_icon_save_as_enabled'):
+        return False
+    if not tk.wait_for_center('bs2_icon_pan_enabled'):
+        return False
+    if not tk.wait_for_center('bs2_icon_zoom_out_enabled'):
+        return False
+    if not tk.wait_for_center('bs2_icon_zoom_in_enabled'):
+        return False
+    if not tk.wait_for_center('bs2_icon_origin_enabled'):
+        return False
+    if not tk.wait_for_center('bs2_icon_all_synapses_unchecked'):
+        return False
+    if not tk.wait_for_center('bs2_icon_reset_enabled'):
+        return False
+    if not tk.wait_for_center('bs2_icon_pause_enabled'):
+        return False
+    if not tk.wait_for_center('bs2_icon_run_enabled'):
+        return False
+    if not tk.wait_for_center('bs2_icon_step_enabled'):
+        return False
+    if not tk.wait_for_center('bs2_icon_speed_enabled'):
+        return False
+    if not tk.wait_for_center('bs2_icon_speed_slider'):
+        return False
+    return True
+
+def check_icon_tooltips():
+    if not tk.wait_and_click('brainsim_title'):
+        return False
+    if not tk.wait_and_check_tooltip('bs2_icon_new_enabled', 'bs2_tooltip_new'):
+        return False
+    if not tk.wait_and_check_tooltip('bs2_icon_open_enabled', 'bs2_tooltip_open'):
+        return False
+    if not tk.wait_and_check_tooltip('bs2_icon_save_as_enabled', 'bs2_tooltip_save_as'):
+        return False
+    if not tk.wait_and_check_tooltip('bs2_icon_pan_enabled', 'bs2_tooltip_pan'):
+        return False
+    if not tk.wait_and_check_tooltip('bs2_icon_zoom_out_enabled', 'bs2_tooltip_zoom_out'):
+        return False
+    if not tk.wait_and_check_tooltip('bs2_icon_zoom_in_enabled', 'bs2_tooltip_zoom_in'):
+        return False
+    if not tk.wait_and_check_tooltip('bs2_icon_origin_enabled', 'bs2_tooltip_origin'):
+        return False
+    if not tk.wait_and_check_tooltip('bs2_icon_reset_enabled', 'bs2_tooltip_reset'):
+        return False
+    if not tk.wait_and_check_tooltip('bs2_icon_pause_enabled', 'bs2_tooltip_pause'):
+        return False
+    if not tk.wait_and_check_tooltip('bs2_icon_run_enabled', 'bs2_tooltip_run'):
+        return False
+    if not tk.wait_and_check_tooltip('bs2_icon_step_enabled', 'bs2_tooltip_step'):
+        return False
+    if not tk.wait_and_check_tooltip('bs2_icon_speed_slider', 'bs2_tooltip_speed'):
+        return False
+    return True
+    
+    

@@ -39,6 +39,14 @@ Is BrainSim Help Menu Complete?
 	${Result}    		Check Help Menu
 	Should Be True		${Result}
 			
+Is BrainSim Icon Bar Complete?
+	[Tags]				Wip
+	${Result}			Check Icon Bar
+	Should Be True		${Result}
 
+Are Icon Tooltips Working?
+	[Tags]				Wip
+	${Result}			Check Icon Tooltips
+	Should Be True		${Result}
 
 

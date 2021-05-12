@@ -59,7 +59,6 @@ namespace BrainSimulator
             }
             if (theNeuronArray.displayParams != null)
                 theNeuronArrayView.Dp = theNeuronArray.displayParams;
-            NeuronArrayView.SortAreas();
 
             AddFileToMRUList(currentFileName);
             Properties.Settings.Default["CurrentFile"] = currentFileName;

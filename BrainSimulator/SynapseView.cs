@@ -158,8 +158,8 @@ namespace BrainSimulator
             weightChanged = false;
 
             //set defaults for next synapse add
-            theNeuronArrayView.lastSynapseModel = s.model;
-            theNeuronArrayView.lastSynapseWeight = s.weight;
+            theNeuronArrayView.LastSynapseModel = s.model;
+            theNeuronArrayView.LastSynapseWeight = s.weight;
 
 
             cm.SetValue(SourceIDProperty, i);
@@ -394,21 +394,23 @@ namespace BrainSimulator
                     return;
                 }
                 cc = Utils.FindByName(cm, "SynapseWeight");
+                float newWeight = 1f;
                 if (cc is ComboBox tb2)
                 {
-                    float.TryParse(tb2.Text, out float newWeight);
+                    float.TryParse(tb2.Text, out newWeight);
                     if (weightChanged)
                     {
-                        theNeuronArrayView.lastSynapseWeight = newWeight;
+                        theNeuronArrayView.LastSynapseWeight = newWeight;
                         Utils.AddToValues(newWeight, synapseWeightValues);
                     }
                 }
                 cc = Utils.FindByName(cm, "Model");
+                Synapse.modelType newModel = Synapse.modelType.Fixed;
                 if (cc is ComboBox cb0)
                 {
                     ListBoxItem lbi = (ListBoxItem)cb0.SelectedItem;
-                    Synapse.modelType sm = (Synapse.modelType)System.Enum.Parse(typeof(Synapse.modelType), lbi.Content.ToString());
-                    theNeuronArrayView.lastSynapseModel = sm;
+                    newModel = (Synapse.modelType)System.Enum.Parse(typeof(Synapse.modelType), lbi.Content.ToString());
+                    theNeuronArrayView.LastSynapseModel = newModel;
                 }
 
                 if (newSourceID != sourceID || newTargetID != targetID)
@@ -417,7 +419,7 @@ namespace BrainSimulator
                     MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).DeleteSynapseWithUndo((int)cm.GetValue(TargetIDProperty));
                 }
                 Neuron nNewSource = MainWindow.theNeuronArray.GetNeuron(newSourceID);
-                nNewSource.AddSynapseWithUndo(newTargetID, theNeuronArrayView.lastSynapseWeight, theNeuronArrayView.lastSynapseModel);
+                nNewSource.AddSynapseWithUndo(newTargetID, newWeight, newModel);
                 cm.IsOpen = false;
                 MainWindow.Update();
             }

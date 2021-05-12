@@ -15,7 +15,7 @@ using System.Xml.Serialization;
 namespace BrainSimulator
 {
 
-    public partial class ModuleView : IComparable<ModuleView>
+    public partial class ModuleView
     {
         int firstNeuron = 0;//, lastNeuron = 0;
         string label;
@@ -41,15 +41,6 @@ namespace BrainSimulator
             }
         }
 
-        //here is where we sort the array of modules so they execute top-to-bottom & left-to-right.
-        public int CompareTo(ModuleView na)
-        {
-            //two bizarre cases
-            if (na == null) return 1;
-            if (na.firstNeuron == firstNeuron) return 0;
-            if (na.firstNeuron < firstNeuron) return 1;
-            return -1;
-        }
 
         public ModuleView(int firstNeuron1, int width, int height, string theLabel, string theCommandLine, int theColor)
         {
@@ -60,11 +51,9 @@ namespace BrainSimulator
             CommandLine = theCommandLine;
             color = theColor;
             string[] Params = CommandLine.Split(' ');
-            if (commandLine.IndexOf("Module") == 0) //take this out when all modules are ported to new class structure
-            {
-                Type t = Type.GetType("BrainSimulator.Modules." + Params[0]);
-                theModule = (Modules.ModuleBase)Activator.CreateInstance(t);
-            }
+
+            Type t = Type.GetType("BrainSimulator.Modules." + Params[0]);
+            theModule = (Modules.ModuleBase)Activator.CreateInstance(t);
         }
 
         public ModuleView() { }
@@ -94,7 +83,7 @@ namespace BrainSimulator
                     for (int row = 0; row < height; row++)
                         GetNeuronAt(col, row).Clear();
                 }
-                width = value; 
+                width = value;
                 if (TheModule != null) TheModule.SizeChanged();
             }
         }
@@ -172,9 +161,9 @@ namespace BrainSimulator
             int index = firstNeuron + Y + X * Rows;
             return MainWindow.theNeuronArray.GetNeuron(index);
         }
-        public int GetNeuronIndexAt(int X, int Y)
+        public int GetAbsNeuronIndexAt(int X, int Y)
         {
-            int index = firstNeuron + Y + X * Rows;
+            int index = Y + X * Rows;
             return index;
         }
 

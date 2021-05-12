@@ -151,8 +151,8 @@ namespace BrainSimulator
         {
             int source = (int)theShape.GetValue(SynapseView.SourceIDProperty);
             int target = (int)theShape.GetValue(SynapseView.TargetIDProperty);
-            lastSynapseWeight = (float)theShape.GetValue(SynapseView.WeightValProperty);
-            lastSynapseModel = (Synapse.modelType)theShape.GetValue(SynapseView.ModelProperty);
+            LastSynapseWeight = (float)theShape.GetValue(SynapseView.WeightValProperty);
+            LastSynapseModel = (Synapse.modelType)theShape.GetValue(SynapseView.ModelProperty);
             Neuron n = MainWindow.theNeuronArray.GetNeuron(source);
             n.DeleteSynapse(target);
             mouseDownNeuronIndex = source;
@@ -170,9 +170,9 @@ namespace BrainSimulator
                 Shape l = SynapseView.GetSynapseShape
                     (dp.pointFromNeuron(mouseDownNeuronIndex),
                     dp.pointFromNeuron(currentNeuron),
-                    lastSynapseModel
+                    LastSynapseModel
                     );
-                l.Stroke = new SolidColorBrush(Utils.RainbowColorFromValue(lastSynapseWeight));
+                l.Stroke = new SolidColorBrush(Utils.RainbowColorFromValue(LastSynapseWeight));
                 if (!(l is Ellipse))
                     l.Fill = l.Stroke;
                 theCanvas.Children.Add(l);
@@ -189,7 +189,7 @@ namespace BrainSimulator
                 MainWindow.theNeuronArray.SetUndoPoint();
                 MainWindow.arrayView.AddShowSynapses(mouseDownNeuronIndex);
                 MainWindow.theNeuronArray.GetNeuron(mouseDownNeuronIndex).
-                    AddSynapseWithUndo(index, lastSynapseWeight, lastSynapseModel);
+                    AddSynapseWithUndo(index, LastSynapseWeight, LastSynapseModel);
             }
             synapseShape = null;
             mouseDownNeuronIndex = -1;
@@ -351,64 +351,65 @@ namespace BrainSimulator
         private void MoveModule(FrameworkElement theShape, int currentNeuron)
         {
             Debug.WriteLine("currentNeuron: " + currentNeuron + " prevModuleMouseLocation:" + prevModuleMouseLocation);
-            if (currentNeuron != prevModuleMouseLocation)
+            lock (MainWindow.theNeuronArray.modules)
             {
-
-                //which module?
-                int index = (int)theShape.GetValue(ModuleView.AreaNumberProperty);
-                ModuleView theCurrentModule = MainWindow.theNeuronArray.modules[index];
-                MainWindow.theNeuronArray.AddModuleUndo(index, theCurrentModule);
-
-                int delta = currentNeuron - prevModuleMouseLocation;
-                int newFirst = theCurrentModule.FirstNeuron + delta;
-                int newLast = theCurrentModule.LastNeuron + delta;
-                MainWindow.theNeuronArray.GetNeuronLocation(newFirst, out int col0, out int row0);
-                MainWindow.theNeuronArray.GetNeuronLocation(newLast, out int col1, out int row1);
-
-
-                if (newFirst >= 0 && row1 > row0 && newLast < MainWindow.theNeuronArray.arraySize)
+                if (currentNeuron != prevModuleMouseLocation)
                 {
-                    //move all the neurons
-                    List<int> neuronsToMove = new List<int>();
-                    foreach (Neuron n in theCurrentModule.Neurons1) neuronsToMove.Add(n.id);
-                    if (!IsDestinationClear(neuronsToMove, delta))
+
+                    //which module?
+                    int index = (int)theShape.GetValue(ModuleView.AreaNumberProperty);
+                    ModuleView theCurrentModule = MainWindow.theNeuronArray.modules[index];
+                    MainWindow.theNeuronArray.AddModuleUndo(index, theCurrentModule);
+
+                    int delta = currentNeuron - prevModuleMouseLocation;
+                    int newFirst = theCurrentModule.FirstNeuron + delta;
+                    int newLast = theCurrentModule.LastNeuron + delta;
+                    MainWindow.theNeuronArray.GetNeuronLocation(newFirst, out int col0, out int row0);
+                    MainWindow.theNeuronArray.GetNeuronLocation(newLast, out int col1, out int row1);
+
+
+                    if (newFirst >= 0 && row1 > row0 && newLast < MainWindow.theNeuronArray.arraySize)
                     {
-                        MessageBoxResult result1 = MessageBox.Show("Some destination neurons are in use and will be overwritten, continue?", "Continue", MessageBoxButton.YesNo);
-                        if (result1 != MessageBoxResult.Yes)
+                        //move all the neurons
+                        List<int> neuronsToMove = new List<int>();
+                        foreach (Neuron n in theCurrentModule.Neurons1) neuronsToMove.Add(n.id);
+                        if (!IsDestinationClear(neuronsToMove, delta))
                         {
-                            return;
+                            MessageBoxResult result1 = MessageBox.Show("Some destination neurons are in use and will be overwritten, continue?", "Continue", MessageBoxButton.YesNo);
+                            if (result1 != MessageBoxResult.Yes)
+                            {
+                                return;
+                            }
                         }
-                    }
-                    if (delta > 0) //move all the nuerons...opposite order depending on the direction of the move
-                    {
-                        for (int i = theCurrentModule.NeuronCount - 1; i >= 0; i--)
+                        if (delta > 0) //move all the nuerons...opposite order depending on the direction of the move
                         {
-                            Neuron src = theCurrentModule.GetNeuronAt(i);
-                            Neuron dest = MainWindow.theNeuronArray.GetNeuron(src.Id + delta);
-                            MainWindow.thisWindow.theNeuronArrayView.MoveOneNeuron(src, dest);
+                            for (int i = theCurrentModule.NeuronCount - 1; i >= 0; i--)
+                            {
+                                Neuron src = theCurrentModule.GetNeuronAt(i);
+                                Neuron dest = MainWindow.theNeuronArray.GetNeuron(src.Id + delta);
+                                MainWindow.thisWindow.theNeuronArrayView.MoveOneNeuron(src, dest);
+                            }
                         }
+                        else
+                        {
+                            for (int i = 0; i < theCurrentModule.NeuronCount; i++)
+                            {
+                                Neuron src = theCurrentModule.GetNeuronAt(i);
+                                Neuron dest = MainWindow.theNeuronArray.GetNeuron(src.Id + delta);
+                                MainWindow.thisWindow.theNeuronArrayView.MoveOneNeuron(src, dest);
+                            }
+                        }
+                        //move the box
+                        theCurrentModule.FirstNeuron += delta;
+                        Update();
+                        prevModuleMouseLocation = currentNeuron;
                     }
                     else
                     {
-                        for (int i = 0; i < theCurrentModule.NeuronCount; i++)
-                        {
-                            Neuron src = theCurrentModule.GetNeuronAt(i);
-                            Neuron dest = MainWindow.theNeuronArray.GetNeuron(src.Id + delta);
-                            MainWindow.thisWindow.theNeuronArrayView.MoveOneNeuron(src, dest);
-                        }
+                        // MessageBox.Show("Module would be outside neuron array boundary.");
                     }
-                    //move the box
-                    theCurrentModule.FirstNeuron += delta;
-                    SortAreas();
-                    Update();
-                    prevModuleMouseLocation = currentNeuron;
-                }
-                else
-                {
-                    // MessageBox.Show("Module would be outside neuron array boundary.");
                 }
             }
-
         }
         private void FinishMovingModule(FrameworkElement theShape)
         {
@@ -418,13 +419,17 @@ namespace BrainSimulator
         private void ResizeModule(FrameworkElement theShape, int currentNeuron)
         {
             lock (MainWindow.theNeuronArray.modules)
-            {            //TODO: Add rearrangement of neurons
-                         //TODO: Add clone of neurons to handle ALL properties
+            {            
+                //TODO: Add rearrangement of neurons
+                //TODO: Add clone of neurons to handle ALL properties
                 int index = (int)theShape.GetValue(ModuleView.AreaNumberProperty);
                 ModuleView theCurrentModule = MainWindow.theNeuronArray.modules[index];
 
+                //the current module bounding box
                 theCurrentModule.GetBounds(out int X1, out int Y1, out int X2, out int Y2);
+                //the previous mouse location
                 theCurrentModule.GetAbsNeuronLocation(prevModuleMouseLocation, out int Xf, out int Yf);
+                //the current mouse location
                 theCurrentModule.GetAbsNeuronLocation(currentNeuron, out int Xc, out int Yc);
                 int minHeight = theCurrentModule.TheModule.MinHeight;
                 int minWidth = theCurrentModule.TheModule.MinWidth;
@@ -448,12 +453,11 @@ namespace BrainSimulator
                                 theCurrentModule.Height = maxHeight;
                             else
                             {
+                                //force this move to be vertical only
+                                int newLoc = theCurrentModule.GetAbsNeuronIndexAt(Xf, Yc);
                                 theCurrentModule.Height = newHeight;
-                                MoveModule(theShape, currentNeuron);
-                                //theCurrentModule.FirstNeuron += Yc - Yf;
-                                prevModuleMouseLocation = currentNeuron;
+                                MoveModule(theShape, newLoc);
                             }
-                            SortAreas();
                             Update();
                         }
                     }
@@ -475,11 +479,11 @@ namespace BrainSimulator
                                 theCurrentModule.Width = maxWidth;
                             else
                             {
+                                //force this move to be vertical only
+                                int newLoc = theCurrentModule.GetAbsNeuronIndexAt(Xc, Yf);
                                 theCurrentModule.Width = newWidth;
-                                MoveModule(theShape, currentNeuron);
-                                prevModuleMouseLocation = currentNeuron;
+                                MoveModule(theShape, newLoc);
                             }
-                            SortAreas();
                             Update();
                         }
                     }
@@ -500,10 +504,7 @@ namespace BrainSimulator
                             else if (newWidth > maxWidth)
                                 theCurrentModule.Width = maxWidth;
                             else
-                            {
-                                prevModuleMouseLocation = currentNeuron;
                                 theCurrentModule.Width = newWidth;
-                            }
                             Update();
                         }
                     }
@@ -523,15 +524,13 @@ namespace BrainSimulator
                             else if (newHeight > maxHeight)
                                 theCurrentModule.Height = maxHeight;
                             else
-                            {
-                                prevModuleMouseLocation = currentNeuron;
                                 theCurrentModule.Height = newHeight;
-                            }
                             Update();
                         }
                     }
                 }
             }
+            prevModuleMouseLocation = currentNeuron;
         }
 
 

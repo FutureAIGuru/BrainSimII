@@ -49,4 +49,9 @@ Are Icon Tooltips Working?
 	${Result}			Check Icon Tooltips
 	Should Be True		${Result}
 
+Are Icon Bar Checkboxes Working?
+	[Tags]				Wip
+	${Result}			Check Icon Checkboxes
+	Should Be True		${Result}
+
 

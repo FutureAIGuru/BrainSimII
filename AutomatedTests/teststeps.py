@@ -9,6 +9,9 @@ from pyscreeze import ImageNotFoundException
 
 import testtoolkit as tk     # the very basic routines we use from PyAutoGUI again and again.
 
+def harmless_click():
+    tk.wait_and_click('brainsim_title')
+
 def check_test_requirements():
     # This function checks the requirements the test framework depends on.
     if not tk.screen_size_correct():
@@ -222,6 +225,24 @@ def check_icon_bar():
         return False
     if not tk.wait_for_center('bs2_icon_speed_slider'):
         return False
+    if not tk.wait_for_center('bs2_icon_add_synapse_with'):
+        return False
+    if not tk.wait_for_center('bs2_icon_weight_collapsed'):
+        return False
+    if not tk.wait_and_click('bs2_icon_weight_collapsed'):
+        return False
+    time.sleep(0.5)
+    if not tk.wait_for_center('bs2_icon_weight_expanded'):
+        return False
+    if not tk.wait_and_click('brainsim_title'):
+        return False
+    if not tk.wait_for_center('bs2_icon_model_collapsed'):
+        return False
+    if not tk.wait_and_click('bs2_icon_model_collapsed'):
+        return False
+    time.sleep(0.5)
+    if not tk.wait_for_center('bs2_icon_model_expanded'):
+        return False
     return True
 
 def check_icon_tooltips():
@@ -253,4 +274,16 @@ def check_icon_tooltips():
         return False
     return True
     
-    
+def check_icon_checkboxes():
+    harmless_click()
+    if not tk.wait_and_click('bs2_icon_all_synapses_unchecked'):
+        return False
+    harmless_click()
+    if not tk.wait_and_click('bs2_icon_all_synapses_checked'):
+        return False
+    if not tk.wait_and_click('bs2_icon_update_from_click_unchecked'):
+        return False
+    harmless_click()
+    if not tk.wait_and_click('bs2_icon_update_from_click_checked'):
+        return False
+    return True

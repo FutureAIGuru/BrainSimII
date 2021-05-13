@@ -329,7 +329,27 @@ def check_file_new_shows_new_network_dialog():
     return check_new_network_complete()
 
 def check_icon_new_shows_new_network_dialog():
-    do_icon_choice('bs2_file_new_item')
+    do_icon_choice('bs2_icon_new_enabled')
     return check_new_network_complete()
+ 
+def check_open_network_complete():
+    if not tk.wait_for_center('file_open_dialog_title'):
+        return False 
+    if not tk.wait_for_center('file_open_dialog_filename'):
+        return False 
+    if not tk.wait_for_center('file_open_dialog_filetype'):
+        return False 
+    if not tk.wait_for_center('file_open_dialog_open_default'):
+        return False 
+    if not tk.wait_and_click('file_open_dialog_cancel_enabled'):
+        return False 
+    return True
     
+def check_file_open_shows_network_load_dialog():
+    do_menu_choice('bs2_file_menu', 'bs2_file_open_item')
+    return check_open_network_complete()
+
+def check_icon_open_shows_network_load_dialog():
+    do_icon_choice('bs2_icon_open_enabled')
+    return check_open_network_complete()
     

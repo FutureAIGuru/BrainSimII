@@ -54,4 +54,7 @@ Are Icon Bar Checkboxes Working?
 	${Result}			Check Icon Checkboxes
 	Should Be True		${Result}
 
-
+Does File New Show New Network Dialog?
+	[Tags]				Wip
+	${Result}			Check File New Shows New Network Dialog
+	Should Be True		${Result}

@@ -287,3 +287,49 @@ def check_icon_checkboxes():
     if not tk.wait_and_click('bs2_icon_update_from_click_checked'):
         return False
     return True
+
+def do_menu_choice(menu, item):
+    if not tk.wait_and_click('brainsim_title'):
+        return False
+    if not tk.wait_and_click(menu):
+        return False
+    if not tk.wait_and_click(item):
+        return False
+    
+def do_icon_choice(icon_choice):
+    if not tk.wait_and_click('brainsim_title'):
+        return False
+    if not tk.wait_and_click(icon_choice):
+        return False
+    return True
+
+def check_new_network_complete():
+    if not tk.wait_for_center('new_network_dialog_title'):
+        return False 
+    if not tk.wait_for_center('new_network_dialog_textblock'):
+        return False 
+    if not tk.wait_for_center('new_network_dialog_width'):
+        return False 
+    if not tk.wait_for_center('new_network_dialog_height'):
+        return False 
+    if not tk.wait_for_center('new_network_dialog_refractory_cycles'):
+        return False 
+    if not tk.wait_for_center('new_network_dialog_use_servers_unchecked'):
+        return False 
+    if not tk.wait_for_center('new_network_dialog_ok_default'):
+        return False 
+    if not tk.wait_for_center('new_network_dialog_title'):
+        return False 
+    if not tk.wait_and_click('new_network_dialog_cancel_enabled'):
+        return False 
+    return True
+    
+def check_file_new_shows_new_network_dialog():
+    do_menu_choice('bs2_file_menu', 'bs2_file_new_item')
+    return check_new_network_complete()
+
+def check_icon_new_shows_new_network_dialog():
+    do_icon_choice('bs2_file_new_item')
+    return check_new_network_complete()
+    
+    

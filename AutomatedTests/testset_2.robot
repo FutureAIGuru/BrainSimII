@@ -39,6 +39,37 @@ Is BrainSim Help Menu Complete?
 	${Result}    		Check Help Menu
 	Should Be True		${Result}
 			
+Is BrainSim Icon Bar Complete?
+	[Tags]				Wip
+	${Result}			Check Icon Bar
+	Should Be True		${Result}
 
+Are Icon Tooltips Working?
+	[Tags]				Wip
+	${Result}			Check Icon Tooltips
+	Should Be True		${Result}
 
+Are Icon Bar Checkboxes Working?
+	[Tags]				Wip
+	${Result}			Check Icon Checkboxes
+	Should Be True		${Result}
 
+Does File New Show New Network Dialog?
+	[Tags]				Wip
+	${Result}			Check File New Shows New Network Dialog
+	Should Be True		${Result}
+
+Does Icon New Show New Network Dialog?
+	[Tags]				Wip
+	${Result}			Check Icon New Shows New Network Dialog
+	Should Be True		${Result}
+
+Does File Open Show Network Load Dialog?
+	[Tags]				Wip
+	${Result}			Check File Open Shows Network Load Dialog
+	Should Be True		${Result}
+
+Does Icon Open Show Network LoadDialog?
+	[Tags]				Wip
+	${Result}			Check Icon Open Shows Network Load Dialog
+	Should Be True		${Result}

@@ -5,8 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrainSimulator"
         mc:Ignorable="d"
-        Title="Brain Simulator II" Height="520.771" Width="1080" KeyUp="Window_KeyUp" KeyDown="Window_KeyDown" 
-        Closing="Window_Closing" ContentRendered="Window_ContentRendered" WindowState="Maximized" MouseEnter="Window_MouseEnter" MouseLeave="Window_MouseLeave">
+        Title="Brain Simulator II" Height="520.771" Width="1080" 
+         KeyUp="Window_KeyUp"  KeyDown="Window_KeyDown" 
+        Closing="Window_Closing" ContentRendered="Window_ContentRendered" WindowState="Maximized" 
+        MouseEnter="Window_MouseEnter" MouseLeave="Window_MouseLeave">
     <DockPanel Margin="0,0,0,0" >
         <StatusBar DockPanel.Dock="Bottom" HorizontalAlignment="Stretch">
             <StatusBar.ItemsPanel>

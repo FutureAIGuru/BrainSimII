@@ -211,6 +211,16 @@ namespace BrainSimulator
             return true;
         }
 
+        //this is needed because the comboboxes in the toolbar can grab focus then MainWindow won't get keystrokes
+        //for some reason, you have to set focus to some visible, focussable control in order to keep the 
+        //combobox from grabbing it back
+        private void theCanvas_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Debug.WriteLine("theCanvas MouseEnter");
+            Keyboard.ClearFocus();
+            Keyboard.Focus(MainWindow.thisWindow.SynapseUpdate);
+            MainWindow.thisWindow.SynapseUpdate.Focus();
+        }
 
         public void theCanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -310,6 +320,7 @@ namespace BrainSimulator
 
         public void theCanvas_MouseMove(object sender, MouseEventArgs e)
         {
+
             shapeType theShapeType = SetMouseCursorShape(e, out FrameworkElement theShape);
             if (MainWindow.Busy()) return;
 

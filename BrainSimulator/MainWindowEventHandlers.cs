@@ -601,7 +601,7 @@ namespace BrainSimulator
             Keyboard.Focus(this);
             this.Focus();
             mouseInWindow = true;
-            //Activate();
+            Activate();
         }
         private void Window_MouseLeave(object sender, MouseEventArgs e)
         {

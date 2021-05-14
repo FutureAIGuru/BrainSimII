@@ -75,6 +75,7 @@ namespace BrainSimulator.Modules
 
             nRd.AddSynapse(nClr.id, 1);
             nIn.AddSynapse(nIn1.id, 1);
+            nIn.AddSynapse(nClr.id, 1);
 
             for (int i = 0; i < levelCount; i++)
             {
@@ -112,8 +113,8 @@ namespace BrainSimulator.Modules
 
                 nClr.AddSynapse(no.id, -1f);
                 nRd.AddSynapse(no.id, 0.9f);
-                nLast.AddSynapse(no.id, -1f);
-                nLast1.AddSynapse(no.id, -1f);
+                //nLast.AddSynapse(no.id, -1f);
+                //nLast1.AddSynapse(no.id, -1f);
 
                 float weight = GetWeight(4 + i);
                 weight += .001f; //differentiates between < and = 
@@ -122,8 +123,8 @@ namespace BrainSimulator.Modules
 
                 for (int j = i + 1; j < levelCount; j++)
                 {
-                    ni.AddSynapse(na.GetNeuronAt(2, j + 1).id, -1f);
-                    ni1.AddSynapse(na.GetNeuronAt(2, j + 1).id, -1f);
+                    //ni.AddSynapse(na.GetNeuronAt(2, j + 1).id, -1f);
+                    //5ni1.AddSynapse(na.GetNeuronAt(2, j + 1).id, -1f);
                 }
                 for (int j = 0; j < levelCount; j++)
                 {

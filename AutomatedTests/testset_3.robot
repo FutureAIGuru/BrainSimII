@@ -58,9 +58,8 @@ Do Library Networks Load?
     Network_NeuralGraph       	fragment_neuralgraph
     Network_Sallie            	fragment_sallie
     Network_ObjectMotion      	fragment_objectmotion
-	# Disabled because of Issue #156.
-    # Network_CameraTest        	fragment_cameratest
-    # Network_3DSim             	fragment_3dsim
+    Network_CameraTest        	fragment_cameratest
+    Network_3DSim             	fragment_3dsim
     
 Do Recent Networks Load?
 	# This test assumes "Do Library Networks Load?" has been executed succesfully.
@@ -76,7 +75,6 @@ Do Recent Networks Load?
     Network_NeuralGraph       	tool_tip_neuralgraph			fragment_neuralgraph
     Network_Sallie            	tool_tip_sallie					fragment_sallie
     Network_ObjectMotion      	tool_tip_objectmotion			fragment_objectmotion
-	# Disabled because of Issue #156.
-    # Network_CameraTest        	tool_tip_cameratest				fragment_cameratest
-    # Network_3DSim             	tool_tip_3dsim					fragment_3dsim
+    Network_CameraTest        	tool_tip_cameratest				fragment_cameratest
+    Network_3DSim             	tool_tip_3dsim					fragment_3dsim
     	

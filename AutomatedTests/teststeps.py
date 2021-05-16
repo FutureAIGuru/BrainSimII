@@ -241,6 +241,29 @@ def check_icon_bar():
         return False
     if not tk.wait_for_center('bs2_icon_add_synapse_with'):
         return False
+    return True
+
+def check_add_module_combobox():
+    if not harmless_click_to_focus():
+        return False
+    if not tk.wait_for_center('bs2_add_module_collapsed'):
+        return False
+    if not tk.wait_and_click('bs2_add_module_collapsed'):
+        return False
+    time.sleep(0.5)
+    if not tk.wait_for_center('bs2_add_module_expanded_1'):
+        return False
+    tk.click([1460, 420]) # scroll down combobox...
+    if not tk.wait_for_center('bs2_add_module_expanded_2'):
+        return False
+    tk.click([1460, 420]) # scroll down combobox...
+    if not tk.wait_for_center('bs2_add_module_expanded_3'):
+        return False
+    return True
+
+def check_synapse_weight_combobox():
+    if not harmless_click_to_focus():
+        return False
     if not tk.wait_for_center('bs2_icon_weight_collapsed'):
         return False
     if not tk.wait_and_click('bs2_icon_weight_collapsed'):
@@ -248,6 +271,9 @@ def check_icon_bar():
     time.sleep(0.5)
     if not tk.wait_for_center('bs2_icon_weight_expanded'):
         return False
+    return True
+    
+def check_synapse_model_combobox():
     if not harmless_click_to_focus():
         return False
     if not tk.wait_for_center('bs2_icon_model_collapsed'):
@@ -258,7 +284,7 @@ def check_icon_bar():
     if not tk.wait_for_center('bs2_icon_model_expanded'):
         return False
     return True
-
+    
 def check_icon_tooltips():
     if not harmless_click_to_focus():
         return False

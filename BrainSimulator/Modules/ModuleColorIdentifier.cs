@@ -26,7 +26,8 @@ namespace BrainSimulator.Modules
             minWidth = 3;
         }
         public override string ShortDescription => "Decodes a set of colors from multi-leveled rgb input.";
-        public override string LongDescription => "Looks for neurons labeled 'R0-7', 'G0-7', & 'B0-7'. Builds a list of most commonly-seen colors.";
+        public override string LongDescription => "Add synapses to from various input sources to 'P0'. The system will automatically add "+
+            "input synapses from all labeled neurons below the input synapses added.";
 
 
         int waitingForInput = 0;

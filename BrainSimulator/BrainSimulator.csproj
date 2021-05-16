@@ -143,9 +143,6 @@
     <Compile Include="Modules\ModuleChainCounter.cs" />
     <Compile Include="Modules\ModuleColorComponent.cs" />
     <Compile Include="Modules\ModuleColorIdentifier.cs" />
-    <Compile Include="Modules\ModuleNullDlg.xaml.cs">
-      <DependentUpon>ModuleNullDlg.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Modules\ModulePatternGenerator.cs" />
     <Compile Include="Modules\ModuleRateDecoder2.cs" />
     <Compile Include="Modules\ModuleRateDecoder.cs" />
@@ -289,10 +286,6 @@
     <Page Include="Modules\ModuleCameraDlg.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Modules\ModuleNullDlg.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Modules\ModuleStrokeFinderDlg.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -48,16 +48,35 @@ Does Icon Save As Show Network Save As Dialog?
 Do Library Networks Load?
 	[Tags]              Wip
 	[Template]          Check Network Library Entry
-    Library_BasicNeurons	  	fragment_basicneurons
-    Library_HebbianSynapses   	fragment_hebbiansynapses
-    Library_SimVision         	fragment_simvision
-    Library_Imagination       	fragment_imagination
-    Library_BabyTalk          	fragment_babytalk
-    Library_Maze              	fragment_maze
-    Library_SpeechTest        	fragment_speechtests
-    Library_NeuralGraph       	fragment_neuralgraph
-    Library_Sallie            	fragment_sallie
-    Library_CameraTest        	fragment_cameratest
-    Library_ObjectMotion      	fragment_objectmotion
-    Library_3DSim             	fragment_3dsim
+    Network_BasicNeurons	  	fragment_basicneurons
+    Network_HebbianSynapses   	fragment_hebbiansynapses
+    Network_SimVision         	fragment_simvision
+    Network_Imagination       	fragment_imagination
+    Network_BabyTalk          	fragment_babytalk
+    Network_Maze              	fragment_maze
+    Network_SpeechTest        	fragment_speechtests
+    Network_NeuralGraph       	fragment_neuralgraph
+    Network_Sallie            	fragment_sallie
+    Network_ObjectMotion      	fragment_objectmotion
+	# Disabled because of Issue #156.
+    # Network_CameraTest        	fragment_cameratest
+    # Network_3DSim             	fragment_3dsim
     
+Do Recent Networks Load?
+	# This test assumes "Do Library Networks Load?" has been executed succesfully.
+	[Tags]              Wip
+	[Template]          Check Recent Network Entry
+    Network_BasicNeurons	  	tool_tip_basicneurons			fragment_basicneurons
+    Network_HebbianSynapses   	tool_tip_hebbiansynapses		fragment_hebbiansynapses
+    Network_SimVision         	tool_tip_simvision				fragment_simvision
+    Network_Imagination       	tool_tip_imagination			fragment_imagination
+    Network_BabyTalk          	tool_tip_babytalk				fragment_babytalk
+    Network_Maze              	tool_tip_maze					fragment_maze
+    Network_SpeechTest        	tool_tip_speechtest 			fragment_speechtests
+    Network_NeuralGraph       	tool_tip_neuralgraph			fragment_neuralgraph
+    Network_Sallie            	tool_tip_sallie					fragment_sallie
+    Network_ObjectMotion      	tool_tip_objectmotion			fragment_objectmotion
+	# Disabled because of Issue #156.
+    # Network_CameraTest        	tool_tip_cameratest				fragment_cameratest
+    # Network_3DSim             	tool_tip_3dsim					fragment_3dsim
+    	

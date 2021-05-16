@@ -401,3 +401,22 @@ def check_network_library_entry(menu_item, relevant_part):
     if not tk.wait_for_center(relevant_part):
         return False
     return True
+
+def check_recent_network_entry(menu_item, tool_tip, relevant_part):
+    harmless_click_to_focus()
+    if not tk.wait_and_click('bs2_file_menu'):
+        return False
+    if not tk.wait_and_click('bs2_file_recent_item'):
+        return False
+    if not tk.wait_and_hover(menu_item):
+        return False
+    if not tk.wait_for_center(tool_tip):
+        return False
+    if not tk.wait_and_click(menu_item):
+        return False
+    if not tk.wait_and_click('notes_ok_button_enabled'):
+        return False
+    if not tk.wait_for_center(relevant_part):
+        return False
+    return True
+

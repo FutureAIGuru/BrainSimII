@@ -13,17 +13,23 @@ Library   			teststeps.py
 *** Test Cases ***
 
 Are Prerequisites Taken Care Of?
-	[Tags]                                                     Wip
+	[Tags]              Wip
 	${Result}    		Check Test Requirements
 	Should Be True		${Result}
 	
-Can We Start Brain Simulator II?
-	[Tags]                                                     Wip
-	${Result}    		Start Brain Simulator
+Can We Clear Appdata?
+	[Tags]              Wip
+	${Result}    		Clear Appdata
+	Should Be True		${Result}
+
+# This immediately follows the above test so we can reset the checkmark.
+Can We Start Brain Simulator II with Getting Started?
+	[Tags]              Wip
+	${Result}    		Start Brain Simulator with Getting Started
 	Should Be True		${Result}
 
 Can We Stop Brain Simulator II?
-	[Tags]                                                     Wip
+	[Tags]              Wip
 	${Result}    		Stop Brain Simulator
 	Should Be True		${Result}
 

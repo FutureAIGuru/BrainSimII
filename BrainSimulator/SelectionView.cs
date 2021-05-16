@@ -67,30 +67,19 @@ namespace BrainSimulator
             cm.Items.Add(new MenuItem { Header = sp, StaysOpenOnClick = true });
 
             ComboBox cb = new ComboBox();
-            //get list of available NEW modules...these are assignable to a "ModuleBase" 
-            var listOfBs = (from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
-                            from assemblyType in domainAssembly.GetTypes()
-                            where typeof(ModuleBase).IsAssignableFrom(assemblyType)
-                            orderby assemblyType.Name
-                            select assemblyType
-                            ).ToArray();
-            foreach (var v in listOfBs)
-            {
-                if (v.Name != "ModuleBase")
-                {
-                    //Type t = Type.GetType(v.FullName);
-                    if (v.Name != "ModuleBase")
-                    {
-                        //get the tooltip
-                        Type t = Type.GetType("BrainSimulator.Modules." + v.Name);
-                        ModuleBase theModule = (Modules.ModuleBase)Activator.CreateInstance(t);
-                        string toolTip = theModule.ShortDescription;
+            //get list of available modules...these are assignable to a "ModuleBase" 
+            var modules = Utils.GetArrayOfModuleTypes();
 
-                        //make the combobox entry
-                        string theName = v.Name.Replace("Module", "");
-                        cb.Items.Add(new Label { Content = theName, ToolTip = toolTip, Margin = new Thickness(0), Padding = new Thickness(0) });
-                    }
-                }
+            foreach (var v in modules)
+            {
+                //get the tooltip
+                Type t = Type.GetType("BrainSimulator.Modules." + v.Name);
+                ModuleBase theModule = (Modules.ModuleBase)Activator.CreateInstance(t);
+                string toolTip = theModule.ShortDescription;
+
+                //make the combobox entry
+                string theName = v.Name.Replace("Module", "");
+                cb.Items.Add(new Label { Content = theName, ToolTip = toolTip, Margin = new Thickness(0), Padding = new Thickness(0) });
             }
             cb.Width = 80;
             cb.Name = "AreaType";

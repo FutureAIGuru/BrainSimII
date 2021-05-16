@@ -157,7 +157,6 @@ namespace BrainSimulator
 
         private void ShowDialogs()
         {
-            SuspendEngine();
             foreach (ModuleView na in theNeuronArray.modules)
             {
                 if (na.TheModule != null && na.TheModule.dlgIsOpen)
@@ -173,7 +172,6 @@ namespace BrainSimulator
                 {
                     MenuItemNotes_Click(null, null);
                 });
-            ResumeEngine();
         }
 
         private void LoadMRUMenu()
@@ -191,6 +189,25 @@ namespace BrainSimulator
                 MRUListMenu.Items.Add(mi);
             }
         }
+        private void LoadModuleTypeMenu()
+        {
+            var moduleTypes = Utils.GetArrayOfModuleTypes();
+
+            foreach (var moduleType in moduleTypes)
+            {
+                string moduleName = moduleType.Name;
+                moduleName = moduleName.Replace("Module", "");
+                Modules.ModuleBase theModule = (Modules.ModuleBase)Activator.CreateInstance(moduleType);
+                string toolTip = theModule.ShortDescription;
+
+                MenuItem mi = new MenuItem { Header = moduleName, ToolTip=toolTip, };
+                mi.Click += InsertModule_Click;
+                InsertModuleMenu.Items.Add(mi);
+
+                ModuleListComboBox.Items.Add(new Label { Content = moduleName, ToolTip = toolTip, Margin = new Thickness(0), Padding = new Thickness(0) });
+            }
+        }
+
         private void LoadFindMenus()
         {
             if (IsArrayEmpty()) return;
@@ -357,6 +374,7 @@ namespace BrainSimulator
         {
             LoadMRUMenu();
             LoadFindMenus();
+
             if (theNeuronArray != null && !useServers) ThreadCount.Text = theNeuronArray.GetThreadCount().ToString();
             else ThreadCount.Text = "";
             if (theNeuronArray != null) Refractory.Text = theNeuronArray.GetRefractoryDelay().ToString();
@@ -490,7 +508,10 @@ namespace BrainSimulator
 
         public static void Update()
         {
-            arrayView.Update();
+            Application.Current.Dispatcher.Invoke((Action)delegate
+            {
+                arrayView.Update();
+            });
         }
 
         public static void CloseAllModuleDialogs()
@@ -533,5 +554,6 @@ namespace BrainSimulator
             ulong availablePhysicalMemory = new Microsoft.VisualBasic.Devices.ComputerInfo().AvailablePhysicalMemory;
             MainWindow.thisWindow.SetStatus(4, "Available Memory: " + availablePhysicalMemory.ToString("##,#"), 0);
         }
+
     }
 }

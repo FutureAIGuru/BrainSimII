@@ -26,11 +26,12 @@ namespace BrainSimulator.Modules
         {
             InitializeComponent();
         }
-        public override bool Draw()
+
+        public override bool Draw(bool checkDrawTimer)
         {
+            if (!base.Draw(checkDrawTimer)) return false;
             //this has a timer so that no matter how often you might call draw, the dialog
             //only updates 10x per second
-            if (!base.Draw()) return false;
 
             //use a line like this to gain access to the parent's public variables
             //ModuleEmpty parent = (ModuleEmpty)base.Parent1;
@@ -41,13 +42,13 @@ namespace BrainSimulator.Modules
             //Point windowCenter = new Point(windowSize.X / 2, windowSize.Y / 2);
             //float scale = (float)Math.Min(windowSize.X, windowSize.Y) / 12;
             //if (scale == 0) return false;
-                        
+
             return true;
         }
-        
+
         private void TheCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Draw();
+            Draw(false);
         }
 
     }

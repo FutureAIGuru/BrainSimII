@@ -13,6 +13,7 @@ using System.Windows.Media;
 using static System.Math;
 using System.Windows.Input;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BrainSimulator
 {
@@ -493,6 +494,23 @@ namespace BrainSimulator
                     }
                 }
             }
+        }
+
+        public static Type[] GetArrayOfModuleTypes()
+        {
+            var listOfBs = (from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
+                            from assemblyType in domainAssembly.GetTypes()
+                            where typeof(ModuleBase).IsAssignableFrom(assemblyType)
+                            orderby assemblyType.Name
+                            select assemblyType
+                ).ToArray();
+            List <Type> retVal  = new List<Type>();
+            foreach (var t in listOfBs)
+            {
+                if (t.Name != "ModuleBase")
+                    retVal.Add(t);
+            }
+            return retVal.ToArray();
         }
 
     }

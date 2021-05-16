@@ -472,12 +472,16 @@ namespace NeuronEngine
 		if (synapsesFrom != NULL)
 		{
 			int numHebbian = 0;
+			int numPosHebbian = 0;
 			while (vectorLock.exchange(1) == 1) {} //prevent the vector of synapses from changing while we're looking at it
 			for (int i = 0; i < synapsesFrom->size(); i++) //process all the synapses sourced by this neuron
 			{
 				SynapseBase s = synapsesFrom->at(i);
 				if (s.GetModel() != SynapseBase::modelType::Fixed)
+				{
 					numHebbian++;
+					if (s.GetWeight() >= 0) numPosHebbian++;
+				}
 			}
 			for (int i = 0; i < synapsesFrom->size(); i++) //process all the synapses sourced by this neuron
 			{
@@ -495,6 +499,7 @@ namespace NeuronEngine
 										}
 										else */
 					if (s.GetModel() == SynapseBase::modelType::Hebbian2 ||
+						s.GetModel() == SynapseBase::modelType::Hebbian3 ||
 						s.GetModel() == SynapseBase::modelType::Binary)
 					{
 						if (nTarget->lastFired >= lastFired - delay)

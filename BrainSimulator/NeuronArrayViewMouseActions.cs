@@ -142,9 +142,11 @@ namespace BrainSimulator
             float weight = (float)theShape.GetValue(SynapseView.WeightValProperty);
             Neuron n1 = MainWindow.theNeuronArray.GetCompleteNeuron(source);
             n1 = MainWindow.theNeuronArray.AddSynapses(n1);
-            Synapse s1 = n1.FindSynapse(target);
-            theShape.ContextMenu = new ContextMenu();
-            SynapseView.CreateContextMenu(source, s1, theShape.ContextMenu);
+            if (n1.FindSynapse(target) is Synapse s1)
+            {
+                theShape.ContextMenu = new ContextMenu();
+                SynapseView.CreateContextMenu(source, s1, theShape.ContextMenu);
+            }
         }
 
         private void StartSynapseDragging(FrameworkElement theShape)
@@ -336,6 +338,76 @@ namespace BrainSimulator
             theShape.ContextMenu.IsOpen = true;
         }
 
+        public static void StartInsertingModule(string moduleLabel)
+        {
+            StopInsertingModule();
+            labelCursor = new Label
+            {
+                Content = moduleLabel,
+                Background = new SolidColorBrush(Colors.White),
+            };
+
+            Type t = Type.GetType("BrainSimulator.Modules.Module" + moduleLabel);
+            Modules.ModuleBase theModule = (Modules.ModuleBase)Activator.CreateInstance(t);
+            rectCursor = new Rectangle
+            {
+                Fill = new SolidColorBrush(Colors.Wheat),
+                Opacity = 0.3,
+                Width = theModule.MinWidth * MainWindow.arrayView.dp.NeuronDisplaySize,
+                Height = theModule.MinHeight * MainWindow.arrayView.dp.NeuronDisplaySize,
+            };
+            MainWindow.arrayView.theCanvas.Cursor = Cursors.None;
+            MainWindow.arrayView.currentOperation = CurrentOperation.insertingModule;
+        }
+        public static void StopInsertingModule()
+        {
+            MainWindow.arrayView.theCanvas.Children.Remove(labelCursor);
+            MainWindow.arrayView.theCanvas.Children.Remove(rectCursor);
+            MainWindow.arrayView.currentOperation = CurrentOperation.idle;
+            labelCursor = null;
+            rectCursor = null;
+        }
+
+        private void DragInsertingModule(int currentNeuron)
+        {
+            if (labelCursor.Parent == null)
+                theCanvas.Children.Add(labelCursor);
+            if (rectCursor.Parent == null)
+                theCanvas.Children.Add(rectCursor);
+
+            string moduleLabel = labelCursor.Content.ToString();
+            Type t = Type.GetType("BrainSimulator.Modules.Module" + moduleLabel);
+            Modules.ModuleBase theModule = (Modules.ModuleBase)Activator.CreateInstance(t);
+
+            MainWindow.theNeuronArray.GetNeuronLocation(currentNeuron, out int col, out int row);
+            col = Math.Min(col, MainWindow.theNeuronArray.Cols - theModule.MinWidth);
+            row = Math.Min(row, MainWindow.theNeuronArray.rows - theModule.MinHeight);
+            currentNeuron = MainWindow.theNeuronArray.GetNeuronIndex(col, row);
+            Point snappedPosition = dp.pointFromNeuron(currentNeuron);
+
+            labelCursor.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            Canvas.SetTop(labelCursor, snappedPosition.Y - labelCursor.DesiredSize.Height);
+            Canvas.SetLeft(labelCursor, snappedPosition.X);
+            Canvas.SetTop(rectCursor, snappedPosition.Y);
+            Canvas.SetLeft(rectCursor, snappedPosition.X);
+            currentOperation = CurrentOperation.insertingModule;
+        }
+
+
+
+        public static void InsertModule(int currentNeuron)
+        {
+            if (labelCursor == null) return;
+            //TODO check to see if the underlying area is empty and warn if not
+            MainWindow.theNeuronArray.SetUndoPoint();
+            MainWindow.theNeuronArray.AddModuleUndo(MainWindow.theNeuronArray.modules.Count, null);
+            string moduleName = labelCursor.Content.ToString();
+            SelectionView.CreateModule(moduleName, "Module" + moduleName, Colors.LightBlue, currentNeuron, 0, 0);
+            StopInsertingModule();
+            MainWindow.Update();
+            MainWindow.arrayView.currentOperation = CurrentOperation.idle;
+        }
+
         int prevModuleMouseLocation = -1;
         private void StartaSizingModule(FrameworkElement theShape, int currentNeuron)
         {
@@ -419,7 +491,7 @@ namespace BrainSimulator
         private void ResizeModule(FrameworkElement theShape, int currentNeuron)
         {
             lock (MainWindow.theNeuronArray.modules)
-            {            
+            {
                 //TODO: Add rearrangement of neurons
                 //TODO: Add clone of neurons to handle ALL properties
                 int index = (int)theShape.GetValue(ModuleView.AreaNumberProperty);

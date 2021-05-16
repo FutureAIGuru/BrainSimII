@@ -102,6 +102,7 @@ namespace BrainSimulator
                     theNeuronArrayView.ClearSelection();
                     Update();
                 }
+                NeuronArrayView.StopInsertingModule();
             }
             if (e.Key == Key.F1)
             {
@@ -483,7 +484,7 @@ namespace BrainSimulator
                     MessageBox.Show("Error encountered in file load: " + e1.Message);
                 }
             }
-
+            LoadModuleTypeMenu();
         }
         private void ButtonInit_Click(object sender, RoutedEventArgs e)
         {
@@ -601,7 +602,7 @@ namespace BrainSimulator
             Keyboard.Focus(this);
             this.Focus();
             mouseInWindow = true;
-            Activate();
+            //Activate();
         }
         private void Window_MouseLeave(object sender, MouseEventArgs e)
         {
@@ -809,6 +810,24 @@ namespace BrainSimulator
         {
             Properties.Settings.Default["ShowHelp"] = cbShowHelpAtStartup.IsChecked;
             Properties.Settings.Default.Save();
+        }
+
+        private void InsertModule_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem mi)
+                NeuronArrayView.StartInsertingModule(mi.Header.ToString());
+        }
+        private void ModuleList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is ComboBox cb)
+            {
+                if (cb.SelectedItem != null)
+                {
+                    string moduleName = ((Label)cb.SelectedItem).Content.ToString();
+                    cb.SelectedIndex = -1;
+                    NeuronArrayView.StartInsertingModule(moduleName);
+                }
+            }
         }
 
     }

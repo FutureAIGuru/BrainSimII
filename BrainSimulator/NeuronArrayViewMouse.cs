@@ -27,8 +27,12 @@ namespace BrainSimulator
 
 
         //State
-        private enum CurrentOperation { idle, draggingSynapse, draggingNewSelection, movingSelection, movingModule, sizingModule, panning };
+        private enum CurrentOperation { idle, draggingSynapse, draggingNewSelection, movingSelection, movingModule, sizingModule, panning, insertingModule };
         private CurrentOperation currentOperation = CurrentOperation.idle;
+
+        //cursor for inserting Module
+        static Label labelCursor = null;
+        static Rectangle rectCursor = null;
 
 
 
@@ -95,6 +99,7 @@ namespace BrainSimulator
                 if (currentOperation == CurrentOperation.draggingSynapse) return shapeType.Synapse;
                 if (currentOperation == CurrentOperation.movingModule) return shapeType.Module;
                 if (currentOperation == CurrentOperation.draggingNewSelection) return shapeType.Selection;
+                if (currentOperation == CurrentOperation.insertingModule) return shapeType.None;
                 if (!MainWindow.ctrlPressed)
                 {
                     if (currentOperation == CurrentOperation.movingSelection) return shapeType.Selection;
@@ -114,8 +119,7 @@ namespace BrainSimulator
 
             //what type of shape is the mouse  over?
             HitTestResult result = VisualTreeHelper.HitTest(theCanvas, e.GetPosition(theCanvas));
-
-            if (result.VisualHit is FrameworkElement theShape0)
+            if (result != null && result.VisualHit is FrameworkElement theShape0)
             {
                 //When you put a Label into a Canvas, you get a hit back on the internal TextBlock
                 //or its border
@@ -214,6 +218,7 @@ namespace BrainSimulator
         //this is needed because the comboboxes in the toolbar can grab focus then MainWindow won't get keystrokes
         //for some reason, you have to set focus to some visible, focussable control in order to keep the 
         //combobox from grabbing it back
+        //TODO THIS DOESN'T WORK if other app is in front
         private void theCanvas_MouseEnter(object sender, MouseEventArgs e)
         {
             Debug.WriteLine("theCanvas MouseEnter");
@@ -290,7 +295,7 @@ namespace BrainSimulator
                 }
 
                 //start a new selection rectangle drag
-                if (theShapeType == shapeType.Canvas)
+                if (theShapeType == shapeType.Canvas && labelCursor == null)
                 {
                     currentPosition = StartNewSelectionDrag();
                 }
@@ -314,12 +319,25 @@ namespace BrainSimulator
                 {
                     StartPan(e.GetPosition((UIElement)theCanvas.Parent));
                 }
-                Mouse.Capture(theCanvas); //if you don't do this, you might lose the mouseup event
+                if (currentOperation == CurrentOperation.insertingModule)
+                {
+                    InsertModule(mouseDownNeuronIndex);
+                    Mouse.Capture(null);
+                }
+                else
+                {
+                    Mouse.Capture(theCanvas); //if you don't do this, you might lose the mouseup event
+                }
             }//end of left-button down
         }
 
         public void theCanvas_MouseMove(object sender, MouseEventArgs e)
         {
+            if (MainWindow.theNeuronArray == null) return;
+            Point currentPosition = e.GetPosition(theCanvas);
+            Point nonlimitedPosition = currentPosition;
+            LimitMousePostion(ref currentPosition);
+            int currentNeuron = dp.NeuronFromPoint(currentPosition);
 
             shapeType theShapeType = SetMouseCursorShape(e, out FrameworkElement theShape);
             if (MainWindow.Busy()) return;
@@ -335,11 +353,6 @@ namespace BrainSimulator
             //You can't do any dragging with the right mouse button
             if (e.RightButton == MouseButtonState.Pressed) return;
 
-
-            Point currentPosition = e.GetPosition(theCanvas);
-            Point nonlimitedPosition = currentPosition;
-            LimitMousePostion(ref currentPosition);
-            int currentNeuron = dp.NeuronFromPoint(currentPosition);
 
             //update the status bar 
             if (currentPosition == nonlimitedPosition)
@@ -408,7 +421,18 @@ namespace BrainSimulator
                 }
             }//end of Left-button down
             else //no button pressed
-                currentOperation = CurrentOperation.idle;
+            {
+                //handle the special case of no mouse cursor we must be inserting a module inserting a module
+                //it's the only thing we drag without a button press
+                if (currentOperation == CurrentOperation.insertingModule)
+                {
+                    DragInsertingModule(currentNeuron);
+                }
+                else
+                {
+                    currentOperation = CurrentOperation.idle;
+                }
+            }
         }
 
         public void theCanvas_MouseUp(object sender, MouseButtonEventArgs e)

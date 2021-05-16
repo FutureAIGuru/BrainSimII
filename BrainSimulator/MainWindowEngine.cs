@@ -59,7 +59,6 @@ namespace BrainSimulator
                 }
                 else if (engineDelay > 1000)
                 {
-                    engineIsPaused = true;
                     if (updateDisplay)
                     {
                         Application.Current.Dispatcher.Invoke((Action)delegate
@@ -70,6 +69,7 @@ namespace BrainSimulator
                         displayUpdateTimer.Start();
                     }
                     Thread.Sleep(100); //check the engineDelay every 100 ms.
+                    engineIsPaused = true;
                 }
                 else
                 {
@@ -123,6 +123,11 @@ namespace BrainSimulator
                 {
                     MainWindow.thisWindow.SetSliderPosition(engineDelay);
                 });
+            }
+            while (theNeuronArray != null && engineIsPaused)
+            {
+                Thread.Sleep(100);
+                System.Windows.Forms.Application.DoEvents();
             }
         }
     }

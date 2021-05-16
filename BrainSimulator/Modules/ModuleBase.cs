@@ -87,7 +87,12 @@ namespace BrainSimulator.Modules
         public void CloseDlg()
         {
             if (dlg != null)
-                dlg.Close();
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    dlg.Close();
+                });
+            }
         }
 
         //used by mainwindow to determine whether or not activation is needed

@@ -43,8 +43,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer", "Installer", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SetupFirewall", "SetupFirewall\SetupFirewall.csproj", "{7F4D726B-F893-4E8D-BC2F-41AE41A6BAD0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeightFinder", "WeightFinter\WeightFinder.csproj", "{380BD449-D57C-44D0-9D19-3A4787EC9898}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AutomatedTests", "AutomatedTests", "{A8AC78AC-3547-4430-94FE-853FB14F243B}"
 	ProjectSection(SolutionItems) = preProject
 		AutomatedTests\_run_automated_test.cmd = AutomatedTests\_run_automated_test.cmd
@@ -207,14 +205,6 @@ Global
 		{7F4D726B-F893-4E8D-BC2F-41AE41A6BAD0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7F4D726B-F893-4E8D-BC2F-41AE41A6BAD0}.Release|x64.ActiveCfg = Release|Any CPU
 		{7F4D726B-F893-4E8D-BC2F-41AE41A6BAD0}.Release|x64.Build.0 = Release|Any CPU
-		{380BD449-D57C-44D0-9D19-3A4787EC9898}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{380BD449-D57C-44D0-9D19-3A4787EC9898}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{380BD449-D57C-44D0-9D19-3A4787EC9898}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{380BD449-D57C-44D0-9D19-3A4787EC9898}.Debug|x64.Build.0 = Debug|Any CPU
-		{380BD449-D57C-44D0-9D19-3A4787EC9898}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{380BD449-D57C-44D0-9D19-3A4787EC9898}.Release|Any CPU.Build.0 = Release|Any CPU
-		{380BD449-D57C-44D0-9D19-3A4787EC9898}.Release|x64.ActiveCfg = Release|Any CPU
-		{380BD449-D57C-44D0-9D19-3A4787EC9898}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

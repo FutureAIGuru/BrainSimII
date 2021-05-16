@@ -7,7 +7,7 @@ namespace NeuronEngine
 	class  __declspec(dllexport) SynapseBase
 	{
 	public:
-		enum class modelType { Fixed, Binary, Hebbian1, Hebbian2};
+		enum class modelType { Fixed, Binary, Hebbian1, Hebbian2,Hebbian3};
 
 		void SetTarget(NeuronBase * target);
 		NeuronBase* GetTarget();

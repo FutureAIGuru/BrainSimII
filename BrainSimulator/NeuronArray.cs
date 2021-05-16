@@ -215,6 +215,7 @@ namespace BrainSimulator
                 if (mbr == MessageBoxResult.Yes)
                 {
                     ModuleView.DeleteModule(badModule);
+                    MainWindow.Update();
                 }
             }
         }
@@ -242,6 +243,11 @@ namespace BrainSimulator
         public int GetNeuronIndex(int x, int y)
         {
             return x * rows + y;
+        }
+
+        public Neuron GetNeuron(int x, int y)
+        {
+            return GetNeuron(GetNeuronIndex(x, y));
         }
 
         public void GetNeuronLocation(int index, out int x, out int y)

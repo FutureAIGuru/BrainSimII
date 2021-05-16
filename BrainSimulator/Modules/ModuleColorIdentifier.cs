@@ -22,120 +22,138 @@ namespace BrainSimulator.Modules
         const int maxPatterns = 6;
         public ModuleColorIdentifier()
         {
-            minHeight = maxPatterns;
+            minHeight = 3;
             minWidth = 3;
         }
         public override string ShortDescription => "Decodes a set of colors from multi-leveled rgb input.";
         public override string LongDescription => "Looks for neurons labeled 'R0-7', 'G0-7', & 'B0-7'. Builds a list of most commonly-seen colors.";
+
+
+        int waitingForInput = 0;
         public override void Fire()
         {
             Init();  //be sure to leave this here
 
-            if ((MainWindow.theNeuronArray.Generation % 10) == 0)
-            {
-                Neuron n = MainWindow.theNeuronArray.GetNeuron("READ");
-                if (n != null)
-                {
-                    n.SetValue(1);
-                }
-            }
+            //Do any hebbian synapse adjustment
 
-            int maxLevels = 20;
-            int r = -1;
-            int g = -1;
-            int b = -1;
-            for (int i = 0; i < maxLevels; i++)
+            if ((MainWindow.theNeuronArray.Generation % 32) == 0)
             {
-                Neuron n = MainWindow.theNeuronArray.GetNeuron("B" + i);
-                if (n != null && n.Fired())
-                {
-                    b = i;
-                    break;
-                }
-                else if (n == null) break;
+                waitingForInput = 4; //countdown tries to read
             }
-            for (int i = 0; i < maxLevels; i++)
+            if (waitingForInput != 0 && (MainWindow.theNeuronArray.Generation % 4) == 0)
             {
-                Neuron n = MainWindow.theNeuronArray.GetNeuron("G" + i);
-                if (n != null && n.Fired())
+                waitingForInput--;
+                if (!(GetNeuron("RdOut") is Neuron n1))
+                    return;
+                n1.CurrentCharge = 1;
+                n1.Update();
+                for (int i = 0; i < na.Height; i++)
                 {
-                    g = i;
-                    break;
-                }
-                else if (n == null) break;
-            }
-            for (int i = 0; i < maxLevels; i++)
-            {
-                Neuron n = MainWindow.theNeuronArray.GetNeuron("R" + i);
-                if (n != null && n.Fired())
-                {
-                    r = i;
-                    break;
-                }
-                else if (n == null) break;
-            }
+                    Neuron n = na.GetNeuronAt(0, i);
+                    if (n.LastFired > MainWindow.theNeuronArray.Generation - 4)
+                    {
+                        waitingForInput = 0;
+                        //adjust the incoming synapse weights
+                        int firedCount = 0;
+                        for (int j = 0; j < n.synapsesFrom.Count; j++)
+                        {
+                            Synapse s = n.synapsesFrom[j];
+                            Neuron nSource = MainWindow.theNeuronArray.GetNeuron(s.TargetNeuron);
+                            if (nSource.LastFired > MainWindow.theNeuronArray.Generation - 4)
+                            {
+                                firedCount++;
+                            }
+                        }
+                        if (firedCount == 0) continue;
+                        //the target pos weight = 1/the number of neurons firing so if they all fire
+                        //the output will fire on the first try
+                        float targetWeightPos = 1 / (float)firedCount;
+                        //the target neg weight = 
+                        float targetWeightNeg = -0.167f - targetWeightPos;
+                        for (int j = 0; j < n.synapsesFrom.Count; j++)
+                        {
+                            Synapse s = n.synapsesFrom[j];
+                            Neuron nSource = MainWindow.theNeuronArray.GetNeuron(s.TargetNeuron);
+                            if (nSource.LastFired > MainWindow.theNeuronArray.Generation - 4)
+                            {
+                                nSource.AddSynapse(n.id, (s.weight + targetWeightPos) / 2);
+                            }
+                            else
+                            {
+                                nSource.AddSynapse(n.id, (s.weight + targetWeightNeg) / 2);
+                            }
+                        }
 
-            //rgb represents the input pattern...do the matching
-            if (b != -1 && g != -1 && r != -1)
-            {
-                int pattern = FindPattern(new int[] { r, g, b });
-                if (pattern != -1)
-                {
-                    na.GetNeuronAt(pattern).SetValue(1);
+                        goto NeuronFired;
+                    }
                 }
-                else
+                //if we get here, no neuron has fired yet
+                if (waitingForInput == 0)
                 {
-                    AddPattern(new int[] { r, g, b });
+                    //if we've tried enough, learn a new pattern
+                    //1) select the neuron to use 2) fire it
+                    //is there an unused neuron?
+                    //decide what to forget
+                    //fire the selected neuron
+                    if (na.GetNeuronAt(0, 0) is Neuron n2)
+                    {
+                        n2.CurrentCharge = 1;
+                        n2.Update();
+                        n1.CurrentCharge = 1;
+                        n1.Update();
+                    }
                 }
-
+            NeuronFired:
+                {
+                }
             }
         }
 
-        List<int[]> storedPatterns = new List<int[]>();
-        List<int> counts = new List<int>();
-        private int FindPattern(int[] values)
+        private void AddIncomingSynapses()
         {
-            int retVal = -1;
-
-            for (int i = 0; i < storedPatterns.Count; i++)
+            na.GetNeuronAt(1, 0).Label = "NewData";
+            na.GetNeuronAt(2, 0).Label = "RdOut";
+            for (int i = 0; i < na.Height; i++)
             {
-                for (int j = 0; j < values.Length; j++)
+                Neuron n1 = na.GetNeuronAt(0, i);
+                if (i != 0)
+                    n1.Clear();
+                n1.Label = "P" + i;
+            }
+            if (GetNeuron("P0") is Neuron n)
+            {
+                foreach (Synapse s in n.SynapsesFrom)
                 {
-                    if (Math.Abs(values[j] - storedPatterns[i][j]) > 1) goto misMatch;
+                    Neuron nSource = MainWindow.theNeuronArray.GetNeuron(s.TargetNeuron);
+                    for (int j = 0; j < na.Height; j++)
+                    {
+                        Neuron nTarget = na.GetNeuronAt(0, j);
+                        nSource.AddSynapse(nTarget.id, 0f);
+                        MainWindow.theNeuronArray.GetNeuronLocation(nSource.id, out int col, out int row);
+                        while (MainWindow.theNeuronArray.GetNeuron(col, ++row).Label != "")
+                        {
+                            MainWindow.theNeuronArray.GetNeuron(col, row).AddSynapse(nTarget.id, 0f);
+                        }
+                    }
                 }
-                counts[i]++;
-                return i;
-            misMatch: continue;
             }
-            return retVal;
+            MainWindow.Update();
         }
-        private int AddPattern(int[] values)
+
+        //called whenever the size of the module rectangle changes
+        //for example, you may choose to reinitialize whenever size changes
+        //delete if not needed
+        public override void SizeChanged()
         {
-            //TODO add intensity
-            //TODO is color between existing colors?
-            //TODO recognize multiple ratios of the same components as the same color
-            int retVal = -1;
-            if (storedPatterns.Count < maxPatterns)
-            {
-                storedPatterns.Add(values);
-                counts.Add(0);
-            }
-            else
-            {
-                //find the lowest of count
-                int minIndex = Array.IndexOf(counts.ToArray(), counts.Min());
-                counts[minIndex] = 0;
-                storedPatterns[minIndex] = values;
-            }
-            return retVal;
+            if (na == null) return;
+            AddIncomingSynapses();
         }
+
 
         public override void Initialize()
         {
-            for (int i = 0; i < maxPatterns; i++)
-            {
-                AddLabel("P" + i);
-            }
+            Init();
+            AddIncomingSynapses();
         }
     }
 }

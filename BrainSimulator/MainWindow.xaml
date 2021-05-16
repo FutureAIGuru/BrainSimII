@@ -114,6 +114,7 @@
                         <Image Source="/Resources/icons/quickFind_16x.png"></Image>
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="Insert Module" x:Name="InsertModuleMenu"></MenuItem>
                 <MenuItem Header=" Undo"  Click="MenuItem_Undo" InputGestureText="Ctrl-Z">
                     <MenuItem.Icon>
                         <Image Source="/resources/icons/Undo_16x.png"></Image>
@@ -327,7 +328,12 @@
                 <Label x:Name="label1" Content="Speed:" Height="30" VerticalAlignment="Center" />
                 <Slider x:Name="slider" ValueChanged="slider_ValueChanged" IsSnapToTickEnabled="True" Value="5" 
                     Width="140" ToolTip="Change the engine speed" Height="25" VerticalAlignment="Bottom"  />
+                
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Label VerticalAlignment="Center">Add Module:</Label>
+                    <ComboBox x:Name="ModuleListComboBox" SelectionChanged="ModuleList_SelectionChanged" VerticalContentAlignment="Center" Width="80" Height="26" IsEditable="True">
+                        
+                    </ComboBox>
                     <Label VerticalAlignment="Center">Add Synapse With—Weight:</Label>
                     <ComboBox x:FieldModifier="public" Name="SynapseWeight" VerticalContentAlignment="Center" Width="60" Height="26" IsEditable="True">
                         <ComboBoxItem IsSelected="true">1.00</ComboBoxItem>
@@ -348,6 +354,7 @@
                         <ComboBoxItem>Binary</ComboBoxItem>
                         <ComboBoxItem>Hebbian1</ComboBoxItem>
                         <ComboBoxItem>Hebbian2</ComboBoxItem>
+                        <!--<ComboBoxItem>Hebbian3</ComboBoxItem>-->
                     </ComboBox>
                     <Label Width="10"></Label>
                     <CheckBox x:Name="SynapseUpdate" VerticalAlignment="Center">Update from click</CheckBox>

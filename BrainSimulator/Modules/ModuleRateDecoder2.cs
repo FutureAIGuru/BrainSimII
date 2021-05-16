@@ -108,7 +108,7 @@ namespace BrainSimulator.Modules
 
                 ni.AddSynapse(nm.id, 1);
                 ni1.AddSynapse(nm.id, 1);
-                nm.AddSynapse(no.id, 0.9f);
+                nm.AddSynapse(no.id, 0.1f);
                 no.AddSynapse(nm.id, 1);
 
                 nClr.AddSynapse(no.id, -1f);

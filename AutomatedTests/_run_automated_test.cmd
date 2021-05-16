@@ -11,5 +11,6 @@ rem - Complete (to signify tests that are considered to work correctly)
 rem - Wip (to signify Work in Progress)
 rem - Faulty (to indicate a test that still has a bug that needs fixing)
 rem
-robot --exclude Faulty .
+rem robot --exclude Faulty .
+robot --include Wip .
 pause

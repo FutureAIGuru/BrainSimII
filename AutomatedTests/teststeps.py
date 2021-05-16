@@ -88,7 +88,7 @@ def check_file_menu():
         return False
     if not tk.wait_for_center('bs2_file_save_item_disabled'):
         return False
-    if not tk.wait_for_center('bs2_file_saveas_item'):
+    if not tk.wait_for_center('bs2_file_save_as_item'):
         return False
     if not tk.wait_for_center('bs2_file_properties_item'):
         return False
@@ -332,7 +332,7 @@ def check_icon_new_shows_new_network_dialog():
     do_icon_choice('bs2_icon_new_enabled')
     return check_new_network_complete()
  
-def check_open_network_complete():
+def check_open_network_dialog_complete():
     if not tk.wait_for_center('file_open_dialog_title'):
         return False 
     if not tk.wait_for_center('file_open_dialog_filename'):
@@ -347,9 +347,30 @@ def check_open_network_complete():
     
 def check_file_open_shows_network_load_dialog():
     do_menu_choice('bs2_file_menu', 'bs2_file_open_item')
-    return check_open_network_complete()
+    return check_open_network_dialog_complete()
 
 def check_icon_open_shows_network_load_dialog():
     do_icon_choice('bs2_icon_open_enabled')
-    return check_open_network_complete()
+    return check_open_network_dialog_complete()
+
+def check_save_as_dialog_complete():
+    if not tk.wait_for_center('save_as_dialog_title'):
+        return False 
+    if not tk.wait_for_center('save_as_dialog_filename'):
+        return False 
+    if not tk.wait_for_center('save_as_dialog_filetype'):
+        return False 
+    if not tk.wait_for_center('save_as_dialog_save_default'):
+        return False 
+    if not tk.wait_and_click('save_as_dialog_cancel_enabled'):
+        return False 
+    return True
+    
+def check_file_save_as_shows_network_save_as_dialog():
+    do_menu_choice('bs2_file_menu', 'bs2_file_save_as_item')
+    return check_save_as_dialog_complete()
+
+def check_icon_save_as_shows_network_save_as_dialog():
+    do_icon_choice('bs2_icon_save_as_enabled')
+    return check_save_as_dialog_complete()
     

@@ -4,13 +4,14 @@
 #  
 
 import time
+import shutil
 import pyautogui
 from pyscreeze import ImageNotFoundException
 
 import testtoolkit as tk     # the very basic routines we use from PyAutoGUI again and again.
 
-def harmless_click():
-    tk.wait_and_click('brainsim_title')
+def harmless_click_to_focus():
+    return tk.wait_and_click('green_ok')
 
 def check_test_requirements():
     # This function checks the requirements the test framework depends on.
@@ -20,6 +21,10 @@ def check_test_requirements():
         return False
     if not tk.wait_for_center('neuronserver_start'):
         return False
+    return True
+        
+def clear_appdata():
+    shutil.rmtree('C:\\Users\\Moorelife\\AppData\\Local\\FutureAI')
     return True
         
 def start_brain_simulator():
@@ -37,6 +42,15 @@ def start_brain_simulator():
         return False
     return True
 
+def start_brain_simulator_with_getting_started():
+    start_brain_simulator()
+    if tk.wait_for_center('getting_started') == False:
+        return False
+    pyautogui.hotkey('alt', 'F4')
+    do_menu_choice('bs2_help_menu', 'bs2_getting_started_checked')
+    harmless_click_to_focus()
+    return True
+    
 def start_brain_simulator_without_network():
     if tk.wait_and_click('brainsim_start') == False:
         return False
@@ -55,7 +69,7 @@ def start_brain_simulator_without_network():
     return True
 
 def stop_brain_simulator():
-    if not tk.wait_and_click('brainsim_title'):
+    if not harmless_click_to_focus():
         return False
     if not tk.wait_and_click('close_icon'):
         return False
@@ -78,7 +92,7 @@ def stop_neuronserver():
     return True
     
 def check_file_menu():
-    if not tk.wait_and_click('brainsim_title'):
+    if not harmless_click_to_focus():
         return False
     if not tk.wait_and_click('bs2_file_menu'):
         return False
@@ -88,11 +102,11 @@ def check_file_menu():
         return False
     if not tk.wait_for_center('bs2_file_save_item_disabled'):
         return False
-    if not tk.wait_for_center('bs2_file_saveas_item'):
+    if not tk.wait_for_center('bs2_file_save_as_item'):
         return False
     if not tk.wait_for_center('bs2_file_properties_item'):
         return False
-    if not tk.wait_for_center('bs2_file_recent_item'):
+    if not tk.wait_for_center('bs2_file_no_recent_item'):
         return False
     if not tk.wait_for_center('bs2_file_library_item'):
         return False
@@ -101,7 +115,7 @@ def check_file_menu():
     return True
 
 def check_edit_menu():
-    if not tk.wait_and_click('brainsim_title'):
+    if not harmless_click_to_focus():
         return False
     if not tk.wait_and_click('bs2_edit_menu'):
         return False
@@ -130,7 +144,7 @@ def check_edit_menu():
     return True
 
 def check_engine_menu():
-    if not tk.wait_and_click('brainsim_title'):
+    if not harmless_click_to_focus():
         return False
     if not tk.wait_and_click('bs2_engine_menu'):
         return False
@@ -151,7 +165,7 @@ def check_engine_menu():
     return True
 
 def check_view_menu():
-    if not tk.wait_and_click('brainsim_title'):
+    if not harmless_click_to_focus():
         return False
     if not tk.wait_and_click('bs2_view_menu'):
         return False
@@ -170,7 +184,7 @@ def check_view_menu():
     return True
 
 def check_help_menu():
-    if not tk.wait_and_click('brainsim_title'):
+    if not harmless_click_to_focus():
         return False
     if not tk.wait_and_click('bs2_help_menu'):
         return False
@@ -193,7 +207,7 @@ def check_help_menu():
     return True
 
 def check_icon_bar():
-    if not tk.wait_and_click('brainsim_title'):
+    if not harmless_click_to_focus():
         return False
     if not tk.wait_for_center('bs2_icon_new_enabled'):
         return False
@@ -234,7 +248,7 @@ def check_icon_bar():
     time.sleep(0.5)
     if not tk.wait_for_center('bs2_icon_weight_expanded'):
         return False
-    if not tk.wait_and_click('brainsim_title'):
+    if not harmless_click_to_focus():
         return False
     if not tk.wait_for_center('bs2_icon_model_collapsed'):
         return False
@@ -246,7 +260,7 @@ def check_icon_bar():
     return True
 
 def check_icon_tooltips():
-    if not tk.wait_and_click('brainsim_title'):
+    if not harmless_click_to_focus():
         return False
     if not tk.wait_and_check_tooltip('bs2_icon_new_enabled', 'bs2_tooltip_new'):
         return False
@@ -275,21 +289,21 @@ def check_icon_tooltips():
     return True
     
 def check_icon_checkboxes():
-    harmless_click()
+    harmless_click_to_focus()
     if not tk.wait_and_click('bs2_icon_all_synapses_unchecked'):
         return False
-    harmless_click()
+    harmless_click_to_focus()
     if not tk.wait_and_click('bs2_icon_all_synapses_checked'):
         return False
     if not tk.wait_and_click('bs2_icon_update_from_click_unchecked'):
         return False
-    harmless_click()
+    harmless_click_to_focus()
     if not tk.wait_and_click('bs2_icon_update_from_click_checked'):
         return False
     return True
 
 def do_menu_choice(menu, item):
-    if not tk.wait_and_click('brainsim_title'):
+    if not harmless_click_to_focus():
         return False
     if not tk.wait_and_click(menu):
         return False
@@ -297,7 +311,7 @@ def do_menu_choice(menu, item):
         return False
     
 def do_icon_choice(icon_choice):
-    if not tk.wait_and_click('brainsim_title'):
+    if not harmless_click_to_focus():
         return False
     if not tk.wait_and_click(icon_choice):
         return False
@@ -332,7 +346,7 @@ def check_icon_new_shows_new_network_dialog():
     do_icon_choice('bs2_icon_new_enabled')
     return check_new_network_complete()
  
-def check_open_network_complete():
+def check_open_network_dialog_complete():
     if not tk.wait_for_center('file_open_dialog_title'):
         return False 
     if not tk.wait_for_center('file_open_dialog_filename'):
@@ -347,9 +361,62 @@ def check_open_network_complete():
     
 def check_file_open_shows_network_load_dialog():
     do_menu_choice('bs2_file_menu', 'bs2_file_open_item')
-    return check_open_network_complete()
+    return check_open_network_dialog_complete()
 
 def check_icon_open_shows_network_load_dialog():
     do_icon_choice('bs2_icon_open_enabled')
-    return check_open_network_complete()
+    return check_open_network_dialog_complete()
+
+def check_save_as_dialog_complete():
+    if not tk.wait_for_center('save_as_dialog_title'):
+        return False 
+    if not tk.wait_for_center('save_as_dialog_filename'):
+        return False 
+    if not tk.wait_for_center('save_as_dialog_filetype'):
+        return False 
+    if not tk.wait_for_center('save_as_dialog_save_default'):
+        return False 
+    if not tk.wait_and_click('save_as_dialog_cancel_enabled'):
+        return False 
+    return True
     
+def check_file_save_as_shows_network_save_as_dialog():
+    do_menu_choice('bs2_file_menu', 'bs2_file_save_as_item')
+    return check_save_as_dialog_complete()
+
+def check_icon_save_as_shows_network_save_as_dialog():
+    do_icon_choice('bs2_icon_save_as_enabled')
+    return check_save_as_dialog_complete()
+    
+def check_network_library_entry(menu_item, relevant_part):
+    harmless_click_to_focus()
+    if not tk.wait_and_click('bs2_file_menu'):
+        return False
+    if not tk.wait_and_click('bs2_file_library_item'):
+        return False
+    if not tk.wait_and_click(menu_item):
+        return False
+    if not tk.wait_and_click('notes_ok_button_enabled'):
+        return False
+    if not tk.wait_for_center(relevant_part):
+        return False
+    return True
+
+def check_recent_network_entry(menu_item, tool_tip, relevant_part):
+    harmless_click_to_focus()
+    if not tk.wait_and_click('bs2_file_menu'):
+        return False
+    if not tk.wait_and_click('bs2_file_recent_item'):
+        return False
+    if not tk.wait_and_hover(menu_item):
+        return False
+    if not tk.wait_for_center(tool_tip):
+        return False
+    if not tk.wait_and_click(menu_item):
+        return False
+    if not tk.wait_and_click('notes_ok_button_enabled'):
+        return False
+    if not tk.wait_for_center(relevant_part):
+        return False
+    return True
+

@@ -76,7 +76,9 @@ def start_brain_simulator_without_network():
 
 def select_no_on_save_prompt():
     if tk.wait_and_hover('save_question'):
-        tk.wait_and_click('no_button_default')    
+        if not tk.wait_and_click('no_button_default'):
+            return False
+    return True
 
 def stop_brain_simulator():
     if not harmless_click_to_focus():
@@ -85,8 +87,7 @@ def stop_brain_simulator():
         return False
     if not tk.wait_for_center('brainsim_start'):
         return False
-    select_no_on_save_prompt()
-    return True
+    return select_no_on_save_prompt()
 
 def start_neuronserver():
     if not tk.wait_and_click('neuronserver_start'):

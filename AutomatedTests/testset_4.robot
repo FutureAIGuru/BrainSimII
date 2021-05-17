@@ -42,3 +42,31 @@ Are Binary Synapses Drawn Correctly?
 	weight_0.10			model_binary		binary_0.10
 	weight_0.00			model_binary		binary_0.00
     weight_-1 			model_binary		binary_-1
+
+Are Hebbian1 Synapses Drawn Correctly?
+	[Tags]              Wip
+	[Template]			Check Synapse Is Drawn Correctly
+	weight_1			model_hebbian1		binary_1.0
+	weight_0.90			model_hebbian1		binary_0.9
+	weight_0.50			model_hebbian1		binary_0.5
+	weight_0.334		model_hebbian1		binary_0.334
+	weight_0.25			model_hebbian1		binary_0.25
+	weight_0.20			model_hebbian1		binary_0.20
+	weight_0.167		model_hebbian1		binary_0.167
+	weight_0.10			model_hebbian1		binary_0.10
+	weight_0.00			model_hebbian1		binary_0.00
+    weight_-1 			model_hebbian1		binary_-1
+
+Are Hebbian2 Synapses Drawn Correctly?
+	[Tags]              Wip
+	[Template]			Check Synapse Is Drawn Correctly
+	weight_1			model_hebbian2		binary_1.0
+	weight_0.90			model_hebbian2		binary_0.9
+	weight_0.50			model_hebbian2		binary_0.5
+	weight_0.334		model_hebbian2		binary_0.334
+	weight_0.25			model_hebbian2		binary_0.25
+	weight_0.20			model_hebbian2		binary_0.20
+	weight_0.167		model_hebbian2		binary_0.167
+	weight_0.10			model_hebbian2		binary_0.10
+	weight_0.00			model_hebbian2		binary_0.00
+    weight_-1 			model_hebbian2		binary_-1

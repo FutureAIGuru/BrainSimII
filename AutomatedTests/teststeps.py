@@ -42,6 +42,12 @@ def start_brain_simulator():
         return False
     return True
 
+def start_brain_simulator_with_new_network():
+    start_brain_simulator()
+    do_icon_choice('bs2_icon_new_enabled')
+    if tk.wait_and_click('new_network_dialog_ok_default') == False:
+        return False
+    
 def start_brain_simulator_with_getting_started():
     start_brain_simulator()
     if tk.wait_for_center('getting_started') == False:
@@ -68,6 +74,10 @@ def start_brain_simulator_without_network():
     pyautogui.keyUp('shift')
     return True
 
+def select_no_on_save_prompt():
+    if tk.wait_and_hover('save_question'):
+        tk.wait_and_click('no_button_default')    
+
 def stop_brain_simulator():
     if not harmless_click_to_focus():
         return False
@@ -75,6 +85,7 @@ def stop_brain_simulator():
         return False
     if not tk.wait_for_center('brainsim_start'):
         return False
+    select_no_on_save_prompt()
     return True
 
 def start_neuronserver():
@@ -446,3 +457,16 @@ def check_recent_network_entry(menu_item, tool_tip, relevant_part):
         return False
     return True
 
+def check_synapse_is_drawn_correctly(weight, model, drawn_synapse):
+    check_synapse_weight_combobox()
+    if not tk.wait_and_click(weight):
+        return False
+    check_synapse_model_combobox()
+    if not tk.wait_and_click(model):
+        return False   
+    tk.drag_from_to(30, 115, 95, 115)
+    harmless_click_to_focus()
+    if not tk.wait_and_click(drawn_synapse):
+        return False  
+    pyautogui.hotkey('control', 'Z')
+    return True

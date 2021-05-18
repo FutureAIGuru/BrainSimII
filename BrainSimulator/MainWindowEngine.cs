@@ -99,16 +99,18 @@ namespace BrainSimulator
             }
         }
 
+        //
         static Stack<int> engineSpeedStack = new Stack<int>();
 
         public static void SuspendEngine()
         {
             engineSpeedStack.Push(engineDelay);
- //           if (engineIsPaused) return; //already suspended
-                                        //suspend the engine...
+
             if (theNeuronArray != null)
                 theNeuronArray.EngineSpeed = engineDelay;
             engineDelay = 2000;
+
+            //wait for the engine to actually stop before returning
             while (theNeuronArray != null && !engineIsPaused)
             {
                 Thread.Sleep(100);
@@ -119,21 +121,17 @@ namespace BrainSimulator
         public static void ResumeEngine()
         {
             engineDelay = engineSpeedStack.Pop();
+            //is the engine still paused?
             theNeuronArray.EngineIsPaused = engineDelay == 2000;
+
             //resume the engine
             if (theNeuronArray != null)
             {
-                //engineDelay = MainWindow.theNeuronArray.EngineSpeed;
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {
                     MainWindow.thisWindow.SetSliderPosition(engineDelay);
                 });
             }
-            //while (theNeuronArray != null && engineIsPaused)
-            //{
-            //    Thread.Sleep(100);
-            //    System.Windows.Forms.Application.DoEvents();
-            //}
         }
     }
 }

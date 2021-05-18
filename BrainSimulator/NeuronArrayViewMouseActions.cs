@@ -566,7 +566,7 @@ namespace BrainSimulator
                     if (Xc != Xf)
                     {
                         int newRight = X2 + Xc - Xf;
-                        if (newRight >= X1)
+                        if (newRight >= X1 && newRight < MainWindow.theNeuronArray.Cols)
                         {
                             MainWindow.theNeuronArray.AddModuleUndo(index, theCurrentModule);
                             int newWidth = theCurrentModule.Width + Xc - Xf;
@@ -587,7 +587,7 @@ namespace BrainSimulator
                     if (Yc != Yf)
                     {
                         int newBottom = Y2 + Yc - Yf;
-                        if (newBottom >= Y1)
+                        if (newBottom >= Y1  && newBottom < MainWindow.theNeuronArray.rows)
                         {
                             int newHeight = theCurrentModule.Height + Yc - Yf;
 

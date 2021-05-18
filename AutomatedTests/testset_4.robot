@@ -16,57 +16,57 @@ Suite Teardown		Stop Brain Simulator
 *** Test Cases ***
 
 Are Fixed Synapses Drawn Correctly?
-	[Tags]              Wip
-	[Template]			Check Synapse Is Drawn Correctly
-	weight_1			model_fixed			fixed_1.0
-	weight_0.90			model_fixed		    fixed_0.9
-	weight_0.50			model_fixed			fixed_0.5
-	weight_0.334		model_fixed			fixed_0.334
-	weight_0.25			model_fixed			fixed_0.25
-	weight_0.20			model_fixed			fixed_0.20
-	weight_0.167		model_fixed			fixed_0.167
-	weight_0.10			model_fixed			fixed_0.10
-	weight_0.00			model_fixed			fixed_0.00
-    weight_-1 			model_fixed			fixed_-1
+	[Tags]          Complete
+	[Template]		Check Synapse Is Drawn Correctly
+	0		0		fixed_1.0
+	1		0		fixed_0.9
+	2		0		fixed_0.5
+	3		0		fixed_0.334
+	4		0		fixed_0.25
+	5		0		fixed_0.20
+	6		0		fixed_0.167
+	7		0		fixed_0.10
+	8		0		fixed_0.00
+    9		0		fixed_-1
 
 Are Binary Synapses Drawn Correctly?
-	[Tags]              Wip
-	[Template]			Check Synapse Is Drawn Correctly
-	weight_1			model_binary		binary_1.0
-	weight_0.90			model_binary		binary_0.9
-	weight_0.50			model_binary		binary_0.5
-	weight_0.334		model_binary		binary_0.334
-	weight_0.25			model_binary		binary_0.25
-	weight_0.20			model_binary		binary_0.20
-	weight_0.167		model_binary		binary_0.167
-	weight_0.10			model_binary		binary_0.10
-	weight_0.00			model_binary		binary_0.00
-    weight_-1 			model_binary		binary_-1
+	[Tags]          Complete
+	[Template]		Check Synapse Is Drawn Correctly
+	0		1		binary_1.0
+	1		1		binary_0.9
+	2		1		binary_0.5
+	3		1		binary_0.334
+	4		1		binary_0.25
+	5		1		binary_0.20
+	6		1		binary_0.167
+	7		1		binary_0.10
+	8		1		binary_0.00
+    9		1		binary_-1
 
 Are Hebbian1 Synapses Drawn Correctly?
-	[Tags]              Wip
-	[Template]			Check Synapse Is Drawn Correctly
-	weight_1			model_hebbian1		binary_1.0
-	weight_0.90			model_hebbian1		binary_0.9
-	weight_0.50			model_hebbian1		binary_0.5
-	weight_0.334		model_hebbian1		binary_0.334
-	weight_0.25			model_hebbian1		binary_0.25
-	weight_0.20			model_hebbian1		binary_0.20
-	weight_0.167		model_hebbian1		binary_0.167
-	weight_0.10			model_hebbian1		binary_0.10
-	weight_0.00			model_hebbian1		binary_0.00
-    weight_-1 			model_hebbian1		binary_-1
+	[Tags]          Complete
+	[Template]		Check Synapse Is Drawn Correctly
+	0		2		binary_1.0
+	1		2		binary_0.9
+	2		2		binary_0.5
+	3		2		binary_0.334
+	4		2		binary_0.25
+	5		2		binary_0.20
+	6		2		binary_0.167
+	7		2		binary_0.10
+	8		2		binary_0.00
+    9		2		binary_-1
 
 Are Hebbian2 Synapses Drawn Correctly?
-	[Tags]              Wip
-	[Template]			Check Synapse Is Drawn Correctly
-	weight_1			model_hebbian2		binary_1.0
-	weight_0.90			model_hebbian2		binary_0.9
-	weight_0.50			model_hebbian2		binary_0.5
-	weight_0.334		model_hebbian2		binary_0.334
-	weight_0.25			model_hebbian2		binary_0.25
-	weight_0.20			model_hebbian2		binary_0.20
-	weight_0.167		model_hebbian2		binary_0.167
-	weight_0.10			model_hebbian2		binary_0.10
-	weight_0.00			model_hebbian2		binary_0.00
-    weight_-1 			model_hebbian2		binary_-1
+	[Tags]          Wip
+	[Template]		Check Synapse Is Drawn Correctly
+	0		3		binary_1.0
+	1		3		binary_0.9
+	#2		3		binary_0.5
+	#3		3		binary_0.334
+	#4		3		binary_0.25
+	#5		3		binary_0.20
+	#6		3		binary_0.167
+	#7		3		binary_0.10
+	#8		3		binary_0.00
+    #9		3		binary_-1

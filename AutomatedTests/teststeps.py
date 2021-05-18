@@ -11,7 +11,7 @@ from pyscreeze import ImageNotFoundException
 import testtoolkit as tk     # the very basic routines we use from PyAutoGUI again and again.
 
 def harmless_click_to_focus():
-    return tk.wait_and_click('green_ok')
+    return tk.click([145, 1028])
 
 def check_test_requirements():
     # This function checks the requirements the test framework depends on.
@@ -75,9 +75,10 @@ def start_brain_simulator_without_network():
     return True
 
 def select_no_on_save_prompt():
+    time.sleep(0.2)
     if tk.wait_and_hover('save_question'):
-        if not tk.wait_and_click('no_button_default'):
-            return False
+        time.sleep(0.2)
+        tk.click([975, 600])
     return True
 
 def stop_brain_simulator():
@@ -85,9 +86,10 @@ def stop_brain_simulator():
         return False
     if not tk.wait_and_click('close_icon'):
         return False
+    select_no_on_save_prompt()
     if not tk.wait_for_center('brainsim_start'):
         return False
-    return select_no_on_save_prompt()
+
 
 def start_neuronserver():
     if not tk.wait_and_click('neuronserver_start'):
@@ -459,15 +461,26 @@ def check_recent_network_entry(menu_item, tool_tip, relevant_part):
     return True
 
 def check_synapse_is_drawn_correctly(weight, model, drawn_synapse):
-    check_synapse_weight_combobox()
-    if not tk.wait_and_click(weight):
-        return False
-    check_synapse_model_combobox()
-    if not tk.wait_and_click(model):
-        return False   
+    select_weight_combobox(int(weight))
+    select_model_combobox(int(model))
     tk.drag_from_to(30, 115, 95, 115)
     harmless_click_to_focus()
-    if not tk.wait_and_click(drawn_synapse):
+    if not tk.wait_and_hover(drawn_synapse):
         return False  
     pyautogui.hotkey('control', 'Z')
     return True
+    
+def select_weight_combobox(option):
+    ys = [92, 110, 130, 150, 170, 190, 210, 230, 250, 270, 290]
+    tk.click([1630, 67])
+    time.sleep(0.1)
+    tk.click([1630, ys[option]])
+    
+def select_model_combobox(option):
+    ys = [92, 110, 130, 150]
+    tk.click([1756, 67])
+    time.sleep(0.1)
+    tk.click([1756, ys[option]])
+    
+
+    

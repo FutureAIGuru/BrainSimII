@@ -16,19 +16,23 @@ namespace BrainSimulator.Modules
     public class ModuleColorIdentifier : ModuleBase
     {
 
-        //fill this method in with code which will execute
-        //once for each cycle of the engine
-
         const int maxPatterns = 6;
         public ModuleColorIdentifier()
         {
             minHeight = 3;
             minWidth = 3;
         }
+
+        float targetWeightPos = 0;
+        float targetWeightNeg = 0;
+
         public override string ShortDescription => "Decodes a set of colors from multi-leveled rgb input.";
-        public override string LongDescription => "Add synapses to from various input sources to 'P0'. The system will automatically add "+
+        public override string LongDescription => "Add synapses to from various input sources to 'P0'. The system will automatically add " +
             "input synapses from all labeled neurons below the input synapses added.";
 
+
+        //fill this method in with code which will execute
+        //once for each cycle of the engine
 
         int waitingForInput = 0;
         public override void Fire()
@@ -36,83 +40,174 @@ namespace BrainSimulator.Modules
             Init();  //be sure to leave this here
 
             //Do any hebbian synapse adjustment
-
-            if ((MainWindow.theNeuronArray.Generation % 32) == 0)
+            if (GetNeuron("Learning") is Neuron nlearing && nlearing.Fired())
             {
-                waitingForInput = 4; //countdown tries to read
-            }
-            if (waitingForInput != 0 && (MainWindow.theNeuronArray.Generation % 4) == 0)
-            {
-                waitingForInput--;
-                if (!(GetNeuron("RdOut") is Neuron n1))
-                    return;
-                n1.CurrentCharge = 1;
-                n1.Update();
                 for (int i = 0; i < na.Height; i++)
                 {
-                    Neuron n = na.GetNeuronAt(0, i);
-                    if (n.LastFired > MainWindow.theNeuronArray.Generation - 4)
+                    if (na.GetNeuronAt(0, i) is Neuron n)
                     {
-                        waitingForInput = 0;
-                        //adjust the incoming synapse weights
-                        int firedCount = 0;
-                        for (int j = 0; j < n.synapsesFrom.Count; j++)
+                        if (n.LastFired > MainWindow.theNeuronArray.Generation - 4)
                         {
-                            Synapse s = n.synapsesFrom[j];
-                            Neuron nSource = MainWindow.theNeuronArray.GetNeuron(s.TargetNeuron);
-                            if (nSource.LastFired > MainWindow.theNeuronArray.Generation - 4)
+                            waitingForInput = 0;
+                            //adjust the incoming synapse weights
+                            int firedCount = 0;
+                            for (int j = 0; j < n.synapsesFrom.Count; j++)
                             {
-                                firedCount++;
+                                Synapse s = n.synapsesFrom[j];
+                                if (s.model != Synapse.modelType.Fixed)
+                                {
+                                    Neuron nSource = MainWindow.theNeuronArray.GetNeuron(s.TargetNeuron);
+                                    if (nSource.LastFired > MainWindow.theNeuronArray.Generation - 4)
+                                    {
+                                        firedCount++;
+                                    }
+                                }
                             }
-                        }
-                        if (firedCount == 0) continue;
-                        //the target pos weight = 1/the number of neurons firing so if they all fire
-                        //the output will fire on the first try
-                        float targetWeightPos = 1 / (float)firedCount;
-                        //the target neg weight = 
-                        float targetWeightNeg = -0.167f - targetWeightPos;
-                        for (int j = 0; j < n.synapsesFrom.Count; j++)
-                        {
-                            Synapse s = n.synapsesFrom[j];
-                            Neuron nSource = MainWindow.theNeuronArray.GetNeuron(s.TargetNeuron);
-                            if (nSource.LastFired > MainWindow.theNeuronArray.Generation - 4)
-                            {
-                                nSource.AddSynapse(n.id, (s.weight + targetWeightPos) / 2);
-                            }
-                            else
-                            {
-                                nSource.AddSynapse(n.id, (s.weight + targetWeightNeg) / 2);
-                            }
-                        }
+                            //if no inputs fired, things might not work so skip for now
+                            if (firedCount == 0) 
+                                continue;
 
-                        goto NeuronFired;
+
+                            for (int j = 0; j < n.synapsesFrom.Count; j++)
+                            {
+                                Synapse s = n.synapsesFrom[j];
+                                if (s.model != Synapse.modelType.Fixed)
+                                {
+                                    Neuron nSource = MainWindow.theNeuronArray.GetNeuron(s.TargetNeuron);
+                                    if (nSource.LastFired > MainWindow.theNeuronArray.Generation - 4)
+                                    {
+                                        nSource.AddSynapse(n.id, (s.weight + targetWeightPos) / 2, s.model);
+                                    }
+                                    else
+                                    {
+                                        nSource.AddSynapse(n.id, (s.weight + targetWeightNeg) / 2, s.model);
+                                    }
+                                }
+                            }
+                            break;
+                        }
                     }
                 }
-                //if we get here, no neuron has fired yet
-                if (waitingForInput == 0)
+
+                Neuron nRdOut = GetNeuron("RdOut");
+                if ((MainWindow.theNeuronArray.Generation % 36) == 0)
                 {
+                    waitingForInput = 6; //countdown tries to read
+                                         //fire rdOut
+                    nRdOut.currentCharge = 1;
+                    nRdOut.Update();
+
+                }
+                if (waitingForInput > 1 && (MainWindow.theNeuronArray.Generation % 6) == 0)
+                {
+                    waitingForInput--;
+                    nRdOut.currentCharge = 1;
+                    nRdOut.Update();
+                }
+                //if we get here, no neuron has fired yet
+                if (waitingForInput == 1 && (MainWindow.theNeuronArray.Generation % 6) == 0)
+                {
+                    waitingForInput--;
                     //if we've tried enough, learn a new pattern
                     //1) select the neuron to use 2) fire it
                     //is there an unused neuron?
                     //decide what to forget
                     //fire the selected neuron
-                    if (na.GetNeuronAt(0, 0) is Neuron n2)
+
+                    //first check for an unused neuron
+                    Neuron unusedNeuron = null;
+                    for (int i = 0; i < na.Height; i++)
                     {
-                        n2.CurrentCharge = 1;
-                        n2.Update();
-                        n1.CurrentCharge = 1;
-                        n1.Update();
+                        if (na.GetNeuronAt(0, i) is Neuron n2)
+                        {
+                            for (int j = 0; j < n2.synapsesFrom.Count; j++)
+                                if (n2.synapsesFrom[j].model == Synapse.modelType.Hebbian3 &&
+                                    n2.synapsesFrom[j].weight != 0) goto inUse;
+                            unusedNeuron = n2;
+                            break;
+                        }
+                    inUse: continue;
+                    }
+                    if (unusedNeuron != null)
+                    {
+                        unusedNeuron.CurrentCharge = 1;
+                        unusedNeuron.Update();
+                    }
+                    else
+                    {
+                        //all neurons are in use
                     }
                 }
-            NeuronFired:
+            }
+        }
+
+        private void GetTargetWeights(int firedCount)
+        {
+            //the target pos weight = reciprocal of the number of neurons firing so if they all fire
+            //the output will fire on the second? try
+            targetWeightPos = .001f + 0.5f / (float)(firedCount);
+            //the target neg weight
+            targetWeightNeg = -0.008f;
+
+            int bestErrorCount = 0;
+            string bestResult = "";
+            for (float targetWeightNegt = 0; targetWeightNegt < .4f; targetWeightNegt += .001f)
+            {
+                int w = 0;
+                string result = "";
+                int k;
+                for (k = 0; k < 10; k++) //bit errors
                 {
+                    float charge = 0;
+                    for (w = 0; w < 40; w++) //generations
+                    {
+                        charge += (firedCount - k) * targetWeightPos -
+                            (k) * targetWeightNegt;
+                        if (charge >= 1)
+                        {
+                            if (!result.Contains(":" + w.ToString()))
+                            {
+                                result += " " + k + ":" + w;
+                                goto resultFound;
+                            }
+                            else
+                            {
+                                result += " " + k + ":" + w + "XX ";
+                                goto duplicateFound;
+                            }
+                        }
+                    }
+                    //we never got a hit
+                    if (k > bestErrorCount)// && !result.Contains("XX"))
+                    {
+                        bestErrorCount = k;
+                        bestResult = targetWeightNegt + " : " + result;
+                        targetWeightNeg = -targetWeightNegt;
+                    }
+                    break;
+                resultFound:
+                    if (k > bestErrorCount)// && !result.Contains("XX"))
+                    {
+                        bestErrorCount = k;
+                        bestResult = targetWeightNeg + " : " + result;
+                        targetWeightNeg = -targetWeightNegt;
+                    }
+                    continue;
                 }
+            duplicateFound:
+                if (k > bestErrorCount)// && !result.Contains("XX"))
+                {
+                    bestErrorCount = k;
+                    bestResult = targetWeightNeg + " : " + result;
+                    targetWeightNeg = -targetWeightNegt;
+                }
+                continue;
             }
         }
 
         private void AddIncomingSynapses()
         {
-            na.GetNeuronAt(1, 0).Label = "NewData";
+            na.GetNeuronAt(1, 0).Label = "Learning";
             na.GetNeuronAt(2, 0).Label = "RdOut";
             for (int i = 0; i < na.Height; i++)
             {
@@ -126,18 +221,35 @@ namespace BrainSimulator.Modules
                 foreach (Synapse s in n.SynapsesFrom)
                 {
                     Neuron nSource = MainWindow.theNeuronArray.GetNeuron(s.TargetNeuron);
-                    for (int j = 0; j < na.Height; j++)
+                    if (nSource.Label != "")
                     {
-                        Neuron nTarget = na.GetNeuronAt(0, j);
-                        nSource.AddSynapse(nTarget.id, 0f);
-                        MainWindow.theNeuronArray.GetNeuronLocation(nSource.id, out int col, out int row);
-                        while (MainWindow.theNeuronArray.GetNeuron(col, ++row).Label != "")
+                        for (int j = 0; j < na.Height; j++)
                         {
-                            MainWindow.theNeuronArray.GetNeuron(col, row).AddSynapse(nTarget.id, 0f);
+                            Neuron nTarget = na.GetNeuronAt(0, j);
+                            nSource.AddSynapse(nTarget.id, 0f, Synapse.modelType.Hebbian3);
+                            MainWindow.theNeuronArray.GetNeuronLocation(nSource.id, out int col, out int row);
+                            while (MainWindow.theNeuronArray.GetNeuron(col, ++row).Label != "")
+                            {
+                                MainWindow.theNeuronArray.GetNeuron(col, row).AddSynapse(nTarget.id, 0f, Synapse.modelType.Hebbian3);
+                            }
                         }
                     }
                 }
             }
+            //add mutual suppression
+            for (int i = 0; i < na.Height; i++)
+                for (int j = 0; j < na.Height; j++)
+                {
+                    if (j != i)
+                    {
+                        Neuron nSource = na.GetNeuronAt(0, i);
+                        Neuron nTarget = na.GetNeuronAt(0, j);
+                        nSource.AddSynapse(nTarget.id, -1);
+                    }
+                }
+
+            if (GetNeuron("P0") is Neuron nP0)
+                GetTargetWeights(nP0.synapsesFrom.Count(x => x.model == Synapse.modelType.Hebbian3) / 2);
             MainWindow.Update();
         }
 

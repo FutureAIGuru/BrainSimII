@@ -296,6 +296,7 @@ namespace BrainSimulator
             {
                 MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).DeleteSynapse((int)cm.GetValue(TargetIDProperty));
                 MainWindow.Update();
+                cmCancelled = true;
                 cm.IsOpen = false;
             }
             if (e.Key == Key.Enter)

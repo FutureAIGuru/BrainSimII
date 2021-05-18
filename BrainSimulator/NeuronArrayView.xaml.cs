@@ -221,8 +221,6 @@ namespace BrainSimulator
                     Color = Utils.ColorToInt(Colors.Aquamarine),
                     CommandLine = ""
                 };
-                //r.MouseDown += theCanvas_MouseDown;
-                //r.MouseLeave += R_MouseLeave;
 
                 if (!dp.ShowNeurons())
                 {
@@ -314,7 +312,7 @@ namespace BrainSimulator
                                 }
 
                                 NeuronOnScreen neuronScreenCache = null;
-                                if ((n.inUse || n.Label != "") && (l is Ellipse || l is Rectangle))
+                                if ((n.inUse || n.Label != "" || n.currentCharge != 0 || n.lastCharge != 0) && (l is Ellipse || l is Rectangle))
                                 {
                                     neuronScreenCache = new NeuronOnScreen(neuronID, l, -10, lbl);
                                 }

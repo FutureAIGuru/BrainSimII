@@ -11,7 +11,7 @@ from pyscreeze import ImageNotFoundException
 import testtoolkit as tk     # the very basic routines we use from PyAutoGUI again and again.
 
 def harmless_click_to_focus():
-    return tk.wait_and_click('green_ok')
+    return tk.click([145, 1028])
 
 def check_test_requirements():
     # This function checks the requirements the test framework depends on.
@@ -42,6 +42,12 @@ def start_brain_simulator():
         return False
     return True
 
+def start_brain_simulator_with_new_network():
+    start_brain_simulator()
+    do_icon_choice('bs2_icon_new_enabled')
+    if tk.wait_and_click('new_network_dialog_ok_default') == False:
+        return False
+    
 def start_brain_simulator_with_getting_started():
     start_brain_simulator()
     if tk.wait_for_center('getting_started') == False:
@@ -68,14 +74,22 @@ def start_brain_simulator_without_network():
     pyautogui.keyUp('shift')
     return True
 
+def select_no_on_save_prompt():
+    time.sleep(0.2)
+    if tk.wait_and_hover('save_question'):
+        time.sleep(0.2)
+        tk.click([975, 600])
+    return True
+
 def stop_brain_simulator():
     if not harmless_click_to_focus():
         return False
     if not tk.wait_and_click('close_icon'):
         return False
+    select_no_on_save_prompt()
     if not tk.wait_for_center('brainsim_start'):
         return False
-    return True
+
 
 def start_neuronserver():
     if not tk.wait_and_click('neuronserver_start'):
@@ -241,6 +255,29 @@ def check_icon_bar():
         return False
     if not tk.wait_for_center('bs2_icon_add_synapse_with'):
         return False
+    return True
+
+def check_add_module_combobox():
+    if not harmless_click_to_focus():
+        return False
+    if not tk.wait_for_center('bs2_add_module_collapsed'):
+        return False
+    if not tk.wait_and_click('bs2_add_module_collapsed'):
+        return False
+    time.sleep(0.5)
+    if not tk.wait_for_center('bs2_add_module_expanded_1'):
+        return False
+    tk.click([1460, 420]) # scroll down combobox...
+    if not tk.wait_for_center('bs2_add_module_expanded_2'):
+        return False
+    tk.click([1460, 420]) # scroll down combobox...
+    if not tk.wait_for_center('bs2_add_module_expanded_3'):
+        return False
+    return True
+
+def check_synapse_weight_combobox():
+    if not harmless_click_to_focus():
+        return False
     if not tk.wait_for_center('bs2_icon_weight_collapsed'):
         return False
     if not tk.wait_and_click('bs2_icon_weight_collapsed'):
@@ -248,6 +285,9 @@ def check_icon_bar():
     time.sleep(0.5)
     if not tk.wait_for_center('bs2_icon_weight_expanded'):
         return False
+    return True
+    
+def check_synapse_model_combobox():
     if not harmless_click_to_focus():
         return False
     if not tk.wait_for_center('bs2_icon_model_collapsed'):
@@ -258,7 +298,7 @@ def check_icon_bar():
     if not tk.wait_for_center('bs2_icon_model_expanded'):
         return False
     return True
-
+    
 def check_icon_tooltips():
     if not harmless_click_to_focus():
         return False
@@ -420,3 +460,27 @@ def check_recent_network_entry(menu_item, tool_tip, relevant_part):
         return False
     return True
 
+def check_synapse_is_drawn_correctly(weight, model, drawn_synapse):
+    select_weight_combobox(int(weight))
+    select_model_combobox(int(model))
+    tk.drag_from_to(30, 115, 95, 115)
+    harmless_click_to_focus()
+    if not tk.wait_and_hover(drawn_synapse):
+        return False  
+    pyautogui.hotkey('control', 'Z')
+    return True
+    
+def select_weight_combobox(option):
+    ys = [92, 110, 130, 150, 170, 190, 210, 230, 250, 270, 290]
+    tk.click([1630, 67])
+    time.sleep(0.1)
+    tk.click([1630, ys[option]])
+    
+def select_model_combobox(option):
+    ys = [92, 110, 130, 150]
+    tk.click([1756, 67])
+    time.sleep(0.1)
+    tk.click([1756, ys[option]])
+    
+
+    

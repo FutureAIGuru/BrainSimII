@@ -465,7 +465,7 @@ namespace BrainSimulator.Modules
                 na.GetNeuronAt(i, 1).Model = Neuron.modelType.Color;
             }
             na.GetNeuronAt(0, 0).Label = "Left";
-            na.GetNeuronAt(0, 1).Label = "Rigit";
+            na.GetNeuronAt(0, 1).Label = "Right";
             na.GetNeuronAt(na.Width / 2, 0).Label = "  ||";
             lastValuesL = null;
             lastValuesR = null;

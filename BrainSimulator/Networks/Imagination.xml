@@ -1223,7 +1223,7 @@
       <Id>113</Id>
       <LeakRate>0</LeakRate>
       <Model>Color</Model>
-      <Label>Rigit</Label>
+      <Label>Right</Label>
     </Neuron>
     <Neuron>
       <Id>115</Id>

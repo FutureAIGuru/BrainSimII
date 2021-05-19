@@ -15,6 +15,12 @@ namespace BrainSimulator.Modules
                 "wheels or limbs";
         }
 
+        public ModuleMotor()
+        {
+            minHeight = 6;
+            minWidth = 2;
+        }
+
         public override void Fire()
         {
             Init();  //be sure to leave this here

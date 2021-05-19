@@ -1127,7 +1127,7 @@
       <Id>108</Id>
       <Model>Color</Model>
       <LeakRate>0</LeakRate>
-      <Label>Rigit</Label>
+      <Label>Right</Label>
     </Neuron>
     <Neuron>
       <Id>110</Id>

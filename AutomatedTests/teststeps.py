@@ -3,6 +3,7 @@
 # Licensed under the MIT License. See LICENSE file in the project root for full license information.
 #  
 
+import os
 import time
 import shutil
 import pyautogui
@@ -463,12 +464,25 @@ def check_recent_network_entry(menu_item, tool_tip, relevant_part):
 def check_synapse_is_drawn_correctly(weight, model, drawn_synapse):
     select_weight_combobox(int(weight))
     select_model_combobox(int(model))
-    tk.drag_from_to(30, 115, 95, 115)
+    tk.drag_from_to(30, 115, 95, 115, 0.2)
     harmless_click_to_focus()
     if not tk.wait_and_hover(drawn_synapse):
         return False  
     pyautogui.hotkey('control', 'Z')
     return True
+
+def select_module_combobox(page, option):
+    ys = [92, 110, 130, 150, 170, 190, 210, 230, 250, 270, 290,
+          310, 330, 350, 370, 390, 410]
+    tk.click([1411, 67])
+    time.sleep(0.1)
+    # go to first page
+    for i in range(2):
+        tk.click([1460, 103])
+    # go to correct page
+    for i in range(page):
+        tk.click([1460, 420])
+    tk.click([1411, ys[option]])
     
 def select_weight_combobox(option):
     ys = [92, 110, 130, 150, 170, 190, 210, 230, 250, 270, 290]
@@ -482,5 +496,16 @@ def select_model_combobox(option):
     time.sleep(0.1)
     tk.click([1756, ys[option]])
     
-
-    
+def check_module_is_inserted_correctly(page, index, drawn_module):
+    result = True
+    select_module_combobox(int(page), int(index))
+    pyautogui.moveTo([95, 185])
+    pyautogui.click([95, 185])
+    harmless_click_to_focus()
+    if not tk.wait_and_hover(drawn_module):
+        result = False  
+    pyautogui.click([70, 140])
+    pyautogui.press('delete')
+    pyautogui.press('delete')
+    return result
+   

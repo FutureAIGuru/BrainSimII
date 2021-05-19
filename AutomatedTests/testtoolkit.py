@@ -77,6 +77,6 @@ def wait_and_doubleclick(screen_frag):
     pyautogui.doubleClick(locate_center(screen_frag))    
     return True
 
-def drag_from_to(start_x, start_y, stop_x, stop_y):
+def drag_from_to(start_x, start_y, stop_x, stop_y, tween):
     pyautogui.moveTo(start_x, start_y)
-    return pyautogui.dragTo(stop_x, stop_y, 0.2)
+    return pyautogui.dragTo(stop_x, stop_y, tween)

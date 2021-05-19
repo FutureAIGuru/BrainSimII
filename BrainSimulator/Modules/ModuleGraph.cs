@@ -20,6 +20,11 @@ namespace BrainSimulator.Modules
                 "TO DO: Long description of Module Graph.";
         }
 
+        public ModuleGraph()
+        {
+            minHeight = 10;
+            minWidth = 18;
+        }
         public override void Fire()
         {
             HandleSequenceSearch();
@@ -472,7 +477,7 @@ namespace BrainSimulator.Modules
             {
                 na.GetNeuronAt(Array.IndexOf(cols, "in"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "in"), j).Id, 1, Synapse.modelType.Fixed);
                 na.GetNeuronAt(Array.IndexOf(cols, "in"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).Id, 10, Synapse.modelType.Fixed);
-                na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "theNeuronArray"), j).Id, 1, Synapse.modelType.Fixed);
+                na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "this"), j).Id, 1, Synapse.modelType.Fixed);
                 na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "attrib"), j).Id, 1, Synapse.modelType.Fixed);
                 na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "anyAttr"), j).Id, 1, Synapse.modelType.Fixed);
                 na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "allAttr"), j).Id, 1, Synapse.modelType.Fixed);
@@ -481,7 +486,7 @@ namespace BrainSimulator.Modules
                 na.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "next"), j).Id, 1, Synapse.modelType.Fixed);
 
 
-                na.GetNeuronAt(Array.IndexOf(cols, "theNeuronArray"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "out"), j).Id, 1, Synapse.modelType.Fixed);
+                na.GetNeuronAt(Array.IndexOf(cols, "this"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "out"), j).Id, 1, Synapse.modelType.Fixed);
                 na.GetNeuronAt(Array.IndexOf(cols, "alt"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "out"), j).Id, 1, Synapse.modelType.Fixed);
                 //na.GetNeuronAt(Array.IndexOf(cols, "out"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "in"), j).Id, -1, false);
                 na.GetNeuronAt(Array.IndexOf(cols, "out"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "recur"), j).Id, 1, Synapse.modelType.Fixed);

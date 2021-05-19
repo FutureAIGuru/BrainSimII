@@ -101,7 +101,7 @@ Are Modules Inserted Correctly?
 	1		7		module_kbdebug
 	1		8		module_learning
 	1		9		module_life
-	#1		10		module_motor  # still crashes the program
+	1		10		module_motor  # still crashes the program
 	1		11		module_move
 	1		12		module_moveobject
 	1		13		module_navigate

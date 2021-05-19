@@ -269,8 +269,8 @@ namespace BrainSimulator
                     if (theNeuronArray.networkNotes != "")
                         MenuItemNotes_Click(null, null);
                 }
+                ResumeEngine();
             }
-            ResumeEngine();
         }
         private void button_Exit_Click(object sender, RoutedEventArgs e)
         {

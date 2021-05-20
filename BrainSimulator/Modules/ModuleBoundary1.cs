@@ -54,6 +54,7 @@ namespace BrainSimulator.Modules
         {
             Init();  //be sure to leave this here
             ModuleView naSource = theNeuronArray.FindModuleByLabel("ModuleImageFile");
+            if (naSource == null) return;
             boundaries.Clear();
             foreach (Neuron n in na.Neurons1)
                 n.SetValue(0);

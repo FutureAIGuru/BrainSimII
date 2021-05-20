@@ -64,7 +64,7 @@ namespace BrainSimulator.Modules
                                 }
                             }
                             //if no inputs fired, things might not work so skip for now
-                            if (firedCount == 0) 
+                            if (firedCount == 0)
                                 continue;
 
 
@@ -96,6 +96,14 @@ namespace BrainSimulator.Modules
                                          //fire rdOut
                     nRdOut.currentCharge = 1;
                     nRdOut.Update();
+                    for (int i = 0; i < na.Height; i++)
+                    {
+                        if (na.GetNeuronAt(0,i) is Neuron n5)
+                        {
+                            n5.currentCharge = 0;
+                            n5.Update();
+                        }
+                    }
 
                 }
                 if (waitingForInput > 1 && (MainWindow.theNeuronArray.Generation % 6) == 0)
@@ -110,32 +118,39 @@ namespace BrainSimulator.Modules
                     waitingForInput--;
                     //if we've tried enough, learn a new pattern
                     //1) select the neuron to use 2) fire it
-                    //is there an unused neuron?
-                    //decide what to forget
-                    //fire the selected neuron
 
-                    //first check for an unused neuron
-                    Neuron unusedNeuron = null;
+                    long oldestFired = long.MaxValue;
+                    Neuron oldestNeuron = null;
                     for (int i = 0; i < na.Height; i++)
                     {
                         if (na.GetNeuronAt(0, i) is Neuron n2)
                         {
-                            for (int j = 0; j < n2.synapsesFrom.Count; j++)
-                                if (n2.synapsesFrom[j].model == Synapse.modelType.Hebbian3 &&
-                                    n2.synapsesFrom[j].weight != 0) goto inUse;
-                            unusedNeuron = n2;
-                            break;
+                            if (n2.LastFired < oldestFired)
+                            {
+                                oldestFired = n2.LastFired;
+                                oldestNeuron = n2;
+                            }
                         }
-                    inUse: continue;
                     }
-                    if (unusedNeuron != null)
+                    if (oldestNeuron != null)
                     {
-                        unusedNeuron.CurrentCharge = 1;
-                        unusedNeuron.Update();
-                    }
-                    else
-                    {
-                        //all neurons are in use
+                        oldestNeuron.CurrentCharge = 1;
+                        oldestNeuron.Update();
+                        //zero out the old synapses
+                        List<Synapse> prevSynapses = new List<Synapse>();
+                        for (int j = 0; j < oldestNeuron.synapsesFrom.Count; j++)
+                        {
+                            prevSynapses.Add(oldestNeuron.synapsesFrom[j]);
+                        }
+                        oldestNeuron.DeleteAllSynapes();
+                        for (int j = 0; j < prevSynapses.Count; j++)
+                        {
+                            float theWeight = prevSynapses[j].weight;
+                            if (prevSynapses[j].model != Synapse.modelType.Fixed)
+                                theWeight = 0;
+                            theNeuronArray.GetNeuron(prevSynapses[j].targetNeuron).AddSynapse(
+                                oldestNeuron.id, theWeight, prevSynapses[j].model);
+                        }
                     }
                 }
             }

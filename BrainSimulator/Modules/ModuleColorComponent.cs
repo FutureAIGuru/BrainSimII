@@ -39,8 +39,8 @@ namespace BrainSimulator.Modules
         public override void Fire()
         {
             float min = 4; // replace with refractory period
-            float steps = 7;
-            float variation = 0.2F;
+            float steps = 4;
+            float variation = 0;// .2F;
             Init();  //be sure to leave this here
 
             int theColor = na.GetNeuronAt(0, 0).LastChargeInt;

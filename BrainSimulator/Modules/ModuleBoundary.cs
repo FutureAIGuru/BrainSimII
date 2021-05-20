@@ -21,7 +21,7 @@ namespace BrainSimulator.Modules
         //[XlmIgnore] 
         //public theStatus = 1;
 
-        public override string ShortDescription { get => "TO DO: Short description of Module Boundary."; }
+        public override string ShortDescription { get => "Finds the boundaries in an imagefile module image."; }
         public override string LongDescription
         {
             get =>
@@ -34,11 +34,16 @@ namespace BrainSimulator.Modules
         {
             Init();  //be sure to leave this here
 
-            ModuleView naSource = theNeuronArray.FindModuleByLabel("ModuleImageFile");
+            ModuleView naSource = theNeuronArray.FindModuleByLabel("ImageFile");
         }
         public override void Initialize()
         {
-            ModuleView naSource = theNeuronArray.FindModuleByLabel("ModuleImageFile");
+            ModuleView naSource = theNeuronArray.FindModuleByLabel("ImageFile");
+            if (naSource == null)
+            {
+                MessageBox.Show("Boundary module requires ImageFile module for input.");
+                return;
+            }
             foreach (Neuron n in naSource.Neurons1)
             {
                 n.Clear();
@@ -51,7 +56,15 @@ namespace BrainSimulator.Modules
                 n.LeakRate = 1f;
             }
 
-            na.Width = naSource.Width * 8;
+            theNeuronArray.GetNeuronLocation(na.FirstNeuron, out int col, out int row);
+            if (col + naSource.Width*6 >= theNeuronArray.Cols ||
+                row + naSource.Height >= theNeuronArray.rows)
+            {
+                MessageBox.Show(na.Label + " would exceed neuron array boundaries.");
+                return;
+            }
+
+            na.Width = naSource.Width * 6;
             na.Height = naSource.Height;
 
             //Up Down Left Right angles: UL DR UR DL

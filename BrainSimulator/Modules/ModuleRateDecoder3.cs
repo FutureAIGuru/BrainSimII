@@ -75,7 +75,6 @@ namespace BrainSimulator.Modules
 
             nRd.AddSynapse(nClr.id, 1);
             nIn.AddSynapse(nIn1.id, 1);
-            nIn.AddSynapse(nClr.id, 1);
 
             for (int i = 0; i < levelCount; i++)
             {
@@ -87,6 +86,8 @@ namespace BrainSimulator.Modules
                 ni.Clear();
                 Neuron no = na.GetNeuronAt(3, i + 1);
                 no.Clear();
+                no.model = Neuron.modelType.LIF;
+                no.LeakRate = 0.13f;
                 Neuron noP = na.GetNeuronAt(4, i + 1);
                 noP.Clear();
                 Neuron noN = na.GetNeuronAt(5, i + 1);
@@ -116,7 +117,7 @@ namespace BrainSimulator.Modules
 
                 ni.AddSynapse(nm.id, 1);
                 ni1.AddSynapse(nm.id, 1);
-                nm.AddSynapse(no.id, 0.01f);
+                nm.AddSynapse(no.id, 0.1f);
                 no.AddSynapse(nm.id, 1);
                 nClr.AddSynapse(noN.id, 1f);
                 no.AddSynapse(noN.id, -1f);
@@ -131,11 +132,6 @@ namespace BrainSimulator.Modules
                 nIn.AddSynapse(ni.id, weight);
                 nIn1.AddSynapse(ni1.id, weight);
 
-                for (int j = i + 1; j < levelCount; j++)
-                {
-                    //ni.AddSynapse(na.GetNeuronAt(2, j + 1).id, -1f);
-                    //5ni1.AddSynapse(na.GetNeuronAt(2, j + 1).id, -1f);
-                }
                 for (int j = 0; j < levelCount; j++)
                 {
                     if (j != i)

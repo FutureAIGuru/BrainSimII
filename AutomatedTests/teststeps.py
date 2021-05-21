@@ -83,14 +83,15 @@ def select_no_on_save_prompt():
     return True
 
 def stop_brain_simulator():
+    result = True
     if not harmless_click_to_focus():
-        return False
+        result = False
     if not tk.wait_and_click('close_icon'):
-        return False
+        result = False
     select_no_on_save_prompt()
     if not tk.wait_for_center('brainsim_start'):
-        return False
-
+        result = False
+    return result
 
 def start_neuronserver():
     if not tk.wait_and_click('neuronserver_start'):
@@ -495,6 +496,11 @@ def select_model_combobox(option):
     tk.click([1756, 67])
     time.sleep(0.1)
     tk.click([1756, ys[option]])
+
+def remove_module():
+    pyautogui.click([70, 140])
+    pyautogui.press('delete')
+    pyautogui.press('delete')
     
 def check_module_is_inserted_correctly(page, index, drawn_module):
     result = True
@@ -504,8 +510,15 @@ def check_module_is_inserted_correctly(page, index, drawn_module):
     harmless_click_to_focus()
     if not tk.wait_and_hover(drawn_module):
         result = False  
-    pyautogui.click([70, 140])
-    pyautogui.press('delete')
-    pyautogui.press('delete')
+    remove_module()
+    return result
+   
+def check_module_is_inserted_correctly_with_warning(page, index, drawn_module, warning):
+    result = check_module_is_inserted_correctly(page, index, drawn_module)
+    if not tk.wait_and_click(warning):
+        result = False  
+    pyautogui.press('escape')
+    pyautogui.press('escape')
+    remove_module()
     return result
    

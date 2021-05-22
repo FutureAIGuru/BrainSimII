@@ -16,37 +16,37 @@ Test Teardown		Stop Brain Simulator
 *** Test Cases ***
 
 Does File New Show New Network Dialog?
-	[Tags]              Wip
+	[Tags]              Complete
 	${Result}			Check File New Shows New Network Dialog
 	Should Be True		${Result}
 
 Does Icon New Show New Network Dialog?
-	[Tags]              Wip
+	[Tags]              Complete
 	${Result}			Check Icon New Shows New Network Dialog
 	Should Be True		${Result}
 
 Does File Open Show Network Load Dialog?
-	[Tags]              Wip
+	[Tags]              Complete
 	${Result}			Check File Open Shows Network Load Dialog
 	Should Be True		${Result}
 
 Does Icon Open Show Network Load Dialog?
-	[Tags]              Wip
+	[Tags]              Complete
 	${Result}			Check Icon Open Shows Network Load Dialog
 	Should Be True		${Result}
 
 Does File Save As Show Network Save As Dialog?
-	[Tags]              Wip
+	[Tags]              Complete
 	${Result}			Check File Save As Shows Network Save As Dialog
 	Should Be True		${Result}
 
 Does Icon Save As Show Network Save As Dialog?
-	[Tags]              Wip
+	[Tags]              Complete
 	${Result}			Check Icon Save As Shows Network Save As Dialog
 	Should Be True		${Result}
 
 Do Library Networks Load?
-	[Tags]              Wip
+	[Tags]              Complete
 	[Template]          Check Network Library Entry
     Network_BasicNeurons	  	fragment_basicneurons
     Network_HebbianSynapses   	fragment_hebbiansynapses
@@ -63,7 +63,7 @@ Do Library Networks Load?
     
 Do Recent Networks Load?
 	# This test assumes "Do Library Networks Load?" has been executed succesfully.
-	[Tags]              Wip
+	[Tags]              Complete
 	[Template]          Check Recent Network Entry
     Network_BasicNeurons	  	tool_tip_basicneurons			fragment_basicneurons
     Network_HebbianSynapses   	tool_tip_hebbiansynapses		fragment_hebbiansynapses

@@ -16,7 +16,7 @@ Test Teardown		Stop Brain Simulator
 *** Test Cases ***
 
 Are Fixed Synapses Drawn Correctly?
-	[Tags]          Wip
+	[Tags]          Complete
 	[Template]		Check Synapse Is Drawn Correctly
 	0		0		fixed_1.0
 	1		0		fixed_0.9
@@ -30,7 +30,7 @@ Are Fixed Synapses Drawn Correctly?
     9		0		fixed_-1
 
 Are Binary Synapses Drawn Correctly?
-	[Tags]          Wip
+	[Tags]          Complete
 	[Template]		Check Synapse Is Drawn Correctly
 	0		1		binary_1.0
 	1		1		binary_0.9
@@ -44,7 +44,7 @@ Are Binary Synapses Drawn Correctly?
     9		1		binary_-1
 
 Are Hebbian1 Synapses Drawn Correctly?
-	[Tags]          Wip
+	[Tags]          Complete
 	[Template]		Check Synapse Is Drawn Correctly
 	0		2		binary_1.0
 	1		2		binary_0.9
@@ -58,7 +58,7 @@ Are Hebbian1 Synapses Drawn Correctly?
     9		2		binary_-1
 
 Are Hebbian2 Synapses Drawn Correctly?
-	[Tags]          Wip
+	[Tags]          Complete
 	[Template]		Check Synapse Is Drawn Correctly
 	0		3		binary_1.0
 	1		3		binary_0.9
@@ -72,7 +72,7 @@ Are Hebbian2 Synapses Drawn Correctly?
     9		3		binary_-1
 
 Are Modules Inserted Correctly?
-	[Tags]          Wip
+	[Tags]          Complete
 	[Template]		Check Module Is Inserted Correctly
 	0		0		module_2dmodel
 	0		1		module_2dsim
@@ -85,6 +85,7 @@ Are Modules Inserted Correctly?
 	0		8		module_behavior
 	0		10		module_boundary1
 	#0		11		module_camera
+	0		12		module_chain
 	0		13		module_chaincounter
 	0		14		module_colorcomponent
 	0		15		module_coloridentifier
@@ -122,9 +123,8 @@ Are Modules Inserted Correctly?
 	2		15		module_uksn
 	
 Are Modules Inserted Correctly With Warning?
-	[Tags]          Wip
+	[Tags]          Complete
 	[Template]		Check Module Is Inserted Correctly With Warning
 	0		9		module_boundary  		requires_image_file
-	# 0		12		module_chain			requires_thing
     2		16		module_words  			requires_file
 	

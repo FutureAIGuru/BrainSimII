@@ -13,11 +13,11 @@ using System.Xml.Serialization;
 
 namespace BrainSimulator.Modules
 {
-    public class ModuleColorIdentifier : ModuleBase
+    public class ModulePatternRecognizer : ModuleBase
     {
 
         const int maxPatterns = 6;
-        public ModuleColorIdentifier()
+        public ModulePatternRecognizer()
         {
             minHeight = 3;
             minWidth = 3;
@@ -25,6 +25,7 @@ namespace BrainSimulator.Modules
 
         float targetWeightPos = 0;
         float targetWeightNeg = 0;
+        int maxTries = 6;
 
         public override string ShortDescription => "Decodes a set of colors from multi-leveled rgb input.";
         public override string LongDescription => "Add synapses to from various input sources to 'P0'. The system will automatically add " +
@@ -84,6 +85,16 @@ namespace BrainSimulator.Modules
                                     }
                                 }
                             }
+
+                            //clear partial charges from others
+                            for (int k = 0; k < na.Height; k++)
+                            {
+                                if (na.GetNeuronAt(0, k) is Neuron n5)
+                                {
+                                    n5.currentCharge = 0;
+                                    n5.Update();
+                                }
+                            }
                             break;
                         }
                     }
@@ -92,19 +103,10 @@ namespace BrainSimulator.Modules
                 Neuron nRdOut = GetNeuron("RdOut");
                 if ((MainWindow.theNeuronArray.Generation % 36) == 0)
                 {
-                    waitingForInput = 6; //countdown tries to read
+                    waitingForInput = maxTries; //countdown tries to read
                                          //fire rdOut
                     nRdOut.currentCharge = 1;
                     nRdOut.Update();
-                    for (int i = 0; i < na.Height; i++)
-                    {
-                        if (na.GetNeuronAt(0,i) is Neuron n5)
-                        {
-                            n5.currentCharge = 0;
-                            n5.Update();
-                        }
-                    }
-
                 }
                 if (waitingForInput > 1 && (MainWindow.theNeuronArray.Generation % 6) == 0)
                 {
@@ -142,7 +144,7 @@ namespace BrainSimulator.Modules
                         {
                             prevSynapses.Add(oldestNeuron.synapsesFrom[j]);
                         }
-                        oldestNeuron.DeleteAllSynapes();
+                        oldestNeuron.DeleteAllSynapes(false);
                         for (int j = 0; j < prevSynapses.Count; j++)
                         {
                             float theWeight = prevSynapses[j].weight;
@@ -154,19 +156,28 @@ namespace BrainSimulator.Modules
                     }
                 }
             }
+            else //not learning
+            {
+                if ((MainWindow.theNeuronArray.Generation % 36) == 0)
+                {
+                    Neuron nRdOut = GetNeuron("RdOut");
+                    nRdOut.currentCharge = 1;
+                    nRdOut.Update();
+                }
+            }
         }
 
         private void GetTargetWeights(int firedCount)
         {
             //the target pos weight = reciprocal of the number of neurons firing so if they all fire
             //the output will fire on the second? try
-            targetWeightPos = .001f + 0.5f / (float)(firedCount);
+            targetWeightPos = .000001f + 1f / (float)(firedCount);
             //the target neg weight
             targetWeightNeg = -0.008f;
 
             int bestErrorCount = 0;
             string bestResult = "";
-            for (float targetWeightNegt = 0; targetWeightNegt < .4f; targetWeightNegt += .001f)
+            for (float targetWeightNegTrial = 0; targetWeightNegTrial < .4f; targetWeightNegTrial += .0001f)
             {
                 int w = 0;
                 string result = "";
@@ -177,7 +188,7 @@ namespace BrainSimulator.Modules
                     for (w = 0; w < 40; w++) //generations
                     {
                         charge += (firedCount - k) * targetWeightPos -
-                            (k) * targetWeightNegt;
+                            (k) * targetWeightNegTrial;
                         if (charge >= 1)
                         {
                             if (!result.Contains(":" + w.ToString()))
@@ -196,8 +207,8 @@ namespace BrainSimulator.Modules
                     if (k > bestErrorCount)// && !result.Contains("XX"))
                     {
                         bestErrorCount = k;
-                        bestResult = targetWeightNegt + " : " + result;
-                        targetWeightNeg = -targetWeightNegt;
+                        bestResult = targetWeightNegTrial + " : " + result;
+                        targetWeightNeg = -targetWeightNegTrial;
                     }
                     break;
                 resultFound:
@@ -205,7 +216,7 @@ namespace BrainSimulator.Modules
                     {
                         bestErrorCount = k;
                         bestResult = targetWeightNeg + " : " + result;
-                        targetWeightNeg = -targetWeightNegt;
+                        targetWeightNeg = -targetWeightNegTrial;
                     }
                     continue;
                 }
@@ -214,7 +225,7 @@ namespace BrainSimulator.Modules
                 {
                     bestErrorCount = k;
                     bestResult = targetWeightNeg + " : " + result;
-                    targetWeightNeg = -targetWeightNegt;
+                    targetWeightNeg = -targetWeightNegTrial;
                 }
                 continue;
             }
@@ -222,8 +233,11 @@ namespace BrainSimulator.Modules
 
         private void AddIncomingSynapses()
         {
-            na.GetNeuronAt(1, 0).Label = "Learning";
-            na.GetNeuronAt(2, 0).Label = "RdOut";
+            Neuron nLearning = na.GetNeuronAt(2, 1);
+            nLearning.Label = "Learning";
+            nLearning.AddSynapse(nLearning.id, 1);
+            Neuron nRdOut = na.GetNeuronAt(2, 0);
+            nRdOut.Label = "RdOut";
             for (int i = 0; i < na.Height; i++)
             {
                 Neuron n1 = na.GetNeuronAt(0, i);
@@ -262,6 +276,15 @@ namespace BrainSimulator.Modules
                         nSource.AddSynapse(nTarget.id, -1);
                     }
                 }
+
+            //add latch column
+            for (int i = 0; i < na.Height; i++)
+            {
+                Neuron nSource = na.GetNeuronAt(0, i);
+                Neuron nTarget = na.GetNeuronAt(1, i);
+                nSource.AddSynapse(nTarget.id, .9f);
+                nRdOut.AddSynapse(nTarget.id, -1);                
+            }
 
             if (GetNeuron("P0") is Neuron nP0)
                 GetTargetWeights(nP0.synapsesFrom.Count(x => x.model == Synapse.modelType.Hebbian3) / 2);

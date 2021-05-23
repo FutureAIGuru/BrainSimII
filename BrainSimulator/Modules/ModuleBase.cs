@@ -6,7 +6,7 @@
 using System;
 using System.Threading;
 using System.Windows;
-
+using System.Windows.Controls;
 
 namespace BrainSimulator.Modules
 {
@@ -217,6 +217,11 @@ namespace BrainSimulator.Modules
         { }
         public virtual void SizeChanged()
         { }
+
+        public virtual MenuItem GetCustomMenuItems()
+        {
+            return null;
+        }
 
         public ModuleBase FindModuleByType(Type t)
         {
@@ -505,7 +510,7 @@ namespace BrainSimulator.Modules
         {
             foreach (Neuron n in na.Neurons())
             {
-                n.DeleteAllSynapes(deleteIncoming);
+                n.DeleteAllSynapes(true,deleteIncoming);
                 n.Label = "";
                 n.Model = Neuron.modelType.IF;
                 n.SetValue(0);

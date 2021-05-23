@@ -114,6 +114,10 @@ namespace BrainSimulator
                 }
             }
 
+            if (nr.TheModule.GetCustomMenuItems() is MenuItem miCustom)
+            {
+                cm.Items.Add(miCustom);
+            }
 
             sp = new StackPanel { Orientation = Orientation.Horizontal };
             Button b0 = new Button { Content = "OK", Width = 100, Height = 25, Margin = new Thickness(10) };

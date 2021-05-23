@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Xml.Serialization;
 
 namespace BrainSimulator.Modules
@@ -33,20 +34,22 @@ namespace BrainSimulator.Modules
             get =>
                 "The ColorComponent module has four labeled nerons that have the values of the red, green, blue and " +
                 "intensity values of a color that is fed in. This somewhat emulates the signals which would be generated " +
-                "by cells in the retina.";
+                "by cells in the retina. In the context menu, you can change the number of discrete levels which an individual color " +
+                "neuron may take and the amount of jitter in the signal";
         }
 
+        float min = 4; // replace with refractory period
+        float steps = 4;
+        float variation = 0.000f;// .2F;
         public override void Fire()
         {
-            float min = 4; // replace with refractory period
-            float steps = 4;
-            float variation = 0;// .2F;
             Init();  //be sure to leave this here
 
             int theColor = na.GetNeuronAt(0, 0).LastChargeInt;
             float r = (theColor & 0xff0000) >> 16;
             float g = (theColor & 0xff00) >> 8;
             float b = (theColor & 0x000ff) >> 0;
+
             float luminance = 0.2126f * r + 0.7152f * g + 0.0722f * b;
             int i = (int)luminance;
             //here rgbi have values 0-255
@@ -96,6 +99,37 @@ namespace BrainSimulator.Modules
             na.GetNeuronAt(0, 2).Model = Neuron.modelType.Random;
             na.GetNeuronAt(0, 3).Model = Neuron.modelType.Random;
             na.GetNeuronAt(0, 4).Model = Neuron.modelType.Random;
+        }
+
+        public override MenuItem GetCustomMenuItems()
+        {
+            StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
+            sp.Children.Add(new Label { Content = "Steps:" });
+            TextBox tbSteps = new TextBox {Name="Steps", Text = steps.ToString(), VerticalAlignment = VerticalAlignment.Center, Width = 40 };
+            tbSteps.TextChanged += TbSteps_TextChanged;
+            sp.Children.Add(tbSteps);
+            sp.Children.Add(new Label { Content = "Variation:" });
+            TextBox tbVariation = new TextBox {Name="Variation", Text = variation.ToString(), VerticalAlignment = VerticalAlignment.Center, Width = 40 };
+            tbVariation.TextChanged += TbSteps_TextChanged;
+            sp.Children.Add(tbVariation);
+            MenuItem mi = new MenuItem { Header = sp,StaysOpenOnClick=true };
+            return mi;
+        }
+
+        private void TbSteps_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (sender is TextBox tb)
+            {
+                if (tb.Name == "Steps")
+                {
+                    int.TryParse(tb.Text, out int steps1);
+                    steps = (int)steps1;
+                }
+                if (tb.Name == "Variation")
+                {
+                    float.TryParse(tb.Text, out variation);
+                }
+            }
         }
     }
 }

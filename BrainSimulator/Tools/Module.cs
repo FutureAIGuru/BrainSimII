@@ -66,7 +66,7 @@ namespace BrainSimulator.Modules
         //delete if not needed
         public override void SizeChanged()
         {
-            if (na == null) return;
+            if (na == null) return; //this is called the first time before the module actually exists
         }
     }
 }

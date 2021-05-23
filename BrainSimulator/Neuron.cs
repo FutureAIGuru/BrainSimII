@@ -184,11 +184,14 @@ namespace BrainSimulator
             MainWindow.theNeuronArray.AddNeuronUndo(this);
         }
 
-        public void DeleteAllSynapes(bool deleteIncoming = true)
+        public void DeleteAllSynapes(bool deleteOutgoing = true, bool deleteIncoming = true)
         {
-            foreach (Synapse s in Synapses)
-                DeleteSynapse(s.targetNeuron);
-            Synapses.Clear();
+            if (deleteOutgoing)
+            {
+                foreach (Synapse s in Synapses)
+                    DeleteSynapse(s.targetNeuron);
+                Synapses.Clear();
+            }
             if (deleteIncoming)
             {
                 foreach (Synapse s in synapsesFrom)

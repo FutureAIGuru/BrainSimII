@@ -142,7 +142,7 @@
     <Compile Include="Modules\ModuleChain.cs" />
     <Compile Include="Modules\ModuleChainCounter.cs" />
     <Compile Include="Modules\ModuleColorComponent.cs" />
-    <Compile Include="Modules\ModuleColorIdentifier.cs" />
+    <Compile Include="Modules\ModulePatternRecognizer.cs" />
     <Compile Include="Modules\ModulePatternGenerator.cs" />
     <Compile Include="Modules\ModuleRateDecoder2.cs" />
     <Compile Include="Modules\ModuleRateDecoder.cs" />

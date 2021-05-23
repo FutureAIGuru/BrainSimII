@@ -21,7 +21,6 @@ namespace BrainSimulator
     {
         bool cancelPressed = false;
         DateTime startTime;
-        DateTime timeElapsed;
         DateTime timeRemaining;
 
         public ProgressDialog()

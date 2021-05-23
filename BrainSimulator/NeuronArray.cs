@@ -100,7 +100,7 @@ namespace BrainSimulator
         {
         }
 
-        public new Neuron GetNeuron(int id, bool fromClipboard = false)
+        public Neuron GetNeuron(int id, bool fromClipboard = false)
         {
             Neuron n = GetCompleteNeuron(id, fromClipboard);
             return n;

@@ -160,7 +160,6 @@ namespace BrainSimulator
         private void UndoSelection()
         {
             MainWindow.arrayView.theSelection.selectedRectangles.Clear();
-            SelectUndo s1 = new SelectUndo();
             foreach (SelectionRectangle nsr in selectionUndoInfo.Last().selectionState.selectedRectangles)
             {
                 SelectionRectangle nsr1 = new SelectionRectangle(nsr.FirstSelectedNeuron, nsr.Height, nsr.Width);

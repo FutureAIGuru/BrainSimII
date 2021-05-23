@@ -215,6 +215,7 @@ namespace BrainSimulator.Modules
             foreach (RecognizedWordUnit w in e.Result.Words)
                 debug += w.Text + "(" + w.Confidence + ") ";
             bool anyLowConfidence = false;
+            Debug.WriteLine("To remove the warning about not being used..." + anyLowConfidence);
             float minConfidence = .91f;
             if (text.IndexOf("Sallie say") == 0)
                 minConfidence = .6f;

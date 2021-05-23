@@ -383,7 +383,9 @@ namespace BrainSimulator
                     }
                 }
                 catch (Exception e1)
-                { }
+                {
+                    MessageBox.Show("Window Clopsing Failed, Message: " + e1.Message);
+                }
             }
 
 
@@ -523,8 +525,6 @@ namespace BrainSimulator
         }
         public void SetPlayPauseButtonImage(bool play)
         {
-            string playIcon = "\uE768";
-            string pauseIcon = "\uE769";
             if (play)
             {
                 buttonPlay.IsEnabled = true;
@@ -710,7 +710,9 @@ namespace BrainSimulator
                     }
                 }
                 catch (Exception e1)
-                { }
+                {
+                    MessageBox.Show("Opening Help Item Failed, Message: " + e1.Message);
+                }
             }
 
 
@@ -738,7 +740,9 @@ namespace BrainSimulator
                             }
                         }
                         catch (Exception e1)
-                        { }
+                        {
+                            MessageBox.Show("Opening Help Item Failed, Message: " + e1.Message);
+                        }
                     }
                 }
             }
@@ -758,7 +762,9 @@ namespace BrainSimulator
                 }
             }
             catch (Exception e1)
-            { }
+            {
+                MessageBox.Show("Opening Help Failed, Message: " + e1.Message);
+            }
         }
 
         private void MenuItemOnlineHelp_Click(object sender, RoutedEventArgs e)

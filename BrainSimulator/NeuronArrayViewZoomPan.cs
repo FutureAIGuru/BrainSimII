@@ -32,11 +32,11 @@ namespace BrainSimulator
         DispatcherTimer zoomRepeatTimer = new DispatcherTimer();
         float scale = 1;
 
-        public double ActualHeight()
+        public new double ActualHeight()
         {
             return theCanvas.ActualHeight;
         }
-        public double ActualWidth()
+        public new double ActualWidth()
         {
             return theCanvas.ActualWidth;
         }

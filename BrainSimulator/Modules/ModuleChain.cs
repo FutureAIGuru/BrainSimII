@@ -78,7 +78,10 @@ namespace BrainSimulator.Modules
         //delete if not needed
         public override void SizeChanged()
         {
-            AddSynapses();
+            if (na != null)
+            {
+                AddSynapses();
+            }
         }
     }
 }

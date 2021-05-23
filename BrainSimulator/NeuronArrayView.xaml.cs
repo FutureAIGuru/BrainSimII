@@ -434,17 +434,17 @@ namespace BrainSimulator
             else
             {
                 //for small arrays, repaint everything so synapse weights will update
-                if (false) //use this for testing of 
+                //if (false) //use this for testing of 
                 //if (neuronsOnScreen.Count < 451 && scale == 1)
-                {
-                    Update();
-                    if (MainWindow.theNeuronArray != null)
-                    {
-                        MainWindow.UpdateDisplayLabel(dp.NeuronDisplaySize);
-                        MainWindow.UpdateEngineLabel((int)MainWindow.theNeuronArray.lastFireCount);
-                    }
-                    return;
-                }
+                //{
+                //    Update();
+                //    if (MainWindow.theNeuronArray != null)
+                //    {
+                //        MainWindow.UpdateDisplayLabel(dp.NeuronDisplaySize);
+                //        MainWindow.UpdateEngineLabel((int)MainWindow.theNeuronArray.lastFireCount);
+                //    }
+                //    return;
+                //}
 
                 SetTargetNeuronSymbol();
 

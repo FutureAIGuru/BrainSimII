@@ -508,6 +508,8 @@ namespace BrainSimulator.Modules
 
         protected void ClearNeurons(bool deleteIncoming = true)
         {
+            if (na == null)
+                return;
             foreach (Neuron n in na.Neurons())
             {
                 n.DeleteAllSynapes(true,deleteIncoming);

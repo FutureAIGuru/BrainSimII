@@ -257,6 +257,11 @@ namespace BrainSimulator
             else
             {
                 SuspendEngine();
+                CreateEmptyNetwork(); // to avoid keeping too many bytes occupied...
+                // and make sure we have maximum memory free...
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                UpdateFreeMem();
                 NewArrayDlg dlg = new NewArrayDlg();
                 dlg.ShowDialog();
                 if (dlg.returnValue)

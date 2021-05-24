@@ -27,9 +27,18 @@ namespace BrainSimulator.Modules
         float targetWeightNeg = 0;
         int maxTries = 6;
 
-        public override string ShortDescription => "Decodes a set of colors from multi-leveled rgb input.";
-        public override string LongDescription => "Add synapses to from various input sources to 'P0'. The system will automatically add " +
-            "input synapses from all labeled neurons below the input synapses added.";
+        public override string ShortDescription => "Decodes input patterns from an input array.";
+        public override string LongDescription => "With 'Learning' not firing:\n" +
+            "'RdOut' fires periodically to request data from inputs. Synapse weights are fixed. Based on" +
+            "the learning algorithm, synapses are typically set so that a perfrect pattern match will fire "+
+            "on the first cycle and 1, 2, and 3-bit errors will fire on the subsequent cycles. \n\n"+
+            "With 'Learning' firing:\n" +
+            "If no recognition neuron spikes after 'RdOut,' a neuron is selected to represent the new pattern  " +
+            "and Hebbian synapses begin learning the new pattern.\n\n" +
+            "To Set up: \n" +
+            "Add synapses from various input sources to 'P0'. The system will automatically add " +
+            "input synapses from all labeled neurons below the input synapses added. Add a synapse from" +
+            "'RdOut' to each neuron which enables inputs so this module.";
 
 
         //fill this method in with code which will execute
@@ -170,7 +179,7 @@ namespace BrainSimulator.Modules
         private void GetTargetWeights(int firedCount)
         {
             //the target pos weight = reciprocal of the number of neurons firing so if they all fire
-            //the output will fire on the second? try
+            //the output will fire on the first try
             targetWeightPos = .000001f + 1f / (float)(firedCount);
             //the target neg weight
             targetWeightNeg = -0.008f;

@@ -481,6 +481,9 @@
     <Resource Include="Resources\mailing-list-icon-17.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Networks\ColorIdentifier.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Networks\Commands.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

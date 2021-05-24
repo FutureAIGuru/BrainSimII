@@ -96,6 +96,8 @@ namespace BrainSimulator
             if (!dp.ShowNeuronLabels()) return retVal;
 
             retVal = n.Label;
+            if (retVal.Length > 0 && retVal[0] == '_')
+                retVal = retVal.Remove(0, 1);
             if (n.model == Neuron.modelType.LIF)
             {
                 if (n.leakRate == 0)

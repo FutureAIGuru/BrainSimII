@@ -127,7 +127,7 @@ namespace BrainSimulator
                 theShape = theShape0;
                 if (theShape0 is TextBlock)
                 {
-                    ContentPresenter x = (ContentPresenter)VisualTreeHelper.GetParent(result.VisualHit);
+                    var x = (ContentPresenter)VisualTreeHelper.GetParent(result.VisualHit);
                     theShape = (Label)x.TemplatedParent;
                 }
                 if (theShape0 is Border l)

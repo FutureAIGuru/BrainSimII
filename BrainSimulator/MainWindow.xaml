@@ -85,6 +85,7 @@
                 <MenuItem Header="Library">
                     <MenuItem Header="BasicNeurons" Click="buttonLoad_Click"/>
                     <MenuItem Header="HebbianSynapses" Click="buttonLoad_Click"/>
+                    <MenuItem Header="ColorIdentifier" Click="buttonLoad_Click"/>
                     <MenuItem Header="SimVision" Click="buttonLoad_Click"/>
                     <MenuItem Header="Imagination" Click="buttonLoad_Click"/>
                     <MenuItem Header="BabyTalk" Click="buttonLoad_Click"/>

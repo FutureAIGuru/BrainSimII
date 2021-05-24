@@ -125,7 +125,8 @@ namespace BrainSimulator
             theNeuronArray.EngineIsPaused = engineDelay == 2000;
 
             //resume the engine
-            if (theNeuronArray != null)
+            //on shutdown, the current applciation may be gone when this is requested
+            if (theNeuronArray != null && Application.Current != null)
             {
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {

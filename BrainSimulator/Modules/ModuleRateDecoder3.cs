@@ -36,10 +36,12 @@ namespace BrainSimulator.Modules
 
         public override string ShortDescription { get => "Similar to RateDecoder module but twice as fast"; }
         public override string LongDescription { get => "Assuming 1ms cycle and 4ms refractory, this module can differentiate serial input "+
-                "by measuring the time between adjascent spikes in an input stream. The number of different levels detected is controlled " +
+                "by measuring the time between adjacent spikes in an input stream. The number of different levels detected is controlled " +
                 "by the height of the module and it detects different interspike timings in 1ms intervals. " +
-                "This module measuring the inter-spike timing for every pair of spikes whereas RateDecoder measures for every other pair of spikes." 
-                ;
+                "This module measures the inter-spike timing for every pair of spikes whereas RateDecoder measures for every other pair of spikes. "+
+                "The neuron labeled 'In' represents the input of the rate-encoded spiking signal. The neuron labeled 'Read' enables the output of the " +
+                "value which is stored in its short-term memory." +
+                "";
         }
 
 

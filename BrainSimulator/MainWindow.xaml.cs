@@ -82,6 +82,8 @@ namespace BrainSimulator
                 };
 #endif
 
+            CheckForVersionUpdate();
+
             engineThread = new Thread(new ThreadStart(EngineLoop)) { Name = "EngineThread" };
 
             InitializeComponent();
@@ -116,6 +118,7 @@ namespace BrainSimulator
             }
 
         }
+
         private void SplashHide_Tick(object sender, EventArgs e)
         {
             Application.Current.MainWindow = this;
@@ -200,7 +203,7 @@ namespace BrainSimulator
                 Modules.ModuleBase theModule = (Modules.ModuleBase)Activator.CreateInstance(moduleType);
                 string toolTip = theModule.ShortDescription;
 
-                MenuItem mi = new MenuItem { Header = moduleName, ToolTip=toolTip, };
+                MenuItem mi = new MenuItem { Header = moduleName, ToolTip = toolTip, };
                 mi.Click += InsertModule_Click;
                 InsertModuleMenu.Items.Add(mi);
 
@@ -304,7 +307,7 @@ namespace BrainSimulator
         float prevValue = 0;
         public bool SetProgress(float value, string label)
         {
-            if (value != 0 && value < 100 && Math.Abs(prevValue - value ) < 0.1)
+            if (value != 0 && value < 100 && Math.Abs(prevValue - value) < 0.1)
             {
                 return false;
             }
@@ -502,7 +505,7 @@ namespace BrainSimulator
             if (zoomLevel < 10) formatString = "N1";
             if (zoomLevel < 1) formatString = "N2";
             if (zoomLevel < .1f) formatString = "N3";
-            string displayStatus= "Zoom Level: " + zoomLevel.ToString(formatString) + ",  " + (displayTimerMovingAverage.Average() / 10000f).ToString("F2") + "ms";
+            string displayStatus = "Zoom Level: " + zoomLevel.ToString(formatString) + ",  " + (displayTimerMovingAverage.Average() / 10000f).ToString("F2") + "ms";
             thisWindow.SetStatus(2, displayStatus, 0);
         }
 
@@ -539,7 +542,7 @@ namespace BrainSimulator
             if (MainWindow.theNeuronArray.Cols == 0) return true;
             return false;
         }
-        
+
         public void CreateEmptyNetwork()
         {
             theNeuronArray = new NeuronArray();

@@ -22,4 +22,11 @@ makensis _BRAINSIM2.nsi
 REM Sign the install .exe
 signtool sign /f "C:\Users\c_sim\Documents\Visual Studio 2015\Projects\Certificate\FutureAIEV.cer" /p FutureAI /t httP://timestamp.comodoca.com "C:\Users\c_sim\Documents\Visual Studio 2015\Projects\BrainSimulator\Installer\Brain Simulator II Setup.exe"
 
+ECHO Copy the exe file to the website upload folder
+copy "Brain Simulator II Setup.exe" "C:\Users\c_sim\source\repos\FutureAI\FutureAI"
+
+Echo write the file version to the website upload folder
+PowerShell.exe (get-command 'C:\Users\c_sim\Documents\Visual Studio 2015\Projects\BrainSimulator\BrainSimulator\bin\x64\Release\brainsimulator.exe').fileversioninfo.ProductVersion > "C:\Users\c_sim\source\repos\FutureAI\FutureAI\LatestBrainSimVersion.txt"
+
+
 cmd /k

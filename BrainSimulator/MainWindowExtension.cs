@@ -56,6 +56,7 @@ namespace BrainSimulator
                     GetUpdateDialog dlg = new GetUpdateDialog();
                     dlg.UpdateInfo.Content = s;
                     dlg.cbDontAsk.IsChecked = !Properties.Settings.Default.CheckForUpdates;
+                    dlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                     dlg.ShowDialog();
                 }
             }

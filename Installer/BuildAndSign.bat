@@ -25,8 +25,9 @@ signtool sign /f "C:\Users\c_sim\Documents\Visual Studio 2015\Projects\Certifica
 ECHO Copy the exe file to the website upload folder
 copy "Brain Simulator II Setup.exe" "C:\Users\c_sim\source\repos\FutureAI\FutureAI"
 
-Echo write the file version to the website upload folder
-PowerShell.exe (get-command 'C:\Users\c_sim\Documents\Visual Studio 2015\Projects\BrainSimulator\BrainSimulator\bin\x64\Release\brainsimulator.exe').fileversioninfo.ProductVersion > "C:\Users\c_sim\source\repos\FutureAI\FutureAI\LatestBrainSimVersion.txt"
+Echo write the .EXE version to the website upload folder
+..\GetVersionInfo\bin\Debug\netcoreapp3.1\GetVersionInfo "..\brainsimulator\bin\x64\release\brainsimulator.exe" > "C:\Users\c_sim\source\repos\FutureAI\FutureAI\LatestBrainSimVersion.txt"
+
 
 
 cmd /k

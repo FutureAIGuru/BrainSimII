@@ -82,8 +82,6 @@ namespace BrainSimulator
                 };
 #endif
 
-            CheckForVersionUpdate();
-
             engineThread = new Thread(new ThreadStart(EngineLoop)) { Name = "EngineThread" };
 
             InitializeComponent();
@@ -116,6 +114,7 @@ namespace BrainSimulator
                 Properties.Settings.Default.UpgradeRequired = false;
                 Properties.Settings.Default.Save();
             }
+            CheckForVersionUpdate();
 
         }
 
@@ -558,5 +557,9 @@ namespace BrainSimulator
             MainWindow.thisWindow.SetStatus(4, "Available Memory: " + availablePhysicalMemory.ToString("##,#"), 0);
         }
 
+        private void MenuCheckForUpdates_Click(object sender, RoutedEventArgs e)
+        {
+            CheckForVersionUpdate(true);
+        }
     }
 }

@@ -137,6 +137,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5787F61C
 		BrainSimulator\Tools\VS Templates Readme.txt = BrainSimulator\Tools\VS Templates Readme.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetVersionInfo", "GetVersionInfo\GetVersionInfo.csproj", "{5AD1A3FF-CAFA-4A20-B4C6-DC72C1A933B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -205,6 +207,14 @@ Global
 		{7F4D726B-F893-4E8D-BC2F-41AE41A6BAD0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7F4D726B-F893-4E8D-BC2F-41AE41A6BAD0}.Release|x64.ActiveCfg = Release|Any CPU
 		{7F4D726B-F893-4E8D-BC2F-41AE41A6BAD0}.Release|x64.Build.0 = Release|Any CPU
+		{5AD1A3FF-CAFA-4A20-B4C6-DC72C1A933B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AD1A3FF-CAFA-4A20-B4C6-DC72C1A933B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AD1A3FF-CAFA-4A20-B4C6-DC72C1A933B2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5AD1A3FF-CAFA-4A20-B4C6-DC72C1A933B2}.Debug|x64.Build.0 = Debug|Any CPU
+		{5AD1A3FF-CAFA-4A20-B4C6-DC72C1A933B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AD1A3FF-CAFA-4A20-B4C6-DC72C1A933B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AD1A3FF-CAFA-4A20-B4C6-DC72C1A933B2}.Release|x64.ActiveCfg = Release|Any CPU
+		{5AD1A3FF-CAFA-4A20-B4C6-DC72C1A933B2}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -212,6 +222,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{59BA341C-6E0D-4E9E-AB29-644769F87857} = {A8AC78AC-3547-4430-94FE-853FB14F243B}
 		{B48F32C5-4EAE-4B6F-B8F7-4397978D8B92} = {A8AC78AC-3547-4430-94FE-853FB14F243B}
+		{5AD1A3FF-CAFA-4A20-B4C6-DC72C1A933B2} = {17040604-C861-4301-A4FC-2DEDD0241501}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5BA1730C-CB74-487C-8891-72E18E8B28B7}

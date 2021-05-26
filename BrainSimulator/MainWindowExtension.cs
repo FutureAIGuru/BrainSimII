@@ -27,21 +27,36 @@ namespace BrainSimulator
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static void CheckForVersionUpdate()
+        private static void CheckForVersionUpdate(bool alwaysShow = false)
         {
+            if (!alwaysShow && !Properties.Settings.Default.CheckForUpdates) return;
+
             try
             {
                 WebRequest wr = WebRequest.Create("https://futureai.guru/LatestBrainSimVersion.txt");
                 wr.Timeout = 1000; //give up after 1 sec
                 WebResponse wrp = wr.GetResponse();
                 Stream contentStream = wrp.GetResponseStream();
-                string onlineVersionString= new StreamReader(contentStream, Encoding.UTF8).ReadToEnd();
+                string onlineVersionString = new StreamReader(contentStream, Encoding.UTF8).ReadToEnd();
                 Version onlineVersion = new Version(onlineVersionString);
                 Version runningVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-                if (onlineVersion > runningVersion)  
+                if (onlineVersion > runningVersion)
                 {
-                    //TODO: put the messagebox/action in here
+                    DateTime runningBuildDate = new DateTime(2000, 1, 1)
+                        .AddDays(runningVersion.Build).AddSeconds(runningVersion.Revision * 2);
+                    DateTime onlineBuildDate = new DateTime(2000, 1, 1)
+                        .AddDays(onlineVersion.Build).AddSeconds(onlineVersion.Revision * 2);
 
+                    string displayableRunningVersion = $"{runningVersion.Major}.{runningVersion.Minor}.{runningVersion.Build}   ({runningBuildDate})";
+                    string displayableOnlineVersion = $"{onlineVersion.Major}.{onlineVersion.Minor}.{onlineVersion.Build}   ({onlineBuildDate})";
+
+                    string s = "Currently Running:\n " + displayableRunningVersion;
+                    s += "\n\nAvailable for Download: \n" + displayableOnlineVersion;
+
+                    GetUpdateDialog dlg = new GetUpdateDialog();
+                    dlg.UpdateInfo.Content = s;
+                    dlg.cbDontAsk.IsChecked = !Properties.Settings.Default.CheckForUpdates;
+                    dlg.ShowDialog();
                 }
             }
             catch (Exception e)

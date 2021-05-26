@@ -121,6 +121,9 @@
       <DependentUpon>FiringHistoryWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="FiringHistory.cs" />
+    <Compile Include="GetUpdateDialog.xaml.cs">
+      <DependentUpon>GetUpdateDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Help.xaml.cs">
       <DependentUpon>Help.xaml</DependentUpon>
     </Compile>
@@ -257,6 +260,10 @@
     <Compile Include="Utils.cs" />
     <Compile Include="XmlFile.cs" />
     <Page Include="FiringHistoryWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GetUpdateDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

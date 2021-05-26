@@ -278,6 +278,7 @@
                         <Image Source="resources/youtube-24.ico"></Image>
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="Check for available updates" Click="MenuCheckForUpdates_Click"></MenuItem>
                 <MenuItem Header="About" Click="Button_HelpAbout_Click"/>
             </MenuItem>
         </Menu>

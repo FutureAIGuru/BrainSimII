@@ -121,19 +121,7 @@ namespace BrainSimulator
             HitTestResult result = VisualTreeHelper.HitTest(theCanvas, e.GetPosition(theCanvas));
             if (result != null && result.VisualHit is FrameworkElement theShape0)
             {
-                //When you put a Label into a Canvas, you get a hit back on the internal TextBlock
-                //or its border
-                //So you need to dig up the parent in order to get the original Label
                 theShape = theShape0;
-                if (theShape0 is TextBlock)
-                {
-                    var x = (ContentPresenter)VisualTreeHelper.GetParent(result.VisualHit);
-                    theShape = (Label)x.TemplatedParent;
-                }
-                if (theShape0 is Border l)
-                {
-                    theShape = (Label)VisualTreeHelper.GetParent(result.VisualHit);
-                }
 
                 //Get the type of the hit...
                 shapeType st = (shapeType)theShape.GetValue(ShapeType);

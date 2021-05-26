@@ -39,7 +39,7 @@ namespace BrainSimulator
             public int neuronIndex;
             public UIElement graphic;
             public float prevValue;
-            public Label label;
+            public TextBlock label;
             public List<synapseOnScreen> synapsesOnScreen = null;
             public struct synapseOnScreen
             {
@@ -47,7 +47,7 @@ namespace BrainSimulator
                 public float prevWeight;
                 public Shape graphic;
             }
-            public NeuronOnScreen(int index, UIElement e, float value, Label Label)
+            public NeuronOnScreen(int index, UIElement e, float value, TextBlock Label)
             {
                 neuronIndex = index; graphic = e; prevValue = value; label = Label;
             }
@@ -298,7 +298,7 @@ namespace BrainSimulator
                             {
                                 n = theNeuronArray.GetCompleteNeuron(neuronID);
                             }
-                            UIElement l = NeuronView.GetNeuronView(n, this, out Label lbl);
+                            UIElement l = NeuronView.GetNeuronView(n, this, out TextBlock lbl);
                             if (l != null)
                             {
                                 int canvas = neuronID % neuronCanvasCount;
@@ -488,15 +488,15 @@ namespace BrainSimulator
 
                         string newLabel = NeuronView.GetNeuronLabel(n);
                         if (newLabel.IndexOf('|') != -1) newLabel = newLabel.Substring(0, newLabel.IndexOf('|'));
-                        if (a.label != null && newLabel != (string)a.label.Content)
+                        if (a.label != null && newLabel != (string)a.label.Text)
                         {
-                            a.label.Content = newLabel;
+                            a.label.Text = newLabel;
                             if (e.Fill.Opacity != 1)
                                 e.Fill.Opacity = 1;
                         }
                         if (a.label == null && newLabel != "")
                         {
-                            UIElement l = NeuronView.GetNeuronView(n, this, out Label lbl);
+                            UIElement l = NeuronView.GetNeuronView(n, this, out TextBlock lbl);
                             if (e.Fill.Opacity != 1)
                                 e.Fill.Opacity = 1;
                             a.label = lbl;

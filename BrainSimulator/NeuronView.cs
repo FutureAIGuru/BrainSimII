@@ -31,7 +31,7 @@ namespace BrainSimulator
         }
         private static float ellipseSize = 0.7f;
 
-        public static UIElement GetNeuronView(Neuron n, NeuronArrayView theNeuronArrayViewI, out Label l)
+        public static UIElement GetNeuronView(Neuron n, NeuronArrayView theNeuronArrayViewI, out TextBlock l)
         {
             l = null;
             theNeuronArrayView = theNeuronArrayViewI;
@@ -66,7 +66,7 @@ namespace BrainSimulator
 
             if (n.Label != "" || n.model != Neuron.modelType.IF)
             {
-                l = new Label();
+                l = new TextBlock();
                 //l.Content = n.Label;
                 l.FontSize = dp.NeuronDisplaySize * .25;
                 l.Foreground = Brushes.White;
@@ -81,7 +81,7 @@ namespace BrainSimulator
                     r.ToolTip = new ToolTip { Content = theToolTip };
                     l.ToolTip = new ToolTip { Content = theToolTip };
                 }
-                l.Content = theLabel;
+                l.Text = theLabel;
                 l.SetValue(NeuronIDProperty, n.id);
                 l.SetValue(NeuronArrayView.ShapeType, NeuronArrayView.shapeType.Neuron);
             }

@@ -51,7 +51,7 @@ namespace BrainSimulator.Modules
             float b = (theColor & 0x000ff) >> 0;
 
             float luminance = 0.2126f * r + 0.7152f * g + 0.0722f * b;
-            int i = (int)luminance;
+            float i = luminance;
             //here rgbi have values 0-255
 
             r /= 255;
@@ -59,13 +59,16 @@ namespace BrainSimulator.Modules
             b /= 255;
             i /= 255;
             //here rgbi have values of 0-1
-            r *= r;
-            g *= g;
-            b *= b;
             r = 1 - r;
             g = 1 - g;
             b = 1 - b;
             i = 1 - i;
+           
+
+            r = min + r * steps;
+            g = min + g * steps;
+            b = min + b * steps;
+            i = min + i * steps;
 
             Neuron nR = na.GetNeuronAt("Red");
             Neuron nG = na.GetNeuronAt("Grn");
@@ -75,13 +78,13 @@ namespace BrainSimulator.Modules
             if (nG == null) return;
             if (nB == null) return;
             if (nI == null) return;
-            nR.AxonDelay = (int)(min + r * steps);
+            nR.AxonDelay = (int)r;
             nR.LeakRate = variation;
-            nG.AxonDelay = (int)(min + g * steps);
+            nG.AxonDelay = (int)g;
             nG.LeakRate = variation;
-            nB.AxonDelay = (int)(min + b * steps);
+            nB.AxonDelay = (int)b;
             nB.LeakRate = variation;
-            nI.AxonDelay = (int)(min + i * steps);
+            nI.AxonDelay = (int)i;
             nI.LeakRate = variation;
         }
 

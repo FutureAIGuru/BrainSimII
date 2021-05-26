@@ -449,7 +449,7 @@ namespace BrainSimulator
         static List<float> meanValues = new List<float>() { 0, 1, 4, 10 };
         static List<float> stdDevValues = new List<float>() { 0, 1, 4, 10 };
         static List<float> currentChargeValues = new List<float>() { 0, 1, };
-        static List<float> colorValues = new List<float>() { 0x00,0xff0000,0xff00,0xff,0xffff00,0xff00ff,0xffff, 0xffa500,0xffffff };
+        static List<float> colorValues = new List<float>() { 0x00, 0xff0000, 0xff00, 0xff, 0xffff00, 0xff00ff, 0xffff, 0xffa500, 0xffffff };
         static List<float> alwaysDelayValues = new List<float>() { 0, 1, 2, 3 };
 
         const string intFormatString = "F0";
@@ -863,14 +863,10 @@ namespace BrainSimulator
                         case "label":
                             if (n.Label == "")
                                 n1.Label = "";
-                            else
+                            else if (n1.id != n.id)
                             {
-                                if (theNeurons.Count == 1)
-                                {
-                                    n1.Label = n.Label;
-                                    break;
-                                }
                                 string newLabel = n.Label;
+                                if (!Char.IsDigit(newLabel[newLabel.Length - 1])) newLabel += "0";
                                 while (MainWindow.theNeuronArray.GetNeuron(newLabel) != null)
                                 {
                                     int num = 0;
@@ -883,8 +879,7 @@ namespace BrainSimulator
                                         newLabel = newLabel.Substring(0, newLabel.Length - 1);
                                     }
                                     num++;
-                                    if (theNeurons.Count > 1)
-                                        newLabel = newLabel + num.ToString();
+                                    newLabel = newLabel + num.ToString();
                                 }
                                 n1.Label = newLabel;
                             }

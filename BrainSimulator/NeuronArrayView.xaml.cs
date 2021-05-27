@@ -63,7 +63,7 @@ namespace BrainSimulator
         {
             showSynapses.Remove(neuronID);
         }
-        public bool IsShowingSnapses(int neuronID)
+        public bool IsShowingSynapses(int neuronID)
         {
             return showSynapses.Contains(neuronID);
         }
@@ -318,7 +318,7 @@ namespace BrainSimulator
                                 }
 
                                 if (synapseCount < dp.maxSynapsesToDisplay &&
-                                    dp.ShowSynapses() && (MainWindow.theNeuronArray.ShowSynapses || IsShowingSnapses(n.id)))
+                                    dp.ShowSynapses() && (MainWindow.theNeuronArray.ShowSynapses || IsShowingSynapses(n.id)))
                                 {
                                     if (MainWindow.useServers && n.inUse)
                                         n = theNeuronArray.AddSynapses(n);
@@ -331,7 +331,7 @@ namespace BrainSimulator
                                             Shape l1 = SynapseView.GetSynapseView(neuronID, p1, s, this);
                                             if (l1 != null)
                                             {
-                                                if (IsShowingSnapses(n.id))
+                                                if (IsShowingSynapses(n.id))
                                                     specialSynapsesCanvas.Children.Add(l1);
                                                 else
                                                     allSynapsesCanvas.Children.Add(l1);

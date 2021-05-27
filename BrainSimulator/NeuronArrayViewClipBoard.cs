@@ -411,7 +411,7 @@ namespace BrainSimulator
                 Neuron sourceNeuron = MainWindow.theNeuronArray.GetNeuron(source);
                 Neuron destNeuron = MainWindow.theNeuronArray.GetNeuron(source + offset);
                 MoveOneNeuron(sourceNeuron, destNeuron);
-                if (MainWindow.arrayView.IsShowingSnapses(source))
+                if (MainWindow.arrayView.IsShowingSynapses(source))
                 {
                     MainWindow.arrayView.RemoveShowSynapses(source);
                     MainWindow.arrayView.AddShowSynapses(source + offset);

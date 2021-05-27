@@ -112,7 +112,7 @@ namespace BrainSimulator
         public void AddNeuronUndo(Neuron n)
         {
             Neuron n1 = n.Copy();
-            neuronUndoInfo.Add(new NeuronUndo { previousNeuron = n1, neuronIsShowingSynapses = MainWindow.arrayView.IsShowingSnapses(n1.id) });
+            neuronUndoInfo.Add(new NeuronUndo { previousNeuron = n1, neuronIsShowingSynapses = MainWindow.arrayView.IsShowingSynapses(n1.id) });
         }
         public void AddSelectionUndo()
         {

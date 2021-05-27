@@ -638,12 +638,13 @@ namespace BrainSimulator
                 {
                     if (synapsesChanged)
                     {
-                        if (cb2.IsChecked == true)
-                        {
-                            MainWindow.arrayView.AddShowSynapses(n.id);
-                        }
-                        else
-                            MainWindow.arrayView.RemoveShowSynapses(n.id);
+                        n.ShowSynapses = (bool)cb2.IsChecked;
+                        //if (cb2.IsChecked == true)
+                        //{
+                        //    MainWindow.arrayView.AddShowSynapses(n.id);
+                        //}
+                        //else
+                        //    MainWindow.arrayView.RemoveShowSynapses(n.id);
                         if (applyToAll)
                             SetValueInSelectedNeurons(n, "synapses");
                     }
@@ -669,13 +670,7 @@ namespace BrainSimulator
                 {
                     if (historyChanged)
                     {
-                        if (cb3.IsChecked == true)
-                        {
-                            FiringHistory.AddNeuronToHistoryWindow(n.id);
-                            OpenHistoryWindow();
-                        }
-                        else
-                            FiringHistory.RemoveNeuronFromHistoryWindow(n.id);
+                        n.RecordHistory = (bool)cb3.IsChecked;
                         if (applyToAll)
                             SetValueInSelectedNeurons(n, "history");
                     }
@@ -780,9 +775,14 @@ namespace BrainSimulator
 
         public static void OpenHistoryWindow()
         {
+            if (MainWindow.Busy()) return;
+            if (FiringHistory.history.Count == 0) return;
             if (MainWindow.fwWindow == null || !MainWindow.fwWindow.IsVisible)
-                MainWindow.fwWindow = new FiringHistoryWindow();
-            MainWindow.fwWindow.Show();
+                Application.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    MainWindow.fwWindow = new FiringHistoryWindow();
+                    MainWindow.fwWindow.Show();
+                });
         }
 
         //change the model and update the context menu
@@ -841,21 +841,16 @@ namespace BrainSimulator
                         case "model": n1.model = n.model; break;
                         case "enable": n1.leakRate = n.leakRate; break;
                         case "history":
-                            if (FiringHistory.NeuronIsInFiringHistory(n.id))
-                            {
-                                FiringHistory.AddNeuronToHistoryWindow(n1.id);
-                                OpenHistoryWindow();
-                            }
-                            else
-                                FiringHistory.RemoveNeuronFromHistoryWindow(n1.id);
+                            n1.RecordHistory = n.RecordHistory;
                             break;
                         case "synapses":
-                            if (MainWindow.arrayView.IsShowingSnapses(n.id))
-                            {
-                                MainWindow.arrayView.AddShowSynapses(n1.id);
-                            }
-                            else
-                                MainWindow.arrayView.RemoveShowSynapses(n1.id);
+                            n1.ShowSynapses = n.ShowSynapses;
+                            //if (MainWindow.arrayView.IsShowingSnapses(n.id))
+                            //{
+                            //    MainWindow.arrayView.AddShowSynapses(n1.id);
+                            //}
+                            //else
+                            //    MainWindow.arrayView.RemoveShowSynapses(n1.id);
                             break;
                         case "toolTip":
                             n1.ToolTip = n.ToolTip;

@@ -144,8 +144,13 @@ namespace BrainSimulator
                             break;
                         case "ShowSynapses":
                             bool.TryParse(node.InnerText, out bool showSynapses);
-                            if (showSynapses)
-                                MainWindow.arrayView.AddShowSynapses(n.id);
+                            n.ShowSynapses = showSynapses;
+                            //if (showSynapses)
+                            //    MainWindow.arrayView.AddShowSynapses(n.id);
+                            break;
+                        case "RecordHistory":
+                            bool.TryParse(node.InnerText, out bool recordHistory);
+                            n.RecordHistory = recordHistory;
                             break;
                         case "Synapses":
                             theNeuronArray.SetCompleteNeuron(n);
@@ -305,12 +310,18 @@ namespace BrainSimulator
                         if (label != "")
                         {
                             attrNode = xmldoc.CreateNode("element", "Label", "");
-                            attrNode.InnerText = label;
+                            attrNode.InnerText = n.label;
                             neuronNode.AppendChild(attrNode);
                         }
-                        if (MainWindow.arrayView.IsShowingSnapses(n.id))
+                        if (n.ShowSynapses)
                         {
                             attrNode = xmldoc.CreateNode("element", "ShowSynapses", "");
+                            attrNode.InnerText = "True";
+                            neuronNode.AppendChild(attrNode);
+                        }
+                        if (n.RecordHistory)
+                        {
+                            attrNode = xmldoc.CreateNode("element", "RecordHistory", "");
                             attrNode.InnerText = "True";
                             neuronNode.AppendChild(attrNode);
                         }

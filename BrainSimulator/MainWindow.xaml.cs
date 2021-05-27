@@ -147,6 +147,7 @@ namespace BrainSimulator
                     }
                 }
             }
+            NeuronView.OpenHistoryWindow();
         }
 
         public static void CloseHistoryWindow()
@@ -174,6 +175,7 @@ namespace BrainSimulator
                 {
                     MenuItemNotes_Click(null, null);
                 });
+            NeuronView.OpenHistoryWindow();
         }
 
         private void LoadMRUMenu()

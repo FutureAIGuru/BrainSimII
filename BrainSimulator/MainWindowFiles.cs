@@ -67,6 +67,7 @@ namespace BrainSimulator
             Update();
             SetShowSynapsesCheckBox(theNeuronArray.ShowSynapses);
             SetPlayPauseButtonImage(theNeuronArray.EngineIsPaused);
+
             ResumeEngine();
         }
 

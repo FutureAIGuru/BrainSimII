@@ -454,11 +454,13 @@ namespace BrainSimulator
             //copy the neuron attributes and delete them from the old neuron.
             n.Copy(nNewLocation);
             MainWindow.theNeuronArray.SetCompleteNeuron(nNewLocation);
-            if (FiringHistory.NeuronIsInFiringHistory(n.id))
-            {
-                FiringHistory.RemoveNeuronFromHistoryWindow(n.id);
-                FiringHistory.AddNeuronToHistoryWindow(nNewLocation.id);
-            }
+            //nNewLocation.RecordHistory = n.RecordHistory;
+            //n.recordHistory = false;
+            //if (FiringHistory.NeuronIsInFiringHistory(n.id))
+            //{
+            //    FiringHistory.RemoveNeuronFromHistoryWindow(n.id);
+            //    FiringHistory.AddNeuronToHistoryWindow(nNewLocation.id);
+            //}
 
             //for all the synapses going out this neuron, change to going from new location
             //don't use a foreach here because the body of the loop may delete a list entry

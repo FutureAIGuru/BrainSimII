@@ -31,9 +31,9 @@ namespace BrainSimulator
         }
         private static float ellipseSize = 0.7f;
 
-        public static UIElement GetNeuronView(Neuron n, NeuronArrayView theNeuronArrayViewI, out TextBlock l)
+        public static UIElement GetNeuronView(Neuron n, NeuronArrayView theNeuronArrayViewI, out TextBlock tb)
         {
-            l = null;
+            tb = null;
             theNeuronArrayView = theNeuronArrayViewI;
 
             Point p = dp.pointFromNeuron(n.id);
@@ -66,24 +66,24 @@ namespace BrainSimulator
 
             if (n.Label != "" || n.model != Neuron.modelType.IF)
             {
-                l = new TextBlock();
+                tb = new TextBlock();
                 //l.Content = n.Label;
-                l.FontSize = dp.NeuronDisplaySize * .25;
-                l.Foreground = Brushes.White;
-                Canvas.SetLeft(l, p.X + dp.NeuronDisplaySize * offset);
-                Canvas.SetTop(l, p.Y + dp.NeuronDisplaySize * offset);
-                Canvas.SetZIndex(l, 100);
+                tb.FontSize = dp.NeuronDisplaySize * .25;
+                tb.Foreground = Brushes.White;
+                Canvas.SetLeft(tb, p.X + dp.NeuronDisplaySize * offset);
+                Canvas.SetTop(tb, p.Y + dp.NeuronDisplaySize * offset);
+                Canvas.SetZIndex(tb, 100);
 
                 string theLabel = GetNeuronLabel(n);
                 string theToolTip = n.ToolTip;
                 if (theToolTip != "")
                 {
                     r.ToolTip = new ToolTip { Content = theToolTip };
-                    l.ToolTip = new ToolTip { Content = theToolTip };
+                    tb.ToolTip = new ToolTip { Content = theToolTip };
                 }
-                l.Text = theLabel;
-                l.SetValue(NeuronIDProperty, n.id);
-                l.SetValue(NeuronArrayView.ShapeType, NeuronArrayView.shapeType.Neuron);
+                tb.Text = theLabel;
+                tb.SetValue(NeuronIDProperty, n.id);
+                tb.SetValue(NeuronArrayView.ShapeType, NeuronArrayView.shapeType.Neuron);
             }
             r.SetValue(NeuronIDProperty,n.id);
             r.SetValue(NeuronArrayView.ShapeType, NeuronArrayView.shapeType.Neuron);

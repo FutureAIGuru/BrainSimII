@@ -11,6 +11,7 @@ namespace BrainSimulator
     public class Neuron : NeuronPartial
     {
         public string label = "";
+
         public List<Synapse> synapses = new List<Synapse>();
         public List<Synapse> synapsesFrom = new List<Synapse>();
         NeuronArray ownerArray = MainWindow.theNeuronArray;
@@ -86,7 +87,7 @@ namespace BrainSimulator
                 string theLabel = ownerArray.GetLabelFromCache(Id);
                 int tooltipStart = theLabel.IndexOf(toolTipSeparator);
                 if (tooltipStart != -1)
-                    label = value + toolTipSeparator +  theLabel.Substring(tooltipStart + toolTipSeparator.Length);
+                    label = value + toolTipSeparator + theLabel.Substring(tooltipStart + toolTipSeparator.Length);
                 else
                     label = value;
 
@@ -113,7 +114,7 @@ namespace BrainSimulator
                 string theToolTip = ownerArray.GetLabelFromCache(Id);
                 int tooltipStart = theToolTip.IndexOf(toolTipSeparator);
                 if (tooltipStart != -1)
-                    theToolTip = theToolTip.Substring(0,tooltipStart);
+                    theToolTip = theToolTip.Substring(0, tooltipStart);
                 if (value != "" || theToolTip != "")
                 {
                     if (value != "")
@@ -122,6 +123,39 @@ namespace BrainSimulator
                 }
                 else
                     ownerArray.RemoveLabelFromCache(Id);
+            }
+        }
+
+        public bool RecordHistory
+        {
+            get
+            {
+                return FiringHistory.NeuronIsInFiringHistory(id);
+            }
+            set
+            {
+                if (value)
+                {
+                    FiringHistory.AddNeuronToHistoryWindow(id);
+                    NeuronView.OpenHistoryWindow();
+                }
+                else
+                    FiringHistory.RemoveNeuronFromHistoryWindow(id);
+            }
+        }
+
+        public bool ShowSynapses
+        {
+            get
+            {
+                return MainWindow.arrayView.IsShowingSnapses(id);
+            }
+            set
+            {
+                if (value)
+                    MainWindow.arrayView.AddShowSynapses(id);
+                else
+                    MainWindow.arrayView.RemoveShowSynapses(id);
             }
         }
 
@@ -245,7 +279,9 @@ namespace BrainSimulator
             Neuron n = (Neuron)this.MemberwiseClone();
             n.label = Label;
             n.synapses = new List<Synapse>();
-            n.synapsesFrom = new List<Synapse>(); ;
+            n.synapsesFrom = new List<Synapse>();
+            n.RecordHistory = RecordHistory;
+            n.ShowSynapses = ShowSynapses;
             return n;
         }
         //copy this content to n
@@ -258,6 +294,8 @@ namespace BrainSimulator
             n.LeakRate = this.LeakRate;
             n.axonDelay = this.axonDelay;
             n.model = this.model;
+            n.RecordHistory = this.RecordHistory;
+            n.ShowSynapses = this.ShowSynapses;
             n.synapsesFrom = new List<Synapse>(); ;
         }
         public Neuron Copy()
@@ -270,6 +308,8 @@ namespace BrainSimulator
             n.LeakRate = this.LeakRate;
             n.axonDelay = this.axonDelay;
             n.model = this.model;
+            n.RecordHistory = this.RecordHistory;
+            n.ShowSynapses = this.ShowSynapses;
             return n;
         }
         public void ClearWithUndo()
@@ -298,6 +338,8 @@ namespace BrainSimulator
             MainWindow.theNeuronArray.SetCompleteNeuron(this);
             synapses = new List<Synapse>();
             synapsesFrom = new List<Synapse>();
+            RecordHistory = false;
+            ShowSynapses = false;
         }
     }
 }

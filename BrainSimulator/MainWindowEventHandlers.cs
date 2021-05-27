@@ -478,6 +478,7 @@ namespace BrainSimulator
                     if (fileName != "")
                     {
                         LoadFile(fileName);
+                        NeuronView.OpenHistoryWindow();
                     }
                     else //force a new file creation on startup if no file name set
                     {
@@ -489,6 +490,7 @@ namespace BrainSimulator
                 {
                     e1.GetType();
                     MessageBox.Show("Error encountered in file load: " + e1.Message);
+                    CreateEmptyNetwork();
                 }
             }
             LoadModuleTypeMenu();

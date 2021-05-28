@@ -52,6 +52,7 @@ namespace BrainSimulator
                 destNeuron.Owner = myClipBoard;
                 destNeuron.Id = destId;
                 destNeuron.Label = sourceNeuron.Label;
+                destNeuron.ToolTip= sourceNeuron.ToolTip;
                 myClipBoard.SetNeuron(destId, destNeuron);
             }
 
@@ -129,6 +130,7 @@ namespace BrainSimulator
                     myClipBoard.modules.Add(newMV);
                 }
             }
+            XmlFile.Save(myClipBoard, "ClipBoard");
         }
 
         private int GetClipboardId(int X1o, int Y1o, int nID)
@@ -178,7 +180,9 @@ namespace BrainSimulator
             if (targetNeuronIndex == -1) return;
             if (myClipBoard == null) return;
 
+            if (!XmlFile.WindowsClipboardContainsNeuronArray()) return;
 
+            myClipBoard = MainWindow.myClipBoard;
             //We are pasting neurons from the clipboard.  
             //The arrays have different sizes so we may by row-col.
 
@@ -237,6 +241,7 @@ namespace BrainSimulator
                     }
                     sourceNeuron.Owner = MainWindow.theNeuronArray;
                     sourceNeuron.Label = sourceNeuron.label;
+                    sourceNeuron.ToolTip = n.ToolTip;
                     MainWindow.theNeuronArray.SetNeuron(destID, sourceNeuron);
 
 

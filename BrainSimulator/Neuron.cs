@@ -24,7 +24,7 @@ namespace BrainSimulator
             "Leaky Integrate & Fire",
             "Fires at random intervals",
             "Fires a burst,",
-                "Always fire"
+            "Always fire",
         };
 
         public NeuronArray Owner { get => ownerArray; set => ownerArray = value; }

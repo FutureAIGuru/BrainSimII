@@ -609,7 +609,6 @@ namespace BrainSimulator
             Keyboard.Focus(this);
             this.Focus();
             mouseInWindow = true;
-            //Activate();
         }
         private void Window_MouseLeave(object sender, MouseEventArgs e)
         {
@@ -776,27 +775,27 @@ namespace BrainSimulator
 
         private void MenuItemOnlineHelp_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://futureai.guru/BrainSimHelp/ui.html");
+            Process.Start("https://futureai.guru/BrainSimHelp/ui.html");
         }
 
         private void MenuItemOnlineBugs_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/FutureAIGuru/BrainSimII/issues");
+            Process.Start("https://github.com/FutureAIGuru/BrainSimII/issues");
         }
 
         private void MenuItemRegister_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://futureai.guru/BrainSimRegister.aspx");
+            Process.Start("https://futureai.guru/BrainSimRegister.aspx");
         }
 
         private void MenuItemOnlineDiscussions_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://facebook.com/groups/BrainSim");
+            Process.Start("https://facebook.com/groups/BrainSim");
         }
 
         private void MenuItemYouTube_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://www.youtube.com/c/futureai");
+            Process.Start("https://www.youtube.com/c/futureai");
         }
 
         private void ThreadCount_TextChanged(object sender, TextChangedEventArgs e)
@@ -841,6 +840,10 @@ namespace BrainSimulator
                     NeuronArrayView.StartInsertingModule(moduleName);
                 }
             }
+        }
+        private void MenuCheckForUpdates_Click(object sender, RoutedEventArgs e)
+        {
+            CheckForVersionUpdate(true);
         }
 
     }

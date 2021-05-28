@@ -25,7 +25,7 @@ namespace BrainSimulator.Modules
 
         float targetWeightPos = 0;
         float targetWeightNeg = 0;
-        int maxTries = 6;
+        int maxTries = 4;
 
         public override string ShortDescription => "Decodes input patterns from an input array.";
         public override string LongDescription => "With 'Learning' not firing:\n" +
@@ -167,9 +167,27 @@ namespace BrainSimulator.Modules
             }
             else //not learning
             {
-                if ((MainWindow.theNeuronArray.Generation % 36) == 0)
+                Neuron nRdOut = GetNeuron("RdOut");
+                for (int i = 0; i < na.Height; i++)
                 {
-                    Neuron nRdOut = GetNeuron("RdOut");
+                    if (na.GetNeuronAt(0, i) is Neuron n)
+                    {
+                        if (n.LastFired > MainWindow.theNeuronArray.Generation - 4)
+                        {
+                            waitingForInput = 0;
+                        }
+                    }
+                }
+
+                            if ((MainWindow.theNeuronArray.Generation % 36) == 0)
+                {
+                    waitingForInput = maxTries; //countdown tries to read
+                    nRdOut.currentCharge = 1;
+                    nRdOut.Update();
+                }
+                if (waitingForInput > 1 && (MainWindow.theNeuronArray.Generation % 6) == 0)
+                {
+                    waitingForInput--;
                     nRdOut.currentCharge = 1;
                     nRdOut.Update();
                 }

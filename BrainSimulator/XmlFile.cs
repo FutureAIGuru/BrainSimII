@@ -39,49 +39,85 @@ namespace BrainSimulator
             Properties.Settings.Default.Save();
         }
 
-        public static bool Load(ref NeuronArray theNeuronArray, string fileName)
+        //this checks to see if the Windows Clipboard contains neurons and loads them if it does
+        public static bool WindowsClipboardContainsNeuronArray()
         {
-            FileStream file;
+            bool retVal = false;
             try
             {
-                file = File.Open(fileName, FileMode.Open,FileAccess.Read);
+                if (Clipboard.ContainsText())
+                {
+                    string content = Clipboard.GetText();
+                    if (content.Contains("<NeuronArray"))
+                    {
+                        retVal = true;
+                        Load(ref MainWindow.myClipBoard, "ClipBoard");
+                    }
+                }
             }
             catch (Exception e)
             {
-                MessageBox.Show("Could not open file because: " + e.Message);
-                RemoveFileFromMRUList(fileName);
-                return false;
-            }
 
-            // first check if the required start tag is present in the file...
-            byte[] buffer = new byte[60];
-            file.Read(buffer, 0, 60);
-            string line = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
-            if (line.Contains("NeuronArray"))
+            }
+            return retVal;
+        }
+
+        public static bool Load(ref NeuronArray theNeuronArray, string fileName)
+        {
+            bool fromClipboard = fileName == "ClipBoard";
+            Stream file;
+            if (!fromClipboard)
             {
-                file.Seek(0, SeekOrigin.Begin);
+                try
+                {
+                    file = File.Open(fileName, FileMode.Open, FileAccess.Read);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Could not open file because: " + e.Message);
+                    RemoveFileFromMRUList(fileName);
+                    return false;
+                }
+
+                // first check if the required start tag is present in the file...
+                byte[] buffer = new byte[60];
+                file.Read(buffer, 0, 60);
+                string line = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+                if (line.Contains("NeuronArray"))
+                {
+                    file.Seek(0, SeekOrigin.Begin);
+                }
+                else
+                {
+                    file.Close();
+                    MessageBox.Show("File is not a valid Brain Simulator II XML file.");
+                    return false;
+                }
+
+                MainWindow.thisWindow.SetProgress(0, "Loading Network File");
             }
             else
             {
-                file.Close();
-                MessageBox.Show("File is no valid Brain Simulator II XML file.");
-                return false;
+                file = new MemoryStream();
+                StreamWriter sw = new StreamWriter(file);
+                string temp = Clipboard.GetText();
+                sw.Write(temp);
+                sw.Flush();
+                file.Seek(0, SeekOrigin.Begin);
             }
-
-            MainWindow.thisWindow.SetProgress(0, "Loading Network File");
             theNeuronArray = new NeuronArray();
 
             XmlSerializer reader1 = new XmlSerializer(typeof(NeuronArray), GetModuleTypes());
             theNeuronArray = (NeuronArray)reader1.Deserialize(file);
-            file.Close();
+            //file.Close();
 
+            file.Position = 0;
             //the above automatically loads the content of the neuronArray object but can't load the neurons themselves
             //because of formatting changes
             XmlDocument xmldoc = new XmlDocument();
             XmlNodeList neuronNodes;
-            FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-            xmldoc.Load(fs);
-            fs.Close();
+            xmldoc.Load(file);
+            file.Close();
 
             int arraySize = theNeuronArray.arraySize;
             theNeuronArray.Initialize(arraySize, theNeuronArray.rows);
@@ -89,17 +125,19 @@ namespace BrainSimulator
 
             for (int i = 0; i < neuronNodes.Count; i++)
             {
-                var progress = i / (float)neuronNodes.Count;
-                progress *= 100;
-                if (progress != 0 && MainWindow.thisWindow.SetProgress(progress, ""))
+                if (!fromClipboard)
                 {
-                    MainWindow.thisWindow.SetProgress(100, "");
-                    return false;
+                    var progress = i / (float)neuronNodes.Count;
+                    progress *= 100;
+                    if (progress != 0 && MainWindow.thisWindow.SetProgress(progress, ""))
+                    {
+                        MainWindow.thisWindow.SetProgress(100, "");
+                        return false;
+                    }
                 }
-
                 XmlElement neuronNode = (XmlElement)neuronNodes[i];
                 XmlNodeList idNodes = neuronNode.GetElementsByTagName("Id");
-                int id = i; //this is a hack to read files where all neurons were included but no Id's
+                int id = i; //this is a hack to read obsolete files where all neurons were included but no Id's
                 if (idNodes.Count > 0)
                     int.TryParse(idNodes[0].InnerText, out id);
                 if (id == -1) continue;
@@ -145,8 +183,6 @@ namespace BrainSimulator
                         case "ShowSynapses":
                             bool.TryParse(node.InnerText, out bool showSynapses);
                             n.ShowSynapses = showSynapses;
-                            //if (showSynapses)
-                            //    MainWindow.arrayView.AddShowSynapses(n.id);
                             break;
                         case "RecordHistory":
                             bool.TryParse(node.InnerText, out bool recordHistory);
@@ -189,7 +225,8 @@ namespace BrainSimulator
                 }
                 theNeuronArray.SetCompleteNeuron(n);
             }
-            MainWindow.thisWindow.SetProgress(100, "");
+            if (!fromClipboard)
+                MainWindow.thisWindow.SetProgress(100, "");
             return true;
         }
 
@@ -218,20 +255,31 @@ namespace BrainSimulator
             return true;
 
         }
+
+        //if you pass in the fileName 'ClipBoard', the save is to the windows clipboard
         public static bool Save(NeuronArray theNeuronArray, string fileName)
         {
-            //Check for file access
-            if (!CanWriteTo(fileName,out string message))
-            {
-                MessageBox.Show("Could not save file because: " + message);
-                return false;
+            Stream file;
+            string tempFile = "";
+            bool fromClipboard = fileName == "ClipBoard";
+            if (!fromClipboard)
+            {            
+                //Check for file access
+                if (!CanWriteTo(fileName, out string message))
+                {
+                    MessageBox.Show("Could not save file because: " + message);
+                    return false;
+                }
+
+                MainWindow.thisWindow.SetProgress(0, "Saving Network File");
+
+                tempFile = System.IO.Path.GetTempFileName();
+                file = File.Create(tempFile);
             }
-
-            MainWindow.thisWindow.SetProgress(0, "Saving Network File");
-
-            string tempFile = System.IO.Path.GetTempFileName();
-            FileStream file = File.Create(tempFile);
-
+            else
+            {
+                file = new MemoryStream();
+            }
             Type[] extraTypes = GetModuleTypes();
             try
             {
@@ -254,19 +302,26 @@ namespace BrainSimulator
 
             for (int i = 0; i < theNeuronArray.arraySize; i++)
             {
-                var progress = i / (float)theNeuronArray.arraySize;
-                progress *= 100;
-                if (MainWindow.thisWindow.SetProgress(progress, ""))
+                if (!fromClipboard)
                 {
-                    MainWindow.thisWindow.SetProgress(100, "");
-                    return false;
+                    var progress = i / (float)theNeuronArray.arraySize;
+                    progress *= 100;
+                    if (MainWindow.thisWindow.SetProgress(progress, ""))
+                    {
+                        MainWindow.thisWindow.SetProgress(100, "");
+                        return false;
+                    }
                 }
                 Neuron n = theNeuronArray.GetNeuronForDrawing(i);
-                if (n.inUse || n.Label != "")
+                if (fromClipboard) n.Owner = theNeuronArray;
+                if (n.inUse || n.Label != "" || fromClipboard)
                 {
-                    n = theNeuronArray.GetCompleteNeuron(i);
+                    n = theNeuronArray.GetCompleteNeuron(i,fromClipboard);
+                    n.Owner = theNeuronArray;
                     string label = n.Label;
-                    //this is needed bacause inUse is true if any synapse points to this neuron--we don't need to bother with that if it's the only thing 
+                    if (n.ToolTip != "") label += Neuron.toolTipSeparator + n.ToolTip;
+                    //this is needed bacause inUse is true if any synapse points to this neuron--
+                    //we don't need to bother with that if it's the only thing 
                     if (n.synapses.Count != 0 || label != "" || n.lastCharge != 0 || n.leakRate != 0.1f
                         || n.model != Neuron.modelType.IF)
                     {
@@ -310,7 +365,7 @@ namespace BrainSimulator
                         if (label != "")
                         {
                             attrNode = xmldoc.CreateNode("element", "Label", "");
-                            attrNode.InnerText = n.label;
+                            attrNode.InnerText = label;
                             neuronNode.AppendChild(attrNode);
                         }
                         if (n.ShowSynapses)
@@ -319,7 +374,7 @@ namespace BrainSimulator
                             attrNode.InnerText = "True";
                             neuronNode.AppendChild(attrNode);
                         }
-                        if (n.RecordHistory)
+                        if (n.RecordHistory && !fromClipboard)
                         {
                             attrNode = xmldoc.CreateNode("element", "RecordHistory", "");
                             attrNode.InnerText = "True";
@@ -356,30 +411,32 @@ namespace BrainSimulator
                     }
                 }
             }
-            //a way to get the xml as a string
-            //using (var stringWriter = new StringWriter())
-            //using (var xmlTextWriter = XmlWriter.Create(stringWriter))
-            //{
-            //    xmldoc.WriteTo(xmlTextWriter);
-            //    xmlTextWriter.Flush();
-            //    string xxx = stringWriter.GetStringBuilder().ToString();
-            //}
 
             file.Position = 0;
             xmldoc.Save(file);
-            file.Close();
-            try
+            if (!fromClipboard)
             {
-                File.Copy(tempFile, fileName, true);
-                File.Delete(tempFile);
+                file.Close();
+                try
+                {
+                    File.Copy(tempFile, fileName, true);
+                    File.Delete(tempFile);
+                    MainWindow.thisWindow.SetProgress(100, "");
+                }
+                catch (Exception e)
+                {
+                    MainWindow.thisWindow.SetProgress(100, "");
+                    MessageBox.Show("Could not save file because: " + e.Message);
+                    return false;
+                }
             }
-            catch(Exception e)
+            else
             {
-                MainWindow.thisWindow.SetProgress(100, "");
-                MessageBox.Show("Could not save file because: " + e.Message);
-                return false;
+                file.Position = 0;
+                StreamReader str = new StreamReader(file);
+                string temp = str.ReadToEnd();
+                Clipboard.SetText(temp);
             }
-            MainWindow.thisWindow.SetProgress(100, "");
 
             return true;
         }

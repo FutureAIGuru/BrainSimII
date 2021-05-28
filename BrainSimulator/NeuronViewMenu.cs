@@ -186,9 +186,10 @@ namespace BrainSimulator
             cm.Items.Add(mi);
 
             mi = new MenuItem { Header = "Paste Here" };
-            if (MainWindow.myClipBoard == null) mi.IsEnabled = false;
+            if (!XmlFile.WindowsClipboardContainsNeuronArray()) mi.IsEnabled = false;
             mi.Click += Mi_Click;
             cm.Items.Add(mi);
+
             mi = new MenuItem { Header = "Move Here" };
             if (MainWindow.arrayView.theSelection.selectedRectangles.Count == 0) mi.IsEnabled = false;
             mi.Click += Mi_Click;

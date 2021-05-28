@@ -461,7 +461,7 @@ namespace BrainSimulator
                     EnableMenuItem(MainMenu.Items, " Move", true);
                 EnableMenuItem(MainMenu.Items, " Clear Selection", true);
             }
-            if (arrayView.targetNeuronIndex < 0 || myClipBoard == null)
+            if (arrayView.targetNeuronIndex < 0 || !XmlFile.WindowsClipboardContainsNeuronArray())
             {
                 EnableMenuItem(MainMenu.Items, " Paste", false);
             }
@@ -557,11 +557,6 @@ namespace BrainSimulator
         {
             ulong availablePhysicalMemory = new Microsoft.VisualBasic.Devices.ComputerInfo().AvailablePhysicalMemory;
             MainWindow.thisWindow.SetStatus(4, "Available Memory: " + availablePhysicalMemory.ToString("##,#"), 0);
-        }
-
-        private void MenuCheckForUpdates_Click(object sender, RoutedEventArgs e)
-        {
-            CheckForVersionUpdate(true);
         }
     }
 }

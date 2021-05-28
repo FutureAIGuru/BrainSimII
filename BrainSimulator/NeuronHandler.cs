@@ -36,7 +36,7 @@ namespace BrainSimulator
                 int i = n.id;
                 SetNeuronCurrentCharge(i, n.currentCharge);
                 SetNeuronLastCharge(i, n.lastCharge);
-                //SetNeuronLabel(i, n.label);
+                SetNeuronLabel(i, n.label);
                 SetNeuronLeakRate(i, n.leakRate);
                 SetNeuronModel(i, (int)n.model);
                 SetNeuronAxonDelay(i, n.axonDelay);

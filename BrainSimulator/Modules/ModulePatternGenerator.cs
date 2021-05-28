@@ -74,7 +74,6 @@ namespace BrainSimulator.Modules
             Neuron n = AddLabel("Patterns");
             n.AddSynapse(n.id, 1);
             AddLabel("Output");
-
         }
     }
 }

@@ -28,7 +28,11 @@ namespace BrainSimulator
 
         //these have nothing to do with the NeuronArray but are here so it will be saved and restored with the network
         private bool showSynapses = false;
-        public bool ShowSynapses { get => showSynapses; set => showSynapses = value; }
+        public bool ShowSynapses 
+        { 
+            get => showSynapses; 
+            set => showSynapses = value; 
+        }
         public int Cols { get => arraySize / rows; }
 
         public List<ModuleView> Modules

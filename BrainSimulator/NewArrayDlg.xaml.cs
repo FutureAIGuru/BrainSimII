@@ -37,6 +37,7 @@ namespace BrainSimulator
         public NewArrayDlg()
         {
             InitializeComponent();
+            bool previousShowSynapses = MainWindow.theNeuronArray.ShowSynapses;
 
             cbUseServers.IsChecked = MainWindow.useServers;
             buttonSpeedTest.IsEnabled = MainWindow.useServers;
@@ -107,6 +108,7 @@ namespace BrainSimulator
         int refractory = 0;
         private void ButtonOK_Click(object sender, RoutedEventArgs e)
         {
+            bool previousShowSynapses = MainWindow.theNeuronArray.ShowSynapses;
             MainWindow.CloseAllModuleDialogs();
             MainWindow.CloseHistoryWindow();
             MainWindow.CloseNotesWindow();
@@ -176,8 +178,8 @@ namespace BrainSimulator
                 MainWindow.theNeuronArray.Initialize(arraySize, rows);
                 MainWindow.theNeuronArray.RefractoryDelay = refractory;
          
-                MainWindow.theNeuronArray.ShowSynapses = false;
-                MainWindow.thisWindow.SetShowSynapsesCheckBox(false);
+                MainWindow.theNeuronArray.ShowSynapses = previousShowSynapses;
+                MainWindow.thisWindow.SetShowSynapsesCheckBox(previousShowSynapses);
                 Close();
                 returnValue = true;
             }

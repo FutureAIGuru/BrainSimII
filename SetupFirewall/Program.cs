@@ -77,7 +77,7 @@ namespace SetupFirewall
                             theRule = firewallPolicy.Rules.Item(theName[i]);
                         }
                     }
-                    catch (Exception e)
+                    catch 
                     {
                         //get here if the rule doesn't exist
                     }

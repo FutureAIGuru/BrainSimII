@@ -257,7 +257,9 @@ namespace BrainSimulator
             else
             {
                 SuspendEngine();
-                CreateEmptyNetwork(); // to avoid keeping too many bytes occupied...
+                //TODO: the following line unconditionally clobbers the current network
+                //so the cancel button in the dialog won't work properly
+                //CreateEmptyNetwork(); // to avoid keeping too many bytes occupied...
                 // and make sure we have maximum memory free...
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
@@ -274,6 +276,7 @@ namespace BrainSimulator
                     if (theNeuronArray.networkNotes != "")
                         MenuItemNotes_Click(null, null);
                 }
+                Update();
                 ResumeEngine();
             }
         }

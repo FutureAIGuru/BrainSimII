@@ -55,9 +55,9 @@ namespace BrainSimulator
                     }
                 }
             }
-            catch (Exception e)
+            catch 
             {
-
+                retVal = false;
             }
             return retVal;
         }

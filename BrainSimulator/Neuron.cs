@@ -148,7 +148,7 @@ namespace BrainSimulator
         {
             get
             {
-                return MainWindow.arrayView.IsShowingSnapses(id);
+                return MainWindow.arrayView.IsShowingSynapses(id);
             }
             set
             {

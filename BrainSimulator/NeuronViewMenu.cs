@@ -139,7 +139,7 @@ namespace BrainSimulator
 
             CheckBox cbShowSynapses = new CheckBox
             {
-                IsChecked = MainWindow.arrayView.IsShowingSnapses(n.id),
+                IsChecked = MainWindow.arrayView.IsShowingSynapses(n.id),
                 Content = "Show Synapses",
                 Name = "Synapses",
             };
@@ -846,7 +846,7 @@ namespace BrainSimulator
                             break;
                         case "synapses":
                             n1.ShowSynapses = n.ShowSynapses;
-                            //if (MainWindow.arrayView.IsShowingSnapses(n.id))
+                            //if (MainWindow.arrayView.IsShowingSynapses(n.id))
                             //{
                             //    MainWindow.arrayView.AddShowSynapses(n1.id);
                             //}

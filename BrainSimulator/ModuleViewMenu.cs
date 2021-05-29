@@ -414,7 +414,8 @@ namespace BrainSimulator
                     {
                         ModuleView m = MainWindow.theNeuronArray.Modules[i];
                         ModuleBase m1 = m.TheModule;
-                        ModuleDescription md = new ModuleDescription(m1.ShortDescription, m1.LongDescription);
+                        string theModuleType = m1.GetType().Name.ToString();
+                        ModuleDescriptionDlg md = new ModuleDescriptionDlg(theModuleType);
                         md.ShowDialog();
                     }
                 }

@@ -848,6 +848,11 @@ namespace BrainSimulator
         {
             CheckForVersionUpdate(true);
         }
+        private void MenuItemModuleInfo_Click(object sender, RoutedEventArgs e)
+        {
+            ModuleDescriptionDlg md = new ModuleDescriptionDlg("");
+            md.ShowDialog();
+        }
 
     }
 }

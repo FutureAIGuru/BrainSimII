@@ -60,7 +60,7 @@ namespace BrainSimulator
                     dlg.ShowDialog();
                 }
             }
-            catch (Exception e)
+            catch
             {
                 //it's not critical that we detect this, so just give up on any error
             }

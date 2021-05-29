@@ -172,6 +172,11 @@
                         <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" Foreground="#FF00539C" >&#xE70F;</TextBlock>
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="Module Descriptions" Click="MenuItemModuleInfo_Click" >
+                    <MenuItem.Icon>
+                        <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" Foreground="#FF00539C" >&#xE70F;</TextBlock>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="Neuron Engine" StaysOpenOnClick="True">
                 <MenuItem Header="Reset" Click="ButtonInit_Click">

@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrainSimulator"
         mc:Ignorable="d"
-        Title="Brain Simulator Update Available" Height="250" Width="400" Background="LightGray" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="Brain Simulator Update Check" Height="250" Width="400" Background="LightGray" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Button Content="Go to Download Page" HorizontalAlignment="Left" Height="36" Margin="43,158,0,0" VerticalAlignment="Top" Width="134" Click="ButtonGetUpdate_Click"/>
         <Button Content="Ignore for Now" HorizontalAlignment="Left" Height="36" Margin="216,158,0,0" VerticalAlignment="Top" Width="134" Click="ButtonIgnore_Click"/>
         <CheckBox Content="Don't ask again" x:Name="cbDontAsk" HorizontalAlignment="Left" Height="16" Margin="135,131,0,0" VerticalAlignment="Top" Width="162"/>
-        <Label x:Name="UpdateInfo" Background="White" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Height="92" Margin="40,20,40,0" VerticalAlignment="Top" Width="351"/>
+        <Label x:Name="UpdateInfo" Background="White" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Height="106" Margin="22,20,22,0" VerticalAlignment="Top" Width="350"/>
 
     </Grid>
 </Window>

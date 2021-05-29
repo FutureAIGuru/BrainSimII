@@ -40,7 +40,7 @@ namespace BrainSimulator
                 string onlineVersionString = new StreamReader(contentStream, Encoding.UTF8).ReadToEnd();
                 Version onlineVersion = new Version(onlineVersionString);
                 Version runningVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-                if (onlineVersion > runningVersion)
+                if (onlineVersion > runningVersion || alwaysShow)
                 {
                     DateTime runningBuildDate = new DateTime(2000, 1, 1)
                         .AddDays(runningVersion.Build).AddSeconds(runningVersion.Revision * 2);
@@ -52,6 +52,8 @@ namespace BrainSimulator
 
                     string s = "Currently Running:\n " + displayableRunningVersion;
                     s += "\n\nAvailable for Download: \n" + displayableOnlineVersion;
+                    if (onlineVersion <= runningVersion)
+                        s += "\nYou have the latest version";
 
                     GetUpdateDialog dlg = new GetUpdateDialog();
                     dlg.UpdateInfo.Content = s;

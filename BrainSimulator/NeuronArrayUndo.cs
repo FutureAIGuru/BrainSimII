@@ -193,9 +193,9 @@ namespace BrainSimulator
                 }
                 else
                 {
+                    modules[m1.index].FirstNeuron = m1.moduleState.FirstNeuron;
                     modules[m1.index].Width = m1.moduleState.Width;
                     modules[m1.index].Height = m1.moduleState.Height;
-                    modules[m1.index].FirstNeuron = m1.moduleState.FirstNeuron;
                     modules[m1.index].Color = m1.moduleState.Color;
                     modules[m1.index].CommandLine = m1.moduleState.CommandLine;
                     modules[m1.index].Label = m1.moduleState.Label;

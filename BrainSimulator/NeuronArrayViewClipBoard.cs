@@ -343,6 +343,8 @@ namespace BrainSimulator
                 n.Model = Neuron.modelType.IF;
 
                 n.Label = "";
+                n.ToolTip = "";
+                
                 n.Update();
             }
             DeleteModulesInSelection();

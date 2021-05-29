@@ -91,6 +91,7 @@ namespace BrainSimulator
                 else
                     label = value;
 
+                if (label == toolTipSeparator) label = "";
                 if (label != "")
                     ownerArray.AddLabelToCache(Id, label);
                 else
@@ -112,15 +113,18 @@ namespace BrainSimulator
             set
             {
                 string theToolTip = ownerArray.GetLabelFromCache(Id);
-                int tooltipStart = theToolTip.IndexOf(toolTipSeparator);
-                if (tooltipStart != -1)
-                    theToolTip = theToolTip.Substring(0, tooltipStart);
-                if (value != "" || theToolTip != "")
-                {
-                    if (value != "")
-                        theToolTip = theToolTip + toolTipSeparator + value;
-                    ownerArray.AddLabelToCache(Id, theToolTip);
-                }
+                string theLabel = theToolTip;
+                if (theLabel.Contains(toolTipSeparator))
+                    theLabel = theLabel.Substring(0, theLabel.IndexOf(toolTipSeparator));
+
+                if (value != "")
+                    label = theLabel + toolTipSeparator + value;
+                else
+                    label = theLabel;
+
+                if (label == toolTipSeparator) label = "";
+                if (label != "")
+                    ownerArray.AddLabelToCache(Id, label);
                 else
                     ownerArray.RemoveLabelFromCache(Id);
             }
@@ -329,6 +333,7 @@ namespace BrainSimulator
         public void Clear()
         {
             Label = "";
+            ToolTip = "";
             currentCharge = 0;
             lastCharge = 0;
             model = modelType.IF;

@@ -95,7 +95,9 @@ namespace BrainSimulator
                 retVal.model = n.model;
                 retVal.axonDelay = n.axonDelay;
 
-                retVal.label = retVal.Label + Neuron.toolTipSeparator+ retVal.ToolTip;// GetNeuronLabel(i);
+                retVal.label = retVal.Label;// GetNeuronLabel(i);
+                if (retVal.ToolTip != "")
+                    retVal.label += Neuron.toolTipSeparator + retVal.ToolTip;
 
                 retVal.synapses = GetSynapsesList(i);
                 retVal.synapsesFrom = GetSynapsesFromList(i);

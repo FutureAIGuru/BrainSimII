@@ -9,7 +9,7 @@
     <Grid >
         <TextBox x:Name="ToolTip" Margin="20,36,58,0" Text="ToolTip Text" Height="20" VerticalAlignment="Top" ></TextBox>
         <TextBox x:Name="Description" VerticalScrollBarVisibility="Auto" Margin="20,98,38,99" TextWrapping="Wrap" Text="Description Text" AcceptsReturn="True" />
-        <Button Content="Save" Margin="189,0,303,27" Click="Button_Click" Height="34" VerticalAlignment="Bottom" />
+        <Button x:Name="buttonSave" Content="Save" Margin="189,0,303,27" Click="Button_Click" Height="34" VerticalAlignment="Bottom" />
         <Button Content="Close" IsCancel="True" Margin="318,0,174,27" Height="34" VerticalAlignment="Bottom" />
         <TextBlock Text="Description:" HorizontalAlignment="Left" Margin="20,78,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.859,1.19"/>
         <TextBlock Text="ToolTip:" HorizontalAlignment="Left" Margin="20,20,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.859,1.19"/>

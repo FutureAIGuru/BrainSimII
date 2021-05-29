@@ -17,7 +17,11 @@ namespace BrainSimulator
         {
             InitializeComponent();
             moduleType = theModuleType;
-
+            string fileName = Path.GetFullPath(".").ToLower();
+            if (fileName.Contains("program"))
+            {
+                buttonSave.IsEnabled = false;
+            }
             var modules = Utils.GetArrayOfModuleTypes();
 
             foreach (var v in modules)
@@ -117,7 +121,7 @@ namespace BrainSimulator
         {
             Stream file;
             string fileName = Path.GetFullPath("./Networks/ModuleDescriptions.xml");
-            file = File.Open(fileName, FileMode.Open);
+            file = File.Open(fileName, FileMode.Open, FileAccess.Read);
             try
             {
                 XmlSerializer reader = new XmlSerializer(typeof(List<ModuleDescription>));
@@ -144,9 +148,9 @@ namespace BrainSimulator
                 fileName = fileName.Replace("\\debug", "");
             }
             fileName += "\\Networks\\ModuleDescriptions.xml";
-            file = File.Create(fileName);
             try
             {
+                file = File.Create(fileName);
                 XmlSerializer writer = new XmlSerializer(typeof(List<ModuleDescription>));
                 writer.Serialize(file, theModuleDescriptions);
             }

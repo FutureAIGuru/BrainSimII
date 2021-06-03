@@ -21,7 +21,7 @@ Does File New Show New Network Dialog?
 	Should Be True		${Result}
 
 Does Icon New Show New Network Dialog?
-	[Tags]              Complete
+	[Tags]              Wip
 	${Result}			Check Icon New Shows New Network Dialog
 	Should Be True		${Result}
 

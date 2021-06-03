@@ -59,21 +59,22 @@ def start_brain_simulator_with_getting_started():
     return True
     
 def start_brain_simulator_without_network():
+    result = True
     if tk.wait_and_click('brainsim_start') == False:
         return False
     if tk.wait_for_center('brainsim_started') == False:
         return False
     pyautogui.keyDown('shift')
     if not tk.wait_for_center('brainsim_splash'):
-        return False
+        result = False
     timeout = 0
     while tk.locate_center('brainsim_splash') is None and timeout < 20:
         time.sleep(1)
         timeout += 1
     if tk.wait_for_center('brainsim_splash') is None:
-        return False
+        result = False
     pyautogui.keyUp('shift')
-    return True
+    return result
 
 def select_no_on_save_prompt():
     time.sleep(0.2)

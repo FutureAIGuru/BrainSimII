@@ -129,7 +129,7 @@ Are Modules Inserted Correctly With Warning?
     2		16		module_words  			requires_file
 	
 Check Do Modules Resize And Undo Correctly?
-	[Tags]          Wip
+	[Tags]          Complete
 	[Template]		Check Does Module Resize And Undo Correctly
 	0		0		${175}	${262}	${485}	${567}	sized_module_2dmodel			module_2dmodel
 	0		1		${175}	${262}	${485}	${567}	sized_module_2dsim				module_2dsim

@@ -104,6 +104,10 @@ namespace BrainSimulator
 
         public static void SuspendEngine()
         {
+            if (theNeuronArray == null)
+            {
+                return;
+            }
             engineSpeedStack.Push(engineDelay);
 
             if (theNeuronArray != null)
@@ -120,6 +124,10 @@ namespace BrainSimulator
 
         public static void ResumeEngine()
         {
+            if (theNeuronArray == null)
+            {
+                return;
+            }
             engineDelay = engineSpeedStack.Pop();
             //is the engine still paused?
             theNeuronArray.EngineIsPaused = engineDelay == 2000;

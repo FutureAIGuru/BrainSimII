@@ -34,12 +34,12 @@ Can We Stop Brain Simulator II?
 	Should Be True		${Result}
 
 Can We Start Neuron Server?
-	[Tags]                                                     Complete
+	[Tags]              Complete
 	${Result}    		Start Neuron Server
 	Should Be True		${Result}
 
 Can We Stop Neuron Server?
-	[Tags]                                                     Complete
+	[Tags]              Complete
 	${Result}    		Stop Neuron Server
 	Should Be True		${Result}
 

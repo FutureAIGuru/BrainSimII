@@ -106,7 +106,7 @@ Are Modules Inserted Correctly?
 	1		12		module_navigate
 	1		13		module_null
 	1		14		module_patterngenerator
-	##1		15		module_patternrecognizer
+			15		module_patternrecognizer
 	1		16      module_ratedecoder2
 	2		3		module_realitymodel
 	2		4		module_shorttermmemory
@@ -129,7 +129,7 @@ Are Modules Inserted Correctly With Warning?
     2		16		module_words  			requires_file
 	
 Check Do Modules Resize And Undo Correctly?
-	[Tags]          Wip
+	[Tags]          Complete
 	[Template]		Check Does Module Resize And Undo Correctly
 	0		0		${175}	${262}	${485}	${567}	sized_module_2dmodel			module_2dmodel
 	0		1		${175}	${262}	${485}	${567}	sized_module_2dsim				module_2dsim
@@ -164,7 +164,7 @@ Check Do Modules Resize And Undo Correctly?
 	1		12		${175}	${262}	${485}	${567}	sized_module_navigate			module_navigate
 	1		13		${175}	${262}	${485}	${567}	sized_module_null				module_null
 	1		14		${175}	${262}	${485}	${567}	sized_module_patterngenerator	module_patterngenerator
-	##1		15		${238}	${324}	${485}	${567}	sized_module_patternrecognizer	module_patternrecognizer
+			15		${238}	${324}	${485}	${567}	sized_module_patternrecognizer	module_patternrecognizer
 	1		16      ${234}	${262}	${485}	${567}	sized_module_ratedecoder2		module_ratedecoder2
 	2		3		${175}	${262}	${485}	${567}	sized_module_realitymodel		module_realitymodel
 	2		4		${175}	${262}	${485}	${567}	sized_module_shorttermmemory	module_shorttermmemory

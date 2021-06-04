@@ -506,7 +506,7 @@ def insert_module(page, index):
 
 def remove_module():
     pyautogui.rightClick([70, 150])
-    return tk.wait_and_click('module_delete')
+    return tk.wait_and_click('delete_module_item')
     
 def check_module_is_inserted_correctly(page, index, drawn_module):
     result = True
@@ -528,9 +528,10 @@ def check_module_is_inserted_correctly_with_warning(page, index, drawn_module, w
 def check_does_module_resize_and_undo_correctly(page, index, x_start, y_start, x_end, y_end, resized_module, drawn_module):
     result = True
     insert_module(page, index)
+    time.sleep(0.5)
     tk.drag_from_to(x_start, y_start, x_end, y_end, 1)
     harmless_click_to_focus()
-    # time.sleep(3)
+    time.sleep(3)
     if not tk.wait_and_hover(resized_module):
         result = False  
     do_menu_choice('bs2_edit_menu', 'bs2_edit_undo_item_enabled')

@@ -5,6 +5,7 @@
         <toolTip>Maintains an internal representation of surrounding things</toolTip>
         <description>
             This module receives input from the Touch and Vision modules and merges the information to maintain a representation of physical objects in the entity's environment. It also supports imagination via the temporary addition of imagined objects and the temporary change in point of view.
+            Dialog: the dialog shows objects from the entity's point of view. The top of the display is forward. Objects have white ends which indicate the confidence that the distance is correct--the smaller the white, the greater the confidence.
 
         </description>
     </ModuleDescription>
@@ -47,12 +48,12 @@
     <ModuleDescription>
         <moduleName>ModuleArm</moduleName>
         <toolTip>A module to form one of Sallie's arms</toolTip>
-        <description>TO DO: Long description of the Arm module.</description>
+        <description>In the simulator, Sallie has arms with touch sensors which default to moving in small circles. This module can override that process with specific arem locations for experimentation with directed exploration.</description>
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModuleAudible</moduleName>
-        <toolTip>TO DO: Short description of Module Audible.</toolTip>
-        <description>TO DO: Long description of Module Audible.</description>
+        <toolTip>Under Development, do not use.</toolTip>
+        <description>Consolidation of processing of audible input outside of the UKS.</description>
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModuleBehavior</moduleName>
@@ -62,12 +63,12 @@
     <ModuleDescription>
         <moduleName>ModuleBoundary</moduleName>
         <toolTip>Finds the boundaries in an imagefile module image.</toolTip>
-        <description>TO DO: Long description of Module Boundary.</description>
+        <description>Creates a simple convoultional network to detect boundaries in an image.</description>
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModuleBoundary1</moduleName>
-        <toolTip>TO DO: Short description of Module Boundary1.</toolTip>
-        <description>TO DO: Long description of Module Boundary1.</description>
+        <toolTip>Uses code to trace boundaries in an imagefile image.</toolTip>
+        <description>Follows boundaries with code.</description>
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModuleCamera</moduleName>
@@ -76,13 +77,13 @@
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModuleChain</moduleName>
-        <toolTip>[Short Description Here]</toolTip>
-        <description>[Long Description Here]</description>
+        <toolTip>Builds a chain of neurons with one firing the next.</toolTip>
+        <description>A quick way to create an array of neurons representing a bucket-brigade.</description>
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModuleChainCounter</moduleName>
-        <toolTip>[Short Description Here]</toolTip>
-        <description>[Long Description Here]</description>
+        <toolTip>Counts the number of neurons firing in a chain.</toolTip>
+        <description>Builds an array of synapse weights which can detect the number of neurons firing in a chain dictated by the size of the module.</description>
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModuleColorComponent</moduleName>
@@ -105,8 +106,8 @@
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModuleEvent</moduleName>
-        <toolTip>TO DO: Short description of Module Event.</toolTip>
-        <description>TO DO: Long description of Module Event.</description>
+        <toolTip>Builds Landmark objects and Event Triples in the UKS.</toolTip>
+        <description>Creates UKS things which represent objects needed for reinforcement learning. Each triple includes a Situation, an Action, and the Outcome. For a given situation, Sallie takes an action, and receives an outcome and can subsequently search the structure to select the action which leads to the best outcome for any given situation. </description>
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModuleFireOldest</moduleName>
@@ -120,33 +121,23 @@
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModuleGraph</moduleName>
-        <toolTip>TO DO: Short description of Module Graph.</toolTip>
-        <description>TO DO: Long description of Module Graph.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleGrayScale</moduleName>
-        <toolTip>TO DO: Short description of Module GrayScale.</toolTip>
-        <description>TO DO: Long description of Module GrayScale.</description>
+        <toolTip>Builds a Simple Knowledge Graph in neurons.</toolTip>
+        <description>Demonstrates how neurons can be harnessed to store knowledge in relationships.</description>
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModuleHearWords</moduleName>
-        <toolTip>TO DO: Short description of Module HearWords.</toolTip>
-        <description>TO DO: Long description of Module HearWords.</description>
+        <toolTip>Senses words from the 2DSIM and builds phrases in the UKS.</toolTip>
+        <description>With an array of labeled word neurons, this modules senses the firing sequence and build phrase Things.</description>
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModuleImageFile</moduleName>
         <toolTip>ImageFile can import images into a set of neurons.</toolTip>
-        <description>This module named ImageFile can import an image file or set of image files and will projectthem onto a rectangular area of Color neurons much like the Camera Module does.</description>
+        <description>This module can import an image file or set of image files and will projectthem onto a rectangular area of Color neurons much like the Camera Module does.</description>
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModuleKBDebug</moduleName>
         <toolTip>Module KBDebug is used for debugging the UKS modules.</toolTip>
-        <description>This module is used in debugging of the UKS, UKSN and UKS2 modules.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleLearning</moduleName>
-        <toolTip>TO DO: Short description of Module Learning.</toolTip>
-        <description>TO DO: Long description of Module Learning.</description>
+        <description>Creates a dialog box which scrolls the sequence of neuron firings into and out of the UKS. This module is used in debugging of the UKS, UKSN and UKS2 modules.</description>
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModuleLife</moduleName>
@@ -155,8 +146,8 @@
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModuleMotor</moduleName>
-        <toolTip>The Motor module controls an electric motor</toolTip>
-        <description>This module will in time be functioning as a motor controller, allowing for movement of wheels or limbs</description>
+        <toolTip>Simulates a few motor funtions for Sallie.</toolTip>
+        <description>Allows for Sallies movement of wheels or limbs</description>
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModuleMove</moduleName>
@@ -186,8 +177,8 @@
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModulePatternGenerator</moduleName>
-        <toolTip>TO DO: Short description of Module PatternGenerator.</toolTip>
-        <description>TO DO: Long description of Module PatternGenerator.</description>
+        <toolTip>Generates a pattern of neuron firings for testing.</toolTip>
+        <description>Has a library of output patterns and can randomly select and output them.</description>
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModulePatternRecognizer</moduleName>
@@ -224,8 +215,8 @@
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModuleRealityModel</moduleName>
-        <toolTip>TO DO: Short description of Module RealityModel.</toolTip>
-        <description>TO DO: Long description of Module RealityModel.</description>
+        <toolTip>Obsolete, do not use.</toolTip>
+        <description>Obsolete, do not use.</description>
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModuleShortTermMemory</moduleName>
@@ -300,7 +291,7 @@
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModuleUKSN</moduleName>
-        <toolTip>DEPRECATED, use US2! A Knowledge Graph KB module expanded with a neuron arrays for inputs and outputs.</toolTip>
+        <toolTip>DEPRECATED, use UKS2! A Knowledge Graph KB module expanded with a neuron arrays for inputs and outputs.</toolTip>
         <description>
             This is like a KB module but expanded to be accessible via neuron firings instead of just programmatically. This module uses no neurons but can be called directly by other modules.
 
@@ -311,7 +302,7 @@
     </ModuleDescription>
     <ModuleDescription>
         <moduleName>ModuleWords</moduleName>
-        <toolTip>Read a .txt file and load the words into a TO DO: Short description of Module Words.</toolTip>
-        <description>TO DO: Long description of Module Words.</description>
+        <toolTip>Read a .txt file and load the words into an array of neuons.</toolTip>
+        <description>Creates an array of neurons representing words interconnected with synapses with weights indicated the count of the next word in a sequence.</description>
     </ModuleDescription>
 </ArrayOfModuleDescription>

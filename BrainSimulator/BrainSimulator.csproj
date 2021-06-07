@@ -158,7 +158,6 @@
     <Compile Include="Modules\ModuleBoundary1.cs" />
     <Compile Include="Modules\ModuleEvent.cs" />
     <Compile Include="Modules\ModuleFireOldest.cs" />
-    <Compile Include="Modules\ModuleGrayScale.cs" />
     <Compile Include="Modules\ModuleImageFileDlg.xaml.cs">
       <DependentUpon>ModuleImageFileDlg.xaml</DependentUpon>
     </Compile>
@@ -205,7 +204,6 @@
     <Compile Include="Modules\ModuleKBDebugDlg.xaml.cs">
       <DependentUpon>ModuleKBDebugDlg.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\ModuleLearning.cs" />
     <Compile Include="Modules\ModuleMotor.cs" />
     <Compile Include="Modules\ModuleNull.cs" />
     <Compile Include="Modules\ModuleRealityModel.cs" />

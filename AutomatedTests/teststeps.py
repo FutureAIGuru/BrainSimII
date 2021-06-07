@@ -59,21 +59,22 @@ def start_brain_simulator_with_getting_started():
     return True
     
 def start_brain_simulator_without_network():
+    result = True
     if tk.wait_and_click('brainsim_start') == False:
         return False
     if tk.wait_for_center('brainsim_started') == False:
         return False
     pyautogui.keyDown('shift')
     if not tk.wait_for_center('brainsim_splash'):
-        return False
+        result = False
     timeout = 0
     while tk.locate_center('brainsim_splash') is None and timeout < 20:
         time.sleep(1)
         timeout += 1
     if tk.wait_for_center('brainsim_splash') is None:
-        return False
+        result = False
     pyautogui.keyUp('shift')
-    return True
+    return result
 
 def select_no_on_save_prompt():
     time.sleep(0.2)
@@ -497,17 +498,19 @@ def select_model_combobox(option):
     time.sleep(0.1)
     tk.click([1756, ys[option]])
 
-def remove_module():
-    pyautogui.click([70, 140])
-    pyautogui.press('delete')
-    pyautogui.press('delete')
-    
-def check_module_is_inserted_correctly(page, index, drawn_module):
-    result = True
+def insert_module(page, index):
     select_module_combobox(int(page), int(index))
     pyautogui.moveTo([95, 185])
     pyautogui.click([95, 185])
     harmless_click_to_focus()
+
+def remove_module():
+    pyautogui.rightClick([70, 150])
+    return tk.wait_and_click('delete_module_item')
+    
+def check_module_is_inserted_correctly(page, index, drawn_module):
+    result = True
+    insert_module(page, index)
     if not tk.wait_and_hover(drawn_module):
         result = False  
     remove_module()
@@ -522,3 +525,18 @@ def check_module_is_inserted_correctly_with_warning(page, index, drawn_module, w
     remove_module()
     return result
    
+def check_does_module_resize_and_undo_correctly(page, index, x_start, y_start, x_end, y_end, resized_module, drawn_module):
+    result = True
+    insert_module(page, index)
+    time.sleep(0.5)
+    tk.drag_from_to(x_start, y_start, x_end, y_end, 1)
+    harmless_click_to_focus()
+    time.sleep(3)
+    if not tk.wait_and_hover(resized_module):
+        result = False  
+    do_menu_choice('bs2_edit_menu', 'bs2_edit_undo_item_enabled')
+    harmless_click_to_focus()
+    if not tk.wait_and_hover(drawn_module):
+        result = False  
+    remove_module()
+    return result

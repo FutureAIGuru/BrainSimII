@@ -49,6 +49,13 @@ def click(screen_location):
     pyautogui.click(screen_location)
     return True
     
+def right_click(screen_location):
+    if screen_location is None:
+        print('right_click()', screen_location, 'not set')
+        return False
+    pyautogui.rightClick(screen_location)
+    return True
+    
 def wait_and_click(screen_frag):
     if not wait_for_center(screen_frag):
         print('wait_and_click()', screen_frag, 'not found')

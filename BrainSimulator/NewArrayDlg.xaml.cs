@@ -37,7 +37,11 @@ namespace BrainSimulator
         public NewArrayDlg()
         {
             InitializeComponent();
-            bool previousShowSynapses = MainWindow.theNeuronArray.ShowSynapses;
+            bool previousShowSynapses = false;
+            if (MainWindow.theNeuronArray != null)
+            {
+                previousShowSynapses = MainWindow.theNeuronArray.ShowSynapses;
+            }
 
             cbUseServers.IsChecked = MainWindow.useServers;
             buttonSpeedTest.IsEnabled = MainWindow.useServers;

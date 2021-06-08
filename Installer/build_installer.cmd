@@ -12,9 +12,8 @@ SET ORGDIR=%CD%
 
 CD %ORGDIR%
 CD ..
+SET BINDIR=%CD%\BrainSimulator\bin\x64\release
 CD ..
-
-SET BINDIR=%CD%\BrainSimulator\BrainSimulator\bin\x64\release
 
 IF EXIST [%1] (
 	SET CERTFILE=%1
@@ -25,7 +24,7 @@ CD %ORGDIR%
 
 SET WEBDIR=C:\Users\c_sim\source\repos\FutureAI\FutureAI
 IF NOT EXIST %WEBDIR% (
-	SET WEBDIR=C:\Users\c_sim\source\repos\FutureAIFuru\FutureAIWebsite
+	SET WEBDIR=C:\Users\c_sim\source\repos\FutureAIGuru\FutureAIWebsite\FutureAI
 )
 
 REM ECHO ON
@@ -67,7 +66,7 @@ ECHO Creating the Installer. . .
 makensis _BRAINSIM2.nsi >"%ORGDIR%\Step4BuildInstaller.log"
 PAUSE
 
-IF EXIST %CERTFILE%y (
+IF EXIST %CERTFILE% (
 ECHO Signing the install.exe. . .
 signtool sign /f %CERTFILE% /p FutureAI /t http://timestamp.comodoca.com "%ORGDIR%\Brain Simulator II Setup.exe" >"%ORGDIR%\Step5SignInstaller.log"
 )

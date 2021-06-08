@@ -269,3 +269,4 @@ AutomatedTests/log.html
 AutomatedTests/report.html
 AutomatedTests/output.xml
 AutomatedTests/*.png
+/Installer/LatestBrainSimVersion.txt

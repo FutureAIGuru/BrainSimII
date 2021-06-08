@@ -23,9 +23,10 @@ def check_test_requirements():
     if not tk.wait_for_center('neuronserver_start'):
         return False
     return True
-        
+
 def clear_appdata():
-    shutil.rmtree('C:\\Users\\Moorelife\\AppData\\Local\\FutureAI')
+    futureai_localappdata = os.path.join(os.getenv('LOCALAPPDATA'), 'FutureAI')
+    shutil.rmtree(futureai_localappdata)
     return True
         
 def start_brain_simulator():

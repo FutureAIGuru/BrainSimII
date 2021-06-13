@@ -29,13 +29,11 @@ namespace BrainSimulator
                 moduleSelector.Items.Add(v.Name.Replace("Module", ""));
             }
             moduleSelector.SelectedItem = theModuleType.Replace("Module", "");
-
-
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            ModuleDescriptionFile.SetToolTip(moduleType, ToolTip.Text);
+            ModuleDescriptionFile.SetToolTip(moduleType, ToolTipText.Text);
             ModuleDescriptionFile.SetDescription(moduleType, Description.Text);
             ModuleDescriptionFile.Save();
         }
@@ -45,7 +43,7 @@ namespace BrainSimulator
             if (sender is ComboBox cb)
             {
                 moduleType = "Module" + cb.SelectedItem.ToString();
-                ToolTip.Text = ModuleDescriptionFile.GetToolTip(moduleType);
+                ToolTipText.Text = ModuleDescriptionFile.GetToolTip(moduleType);
                 Description.Text = ModuleDescriptionFile.GetDescription(moduleType);
             }
         }

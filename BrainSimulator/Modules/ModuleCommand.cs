@@ -4,6 +4,7 @@
 //  
 
 using System.IO;
+using System.Windows.Controls;
 using System.Xml.Serialization;
 
 namespace BrainSimulator.Modules
@@ -32,19 +33,26 @@ namespace BrainSimulator.Modules
         public int line = 0;
 
         string currentModule = "";
+        int countDown = 0;
 
         public ModuleCommand()
         {
-
+            minHeight = 1;
+            minWidth = 1;
         }
 
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
             if (commands == null) return;
-            if (line >= commands.Length) return;
+            if (line >= commands.Length || line < 0) return;
+            if (countDown > 0)
+            {
+                countDown--;
+                return;
+            }
 
-            string[] commandLine = commands[line].Split(' ');
+            string[] commandLine = commands[line].Split(new char[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
 
             if (commandLine.Length > 0 && commandLine[0].IndexOf("//") != 0)
                 for (int i = 0; i < commandLine.Length; i++)
@@ -62,19 +70,35 @@ namespace BrainSimulator.Modules
                     }
                     if (currentCommand == "Wait-for")
                     {
-                        SetCurrentModule(commandLine[i + 1]);
-                        ModuleView na1 = theNeuronArray.FindModuleByLabel(currentModule);
-                        Neuron n = na1.GetNeuronAt(commandLine[i + 2]);
-                        if (n != null && !n.Fired()) return;
-                    }
-                    SetCurrentModule(currentCommand);
-                    ModuleView na = theNeuronArray.FindModuleByLabel(currentModule);
-                    if (na != null && currentCommand != "")
-                    {
-                        Neuron n = na.GetNeuronAt(currentCommand);
-                        if (n != null)
+                        if (commandLine.Length > i + 1)
                         {
-                            n.CurrentCharge = 1;
+                            if (!int.TryParse(commandLine[i + 1], out countDown))
+                            {
+                                SetCurrentModule(commandLine[i + 1]);
+                                Neuron n = GetNeuron(currentModule, commandLine[i + 2]);
+                                if (n != null && !n.Fired()) return;
+                            }
+                        }
+                    }
+
+                    if (currentCommand != "")
+                    {
+                        //if it contains a colon, set the current module
+                        if (currentCommand.IndexOf(':') != -1)
+                            SetCurrentModule(currentCommand);
+                        else
+                        {
+                            if (i + 1 < commandLine.Length)
+                            {
+                                float param = 1;
+                                if (float.TryParse(commandLine[i+1], out param))
+                                {
+                                    SetNeuronValue(currentModule, currentCommand, param);
+                                    i++;
+                                    continue;
+                                }
+                            }
+                            SetNeuronValue(currentModule, currentCommand, 1);
                         }
                     }
                 }
@@ -106,6 +130,19 @@ namespace BrainSimulator.Modules
         {
             base.ShowDialog();
             Initialize();
+        }
+
+        public override MenuItem GetCustomMenuItems()
+        {
+            Button runBtn = new Button {  Content = "Run",  };
+            runBtn.Click += RunBtn_Click;
+            MenuItem mi = new MenuItem { Header = runBtn};
+            return mi;
+        }
+
+        private void RunBtn_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            line = 0;
         }
     }
 }

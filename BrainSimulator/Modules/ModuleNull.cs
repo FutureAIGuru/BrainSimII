@@ -31,10 +31,11 @@ namespace BrainSimulator.Modules
         //or when the engine restart button is pressed
         public override void Initialize()
         {
-            Neuron n = na.GetNeuronAt(0, 0);
-            n.Label = "FirstNeuron";
-            Neuron n1 = na.GetNeuronAt(0, 1);
-            n.AddSynapse(n1.Id, 0.5f);
+            //some dummy test dat
+            //Neuron n = na.GetNeuronAt(0, 0);
+            //n.Label = "FirstNeuron";
+            //Neuron n1 = na.GetNeuronAt(0, 1);
+            //n.AddSynapse(n1.Id, 0.5f);
         }
 
         public override void SetUpAfterLoad()

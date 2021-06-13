@@ -264,7 +264,11 @@ namespace BrainSimulator.Modules
                 Neuron n = naModule.GetNeuronAt(neuronLabel);
                 return n;
             }
-            return null;
+            else
+            {
+                Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronLabel);
+                return n;
+            }
         }
         protected bool SetNeuronValue(string neuronLabel, float value)
         {
@@ -282,6 +286,15 @@ namespace BrainSimulator.Modules
             if (naModule != null)
             {
                 Neuron n = naModule.GetNeuronAt(neuronLabel);
+                if (n != null)
+                {
+                    n.SetValue(value);
+                    retVal = true;
+                }
+            }
+            else
+            {
+                Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronLabel);
                 if (n != null)
                 {
                     n.SetValue(value);

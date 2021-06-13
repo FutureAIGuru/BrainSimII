@@ -190,7 +190,9 @@ namespace BrainSimulator
                 MainWindow.theNeuronArray.SetUndoPoint();
 
                 //clear out the underlying neurons
-                MainWindow.arrayView.DeleteSelection(true);
+                //TODO: take care of this hack
+                if (commandLine != "ModuleNull")
+                    MainWindow.arrayView.DeleteSelection(true);
                 MainWindow.theNeuronArray.AddModuleUndo(MainWindow.theNeuronArray.modules.Count, null);
                 width = MainWindow.arrayView.theSelection.selectedRectangles[i].Width;
                 height = MainWindow.arrayView.theSelection.selectedRectangles[i].Height;

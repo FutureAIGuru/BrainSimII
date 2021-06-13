@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Module Description" Height="400" Width="600">
     <Grid >
-        <TextBox x:Name="ToolTip" Margin="20,36,58,0" Text="ToolTip Text" Height="20" VerticalAlignment="Top" ></TextBox>
+        <TextBox x:Name="ToolTipText" Margin="20,36,58,0" Text="ToolTip Text" Height="20" VerticalAlignment="Top" ></TextBox>
         <TextBox x:Name="Description" VerticalScrollBarVisibility="Auto" Margin="20,98,38,99" TextWrapping="Wrap" Text="Description Text" AcceptsReturn="True" />
         <Button x:Name="buttonSave" Content="Save" Margin="189,0,303,27" Click="Button_Click" Height="34" VerticalAlignment="Bottom" />
         <Button Content="Close" IsCancel="True" Margin="318,0,174,27" Height="34" VerticalAlignment="Bottom" />

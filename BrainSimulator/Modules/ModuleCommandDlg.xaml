@@ -5,14 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrainSimulator.Modules"
         mc:Ignorable="d"
-        Title="Command Module Dialog" Height="294" Width="326" Background="Gray" ShowInTaskbar="False">
+        Title="Command Module Dialog" Height="294" Width="450" Background="Gray" ShowInTaskbar="False">
     <Grid Name="theGrid" SizeChanged="TheCanvas_SizeChanged" >
         <TextBox x:Name="textBox" Margin="10,41,10,73" TextWrapping="Wrap" Text="[Load Command File to see it here]"  AcceptsReturn="True" VerticalScrollBarVisibility="Visible"/>
         <TextBox x:Name="textBoxPath" Height="19" Margin="10,10,87,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <Button x:Name="buttonBrowse" Content="Browse" Height="19" Margin="0,10,18,0" VerticalAlignment="Top" Click="ButtonBrowse_Click" HorizontalAlignment="Right" Width="56" />
-        <StackPanel Height="23" Margin="60,0,58,20" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" RenderTransformOrigin="0.497,0.026">
-            <Button x:Name="buttonLoad" Content="Load" Height="24" Width="100" VerticalAlignment="Bottom" Click="ButtonLoad_Click" />
-            <Button x:Name="buttonSave" Content="Save" Height="24" Width="100" VerticalAlignment="Bottom" Click="ButtonSave_Click"/>
+        <StackPanel Height="23" Margin="0,0,0,20" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+            <Button x:Name="buttonRun" Content="Run" Height="24" Width="80" VerticalAlignment="Bottom" Click="ButtonRun_Click" />
+            <TextBlock Width="20"></TextBlock>
+            <Button x:Name="buttonLoad" Content="Load" Height="24" Width="80" VerticalAlignment="Bottom" Click="ButtonLoad_Click" />
+            <TextBlock Width="20"></TextBlock>
+            <Button x:Name="buttonSave" Content="Save" Height="24" Width="80" VerticalAlignment="Bottom" Click="ButtonSave_Click"/>
         </StackPanel>
     </Grid>
 </local:ModuleBaseDlg>

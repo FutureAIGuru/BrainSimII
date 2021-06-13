@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 namespace BrainSimulator.Modules
 {
+
     public partial class ModuleCommandDlg : ModuleBaseDlg
     {
         public ModuleCommandDlg()
@@ -28,14 +29,31 @@ namespace BrainSimulator.Modules
             textBoxPath.Text = parent.textFile;
             string theString = "";
             if (parent.commands == null) return true;
+            int start = -1;
+            int end = -1;
             for (int i = 0; i < parent.commands.Length; i++)
             {
-                if (i == parent.line) theString += ">>>";
-                theString += parent.commands[i] + "\r\n";
+                if (i == parent.line)
+                {
+                    start = theString.Length;
+                    theString += ">";
+                    theString += parent.commands[i] + "\r\n";
+                    end = theString.Length;
+                }
+                else
+                    theString += parent.commands[i] + "\r\n";
             }
             textBox.Text = theString;
             if (parent.line > 0)
                 textBox.ScrollToLine(parent.line);
+            if (start != -1 && end != -1)
+            {
+                textBox.SelectionStart = start;
+                textBox.SelectionLength = end - start;
+                string xx = textBox.SelectedText;
+                textBox.Select(start, end - start);
+                textBox.Focus();
+            }
 
             return true;
         }
@@ -53,15 +71,41 @@ namespace BrainSimulator.Modules
             string theString = textBox.Text;
             theString = theString.Replace(">>>", "");
 
+            if (parent.textFile == "")
+            {
+                //create a new file
+                if (!SaveFileName()) return;
+            }
+
             parent.commands = theString.Split(new string[] { "\r\n" }, StringSplitOptions.None);
             File.WriteAllLines(parent.textFile, parent.commands);
         }
 
-        private void ButtonBrowse_Click(object sender, RoutedEventArgs e)
+        private bool SaveFileName()
+        {
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog
+            {
+                Filter = "Command Files|*.txt",
+                Title = "Select/Create a Brain Simulator Command File"
+            };
+            // Show the Dialog.  
+            // If the user clicked OK in the dialog  
+            DialogResult result = saveFileDialog1.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                ModuleCommand parent = (ModuleCommand)base.ParentModule;
+                textBoxPath.Text = saveFileDialog1.FileName;
+                parent.textFile = textBoxPath.Text;
+                parent.line = -1;
+                return true;
+            }
+            return false;
+        }
+        private bool OpenFileName()
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog
             {
-                Filter = "XML Network Files|*.txt",
+                Filter = "Command Files|*.txt",
                 Title = "Select a Brain Simulator Command File"
             };
             // Show the Dialog.  
@@ -70,7 +114,13 @@ namespace BrainSimulator.Modules
             if (result == System.Windows.Forms.DialogResult.OK)
             {
                 textBoxPath.Text = openFileDialog1.FileName;
+                return true;
             }
+            return false;
+        }
+        private void ButtonBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileName();
         }
 
         private void ButtonLoad_Click(object sender, RoutedEventArgs e)
@@ -80,9 +130,16 @@ namespace BrainSimulator.Modules
             {
                 parent.commands = File.ReadAllLines(textBoxPath.Text);
                 parent.textFile = textBoxPath.Text;
-                parent.line = 0;
+                parent.line = -1;
                 Draw(true);
             }
+        }
+        private void ButtonRun_Click(object sender, RoutedEventArgs e)
+        {
+            ModuleCommand parent = (ModuleCommand)base.ParentModule;
+            parent.textFile = textBoxPath.Text;
+            parent.line = 0;
+            Draw(true);
         }
     }
 

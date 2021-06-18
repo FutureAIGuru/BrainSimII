@@ -478,7 +478,7 @@ def select_module_combobox(page, option):
     ys = [92, 110, 130, 150, 170, 190, 210, 230, 250, 270, 290,
           310, 330, 350, 370, 390, 410]
     tk.click([1411, 67])
-    time.sleep(0.1)
+    time.sleep(0.5)
     # go to first page
     for i in range(2):
         tk.click([1460, 103])
@@ -509,35 +509,11 @@ def remove_module():
     pyautogui.rightClick([70, 150])
     return tk.wait_and_click('delete_module_item')
     
-def check_module_is_inserted_correctly(page, index, drawn_module):
-    result = True
-    insert_module(page, index)
-    if not tk.wait_and_hover(drawn_module):
-        result = False  
-    remove_module()
-    return result
-   
 def check_module_is_inserted_correctly_with_warning(page, index, drawn_module, warning):
     result = check_module_is_inserted_correctly(page, index, drawn_module)
     if not tk.wait_and_click(warning):
         result = False  
     pyautogui.press('escape')
     pyautogui.press('escape')
-    remove_module()
-    return result
-   
-def check_does_module_resize_and_undo_correctly(page, index, x_start, y_start, x_end, y_end, resized_module, drawn_module):
-    result = True
-    insert_module(page, index)
-    time.sleep(0.5)
-    tk.drag_from_to(x_start, y_start, x_end, y_end, 1)
-    harmless_click_to_focus()
-    time.sleep(3)
-    if not tk.wait_and_hover(resized_module):
-        result = False  
-    do_menu_choice('bs2_edit_menu', 'bs2_edit_undo_item_enabled')
-    harmless_click_to_focus()
-    if not tk.wait_and_hover(drawn_module):
-        result = False  
     remove_module()
     return result

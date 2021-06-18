@@ -13,7 +13,7 @@ Library   			teststeps.py
 *** Test Cases ***
 
 Are Prerequisites Taken Care Of?
-	[Tags]              Complete
+	[Tags]              Wip
 	${Result}    		Check Test Requirements
 	Should Be True		${Result}
 	

@@ -12,7 +12,7 @@ from pyscreeze import ImageNotFoundException
 import testtoolkit as tk     # the very basic routines we use from PyAutoGUI again and again.
 
 def harmless_click_to_focus():
-    return tk.click([145, 1028])
+    return tk.click(145, 1028)
 
 def check_test_requirements():
     # This function checks the requirements the test framework depends on.
@@ -81,7 +81,7 @@ def select_no_on_save_prompt():
     time.sleep(0.2)
     if tk.wait_and_hover('save_question'):
         time.sleep(0.2)
-        tk.click([975, 600])
+        tk.click(975, 600)
     return True
 
 def stop_brain_simulator():
@@ -271,10 +271,10 @@ def check_add_module_combobox():
     time.sleep(0.5)
     if not tk.wait_for_center('bs2_add_module_expanded_1'):
         return False
-    tk.click([1460, 420]) # scroll down combobox...
+    tk.click(1460, 420) # scroll down combobox...
     if not tk.wait_for_center('bs2_add_module_expanded_2'):
         return False
-    tk.click([1460, 420]) # scroll down combobox...
+    tk.click(1460, 420) # scroll down combobox...
     if not tk.wait_for_center('bs2_add_module_expanded_3'):
         return False
     return True
@@ -477,33 +477,43 @@ def check_synapse_is_drawn_correctly(weight, model, drawn_synapse):
 def select_module_combobox(page, option):
     ys = [92, 110, 130, 150, 170, 190, 210, 230, 250, 270, 290,
           310, 330, 350, 370, 390, 410]
-    tk.click([1411, 67])
+    tk.click(1411, 67)
     time.sleep(0.5)
     # go to first page
     for i in range(2):
-        tk.click([1460, 103])
+        tk.click(1460, 103)
     # go to correct page
     for i in range(page):
-        tk.click([1460, 420])
-    tk.click([1411, ys[option]])
+        tk.click(1460, 420)
+    tk.click(1411, ys[option])
     
 def select_weight_combobox(option):
     ys = [92, 110, 130, 150, 170, 190, 210, 230, 250, 270, 290]
-    tk.click([1630, 67])
+    tk.click(1630, 67)
     time.sleep(0.1)
-    tk.click([1630, ys[option]])
+    tk.click(1630, ys[option])
     
 def select_model_combobox(option):
     ys = [92, 110, 130, 150]
-    tk.click([1756, 67])
+    tk.click(1756, 67)
     time.sleep(0.1)
-    tk.click([1756, ys[option]])
+    tk.click(1756, ys[option])
 
 def insert_module(page, index):
     select_module_combobox(int(page), int(index))
     pyautogui.moveTo([95, 185])
     pyautogui.click([95, 185])
     harmless_click_to_focus()
+
+def select_module(page, screenshot):
+    # go to first page
+    for i in range(2):
+        tk.click(365, 350)
+    # go to correct page
+    for i in range(page):
+        tk.click(365, 670)
+    if not tk.wait_and_click(screenshot):
+        result = False  
 
 def remove_module():
     pyautogui.rightClick([70, 150])

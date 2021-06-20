@@ -74,7 +74,7 @@ Are Hebbian2 Synapses Drawn Correctly?
     9		3		binary_-1
 
 Are Modules Inserted Correctly?
-	[Tags]          Wip
+	[Tags]          Complete
 	[Template]		Check Module Is Inserted Correctly
 	0		0		module_2dmodel
 	0		1		module_2dsim
@@ -129,7 +129,7 @@ Are Modules Inserted Correctly With Warning?
     2		16		module_words  			requires_file
 	
 Check Do Modules Resize And Undo Correctly?
-	[Tags]          Wip
+	[Tags]          Complete
 	[Template]		Check Does Module Resize And Undo Correctly
 	0		0		${175}	${262}	${485}	${567}	sized_module_2dmodel			module_2dmodel
 	0		1		${175}	${262}	${485}	${567}	sized_module_2dsim				module_2dsim
@@ -177,3 +177,54 @@ Check Do Modules Resize And Undo Correctly?
 	2		13		${175}	${262}	${485}	${567}	sized_module_uks				module_uks
 	2		14		${175}	${262}	${485}	${567}	sized_module_uks2				module_uks2
 	2		15		${175}	${262}	${485}	${567}	sized_module_uksn				module_uksn
+
+Do Selections Convert To Modules Correctly?
+	[Tags]          Wip
+	[Template]		Check Do Selections Convert To Modules Correctly
+	${0}		${70}	${150}	${480}	${565}	mod_2dmodel				sized_module_2dmodel
+	${0}		${70}	${150}	${480}	${565}	mod_2dsim				sized_module_2dsim
+	${0}		${70}	${150}	${480}	${565}	mod_2dsmell				sized_module_2dsmell
+	# ${0}		${70}	${150}	${480}	${565}	mod_2dtouch				sized_module_2dtouch_2
+	${0}		${70}	${150}	${480}	${565}	mod_2dvision			sized_module_2dvision
+	${0}		${70}	${150}	${480}	${565}	mod_3dsim				sized_module_3dsim_2
+	${0}		${70}	${150}	${480}	${565}	mod_arm					sized_module_arm_2
+	${0}		${70}	${150}	${480}	${565}	mod_audible				sized_module_audible
+	${0}		${70}	${150}	${480}	${565}	mod_behavior			sized_module_behavior
+	${0}		${70}	${150}	${480}	${565}	mod_boundary1			sized_module_boundary1
+	# NOT DONE Because the test behaves weird. figure out later
+	##0		${70}	${150}	${480}	${565}	mod_camera				sized_module_camera
+	${0}		${70}	${150}	${480}	${565}	mod_chain				sized_module_chain
+	${0}		${70}	${150}	${480}	${565}	mod_chaincounter		sized_module_chaincounter
+	${0}		${70}	${150}	${480}	${565}	mod_colorcomponent		sized_module_colorcomponent_2
+	${0}		${70}	${150}	${480}	${565}	mod_command				sized_module_command
+	${0}		${70}	${150}	${480}	${565}	mod_event				sized_module_event
+	${1}		${70}	${150}	${480}	${565}	mod_fireoldest			sized_module_fireoldest
+	${1}		${70}	${150}	${480}	${565}	mod_gotodest			sized_module_gotodest
+	${1}		${70}	${150}	${480}	${565}	mod_graph				module_graph
+	${1}		${70}	${150}	${480}	${565}	mod_hearwords			sized_module_hearwords
+	# NOT DONE Because the test behaves weird. figure out later
+	##${1}		${70}	${150}	${480}	${565}	mod_imagefile			sized_module_imagefile
+	${1}		${70}	${150}	${480}	${565}	mod_kbdebug				sized_module_kbdebug
+	# NOT DONE Because the test behaves weird. figure out later
+	##${1}		${70}	${150}	${480}	${565}	mod_life				sized_module_life
+	${1}		${70}	${150}	${480}	${565}	mod_motor				sized_module_motor_2
+	${1}		${70}	${150}	${480}	${565}	mod_move				sized_module_move
+	${1}		${70}	${150}	${480}	${565}	mod_moveobject			sized_module_moveobject
+	${1}		${70}	${150}	${480}	${565}	mod_navigate			sized_module_navigate
+	${1}		${70}	${150}	${480}	${565}	mod_null				sized_module_null_2
+	${1}		${70}	${150}	${480}	${565}	mod_patterngenerator	sized_module_patterngenerator
+	${1}		${70}	${150}	${480}	${565}	mod_patternrecognizer	sized_module_patternrecognizer
+	${1}		${70}	${150}	${480}	${565}	mod_ratedecoder			sized_module_ratedecoder
+	${2}		${70}	${150}	${480}	${565}	mod_realitymodel		sized_module_realitymodel
+	${2}		${70}	${150}	${480}	${565}	mod_shorttermmemory		sized_module_shorttermmemory
+	${2}		${70}	${150}	${480}	${565}	mod_speakphonemes		sized_module_speakphonemes_2
+	${2}		${70}	${150}	${480}	${565}	mod_speakphonemes2		sized_module_speakphonemes2_2
+	${2}		${70}	${150}	${480}	${565}	mod_speakwords			sized_module_speakwords
+	${2}		${70}	${150}	${480}	${565}	mod_speechin			sized_module_speechin
+	${2}		${70}	${150}	${480}	${565}	mod_speechout			sized_module_speechout
+	${2}		${70}	${150}	${480}	${565}	mod_strokecenter		sized_module_strokecenter_2
+	${2}		${70}	${150}	${480}	${565}	mod_strokefinder		sized_module_strokefinder_2
+	${2}		${70}	${150}	${480}	${565}	mod_turn				sized_module_turn_2
+	# ${2}		${70}	${150}	${480}	${565}	mod_uks					sized_module_uks_2
+	${2}		${70}	${150}	${480}	${565}	mod_uks2				sized_module_uks2_2
+	${2}		${70}	${150}	${480}	${565}	mod_uksn				sized_module_uksn_2

@@ -42,18 +42,12 @@ def wait_for_center(screen_frag):
         return False
     return True
 
-def click(screen_location):
-    if screen_location is None:
-        print('click()', screen_location, 'not set')
-        return False
-    pyautogui.click(screen_location)
+def click(scrn_x, scrn_y):
+    pyautogui.click([scrn_x, scrn_y])
     return True
     
-def right_click(screen_location):
-    if screen_location is None:
-        print('right_click()', screen_location, 'not set')
-        return False
-    pyautogui.rightClick(screen_location)
+def right_click(scrn_x, scrn_y):
+    pyautogui.rightClick([scrn_x, scrn_y])
     return True
     
 def wait_and_click(screen_frag):
@@ -87,3 +81,12 @@ def wait_and_doubleclick(screen_frag):
 def drag_from_to(start_x, start_y, stop_x, stop_y, tween):
     pyautogui.moveTo(start_x, start_y)
     return pyautogui.dragTo(stop_x, stop_y, tween)
+    
+def mouse_down(x, y):
+    pyautogui.mouseDown([x, y])
+
+def mouse_up(x, y):
+    pyautogui.mouseUp([x, y])
+        
+def mouse_move_to(x, y):
+    pyautogui.moveTo([x, y])

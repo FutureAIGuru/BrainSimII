@@ -159,7 +159,7 @@ namespace BrainSimulator
                 int i = (int)cm.GetValue(SelectionNumberProperty);
                 string label = "";
                 string commandLine = "";
-                Color color = Colors.Wheat;
+                Color color = Colors.LightBlue;
                 int width = 1, height = 1;
 
                 Control cc = Utils.FindByName(cm, "AreaType");

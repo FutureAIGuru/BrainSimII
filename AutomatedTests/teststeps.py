@@ -14,68 +14,10 @@ import testtoolkit as tk     # the very basic routines we use from PyAutoGUI aga
 def harmless_click_to_focus():
     return tk.click(145, 1028)
 
-def check_test_requirements():
-    # This function checks the requirements the test framework depends on.
-    if not tk.screen_size_correct():
-        return False
-    if not tk.wait_for_center('brainsim_start'):
-        return False
-    if not tk.wait_for_center('neuronserver_start'):
-        return False
-    return True
-
 def clear_appdata():
     futureai_localappdata = os.path.join(os.getenv('LOCALAPPDATA'), 'FutureAI')
     shutil.rmtree(futureai_localappdata)
     return True
-        
-def start_brain_simulator():
-    if tk.wait_and_click('brainsim_start') == False:
-        return False
-    if tk.wait_for_center('brainsim_started') == False:
-        return False
-    if not tk.wait_for_center('brainsim_splash'):
-        return False
-    timeout = 0
-    while tk.locate_center('brainsim_splash') and timeout < 20:
-        time.sleep(1)
-        timeout += 1
-    if tk.locate_center('brainsim_splash') is not None:
-        return False
-    return True
-
-def start_brain_simulator_with_new_network():
-    start_brain_simulator()
-    do_icon_choice('bs2_icon_new_enabled')
-    if tk.wait_and_click('new_network_dialog_ok_default') == False:
-        return False
-    
-def start_brain_simulator_with_getting_started():
-    start_brain_simulator()
-    if tk.wait_for_center('getting_started') == False:
-        return False
-    pyautogui.hotkey('alt', 'F4')
-    do_menu_choice('bs2_help_menu', 'bs2_getting_started_checked')
-    harmless_click_to_focus()
-    return True
-    
-def start_brain_simulator_without_network():
-    result = True
-    if tk.wait_and_click('brainsim_start') == False:
-        return False
-    if tk.wait_for_center('brainsim_started') == False:
-        return False
-    pyautogui.keyDown('shift')
-    if not tk.wait_for_center('brainsim_splash'):
-        result = False
-    timeout = 0
-    while tk.locate_center('brainsim_splash') is None and timeout < 20:
-        time.sleep(1)
-        timeout += 1
-    if tk.wait_for_center('brainsim_splash') is None:
-        result = False
-    pyautogui.keyUp('shift')
-    return result
 
 def select_no_on_save_prompt():
     time.sleep(0.2)
@@ -84,31 +26,6 @@ def select_no_on_save_prompt():
         tk.click(975, 600)
     return True
 
-def stop_brain_simulator():
-    result = True
-    if not harmless_click_to_focus():
-        result = False
-    if not tk.wait_and_click('close_icon'):
-        result = False
-    select_no_on_save_prompt()
-    if not tk.wait_for_center('brainsim_start'):
-        result = False
-    return result
-
-def start_neuronserver():
-    if not tk.wait_and_click('neuronserver_start'):
-        return False
-    if not tk.wait_for_center('neuronserver_started'):
-        return False
-    return True
-
-def stop_neuronserver():
-    if not tk.wait_and_click('close_icon'):
-        return False
-    if not tk.wait_for_center('neuronserver_start'):
-        return False
-    return True
-    
 def check_file_menu():
     if not harmless_click_to_focus():
         return False

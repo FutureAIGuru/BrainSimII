@@ -179,7 +179,7 @@ Check Do Modules Resize And Undo Correctly?
 	2		15		${175}	${262}	${485}	${567}	sized_module_uksn				module_uksn
 
 Do Selections Convert To Modules Correctly?
-	[Tags]          Wip
+	[Tags]          Complete
 	[Template]		Check Do Selections Convert To Modules Correctly
 	${0}		${70}	${150}	${480}	${565}	mod_2dmodel				sized_module_2dmodel
 	${0}		${70}	${150}	${480}	${565}	mod_2dsim				sized_module_2dsim

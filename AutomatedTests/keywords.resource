@@ -39,6 +39,9 @@ Start Brain Simulator Without Network
 
 Start Brain Simulator With New Network
     Start Brain Simulator
+	New Network
+	
+New Network	
     ${ret_code}			Do Icon Choice		bs2_icon_new_enabled
     Should Be Equal 	${ret_code}         ${true}         no File => New not triggered
     ${ret_code}			Wait And Click		new_network_dialog_ok_default
@@ -270,7 +273,8 @@ Check Network Library Entry
     Wait And Click				${menu_item}
     Wait And Click				notes_ok_button_enabled
     Wait For Image				${relevant_part}
-
+	New Network	
+	
 Check Recent Network Entry
 	[arguments]					${menu_item} 		${tool_tip}			${relevant_part}
     Harmless Click To Focus
@@ -281,7 +285,8 @@ Check Recent Network Entry
     Wait And Click				${menu_item}
     Wait And Click				notes_ok_button_enabled
     Wait For Image				${relevant_part}
-
+	New Network	
+	
 Check Module Is Inserted Correctly
 	[arguments]			${page}   ${index}   ${drawn_module}
     Insert Module		${page}   ${index}

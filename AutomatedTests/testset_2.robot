@@ -43,27 +43,20 @@ Is BrainSim Icon Bar Showing?
 
 Are Icon Tooltips Showing?
 	[Tags]              Complete
-	${Result}			Check Icon Tooltips
-	Should Be True		${Result}
+	Check Icon Tooltips
 
 Are Icon Bar Checkboxes Showing?
 	[Tags]              Complete
-	${Result}			Check Icon Checkboxes
-	Should Be True		${Result}
+	Check Icon Checkboxes
 
 Is Add Module Combobox Showing?
 	[Tags]              Complete
-	${Result}			Check Add Module Combobox
-	Should Be True		${Result}
+	Check Add Module Combobox
 
 Is Synapse Weight Combobox Showing?
 	[Tags]              Complete
-	${Result}			Check Synapse Weight Combobox
-	Should Be True		${Result}
+	Check Synapse Weight Combobox
 
 Is Synapse Model Combobox Showing?
 	[Tags]              Complete
-	${Result}			Check Synapse Model Combobox
-	Should Be True		${Result}
-
-
+	Check Synapse Model Combobox

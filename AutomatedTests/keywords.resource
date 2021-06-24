@@ -166,6 +166,53 @@ Check Icon Bar
     Check Menu Item		bs2_icon_speed_slider					no Speed Slider icon present
     Check Menu Item		bs2_icon_add_synapse_with				no Add Synapse With section present
 
+Check Icon Tooltips
+    Harmless Click To Focus
+    Wait And Check Tooltip		bs2_icon_new_enabled			bs2_tooltip_new
+    Wait And Check Tooltip		bs2_icon_open_enabled			bs2_tooltip_open
+    Wait And Check Tooltip		bs2_icon_save_as_enabled		bs2_tooltip_save_as
+    Wait And Check Tooltip		bs2_icon_pan_enabled			bs2_tooltip_pan
+    Wait And Check Tooltip		bs2_icon_zoom_out_enabled		bs2_tooltip_zoom_out
+    Wait And Check Tooltip		bs2_icon_zoom_in_enabled		bs2_tooltip_zoom_in
+    Wait And Check Tooltip		bs2_icon_origin_enabled			bs2_tooltip_origin
+    Wait And Check Tooltip		bs2_icon_reset_enabled			bs2_tooltip_reset
+    Wait And Check Tooltip		bs2_icon_pause_enabled			bs2_tooltip_pause
+    Wait And Check Tooltip		bs2_icon_run_enabled			bs2_tooltip_run
+    Wait And Check Tooltip		bs2_icon_step_enabled			bs2_tooltip_step
+    Wait And Check Tooltip		bs2_icon_speed_slider			bs2_tooltip_speed
+    
+Check Icon Checkboxes
+    Harmless Click To Focus
+    Wait And Click				bs2_icon_all_synapses_unchecked
+    Harmless Click To Focus
+    Wait And Click				bs2_icon_all_synapses_checked
+    Wait And Click				bs2_icon_update_from_click_unchecked
+    Harmless Click To Focus
+    Wait And Click				bs2_icon_update_from_click_checked
+
+Check Add Module Combobox
+    Harmless Click To Focus
+	Wait For Image				bs2_add_module_collapsed
+    Wait And Click				bs2_add_module_collapsed
+    Sleep						0.5s
+    Wait For Image				bs2_add_module_expanded_1
+    Click						${1460}		${420}    # scroll down combobox...
+    Wait And Click				bs2_add_module_expanded_2
+    Click						${1460}		${420}    # scroll down combobox...
+    Wait And Click				bs2_add_module_expanded_3
+
+Check Synapse Weight Combobox
+    Harmless Click To Focus
+    Wait And Click				bs2_icon_weight_collapsed
+    Sleep						0.5s
+    Wait For Image				bs2_icon_weight_expanded
+    
+Check Synapse Model Combobox
+    Harmless Click To Focus
+    Wait And Click				bs2_icon_model_collapsed
+    Sleep						0.5s
+    Wait For Image				bs2_icon_model_expanded
+    
 Check Module Is Inserted Correctly
 	[arguments]			${page}   ${index}   ${drawn_module}
     Insert Module		${page}   ${index}

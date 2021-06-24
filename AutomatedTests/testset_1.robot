@@ -10,12 +10,13 @@ Documentation		This testset runs with no setup or teardown whatsoever,
 Library   			testtoolkit.py
 Library   			teststeps.py
 
+Resource			keywords.resource
+
 *** Test Cases ***
 
 Are Prerequisites Taken Care Of?
-	[Tags]              Wip
+	[Tags]              Complete
 	${Result}    		Check Test Requirements
-	Should Be True		${Result}
 	
 Can We Clear Appdata?
 	[Tags]              Complete
@@ -25,23 +26,16 @@ Can We Clear Appdata?
 # This immediately follows the above test so we can reset the checkmark.
 Can We Start Brain Simulator II with Getting Started?
 	[Tags]              Complete
-	${Result}    		Start Brain Simulator with Getting Started
-	Should Be True		${Result}
+	Start Brain Simulator with Getting Started
 
 Can We Stop Brain Simulator II?
 	[Tags]              Complete
-	${Result}    		Stop Brain Simulator
-	Should Be True		${Result}
+	Stop Brain Simulator
 
 Can We Start Neuron Server?
 	[Tags]              Complete
 	${Result}    		Start Neuron Server
-	Should Be True		${Result}
 
 Can We Stop Neuron Server?
 	[Tags]              Complete
 	${Result}    		Stop Neuron Server
-	Should Be True		${Result}
-
-
-	

@@ -12,43 +12,37 @@ Library   			teststeps.py
 
 Resource			keywords.resource
 
-Test Setup			Start Brain Simulator With New Network
+Test Setup			Start Brain Simulator Without Network
 Test Teardown		Stop Brain Simulator
 
 *** Test Cases ***
 
-Does File New Show New Network Dialog?
-	[Tags]              Complete
-	${Result}			Check File New Shows New Network Dialog
-	Should Be True		${Result}
+7Does File New Show New Network Dialog?
+	[Tags]              Complete	
+	Check File New Shows New Network Dialog
 
 Does Icon New Show New Network Dialog?
 	[Tags]              Complete
-	${Result}			Check Icon New Shows New Network Dialog
-	Should Be True		${Result}
+	Check Icon New Shows New Network Dialog
 
 Does File Open Show Network Load Dialog?
 	[Tags]              Complete
-	${Result}			Check File Open Shows Network Load Dialog
-	Should Be True		${Result}
+	Check File Open Shows Network Load Dialog
 
 Does Icon Open Show Network Load Dialog?
 	[Tags]              Complete
-	${Result}			Check Icon Open Shows Network Load Dialog
-	Should Be True		${Result}
+	Check Icon Open Shows Network Load Dialog
 
 Does File Save As Show Network Save As Dialog?
 	[Tags]              Complete
-	${Result}			Check File Save As Shows Network Save As Dialog
-	Should Be True		${Result}
+	Check File Save As Shows Network Save As Dialog
 
 Does Icon Save As Show Network Save As Dialog?
 	[Tags]              Complete
-	${Result}			Check Icon Save As Shows Network Save As Dialog
-	Should Be True		${Result}
+	Check Icon Save As Shows Network Save As Dialog
 
 Do Library Networks Load?
-	[Tags]              Complete
+	[Tags]              Wip
 	[Template]          Check Network Library Entry
     Network_BasicNeurons	  	fragment_basicneurons
     Network_HebbianSynapses   	fragment_hebbiansynapses
@@ -58,14 +52,14 @@ Do Library Networks Load?
     Network_Maze              	fragment_maze
     Network_SpeechTest        	fragment_speechtests
     Network_NeuralGraph       	fragment_neuralgraph
-    Network_Sallie            	fragment_sallie
+    # Network_Sallie            	fragment_sallie
     Network_ObjectMotion      	fragment_objectmotion
     Network_CameraTest        	fragment_cameratest
     Network_3DSim             	fragment_3dsim
     
 Do Recent Networks Load?
 	# This test assumes "Do Library Networks Load?" has been executed succesfully.
-	[Tags]              Complete
+	[Tags]              Wip
 	[Template]          Check Recent Network Entry
     Network_BasicNeurons	  	tool_tip_basicneurons			fragment_basicneurons
     Network_HebbianSynapses   	tool_tip_hebbiansynapses		fragment_hebbiansynapses
@@ -75,7 +69,7 @@ Do Recent Networks Load?
     Network_Maze              	tool_tip_maze					fragment_maze
     Network_SpeechTest        	tool_tip_speechtest 			fragment_speechtests
     Network_NeuralGraph       	tool_tip_neuralgraph			fragment_neuralgraph
-    Network_Sallie            	tool_tip_sallie					fragment_sallie
+    # Network_Sallie            	tool_tip_sallie					fragment_sallie
     Network_ObjectMotion      	tool_tip_objectmotion			fragment_objectmotion
     Network_CameraTest        	tool_tip_cameratest				fragment_cameratest
     Network_3DSim             	tool_tip_3dsim					fragment_3dsim

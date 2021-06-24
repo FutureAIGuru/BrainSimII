@@ -213,6 +213,75 @@ Check Synapse Model Combobox
     Sleep						0.5s
     Wait For Image				bs2_icon_model_expanded
     
+Check New Network Complete
+    Wait For Image				new_network_dialog_title
+    Wait For Image				new_network_dialog_textblock
+    Wait For Image				new_network_dialog_width
+    Wait For Image				new_network_dialog_height
+    Wait For Image				new_network_dialog_refractory_cycles
+    Wait For Image				new_network_dialog_use_servers_unchecked
+    Wait For Image				new_network_dialog_ok_default
+    Wait For Image				new_network_dialog_title
+    Wait And Click				new_network_dialog_cancel_enabled
+    
+Check File New Shows New Network Dialog
+    Do Menu Choice				bs2_file_menu		bs2_file_new_item
+    Check New Network Complete
+
+Check Icon New Shows New Network Dialog
+    Do Icon Choice				bs2_icon_new_enabled
+    Check New Network Complete
+
+Check Open Network Dialog Complete
+    Wait For Image				file_open_dialog_title
+    Wait For Image				file_open_dialog_filename
+    Wait For Image				file_open_dialog_filetype
+    Wait For Image				file_open_dialog_open_default
+    Wait And Click				file_open_dialog_cancel_enabled
+    
+Check File Open Shows Network Load Dialog
+    Do Menu Choice				bs2_file_menu		bs2_file_open_item
+    Check Open Network Dialog Complete
+
+Check Icon Open Shows Network Load Dialog
+    Do Icon Choice				bs2_icon_open_enabled
+    Check Open Network Dialog Complete
+
+Check Save As Dialog Complete
+    Wait For Image				save_as_dialog_title
+    Wait For Image				save_as_dialog_filename
+    Wait For Image				save_as_dialog_filetype
+    Wait For Image				save_as_dialog_save_default
+    Wait And Click				save_as_dialog_cancel_enabled
+    
+Check File Save As Shows Network Save As Dialog
+    Do Menu Choice				bs2_file_menu		bs2_file_save_as_item
+    Check Save As Dialog Complete
+
+Check Icon Save As Shows Network Save As Dialog
+    Do Icon Choice				bs2_icon_save_as_enabled
+    Check Save As Dialog Complete
+    
+Check Network Library Entry
+	[arguments]					${menu_item}		${relevant_part}
+    Harmless Click To Focus
+    Wait And Click				bs2_file_menu
+    Wait And Click				bs2_file_library_item
+    Wait And Click				${menu_item}
+    Wait And Click				notes_ok_button_enabled
+    Wait For Image				${relevant_part}
+
+Check Recent Network Entry
+	[arguments]					${menu_item} 		${tool_tip}			${relevant_part}
+    Harmless Click To Focus
+    Wait And Click				bs2_file_menu
+    Wait And Click				bs2_file_recent_item
+    Wait And Hover				${menu_item}
+    Wait For Image    			${tool_tip}
+    Wait And Click				${menu_item}
+    Wait And Click				notes_ok_button_enabled
+    Wait For Image				${relevant_part}
+
 Check Module Is Inserted Correctly
 	[arguments]			${page}   ${index}   ${drawn_module}
     Insert Module		${page}   ${index}

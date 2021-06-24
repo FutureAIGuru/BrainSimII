@@ -10,40 +10,36 @@ Documentation		This testset runs with Brain Simulator II
 Library   			testtoolkit.py
 Library   			teststeps.py
 
-Suite Setup			Start Brain Simulator Without Network
+Resource			keywords.resource
+
+Suite Setup			Start Brain Simulator With New Network
 Suite Teardown		Stop Brain Simulator
 
 *** Test Cases ***
 
 Is BrainSim File Menu Showing?
 	[Tags]              Complete
-	${Result}    		Check File Menu
-	Should Be True		${Result}
+	Check File Menu
 	
 Is BrainSim Edit Menu Showing?
 	[Tags]              Complete
-	${Result}    		Check Edit Menu
-	Should Be True		${Result}
+	Check Edit Menu
 	
 Is BrainSim Neuron Engine Menu Showing?
 	[Tags]              Complete
-	${Result}    		Check Engine Menu
-	Should Be True		${Result}
+	Check Engine Menu
 	
 Is BrainSim View Menu Showing?
 	[Tags]              Complete
-	${Result}    		Check View Menu
-	Should Be True		${Result}
+	Check View Menu
 	
 Is BrainSim Help Menu Showing?
 	[Tags]              Complete
-	${Result}    		Check Help Menu
-	Should Be True		${Result}
+	Check Help Menu
 			
 Is BrainSim Icon Bar Showing?
 	[Tags]              Complete
-	${Result}			Check Icon Bar
-	Should Be True		${Result}
+	Check Icon Bar
 
 Are Icon Tooltips Showing?
 	[Tags]              Complete

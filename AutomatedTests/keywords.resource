@@ -40,7 +40,7 @@ Start Brain Simulator Without Network
 Start Brain Simulator With New Network
     Start Brain Simulator
     ${ret_code}			Do Icon Choice		bs2_icon_new_enabled
-    Should Be Equal 	${ret_code}         ${true}         File => New not triggered
+    Should Be Equal 	${ret_code}         ${true}         no File => New not triggered
     ${ret_code}			Wait And Click		new_network_dialog_ok_default
     Should Be Equal 	${ret_code}         ${true}         New dialog not OK-ed
 	
@@ -74,7 +74,98 @@ Stop Neuronserver
     Harmless Click To Focus
     ${ret_code}			Wait For Image      neuronserver_start
     Should Be Equal 	${ret_code}         ${true}         Neuronserver did not stop
-		
+	
+Check Menu Item
+	[arguments]			${menu_item}        ${error_message}
+    ${ret_code}			Wait For Image      ${menu_item}
+    Should Be Equal 	${ret_code}         ${true}         ${error_message}
+	
+Check File Menu
+    Harmless Click To Focus
+    ${ret_code}			Wait And Click		bs2_file_menu
+    Should Be Equal 	${ret_code}         ${true}     File menu could not be clicked
+    Check Menu Item		bs2_file_new_item				no File => New present
+    Check Menu Item		bs2_file_open_item				no File => Open present
+    Check Menu Item		bs2_file_save_item_disabled 	no File => Save present
+    Check Menu Item		bs2_file_save_as_item			no File => Save As present
+    Check Menu Item		bs2_file_properties_item		no File => Properties present
+    Check Menu Item		bs2_file_no_recent_item			no File => Recent Items sub present
+    Check Menu Item		bs2_file_library_item			no File => Library sub present
+    Check Menu Item		bs2_file_exit_item				no File => Exit present
+
+Check Edit Menu
+    Harmless Click To Focus
+    ${ret_code}			Wait And Click		bs2_edit_menu
+    Should Be Equal 	${ret_code}         ${true}         	Edit menu could not be clicked
+    Check Menu Item		bs2_edit_find_module_item_disabled		no Edit => Find Module present
+    Check Menu Item		bs2_edit_find_neuron_item_disabled		no Edit => Find Neuron present
+    Check Menu Item		bs2_edit_insert_module_item             no Edit => Insert Module present
+    Check Menu Item		bs2_edit_undo_item_disabled				no Edit => Undo present
+    Check Menu Item		bs2_edit_cut_item_disabled				no Edit => Cut present
+    Check Menu Item		bs2_edit_copy_item_disabled	    		no Edit => Copy present
+    Check Menu Item		bs2_edit_paste_item_disabled			no Edit => Paste present
+    Check Menu Item		bs2_edit_delete_item_disabled			no Edit => Delete present
+    Check Menu Item		bs2_edit_move_item_disabled				no Edit => Move present
+    Check Menu Item		bs2_edit_clear_selection_item			no Edit => Clear Selection present
+    Check Menu Item		bs2_edit_select_all_disabled		    no Edit => Select All present
+    Check Menu Item		bs2_edit_load_clipboard_item			no Edit => Load Clipboard present
+    Check Menu Item		bs2_edit_save_clipboard_item_disabled	no Edit => Save Clipboard present
+    Check Menu Item		bs2_edit_notes_item						no Edit => Network Notes present
+    Check Menu Item		bs2_edit_module_descriptions_item		no Edit => Module Descriptions present
+
+Check Engine Menu
+    Harmless Click To Focus
+    ${ret_code}			Wait And Click		bs2_engine_menu
+    Check Menu Item		bs2_engine_reset_item					no Engine => Reset present
+    Check Menu Item		bs2_engine_run_item_disabled		    no Engine => Run present
+    Check Menu Item		bs2_engine_pause_item					no Engine => Pause present
+    Check Menu Item		bs2_engine_step_item					no Engine => Step present
+    Check Menu Item		bs2_engine_speed_item					no Engine => Speed present
+    Check Menu Item		bs2_engine_refractory_item				no Engine => Refractory present
+    Check Menu Item		bs2_engine_threads_item					no Engine => Threads present
+
+Check View Menu
+    Harmless Click To Focus
+    ${ret_code}			Wait And Click		bs2_view_menu
+    Check Menu Item		bs2_view_start_pan_item					no View => Start Pan present
+    Check Menu Item		bs2_view_zoom_in_item					no View => Zoom In present
+    Check Menu Item		bs2_view_zoom_out_item					no View => Zoom Out present
+    Check Menu Item		bs2_view_show_all_item					no View => Show All present
+    Check Menu Item		bs2_view_origin_item					no View => Origin present
+    Check Menu Item		bs2_view_show_synapses_unchecked	    no View Show Synapses present
+
+Check Help Menu
+    Harmless Click To Focus
+    ${ret_code}			Wait And Click		bs2_help_menu
+    Check Menu Item		bs2_help_getting_started_item			no Help => Getting Started present
+    Check Menu Item		bs2_help_register_item					no Help => Register present
+    Check Menu Item		bs2_help_contents_item					no Help => Help Contents present
+    Check Menu Item		bs2_help_report_bugs_item				no Help => Report Bugs present
+    Check Menu Item		bs2_help_facebook_item					no Help => Join Facebook present
+    Check Menu Item		bs2_help_watch_youtube_item				no Help => Watch Youtube present
+    Check Menu Item		bs2_help_about_item						no Help => About present
+    Check Menu Item		bs2_help_check_updates_item				no Help => Check Updates present
+    Check Menu Item		bs2_help_show_at_startup_unchecked		no Help => Show at Startup present
+
+Check Icon Bar
+    Harmless Click To Focus
+    Check Menu Item		bs2_icon_new_enabled					no New icon present
+    Check Menu Item		bs2_icon_open_enabled					no Open icon present
+    Check Menu Item		bs2_icon_save_disabled					no Save icon present
+    Check Menu Item		bs2_icon_save_as_enabled				no Save As icon present	
+    Check Menu Item		bs2_icon_pan_enabled					no Pan icon present
+    Check Menu Item		bs2_icon_zoom_out_enabled				no Zoom Out icon present	
+    Check Menu Item		bs2_icon_zoom_in_enabled				no Zoom In icon present	
+    Check Menu Item		bs2_icon_origin_enabled					no Origin icon present
+    Check Menu Item		bs2_icon_all_synapses_unchecked			no All Synapses icon present		
+    Check Menu Item		bs2_icon_reset_enabled					no Reset icon present
+    Check Menu Item		bs2_icon_pause_enabled					no Pause icon present
+    Check Menu Item		bs2_icon_run_enabled					no Run icon present
+    Check Menu Item		bs2_icon_step_enabled					no Step icon present
+    Check Menu Item		bs2_icon_speed_enabled					no Speed icon present
+    Check Menu Item		bs2_icon_speed_slider					no Speed Slider icon present
+    Check Menu Item		bs2_icon_add_synapse_with				no Add Synapse With section present
+
 Check Module Is Inserted Correctly
 	[arguments]			${page}   ${index}   ${drawn_module}
     Insert Module		${page}   ${index}

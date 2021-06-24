@@ -10,6 +10,8 @@ Documentation		This testset runs with Brain Simulator II
 Library   			testtoolkit.py
 Library   			teststeps.py
 
+Resource			keywords.resource
+
 Test Setup			Start Brain Simulator With New Network
 Test Teardown		Stop Brain Simulator
 

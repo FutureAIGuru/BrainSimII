@@ -58,6 +58,9 @@ def wait_for_image(screen_frag):
 def press_alt_f4():
     pyautogui.hotkey('alt', 'F4')
     
+def press_escape():
+    pyautogui.press('esc')
+    
 def key_down(key):
     pyautogui.keyDown(key)
     

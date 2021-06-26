@@ -95,12 +95,3 @@ def select_module(page, screenshot):
 def remove_module():
     pyautogui.rightClick([70, 150])
     return tk.wait_and_click('delete_module_item')
-    
-def check_module_is_inserted_correctly_with_warning(page, index, drawn_module, warning):
-    result = check_module_is_inserted_correctly(page, index, drawn_module)
-    if not tk.wait_and_click(warning):
-        result = False  
-    pyautogui.press('escape')
-    pyautogui.press('escape')
-    remove_module()
-    return result

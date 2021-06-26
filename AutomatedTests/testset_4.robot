@@ -87,7 +87,7 @@ Are Modules Inserted Correctly?
 	0		8		module_behavior
 	0		10	    module_boundary1
 	## NOT DONE Because Camera Module seems to hang the test
-	##0		11		${175}	${262}	${290}	${380}	sized_module_camera				module_camera
+	##0		11		${175}	${262}	${290}	${380}	sized_module_camera	  module_camera
 	0		12		module_chain
 	0		13		module_chaincounter
 	0		14		module_colorcomponent
@@ -122,12 +122,6 @@ Are Modules Inserted Correctly?
 	2		14		module_uks2
 	2		15		module_uksn
 	
-Are Modules Inserted Correctly With Warning?
-	[Tags]          Complete
-	[Template]		Check Module Is Inserted Correctly With Warning
-	0		9		module_boundary  		requires_image_file
-    2		16		module_words  			requires_file
-	
 Check Do Modules Resize And Undo Correctly?
 	[Tags]          Complete
 	[Template]		Check Does Module Resize And Undo Correctly
@@ -146,7 +140,7 @@ Check Do Modules Resize And Undo Correctly?
 	0		12		${112}	${198}	${485}	${567}	sized_module_chain				module_chain
 	0		13		${234}	${318}	${485}	${567}	sized_module_chaincounter		module_chaincounter
 	0		14		${112}	${378}	${485}	${567}	sized_module_colorcomponent		module_colorcomponent
-	0		15		${175}	${262}	${485}	${567}	sized_module_command			module_command
+	0		15		${112}	${198}	${485}	${567}	sized_module_command			module_command
 	0		16   	${175}	${262}	${485}	${567}	sized_module_event				module_event
 	1		0		${175}	${262}	${485}	${567}	sized_module_fireoldest			module_fireoldest
 	1		1		${238}	${262}	${485}	${567}	sized_module_gotodest			module_gotodest

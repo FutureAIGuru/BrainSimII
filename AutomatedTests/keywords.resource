@@ -19,11 +19,8 @@ Check Test Requirements
 Start Brain Simulator
     ${ret_code}			Wait And Click		brainsim_start
     Should Be Equal 	${ret_code}         ${true}         Brain Simulator II icon not on start bar
-    ${ret_code}			Wait For Image     brainsim_started
+    ${ret_code}			Wait For Image      brainsim_started
     Should Be Equal 	${ret_code}         ${true}         Brain Simulator II did not start
-    ${ret_code}			Wait For Image     brainsim_splash
-    Should Be Equal 	${ret_code}         ${true}         Splash screen is not showing
-    Wait Until Keyword Succeeds				30s     5x		Not On Screen		brainsim_splash
 
 Start Brain Simulator Without Network
 	Key Down			shift
@@ -31,11 +28,7 @@ Start Brain Simulator Without Network
     Should Be Equal 	${ret_code}         ${true}         Brain Simulator II icon not on start bar
     ${ret_code}			Wait For Image      brainsim_started
     Should Be Equal 	${ret_code}         ${true}         Brain Simulator II did not start
-    ${ret_code}			Wait For Image      brainsim_splash
-    Should Be Equal 	${ret_code}         ${true}         Splash screen is not showing
 	Key Up 				shift
-    Wait Until Keyword Succeeds				30s     5x		Not On Screen		brainsim_splash
-	Sleep				10s
 
 Start Brain Simulator With New Network
     Start Brain Simulator
@@ -258,10 +251,12 @@ Check Save As Dialog Complete
     Wait And Click				save_as_dialog_cancel_enabled
     
 Check File Save As Shows Network Save As Dialog
+	Drag From To				${100}		${100}		${200}		${200}		${1}
     Do Menu Choice				bs2_file_menu		bs2_file_save_as_item
     Check Save As Dialog Complete
 
 Check Icon Save As Shows Network Save As Dialog
+	Drag From To				${100}		${100}		${200}		${200}		${1}
     Do Icon Choice				bs2_icon_save_as_enabled
     Check Save As Dialog Complete
     
@@ -295,7 +290,7 @@ Check Module Is Inserted Correctly
     ${ret_code}			Wait And Hover		${drawn_module}
 	Should Be True		${ret_code}			original module not found on screen
     Remove Module
-   
+
 Check Does Module Resize And Undo Correctly
 	[arguments]			${page}   ${index}   ${x_start}   ${y_start}   ${x_end}   ${y_end}   ${sized_module}   ${drawn_module}
     Insert Module		${page}   ${index}

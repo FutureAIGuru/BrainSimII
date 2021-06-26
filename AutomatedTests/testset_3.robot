@@ -12,12 +12,12 @@ Library   			teststeps.py
 
 Resource			keywords.resource
 
-Test Setup			Start Brain Simulator Without Network
+Test Setup			Start Brain Simulator With New Network
 Test Teardown		Stop Brain Simulator
 
 *** Test Cases ***
 
-7Does File New Show New Network Dialog?
+Does File New Show New Network Dialog?
 	[Tags]              Complete	
 	Check File New Shows New Network Dialog
 
@@ -42,7 +42,7 @@ Does Icon Save As Show Network Save As Dialog?
 	Check Icon Save As Shows Network Save As Dialog
 
 Do Library Networks Load?
-	[Tags]              Wip
+	[Tags]              Complete
 	[Template]          Check Network Library Entry
     Network_BasicNeurons	  	fragment_basicneurons
     Network_HebbianSynapses   	fragment_hebbiansynapses
@@ -59,7 +59,7 @@ Do Library Networks Load?
     
 Do Recent Networks Load?
 	# This test assumes "Do Library Networks Load?" has been executed succesfully.
-	[Tags]              Wip
+	[Tags]              Complete
 	[Template]          Check Recent Network Entry
     Network_BasicNeurons	  	tool_tip_basicneurons			fragment_basicneurons
     Network_HebbianSynapses   	tool_tip_hebbiansynapses		fragment_hebbiansynapses

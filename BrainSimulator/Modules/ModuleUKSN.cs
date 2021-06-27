@@ -10,7 +10,13 @@ using System.Linq;
 namespace BrainSimulator.Modules
 {
     public class ModuleUKSN : ModuleUKS
-    {
+   {
+        public ModuleUKSN()
+        {
+            minHeight = 8;
+            minWidth = 8;
+        }
+
         public long immediateMemory = 2; //items are more-or-less simultaneous
         public static long shortTermMemory = 10; //items are close in time
         public override string ShortDescription => "DEPRECATED, use US2! A Knowledge Graph KB module expanded with a neuron arrays for inputs and outputs.";

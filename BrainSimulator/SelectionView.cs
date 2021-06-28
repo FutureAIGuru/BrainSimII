@@ -74,11 +74,11 @@ namespace BrainSimulator
             {
                 //get the tooltip
                 Type t = Type.GetType("BrainSimulator.Modules." + v.Name);
-                ModuleBase theModule = (Modules.ModuleBase)Activator.CreateInstance(t);
-                string toolTip = theModule.ShortDescription;
+                // ModuleBase theModule = (Modules.ModuleBase)Activator.CreateInstance(t);
+                string toolTip = t.Name;
 
                 //make the combobox entry
-                string theName = v.Name.Replace("Module", "");
+                string theName = toolTip.Replace("Module", "");
                 cb.Items.Add(new Label { Content = theName, ToolTip = toolTip, Margin = new Thickness(0), Padding = new Thickness(0) });
             }
             cb.Width = 80;
@@ -196,6 +196,12 @@ namespace BrainSimulator
                 MainWindow.theNeuronArray.AddModuleUndo(MainWindow.theNeuronArray.modules.Count, null);
                 width = MainWindow.arrayView.theSelection.selectedRectangles[i].Width;
                 height = MainWindow.arrayView.theSelection.selectedRectangles[i].Height;
+
+                if (width < tempModule.MinWidth) width = tempModule.MinWidth;
+                if (width > tempModule.MaxWidth) width = tempModule.MaxWidth;
+                if (height < tempModule.MinHeight) height = tempModule.MinHeight;
+                if (height > tempModule.MaxHeight) height = tempModule.MaxHeight;
+
                 CreateModule(label, commandLine, color, nsr.FirstSelectedNeuron, width, height);
                 MainWindow.arrayView.theSelection.selectedRectangles.RemoveAt(i);
             }

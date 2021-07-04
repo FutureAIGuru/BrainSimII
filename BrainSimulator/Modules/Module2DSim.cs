@@ -31,6 +31,12 @@ namespace BrainSimulator.Modules
         }
         public List<physObject> objects = new List<physObject>();
 
+        public Module2DSim()
+        {
+            minHeight = 3;
+            minWidth = 1;
+        }
+
         public override string ShortDescription { get => "A simulated 2D environment with obstacles"; }
         public override string LongDescription
         {
@@ -75,10 +81,6 @@ namespace BrainSimulator.Modules
         public float bodyRadius = .2f;
 
         Random rand = new Random();
-
-        public Module2DSim()
-        {
-        }
 
         float armTheta1 = 0;
         float armTheta2 = 0;

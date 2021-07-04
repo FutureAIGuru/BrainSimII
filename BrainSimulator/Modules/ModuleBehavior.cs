@@ -25,6 +25,8 @@ namespace BrainSimulator.Modules
         {
             minWidth = 11;
             minHeight = 1;
+            maxWidth = 11;
+            maxHeight = 1;
         }
 
         public enum TheBehavior { Rest, Move, Turn };

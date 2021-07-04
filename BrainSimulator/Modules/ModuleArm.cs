@@ -17,6 +17,8 @@ namespace BrainSimulator.Modules
         {
             minHeight = 1;
             minWidth = 6;
+            maxHeight = 1;
+            maxWidth = 6;
         }
 
         public override string ShortDescription { get => "A module to form one of Sallie's arms"; }

@@ -16,6 +16,12 @@ namespace BrainSimulator.Modules
 
         List<Thing> activeSequences = new List<Thing>();
 
+        public ModuleUKS2()
+        {
+            minHeight = 8;
+            minWidth = 8;
+        }
+
         //once for each cycle of the engine
         public override void Fire()
         {

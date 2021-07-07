@@ -18,6 +18,12 @@ namespace BrainSimulator.Modules
 
         int anyNewWords = 0;
 
+        public ModuleSpeechOut()
+        {
+            minHeight = 4;
+            minWidth = 3;
+        }
+
         public override string ShortDescription { get => "Uses OS speech synhesis to speak words."; }
         public override string LongDescription
         {

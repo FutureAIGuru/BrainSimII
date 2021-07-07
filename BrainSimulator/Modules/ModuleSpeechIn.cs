@@ -16,6 +16,12 @@ namespace BrainSimulator.Modules
     {
         SpeechRecognitionEngine recognizer = null;
 
+        public ModuleSpeechIn()
+        {
+            minHeight = 4;
+            minWidth = 3;
+        }
+
         //keeps the temporary phrase so it can be recognized across multiple engine cycles
         private List<string> words = new List<string>();
 

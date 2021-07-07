@@ -67,17 +67,23 @@ namespace BrainSimulator.Modules
                         valueNeuron.AddSynapse(liveNeuron.Id, .4f);
                     }
                     catch { }
-                    //add live & die synapses to the 8 surrounding neurons
+                    // add live & die synapses to the 8 surrounding neurons
+                    // may be better to rewrite this without relying on try catch blocks. 
+                    // bottom row
                     try { valueNeuron.AddSynapse(na.GetNeuronAt(x + 2, y).Id, .4f); } catch { }
                     try { valueNeuron.AddSynapse(na.GetNeuronAt(x + 2, y + 1).Id, .3f); } catch { }
                     try { valueNeuron.AddSynapse(na.GetNeuronAt(x + 2, y + 2).Id, .4f); } catch { }
                     try { valueNeuron.AddSynapse(na.GetNeuronAt(x + 2, y + 2 + 1).Id, .3f); } catch { }
                     try { valueNeuron.AddSynapse(na.GetNeuronAt(x + 2, y - 2).Id, .4f); } catch { }
                     try { valueNeuron.AddSynapse(na.GetNeuronAt(x + 2, y - 2 + 1).Id, .3f); } catch { }
+
+                    // middle row
                     try { valueNeuron.AddSynapse(na.GetNeuronAt(x, y + 2).Id, .4f); } catch { }
                     try { valueNeuron.AddSynapse(na.GetNeuronAt(x, y + 2 + 1).Id, .3f); } catch { }
                     try { valueNeuron.AddSynapse(na.GetNeuronAt(x, y - 2).Id, .4f); } catch { }
                     try { valueNeuron.AddSynapse(na.GetNeuronAt(x, y - 2 + 1).Id, .3f); } catch { }
+
+                    // top row
                     try { valueNeuron.AddSynapse(na.GetNeuronAt(x - 2, y).Id, .4f); } catch { }
                     try { valueNeuron.AddSynapse(na.GetNeuronAt(x - 2, y + 1).Id, .3f); } catch { }
                     try { valueNeuron.AddSynapse(na.GetNeuronAt(x - 2, y + 2).Id, .4f); } catch { }

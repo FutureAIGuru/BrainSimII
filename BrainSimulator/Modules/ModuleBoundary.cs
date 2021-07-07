@@ -57,15 +57,16 @@ namespace BrainSimulator.Modules
             }
 
             theNeuronArray.GetNeuronLocation(na.FirstNeuron, out int col, out int row);
-            if (col + naSource.Width*6 >= theNeuronArray.Cols ||
-                row + naSource.Height >= theNeuronArray.rows)
+
+            na.Width = naSource.Width * 6;
+            na.Height = naSource.Height;
+
+            if (col + na.Width >= theNeuronArray.Cols ||
+                row + na.Height >= theNeuronArray.rows)
             {
                 MessageBox.Show(na.Label + " would exceed neuron array boundaries.");
                 return;
             }
-
-            na.Width = naSource.Width * 6;
-            na.Height = naSource.Height;
 
             //Up Down Left Right angles: UL DR UR DL
             for (int x = 0; x < naSource.Width; x++)

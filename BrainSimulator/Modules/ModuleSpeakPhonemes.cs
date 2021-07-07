@@ -16,6 +16,12 @@ namespace BrainSimulator.Modules
 {
     public class ModuleSpeakPhonemes : ModuleBase
     {
+        public ModuleSpeakPhonemes()
+        {
+            minHeight = 8;
+            minWidth = 8;
+        }
+
         SpeechSynthesizer synth = null;
         string phraseToSpeak = "";
 

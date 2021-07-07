@@ -25,6 +25,14 @@ namespace BrainSimulator.Modules
 
         Thing currentText = null;
 
+        public ModuleAudible()
+        {
+            minHeight = 2;
+            minWidth = 2;
+            maxHeight = 2;
+            maxWidth = 2;
+        }
+
         public override string ShortDescription { get => "TO DO: Short description of Module Audible."; }
         public override string LongDescription
         {

@@ -19,6 +19,12 @@ namespace BrainSimulator.Modules
         string phraseToSpeak = "";
         bool validating = false;
 
+        public ModuleSpeakPhonemes2()
+        {
+            minHeight = 5;
+            minWidth = 3;
+        }
+
         public override string ShortDescription { get => "Uses OS speech synhesis to say phonemes."; }
         public override string LongDescription
         {

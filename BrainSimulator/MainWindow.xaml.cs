@@ -71,18 +71,25 @@ namespace BrainSimulator
 #if !DEBUG
             AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) =>
                 {
-                    string message = eventArgs.ExceptionObject.ToString();
+                    string message = "Brain Simulator encountered an error--";
+                    Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+                    DateTime buildDate = new DateTime(2000, 1, 1).AddDays(version.Build).AddSeconds(version.Revision * 2);
+                    message += "\r\nVersion: " + $"{version.Major}.{version.Minor}.{version.Build}   ({buildDate})";
+                    message += "\r\n.exe location: " + System.Reflection.Assembly.GetExecutingAssembly().Location;
+                    message += "\r\nPROGRAM WILL EXIT  (this message copied to clipboard)";
+
+                    message += "\r\n\r\n"+ eventArgs.ExceptionObject.ToString();
+                 
                     System.Windows.Forms.Clipboard.SetText(message);
-                    int i = message.IndexOf("stack trace");
-                    if (i > 0)
-                        message = message.Substring(0, i + 16);
-                    message += "\r\nPROGRAM WILL EXIT  (stack trace copied to clipboard)";
                     MessageBox.Show(message);
                     Application.Current.Shutdown(255);
                 };
 #endif
 
             engineThread = new Thread(new ThreadStart(EngineLoop)) { Name = "EngineThread" };
+
+            //testing of crash message...
+            //throw new FileNotFoundException();
 
             InitializeComponent();
 

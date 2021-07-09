@@ -214,7 +214,10 @@ namespace BrainSimulator
             ModuleView mv = new ModuleView(firstNeuron, width, height, label, commandLine, Utils.ColorToInt(color));
             if (mv.Width < mv.TheModule.MinWidth) mv.Width = mv.TheModule.MinWidth;
             if (mv.Height < mv.TheModule.MinHeight) mv.Height = mv.TheModule.MinHeight;
-            MainWindow.theNeuronArray.modules.Add(mv);
+            lock (MainWindow.theNeuronArray.modules)
+            {
+                MainWindow.theNeuronArray.modules.Add(mv);
+            }
             MainWindow.SuspendEngine();
             mv.TheModule.SetModuleView();
             mv.TheModule.Initialize();

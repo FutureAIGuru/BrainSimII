@@ -154,7 +154,6 @@
     <Compile Include="Modules\ModuleStrokeFinderDlg.xaml.cs">
       <DependentUpon>ModuleStrokeFinderDlg.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\ModuleAudible.cs" />
     <Compile Include="Modules\ModuleBoundary1.cs" />
     <Compile Include="Modules\ModuleEvent.cs" />
     <Compile Include="Modules\ModuleFireOldest.cs" />
@@ -167,7 +166,6 @@
     <Compile Include="Modules\ModuleWords.cs" />
     <Compile Include="Modules\ModuleSpeakPhonemes.cs" />
     <Compile Include="Modules\ModuleSpeakPhonemesDlg.xaml.cs" />
-    <Compile Include="Modules\ModuleUKS2.cs" />
     <Compile Include="Modules\ModuleUKSN.cs" />
     <Compile Include="Modules\ModuleUKSDlg.xaml.cs">
       <DependentUpon>ModuleUKSDlg.xaml</DependentUpon>
@@ -207,10 +205,6 @@
     <Compile Include="Modules\ModuleMotor.cs" />
     <Compile Include="Modules\ModuleNull.cs" />
     <Compile Include="Modules\ModuleRealityModel.cs" />
-    <Compile Include="Modules\ModuleSpeakPhonemes2.cs" />
-    <Compile Include="Modules\ModuleSpeakPhonemes2Dlg.xaml.cs">
-      <DependentUpon>ModuleSpeakPhonemes2Dlg.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Modules\ModuleSpeakWords.cs" />
     <Compile Include="NeuronArrayViewMouseActions.cs" />
     <Compile Include="SelectionView.cs" />
@@ -326,10 +320,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Modules\ModuleKBDebugDlg.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Modules\ModuleSpeakPhonemes2Dlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

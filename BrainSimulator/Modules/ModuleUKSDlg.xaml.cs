@@ -55,10 +55,10 @@ namespace BrainSimulator.Modules
             {
                 string thingLabel = LeftOfColon(tvi.Header.ToString()).Trim();
                 ModuleUKS parent = (ModuleUKS)base.ParentModule;
-                if (parent.FindModuleByType(typeof(ModuleAudible)) is ModuleAudible mda)
-                {
-                    mda.SpeakThing(thingLabel);
-                }
+                //if (parent.FindModuleByType(typeof(ModuleAudible)) is ModuleAudible mda)
+                //{
+                //    mda.SpeakThing(thingLabel);
+                //}
                 //textBox1.Text = LeftOfColon(tvi.Header.ToString());
                 //Button_Click(null, null);
                 e.Handled = true;

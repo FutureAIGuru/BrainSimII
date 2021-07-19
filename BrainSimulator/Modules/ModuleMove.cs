@@ -7,13 +7,6 @@ namespace BrainSimulator.Modules
 {
     public class ModuleMove : ModuleBase
     {
-        public override string ShortDescription { get => "Moves the entity within the simulator"; }
-        public override string LongDescription
-        {
-            get => "The outer neurons can move the entity by pre-programmed amounts. It always moves forward or back relative to the direction it is headed.\n\r" +
-                "The center neuron can be applied with any float value to move the entity by a specified amount.\n\r" +
-                "Other modules such as Simulator and Model are informed directly of the motiion. When the Simulator is informed, a collision may cancel the requested motion.";
-        }
 
         public ModuleMove()
         {

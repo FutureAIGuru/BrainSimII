@@ -12,12 +12,6 @@ namespace BrainSimulator.Modules
     {
         private List<string> words = new List<string>();
 
-        public override string ShortDescription { get => "TO DO: Short description of Module HearWords."; }
-        public override string LongDescription
-        {
-            get =>
-                "TO DO: Long description of Module HearWords.";
-        }
 
         public override void Fire()
         {

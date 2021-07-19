@@ -31,9 +31,6 @@ namespace BrainSimulator.Modules
             maxWidth = 100;
         }
 
-        public override string ShortDescription { get => "[Short Description Here]"; }
-        public override string LongDescription { get => "[Long Description Here]"; }
-
 
         //fill this method in with code which will execute
         //once for each cycle of the engine

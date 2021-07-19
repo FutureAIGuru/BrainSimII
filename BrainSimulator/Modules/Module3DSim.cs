@@ -24,16 +24,6 @@ namespace BrainSimulator.Modules
         [XmlIgnore]
         public bool renderDone = false;
 
-        public override string ShortDescription { get => "A simulated 3D environment with obstacles"; }
-        public override string LongDescription
-        {
-            get =>
-                "This module uses no neurons of its own but fires neurons in various sensory modules if they are in the network. It has methods (Move and Turn and potentially others) " +
-                "which can be called by other modules to move its point of view around the simulation. " +
-                "This is still largely experimental, more progress has been made in the 2DSim module."
-                ;
-        }
-
         //fill this method in with code which will execute
         //once for each cycle of the engine
         public override void Fire()

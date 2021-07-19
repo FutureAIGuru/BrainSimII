@@ -31,9 +31,6 @@ namespace BrainSimulator.Modules
             maxWidth = 3;
         }
 
-        public override string ShortDescription { get => "Short Term memory, expends no energy for unlimited duration"; }
-        public override string LongDescription { get => "Data is entered by firing the 'I' neurons. When 'Rd' is fired, data will be present on the 'O' neurons. "; }
-
 
         //fill this method in with code which will execute
         //once for each cycle of the engine

@@ -14,17 +14,7 @@ namespace BrainSimulator.Modules
     {
         public static float fieldOfView = (float)(PI / 2);
         public static float eyeOffset = .2f;
-        public override string ShortDescription { get => "Retinae"; }
-        public override string LongDescription
-        {
-            get =>
-                "This module has 2 rows of neurons representing the retinal views of the right and left eyes. It receives input from the 2DSim module " +
-                "and finds points of interest which are color boundaries. Based on the difference in position of these boundaries in the two eyes, " +
-                "it estimates the distance (depth perception) of the point and passes this information to the model. As depths are approximate, " +
-                "it enters these as 'possible' points.\r\n" +
-                "";
-        }
-
+        
 
         public Module2DVision()
         {

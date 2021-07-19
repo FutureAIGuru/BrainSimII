@@ -55,7 +55,7 @@ namespace BrainSimulator
                     }
                 }
             }
-            catch 
+            catch
             {
                 retVal = false;
             }
@@ -108,8 +108,17 @@ namespace BrainSimulator
             theNeuronArray = new NeuronArray();
 
             XmlSerializer reader1 = new XmlSerializer(typeof(NeuronArray), GetModuleTypes());
-            theNeuronArray = (NeuronArray)reader1.Deserialize(file);
-            //file.Close();
+            try
+            {
+                theNeuronArray = (NeuronArray)reader1.Deserialize(file);
+            }
+            catch (Exception e)
+            {
+                file.Close();
+                MessageBox.Show("Network file load failed, a blank network will be opened. \r\n\r\n"+e.InnerException);
+                MainWindow.thisWindow.SetProgress(100,"");
+                return false;
+            }
 
             file.Position = 0;
             //the above automatically loads the content of the neuronArray object but can't load the neurons themselves
@@ -234,7 +243,7 @@ namespace BrainSimulator
         {
             return CanWriteTo(fileName, out _);
         }
-        public static bool CanWriteTo(string fileName,out string message)
+        public static bool CanWriteTo(string fileName, out string message)
         {
             FileStream file1;
             message = "";
@@ -263,7 +272,7 @@ namespace BrainSimulator
             string tempFile = "";
             bool fromClipboard = fileName == "ClipBoard";
             if (!fromClipboard)
-            {            
+            {
                 //Check for file access
                 if (!CanWriteTo(fileName, out string message))
                 {
@@ -316,7 +325,7 @@ namespace BrainSimulator
                 if (fromClipboard) n.Owner = theNeuronArray;
                 if (n.inUse || n.Label != "" || fromClipboard)
                 {
-                    n = theNeuronArray.GetCompleteNeuron(i,fromClipboard);
+                    n = theNeuronArray.GetCompleteNeuron(i, fromClipboard);
                     n.Owner = theNeuronArray;
                     string label = n.Label;
                     if (n.ToolTip != "") label += Neuron.toolTipSeparator + n.ToolTip;

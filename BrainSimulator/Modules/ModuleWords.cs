@@ -46,13 +46,6 @@ namespace BrainSimulator.Modules
 
         Dictionary<string, int> wordDictionary = new Dictionary<string, int>();
 
-        public override string ShortDescription { get => "Read a .txt file and load the words into a TO DO: Short description of Module Words."; }
-        public override string LongDescription
-        {
-            get =>
-                "TO DO: Long description of Module Words.";
-        }
-
         private void AddSynapse(string word, string nextWord)
         {
             word = TrimPunctuation(word);

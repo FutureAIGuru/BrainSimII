@@ -7,14 +7,6 @@ namespace BrainSimulator.Modules
 {
     public class ModuleMotor : ModuleBase
     {
-        public override string ShortDescription { get => "The Motor module controls an electric motor"; }
-        public override string LongDescription
-        {
-            get =>
-                "This module will in time be functioning as a motor controller, allowing for movement of " +
-                "wheels or limbs";
-        }
-
         public ModuleMotor()
         {
             minHeight = 6;

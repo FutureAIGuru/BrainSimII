@@ -27,19 +27,6 @@ namespace BrainSimulator.Modules
         float targetWeightNeg = 0;
         int maxTries = 4;
 
-        public override string ShortDescription => "Decodes input patterns from an input array.";
-        public override string LongDescription => "With 'Learning' not firing:\n" +
-            "'RdOut' fires periodically to request data from inputs. Synapse weights are fixed. Based on" +
-            "the learning algorithm, synapses are typically set so that a perfrect pattern match will fire "+
-            "on the first cycle and 1, 2, and 3-bit errors will fire on the subsequent cycles. \n\n"+
-            "With 'Learning' firing:\n" +
-            "If no recognition neuron spikes after 'RdOut,' a neuron is selected to represent the new pattern  " +
-            "and Hebbian synapses begin learning the new pattern.\n\n" +
-            "To Set up: \n" +
-            "Add synapses from various input sources to 'P0'. The system will automatically add " +
-            "input synapses from all labeled neurons below the input synapses added. Add a synapse from" +
-            "'RdOut' to each neuron which enables inputs so this module.";
-
 
         //fill this method in with code which will execute
         //once for each cycle of the engine

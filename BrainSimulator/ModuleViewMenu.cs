@@ -29,17 +29,17 @@ namespace BrainSimulator
             mi.Header = "Delete";
             mi.Click += Mi_Click;
             cm.Items.Add(mi);
+
             mi = new MenuItem();
             mi.Header = "Initialize";
             mi.Click += Mi_Click;
             cm.Items.Add(mi);
+
             mi = new MenuItem();
-            if (nr.TheModule.ShortDescription != null || nr.TheModule.LongDescription != null)
-            {
-                mi.Header = "Info...";
-                mi.Click += Mi_Click;
-                cm.Items.Add(mi);
-            }
+            mi.Header = "Info...";
+            mi.Click += Mi_Click;
+            cm.Items.Add(mi);
+
             sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
             sp.Children.Add(new Label { Content = "Width: ", VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) });
             TextBox tb0 = new TextBox { Text = nr.Width.ToString(), Width = 60, Name = "AreaWidth", VerticalAlignment = VerticalAlignment.Center };

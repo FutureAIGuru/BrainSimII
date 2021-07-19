@@ -21,13 +21,6 @@ namespace BrainSimulator.Modules
             maxWidth = 6;
         }
 
-        public override string ShortDescription { get => "A module to form one of Sallie's arms"; }
-        public override string LongDescription
-        {
-            get =>
-                "TO DO: Long description of the Arm module."
-                ;
-        }
 
         //fill this method in with code which will execute
         //once for each cycle of the engine

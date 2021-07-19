@@ -9,13 +9,6 @@ namespace BrainSimulator.Modules
 {
     public class ModuleTurn : ModuleBase
     {
-        public override string ShortDescription { get => "Rotates the entity within the simulator"; }
-        public override string LongDescription
-        {
-            get => "The outer neurons can rotate the entity by pre-programmed amounts.\n\r" +
-                "The center neuron can be applied with any float value to rotate the entity by a specified amount." +
-                "Other modules such as Simulator and Model are informed directly of the rotation.";
-        }
 
         public ModuleTurn()
         {

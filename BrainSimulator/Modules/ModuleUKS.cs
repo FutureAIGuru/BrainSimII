@@ -18,18 +18,18 @@ namespace BrainSimulator.Modules
         //break circular links by storing index values instead of actual links Note the use of SThing instead of Thing
         public List<SThing> UKSTemp = new List<SThing>();
 
-        public override string ShortDescription { get => "Universal Knowledge Store for storing linked knowledge data"; }
-        public override string LongDescription
-        {
-            get => "This module uses no neurons but can be called directly by other modules.\n\r" +
-"Within the Knowledge Store, everything is a 'Thing' (see the source code for the 'Thing' object). Things may have parents, children, " +
-"references to other Things, and a 'value' which can be " +
-"any .NET object (with Color and Point being implemented). " +
-"It can search by value with an optional tolerance. A reference to another thing is done with a 'Link' " +
-"which is a thing with an attached weight which can be examined and/or modified.\n\r " +
-"Note that the Knowledge store is a bit like a neural network its own right if we consider a node to be a neuron " +
-"and a link to be a synapse.";
-        }
+//        public override string ShortDescription { get => "Universal Knowledge Store for storing linked knowledge data"; }
+//        public override string LongDescription
+//        {
+//            get => "This module uses no neurons but can be called directly by other modules.\n\r" +
+//"Within the Knowledge Store, everything is a 'Thing' (see the source code for the 'Thing' object). Things may have parents, children, " +
+//"references to other Things, and a 'value' which can be " +
+//"any .NET object (with Color and Point being implemented). " +
+//"It can search by value with an optional tolerance. A reference to another thing is done with a 'Link' " +
+//"which is a thing with an attached weight which can be examined and/or modified.\n\r " +
+//"Note that the Knowledge store is a bit like a neural network its own right if we consider a node to be a neuron " +
+//"and a link to be a synapse.";
+//        }
 
         public override void Fire()
         {

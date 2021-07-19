@@ -11,19 +11,19 @@ namespace BrainSimulator.Modules
 {
     public class ModuleCommand : ModuleBase
     {
-        public override string ShortDescription { get => "Reads neuron firing instructions from a file"; }
-        public override string LongDescription
-        {
-            get =>
-                "For testing purposes, this module reads a script file with a direction to fire specific neurons in the network. " +
-                "You can edit the script file in the dialog box. \r\n\r\n" +
-                "Format / commands:\r\n" +
-                "In general, the format to fire a neuron is '[moduleLabel:] [neuronLabel]...[neuronLabel]\r\n" +
-                "Every line in the file represents an engine cycle so commands on the same line execute in the same cycle.\r\n" +
-                "Commands may be entered on full lines if they contain '//'\r\n" +
-                "The 'WaitFor' command which pauses execution until the specified neuron fires.\r\n" +
-                "The 'Stop' command aborts execution at the line in the file...useful for executing just the first lines of a file.";
-        }
+        //public override string ShortDescription { get => "Reads neuron firing instructions from a file"; }
+        //public override string LongDescription
+        //{
+        //    get =>
+        //        "For testing purposes, this module reads a script file with a direction to fire specific neurons in the network. " +
+        //        "You can edit the script file in the dialog box. \r\n\r\n" +
+        //        "Format / commands:\r\n" +
+        //        "In general, the format to fire a neuron is '[moduleLabel:] [neuronLabel]...[neuronLabel]\r\n" +
+        //        "Every line in the file represents an engine cycle so commands on the same line execute in the same cycle.\r\n" +
+        //        "Commands may be entered on full lines if they contain '//'\r\n" +
+        //        "The 'WaitFor' command which pauses execution until the specified neuron fires.\r\n" +
+        //        "The 'Stop' command aborts execution at the line in the file...useful for executing just the first lines of a file.";
+        //}
 
         public string textFile = ""; //path to the text file
         [XmlIgnore]

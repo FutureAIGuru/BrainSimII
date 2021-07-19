@@ -20,13 +20,6 @@ namespace BrainSimulator.Modules
         bool doFaceSegment = false;
         bool doBackOff = false;
 
-        public override string ShortDescription { get => "This module moves objects."; }
-        public override string LongDescription
-        {
-            get =>
-                "This module can move objects around in the simulated worlds.";
-        }
-
         public override void Fire()
         {
             Init();  //be sure to leave this here

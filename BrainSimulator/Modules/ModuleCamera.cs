@@ -30,13 +30,6 @@ namespace BrainSimulator.Modules
         [XmlIgnore]
         public BitmapImage theDlgBitMap = null;
 
-        public override string ShortDescription { get => "Module Camera turns camera input into neurons."; }
-        public override string LongDescription
-        {
-            get =>
-                "The module Camera is a module for translating the signals from an attached camera into a rectangular " +
-                "field of Color Neurons, which show the camera image.";
-        }
 
         public override void Fire()
         {

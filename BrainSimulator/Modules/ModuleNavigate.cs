@@ -32,14 +32,6 @@ namespace BrainSimulator.Modules
         //we use this to create a random selection of behaviors
         Random rand = new Random((int)DateTime.Now.Ticks);
 
-        public override string ShortDescription { get => "Navigates a Maze."; }
-        public override string LongDescription
-        {
-            get =>
-                "The module Navigate has specific code to navigate a maze in the simulated world, " +
-                "and perhaps one day in the real world.";
-        }
-
         public override void Fire()
         {
             Init();  //be sure to leave this here

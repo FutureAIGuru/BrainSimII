@@ -21,13 +21,6 @@ namespace BrainSimulator.Modules
         //[XlmIgnore] 
         //public theStatus = 1;
 
-        public override string ShortDescription { get => "Finds the boundaries in an imagefile module image."; }
-        public override string LongDescription
-        {
-            get =>
-                "TO DO: Long description of Module Boundary.";
-        }
-
         //fill this method in with code which will execute
         //once for each cycle of the engine
         public override void Fire()

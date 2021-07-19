@@ -33,13 +33,6 @@ namespace BrainSimulator.Modules
             maxWidth = 2;
         }
 
-        public override string ShortDescription { get => "TO DO: Short description of Module Audible."; }
-        public override string LongDescription
-        {
-            get =>
-                "TO DO: Long description of Module Audible.";
-        }
-
         public override void Fire()
         {
             Init();  //be sure to leave this here
@@ -77,7 +70,7 @@ namespace BrainSimulator.Modules
             //add incoming phonemes to short-term memory and do more processing 
             //if there is a new phoneme, add it to short-term memory
             //TODO: handle phonemes as they come in rather than waiting for a pause
-            Debug.Assert(phonemes.Count < 2);
+           //Debug.Assert(phonemes.Count < 2);
             if (phonemes.Count == 1)
             {
                 Thing phoneme = phonemes[0];

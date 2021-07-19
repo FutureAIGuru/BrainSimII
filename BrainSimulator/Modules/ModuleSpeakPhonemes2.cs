@@ -25,14 +25,6 @@ namespace BrainSimulator.Modules
             minWidth = 3;
         }
 
-        public override string ShortDescription { get => "Uses OS speech synhesis to say phonemes."; }
-        public override string LongDescription
-        {
-            get =>
-                "This module uses the onboard OS Speech synthesis to speak (strings of) phonemes, " +
-                "thus building words and sentences.";
-        }
-
         public override void Fire()
         {
             Init();  //be sure to leave this here

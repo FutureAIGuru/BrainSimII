@@ -12,13 +12,6 @@ namespace BrainSimulator.Modules
         //[XlmIgnore] 
         //public theStatus = 1;
 
-        public override string ShortDescription { get => "This module implements the Game of Life."; }
-        public override string LongDescription
-        {
-            get =>
-                "With this module it is possible to show Conway's Game of Life implemented in neurons and synapses.";
-        }
-
         //fill this method in with code which will execute
         //once for each cycle of the engine
         public override void Fire()

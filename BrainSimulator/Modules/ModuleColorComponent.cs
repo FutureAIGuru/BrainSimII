@@ -28,15 +28,6 @@ namespace BrainSimulator.Modules
             maxWidth = 1;
         }
 
-        public override string ShortDescription { get => "Module ColorComponent breaks a color into components."; }
-        public override string LongDescription
-        {
-            get =>
-                "The ColorComponent module has four labeled nerons that have the values of the red, green, blue and " +
-                "intensity values of a color that is fed in. This somewhat emulates the signals which would be generated " +
-                "by cells in the retina. In the context menu, you can change the number of discrete levels which an individual color " +
-                "neuron may take and the amount of jitter in the signal";
-        }
 
         float min = 4; // replace with refractory period
         float steps = 4;

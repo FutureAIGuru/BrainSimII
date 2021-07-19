@@ -33,16 +33,6 @@ namespace BrainSimulator.Modules
         int cCount = 0;
         int mCount = 0;
 
-        public override string ShortDescription { get => "Maintains an internal representation of surrounding things"; }
-        public override string LongDescription
-        {
-            get =>
-                "This module receives input from the Touch and Vision modules and merges the information to maintain a representation of " +
-                "physical objects in the entity's environment. It also supports imagination via the temporary addition of imagined objects " + "" +
-                "and the temporary change in point of view.\r\n" +
-                "\r\n" +
-                "";
-        }
 
         public Module2DModel()
         {

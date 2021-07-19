@@ -34,14 +34,6 @@ namespace BrainSimulator.Modules
             maxWidth = 3;
         }
 
-        public override string ShortDescription { get => "Decode seriel input into single firings of an neuron array"; }
-        public override string LongDescription { get => "Assuming 1ms cycle and 4ms refractory, this module can differentiate serial input "+
-                "by measuring the time between adjascent spikes in an input stream. The number of different levels detected is controlled " +
-                "by the height of the module and it detects different interspike timings in 1ms intervals. " +
-                "" 
-                ;
-        }
-
 
         //fill this method in with code which will execute
         //once for each cycle of the engine

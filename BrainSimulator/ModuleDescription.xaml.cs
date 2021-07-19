@@ -62,28 +62,28 @@ namespace BrainSimulator
         public static string GetToolTip(string moduleName)
         {
             if (theModuleDescriptions == null) Load();
-            if (theModuleDescriptions.Count == 0) GetLegacyDescriptions();
+            //if (theModuleDescriptions.Count == 0) GetLegacyDescriptions();
             ModuleDescription desc = theModuleDescriptions.Find(t => t.moduleName == moduleName);
             if (desc != null) return desc.toolTip;
             return "";
         }
 
         //for backward compatibility;
-        private static void GetLegacyDescriptions()
-        {
-            var modules = Utils.GetArrayOfModuleTypes();
+        //private static void GetLegacyDescriptions()
+        //{
+        //    var modules = Utils.GetArrayOfModuleTypes();
 
-            foreach (var v in modules)
-            {
-                //get the tooltip
-                Type t = Type.GetType("BrainSimulator.Modules." + v.Name);
-                Modules.ModuleBase aModule = (Modules.ModuleBase)Activator.CreateInstance(t);
-                string toolTip = aModule.ShortDescription;
-                string description = aModule.LongDescription;
-                ModuleDescription desc = new ModuleDescription { moduleName = t.Name, description = description, toolTip = toolTip, };
-                theModuleDescriptions.Add(desc);
-            }
-        }
+        //    foreach (var v in modules)
+        //    {
+        //        //get the tooltip
+        //        Type t = Type.GetType("BrainSimulator.Modules." + v.Name);
+        //        Modules.ModuleBase aModule = (Modules.ModuleBase)Activator.CreateInstance(t);
+        //        string toolTip = aModule.ShortDescription;
+        //        string description = aModule.LongDescription;
+        //        ModuleDescription desc = new ModuleDescription { moduleName = t.Name, description = description, toolTip = toolTip, };
+        //        theModuleDescriptions.Add(desc);
+        //    }
+        //}
 
         public static void SetToolTip(string moduleName, string theDescription)
         {

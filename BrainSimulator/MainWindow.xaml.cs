@@ -209,7 +209,7 @@ namespace BrainSimulator
                 string moduleName = moduleType.Name;
                 moduleName = moduleName.Replace("Module", "");
                 Modules.ModuleBase theModule = (Modules.ModuleBase)Activator.CreateInstance(moduleType);
-                string toolTip = theModule.ShortDescription;
+                string toolTip = ModuleDescriptionFile.GetToolTip(moduleType.Name);
 
                 MenuItem mi = new MenuItem { Header = moduleName, ToolTip = toolTip, };
                 mi.Click += InsertModule_Click;

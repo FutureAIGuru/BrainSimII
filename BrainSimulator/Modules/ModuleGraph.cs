@@ -13,12 +13,6 @@ namespace BrainSimulator.Modules
         string[] cols = { "in", "thing", "this", "parent", "child", "attrib", "allAttr", "anyAttr", "match", "next", "nMtch", "head", "alt", "recur", "out", "say", "0" };
         string theInPhrase = "";
 
-        public override string ShortDescription { get => "TO DO: Short description of Module Graph."; }
-        public override string LongDescription
-        {
-            get =>
-                "TO DO: Long description of Module Graph.";
-        }
 
         public ModuleGraph()
         {

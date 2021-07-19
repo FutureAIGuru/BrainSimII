@@ -10,15 +10,6 @@ namespace BrainSimulator.Modules
 {
     public class Module2DTouch : ModuleBase
     {
-        public override string ShortDescription { get => "Handles 2 Touch sensors"; }
-        public override string LongDescription
-        {
-            get =>
-                "This module has 2 rows of neurons representing input from two touch sensors. It receives input from the 2DSim module " +
-                "and outputs touch info to the Internal Model. It necessarily handles the positions of the two touch sensors forming " +
-                "the beginning of an internal sense of proprioception. " +
-                "";
-        }
         public Module2DTouch()
         {
             minWidth = 12;

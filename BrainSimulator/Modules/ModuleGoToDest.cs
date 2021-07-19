@@ -9,15 +9,6 @@ namespace BrainSimulator.Modules
 {
     public class ModuleGoToDest : ModuleBase
     {
-        public override string ShortDescription { get => "Demo module to show use of imagination"; }
-        public override string LongDescription
-        {
-            get =>
-                "The module accepts a destination and determines a path to get there. It works by successively " +
-                "trying different endpoints it can currently reach to see if there is one which can directly reach " +
-                "the destination. This is a demonstration of the use of various other modules." +
-                "";
-        }
 
         List<PointPlus> pointsToTry = new List<PointPlus>();
         PointPlus pvTry = null;

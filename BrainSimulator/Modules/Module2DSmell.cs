@@ -7,16 +7,6 @@ namespace BrainSimulator.Modules
 {
     public class Module2DSmell : ModuleBase
     {
-        public override string ShortDescription { get => "Handles 2 Smell sensors"; }
-        public override string LongDescription
-        {
-            get =>
-                "This module has 2 rows of neurons representing input from two smell sensors. It receives input from the 2DSim module " +
-                "and outputs smell info to the Internal Model. It necessarily handles the positions of the two smell sensors forming " +
-                "the beginning of an internal sense of olfactory perception. " +
-                "";
-        }
-
         float average = 0;
         bool increasing = false;
         float last0, last1;

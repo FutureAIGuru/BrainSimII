@@ -52,6 +52,13 @@ namespace BrainSimulator
             cm.Items.Add(new MenuItem { Header = sp, StaysOpenOnClick = true });
 
             sp = new StackPanel { Orientation = Orientation.Horizontal };
+            sp.Children.Add(new Label { Content = "Type: ", Padding = new Thickness(0) });
+            string[] parts = nr.TheModule.GetType().ToString().Split('.');
+            string moduleType = parts[2];
+            sp.Children.Add(new Label { Content = moduleType, Padding = new Thickness(0) });
+            cm.Items.Add(new MenuItem { Header = sp, StaysOpenOnClick = true });
+
+            sp = new StackPanel { Orientation = Orientation.Horizontal };
             sp.Children.Add(new Label { Content = "Name: ", Padding = new Thickness(0) });
             sp.Children.Add(new TextBox { Text = nr.Label, Width = 140, Name = "AreaName", Padding = new Thickness(0) });
             cm.Items.Add(new MenuItem { Header = sp, StaysOpenOnClick = true });

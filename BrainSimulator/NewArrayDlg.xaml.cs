@@ -112,7 +112,11 @@ namespace BrainSimulator
         int refractory = 0;
         private void ButtonOK_Click(object sender, RoutedEventArgs e)
         {
-            bool previousShowSynapses = MainWindow.theNeuronArray.ShowSynapses;
+            bool previousShowSynapses = false;
+            if (MainWindow.theNeuronArray != null)
+            {
+                previousShowSynapses = MainWindow.theNeuronArray.ShowSynapses;
+            }
             MainWindow.CloseAllModuleDialogs();
             MainWindow.CloseHistoryWindow();
             MainWindow.CloseNotesWindow();

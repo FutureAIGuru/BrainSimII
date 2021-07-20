@@ -34,6 +34,8 @@ namespace BrainSimulator
             set => showSynapses = value; 
         }
         public int Cols { get => arraySize / rows; }
+        private bool loadComplete = false;
+        public bool LoadComplete { get => loadComplete; set => loadComplete = value; }
 
         public List<ModuleView> Modules
         {

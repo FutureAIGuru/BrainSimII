@@ -57,6 +57,8 @@ namespace BrainSimulator
                 if (na.TheModule != null)
                     na.TheModule.SetUpAfterLoad();
             }
+            theNeuronArray.LoadComplete = true;
+
             if (theNeuronArray.displayParams != null)
                 theNeuronArrayView.Dp = theNeuronArray.displayParams;
 

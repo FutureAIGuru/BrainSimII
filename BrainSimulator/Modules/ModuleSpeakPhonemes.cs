@@ -53,7 +53,7 @@ namespace BrainSimulator.Modules
                             Thing pn = nmKB.Labeled(label, phonemes);
                             if (pn == null) //this should always be null
                             {
-                                pn = nmKB.AddThing(label, new Thing[] { nmKB.Labeled("Phoneme") }, pn);
+                                pn = nmKB.AddThing(label, nmKB.Labeled("Phoneme"), pn);
                             }
                             Neuron n1 = nmKB.GetNeuron(pn);
                             if (n1 != null)

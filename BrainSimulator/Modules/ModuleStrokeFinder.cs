@@ -271,11 +271,11 @@ namespace BrainSimulator.Modules
                 if (uks.Labeled("AbsStroke") == null) uks.AddThing("AbsStroke", "Visual");
                 Thing t1 = uks.Valued(P1);
                 if (t1 == null)
-                    t1 = UKS.AddThing("p" + pCount++, new Thing[] { UKS.Labeled("Point") }, P1);
+                    t1 = UKS.AddThing("p" + pCount++, UKS.Labeled("Point"), P1);
                 Thing t2 = uks.Valued(P2);
                 if (t2 == null)
-                    t2 = UKS.AddThing("p" + pCount++, new Thing[] { UKS.Labeled("Point") }, P2);
-                Thing newThing = UKS.AddThing("s" + strokeCount++, new Thing[] { UKS.Labeled("AbsStroke") }, null, new Thing[] { t1, t2 });
+                    t2 = UKS.AddThing("p" + pCount++, UKS.Labeled("Point"), P2);
+                Thing newThing = UKS.AddThing("s" + strokeCount++, UKS.Labeled("AbsStroke"), null, new Thing[] { t1, t2 });
                 return newThing;
             }
             return null;

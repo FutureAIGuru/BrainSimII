@@ -118,8 +118,11 @@ namespace BrainSimulator.Modules
             for (int i = 0; i < na.NeuronCount && i < UKS.Count; i++)
             {
                 if (UKS[i] == null) continue;
-                na.GetNeuronAt(i).Label = UKS[i].Label;
-                SetNeuronValue("KBOut", i, 0f, UKS[i].Label);
+                if (na.GetNeuronAt(i).Label != UKS[i].Label)
+                {
+                    na.GetNeuronAt(i).Label = UKS[i].Label;
+                    SetNeuronValue("KBOut", i, 0f, UKS[i].Label);
+                }
             }
             for (int i = UKS.Count; i < na.NeuronCount; i++)
             {
@@ -482,7 +485,7 @@ namespace BrainSimulator.Modules
                     {
                         if (phonemesInWord.Count > 0)
                         {
-                            Thing newWord = AddThing("w" + wordCount++, new Thing[] { Labeled("Word") }, null, phonemesInWord.ToArray());
+                            Thing newWord = AddThing("w" + wordCount++, Labeled("Word"), null, phonemesInWord.ToArray());
                             phonemesInWord.Clear();
                             if (startOfNewWord != -1)
                             {
@@ -500,14 +503,14 @@ namespace BrainSimulator.Modules
                 }
                 if (phonemesInWord.Count > 0)
                 {
-                    Thing newWord = AddThing("w" + wordCount++, new Thing[] { Labeled("Word") }, null, phonemesInWord.ToArray());
+                    Thing newWord = AddThing("w" + wordCount++, Labeled("Word"), null, phonemesInWord.ToArray());
                     shortTermMemoryList[startOfNewWord] = newWord;
                     shortTermMemoryList.RemoveRange(startOfNewWord + 1, newWord.References.Count - 1);
                     startOfNewWord = -1;
                 }
 
                 //Now add the phrase to the knowledge store
-                Thing possibleNewPhrase = AddThing("ph" + phraseCount++, new Thing[] { Labeled("Phrase") }, null, shortTermMemoryList.ToArray());
+                Thing possibleNewPhrase = AddThing("ph" + phraseCount++, Labeled("Phrase"), null, shortTermMemoryList.ToArray());
                 List<Link> exitingPhrase = possibleNewPhrase.FindSimilar(phrases, true, 1);
                 if (exitingPhrase.Count == 1 && exitingPhrase[0].weight == 1)
                 {

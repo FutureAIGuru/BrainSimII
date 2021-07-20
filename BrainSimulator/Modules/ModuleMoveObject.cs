@@ -134,7 +134,7 @@ namespace BrainSimulator.Modules
                 {                //add new Event
                     Thing lm1 = mEvent.CreateLandmark(new List<Thing>() { t });
                     Thing t1 = mEvent.CreateEvent(lm1);
-                    Thing t3 = UKS.AddThing("m" + motionCount++, new Thing[] { UKS.Labeled("Motion") }, motion);
+                    Thing t3 = UKS.AddThing("m" + motionCount++, UKS.Labeled("Motion"), motion);
                     mEvent.AddOutcomePair(t1, UKS.Labeled("Push"), t3);
                 }
                 return;

@@ -111,23 +111,23 @@ namespace BrainSimulator.Modules
             {
                 Thing t1, t2;
                 Thing t3 = null;
-                t1 = UKS.AddThing("p" + pCount++, new Thing[] { UKS.Labeled("Point") }, P1);
-                t2 = UKS.AddThing("p" + pCount++, new Thing[] { UKS.Labeled("Point") }, P2);
+                t1 = UKS.AddThing("p" + pCount++, UKS.Labeled("Point"), P1);
+                t2 = UKS.AddThing("p" + pCount++, UKS.Labeled("Point"), P2);
                 if (addToModel)
                 {
                     t1.AddParent(UKS.Labeled("ModelThing"));
                     t2.AddParent(UKS.Labeled("ModelThing"));
                 }
                 if (motion != null)
-                    t3 = UKS.AddThing("m" + mCount++, new Thing[] { UKS.Labeled("Motion") }, motion);
+                    t3 = UKS.AddThing("m" + mCount++, UKS.Labeled("Motion"), motion);
                 Thing color = UKS.Valued(theColor);
                 if (color == null)
-                    color = UKS.AddThing("c" + cCount++, new Thing[] { UKS.Labeled("Color") }, theColor);
+                    color = UKS.AddThing("c" + cCount++, UKS.Labeled("Color"), theColor);
                 Thing newThing = null;
                 if (motion != null)
-                    newThing = UKS.AddThing("s" + sCount++, new Thing[] { UKS.Labeled("Segment") }, null, new Thing[] { t1, t2, color, t3 });
+                    newThing = UKS.AddThing("s" + sCount++, UKS.Labeled("Segment"), null, new Thing[] { t1, t2, color, t3 });
                 else
-                    newThing = UKS.AddThing("s" + sCount++, new Thing[] { UKS.Labeled("Segment") }, null, new Thing[] { t1, t2, color });
+                    newThing = UKS.AddThing("s" + sCount++, UKS.Labeled("Segment"), null, new Thing[] { t1, t2, color });
                 return newThing;
             }
             return null;

@@ -187,6 +187,7 @@ namespace BrainSimulator
                 Close();
                 returnValue = true;
             }
+            MainWindow.theNeuronArray.LoadComplete = true;
         }
 
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)

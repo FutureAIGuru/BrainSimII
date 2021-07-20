@@ -65,6 +65,7 @@ namespace BrainSimulator
                 MainWindow.arrayView.targetNeuronIndex = 0;
                 MainWindow.arrayView.PasteNeurons();
                 MainWindow.theNeuronArray.ShowSynapses = true;
+                MainWindow.theNeuronArray.LoadComplete = true;
                 MainWindow.thisWindow.SetShowSynapsesCheckBox(true);
                 MainWindow.arrayView.ClearShowingSynapses();
                 FiringHistory.ClearAll();

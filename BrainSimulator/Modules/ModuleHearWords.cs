@@ -42,7 +42,7 @@ namespace BrainSimulator.Modules
                             if (w == null)
                             {
                                 string label = "w" + char.ToUpper(word[0]) + word.Substring(1);
-                                w = nmUKS.AddThing(label, new Thing[] { nmUKS.Labeled("Word") }, word);
+                                w = nmUKS.AddThing(label, nmUKS.Labeled("Word"), word);
                             }
                             Neuron n1 = nmUKS.GetNeuron(w);
                             if (n1 != null)

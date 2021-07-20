@@ -548,6 +548,7 @@ namespace BrainSimulator
             if (MainWindow.theNeuronArray.arraySize == 0) return true;
             if (MainWindow.theNeuronArray.rows == 0) return true;
             if (MainWindow.theNeuronArray.Cols == 0) return true;
+            if (!MainWindow.theNeuronArray.LoadComplete) return true;
             return false;
         }
 
@@ -557,6 +558,7 @@ namespace BrainSimulator
             arrayView.Dp.NeuronDisplaySize = 62;
             arrayView.Dp.DisplayOffset = new Point(0, 0);
             theNeuronArray.Initialize(450, 15);
+            theNeuronArray.LoadComplete = true;
             Update();
         }
 

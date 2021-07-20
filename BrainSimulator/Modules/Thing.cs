@@ -55,9 +55,9 @@ namespace BrainSimulator
         public object V { get => value; set => this.value = value; }
         public string Label { get => label; set => label = value; }
         public List<Thing> Parents { get => parents; }
-        public List<Thing> Children { get => children; set => children = value; }
-        public List<Link> References { get => references; set => references = value; }
-        public List<Link> ReferencedBy { get => referencedBy; set => referencedBy = value; }
+        public List<Thing> Children { get => children; }
+        public List<Link> References { get => references;}
+        public List<Link> ReferencedBy { get => referencedBy; }
 
         public List<Thing> ReferencesAsThings
         {

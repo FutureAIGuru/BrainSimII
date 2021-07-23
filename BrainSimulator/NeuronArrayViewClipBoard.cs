@@ -167,6 +167,7 @@ namespace BrainSimulator
                 ModuleView mv = MainWindow.theNeuronArray.modules[i];
                 if (theSelection.NeuronInSelection(mv.FirstNeuron) > 0 && theSelection.NeuronInSelection(mv.LastNeuron) > 0)
                 {
+                    mv.TheModule.CloseDlg();
                     MainWindow.theNeuronArray.modules.RemoveAt(i);
                     i--;
                 }

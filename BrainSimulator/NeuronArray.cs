@@ -28,13 +28,14 @@ namespace BrainSimulator
 
         //these have nothing to do with the NeuronArray but are here so it will be saved and restored with the network
         private bool showSynapses = false;
-        public bool ShowSynapses 
-        { 
-            get => showSynapses; 
-            set => showSynapses = value; 
+        public bool ShowSynapses
+        {
+            get => showSynapses;
+            set => showSynapses = value;
         }
         public int Cols { get => arraySize / rows; }
         private bool loadComplete = false;
+        [XmlIgnore]
         public bool LoadComplete { get => loadComplete; set => loadComplete = value; }
 
         public List<ModuleView> Modules
@@ -194,6 +195,8 @@ namespace BrainSimulator
                     ModuleView na = modules.Find(x => x.FirstNeuron == firstNeurons[i]);
                     if (na.TheModule != null)
                     {
+                        //if not in debug mode, trap exceptions and offer to delete module
+#if !DEBUG
                         try
                         {
                             na.TheModule.Fire();
@@ -212,6 +215,9 @@ namespace BrainSimulator
                             message += "\n\n Would you like to remove it from this network?";
                             badModule = i;
                         }
+#else
+                        na.TheModule.Fire();
+#endif
                     }
                 }
             }

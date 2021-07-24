@@ -154,22 +154,26 @@ namespace BrainSimulator
         public void CutNeurons()
         {
             CopyNeurons();
-            DeleteSelection();
             DeleteModulesInSelection();
+            DeleteSelection();
             ClearSelection();
             Update();
         }
 
         private void DeleteModulesInSelection()
         {
-            for (int i = 0; i < MainWindow.theNeuronArray.modules.Count; i++)
+            lock (MainWindow.theNeuronArray.modules)
             {
-                ModuleView mv = MainWindow.theNeuronArray.modules[i];
-                if (theSelection.NeuronInSelection(mv.FirstNeuron) > 0 && theSelection.NeuronInSelection(mv.LastNeuron) > 0)
+                for (int i = 0; i < MainWindow.theNeuronArray.modules.Count; i++)
                 {
-                    mv.TheModule.CloseDlg();
-                    MainWindow.theNeuronArray.modules.RemoveAt(i);
-                    i--;
+                    ModuleView mv = MainWindow.theNeuronArray.modules[i];
+                    if (theSelection.NeuronInSelection(mv.FirstNeuron) > 0 && theSelection.NeuronInSelection(mv.LastNeuron) > 0)
+                    {
+                        MainWindow.theNeuronArray.AddModuleUndo(i, mv);
+                        mv.TheModule.CloseDlg();
+                        MainWindow.theNeuronArray.modules.RemoveAt(i);
+                        i--;
+                    }
                 }
             }
         }
@@ -321,6 +325,9 @@ namespace BrainSimulator
         {
             if (allowUndo)
                 MainWindow.theNeuronArray.SetUndoPoint();
+
+            DeleteModulesInSelection();
+
             List<int> neuronsToDelete = theSelection.EnumSelectedNeurons();
             foreach (int nID in neuronsToDelete)
             {
@@ -348,7 +355,6 @@ namespace BrainSimulator
                 
                 n.Update();
             }
-            DeleteModulesInSelection();
             Update();
         }
 

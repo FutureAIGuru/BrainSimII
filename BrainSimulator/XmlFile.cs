@@ -115,7 +115,8 @@ namespace BrainSimulator
             catch (Exception e)
             {
                 file.Close();
-                MessageBox.Show("Network file load failed, a blank network will be opened. \r\n\r\n"+e.InnerException);
+                MessageBox.Show("Network file load failed, a blank network will be opened. \r\n\r\n"+e.InnerException,"File Load Error",
+                    MessageBoxButton.OK,MessageBoxImage.Error,MessageBoxResult.OK,MessageBoxOptions.DefaultDesktopOnly);
                 MainWindow.thisWindow.SetProgress(100,"");
                 return false;
             }

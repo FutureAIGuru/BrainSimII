@@ -138,7 +138,7 @@ namespace BrainSimulator
                     Height = currentModule.Height,
                     FirstNeuron = currentModule.FirstNeuron,
                     Color = currentModule.Color,
-                    CommandLine = currentModule.CommandLine,
+                    CommandLine = currentModule.TheModule.GetType().Name,
                     Label = currentModule.Label
                 };
             moduleUndoInfo.Add(m1);
@@ -169,39 +169,42 @@ namespace BrainSimulator
         }
         private void UndoModule()
         {
-            if (moduleUndoInfo.Count == 0) return;
-            ModuleUndo m1 = moduleUndoInfo.Last();
-            if (m1.moduleState == null)
+            lock (MainWindow.theNeuronArray.modules)
             {
-                ModuleView.DeleteModule(m1.index);
-            }
-            else
-            {
-                if (m1.index == -1) //the module was just deleted
+                if (moduleUndoInfo.Count == 0) return;
+                ModuleUndo m1 = moduleUndoInfo.Last();
+                if (m1.moduleState == null)  //the module was just added
                 {
-                    ModuleView mv = new ModuleView
-                    {
-                        Width = m1.moduleState.Width,
-                        Height = m1.moduleState.Height,
-                        FirstNeuron = m1.moduleState.FirstNeuron,
-                        Color = m1.moduleState.Color,
-                        CommandLine = m1.moduleState.CommandLine,
-                        Label = m1.moduleState.Label,
-                    };
-                    // modules.Add(mv);
-                    ModuleView.CreateModule(mv.Label, mv.CommandLine, Utils.IntToColor(mv.Color), mv.FirstNeuron, mv.Width, mv.Height);
+                    ModuleView.DeleteModule(m1.index);
                 }
                 else
                 {
-                    modules[m1.index].FirstNeuron = m1.moduleState.FirstNeuron;
-                    modules[m1.index].Width = m1.moduleState.Width;
-                    modules[m1.index].Height = m1.moduleState.Height;
-                    modules[m1.index].Color = m1.moduleState.Color;
-                    modules[m1.index].CommandLine = m1.moduleState.CommandLine;
-                    modules[m1.index].Label = m1.moduleState.Label;
+                    //if (m1.index == -1) //the module was just deleted
+                    {
+                        ModuleView mv = new ModuleView
+                        {
+                            Width = m1.moduleState.Width,
+                            Height = m1.moduleState.Height,
+                            FirstNeuron = m1.moduleState.FirstNeuron,
+                            Color = m1.moduleState.Color,
+                            CommandLine = m1.moduleState.CommandLine,
+                            Label = m1.moduleState.Label,
+                        };
+                        // modules.Add(mv);
+                        ModuleView.CreateModule(mv.Label, mv.CommandLine, Utils.IntToColor(mv.Color), mv.FirstNeuron, mv.Width, mv.Height);
+                    }
+                    //else
+                    //{
+                    //    modules[m1.index].FirstNeuron = m1.moduleState.FirstNeuron;
+                    //    modules[m1.index].Width = m1.moduleState.Width;
+                    //    modules[m1.index].Height = m1.moduleState.Height;
+                    //    modules[m1.index].Color = m1.moduleState.Color;
+                    //    modules[m1.index].CommandLine = m1.moduleState.CommandLine;
+                    //    modules[m1.index].Label = m1.moduleState.Label;
+                    //}
                 }
+                moduleUndoInfo.RemoveAt(moduleUndoInfo.Count - 1);
             }
-            moduleUndoInfo.RemoveAt(moduleUndoInfo.Count - 1);
         }
         private void UndoSynapse()
         {

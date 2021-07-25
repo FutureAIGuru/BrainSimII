@@ -519,6 +519,9 @@ namespace BrainSimulator
 
         private void PlayPause_Click(object sender, RoutedEventArgs e)
         {
+            if (theNeuronArray == null)
+                return;
+                
             if (!theNeuronArray.EngineIsPaused)
             {
                 SetPlayPauseButtonImage(true);
@@ -561,6 +564,7 @@ namespace BrainSimulator
                 }
                 else
                 {
+                    SetPlayPauseButtonImage(false);
                     theNeuronArray.Fire();
                     theNeuronArrayView.UpdateNeuronColors();
                 }

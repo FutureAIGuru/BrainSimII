@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
@@ -118,8 +119,11 @@ namespace BrainSimulator
         public static bool Load()
         {
             Stream file;
-            string fileName = Path.GetFullPath("./Networks/ModuleDescriptions.xml");
-            file = File.Open(fileName, FileMode.Open, FileAccess.Read);
+            RegistryKey regKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\FutureAI Brain Simulator II");
+            string location = regKey.GetValue("InstallLocation").ToString();
+            location = location.Substring(1, location.Length - 2);
+            location += "\\Networks\\ModuleDescriptions.xml";
+            file = File.Open(location, FileMode.Open, FileAccess.Read);
             try
             {
                 XmlSerializer reader = new XmlSerializer(typeof(List<ModuleDescription>));
@@ -133,6 +137,7 @@ namespace BrainSimulator
             file.Close();
             return true;
         }
+
         public static bool Save()
         {
             Stream file;

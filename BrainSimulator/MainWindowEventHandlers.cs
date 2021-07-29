@@ -202,7 +202,6 @@ namespace BrainSimulator
             string fileName = "_Open";
             if (sender is MenuItem mainMenu)
                 fileName = (string)mainMenu.Header;
-            MessageBox.Show(fileName);
 
             if (fileName == "_Open")
             {

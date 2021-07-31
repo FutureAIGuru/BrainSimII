@@ -48,7 +48,7 @@ namespace BrainSimulator
 
         public static bool useServers = false;
 
-        private static int engineDelay = 500;//how long to wait after each cycle of the engine
+        private static int engineDelay = 500; //wait after each cycle of the engine, 0-1000
 
         //timer to update the neuron values 
         private DispatcherTimer displayUpdateTimer = new DispatcherTimer();

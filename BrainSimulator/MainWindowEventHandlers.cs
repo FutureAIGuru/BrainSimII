@@ -198,35 +198,32 @@ namespace BrainSimulator
         private void buttonLoad_Click(object sender, RoutedEventArgs e)
         {
             if (PromptToSaveChanges())
-            { }
-            else
-            {
+                return;
+            string fileName = "_Open";
+            if (sender is MenuItem mainMenu)
+                fileName = (string)mainMenu.Header;
 
-                string fileName = "_Open";
-                if (sender is MenuItem mainMenu)
-                    fileName = (string)mainMenu.Header;
-                if (fileName == "_Open")
+            if (fileName == "_Open")
+            {
+                OpenFileDialog openFileDialog1 = new OpenFileDialog
                 {
-                    OpenFileDialog openFileDialog1 = new OpenFileDialog
-                    {
-                        Filter = "XML Network Files|*.xml",
-                        Title = "Select a Brain Simulator File",
-                    };
-                    // Show the Dialog.  
-                    // If the user clicked OK in the dialog and  
-                    Nullable<bool> result = openFileDialog1.ShowDialog();
-                    if (result ?? false)
-                    {
-                        currentFileName = openFileDialog1.FileName;
-                        LoadCurrentFile();
-                    }
-                }
-                else
+                    Filter = "XML Network Files|*.xml",
+                    Title = "Select a Brain Simulator File",
+                };
+                // Show the Dialog.  
+                // If the user clicked OK in the dialog and  
+                Nullable<bool> result = openFileDialog1.ShowDialog();
+                if (result ?? false)
                 {
-                    //this is a file name from the File menu
-                    currentFileName = Path.GetFullPath("./Networks/" + fileName + ".xml");
+                    currentFileName = openFileDialog1.FileName;
                     LoadCurrentFile();
                 }
+            }
+            else
+            {
+                //this is a file name from the File menu
+                currentFileName = Path.GetFullPath("./Networks/" + fileName + ".xml");
+                LoadCurrentFile();
             }
         }
 
@@ -519,6 +516,9 @@ namespace BrainSimulator
 
         private void PlayPause_Click(object sender, RoutedEventArgs e)
         {
+            if (theNeuronArray == null)
+                return;
+                
             if (!theNeuronArray.EngineIsPaused)
             {
                 SetPlayPauseButtonImage(true);
@@ -561,6 +561,7 @@ namespace BrainSimulator
                 }
                 else
                 {
+                    SetPlayPauseButtonImage(false);
                     theNeuronArray.Fire();
                     theNeuronArrayView.UpdateNeuronColors();
                 }

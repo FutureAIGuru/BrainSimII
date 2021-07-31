@@ -907,26 +907,6 @@
       </TheModule>
     </ModuleView>
     <ModuleView>
-      <Label>Learning </Label>
-      <FirstNeuron>2120</FirstNeuron>
-      <Height>2</Height>
-      <Width>2</Width>
-      <Color>8388564</Color>
-      <CommandLine>ModuleLearning </CommandLine>
-      <TheModule xsi:type="ModuleLearning">
-        <initialized>true</initialized>
-        <dlgPos>
-          <X>0</X>
-          <Y>0</Y>
-        </dlgPos>
-        <dlgSize>
-          <X>0</X>
-          <Y>0</Y>
-        </dlgSize>
-        <dlgIsOpen>false</dlgIsOpen>
-      </TheModule>
-    </ModuleView>
-    <ModuleView>
       <Label>KBDebug </Label>
       <FirstNeuron>2510</FirstNeuron>
       <Height>2</Height>

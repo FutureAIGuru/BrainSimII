@@ -96,7 +96,7 @@ namespace BrainSimulator
                             displayUpdateTimer.Start();
                         }
                     }
-                    // Thread.Sleep(Math.Abs(engineDelay));
+                    Thread.Sleep(Math.Abs(engineDelay));
                 }
             }
         }

@@ -70,6 +70,7 @@ namespace BrainSimulator
             previousUseNeurons = MainWindow.useServers;
             cbUseServers.IsChecked = MainWindow.useServers;
             UpdateServerTextBox();
+            textBoxColumns.Focus();
         }
 
         private void UpdateServerTextBox()
@@ -310,6 +311,16 @@ namespace BrainSimulator
             }
             else
                 LabelNeuronCount.Content = "Neuron Count: ERROR";
+        }
+
+        private void textBoxColumns_GotFocus(object sender, RoutedEventArgs e)
+        {
+            textBoxColumns.SelectAll();
+        }
+
+        private void textBoxRows_GotFocus(object sender, RoutedEventArgs e)
+        {
+            textBoxRows.SelectAll();
         }
     }
 }

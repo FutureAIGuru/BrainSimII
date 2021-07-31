@@ -77,13 +77,13 @@ namespace BrainSimulator
                 {
                     if (v3 is Control c1)
                     {
-                        if (c1.Name == name) 
+                        if (c1.Name == name)
                             return c1;
                     }
                     try
                     {
                         Control c2 = FindByName(v3, name);
-                        if (c2 != null) 
+                        if (c2 != null)
                             return c2;
                     }
                     catch { }
@@ -97,6 +97,12 @@ namespace BrainSimulator
             return (float)(degrees * Math.PI / 180);
         }
 
+        public static System.Drawing.Color IntToDrawingColor(int theColor)
+        {
+            Color c1 = IntToColor(theColor);
+            System.Drawing.Color c = System.Drawing.Color.FromArgb(c1.A, c1.B, c1.G, c1.R);
+            return c;
+        }
 
         public static Color IntToColor(int theColor)
         {
@@ -435,7 +441,7 @@ namespace BrainSimulator
         }
 
         //there is a label followed by a combobox with provided values
-        public static MenuItem CreateComboBoxMenuItem(string cbName, float value, List<float> values, string format, string label, 
+        public static MenuItem CreateComboBoxMenuItem(string cbName, float value, List<float> values, string format, string label,
             int textWidth, RoutedEventHandler theEventHandler)
         {
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
@@ -504,7 +510,7 @@ namespace BrainSimulator
                             orderby assemblyType.Name
                             select assemblyType
                 ).ToArray();
-            List <Type> retVal  = new List<Type>();
+            List<Type> retVal = new List<Type>();
             foreach (var t in listOfBs)
             {
                 if (t.Name != "ModuleBase")

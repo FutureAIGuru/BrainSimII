@@ -351,20 +351,22 @@ namespace BrainSimulator
         {
             Slider s = sender as Slider;
             int value = (int)s.Value;
-            int Interval = 0;
-            if (value == 0) Interval = 1000;
-            if (value == 1) Interval = 1000;
-            if (value == 2) Interval = 500;
-            if (value == 3) Interval = 250;
-            if (value == 4) Interval = 100;
-            if (value == 5) Interval = 50;
-            if (value == 6) Interval = 10;
-            if (value == 7) Interval = 5;
-            if (value == 8) Interval = 2;
-            if (value == 9) Interval = 1;
+            int interval = 0;
+            if (value == 0) interval = 1000;
+            if (value == 1) interval = 1000;
+            if (value == 2) interval = 500;
+            if (value == 3) interval = 250;
+            if (value == 4) interval = 100;
+            if (value == 5) interval = 50;
+            if (value == 6) interval = 10;
+            if (value == 7) interval = 5;
+            if (value == 8) interval = 2;
+            if (value == 9) interval = 1;
             if (value > 9)
-                Interval = 0;
-            engineDelay = Interval;
+                interval = 0;
+            engineDelay = interval;
+            if (theNeuronArray != null) 
+                theNeuronArray.EngineSpeed = interval;
             if (!engineThread.IsAlive)
                 engineThread.Start();
             EngineSpeed.Text = slider.Value.ToString();

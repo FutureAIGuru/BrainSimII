@@ -13,8 +13,8 @@
             <ColumnDefinition Width="255*"/>
         </Grid.ColumnDefinitions>
         <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Height="104" Margin="18,25,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="300" Grid.ColumnSpan="2"/>
-        <TextBox x:Name="textBoxColumns" HorizontalAlignment="Left" Height="20" Margin="162,25,0,0" TextWrapping="Wrap" Text="30" VerticalAlignment="Top" Width="55" Grid.Column="1"  TextChanged="textBox_TextChanged"/>
-        <TextBox x:Name="textBoxRows" HorizontalAlignment="Left" Height="20" Margin="162,57,0,0" TextWrapping="Wrap" Text="15" VerticalAlignment="Top" Width="55" VerticalContentAlignment="Center" Grid.Column="1" TextChanged="textBox_TextChanged"/>
+        <TextBox x:Name="textBoxColumns" HorizontalAlignment="Left" Height="20" Margin="162,25,0,0" TextWrapping="Wrap" Text="30" VerticalAlignment="Top" Width="55" Grid.Column="1"  TextChanged="textBox_TextChanged" GotFocus="textBoxColumns_GotFocus"/>
+        <TextBox x:Name="textBoxRows" HorizontalAlignment="Left" Height="20" Margin="162,57,0,0" TextWrapping="Wrap" Text="15" VerticalAlignment="Top" Width="55" VerticalContentAlignment="Center" Grid.Column="1" TextChanged="textBox_TextChanged" GotFocus="textBoxRows_GotFocus"/>
         <Label x:Name="label" Content="Width:" HorizontalAlignment="Left" Height="30" Margin="87,19,0,0" VerticalAlignment="Top" Width="70" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Column="1"/>
         <Label x:Name="label1" Content="Height:" HorizontalAlignment="Left" Height="29" Margin="97,53,0,0" VerticalAlignment="Top" Width="58" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Column="1"/>
         <TextBox KeyboardNavigation.IsTabStop="False" HorizontalAlignment="Left" Margin="18,0,0,89" x:Name="ServerList" TextWrapping="Wrap" Text="No Servers Detected" Width="437" Grid.ColumnSpan="2" Height="98" VerticalAlignment="Bottom"/>

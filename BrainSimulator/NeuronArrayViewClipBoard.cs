@@ -182,7 +182,7 @@ namespace BrainSimulator
         {
             NeuronArray myClipBoard = MainWindow.myClipBoard;
 
-            if (!MainWindow.theNeuronArray.displayParams.ShowNeurons())
+            if (!MainWindow.arrayView.dp.ShowNeurons())
             {
                 MessageBox.Show("Pasting not allowed at this zoom factor");
                 return;

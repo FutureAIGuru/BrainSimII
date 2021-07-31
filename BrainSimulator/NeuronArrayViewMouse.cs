@@ -348,6 +348,14 @@ namespace BrainSimulator
                 int y1 = currentNeuron % Rows;
                 int x1 = currentNeuron / Rows;
                 string mouseStatus = "ID: " + currentNeuron + "  Row: " + y1 + " Col: " + x1;
+                foreach (ModuleView mv in MainWindow.theNeuronArray.modules)
+                {
+                    if (currentNeuron >= mv.FirstNeuron && currentNeuron <= mv.LastNeuron)
+                    {
+                        mv.GetNeuronLocation(currentNeuron, out int x, out int y);
+                        mouseStatus += "  " + mv.Label+"("+x+","+y+")";
+                    }
+                }
                 MainWindow.thisWindow.SetStatus(1, mouseStatus, 0);
             }
             else

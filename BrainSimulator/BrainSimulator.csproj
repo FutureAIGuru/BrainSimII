@@ -137,7 +137,14 @@
     <Compile Include="ModuleDescription.xaml.cs">
       <DependentUpon>ModuleDescription.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\ModuleArea.cs" />
+    <Compile Include="Modules\ModuleAttention.cs" />
     <Compile Include="Modules\ModuleBoundary.cs" />
+    <Compile Include="Modules\ModuleBoundary2.cs" />
+    <Compile Include="Modules\ModuleBoundarySegments.cs" />
+    <Compile Include="Modules\ModuleBoundarySegmentsDlg.xaml.cs">
+      <DependentUpon>ModuleBoundarySegmentsDlg.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\ModuleCamera.cs" />
     <Compile Include="Modules\ModuleCameraDlg.xaml.cs">
       <DependentUpon>ModuleCameraDlg.xaml</DependentUpon>
@@ -145,11 +152,13 @@
     <Compile Include="Modules\ModuleChain.cs" />
     <Compile Include="Modules\ModuleChainCounter.cs" />
     <Compile Include="Modules\ModuleColorComponent.cs" />
+    <Compile Include="Modules\ModuleImageZoom.cs" />
     <Compile Include="Modules\ModulePatternRecognizer.cs" />
     <Compile Include="Modules\ModulePatternGenerator.cs" />
     <Compile Include="Modules\ModuleRateDecoder2.cs" />
     <Compile Include="Modules\ModuleRateDecoder.cs" />
     <Compile Include="Modules\ModuleRateDecoder3.cs" />
+    <Compile Include="Modules\ModuleRobot.cs" />
     <Compile Include="Modules\ModuleShortTermMemory.cs" />
     <Compile Include="Modules\ModuleStrokeFinderDlg.xaml.cs">
       <DependentUpon>ModuleStrokeFinderDlg.xaml</DependentUpon>
@@ -163,6 +172,7 @@
     <Compile Include="Modules\ModuleLife.cs" />
     <Compile Include="Modules\ModuleStrokeCenter.cs" />
     <Compile Include="Modules\ModuleStrokeFinder.cs" />
+    <Compile Include="Modules\ModuleUKSTest.cs" />
     <Compile Include="Modules\ModuleWords.cs" />
     <Compile Include="Modules\ModuleSpeakPhonemes.cs" />
     <Compile Include="Modules\ModuleSpeakPhonemesDlg.xaml.cs" />
@@ -280,6 +290,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="ModuleDescription.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\ModuleBoundarySegmentsDlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

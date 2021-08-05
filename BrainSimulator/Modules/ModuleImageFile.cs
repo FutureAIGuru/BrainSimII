@@ -15,43 +15,63 @@ namespace BrainSimulator.Modules
     {
         //any public variable you create here will automatically be stored with the network
         //unless you precede it with the [XmlIgnore] directive
-        //[XmlIgnore] 
-        //public theStatus = 1;
-        [XmlIgnore]
+
         public string filePath = "";
-        [XmlIgnore]
         public bool cycleThroughFolder = false;
+
+        Bitmap bitmap1;
+        public Bitmap GetBitMap()
+        {
+            return bitmap1;
+        }
+
+        public ModuleImageFile()
+        {
+            minHeight = 10;
+            maxHeight = 500;
+            minWidth = 10;
+            maxWidth = 500;
+        }
 
         int fileCounter = 0;
         int countDown = -1;
-        List<string> fileList = null;
+        List<string> fileList = new List<string>();
+        [XmlIgnore]
+        public bool fileAlreadyLoaded = false;
 
         //fill this method in with code which will execute
         //once for each cycle of the engine
         public override void Fire()
         {
             Init();  //be sure to leave this here
-            if (filePath != "")
+            if (fileCounter >= fileList.Count) fileCounter = 0;
+            if (fileCounter < 0) fileCounter = fileCounter = fileList.Count - 1;
+
+            if (!fileAlreadyLoaded)
             {
-                if (cycleThroughFolder)
+                if (filePath != "")
                 {
-                    filePath = Path.GetDirectoryName(filePath);
-                    fileList = new List<string>(Directory.EnumerateFiles(filePath));
-                    LoadImage(fileList[fileCounter++]);
-                    countDown = 3;
+                    if (cycleThroughFolder)
+                    {
+                        GetFileList();
+                        countDown = 3;
+                    }
+                    else if (fileList.Count == 0)
+                    {
+                        LoadImage(filePath);
+                        countDown = -1;
+                    }
+                    else
+                    {
+                        LoadImage(fileList[fileCounter]);
+                    }
+                    fileAlreadyLoaded = true; ;
                 }
-                else
-                {
-                    LoadImage(filePath);
-                    countDown = -1;
-                }
-                filePath = "";
             }
             else
             {
-                if (countDown == 0)
+                if (countDown == 0 && cycleThroughFolder)
                 {
-                    if (fileCounter == fileList.Count) fileCounter = 0;
                     LoadImage(fileList[fileCounter++]);
                     countDown = 3;
                 }
@@ -64,19 +84,30 @@ namespace BrainSimulator.Modules
 
         }
 
+        private void GetFileList()
+        {
+            string dir = filePath;
+            FileAttributes attr = File.GetAttributes(filePath);
+            if ((attr & FileAttributes.Directory) != FileAttributes.Directory)
+                dir = Path.GetDirectoryName(filePath);
+            fileList = new List<string>(Directory.EnumerateFiles(dir));
+            LoadImage(fileList[fileCounter++]);
+        }
+
         public override void Initialize()
         {
             foreach (Neuron n in na.Neurons())
             {
                 n.Model = Neuron.modelType.Color;
-            //    na.GetNeuronLocation(n, out int x, out int y);
-            //    n.Label = x + "," + y;
+                //    na.GetNeuronLocation(n, out int x, out int y);
+                //    n.Label = x + "," + y;
             }
-            fileList = null;
+            fileList.Clear();
             fileCounter = 0;
             countDown = -1;
         }
 
+        //NOT IMPLEMENTED
         int GetAveragePixel(Bitmap bitmap1, int x, int y, float vRatio, float hRatio)
         {
             int average = 0;
@@ -100,7 +131,14 @@ namespace BrainSimulator.Modules
         {
             if (path != "")
             {
-                Bitmap bitmap1 = new Bitmap(path);
+                try
+                {
+                    bitmap1 = new Bitmap(path);
+                }
+                catch
+                {
+                    return;
+                }
                 float vRatio = bitmap1.Height / (float)na.Height;
                 float hRatio = bitmap1.Width / (float)na.Width;
                 for (int i = 0; i < na.Height; i++)
@@ -109,13 +147,57 @@ namespace BrainSimulator.Modules
                         Neuron n = na.GetNeuronAt(j, i);
                         int x = (int)(j * (bitmap1.Width - 1) / (float)(na.Width - 1));
                         int y = (int)(i * (bitmap1.Height - 1) / (float)(na.Height - 1));
+
                         int val = GetAveragePixel(bitmap1, x, y, vRatio, hRatio);
-                        //                        System.Drawing.Color c = bitmap1.GetPixel(x, y);
-                        //                        int val = Utils.ColorToInt(c);
-                        //if (val != 0xffffff) val = 0;
                         n.LastChargeInt = val;
                     }
             }
+        }
+
+        public void SetNewPath(string path, bool cycle)
+        {
+            if (cycle)
+                countDown = 3;
+            else
+                countDown = -1;
+            filePath = path;
+            fileAlreadyLoaded = false;
+            cycleThroughFolder = cycle;
+            fileCounter = 0;
+            fileList.Clear();
+        }
+        public void NextFile()
+        {
+            if (fileList.Count == 0)
+            {
+                GetFileList();
+                fileCounter = fileList.IndexOf(filePath);
+            }
+            fileCounter++;
+            if (fileCounter >= fileList.Count)
+                fileCounter = 0;
+            fileAlreadyLoaded = false;
+            countDown = -1;
+            cycleThroughFolder = false;
+        }
+
+        public void PrevFile()
+        {
+            if (fileList.Count == 0)
+            {
+                GetFileList();
+                fileCounter = fileList.IndexOf(filePath);
+            }
+            fileCounter--;
+            if (fileCounter < 0)
+                fileCounter = fileList.Count - 1;
+            fileAlreadyLoaded = false;
+            countDown = -1;
+            cycleThroughFolder = false;
+        }
+
+        public override void SetUpAfterLoad()
+        {
         }
 
     }

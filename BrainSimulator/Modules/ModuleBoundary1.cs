@@ -25,8 +25,6 @@ namespace BrainSimulator.Modules
     }
     public class ModuleBoundary1 : ModuleBase
     {
-        //[XlmIgnore] 
-
         public class BoundaryNeuron
         {
             public bool fired = false;
@@ -39,7 +37,7 @@ namespace BrainSimulator.Modules
         [XmlIgnore]
         public List<Boundary> boundaries = new List<Boundary>();
         [XmlIgnore]
-        public List<Boundary> xx = new List<Boundary>();
+        public List<Boundary> boundarySegments = new List<Boundary>();
         int lastInflection = 0; //used in predicting next point
         int mustExitDir = -10; //used in special case of corner points with 7 neighbors
 
@@ -47,7 +45,7 @@ namespace BrainSimulator.Modules
         public override void Fire()
         {
             Init();  //be sure to leave this here
-            ModuleView naSource = theNeuronArray.FindModuleByLabel("ModuleImageFile");
+            ModuleView naSource = theNeuronArray.FindModuleByLabel("ImageZoom");
             if (naSource == null) return;
             boundaries.Clear();
             foreach (Neuron n in na.Neurons1)
@@ -57,9 +55,9 @@ namespace BrainSimulator.Modules
             {
                 int theHeight = naSource.Height;
                 int theWidth = naSource.Width;
-                BoundaryNeuron[,] sourceValue = new BoundaryNeuron[theHeight, theWidth];
+                BoundaryNeuron[,] sourceValue = new BoundaryNeuron[theWidth, theHeight];
                 //copy to local 2D array for speed and simplicity
-                for (int y = 0; y < theHeight; y++)
+                for (int y = 1; y < theHeight; y++)
                 {
                     for (int x = 0; x < theWidth; x++)
                     {
@@ -68,7 +66,7 @@ namespace BrainSimulator.Modules
                     }
                 }
                 //count the number of firing neighbors at each cell
-                for (int y = 0; y < theHeight; y++)
+                for (int y = 1; y < theHeight; y++)
                 {
                     for (int x = 0; x < theWidth; x++)
                     {
@@ -83,7 +81,7 @@ namespace BrainSimulator.Modules
                 //go to any unprocessed boundary point and follow along the boundary
                 string boundaryString = "";
                 lastInflection = 0;
-                for (int y1 = 0; y1 < theHeight; y1++)
+                for (int y1 = 1; y1 < theHeight; y1++)
                 {
                     for (int x1 = 0; x1 < theWidth; x1++)
                     {
@@ -118,6 +116,7 @@ namespace BrainSimulator.Modules
                         sourceValue[x1, y1].processed = true;
                     }
                 }
+
                 //close boundary loops
                 //these will always be unclosed because the first point is marked used and cannot be reused
                 for (int i = 0; i < boundaries.Count; i++)
@@ -132,8 +131,9 @@ namespace BrainSimulator.Modules
                         boundaries[i].p2.Y += dy;
                     }
                 }
+
                 //SquareTheCorners();
-                xx.Clear();
+                boundarySegments.Clear();
                 for (int j = 0; j < boundaries.Count; j++)
                 {
                     String[] lines = LongestStraightLine(boundaries[j].theString).ToArray();
@@ -145,13 +145,13 @@ namespace BrainSimulator.Modules
                         int y0 = (int)boundaries[j].p1.Y;
                         int x1 = x0;
                         int y1 = y0;
-                        int index = s.IndexOf(lines[i],StringComparison.Ordinal);
+                        int index = s.IndexOf(lines[i], StringComparison.Ordinal);
                         while (index != -1)
                         {
                             if (index != 0)
-                                GetPositionOfLinePoint(x0, y0, boundaries[j].theString, index+1, out x1, out y1);
-                            GetPositionOfLinePoint(x0, y0, boundaries[j].theString, index + lines[i].Length+1, out int x2, out int y2);
-                            xx.Add(new Boundary { p1 = new Point(x1, y1), p2 = new Point(x2, y2), theString = lines[i] });
+                                GetPositionOfLinePoint(x0, y0, boundaries[j].theString, index + 1, out x1, out y1);
+                            GetPositionOfLinePoint(x0, y0, boundaries[j].theString, index + lines[i].Length + 1, out int x2, out int y2);
+                            boundarySegments.Add(new Boundary { p1 = new Point(x1, y1), p2 = new Point(x2, y2), theString = lines[i] });
                             int end = index + lines[i].Length + 2;
                             if (end >= s.Length) end = s.Length;
                             s = s.Substring(0, index) + '*' + new string('x', lines[i].Length) + '*' + s.Substring(end);
@@ -224,13 +224,15 @@ namespace BrainSimulator.Modules
         }
         private void SetTheNeuron(int x0, int y0)
         {
-            ModuleView naSource = theNeuronArray.FindModuleByLabel("ModuleImageFile");
+            ModuleView naSource = theNeuronArray.FindModuleByLabel("ImageZoom");
             //Set neuron
             int theHeight = naSource.Height;
             int theWidth = naSource.Width;
             int x = (int)(x0 * na.Width / (float)theWidth);
             int y = (int)(y0 * na.Height / (float)theHeight);
-            na.GetNeuronAt(x, y).SetValue(1);
+            Neuron n = na.GetNeuronAt(x, y); 
+            if (n != null) 
+                n.SetValue(1);
         }
 
         public static char[] dirChars = new char[] { R, UR, U, UL, L, DL, D, DR };
@@ -590,7 +592,7 @@ namespace BrainSimulator.Modules
 
         bool WithinBounds(BoundaryNeuron[,] array, int x, int y)
         {
-            if (x >= 0 && y >= 0 && x < array.GetLength(0) && y < array.GetLength(1)) return true;
+            if (x >= 0 && y >= 1 && x < array.GetLength(0) && y < array.GetLength(1)) return true;
             return false;
         }
 

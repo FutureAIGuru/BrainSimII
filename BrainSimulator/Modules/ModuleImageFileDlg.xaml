@@ -7,10 +7,12 @@
         mc:Ignorable="d"
         Title="ModuleImageFileDlg Module Dialog" Height="243" Width="383" Background="Gray" ShowInTaskbar="False">
     <Grid Name="theCanvas" SizeChanged="TheCanvas_SizeChanged" Margin="0,0,0,-2" >
-        <Button Content="Cancel" Height="25" Width="80" Click="Button_Cancel_Click" Margin="0,0,73,44" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+        <Button Content="Cancel" Height="25" Click="Button_Cancel_Click" Margin="0,0,73,44" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="80"/>
         <TextBox x:Name="textBoxPath" Height="44" TextWrapping="Wrap" Margin="10,25,47,0" VerticalAlignment="Top"/>
         <Button Content="..." Height="26" Click="Button_Browse_Click" Margin="0,32,10,0" Width="32" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-        <Button Content="OK" Height="25" Width="80" Click="Button_OK_Click" Margin="0,0,215,44" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
-        <CheckBox Content="All files in folder" x:Name="cbEntireFolder" Height="19" Margin="26,74,0,0" HorizontalAlignment="Left" Width="108" VerticalAlignment="Top"/>
+        <Button Content="OK" Height="25" Click="Button_OK_Click" Margin="0,0,215,44" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="80"/>
+        <CheckBox Content="Cycle files" x:Name="cbEntireFolder" Height="19" Margin="26,74,0,0" HorizontalAlignment="Left" Width="108" VerticalAlignment="Top"/>
+        <Button Content="&#x2190;" Margin="0,0,221,92" Width="26" Height="24" VerticalAlignment="Bottom" Click="Button_Click_Prev" HorizontalAlignment="Right"/>
+        <Button Content="&#x2192;" Height="24" Margin="0,0,190,92" VerticalAlignment="Bottom" Width="26" Click="Button_Click_Next" HorizontalAlignment="Right"/>
     </Grid>
 </local:ModuleBaseDlg>

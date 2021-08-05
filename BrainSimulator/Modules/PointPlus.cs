@@ -245,6 +245,10 @@ namespace BrainSimulator.Modules
         {
             return theAngle.CompareTo(a.theAngle);
         }
+        public float ToDegrees()
+        {
+            return theAngle * 180 / (float)PI;
+        }
     }
 
     public class ColorInt

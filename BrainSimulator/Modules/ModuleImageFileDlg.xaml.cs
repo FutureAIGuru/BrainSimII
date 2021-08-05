@@ -32,6 +32,8 @@ namespace BrainSimulator.Modules
             //this has a timer so that no matter how often you might call draw, the dialog
             //only updates 10x per second
             if (!base.Draw(checkDrawTimer)) return false;
+            ModuleImageFile parent = (ModuleImageFile)base.ParentModule;
+            textBoxPath.Text = parent.filePath;
 
             //use a line like this to gain access to the parent's public variables
             //ModuleEmpty parent = (ModuleEmpty)base.Parent1;
@@ -65,22 +67,31 @@ namespace BrainSimulator.Modules
             {
                 textBoxPath.Text = openFileDialog1.FileName;
                 ModuleImageFile parent = (ModuleImageFile)base.ParentModule;
-                parent.filePath = textBoxPath.Text;
+                parent.SetNewPath(textBoxPath.Text, false);
             }
         }
 
         private void Button_Cancel_Click(object sender, RoutedEventArgs e)
         {
-            ModuleImageFile parent = (ModuleImageFile)base.ParentModule;
-            parent.filePath = "";
             Close();
         }
 
         private void Button_OK_Click(object sender, RoutedEventArgs e)
         {
             ModuleImageFile parent = (ModuleImageFile)base.ParentModule;
-            parent.filePath = textBoxPath.Text;
-            parent.cycleThroughFolder = (bool)cbEntireFolder.IsChecked;
+            parent.SetNewPath(textBoxPath.Text, (bool)cbEntireFolder.IsChecked);
+        }
+
+        private void Button_Click_Next(object sender, RoutedEventArgs e)
+        {
+            ModuleImageFile parent = (ModuleImageFile)base.ParentModule;
+            parent.NextFile();
+        }
+
+        private void Button_Click_Prev(object sender, RoutedEventArgs e)
+        {
+            ModuleImageFile parent = (ModuleImageFile)base.ParentModule;
+            parent.PrevFile();
         }
     }
 }

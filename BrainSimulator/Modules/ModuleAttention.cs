@@ -10,26 +10,29 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Serialization;
-using static System.Math;
 
 namespace BrainSimulator.Modules
 {
-    public class $safeitemname$ : ModuleBase
+    public class ModuleAttention : ModuleBase
     {
         //any public variable you create here will automatically be saved and restored  with the network
         //unless you precede it with the [XmlIgnore] directive
         //[XlmIgnore] 
         //public theStatus = 1;
 
+        //This module directs a ImageZoom module to intersting locations
+
+        Random rand = new Random();
+
 
         //set size parameters as needed in the constructor
         //set max to be -1 if unlimited
-        public $safeitemname$()
+        public ModuleAttention()
         {
             minHeight = 2;
-            maxHeight = 500;
+            maxHeight = 5;
             minWidth = 2;
-            maxWidth = 500;
+            maxWidth = 5;
         }
 
 
@@ -39,8 +42,13 @@ namespace BrainSimulator.Modules
         {
             Init();  //be sure to leave this here
 
-            //if you want the dlg to update, use the following code whenever any parameter changes
-            // UpdateDialog();
+            Point offset = new System.Windows.Point(rand.NextDouble(), rand.NextDouble());
+            //SetNeuronValue("ImageZoom", "X", (float)offset.X);
+            //SetNeuronValue("ImageZoom", "Y", (float)offset.Y);
+            //SetNeuronValue("ImageZoom", "Scale", (float)rand.NextDouble());
+            SetNeuronValue("ImageZoom", "X", 0);
+            SetNeuronValue("ImageZoom", "Y", 0);
+            SetNeuronValue("ImageZoom", "Scale", 0);
         }
 
         //fill this method in with code which will execute once

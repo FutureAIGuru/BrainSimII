@@ -10,11 +10,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Serialization;
-using static System.Math;
 
 namespace BrainSimulator.Modules
 {
-    public class $safeitemname$ : ModuleBase
+    public class ModuleArea : ModuleBase
     {
         //any public variable you create here will automatically be saved and restored  with the network
         //unless you precede it with the [XmlIgnore] directive
@@ -24,7 +23,7 @@ namespace BrainSimulator.Modules
 
         //set size parameters as needed in the constructor
         //set max to be -1 if unlimited
-        public $safeitemname$()
+        public ModuleArea()
         {
             minHeight = 2;
             maxHeight = 500;
@@ -41,6 +40,20 @@ namespace BrainSimulator.Modules
 
             //if you want the dlg to update, use the following code whenever any parameter changes
             // UpdateDialog();
+        }
+
+        public float MatchAreaToLibrary(Thing t, out Thing tOut)
+        {
+            tOut = null;
+            return 0;
+        }
+        public Thing AddAreaToLibrary(Thing t)
+        {
+            return t;
+        }
+        public void RemoveUnusedAreasFromLibrary()
+        {
+
         }
 
         //fill this method in with code which will execute once

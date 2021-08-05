@@ -8,9 +8,7 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Configuration;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -63,7 +61,7 @@ namespace BrainSimulator.Modules
                 n.Model = Neuron.modelType.FloatValue;
             }
 
-            ModuleView naSource = theNeuronArray.FindModuleByLabel("ModuleBoundary1");
+            ModuleView naSource = theNeuronArray.FindModuleByLabel("Boundary1");
             if (naSource == null) return;
 
             strokes.Clear();
@@ -73,7 +71,7 @@ namespace BrainSimulator.Modules
             if (mlf.boundaries != null)
             {
                 DeletePreviousStrokes();
-                List<Boundary> theLines = mlf.xx;//.boundaries;
+                List<Boundary> theLines = mlf.boundarySegments;//.boundaries;
                 for (int i = 0; i < theLines.Count; i++)
                 {
                     List<Segment0> temp = FindPrimaryLines(theLines[i]);
@@ -183,7 +181,7 @@ namespace BrainSimulator.Modules
 
             for (int i = 0; i < strokes.Count; i++)
                 SaveThing(strokes[i]);
-            FindClustersOfAbsoluteStrodkes();
+            FindClustersOfAbsoluteStrokes();
             ConvertClusterToRelativeStrokes();
             MatchClustersAgainstStoredShapes();
             if (dlg != null)
@@ -289,7 +287,7 @@ namespace BrainSimulator.Modules
         }
 
         //find clusters of absolute strokes
-        void FindClustersOfAbsoluteStrodkes()
+        void FindClustersOfAbsoluteStrokes()
         {
 
         }
@@ -298,6 +296,7 @@ namespace BrainSimulator.Modules
         void ConvertClusterToRelativeStrokes()
         {
             ModuleUKS uks = (ModuleUKS)FindModuleByType(typeof(ModuleUKS));
+            if (uks == null) return;
             if (uks.Labeled("AbsStroke") == null) uks.AddThing("AbsStroke", "Visual");
             List<Thing> strokes = uks.Labeled("AbsStroke").Children;
             List<Thing> relations = uks.Labeled("Relation").Children;
@@ -336,6 +335,7 @@ namespace BrainSimulator.Modules
         void MatchClustersAgainstStoredShapes()
         {
             ModuleUKS uks = (ModuleUKS)FindModuleByType(typeof(ModuleUKS));
+            if (uks == null) return;
             if (uks.Labeled("Cluster") == null) uks.AddThing("Cluster", "Shape");
             Thing tempShape = uks.Labeled("TempShape");
             List<Thing> clusters = uks.Labeled("Cluster").Children;
@@ -450,6 +450,7 @@ namespace BrainSimulator.Modules
         void DeletePreviousStrokes()
         {
             ModuleUKS uks = (ModuleUKS)FindModuleByType(typeof(ModuleUKS));
+            if (uks == null) return;
             if (uks.Labeled("AbsStroke") == null) uks.AddThing("AbsStroke", "Visual");
             List<Thing> strokes = uks.Labeled("AbsStroke").Children;
             while (strokes.Count != 0)
@@ -481,7 +482,7 @@ namespace BrainSimulator.Modules
                             lineString = ss.Substring(0, ss.Length - 1);
                         ModuleBoundary1.GetPositionOfLinePoint((int)curPt.X, (int)curPt.Y, lineString, 100, out newX, out newY);
                         Point newPt = new Point(newX, newY);
-                        if (lineString.Length > 2)
+                        if (lineString.Length > 1)
                         {
                             theLines.Add(new Segment0 { p1 = curPt, p2 = newPt });
                             curPt = newPt;

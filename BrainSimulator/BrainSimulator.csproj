@@ -153,6 +153,9 @@
     <Compile Include="Modules\ModuleChainCounter.cs" />
     <Compile Include="Modules\ModuleColorComponent.cs" />
     <Compile Include="Modules\ModuleImageZoom.cs" />
+    <Compile Include="Modules\ModuleImageZoomDlg.xaml.cs">
+      <DependentUpon>ModuleImageZoomDlg.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\ModulePatternRecognizer.cs" />
     <Compile Include="Modules\ModulePatternGenerator.cs" />
     <Compile Include="Modules\ModuleRateDecoder2.cs" />
@@ -300,6 +303,10 @@
     <Page Include="Modules\ModuleCameraDlg.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\ModuleImageZoomDlg.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Modules\ModuleStrokeFinderDlg.xaml">
       <Generator>MSBuild:Compile</Generator>

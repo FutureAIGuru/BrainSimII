@@ -122,7 +122,13 @@ namespace BrainSimulator
             if (result != null && result.VisualHit is FrameworkElement theShape0)
             {
                 theShape = theShape0;
-
+                if (theShape.GetType() == typeof(TextBlock))
+                {
+                    var theLabel = VisualTreeHelper.GetParent(theShape);
+                    theLabel = VisualTreeHelper.GetParent(theLabel);
+                    theLabel = VisualTreeHelper.GetParent(theLabel);
+                    theShape = (FrameworkElement)theLabel;
+                }
                 //Get the type of the hit...
                 shapeType st = (shapeType)theShape.GetValue(ShapeType);
 

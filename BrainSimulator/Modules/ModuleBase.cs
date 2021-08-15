@@ -29,12 +29,13 @@ namespace BrainSimulator.Modules
         public int MinHeight => minHeight;
         public int MaxWidth => maxWidth;
         public int MaxHeight => maxHeight;
-
+        public bool isEnabled = true;
 
         protected ModuleBaseDlg dlg = null;
         public Point dlgPos;
         public Point dlgSize;
         public bool dlgIsOpen = false;
+
 
         public ModuleBase() { }
 

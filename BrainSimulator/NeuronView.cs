@@ -50,8 +50,8 @@ namespace BrainSimulator
             else
             {
                 r = new Rectangle();
-                r.Width = dp.NeuronDisplaySize;
-                r.Height = dp.NeuronDisplaySize;
+                r.Width = dp.NeuronDisplaySize-2;
+                r.Height = dp.NeuronDisplaySize-2;
             }
             r.Fill = s1;
             if (dp.ShowNeuronOutlines())

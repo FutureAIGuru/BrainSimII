@@ -34,6 +34,7 @@ namespace BrainSimulator
         static List<int> engineTimerMovingAverage;
         static public void UpdateEngineLabel(int firedCount)
         {
+            if (engineIsPaused) return;
             if (engineTimerMovingAverage == null)
             {
                 engineTimerMovingAverage = new List<int>();
@@ -47,7 +48,7 @@ namespace BrainSimulator
             string engineStatus = "Running, Speed: " + thisWindow.slider.Value + "  Cycle: " + theNeuronArray.Generation.ToString("N0") +
             "  " + firedCount.ToString("N0") + " Neurons Fired  " + (engineTimerMovingAverage.Average() / 10000f).ToString("F2") + "ms";
             thisWindow.SetStatus(3, engineStatus, 0);
-            thisWindow.SetPlayPauseButtonImage(false);
+            //thisWindow.SetPlayPauseButtonImage(false);
         }
 
         private void EngineLoop()
@@ -65,7 +66,7 @@ namespace BrainSimulator
                         Application.Current.Dispatcher.Invoke((Action)delegate
                         {
                             SetStatus(3, "Not Running   Cycle: " + theNeuronArray.Generation.ToString("N0"), 0);
-                            thisWindow.SetPlayPauseButtonImage(true);
+                            //thisWindow.SetPlayPauseButtonImage(true);
                         });
                         updateDisplay = false;
                         displayUpdateTimer.Start();
@@ -127,7 +128,7 @@ namespace BrainSimulator
         public static void ResumeEngine()
         {
             // first pop the top to make sure we balance the suspends and resumes
-            engineSpeedStack.Pop();
+            engineDelay = engineSpeedStack.Pop();
             if (theNeuronArray == null)
                 return;
 

@@ -580,7 +580,7 @@ namespace BrainSimulator.Modules
             if (nmUKS == null) return;
             actionTrainingState--;
             if (actionTrainingState <= 4 || !na.GetNeuronAt("Train").Fired()) return;
-            List<Thing> actions = nmUKS.GetChildren(nmUKS.Labeled("Action"));
+            IList<Thing> actions = nmUKS.GetChildren(nmUKS.Labeled("Action"));
             bool bResponded = false;
             foreach (Thing action in actions)
             {

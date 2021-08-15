@@ -17,6 +17,7 @@ using System.Linq;
 
 namespace BrainSimulator
 {
+    //This is not used
     class Range
     {
         float minX;
@@ -52,6 +53,24 @@ namespace BrainSimulator
             return true;
         }
     }
+
+
+    public class HSLColor
+    {
+        public float hue;
+        public float saturation;
+        public float luminance;
+        public HSLColor() { }
+        public HSLColor(float h, float s, float l)
+        {
+            hue = h;
+            saturation = s;
+            luminance = l;
+        }
+        public override string ToString()
+        { return "H:" + hue.ToString("f0") + " S:" + saturation.ToString("f3") + " L:" + luminance.ToString("f3"); }
+    }
+
 
     public static class Utils
     {

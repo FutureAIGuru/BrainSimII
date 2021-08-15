@@ -49,7 +49,7 @@ namespace BrainSimulator.Modules
                         if (nmKB != null)
                         {
                             string label = "pn" + n.Label;
-                            List<Thing> phonemes = nmKB.Labeled("Phoneme").Children;
+                            IList<Thing> phonemes = nmKB.Labeled("Phoneme").Children;
                             Thing pn = nmKB.Labeled(label, phonemes);
                             if (pn == null) //this should always be null
                             {

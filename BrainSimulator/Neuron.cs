@@ -3,7 +3,9 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
 
+using System;
 using System.Collections.Generic;
+using System.Windows;
 using System.Xml.Serialization;
 
 namespace BrainSimulator
@@ -96,6 +98,15 @@ namespace BrainSimulator
                     ownerArray.AddLabelToCache(Id, label);
                 else
                     ownerArray.RemoveLabelFromCache(Id);
+
+                //changing a label forces a neuron to update on the screen even if it is not inUse
+                if (label != "")
+                {
+                    Application.Current.Dispatcher.Invoke((Action)delegate
+                       {
+                           MainWindow.arrayView.AddNeuronToUpdateList(id);
+                       });
+                }
             }
         }
         public string ToolTip

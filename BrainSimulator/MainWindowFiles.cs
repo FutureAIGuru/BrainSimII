@@ -72,7 +72,13 @@ namespace BrainSimulator
             SetPlayPauseButtonImage(theNeuronArray.EngineIsPaused);
             SetSliderPosition(theNeuronArray.EngineSpeed);
 
-            ResumeEngine();
+            engineIsPaused = theNeuronArray.EngineIsPaused;
+
+            engineSpeedStack.Clear();
+            engineSpeedStack.Push(theNeuronArray.EngineSpeed);
+
+            if (!engineIsPaused)
+                ResumeEngine();
         }
 
         private bool LoadClipBoardFromFile(string fileName)
@@ -152,7 +158,7 @@ namespace BrainSimulator
             Properties.Settings.Default["MRUList"] = MRUList;
             Properties.Settings.Default.Save();
         }
-        
+
         private void LoadCurrentFile()
         {
             LoadFile(currentFileName);

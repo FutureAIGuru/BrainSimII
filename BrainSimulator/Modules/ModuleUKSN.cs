@@ -101,7 +101,7 @@ namespace BrainSimulator.Modules
             return retVal;
         }
 
-        public override Thing Valued(object value, List<Thing> KBt = null, float toler = 0)
+        public override Thing Valued(object value, IList<Thing> KBt = null, float toler = 0)
         {
             Thing retVal = base.Valued(value, KBt, toler);
             if (retVal != null)
@@ -424,7 +424,7 @@ namespace BrainSimulator.Modules
             //associate phonemes I've heard with phonemes I spoke 2 gens earlier
             BuildAssociation(Labeled("Phoneme"), Labeled("SpeakPhn"), 1, 1, 2);
             List<Thing> phonemes = AnyChildrenFired(Labeled("Phoneme"), 0, 0, true);
-            List<Thing> phrases = GetChildren(Labeled("Phrase"));
+            IList<Thing> phrases = GetChildren(Labeled("Phrase"));
             Thing shortTerm = Labeled("phTemp");
             if (shortTerm == null) return;
 
@@ -449,7 +449,7 @@ namespace BrainSimulator.Modules
                 }
 
                 //find any known words in the phrase
-                List<Thing> words = GetChildren(Labeled("Word"));
+                IList<Thing> words = GetChildren(Labeled("Word"));
                 foreach (Thing word in words)
                 {
                     if (word.References.Count > 0)
@@ -595,8 +595,8 @@ namespace BrainSimulator.Modules
             if (Fired(Labeled("SayRnd"), 0))
             {
                 //say a random utterance  (there is a hack to handle combiners which is needed to work with TTS)
-                List<Thing> vowels = Labeled("Vowel").Children;
-                List<Thing> consonants = Labeled("Consonant").Children;
+                IList<Thing> vowels = Labeled("Vowel").Children;
+                IList<Thing> consonants = Labeled("Consonant").Children;
                 if (consonants.Count == 0) return;
                 Thing consonant = consonants[rand.Next(consonants.Count - 2)];
                 Thing vowel1 = vowels[rand.Next(vowels.Count)];
@@ -704,12 +704,12 @@ namespace BrainSimulator.Modules
         //this learns associations between words and Events
         private void LearnWordLinks()
         {
-            List<Thing> words = GetChildren(Labeled("Word"));
+            IList<Thing> words = GetChildren(Labeled("Word"));
             foreach (Thing word in words)
             {
                 if (Fired(word, immediateMemory))
                 {
-                    List<Thing> colors = GetChildren(Labeled("Color"));
+                    IList<Thing> colors = GetChildren(Labeled("Color"));
                     foreach (Thing t in colors)
                     {
                         if (Fired(t, immediateMemory))
@@ -726,14 +726,14 @@ namespace BrainSimulator.Modules
         private void LearnActions()
         {
             if (lastPhraseHeard == null || lastActionPerformed == null) return;
-            List<Thing> outcomes = GetChildren(Labeled("Outcome"));
+            IList<Thing> outcomes = GetChildren(Labeled("Outcome"));
             foreach (Thing outcome in outcomes)
             {
                 if (Fired(outcome, immediateMemory))
                 {
                     float positive = (outcome.Label == "Positive") ? 1 : -1;
                     //do we already know this?
-                    List<Thing> Events = GetChildren(Labeled("Event"));
+                    IList<Thing> Events = GetChildren(Labeled("Event"));
                     foreach (Thing learned in Events)
                     {
                         //TODO we now have other types of Events...need to detect
@@ -767,9 +767,9 @@ namespace BrainSimulator.Modules
 
         private void DoActions()
         {
-            List<Thing> actions = GetChildren(Labeled("Action"));
+            IList<Thing> actions = GetChildren(Labeled("Action"));
             List<Thing> actionsNotYetTried = new List<Thing>(actions);// clone the list so we can keep track of what's already been tried
-            List<Thing> phrases = GetChildren(Labeled("Phrase"));
+            IList<Thing> phrases = GetChildren(Labeled("Phrase"));
 
             foreach (Thing phrase in phrases)
             {
@@ -903,7 +903,7 @@ namespace BrainSimulator.Modules
             //TODO generalize phrases which differen only in the value of a parameter (children)
             //delete a bunch of extraneous links by choosing only the hightest value
             if (!NeuronFired("Sleep")) return;
-            List<Thing> words = GetChildren(Labeled("Word"));
+            IList<Thing> words = GetChildren(Labeled("Word"));
             foreach (Thing word in words)
             {
                 Thing t = word.MostLikelyReference(Thing.ReferenceDirection.reference);

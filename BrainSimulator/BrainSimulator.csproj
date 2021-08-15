@@ -88,6 +88,9 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="IListExtension, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\IListExtension.1.0.2\lib\netstandard2.0\IListExtension.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -141,10 +144,13 @@
     <Compile Include="Modules\ModuleAttention.cs" />
     <Compile Include="Modules\ModuleBoundary.cs" />
     <Compile Include="Modules\ModuleBoundary2.cs" />
+    <Compile Include="Modules\ModuleBoundaryAreas.cs" />
+    <Compile Include="Modules\ModuleBoundaryRelationship.cs" />
     <Compile Include="Modules\ModuleBoundarySegments.cs" />
     <Compile Include="Modules\ModuleBoundarySegmentsDlg.xaml.cs">
       <DependentUpon>ModuleBoundarySegmentsDlg.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\ModuleBoundaryShapes.cs" />
     <Compile Include="Modules\ModuleCamera.cs" />
     <Compile Include="Modules\ModuleCameraDlg.xaml.cs">
       <DependentUpon>ModuleCameraDlg.xaml</DependentUpon>
@@ -153,9 +159,6 @@
     <Compile Include="Modules\ModuleChainCounter.cs" />
     <Compile Include="Modules\ModuleColorComponent.cs" />
     <Compile Include="Modules\ModuleImageZoom.cs" />
-    <Compile Include="Modules\ModuleImageZoomDlg.xaml.cs">
-      <DependentUpon>ModuleImageZoomDlg.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Modules\ModulePatternRecognizer.cs" />
     <Compile Include="Modules\ModulePatternGenerator.cs" />
     <Compile Include="Modules\ModuleRateDecoder2.cs" />
@@ -304,10 +307,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Modules\ModuleImageZoomDlg.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Modules\ModuleStrokeFinderDlg.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -388,6 +387,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

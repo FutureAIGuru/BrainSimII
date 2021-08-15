@@ -114,7 +114,7 @@ namespace BrainSimulator.Modules
             ModuleUKSN nmUKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
             if (nmUKS != null && nmUKS.Labeled("Color") != null)
             {
-                List<Thing> colors = nmUKS.Labeled("Color").Children;
+                IList<Thing> colors = nmUKS.Labeled("Color").Children;
                 //if (c1 != 0)
                 {
                     nmUKS.Fire(nmUKS.Valued(c1, colors));

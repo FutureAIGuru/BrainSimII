@@ -18,18 +18,6 @@ namespace BrainSimulator.Modules
         //break circular links by storing index values instead of actual links Note the use of SThing instead of Thing
         public List<SThing> UKSTemp = new List<SThing>();
 
-//        public override string ShortDescription { get => "Universal Knowledge Store for storing linked knowledge data"; }
-//        public override string LongDescription
-//        {
-//            get => "This module uses no neurons but can be called directly by other modules.\n\r" +
-//"Within the Knowledge Store, everything is a 'Thing' (see the source code for the 'Thing' object). Things may have parents, children, " +
-//"references to other Things, and a 'value' which can be " +
-//"any .NET object (with Color and Point being implemented). " +
-//"It can search by value with an optional tolerance. A reference to another thing is done with a 'Link' " +
-//"which is a thing with an attached weight which can be examined and/or modified.\n\r " +
-//"Note that the Knowledge store is a bit like a neural network its own right if we consider a node to be a neuron " +
-//"and a link to be a synapse.";
-//        }
 
         public override void Fire()
         {
@@ -45,26 +33,29 @@ namespace BrainSimulator.Modules
         //this is used to format debug output 
         private string ArrayToString(Thing[] list)
         {
-            string retVal = ",";
+            string retVal = "";
             if (list == null) return ".";
             foreach (Thing t in list)
             {
                 if (t == null) retVal += ".,";
                 else retVal += t.ToString() + ",";
             }
+            int index = retVal.LastIndexOf(",");
+            if (index != -1)
+                retVal = retVal.Remove(index, 1);
             return retVal;
         }
 
         public Thing ThingExists(Thing[] parents, Thing[] references = null)
         {
             Thing found = null;
-            List<Thing> things = GetChildren(parents[0]);
+            IList<Thing> things = GetChildren(parents[0]);
             foreach (Thing t in things)
             {
                 bool referenceMissing = false;
                 foreach (Thing t1 in references)
                 {
-                    if (t.References.Find(x => x.T == t1) == null)
+                    if (t.References.FindFirst(x => x.T == t1) == null)
                     {
                         referenceMissing = true;
                         break;
@@ -82,14 +73,14 @@ namespace BrainSimulator.Modules
         }
         public virtual Thing AddThing(string label, Thing[] parents, object value = null, Thing[] references = null)
         {
-            Debug.WriteLine("AddThing: " + label + " (" + ArrayToString(parents) + ") (" + ArrayToString(references) + ")");
+            //Debug.WriteLine("AddThing: " + label + " (" + ArrayToString(parents) + ") (" + ArrayToString(references) + ")");
             Thing newThing = new Thing { Label = label, V = value };
             references = references ?? new Thing[0];
             for (int i = 0; i < parents.Length; i++)
             {
                 if (parents[i] == null) return null;
-                newThing.Parents.Add(parents[i]);
-                parents[i].Children.Add(newThing);
+                newThing.ParentsWriteable.Add(parents[i]);
+                parents[i].ChildrenWriteable.Add(newThing);
             }
 
             for (int i = 0; i < references.Length; i++)
@@ -104,24 +95,27 @@ namespace BrainSimulator.Modules
 
         public virtual void DeleteThing(Thing t)
         {
+            Debug.Assert(UKS.Contains(t)); //if the thing is not in the UKS, it is free floating. Just let it go out of scope
             if (t.Children.Count != 0) return; //can't delete something with children...must delete all children first.
             foreach (Thing t1 in t.Parents)
-                t1.Children.Remove(t);
+                t1.ChildrenWriteable.Remove(t);
             foreach (Link l1 in t.References)
-                l1.T.ReferencedBy.RemoveAll(v => v.T == t);
+                l1.T.ReferencedByWriteable.RemoveAll(v => v.T == t);
             foreach (Link l1 in t.ReferencedBy)
-                l1.T.References.RemoveAll(v => v.T == t);
+                l1.T.ReferencesWriteable.RemoveAll(v => v.T == t);
             UKS.Remove(t);
         }
 
         //returns a thing with the given label
         //2nd paramter defines UKS to search, null=search entire knowledge store
-        public Thing Labeled(string label, List<Thing> UKSt = null)
+        public Thing Labeled(string label, IList<Thing> UKSt = null)
         {
             UKSt = UKSt ?? UKS; //if UKSt is null, search the entire UKS
             Thing retVal = null;
-            retVal = UKSt.Find(t => t.Label == label);
-            //if (retVal != null) retVal.useCount++;
+            //            retVal = UKSt.Find(t => t.Label == label);
+            foreach (Thing t in UKSt)
+                if (t.Label == label)
+                    return t;
             return retVal;
         }
 
@@ -175,7 +169,7 @@ namespace BrainSimulator.Modules
         //if it is null, it searches the entire UKS,
         //the 3rd paramter defines the tolerance for spatial matches
         //if it is null, an exact match is required
-        public virtual Thing Valued(object value, List<Thing> UKSt = null, float toler = 0)
+        public virtual Thing Valued(object value, IList<Thing> UKSt = null, float toler = 0)
         {
             UKSt = UKSt ?? UKS;
             foreach (Thing t in UKSt)
@@ -247,7 +241,7 @@ namespace BrainSimulator.Modules
             {
                 foreach (int p in UKSTemp[i].parents)
                 {
-                    UKS[i].Parents.Add(UKS[p]);
+                    UKS[i].ParentsWriteable.Add(UKS[p]);
                 }
                 foreach (Point p in UKSTemp[i].references)
                 {
@@ -259,7 +253,7 @@ namespace BrainSimulator.Modules
                         hits = (int)(1000 / weight);
                         misses = 1000 - hits;
                     }
-                    UKS[i].References.Add(new Link { T = UKS[(int)p.X], weight = weight, hits = hits, misses = misses });
+                    UKS[i].ReferencesWriteable.Add(new Link { T = UKS[(int)p.X], weight = weight, hits = hits, misses = misses });
                 }
             }
 
@@ -267,17 +261,17 @@ namespace BrainSimulator.Modules
             foreach (Thing t in UKS)
             {
                 foreach (Thing t1 in t.Parents)
-                    t1.Children.Add(t);
+                    t1.ChildrenWriteable.Add(t);
                 foreach (Link l in t.References)
                 {
                     Thing t1 = l.T;
-                    t1.ReferencedBy.Add(new Link { T = t, weight = l.weight });
+                    t1.ReferencedByWriteable.Add(new Link { T = t, weight = l.weight });
                 }
             }
         }
 
         //gets direct children
-        public List<Thing> GetChildren(Thing t)
+        public IList<Thing> GetChildren(Thing t)
         {
             if (t == null) return new List<Thing>();
             return t.Children;
@@ -293,12 +287,41 @@ namespace BrainSimulator.Modules
                 yield return t;
             }
         }
+        public void DeleteAllChilden(Thing t)
+        {
+            while (t.Children.Count > 0)
+            {
+                DeleteAllChilden(t.Children[0]);
+                DeleteThing(t.Children[0]);
+            }
+        }
+
+        public Thing GetOrAddThing(string label, Thing parent)
+        {
+            if (parent == null)
+                return null;
+            Thing retVal = Labeled(label, parent.Children);
+            if (retVal == null)
+                retVal = AddThing(label, parent);
+            return retVal; //if the thing already exists, return it and do not add a duplicate
+        }
+        public Thing GetOrAddThing(string label, string parentLabel)
+        {
+            Thing parent = Labeled(parentLabel);
+            if (parent == null)
+                return null;
+            Thing retVal = Labeled(label, parent.Children);
+            if (retVal == null)
+                retVal = AddThing(label, parentLabel);
+            return retVal; //if the thing already exists, return it and do not add a duplicate
+        }
 
         public Thing AddThing(string label, string parentLabel)
         {
-            Thing retVal = Labeled(label);
-            //if (retVal == null)
-            retVal = AddThing(label, new Thing[] { Labeled(parentLabel) });
+            Thing parent = Labeled(parentLabel);
+            if (parent == null)
+                return null;
+            Thing retVal = AddThing(label, new Thing[] { Labeled(parentLabel) });
             return retVal;
         }
 
@@ -326,6 +349,55 @@ namespace BrainSimulator.Modules
             return retVal;
         }
 
+        int relationshipCount = 0;
+        public Thing SetValue(Thing t1, float value, string valueName)
+        {
+            Thing valueParent = GetOrAddThing("Value", "Thing");
+            string valueString = value.ToString("f1");
+            Thing retVal = GetOrAddThing(valueName + "'" + valueString, valueParent);
+            t1.AddReference(retVal);
+            return retVal;
+        }
+
+        public Dictionary<string, float> GetValues(Thing t)
+        {
+            Dictionary<string, float> retVal = new Dictionary<string, float>();
+            foreach (Link l in t.References)
+            {
+                int splitPoint = l.T.Label.IndexOf("'");
+                if (splitPoint != -1)
+                {
+                    string name = l.T.Label.Substring(0, splitPoint);
+                    if (l.T.Parents[0].Label == "Value")
+                        name += "+";
+                    if (float.TryParse(l.T.Label.Substring(splitPoint + 1), out float value))
+                        retVal.Add(name, value);
+                }
+            }
+            return retVal;
+        }
+
+        public void AddRelationship(Thing t1, Thing t2, string relationshipName)
+        {
+            Thing relationshipParent = GetOrAddThing("Relationship", "Thing");
+            Thing relationshipType = GetOrAddThing(relationshipName, relationshipParent);
+            AddRelationship(t1, t2, relationshipType);
+        }
+        public void AddRelationship(Thing t1, Thing t2, Thing relationshipType)
+        {
+            Thing theRelationship = AddThing("rel" + relationshipCount++, relationshipType);
+            t1.AddReference(theRelationship);
+            theRelationship.AddReference(t2);
+        }
+        public void DeleteRelationship(Thing t1, Thing t2, Thing relationshipType)
+        {
+            IList<Link> relationships = t1.References.FindAll(t => t.T.Parents.Contains(relationshipType));
+            Link l = relationships.FindFirst(a => a.T.References[0].T == t2);
+            DeleteThing(l.T);
+        }
+
+
+
         public override void Initialize()
         {
             //create an intial structure with some test data
@@ -345,11 +417,10 @@ namespace BrainSimulator.Modules
             AddThing("LTurn", "Action");
             AddThing("UTurn", "Action");
             AddThing("Say", "Action");
-            AddThing("Push", "Action");
             AddThing("SayRnd", "Action");
-            AddThing("Attn", "Action");
             AddThing("Sense", "Thing");
             AddThing("Visual", "Sense");
+            AddThing("Touch", "Sense");
             AddThing("Color", "Visual");
             AddThing("Shape", "Visual");
             AddThing("Landmark", "Visual");
@@ -364,11 +435,6 @@ namespace BrainSimulator.Modules
             AddThing("ShortTerm", "Phrase");
             AddThing("phTemp", "ShortTerm");
             AddThing("NoWord", "Word");
-            AddThing("Relation", "Thing");
-            AddThing("Bigger", "Relation");
-            AddThing("SameLength", "Relation");
-            AddThing("SameAngle", "Relation");
-            AddThing("Closer", "Relation");
             AddThing("Event", "Thing");
             AddThing("Outcome", "Thing");
             AddThing("Positive", "Outcome");

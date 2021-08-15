@@ -400,6 +400,19 @@ namespace BrainSimulator
             //Debug.WriteLine("Update Done " + elapsedMs + "ms");
         }
 
+        public void AddNeuronToUpdateList(int neuronID)
+        {
+            if (neuronsOnScreen.Count == 0) return;
+            if (MainWindow.thisWindow.progressDialog.Visibility == Visibility.Visible)
+                return;
+            Neuron n = MainWindow.theNeuronArray.GetCompleteNeuron(neuronID);
+            UIElement l = NeuronView.GetNeuronView(n, this, out TextBlock lbl);
+            theCanvas.Children.Add(l);
+            if (lbl != null)    
+                theCanvas.Children.Add(lbl);
+            NeuronOnScreen neuronScreenCache = new NeuronOnScreen(neuronID, l, -10, lbl);
+            neuronsOnScreen.Add(neuronScreenCache);
+        }
 
         //just update the colors of the neurons based on their current charge
         //and synapses based on current weight

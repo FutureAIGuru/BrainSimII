@@ -1,18 +1,18 @@
-<?xml version="1.0" ?>
+<?xml version="1.0"?>
 <ArrayOfModuleDescription xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <ModuleDescription>
-        <moduleName>Module2DModel</moduleName>
-        <toolTip>Maintains an internal representation of surrounding things</toolTip>
-        <description>
+  <ModuleDescription>
+    <moduleName>Module2DModel</moduleName>
+    <toolTip>Maintains an internal representation of surrounding things</toolTip>
+    <description>
             This module receives input from the Touch and Vision modules and merges the information to maintain a representation of physical objects in the entity's environment. It also supports imagination via the temporary addition of imagined objects and the temporary change in point of view.
             Dialog: the dialog shows objects from the entity's point of view. The top of the display is forward. Objects have white ends which indicate the confidence that the distance is correct--the smaller the white, the greater the confidence.
 
         </description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>Module2DSim</moduleName>
-        <toolTip>A simulated 2D environment with obstacles</toolTip>
-        <description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>Module2DSim</moduleName>
+    <toolTip>A simulated 2D environment with obstacles</toolTip>
+    <description>
             This module uses no neurons of its own but fires neurons in various sensory modules if they are in the network. It has methods (Move and Turn and potentially others) which can be called by other modules to move its point of view around the simulation. Shift-mouse wheel can zoom the display and Shift-left mouse button can drag (pan). Right-clicking in the dialog box can direct the entity to that location. Shift + Mouse motion or mouse wheel will pan or zoom the display.
 
             Obstacles are set with synapses and will show after initiation.
@@ -22,78 +22,78 @@
             Weight=(-1,0) obstacle moves horizontally spd=weight-(-.5)
             Speeds are adjusted with the slider.
         </description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>Module2DSmell</moduleName>
-        <toolTip>Handles 2 Smell sensors</toolTip>
-        <description>This module has 2 rows of neurons representing input from two smell sensors. It receives input from the 2DSim module and outputs smell info to the Internal Model. It necessarily handles the positions of the two smell sensors forming the beginning of an internal sense of olfactory perception. </description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>Module2DTouch</moduleName>
-        <toolTip>Handles 2 Touch sensors</toolTip>
-        <description>This module has 2 rows of neurons representing input from two touch sensors. It receives input from the 2DSim module and outputs touch info to the Internal Model. It necessarily handles the positions of the two touch sensors forming the beginning of an internal sense of proprioception. </description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>Module2DVision</moduleName>
-        <toolTip>Retinae</toolTip>
-        <description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>Module2DSmell</moduleName>
+    <toolTip>Handles 2 Smell sensors</toolTip>
+    <description>This module has 2 rows of neurons representing input from two smell sensors. It receives input from the 2DSim module and outputs smell info to the Internal Model. It necessarily handles the positions of the two smell sensors forming the beginning of an internal sense of olfactory perception. </description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>Module2DTouch</moduleName>
+    <toolTip>Handles 2 Touch sensors</toolTip>
+    <description>This module has 2 rows of neurons representing input from two touch sensors. It receives input from the 2DSim module and outputs touch info to the Internal Model. It necessarily handles the positions of the two touch sensors forming the beginning of an internal sense of proprioception. </description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>Module2DVision</moduleName>
+    <toolTip>Retinae</toolTip>
+    <description>
             This module has 2 rows of neurons representing the retinal views of the right and left eyes. It receives input from the 2DSim module and finds points of interest which are color boundaries. Based on the difference in position of these boundaries in the two eyes, it estimates the distance (depth perception) of the point and passes this information to the model. As depths are approximate, it enters these as 'possible' points.
         </description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>Module3DSim</moduleName>
-        <toolTip>A simulated 3D environment with obstacles</toolTip>
-        <description>This module uses no neurons of its own but fires neurons in various sensory modules if they are in the network. It has methods (Move and Turn and potentially others) which can be called by other modules to move its point of view around the simulation. This is still largely experimental, more progress has been made in the 2DSim module.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleArm</moduleName>
-        <toolTip>A module to form one of Sallie's arms</toolTip>
-        <description>In the simulator, Sallie has arms with touch sensors which default to moving in small circles. This module can override that process with specific arem locations for experimentation with directed exploration.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleAudible</moduleName>
-        <toolTip>Under Development, do not use.</toolTip>
-        <description>Consolidation of processing of audible input outside of the UKS.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleBehavior</moduleName>
-        <toolTip>Handles a queue of behaviors.</toolTip>
-        <description>This module has primitives of Move and Turn behaviors and allows them to be queued into sequences. A sequence can be cancelled in the event of collision or other issue. By firing various input neurons the module may query the Model to decide where to turn.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleBoundary</moduleName>
-        <toolTip>Finds the boundaries in an imagefile module image.</toolTip>
-        <description>Creates a simple convoultional network to detect boundaries in an image.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleBoundary1</moduleName>
-        <toolTip>Uses code to trace boundaries in an imagefile image.</toolTip>
-        <description>Follows boundaries with code.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleCamera</moduleName>
-        <toolTip>Module Camera turns camera input into neurons.</toolTip>
-        <description>The module Camera is a module for translating the signals from an attached camera into a rectangular field of Color Neurons, which show the camera image.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleChain</moduleName>
-        <toolTip>Builds a chain of neurons with one firing the next.</toolTip>
-        <description>A quick way to create an array of neurons representing a bucket-brigade.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleChainCounter</moduleName>
-        <toolTip>Counts the number of neurons firing in a chain.</toolTip>
-        <description>Builds an array of synapse weights which can detect the number of neurons firing in a chain dictated by the size of the module.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleColorComponent</moduleName>
-        <toolTip>Module ColorComponent breaks a color into components.</toolTip>
-        <description>The ColorComponent module has four labeled nerons that have the values of the red, green, blue and intensity values of a color that is fed in. This somewhat emulates the signals which would be generated by cells in the retina. In the context menu, you can change the number of discrete levels which an individual color neuron may take and the amount of jitter in the signal</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleCommand</moduleName>
-        <toolTip>Reads neuron firing instructions from a file</toolTip>
-        <description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>Module3DSim</moduleName>
+    <toolTip>A simulated 3D environment with obstacles</toolTip>
+    <description>This module uses no neurons of its own but fires neurons in various sensory modules if they are in the network. It has methods (Move and Turn and potentially others) which can be called by other modules to move its point of view around the simulation. This is still largely experimental, more progress has been made in the 2DSim module.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleArm</moduleName>
+    <toolTip>A module to form one of Sallie's arms</toolTip>
+    <description>In the simulator, Sallie has arms with touch sensors which default to moving in small circles. This module can override that process with specific arem locations for experimentation with directed exploration.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleAudible</moduleName>
+    <toolTip>Under Development, do not use.</toolTip>
+    <description>Consolidation of processing of audible input outside of the UKS.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleBehavior</moduleName>
+    <toolTip>Handles a queue of behaviors.</toolTip>
+    <description>This module has primitives of Move and Turn behaviors and allows them to be queued into sequences. A sequence can be cancelled in the event of collision or other issue. By firing various input neurons the module may query the Model to decide where to turn.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleBoundary</moduleName>
+    <toolTip>Finds the boundaries in an imagefile module image.</toolTip>
+    <description>Creates a simple convoultional network to detect boundaries in an image.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleBoundary1</moduleName>
+    <toolTip>Uses code to trace boundaries in an imagefile image.</toolTip>
+    <description>Follows boundaries with code.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleCamera</moduleName>
+    <toolTip>Module Camera turns camera input into neurons.</toolTip>
+    <description>The module Camera is a module for translating the signals from an attached camera into a rectangular field of Color Neurons, which show the camera image.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleChain</moduleName>
+    <toolTip>Builds a chain of neurons with one firing the next.</toolTip>
+    <description>A quick way to create an array of neurons representing a bucket-brigade.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleChainCounter</moduleName>
+    <toolTip>Counts the number of neurons firing in a chain.</toolTip>
+    <description>Builds an array of synapse weights which can detect the number of neurons firing in a chain dictated by the size of the module.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleColorComponent</moduleName>
+    <toolTip>Module ColorComponent breaks a color into components.</toolTip>
+    <description>The ColorComponent module has four labeled nerons that have the values of the red, green, blue and intensity values of a color that is fed in. This somewhat emulates the signals which would be generated by cells in the retina. In the context menu, you can change the number of discrete levels which an individual color neuron may take and the amount of jitter in the signal</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleCommand</moduleName>
+    <toolTip>Reads neuron firing instructions from a file</toolTip>
+    <description>
             For testing purposes, this module reads a script file with a direction to fire specific neurons in the network. You can edit the script file in the dialog box.
 
             Format / commands:
@@ -103,87 +103,87 @@
             The 'WaitFor' command which pauses execution until the specified neuron fires.
             The 'Stop' command aborts execution at the line in the file...useful for executing just the first lines of a file.
         </description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleEvent</moduleName>
-        <toolTip>Builds Landmark objects and Event Triples in the UKS.</toolTip>
-        <description>Creates UKS things which represent objects needed for reinforcement learning. Each triple includes a Situation, an Action, and the Outcome. For a given situation, Sallie takes an action, and receives an outcome and can subsequently search the structure to select the action which leads to the best outcome for any given situation. </description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleFireOldest</moduleName>
-        <toolTip>Fires the Oldest Neuron.</toolTip>
-        <description>The module FireOldest fires the oldest neuron in the module, which can be used to trigger functionality like forgetting something.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleGoToDest</moduleName>
-        <toolTip>Demo module to show use of imagination</toolTip>
-        <description>The module accepts a destination and determines a path to get there. It works by successively trying different endpoints it can currently reach to see if there is one which can directly reach the destination. This is a demonstration of the use of various other modules.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleGraph</moduleName>
-        <toolTip>Builds a Simple Knowledge Graph in neurons.</toolTip>
-        <description>Demonstrates how neurons can be harnessed to store knowledge in relationships.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleHearWords</moduleName>
-        <toolTip>Senses words from the 2DSIM and builds phrases in the UKS.</toolTip>
-        <description>With an array of labeled word neurons, this modules senses the firing sequence and build phrase Things.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleImageFile</moduleName>
-        <toolTip>ImageFile can import images into a set of neurons.</toolTip>
-        <description>This module can import an image file or set of image files and will projectthem onto a rectangular area of Color neurons much like the Camera Module does.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleKBDebug</moduleName>
-        <toolTip>Module KBDebug is used for debugging the UKS modules.</toolTip>
-        <description>Creates a dialog box which scrolls the sequence of neuron firings into and out of the UKS. This module is used in debugging of the UKS, UKSN and UKS2 modules.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleLife</moduleName>
-        <toolTip>This module implements the Game of Life.</toolTip>
-        <description>With this module it is possible to show Conway's Game of Life implemented in neurons and synapses.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleMotor</moduleName>
-        <toolTip>Simulates a few motor funtions for Sallie.</toolTip>
-        <description>Allows for Sallies movement of wheels or limbs</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleMove</moduleName>
-        <toolTip>Moves the entity within the simulator</toolTip>
-        <description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleEvent</moduleName>
+    <toolTip>Builds Landmark objects and Event Triples in the UKS.</toolTip>
+    <description>Creates UKS things which represent objects needed for reinforcement learning. Each triple includes a Situation, an Action, and the Outcome. For a given situation, Sallie takes an action, and receives an outcome and can subsequently search the structure to select the action which leads to the best outcome for any given situation. </description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleFireOldest</moduleName>
+    <toolTip>Fires the Oldest Neuron.</toolTip>
+    <description>The module FireOldest fires the oldest neuron in the module, which can be used to trigger functionality like forgetting something.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleGoToDest</moduleName>
+    <toolTip>Demo module to show use of imagination</toolTip>
+    <description>The module accepts a destination and determines a path to get there. It works by successively trying different endpoints it can currently reach to see if there is one which can directly reach the destination. This is a demonstration of the use of various other modules.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleGraph</moduleName>
+    <toolTip>Builds a Simple Knowledge Graph in neurons.</toolTip>
+    <description>Demonstrates how neurons can be harnessed to store knowledge in relationships.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleHearWords</moduleName>
+    <toolTip>Senses words from the 2DSIM and builds phrases in the UKS.</toolTip>
+    <description>With an array of labeled word neurons, this modules senses the firing sequence and build phrase Things.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleImageFile</moduleName>
+    <toolTip>ImageFile can import images into a set of neurons.</toolTip>
+    <description>This module can import an image file or set of image files and will projectthem onto a rectangular area of Color neurons much like the Camera Module does.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleKBDebug</moduleName>
+    <toolTip>Module KBDebug is used for debugging the UKS modules.</toolTip>
+    <description>Creates a dialog box which scrolls the sequence of neuron firings into and out of the UKS. This module is used in debugging of the UKS, UKSN and UKS2 modules.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleLife</moduleName>
+    <toolTip>This module implements the Game of Life.</toolTip>
+    <description>With this module it is possible to show Conway's Game of Life implemented in neurons and synapses.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleMotor</moduleName>
+    <toolTip>Simulates a few motor funtions for Sallie.</toolTip>
+    <description>Allows for Sallies movement of wheels or limbs</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleMove</moduleName>
+    <toolTip>Moves the entity within the simulator</toolTip>
+    <description>
             The outer neurons can move the entity by pre-programmed amounts. It always moves forward or back relative to the direction it is headed.
 
             The center neuron can be applied with any float value to move the entity by a specified amount.
 
             Other modules such as Simulator and Model are informed directly of the motiion. When the Simulator is informed, a collision may cancel the requested motion.
         </description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleMoveObject</moduleName>
-        <toolTip>This module moves objects.</toolTip>
-        <description>This module can move objects around in the simulated worlds.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleNavigate</moduleName>
-        <toolTip>Navigates a Maze.</toolTip>
-        <description>The module Navigate has specific code to navigate a maze in the simulated world, and perhaps one day in the real world.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleNull</moduleName>
-        <toolTip>Module does nothing and can be used for testing</toolTip>
-        <description>Module does nothing and is used for testing.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModulePatternGenerator</moduleName>
-        <toolTip>Generates a pattern of neuron firings for testing.</toolTip>
-        <description>Has a library of output patterns and can randomly select and output them.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModulePatternRecognizer</moduleName>
-        <toolTip>Decodes input patterns from an input array.</toolTip>
-        <description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleMoveObject</moduleName>
+    <toolTip>This module moves objects.</toolTip>
+    <description>This module can move objects around in the simulated worlds.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleNavigate</moduleName>
+    <toolTip>Navigates a Maze.</toolTip>
+    <description>The module Navigate has specific code to navigate a maze in the simulated world, and perhaps one day in the real world.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleNull</moduleName>
+    <toolTip>Module does nothing and can be used for testing</toolTip>
+    <description>Module does nothing and is used for testing.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModulePatternGenerator</moduleName>
+    <toolTip>Generates a pattern of neuron firings for testing.</toolTip>
+    <description>Has a library of output patterns and can randomly select and output them.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModulePatternRecognizer</moduleName>
+    <toolTip>Decodes input patterns from an input array.</toolTip>
+    <description>
             With 'Learning' not firing:
             'RdOut' fires periodically to request data from inputs. Synapse weights are fixed. Based onthe learning algorithm, synapses are typically set so that a perfrect pattern match will fire on the first cycle and 1, 2, and 3-bit errors will fire on the subsequent cycles.
 
@@ -193,116 +193,127 @@
             To Set up:
             Add synapses from various input sources to 'P0'. The system will automatically add input synapses from all labeled neurons below the input synapses added. Add a synapse from'RdOut' to each neuron which enables inputs so this module.
         </description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleRateDecoder</moduleName>
-        <toolTip>Decode seriel input into single firings of an neuron array</toolTip>
-        <description>Assuming 1ms cycle and 4ms refractory, this module can differentiate serial input by measuring the time between adjascent spikes in an input stream. The number of different levels detected is controlled by the height of the module and it detects different interspike timings in 1ms intervals. </description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleRateDecoder2</moduleName>
-        <toolTip>Similar to RateDecoder module but twice as fast</toolTip>
-        <description>Assuming 1ms cycle and 4ms refractory, this module can differentiate serial input by measuring the time between adjascent spikes in an input stream. The number of different levels detected is controlled by the height of the module and it detects different interspike timings in 1ms intervals. This module measuring the inter-spike timing for every pair of spikes whereas RateDecoder measures for every other pair of spikes.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleRateDecoder3</moduleName>
-        <toolTip>Similar to RateDecoder module but twice as fast</toolTip>
-        <description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleRateDecoder</moduleName>
+    <toolTip>Decode seriel input into single firings of an neuron array</toolTip>
+    <description>Assuming 1ms cycle and 4ms refractory, this module can differentiate serial input by measuring the time between adjascent spikes in an input stream. The number of different levels detected is controlled by the height of the module and it detects different interspike timings in 1ms intervals. </description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleRateDecoder2</moduleName>
+    <toolTip>Similar to RateDecoder module but twice as fast</toolTip>
+    <description>Assuming 1ms cycle and 4ms refractory, this module can differentiate serial input by measuring the time between adjascent spikes in an input stream. The number of different levels detected is controlled by the height of the module and it detects different interspike timings in 1ms intervals. This module measuring the inter-spike timing for every pair of spikes whereas RateDecoder measures for every other pair of spikes.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleRateDecoder3</moduleName>
+    <toolTip>Similar to RateDecoder module but twice as fast</toolTip>
+    <description>
             Assuming 1ms cycle and 4ms refractory, this module can differentiate serial input by measuring the time between adjacent spikes in an input stream. The number of different levels detected is controlled by the height of the module and it detects different interspike timings in 1ms intervals.
 
             This module measures the inter-spike timing for every pair of spikes whereas RateDecoder measures for every other pair of spikes. The neuron labeled 'In' represents the input of the rate-encoded spiking signal. The neuron labeled 'Read' enables the output of the value which is stored in its short-term memory.
         </description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleRealityModel</moduleName>
-        <toolTip>Obsolete, do not use.</toolTip>
-        <description>Obsolete, do not use.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleShortTermMemory</moduleName>
-        <toolTip>Short Term memory, expends no energy for unlimited duration</toolTip>
-        <description>Data is entered by firing the 'I' neurons. When 'Rd' is fired, data will be present on the 'O' neurons. </description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleSpeakPhonemes</moduleName>
-        <toolTip>Uses OS speech synhesis to say phonemes.</toolTip>
-        <description>This module uses the onboard OS Speech synthesis to speak (strings of) phonemes, thus building words and sentences.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleSpeakPhonemes2</moduleName>
-        <toolTip>Uses OS speech synhesis to say phonemes.</toolTip>
-        <description>This module uses the onboard OS Speech synthesis to speak (strings of) phonemes, thus building words and sentences.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleSpeakWords</moduleName>
-        <toolTip>Uses OS speech synhesis to say words.</toolTip>
-        <description>This module uses the onboard OS Speech synthesis to speak (strings of) words, thus building entire sentences.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleSpeechIn</moduleName>
-        <toolTip>Uses OS speech recognition to detect words.</toolTip>
-        <description>This module uses the onboard OS Speech recognition to hear (strings of) words, in this case digits.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleSpeechOut</moduleName>
-        <toolTip>Uses OS speech synhesis to speak words.</toolTip>
-        <description>This module uses the onboard OS Speech synthesis to speak (strings of) words, thus building sentences.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleStrokeCenter</moduleName>
-        <toolTip>The base class for all Modules.</toolTip>
-        <description>This base class defines all common functionality for Modules.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleStrokeFinder</moduleName>
-        <toolTip>The base class for all Modules.</toolTip>
-        <description>This base class defines all common functionality for Modules.</description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleTurn</moduleName>
-        <toolTip>Rotates the entity within the simulator</toolTip>
-        <description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleRealityModel</moduleName>
+    <toolTip>Obsolete, do not use.</toolTip>
+    <description>Obsolete, do not use.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleShortTermMemory</moduleName>
+    <toolTip>Short Term memory, expends no energy for unlimited duration</toolTip>
+    <description>Data is entered by firing the 'I' neurons. When 'Rd' is fired, data will be present on the 'O' neurons. </description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleSpeakPhonemes</moduleName>
+    <toolTip>Uses OS speech synhesis to say phonemes.</toolTip>
+    <description>This module uses the onboard OS Speech synthesis to speak (strings of) phonemes, thus building words and sentences.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleSpeakPhonemes2</moduleName>
+    <toolTip>Uses OS speech synhesis to say phonemes.</toolTip>
+    <description>This module uses the onboard OS Speech synthesis to speak (strings of) phonemes, thus building words and sentences.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleSpeakWords</moduleName>
+    <toolTip>Uses OS speech synhesis to say words.</toolTip>
+    <description>This module uses the onboard OS Speech synthesis to speak (strings of) words, thus building entire sentences.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleSpeechIn</moduleName>
+    <toolTip>Uses OS speech recognition to detect words.</toolTip>
+    <description>This module uses the onboard OS Speech recognition to hear (strings of) words, in this case digits.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleSpeechOut</moduleName>
+    <toolTip>Uses OS speech synhesis to speak words.</toolTip>
+    <description>This module uses the onboard OS Speech synthesis to speak (strings of) words, thus building sentences.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleStrokeCenter</moduleName>
+    <toolTip>The base class for all Modules.</toolTip>
+    <description>This base class defines all common functionality for Modules.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleStrokeFinder</moduleName>
+    <toolTip>The base class for all Modules.</toolTip>
+    <description>This base class defines all common functionality for Modules.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleTurn</moduleName>
+    <toolTip>Rotates the entity within the simulator</toolTip>
+    <description>
             The outer neurons can rotate the entity by pre-programmed amounts.
 
             The center neuron can be applied with any float value to rotate the entity by a specified amount.Other modules such as Simulator and Model are informed directly of the rotation.
         </description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleUKS</moduleName>
-        <toolTip>Universal Knowledge Store for storing linked knowledge data</toolTip>
-        <description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleUKS</moduleName>
+    <toolTip>Universal Knowledge Store for storing linked knowledge data</toolTip>
+    <description>
             This module uses no neurons but can be called directly by other modules.
 
             Within the Knowledge Store, everything is a 'Thing' (see the source code for the 'Thing' object). Things may have parents, children, references to other Things, and a 'value' which can be any .NET object (with Color and Point being implemented). It can search by value with an optional tolerance. A reference to another thing is done with a 'Link' which is a thing with an attached weight which can be examined and/or modified.
 
             Note that the Knowledge store is a bit like a neural network its own right if we consider a node to be a neuron and a link to be a synapse.
         </description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleUKS2</moduleName>
-        <toolTip>A Knowledge Graph UKS module expanded with a neuron arrays for inputs and outputs.</toolTip>
-        <description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleUKS2</moduleName>
+    <toolTip>A Knowledge Graph UKS module expanded with a neuron arrays for inputs and outputs.</toolTip>
+    <description>
             This is like a UKS module but expanded to be accessible via neuron firings instead of just programmatically. This module uses no neurons but can be called directly by other modules.
 
             Within the Knowledge Store, everything is a 'Thing' (see the source code for the 'Thing' object). Things may have parents, children, references to other Things, and a 'value' which can be any .NET object (with Color and Point being implemented). It can search by value with an optional tolerance. A reference to another thing is done with a 'Link' which is a thing with an attached weight which can be examined and/or modified.
 
             Note that the Knowledge store is a bit like a neural network its own right if we consider a node to be a neuron and a link to be a synapse.
         </description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleUKSN</moduleName>
-        <toolTip>DEPRECATED, use UKS2! A Knowledge Graph KB module expanded with a neuron arrays for inputs and outputs.</toolTip>
-        <description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleUKSN</moduleName>
+    <toolTip>DEPRECATED, use UKS2! A Knowledge Graph KB module expanded with a neuron arrays for inputs and outputs.</toolTip>
+    <description>
             This is like a KB module but expanded to be accessible via neuron firings instead of just programmatically. This module uses no neurons but can be called directly by other modules.
 
             Within the Knowledge Store, everything is a 'Thing' (see the source code for the 'Thing' object). Things may have parents, children, references to other Things, and a 'value' which can be any .NET object (with Color and Point being implemented). It can search by value with an optional tolerance. A reference to another thing is done with a 'Link' which is a thing with an attached weight which can be examined and/or modified.
 
             Note that the Knowledge store is a bit like a neural network its own right if we consider a node to be a neuron and a link to be a synapse.
         </description>
-    </ModuleDescription>
-    <ModuleDescription>
-        <moduleName>ModuleWords</moduleName>
-        <toolTip>Read a .txt file and load the words into an array of neuons.</toolTip>
-        <description>Creates an array of neurons representing words interconnected with synapses with weights indicated the count of the next word in a sequence.</description>
-    </ModuleDescription>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleWords</moduleName>
+    <toolTip>Read a .txt file and load the words into an array of neuons.</toolTip>
+    <description>Creates an array of neurons representing words interconnected with synapses with weights indicated the count of the next word in a sequence.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleImageZoom</moduleName>
+    <toolTip>Displays a bitmap image a desired scale, rotation, and offset</toolTip>
+    <description>This reads the underlying bitmap of an ImageFile module and displays it any way needed.
+
+Neuron values in the top row set the x, y, scale, and rotation values. There are mirrored in sliders which appear in the module context folder 
+
+Minimum scale shows the tnere image in the neuron area of the module. Maximum scale shows one pixel per neuron. Rotation is about the center of the image.
+
+It is intended that an attention module will control the various parameters so the system can focus in on areas of intereest.</description>
+  </ModuleDescription>
 </ArrayOfModuleDescription>

@@ -26,6 +26,7 @@ namespace BrainSimulator
                 list.Add(listOfBs[i]);
             list.Add(typeof(PointPlus));
             list.Add(typeof(DisplayParams));
+            list.Add(typeof(HSLColor));
             return list.ToArray();
         }
 
@@ -298,7 +299,11 @@ namespace BrainSimulator
             }
             catch (Exception e)
             {
-                MessageBox.Show("Xml file write failed because: " + e.Message);
+                if (e.InnerException != null)
+                    MessageBox.Show("Xml file write failed because: " + e.InnerException.Message);
+                else
+                    MessageBox.Show("Xml file write failed because: " + e.Message);
+                MainWindow.thisWindow.SetProgress(100,"");
                 return false;
             }
             file.Position = 0; ;

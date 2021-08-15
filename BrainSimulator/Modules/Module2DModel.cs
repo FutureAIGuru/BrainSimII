@@ -18,13 +18,13 @@ namespace BrainSimulator.Modules
 
     public class Module2DModel : ModuleBase
     {
-        private List<Thing> UKSSegments;
-        private List<Thing> UKSPoints;
+        private IList<Thing> UKSSegments;
+        private IList<Thing> UKSPoints;
 
         //these are public to let the dialog box use the info
 
-        public List<Thing> GetUKSSegments() { return UKSSegments; }
-        public List<Thing> GetUKSPoints() { return UKSPoints; }
+        public IList<Thing> GetUKSSegments() { return UKSSegments; }
+        public IList<Thing> GetUKSPoints() { return UKSPoints; }
 
         //these are used to build labels for things
         //TODO make public and reset on initialize

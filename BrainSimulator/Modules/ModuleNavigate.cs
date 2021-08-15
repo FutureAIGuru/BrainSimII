@@ -48,22 +48,7 @@ namespace BrainSimulator.Modules
 
 
             //check on the various input neurons...
-            //check for a goal selection
-            foreach (Neuron n in na.Neurons())
-            {
-                if (n.Fired() && n.Label.IndexOf("c") == 0 && n.Model == Neuron.modelType.IF)
-                {
-                    Thing newTarget = UKS.Labeled(n.Label);
-                    if (newTarget == currentTarget)
-                        currentTarget = null;
-                    else
-                        currentTarget = newTarget;
-                    currentTargetReached = null;
-                    break;
-                }
-            }
-            //check for operating mode
-            auto = (GetNeuronValue(null, "Auto") == 1) ? true : false;
+            CheckNeurons(UKS);
 
             //don't do anything while a behavior is in progress
             if (GetNeuronValue("ModuleBehavior", "Done") == 0) return;
@@ -79,7 +64,7 @@ namespace BrainSimulator.Modules
 
             nmModel.FireVisibleObjects(); //not really needed
 
-            if (bestDist < .2f) //are we near a landmark we've been at before?
+            if (bestDist < .2f) //we are near a landmark we've been at before?
             {
                 SetNeuronValue(null, "Found", 1);
 
@@ -142,7 +127,6 @@ namespace BrainSimulator.Modules
             //we are in exploration mode
             //We're not at a known landmark
             //decide which way to turn at an obstacle
-            //If I am up to an obstacle...is there a decision or can I only go one way
             float distAhead = nmModel.GetDistanceAtDirection(0);
             float distLeft = nmModel.GetDistanceAtDirection((float)PI / 2);
             float distRight = nmModel.GetDistanceAtDirection((float)-PI / 2);
@@ -227,7 +211,7 @@ namespace BrainSimulator.Modules
                 }
                 else
                 {
-                    if (mostRecentDecisionPoint != null && mostRecentDecisionPoint.Children.Find(t1 => t1.References[0].T == mostRecentAction) == null)
+                    if (mostRecentDecisionPoint != null && mostRecentDecisionPoint.Children.FindFirst(t1 => t1.References[0].T == mostRecentAction) == null)
                         mEvent.AddOutcomePair(mostRecentDecisionPoint, mostRecentAction, currentEvent);
                 }
 
@@ -236,18 +220,18 @@ namespace BrainSimulator.Modules
                 //priorities...1)continue ahead 2)left 3)right or randomized (depending on comment below)
                 Thing newAction = UKS.Labeled("NoAction");
                 List<Thing> possibleActions = new List<Thing>();
-                if (currentEvent.Children.Find(t => t.References[0].T.Label == "GoS") == null && canGoAhead)
+                if (currentEvent.Children.FindFirst(t => t.References[0].T.Label == "GoS") == null && canGoAhead)
                     possibleActions.Add(UKS.Labeled("GoS"));
-                if (currentEvent.Children.Find(t => t.References[0].T.Label == "LTurnS") == null && canGoLeft)
+                if (currentEvent.Children.FindFirst(t => t.References[0].T.Label == "LTurnS") == null && canGoLeft)
                     possibleActions.Add(UKS.Labeled("LTurnS"));
-                if (currentEvent.Children.Find(t => t.References[0].T.Label == "RTurnS") == null && canGoRight)
+                if (currentEvent.Children.FindFirst(t => t.References[0].T.Label == "RTurnS") == null && canGoRight)
                     possibleActions.Add(UKS.Labeled("RTurnS"));
-                if (possibleActions.Count == 0 && currentEvent.Children.Find(t => t.References[0].T.Label == "UTurnS") == null)
+                if (possibleActions.Count == 0 && currentEvent.Children.FindFirst(t => t.References[0].T.Label == "UTurnS") == null)
                     newAction = UKS.Labeled("UTurnS");
                 else if (possibleActions.Count == 1)
                     newAction = possibleActions[0];
                 else if (possibleActions.Count > 0)
-                    //for debugging, eliminate the ransomization by alternately commenting the 2 stmts below
+                    //for debugging, eliminate the randomization by alternately commenting the 2 stmts below
                     //    newAction = possibleActions[0];
                     newAction = possibleActions[rand.Next(possibleActions.Count)];
 
@@ -266,6 +250,27 @@ namespace BrainSimulator.Modules
                 }
                 lastLandmark = currentLandmark;
                 return;
+            }
+        }
+
+        private void CheckNeurons(ModuleUKSN UKS)
+        {
+            //check for operating mode
+            auto = (GetNeuronValue(null, "Auto") == 1) ? true : false;
+
+            //check for a goal selection
+            foreach (Neuron n in na.Neurons())
+            {
+                if (n.Fired() && n.Label.IndexOf("c") == 0 && n.Model == Neuron.modelType.IF)
+                {
+                    Thing newTarget = UKS.Labeled(n.Label);
+                    if (newTarget == currentTarget)
+                    { }// currentTarget = null;
+                    else
+                        currentTarget = newTarget;
+                    currentTargetReached = null;
+                    break;
+                }
             }
         }
 
@@ -328,7 +333,7 @@ namespace BrainSimulator.Modules
 
             //landmark segments are sorted, closest segment first
             //closer segments are more important
-            List<Thing> landmarks = UKS.Labeled("Landmark").Children;
+            IList<Thing> landmarks = UKS.Labeled("Landmark").Children;
             foreach (Thing landmark in landmarks)
             {
                 float totalDist = 0;
@@ -381,8 +386,9 @@ namespace BrainSimulator.Modules
         {
             if (target == null) return null;
             ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
-            return UKS.Labeled("Event").Children.FindAll(
-                t => t.Children.Find(u => u.References[1].T == target) != null);
+
+            return UKS.Labeled("Event").ChildrenWriteable.FindAll(
+                t => t.Children.FindFirst(u => u.References[1].T == target) != null);
         }
 
         //This returns the action needed at the currentEvent in order to move toward the goal
@@ -392,23 +398,24 @@ namespace BrainSimulator.Modules
             ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
 
             //trivial case, you can go straight to goal
-            Thing pair = currentEvent.Children.Find(t => t.References[1].T == goal);
+            Thing pair = currentEvent.Children.FindFirst(t => t.References[1].T == goal);
             if (pair != null)
                 return pair.References[0].T;
 
-            List<Thing> placesToTry = FindGoal(goal);
+            IList<Thing> placesToTry = FindGoal(goal);
             //extend the list of connections to existing nodes until we reach our current position
             for (int i = 0; i < placesToTry.Count; i++)
             {
-                List<Thing> newPlacesToTry = FindGoal(placesToTry[i]);
+                IList<Thing> newPlacesToTry = FindGoal(placesToTry[i]);
                 if (newPlacesToTry.Contains(currentEvent))
                 {
                     Thing target = placesToTry[i]; //target is the intermediate target
-                    pair = currentEvent.Children.Find(t => t.References[1].T == target);
+                    pair = currentEvent.Children.FindFirst(t => t.References[1].T == target);
                     return pair.References[0].T; //return the action of the outcome pair
                 }
                 foreach (Thing t in newPlacesToTry)
-                    if (!placesToTry.Contains(t)) placesToTry.Add(t);
+                    if (!placesToTry.Contains(t)) 
+                        placesToTry.Add(t);
             }
             return null;
         }

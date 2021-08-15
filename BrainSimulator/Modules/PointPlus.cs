@@ -21,6 +21,10 @@ namespace BrainSimulator.Modules
         private bool polarDirty = false;
         private bool xyDirty = false;
 
+        public static implicit operator Point(PointPlus a) => a.p;
+        public static implicit operator PointPlus(Point a) => new PointPlus(a);
+
+
         public PointPlus()
         {
             r = 0;
@@ -230,7 +234,7 @@ namespace BrainSimulator.Modules
     //it's really just an extension of float...it also accepts assignment from a double without an explicit cast
     public class Angle
     {
-        private readonly float theAngle;
+        private float theAngle;
         public Angle(float angle) { this.theAngle = angle; }
         public static implicit operator float(Angle a) => a.theAngle;
         public static implicit operator Angle(float a) => new Angle(a);
@@ -245,9 +249,19 @@ namespace BrainSimulator.Modules
         {
             return theAngle.CompareTo(a.theAngle);
         }
+
+        public float Degrees
+        {
+            get { return theAngle * 180 / (float)PI; }
+            set { theAngle = (float)(value * PI / 180.0); }
+        }
         public float ToDegrees()
         {
             return theAngle * 180 / (float)PI;
+        }
+        public float FromDegrees(float degrees)
+        {
+            return (float)(degrees * PI / 180.0);
         }
     }
 

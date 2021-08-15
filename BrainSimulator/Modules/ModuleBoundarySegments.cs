@@ -30,11 +30,18 @@ namespace BrainSimulator.Modules
             minWidth = 2;
             maxWidth = 500;
         }
+
+        int bndryPtCt = 0;
+        int bndryCt = 0;
+
+
+        //TODO: Add color because down-the-road, only similar-colored boundary arcs can be related
         public class Arc
         {
             public Point p1;
             public Point p2;
-            public Point p3;
+            //public Point p3; //we'll use this as the arc midpoint when arcs are curved
+
             public float Length
             {
                 get => (float)((Vector)(p1 - (Vector)p2)).Length;
@@ -85,6 +92,7 @@ namespace BrainSimulator.Modules
 
             //FindFavoredPoints();
 
+            DeleteBoundariesFromUKS();
             boundaries.Clear();
 
             FindHorizBoundaries();
@@ -94,9 +102,55 @@ namespace BrainSimulator.Modules
             JoinColinearSegments(boundaries);
             JoinEndsWhichMissBy1(-1);
 
+            //delete zero-length segments
+            for (int i = 0; i < boundaries.Count; i++)
+            {
+                if (boundaries[i].Length == 0)
+                {
+                    boundaries.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            AddBoundarySegmentsToUKS();
+
             //if you want the dlg to update, use the following code whenever any parameter changes
             UpdateDialog();
         }
+        private void DeleteBoundariesFromUKS()
+        {
+
+        }
+
+        void AddBoundarySegmentsToUKS()
+        {
+            naSource = theNeuronArray.FindModuleByLabel("UKS");
+            if (naSource == null) return;
+            ModuleUKS uks = (ModuleUKS)naSource.TheModule;
+            Thing segmentParent = uks.Labeled("Segment");
+            if (segmentParent == null) 
+                segmentParent= uks.AddThing("Segment", "Shape");
+            Thing pointParent = uks.Labeled("ModelThing"); //TODO: this modelthing is a 2D and we're now in 3D
+            if (pointParent == null) return;
+
+            uks.DeleteAllChilden(segmentParent);
+            //uks.DeleteAllChilden(pointParent);
+            
+            for (int i = 0; i < boundaries.Count; i++)
+            {
+                if (boundaries[i].Length > 0)
+                {
+                    Thing pt1 = uks.AddThing("BndryPt" + bndryPtCt++, new Thing[] { pointParent, segmentParent });
+                    pt1.V = (PointPlus)boundaries[i].p1;
+                    Thing pt2 = uks.AddThing("BndryPt" + bndryPtCt++, new Thing[] { pointParent, segmentParent });
+                    pt2.V = (PointPlus)boundaries[i].p2;
+                    Thing seg = uks.AddThing("BndrySeg" + bndryCt++, "Segment");
+                    seg.AddChild(pt1);
+                    seg.AddChild(pt2);
+                }
+            }
+        }
+
 
         void FindHorizBoundaries()
         {
@@ -107,14 +161,14 @@ namespace BrainSimulator.Modules
                 for (int i = 0; i < naSource.Width; i++)
                 {
                     if (i == 4 && j == 36)
-                            { }
+                    { }
                     if (naSource.GetNeuronAt(i, j) is Neuron n)
                     {
                         if (n.LastCharge > 0.9f && n.LastCharge < 1)
                         {
                             favoredPoints.Add(new Point(i, j));
                         }
-                        if (n.LastCharge  > 0.9f)
+                        if (n.LastCharge > 0.9f)
                         {
                             if (GetNeuronAndValue(i - 1, j) == 0)
                             {
@@ -206,7 +260,6 @@ namespace BrainSimulator.Modules
             //special case where a line has been removed (at the bottom of a v)
             else if (tList3[i].p1.Y != a1.p1.Y && tList3[i].p2.Y != a1.p1.Y)
             {
-                Arc x = tList3[i];
                 //tList3.Add(new Arc { p1 = PointCopy(a2.p1), p2 = PointCopy(tList3[i].p2) });
                 tList3.Add(new Arc { p1 = PointCopy(tList3[i].p2), p2 = PointCopy(a2.p1) });
                 tList3[i].p2 = a2.p1;
@@ -651,8 +704,8 @@ namespace BrainSimulator.Modules
             float dy = (float)(a.p2.Y - a.p1.Y);
             if (Math.Abs(dx) > Math.Abs(dy))
             {
-                dx = dx / Math.Abs(dx);
-                dy = dy / Math.Abs(dx);
+                dx /= Math.Abs(dx);
+                dy /= Math.Abs(dx);
             }
             else
             {

@@ -199,7 +199,8 @@ namespace BrainSimulator
 #if !DEBUG
                         try
                         {
-                            na.TheModule.Fire();
+                            if (na.TheModule.isEnabled)
+                                na.TheModule.Fire();
                         }
                         catch (Exception e)
                         {
@@ -216,7 +217,8 @@ namespace BrainSimulator
                             badModule = i;
                         }
 #else
-                        na.TheModule.Fire();
+                        if (na.TheModule.isEnabled)
+                            na.TheModule.Fire();
 #endif
                     }
                 }

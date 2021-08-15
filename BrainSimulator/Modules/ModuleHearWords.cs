@@ -37,7 +37,7 @@ namespace BrainSimulator.Modules
                         ModuleUKSN nmUKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
                         if (nmUKS != null)
                         {
-                            List<Thing> words = nmUKS.Labeled("Word").Children;
+                            IList<Thing> words = nmUKS.Labeled("Word").Children;
                             Thing w = nmUKS.Valued(word, words);
                             if (w == null)
                             {

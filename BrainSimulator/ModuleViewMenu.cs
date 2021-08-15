@@ -40,6 +40,10 @@ namespace BrainSimulator
             mi.Click += Mi_Click;
             cm.Items.Add(mi);
 
+            mi = new MenuItem();
+            mi.Header = new CheckBox {Name="Enabled", Content = "Enabled",IsChecked=nr.TheModule.isEnabled, };
+            cm.Items.Add(mi);
+
             sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
             sp.Children.Add(new Label { Content = "Width: ", VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) });
             TextBox tb0 = new TextBox { Text = nr.Width.ToString(), Width = 60, Name = "AreaWidth", VerticalAlignment = VerticalAlignment.Center };
@@ -248,6 +252,11 @@ namespace BrainSimulator
                 Control cc = Utils.FindByName(cm, "AreaName");
                 if (cc is TextBox tb)
                     label = tb.Text;
+                cc = Utils.FindByName(cm, "Enabled");
+                bool isEnabled = true;
+                if (cc is CheckBox cb2)
+                    isEnabled = (bool) cb2.IsChecked;
+
                 cc = Utils.FindByName(cm, "AreaWidth");
                 if (cc is TextBox tb1)
                     int.TryParse(tb1.Text, out width);
@@ -274,6 +283,7 @@ namespace BrainSimulator
                 theModuleView.Label = label;
                 theModuleView.CommandLine = commandLine;
                 theModuleView.Color = Utils.ColorToInt(color);
+                theModuleView.TheModule.isEnabled = isEnabled;
 
                 //did we change the module type?
                 string[] Params = commandLine.Split(' ');
@@ -311,7 +321,7 @@ namespace BrainSimulator
         public static void CreateModule(string label, string commandLine, Color color, int firstNeuron, int width, int height)
         {
             ModuleView mv = new ModuleView(firstNeuron, width, height, label, commandLine, Utils.ColorToInt(color));
-       
+
             if (mv.Width < mv.theModule.MinWidth) mv.Width = mv.theModule.MinWidth;
             if (mv.Height < mv.theModule.MinHeight) mv.Height = mv.theModule.MinHeight;
             MainWindow.theNeuronArray.modules.Add(mv);

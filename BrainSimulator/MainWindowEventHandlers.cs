@@ -365,7 +365,7 @@ namespace BrainSimulator
             if (value > 9)
                 interval = 0;
             engineDelay = interval;
-            if (theNeuronArray != null) 
+            if (theNeuronArray != null)
                 theNeuronArray.EngineSpeed = interval;
             if (!engineThread.IsAlive)
                 engineThread.Start();
@@ -516,28 +516,32 @@ namespace BrainSimulator
             ResumeEngine();
         }
 
+        //this is two buttons on one event handler for historical reasons
         private void PlayPause_Click(object sender, RoutedEventArgs e)
         {
             if (theNeuronArray == null)
                 return;
-                
-            if (!theNeuronArray.EngineIsPaused)
-            {
-                SetPlayPauseButtonImage(true);
-                SuspendEngine();
-                theNeuronArrayView.UpdateNeuronColors();
-                theNeuronArray.EngineIsPaused = true;
-            }
-            else
-            {
-                SetPlayPauseButtonImage(false);
-                theNeuronArray.EngineIsPaused = false;
-                ResumeEngine();
-            }
+
+            if (sender is Button playOrPause)
+                if (playOrPause.Name == "buttonPause")
+                {
+                    SetPlayPauseButtonImage(true);
+                    SuspendEngine();
+                    theNeuronArrayView.UpdateNeuronColors();
+                    engineIsPaused = true;
+                    theNeuronArray.EngineIsPaused = true;
+                }
+                else
+                {
+                    SetPlayPauseButtonImage(false);
+                    theNeuronArray.EngineIsPaused = false;
+                    engineIsPaused = false;
+                    ResumeEngine();
+                }
         }
-        public void SetPlayPauseButtonImage(bool play)
+        public void SetPlayPauseButtonImage(bool paused)
         {
-            if (play)
+            if (paused)
             {
                 buttonPlay.IsEnabled = true;
                 buttonPause.IsEnabled = false;
@@ -563,7 +567,7 @@ namespace BrainSimulator
                 }
                 else
                 {
-                    SetPlayPauseButtonImage(false);
+                    SetPlayPauseButtonImage(true);
                     theNeuronArray.Fire();
                     theNeuronArrayView.UpdateNeuronColors();
                 }
@@ -738,7 +742,7 @@ namespace BrainSimulator
 
                 DateTime starttTime = DateTime.Now;
 
-                while (latestProcess == null && DateTime.Now < starttTime + new TimeSpan(0,0,3))
+                while (latestProcess == null && DateTime.Now < starttTime + new TimeSpan(0, 0, 3))
                 {
                     theProcesses1 = Process.GetProcesses();
                     for (int i = 1; i < theProcesses1.Length; i++)

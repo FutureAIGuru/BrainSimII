@@ -10,10 +10,69 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Xml.Serialization;
+
 
 namespace BrainSimulator.Modules
 {
+    class Array2D
+    {
+        int[,] theArray;
+        public Array2D(int size1, int size2)
+        {
+            theArray = new int[size1, size2];
+        }
+
+        public int this[int key1, int key2]
+        {
+            get
+            {
+                if (key1 < 0 || key2 < 0) return 0;
+                if (key1 >= theArray.GetLength(0) || key2 >= theArray.GetLength(1)) return 0;
+                return (int)theArray[key1, key2];
+            }
+            set
+            {
+                if (key1 < 0 || key2 < 0) return;
+                if (key1 >= theArray.GetLength(0) || key2 >= theArray.GetLength(1)) return;
+                theArray[key1, key2] = value;
+            }
+        }
+        public int GetLength(int index)
+        {
+            return theArray.GetLength(index);
+        }
+    }
+    class Array2DF
+    {
+        float[,] theArray;
+        public Array2DF(int size1, int size2)
+        {
+            theArray = new float[size1, size2];
+        }
+
+        public float this[int key1, int key2]
+        {
+            get
+            {
+                if (key1 < 0 || key2 < 0) return 0;
+                if (key1 >= theArray.GetLength(0) || key2 >= theArray.GetLength(1)) return 0;
+                return (float)theArray[key1, key2];
+            }
+            set
+            {
+                if (key1 < 0 || key2 < 0) return;
+                if (key1 >= theArray.GetLength(0) || key2 >= theArray.GetLength(1)) return;
+                theArray[key1, key2] = value;
+            }
+        }
+        public int GetLength(int index)
+        {
+            return theArray.GetLength(index);
+        }
+    }
+
     public class ModuleBoundary2 : ModuleBase
     {
         //any public variable you create here will automatically be saved and restored  with the network
@@ -32,8 +91,9 @@ namespace BrainSimulator.Modules
             maxWidth = 500;
         }
 
-        int hueLimit = 10; // minimum hue difference for boundary (in degrees)
-        float brightLimit = .5f; // minimum hue difference for boundary (in degrees)
+        public int hueLimit = 10; // minimum hue difference for boundary (in degrees)
+        public float brightLimit = .5f; // minimum hue difference for boundary (in degrees)
+        public float satLimit = .5f; // minimum hue difference for boundary (in degrees)
 
 
         //fill this method in with code which will execute
@@ -44,15 +104,16 @@ namespace BrainSimulator.Modules
             ModuleView source = theNeuronArray.FindModuleByLabel("ImageZoom");
             if (source == null) return;
 
-            int[,] neuronValues = new int[source.Width, source.Height];
+            //read the neuron values into an internal array
+            Array2D neuronValues = new Array2D(source.Width, source.Height);
             for (int j = 1; j < source.Height; j++)
                 for (int i = 0; i < source.Width; i++)
                 {
                     neuronValues[i, j] = source.GetNeuronAt(i, j).LastChargeInt;
                 }
 
-            float[,] neuronValues1 = new float[na.Width, na.Height];
-
+            //find all the points which have different color values than their neighbors
+            Array2DF neuronValues1 = new Array2DF(na.Width, na.Height);
             for (int i = 0; i < source.Width && i < na.Width; i++)
             {
                 for (int j = 1; j < source.Height && i < na.Height; j++)
@@ -64,11 +125,13 @@ namespace BrainSimulator.Modules
                 }
             }
 
-            float[,] neuronValues2 = new float[neuronValues1.GetLength(0), neuronValues1.GetLength(0)];
+            //every boundary is twice as wide as needed...thin them
+            Array2DF neuronValues2 = new Array2DF(neuronValues1.GetLength(0), neuronValues1.GetLength(0));
             for (int i = 0; i < neuronValues1.GetLength(0) - 1; i++)
             {
                 for (int j = 0; j < neuronValues1.GetLength(1) - 1; j++)
                 {
+                    //neuronValues2[i, j] = neuronValues1[i, j];
                     if (neuronValues1[i, j] == 1 &&
                         neuronValues1[i + 1, j] == 1 &&
                         neuronValues1[i, j + 1] == 1 &&
@@ -79,8 +142,13 @@ namespace BrainSimulator.Modules
                 }
             }
 
-            MatchPatterns(neuronValues2);
+            //corner areas need to be cleaned up
+            CleanUpBoundaries(neuronValues2);
 
+            //specific corner pixels are located
+            FindCorners(neuronValues2);
+
+            //set the neuron values from the internal array
             for (int i = 0; i < na.Width; i++)
             {
                 for (int j = 1; j < na.Height; j++)
@@ -96,51 +164,200 @@ namespace BrainSimulator.Modules
             //UpdateDialog();
         }
 
-
-        void MatchPatterns(float[,] neuronValues)
+        void CleanUpBoundaries(Array2DF neuronValues)
         {
             //0 must be 0, 1 must be 1, 2 don't care, -1 must be one, change to 0, -2 don't care, change to 0
-            float[,,] matchPatterns4 = new float[,,]
+            float[,,] matchPatterns = new float[,,]
             {
-         {{ 0, 0, 0, 0 },
-          { 1, 1, 1, 2 },
-          { -1, -1, -1, 2 },
-          { 0, 0, 0, 0 } },
-         {{ 2, 0, 0, 0 },
-          { 1, 1, -1, 0 },
-          { 0, -1, 1, 1 },
-          { 0, 0, 0, 2 } },
-         {{ 1, 1, 0, 0 },
-          { 0, 1,  1, 0 },
-          { 0, -1, 1, 0},
-          { 0, -1, 1, 2 } },
-         {{ 0, 0, 0, 0 },
-          { 2, 1,  1, 0 },
-          { 1, -1, -1, 1},
-          { 2, -2, -2, 2 } },
-         {{ 0, 0, 1, 0 },
-          { 0, -1,  1, 0 },
-          { 1, -1, 1, 0},
-          { 0, 1, 0, 0 } },
-         {{ 0, 1, 0, 0 },
-          { 0, 1, -1, 1 },
-          { 0, 1, 1, 0},
-          { 0, 0, 0, 0 } },
-         {{ 0, 0, 0, 0 },
-          { 0, 1, 1, 1 },
-          { 0, 1, -1, 1},
-          { 0, 1, 0, 0 } },
-         {{ 2, 1, 0, 0 },
-          { 0, -1, 1, 1 },
-          { 0, -1, 1, 0},
-          { 0, 1, 0, 0 } },
-         {{ 0, 0, 0, 2 },
-          { 0, 1, 1, 1 },
-          { 0, 1, -1, 0},
-          { 0, 0, 1, 0 } },
+                {{ 0, 0, 0, 1,},
+                { 1, -1, -1, 1,},
+                { 0, 1, 1, 1,},
+                { 0, 0, 0, 0,},
+                },
+                {{ 0, 0, 0, 0,},
+                { 0, -1, -1, 1,},
+                { 1, 1, 1, 0,},
+                { 0, 0, 0, 0,},
+                },
+                {{ 0, 0, 0, 0,},
+                { 1, 1, 1, 0,},
+                { 0, -1, 1, 0,},
+                { 0, 1, 0, 0,},
+                },
+                {{ 0, 0, 0, 0,},
+                { 0, 1, 1, 0,},
+                { 1, -1, -1, 1,},
+                { 1, 0, 0, 0,},
+                },
+                {{ 0, 0, 1, 1,},
+                { 1, -1, 1, 0,},
+                { 0, 1, 1, 0,},
+                { 0, 0, 0, 0,},
+                },
+                {{ 1, 0, 0, 0,},
+                { 1, 1, 1, 0,},
+                { 0, -1, 1, 0,},
+                { 0, 1, 0, 0,},
+                },
+                {{ 0, 0, 1, 0,},
+                { 0, 1, -1, 0,},
+                { 0, 1, -1, 0,},
+                { 0, 1, 1, 1,},
+                },
+                {{ 0, 1, 1, 0,},
+                { 0, 1, -1, 0,},
+                { 0, 1, 1, 1,},
+                { 0, 0, 0, 1,},
+                },
+                {{ 0, 0, 0, 0,},
+                { 0, 1, 1, 0,},
+                { 0, 1, -1, 1,},
+                { 1, -1,- 1, -1,},
+                },
+                {{ 0, 1, 1, 0,},
+                { 0, 1, -1, 1,},
+                { 1, -1,- 1, 1,},
+                { 1, 0, 0, 0,},
+                },
+                {{ 1, -1, 0, 0,},
+                { 1, -1, -1, 0,},
+                { 1, 1, 1, 1,},
+                { 0, 0, 0, 0,},
+                },
+                {{ 0, 0, 0, 1,},
+                { 1, -1, -1, 1,},
+                { 0, 1, 1, 0,},
+                { 0, 0, 0, 0,},
+                },
+                {{ 1, 1, 0, 0,},
+                { 0, -1, 1, 0,},
+                { 0, -1, 1, 0,},
+                { 0, 1, 0, 0,},
+                },
+                {{ 0, 0, 1, 1,},
+                { 0, 1, -1, 0,},
+                { 0, 1, -1, 0,},
+                { 0, 1, 1, 1,},
+                },
+                {{ 0, 0, 0, 0,},
+                { 0, 1, 1, 1,},
+                { 1, -1, -1, 1,},
+                { 1, 0, 0, 1,},
+                },
+                {{ 0, 0, 0, 0,},
+                { 1, 1, 1, 0,},
+                { 1, -1, 1, 0,},
+                { 0, 0, 1, 1,},
+                },
+                {{ 0, 0, 0, 0,},
+                { 1, -1, -1, 1,},
+                { 0, 1, -1, 1,},
+                { 0, 1, 1, 0,},
+                },
+                {{ 1, -1, -1, 1,},
+                { 0, 1, -1, 1,},
+                { 0, 1, 1, 0,},
+                { 0, 0, 0, 0,},
+                },
+                {{ 0, 0, 0, 1,},
+                { 1, -1, -1, 1,},
+                { 1, -1, 1, 0,},
+                { 1, 1, 0, 0,},
+                },
+                {{ 0, 1, 0, 0,},
+                { 0, 1, 1, 1,},
+                { 0, 1, -1, 1,},
+                { 0, 1, 1, 0,},
+                },
+                {{ 0, 1, 1, 1,},
+                { 0, -1,- 1, 1,},
+                { 0, 1, 1, 0,},
+                { 1, 1, 0, 0,},
+                },
+                {{ 1, 0, 0, 0,},
+                { -1, 1, 1, 0,},
+                { -1, -1, 1, 0,},
+                { -1, 1, 0, 0,},
+                },
 
+                {{ 0, 0, 1, 0,},
+                { 0, -1, 1, 0,},
+                { 0, 1, 1, 0,},
+                { 1, 1, 0, 0,},
+                },
             };
+            for (int i = 0; i < neuronValues.GetLength(0) - 1; i++)
+            {
+                for (int j = 0; j < neuronValues.GetLength(1) - 1; j++)
+                {
+                    //remove remaining "fours": a cluster of 4 firing neurons confuses the segment-finder
+                    if (neuronValues[i, j] > 0.8f &&
+                        neuronValues[i + 1, j] > 0.8f &&
+                        neuronValues[i, j + 1] > 0.8f &&
+                        neuronValues[i + 1, j + 1] > 0.8f)
+                    {
+                        for (int k = 0; k < matchPatterns.GetLength(0); k++)
+                        {
+                            for (int orientation = 0; orientation < 8; orientation++)
+                            {
+                                for (int i1 = 0; i1 < 4; i1++)
+                                {
+                                    for (int j1 = 0; j1 < 4; j1++)
+                                    {
+                                        float arrayVal = GetArrayValue(k, orientation, i1, j1, matchPatterns);
+                                        if (Math.Abs(arrayVal) != 2)
+                                        {
+                                            //TODO add range limiting throughout
+                                            int x = i1 + i - 1;
+                                            int y = j1 + j - 1;
+                                            if (neuronValues[x, y] != Math.Abs(arrayVal))
+                                                goto noMatch;
+                                        }
+                                    }
+                                }
+                                for (int i1 = 0; i1 < 4; i1++)
+                                {
+                                    for (int j1 = 0; j1 < 4; j1++)
+                                    {
+                                        float arrayVal = GetArrayValue(k, orientation, i1, j1, matchPatterns);
+                                        if (arrayVal < 0)
+                                        {
+                                            neuronValues[i1 + i - 1, j1 + j - 1] = 0;// 0.99f; change tis to tag removed points for testing
+                                        }
+                                    }
+                                }
+                                goto MatchFound;
+                            noMatch:
+                                {
+                                }
+                            }
+                        }
+                        //no match found
 
+                        string pattern = "x=" + i + " y=" + j + "\n{";
+                        for (int j1 = 0; j1 < 4; j1++)
+                        {
+                            pattern += "{";
+                            for (int i1 = 0; i1 < 4; i1++)
+                            {
+                                pattern += neuronValues[i1 + i - 1, j1 + j - 1] == 1 ? " 1," : " 0,";
+                            }
+                            pattern += "},\n";
+                        }
+                        pattern += "},";
+                        { } //SET A BREAKPOINT HERE.  If it is hit, open the "pattern" variable with the text visualizer and copy/paste the content to the pattern list above
+                            //negate the 1's to be removed
+
+                    MatchFound:
+                        { }
+                    }
+                }
+            }
+
+        }
+
+        void FindCorners(Array2DF neuronValues)
+        {
             //0 must be 0, 1 must be 1, 2 don't care, center is marked as corner
             //special case: -2 where corner point is initially 0 & -3 point to be cleared
             float[,,] matchPatternsCorner = new float[,,]
@@ -150,11 +367,11 @@ namespace BrainSimulator.Modules
           { 0, 1, 1, 1, 0 },
           { 1, 1, 2, 2, 1 },
           { 2, 2, 2, 2, 2 } },
-         {{ 2, 2, 2, 2, 2 },
-          { 2, 0, 0 , 0, 2 },
-          { 2, 1, -1, 0, 2 },
-          { 2, 2,  1, 0, 2 },
-          { 2, 2,  2, 2, 2 } },
+         {{ 2, 2, 0, 0, 2 },
+          { 2, 0, 0, 0, 0 },
+          { 2, 1,-1, 0, 0 },
+          { 2, 2, 1, 0, 2 },
+          { 2, 2, 2, 2, 2 } },
          {{ 2, 2, 2, 2, 2 },
           { 2, 0, 0, 0, 2 },
           { 2, 0,-1, 0, 2 },
@@ -185,75 +402,6 @@ namespace BrainSimulator.Modules
             {
                 for (int j = 0; j < neuronValues.GetLength(1) - 1; j++)
                 {
-                    //remove remaining "fours": a cluster of 4 firing neurons confuses the segment-finder
-                    if (neuronValues[i, j] > 0.8f &&
-                        neuronValues[i + 1, j] > 0.8f &&
-                        neuronValues[i, j + 1] > 0.8f &&
-                        neuronValues[i + 1, j + 1] > 0.8f)
-                    {
-                        for (int k = 0; k < matchPatterns4.GetLength(0); k++)
-                        {
-                            for (int orientation = 0; orientation < 8; orientation++)
-                            {
-                                for (int i1 = 0; i1 < 4; i1++)
-                                {
-                                    for (int j1 = 0; j1 < 4; j1++)
-                                    {
-                                        float arrayVal = GetArrayValue(k, orientation, i1, j1, matchPatterns4);
-                                        if (Math.Abs(arrayVal) != 2)
-                                        {
-                                            if (neuronValues[i1 + i - 1, j1 + j - 1] != Math.Abs(arrayVal))
-                                                goto noMatch;
-                                        }
-                                    }
-                                }
-                                for (int i1 = 0; i1 < 4; i1++)
-                                {
-                                    for (int j1 = 0; j1 < 4; j1++)
-                                    {
-                                        float arrayVal = GetArrayValue(k, orientation, i1, j1, matchPatterns4);
-                                        if (arrayVal < 0)
-                                        {
-                                            neuronValues[i1 + i - 1, j1 + j - 1] = 0;// 0.99f; change tis to tag removed points for testing
-                                        }
-                                    }
-                                }
-                                goto MatchFound;
-                            }
-                        noMatch:
-                            {
-                            }
-
-
-                        }
-                        //no match found
-
-                        string pattern = "x=" + i + " y=" + j + "\n{";
-                        for (int j1 = 0; j1 < 4; j1++)
-                        {
-                            pattern += " {";
-                            for (int i1 = 0; i1 < 4; i1++)
-                            {
-                                pattern += neuronValues[i1 + i - 1, j1 + j - 1] == 1 ? " 1," : " 0,";
-                            }
-                            pattern += "},\n";
-                        }
-                        pattern += "},";
-                        { } //SET A BREAKPOINT HERE.  If it is hit, open the "pattern" variable with the text visualizer and copy/paste the content to the pattern list above
-                            //negate the 1's to be removed
-
-                    MatchFound:
-                        { }
-                        //enable this to flag quads which aren't found and repaired
-                        //if (!processed)
-                        //{
-                        //    if (na.GetNeuronAt(i, j) is Neuron n)
-                        //    {
-                        //        n.LastCharge = 0.8f;
-                        //        n.Update();
-                        //    }
-                        //}
-                    }
                     //Tag corner points
                     if (neuronValues[i, j] == 1)
                     {
@@ -287,15 +435,7 @@ namespace BrainSimulator.Modules
                                 int y = j + cy - 2;
                                 neuronValues[x, y] = 0.99f;
 
-                                //if (cx != 2 || cy != 2)
-                                //{
-                                //    if (na.GetNeuronAt(i, j) is Neuron n1)
-                                //    {
-                                //        n1.LastCharge = 0f;
-                                //        n1.Update();
-                                //    }
 
-                                //}
                                 break;
                             noMatch:
                                 {
@@ -378,32 +518,34 @@ namespace BrainSimulator.Modules
         }
 
         //        bool IsBoundary(int x, int y, ModuleView mv)
-        bool IsBoundary(int x, int y, int[,] neuronValues)
+        bool IsBoundary(int x, int y, Array2D neuronValues)//int[,] neuronValues)
         {
             //if (mv.GetNeuronAt(x, y) is Neuron n)
             {
 
                 Color c = Utils.IntToDrawingColor(neuronValues[x, y]);
-                //if (c == Utils.IntToDrawingColor(0xffffff)) return false;
                 for (int i = 0; i < 8; i++)
                 {
                     GetDeltasFromDirection(i, out int dx, out int dy);
                     int x1 = x + dx;
                     int y1 = y + dy;
-                    if (x1 >= 0 && x1 < neuronValues.GetLength(0) && y1 >= 0 && y1 < neuronValues.GetLength(1))
 
-                    //if (mv.GetNeuronAt(x + dx, y + dy) is Neuron n1)
-                    {
-                        Color c1 = Utils.IntToDrawingColor(neuronValues[x1, y1]);// n1.LastChargeInt);
-                        float hue1 = c1.GetHue();
-                        float hue2 = c.GetHue();
-                        if (Math.Abs(hue1 - hue2) > hueLimit)
-                            return true;
-                        float bright1 = c1.GetBrightness();
-                        float bright2 = c.GetBrightness();
-                        if (Math.Abs(bright1 - bright2) > brightLimit)
-                            return true;
-                    }
+                    Color c1 = Utils.IntToDrawingColor(neuronValues[x1, y1]);// n1.LastChargeInt);
+
+                    float hue1 = c1.GetHue();
+                    float hue2 = c.GetHue();
+                    if (Math.Abs(hue1 - hue2) > hueLimit)
+                        return true;
+
+                    float bright1 = c1.GetBrightness();
+                    float bright2 = c.GetBrightness();
+                    if (Math.Abs(bright1 - bright2) > brightLimit)
+                        return true;
+
+                    float sat1 = c1.GetSaturation();
+                    float sat2 = c.GetSaturation();
+                    if (Math.Abs(sat1 - sat2) > satLimit)
+                        return true;
                 }
             }
             return false;
@@ -450,6 +592,47 @@ namespace BrainSimulator.Modules
         public override void SizeChanged()
         {
             if (na == null) return; //this is called the first time before the module actually exists
+        }
+
+        public override MenuItem GetCustomMenuItems()
+        {
+            StackPanel s2 = new StackPanel { Orientation = Orientation.Vertical };
+            s2.Children.Add(new Label { Content = "Thresholds:" });
+
+            StackPanel s = new StackPanel { Orientation = Orientation.Horizontal };
+            s.Children.Add(new Label { Content = "Hue (0-360):",Width=70 });
+            Slider sl1 = new Slider { Name = "Hue", Maximum = 1, Width = 100, Height = 20,Value=hueLimit/360f };
+            sl1.ValueChanged += Sl1_ValueChanged;
+            s.Children.Add(sl1);
+            s2.Children.Add(s);
+
+
+            s = new StackPanel { Orientation = Orientation.Horizontal };
+            s.Children.Add(new Label { Content = "Bright (0-1):", Width = 70 });
+            sl1 = new Slider { Name = "Brt", Maximum = 1, Width = 100, Height = 20,Value=brightLimit };
+            sl1.ValueChanged += Sl1_ValueChanged;
+            s.Children.Add(sl1);
+            s2.Children.Add(s);
+
+            s = new StackPanel { Orientation = Orientation.Horizontal };
+            s.Children.Add(new Label { Content = "Sat. (0-1):", Width = 70 });
+            sl1 = new Slider { Name = "Sat", Maximum = 1, Width = 100, Height = 20,Value=satLimit };
+            sl1.ValueChanged += Sl1_ValueChanged;
+            s.Children.Add(sl1);
+            s2.Children.Add(s);
+
+            return new MenuItem { Header = s2, StaysOpenOnClick = true };
+        }
+
+        private void Sl1_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (sender is Slider sl)
+            {
+                if (sl.Name == "Hue") hueLimit = (int)(sl.Value * 360);
+                if (sl.Name == "Brt") brightLimit = (float)sl.Value;
+                if (sl.Name == "Sat") satLimit = (float)sl.Value;
+
+            }
         }
     }
 }

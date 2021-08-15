@@ -298,8 +298,8 @@ namespace BrainSimulator.Modules
             ModuleUKS uks = (ModuleUKS)FindModuleByType(typeof(ModuleUKS));
             if (uks == null) return;
             if (uks.Labeled("AbsStroke") == null) uks.AddThing("AbsStroke", "Visual");
-            List<Thing> strokes = uks.Labeled("AbsStroke").Children;
-            List<Thing> relations = uks.Labeled("Relation").Children;
+            IList<Thing> strokes = uks.Labeled("AbsStroke").Children;
+            IList<Thing> relations = uks.Labeled("Relation").Children;
             //create a tempShape
             Thing tempShape = uks.AddThing("TempShape", "Shape");
             //create relative strokes
@@ -307,7 +307,7 @@ namespace BrainSimulator.Modules
             {
                 uks.AddThing("ts" + strokeCount++, tempShape);
             }
-            List<Thing> relStrokes = uks.Labeled("TempShape").Children;
+            IList<Thing> relStrokes = uks.Labeled("TempShape").Children;
             //foreach stroke-pair  in cluster
             for (int i = 0; i < strokes.Count; i++)
             {
@@ -338,7 +338,7 @@ namespace BrainSimulator.Modules
             if (uks == null) return;
             if (uks.Labeled("Cluster") == null) uks.AddThing("Cluster", "Shape");
             Thing tempShape = uks.Labeled("TempShape");
-            List<Thing> clusters = uks.Labeled("Cluster").Children;
+            IList<Thing> clusters = uks.Labeled("Cluster").Children;
             //for each stored shape, calculate error from cluster
             Thing bestThing = null;
             int bestMatch = int.MinValue;
@@ -388,7 +388,7 @@ namespace BrainSimulator.Modules
         }
         List<int> GetStrokeCounts(Thing t)
         {
-            List<Thing> strokes = t.Children;
+            IList<Thing> strokes = t.Children;
 
             int[,] relations = new int[strokes.Count, strokes.Count];
             for (int i = 0; i < strokes.Count; i++)
@@ -452,7 +452,7 @@ namespace BrainSimulator.Modules
             ModuleUKS uks = (ModuleUKS)FindModuleByType(typeof(ModuleUKS));
             if (uks == null) return;
             if (uks.Labeled("AbsStroke") == null) uks.AddThing("AbsStroke", "Visual");
-            List<Thing> strokes = uks.Labeled("AbsStroke").Children;
+            IList<Thing> strokes = uks.Labeled("AbsStroke").Children;
             while (strokes.Count != 0)
             {
                 uks.DeleteThing(strokes[0]);

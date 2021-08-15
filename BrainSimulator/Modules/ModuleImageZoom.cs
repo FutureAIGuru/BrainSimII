@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using static System.Math;
-
+using System.Windows.Controls;
 
 namespace BrainSimulator.Modules
 {
@@ -36,6 +36,8 @@ namespace BrainSimulator.Modules
         }
 
         float scale = 1.0f;
+        Bitmap oldBitmap = null;
+        bool refreshNeeded = true;
 
         //fill this method in with code which will execute
         //once for each cycle of the engine
@@ -47,14 +49,17 @@ namespace BrainSimulator.Modules
             if (mif == null) return;
             Bitmap bitmap1 = mif.GetBitMap();
             if (bitmap1 == null) return;
+            //TODO need to actually check if neuron values changes (pan/zoom/rot) instead of refreshNeeded
+            if (bitmap1 == oldBitmap && !refreshNeeded) 
+                return;
+            oldBitmap = bitmap1;
 
             Angle rotation = 0;
             if (GetNeuron("Rot") is Neuron n1)
-                rotation = n1.currentCharge;
-            rotation = rotation * 2 * (float)PI;
-            //if (rotation != 0)
-                bitmap1 = RotateBitmap(bitmap1, rotation.ToDegrees());
+                rotation = n1.currentCharge; //range (0,1)
+            rotation = rotation * 2 * (float)PI; //range (0,2Pi)
 
+            bitmap1 = RotateBitmap(bitmap1, rotation.ToDegrees());
 
             System.Windows.Point offset = new System.Windows.Point
             {
@@ -67,8 +72,6 @@ namespace BrainSimulator.Modules
             float minScale = (float)bitmap1.Width / (float)na.Width;
             minScale = minScale + 1;
             scale = 1 + (1 - scale) * (minScale - 1);
-
-
 
             for (int i = 0; i < na.Height - 1; i++)
                 for (int j = 0; j < na.Width; j++)
@@ -92,9 +95,10 @@ namespace BrainSimulator.Modules
                     continue;
                 NoData:
                     n.LastChargeInt = 0xffffff;
-
+                  
                 }
-
+            refreshNeeded = false;
+            UpdateDialog();
         }
 
         // Return a bitmap rotated around its center.
@@ -102,6 +106,8 @@ namespace BrainSimulator.Modules
         {
             // Make a Matrix to represent rotation
             // by this angle.
+            bm.SetResolution(96, 96);
+
             Matrix rotate_at_origin = new Matrix();
             rotate_at_origin.Rotate(angle);
 
@@ -109,16 +115,14 @@ namespace BrainSimulator.Modules
             // it will be after rotation.
             PointF[] points =
             {
-        new PointF(0, 0),
-        new PointF(bm.Width, 0),
-        new PointF(bm.Width, bm.Height),
-        new PointF(0, bm.Height),
-    };
-            rotate_at_origin.TransformPoints(points);
-            float xmin, xmax, ymin, ymax;
-            GetPointBounds(points, out xmin, out xmax,
-                out ymin, out ymax);
+                new PointF(0, 0),
+                new PointF(bm.Width, 0),
+                new PointF(bm.Width, bm.Height),
+                new PointF(0, bm.Height),
+            };
 
+            rotate_at_origin.TransformPoints(points);
+            GetPointBounds(points, out float xmin, out float xmax,out float ymin, out float ymax);
 
             // Make a bitmap to hold the rotated result.
             int wid = (int)Math.Round(xmax - xmin);
@@ -130,7 +134,7 @@ namespace BrainSimulator.Modules
             rotate_at_center.RotateAt(angle,
                 new PointF(wid / 2f, hgt / 2f));
 
-            rotate_at_center.Scale(3,3f);
+            //rotate_at_center.Scale(4,4);
 
             // Draw the image onto the new bitmap rotated.
             using (Graphics gr = Graphics.FromImage(result))
@@ -204,23 +208,6 @@ namespace BrainSimulator.Modules
 
         }
 
-        public void SetX(float val)
-        {
-            SetNeuronValue("X", val);
-        }
-        public void SetZoom(float val)
-        {
-            SetNeuronValue("Scale", val);
-        }
-        public void SetY(float val)
-        {
-            SetNeuronValue("Y", val);
-        }
-        public void SetRotation(float val)
-        {
-            SetNeuronValue("Rot", val);
-        }
-
         //the following can be used to massage public data to be different in the xml file
         //delete if not needed
         public override void SetUpBeforeSave()
@@ -237,5 +224,55 @@ namespace BrainSimulator.Modules
         {
             if (na == null) return; //this is called the first time before the module actually exists
         }
+
+
+        public override MenuItem GetCustomMenuItems()
+        {
+            StackPanel s2 = new StackPanel { Orientation = Orientation.Vertical };
+
+            StackPanel s = new StackPanel { Orientation = Orientation.Horizontal };
+            s.Children.Add(new Label { Content = "X:", Width = 60, HorizontalContentAlignment = HorizontalAlignment.Right});
+            Slider sl1 = new Slider { Name = "x", Maximum = 1, Width = 100, Height = 20, Value = GetNeuronValue("X") };
+            sl1.ValueChanged += Sl1_ValueChanged;
+            s.Children.Add(sl1);
+            s2.Children.Add(s);
+
+
+            s = new StackPanel { Orientation = Orientation.Horizontal };
+            s.Children.Add(new Label { Content = "Y:", Width = 60, HorizontalContentAlignment = HorizontalAlignment.Right });
+            sl1 = new Slider { Name = "y", Maximum = 1, Width = 100, Height = 20, Value = GetNeuronValue("Y") };
+            sl1.ValueChanged += Sl1_ValueChanged;
+            s.Children.Add(sl1);
+            s2.Children.Add(s);
+
+            s = new StackPanel { Orientation = Orientation.Horizontal };
+            s.Children.Add(new Label { Content = "Zoom:", Width = 60, HorizontalContentAlignment = HorizontalAlignment.Right });
+            sl1 = new Slider { Name = "zoom", Maximum = 1, Width = 100, Height = 20, Value = GetNeuronValue("Scale") };
+            sl1.ValueChanged += Sl1_ValueChanged;
+            s.Children.Add(sl1);
+            s2.Children.Add(s);
+
+            s = new StackPanel { Orientation = Orientation.Horizontal };
+            s.Children.Add(new Label { Content = "Rotation:", Width = 60, HorizontalContentAlignment = HorizontalAlignment.Right });
+            sl1 = new Slider { Name = "rotation", Maximum = 1, SmallChange = 0.00277777, LargeChange=PI/24,  Width = 100, Height = 20, Value = GetNeuronValue("Rot") };
+            sl1.ValueChanged += Sl1_ValueChanged;
+            s.Children.Add(sl1);
+            s2.Children.Add(s);
+
+            return new MenuItem { Header = s2, StaysOpenOnClick = true };
+        }
+
+        private void Sl1_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (sender is Slider sl)
+            {
+                if (sl.Name == "x") SetNeuronValue("X", (float)sl.Value);
+                if (sl.Name == "y") SetNeuronValue("Y", (float)sl.Value);
+                if (sl.Name == "zoom") SetNeuronValue("scale", (float)sl.Value);
+                if (sl.Name == "rotation") SetNeuronValue("Rot", (float)sl.Value);
+                refreshNeeded = true;
+            }
+        }
+
     }
 }

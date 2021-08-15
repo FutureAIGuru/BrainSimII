@@ -29,6 +29,7 @@ namespace BrainSimulator.Modules
         }
 
         const int maxDepth = 6;
+        int totalItemCount = 0;
         List<string> expandedItems = new List<string>();
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -41,9 +42,11 @@ namespace BrainSimulator.Modules
             Thing t = parent.Labeled(root);
             if (t != null)
             {
+                totalItemCount = 0;
                 TreeViewItem tvi = new TreeViewItem { Header = t.Label };
                 tvi.IsExpanded = true; //always expand the top-level item
                 theTreeView.Items.Add(tvi);
+                totalItemCount++;
                 tvi.MouseRightButtonDown += Tvi_MouseRightButtonDown;
                 AddChildren(t, tvi, 0);
             }
@@ -96,9 +99,12 @@ namespace BrainSimulator.Modules
             }
         }
 
+
         private void AddChildren(Thing t, TreeViewItem tvi, int depth)
         {
-            List<Thing> theChildren;
+            if (totalItemCount > 2000)
+                return;
+            IList<Thing> theChildren;
             if ((bool)checkBoxSort.IsChecked) theChildren = t.Children.OrderByDescending(x => x.useCount).ToList();
             else theChildren = t.Children;
             for (int i = 0; i < theChildren.Count; i++)
@@ -112,9 +118,16 @@ namespace BrainSimulator.Modules
                     Thing best = parent.FindBestReference(child);
                     foreach (Link L in child.References)
                     {
-                        if (L.T == best) header += "*";
-                        if (L.weight < 0) header += "-";
-                        header += L.T.Label + ", ";
+//                        if (L.T.References.Count != 1)
+                        {
+                            if (L.T == best) header += "*";
+                            if (L.weight < 0) header += "-";
+                            header += L.T.Label + ", ";
+                        }
+                        //else //to display relationships
+                        //{
+                        //    header += L.T.Parents[0].Label + "->" + L.T.References[0].T.Label;
+                        //}
                     }
                     header = header.Substring(0, header.Length - 2);
                     header += ")";
@@ -132,6 +145,7 @@ namespace BrainSimulator.Modules
                 if (expandedItems.Contains(LeftOfColon(header)))
                     tviChild.IsExpanded = true;
                 tvi.Items.Add(tviChild);
+                totalItemCount++;
                 tviChild.MouseRightButtonDown += Tvi_MouseRightButtonDown;
                 if (depth < maxDepth)
                 {
@@ -149,20 +163,37 @@ namespace BrainSimulator.Modules
             if (expandedItems.Contains(t.Label + ":References"))
                 tviRefLabel.IsExpanded = true;
             tvi.Items.Add(tviRefLabel);
+            totalItemCount++;
             for (int i = 0; i < t.References.Count; i++)
             {
                 Link reference = t.References[i];
-                TreeViewItem tviRef = new TreeViewItem
+                //is this a relationship?
+                if (reference.T.HasAncestorLabeled("Relationship"))
                 {
-                    Header =
-                    reference.T.Label + " : " +
-                    //reference.weight.ToString() + " : " +
-                    reference.hits + " : -" +
-                    reference.misses + " : " +
-                    ((float)reference.hits / (float)reference.misses).ToString("f3")
-                };
-                tviRef.MouseRightButtonDown += Tvi_MouseRightButtonDown;
-                tviRefLabel.Items.Add(tviRef);
+                    TreeViewItem tviRef = new TreeViewItem
+                    {
+                        Header = reference.T.Label + " " + reference.T.Parents[0].Label + " : " +
+                            reference.T.References[0].T.Label,
+                    };
+                    tviRef.MouseRightButtonDown += Tvi_MouseRightButtonDown;
+                    tviRefLabel.Items.Add(tviRef);
+                    totalItemCount++;
+                }
+                else
+                {
+                    TreeViewItem tviRef = new TreeViewItem
+                    {
+                        Header =
+                        reference.T.Label + " : " +
+                        //reference.weight.ToString() + " : " +
+                        reference.hits + " : -" +
+                        reference.misses + " : " +
+                        ((float)reference.hits / (float)reference.misses).ToString("f3")
+                    };
+                    tviRef.MouseRightButtonDown += Tvi_MouseRightButtonDown;
+                    tviRefLabel.Items.Add(tviRef);
+                    totalItemCount++;
+                }
             }
         }
         private void AddReferencedBy(Thing t, TreeViewItem tvi)
@@ -172,6 +203,7 @@ namespace BrainSimulator.Modules
             if (expandedItems.Contains(t.Label + ":ReferencedBy"))
                 tviRefLabel.IsExpanded = true;
             tvi.Items.Add(tviRefLabel);
+            totalItemCount++;
             for (int i = 0; i < t.ReferencedBy.Count; i++)
             {
                 Link referencedBy = t.ReferencedBy[i];
@@ -186,6 +218,7 @@ namespace BrainSimulator.Modules
                 };
                 tviRef.MouseRightButtonDown += Tvi_MouseRightButtonDown;
                 tviRefLabel.Items.Add(tviRef);
+                totalItemCount++;
             }
         }
 

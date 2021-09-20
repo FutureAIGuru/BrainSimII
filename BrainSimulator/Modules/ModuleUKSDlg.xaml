@@ -7,11 +7,14 @@
         mc:Ignorable="d"
         Title="Universal Knowledge Store" Height="450" Width="800" Background="Gray" ShowInTaskbar="False">
     <Grid >
-        <TreeView x:Name="theTreeView" SizeChanged="TheTreeView_SizeChanged" Margin="0,0,0,51">
+        <TreeView x:Name="theTreeView" SizeChanged="TheTreeView_SizeChanged" Background="LightGray" Foreground="Black" Margin="0,0,0,51" MouseEnter="theTreeView_MouseEnter" MouseLeave="theTreeView_MouseLeave">
+   
         </TreeView>
         <Button x:Name="button" Content="Refresh" HorizontalAlignment="Left" Margin="20,0,0,10" Width="79" Height="36" RenderTransformOrigin="0.519,5.667" VerticalAlignment="Bottom" Click="Button_Click" />
         <CheckBox x:Name="checkBoxSort" Content="Sort by Use" HorizontalAlignment="Left" Margin="122,0,0,27" Width="99" Height="19" VerticalAlignment="Bottom" Checked="CheckBoxSort_Checked" Unchecked="CheckBoxSort_Unchecked" />
-        <CheckBox x:Name="checkBox" Content="Auto-Refresh" HorizontalAlignment="Left" Margin="122,0,0,10" Width="99" Height="19" VerticalAlignment="Bottom" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
-        <TextBox x:Name="textBox1" HorizontalAlignment="Left" Margin="226,0,0,16" TextWrapping="Wrap" Text="Thing" Width="100" Height="19" VerticalAlignment="Bottom" KeyDown="TextBox1_KeyDown" />
+        <CheckBox x:Name="checkBox" IsChecked="True" Content="Auto-Refresh" HorizontalAlignment="Left" Margin="122,0,0,10" Width="99" Height="19" VerticalAlignment="Bottom" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
+        <TextBox x:Name="textBox1" HorizontalAlignment="Left" Margin="259,0,0,27" TextWrapping="Wrap" Text="Thing" Width="100" Height="19" VerticalAlignment="Bottom" KeyDown="TextBox1_KeyDown" />
+        <Label Content="Root:" HorizontalAlignment="Left" Margin="226,0,0,25" Width="38" Height="25" VerticalAlignment="Bottom"/>
+        <Label Content="" x:Name="statusLabel" HorizontalAlignment="Left" Margin="226,0,0,7" Width="181" Height="25" VerticalAlignment="Bottom"/>
     </Grid>
 </local:ModuleBaseDlg>

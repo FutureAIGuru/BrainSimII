@@ -1,0 +1,17 @@
+﻿<local:ModuleBaseDlg x:Class="BrainSimulator.Modules.ModuleBoundaryDescriptionDlg"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BrainSimulator.Modules"
+        mc:Ignorable="d"
+        Title="Description Module Dialog" Height="211.111" Width="369.444" Background="Gray" ShowInTaskbar="False">
+    <Grid>
+        <TextBox x:Name="theTextBox" Height="36" Margin="22,26,19,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+        <Button Content="OK" Margin="146,0,140,10" Click="Button_Click" Height="35" VerticalAlignment="Bottom" IsDefault="True" />
+        <TextBlock Text="" TextWrapping="Wrap" Name="currentDescription" HorizontalAlignment="Left" Height="50" Margin="22,88,0,0" VerticalAlignment="Top" Width="311"/>
+        <Label Content="Description Input:
+" HorizontalAlignment="Left" Height="26" Margin="22,0,0,0" VerticalAlignment="Top" Width="135"/>
+        <Label Content="Inner Monologue:" HorizontalAlignment="Left" Height="26" Margin="22,62,0,0" VerticalAlignment="Top" Width="135"/>
+    </Grid>
+</local:ModuleBaseDlg>

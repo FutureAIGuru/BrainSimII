@@ -141,12 +141,26 @@
       <DependentUpon>ModuleDescription.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\ModuleArea.cs" />
+    <Compile Include="Modules\ModuleAssociation.cs" />
     <Compile Include="Modules\ModuleAttention.cs" />
+    <Compile Include="Modules\ModuleBoundaryByNeurons.cs" />
     <Compile Include="Modules\ModuleBoundary.cs" />
-    <Compile Include="Modules\ModuleBoundary2.cs" />
     <Compile Include="Modules\ModuleBoundaryAreas.cs" />
+    <Compile Include="Modules\ModuleBoundaryColor.cs" />
+    <Compile Include="Modules\ModuleBoundaryDescriptionDlg.xaml.cs">
+      <DependentUpon>ModuleBoundaryDescriptionDlg.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\ModuleBoundaryDescription.cs" />
+    <Compile Include="Modules\ModuleBoundaryKnown.cs" />
+    <Compile Include="Modules\ModuleBoundaryMotion.cs" />
     <Compile Include="Modules\ModuleBoundaryRelationship.cs" />
+    <Compile Include="Modules\ModuleAssociationDlg.xaml.cs">
+      <DependentUpon>ModuleAssociationDlg.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\ModuleBoundarySegments.cs" />
+    <Compile Include="Modules\ModuleAttentionDlg.xaml.cs">
+      <DependentUpon>ModuleAttentionDlg.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\ModuleBoundarySegmentsDlg.xaml.cs">
       <DependentUpon>ModuleBoundarySegmentsDlg.xaml</DependentUpon>
     </Compile>
@@ -166,10 +180,6 @@
     <Compile Include="Modules\ModuleRateDecoder3.cs" />
     <Compile Include="Modules\ModuleRobot.cs" />
     <Compile Include="Modules\ModuleShortTermMemory.cs" />
-    <Compile Include="Modules\ModuleStrokeFinderDlg.xaml.cs">
-      <DependentUpon>ModuleStrokeFinderDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\ModuleBoundary1.cs" />
     <Compile Include="Modules\ModuleEvent.cs" />
     <Compile Include="Modules\ModuleFireOldest.cs" />
     <Compile Include="Modules\ModuleImageFileDlg.xaml.cs">
@@ -177,7 +187,6 @@
     </Compile>
     <Compile Include="Modules\ModuleLife.cs" />
     <Compile Include="Modules\ModuleStrokeCenter.cs" />
-    <Compile Include="Modules\ModuleStrokeFinder.cs" />
     <Compile Include="Modules\ModuleUKSTest.cs" />
     <Compile Include="Modules\ModuleWords.cs" />
     <Compile Include="Modules\ModuleSpeakPhonemes.cs" />
@@ -299,15 +308,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Modules\ModuleAttentionDlg.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\ModuleBoundaryDescriptionDlg.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\ModuleAssociationDlg.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Modules\ModuleBoundarySegmentsDlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Modules\ModuleCameraDlg.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Modules\ModuleStrokeFinderDlg.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -474,6 +491,129 @@
     <Content Include="Networks\BasicNeurons.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Networks\TestData\Blank.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\ColorVariation\Blue rectangle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\ColorVariation\Red rectangle 1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\ColorVariation\Red rectangle 2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\ColorVariation\White triangle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Motion\1 Three triangle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Motion\Three triangle %28R1%29 - Copy.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Motion\Three triangle %28R1%29.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Motion\Three triangle %28Z1%29.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Relationships\1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Relationships\1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Relationships\2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Relationships\2.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Relationships\3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Relationships\3.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Relationships\4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Relationships\4.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Relationships\5.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Relationships\5.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Relationships\6.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Relationships\6.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Relationships\8.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Relationships\8.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Relationships\9.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Relationships\9.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Relationships\two triangles %28blue%29.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Relationships\two triangles %28blue%29.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Relationships\two triangles.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Relationships\two triangles.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\SingleShapes\Blue Line.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\SingleShapes\Blue rectangle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\SingleShapes\Blue square.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\SingleShapes\Blue triangle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\SingleShapes\Red Line.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\SingleShapes\Red rectangle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\SingleShapes\Red square.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\SingleShapes\Red triangle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\SingleShapes\Yellow Line.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\SingleShapes\Yellow rectangle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\SingleShapes\Yellow square.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\SingleShapes\Yellow triangle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Resources\youtube-24.ico" />
     <Resource Include="Resources\github-9-24.ico" />
     <Resource Include="Smoothed_Splash.bmp" />
@@ -523,6 +663,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Networks\ObjectMotion.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\Recognition.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Networks\SimVision.xml">

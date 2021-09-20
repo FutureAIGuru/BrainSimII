@@ -54,7 +54,6 @@ namespace BrainSimulator
         }
     }
 
-
     public class HSLColor
     {
         public float hue;
@@ -67,8 +66,86 @@ namespace BrainSimulator
             saturation = s;
             luminance = l;
         }
+        public HSLColor(Dictionary<string, float> values)
+        {
+            hue = 0;
+            saturation = 0;
+            luminance = 0;
+            try
+            {
+                hue = values["Hue+"];
+                saturation = values["Sat+"];
+                luminance = values["Lum+"];
+            }
+            catch { }
+        }
+        public HSLColor(Color c)
+        {
+            System.Drawing.Color c1 = System.Drawing.Color.FromArgb(255, c.R, c.G, c.B);
+            hue = c1.GetHue();
+            saturation = c1.GetSaturation();
+            luminance = c1.GetBrightness();
+        }
+        public HSLColor(HSLColor c)
+        {
+            hue = c.hue;
+            saturation = c.saturation;
+            luminance = c.luminance;
+        }
+
         public override string ToString()
-        { return "H:" + hue.ToString("f0") + " S:" + saturation.ToString("f3") + " L:" + luminance.ToString("f3"); }
+        { return "H:" + hue.ToString("f2") + " S:" + saturation.ToString("f2") + " L:" + luminance.ToString("f2"); }
+
+        public static float operator -(HSLColor c1,HSLColor c2)
+        {
+            //any lum > .95 is white  \
+            //any lum < .15 is black    -set lum to .5
+            //any sat  < .1 is gray   /
+            if (c1.luminance > 0.95) c1.hue = 0.5f;
+            else if (c1.luminance < .1) c1.hue = 0.5f;
+            else if (c1.saturation < .1) c1.hue = 0.5f;
+            if (c2.luminance > 0.95) c2.hue = 0.5f;
+            else if (c2.luminance < .1) c2.hue = 0.5f;
+            else if (c2.saturation < .1) c2.hue = 0.5f;
+            float diff = Abs(c1.hue- c2.hue) * 5 + Abs(c1.saturation - c2.saturation) + Abs(c1.luminance - c2.luminance);
+            diff /= 7;
+            return diff;
+        }
+        public Color ToColor()
+        {
+            Color c1 = ColorFromHSL();
+            return c1;
+        }
+        // the Color Converter
+        Color ColorFromHSL()
+        {
+            if (saturation == 0)
+            {
+                byte L = (byte)(luminance * 255);
+                return Color.FromArgb(255, L, L, L);
+            }
+
+            double min, max;
+
+            max = luminance < 0.5d ? luminance * (1 + saturation) : (luminance + saturation) - (luminance * saturation);
+            min = (luminance * 2d) - max;
+
+            Color c = Color.FromArgb(255, (byte)(255 * RGBChannelFromHue(min, max, hue + 1 / 3d)),
+                                          (byte)(255 * RGBChannelFromHue(min, max, hue)),
+                                          (byte)(255 * RGBChannelFromHue(min, max, hue - 1 / 3d)));
+            return c;
+        }
+
+        static double RGBChannelFromHue(double m1, double m2, double h)
+        {
+            h = (h + 1d) % 1d;
+            if (h < 0) h += 1;
+            if (h * 6 < 1) return m1 + (m2 - m1) * 6 * h;
+            else if (h * 2 < 1) return m2;
+            else if (h * 3 < 2) return m1 + (m2 - m1) * 6 * (2d / 3d - h);
+            else return m1;
+
+        }
     }
 
 
@@ -85,6 +162,15 @@ namespace BrainSimulator
         public static void Noop()
         {
 
+        }
+
+        public static float RoundToSignificantDigits(this float d, int digits)
+        {
+            if (d == 0)
+                return 0;
+
+            double scale = Math.Pow(10, Math.Floor(Math.Log10(Math.Abs(d))) + 1);
+            return (float)(scale * Math.Round(d / scale, digits));
         }
 
         //this searches a control tree to find a control by name so you can retrieve its value
@@ -116,10 +202,11 @@ namespace BrainSimulator
             return (float)(degrees * Math.PI / 180);
         }
 
+
         public static System.Drawing.Color IntToDrawingColor(int theColor)
         {
             Color c1 = IntToColor(theColor);
-            System.Drawing.Color c = System.Drawing.Color.FromArgb(c1.A, c1.B, c1.G, c1.R);
+            System.Drawing.Color c = System.Drawing.Color.FromArgb(c1.A, c1.R, c1.G, c1.B);
             return c;
         }
 
@@ -269,6 +356,24 @@ namespace BrainSimulator
             }
         }
 
+        public static float DistanceBetweenTwoSegments(Point p1, Point p2, Point p3, Point p4)
+        {
+            float retVal = float.MaxValue;
+            double d1 = FindDistanceToSegment(p1, p3, p4, out Point closest);
+            if (d1 < retVal)
+                retVal = (float)d1;
+            d1 = FindDistanceToSegment(p2, p3, p4, out closest);
+            if (d1 < retVal)
+                retVal = (float)d1;
+            d1 = FindDistanceToSegment(p3, p1, p2, out closest);
+            if (d1 < retVal)
+                retVal = (float)d1;
+            d1 = FindDistanceToSegment(p4, p1, p2, out closest);
+            if (d1 < retVal)
+                retVal = (float)d1;
+            return retVal;
+        }
+
         // Calculate the distance between
         // point pt and the segment p1 --> p2.
         public static double FindDistanceToSegment(
@@ -313,6 +418,15 @@ namespace BrainSimulator
             return Math.Sqrt(dx * dx + dy * dy);
         }
 
+        public static bool SegmentsIntersect(Point p1, Point p2, Point p3, Point p4)
+        {
+            FindIntersection(p1, p2, p3, p4,
+            out bool lines_intersect, out bool segments_intersect,
+            out Point intersection,
+            out Point close_p1, out Point close_p2,
+            out double collisionAngle);
+            return segments_intersect;
+        }
 
         // Find the point of intersection between
         // the lines p1 --> p2 and p3 --> p4.
@@ -428,6 +542,74 @@ namespace BrainSimulator
                 return newPoint;
             }
         }
+
+        /// <summary>
+        /// Determines if the given point is inside the polygon
+        /// </summary>
+        /// <param name="polygon">the vertices of polygon</param>
+        /// <param name="testPoint">the given point</param>
+        /// <returns>true if the point is inside the polygon; otherwise, false</returns>
+        public static bool IsPointInPolygon(Point[] polygon, Point testPoint)
+        {
+            bool result = false;
+            if (polygon == null) return false;
+            if (polygon.Count() == 2)
+            {
+                float dist = Utils.DistancePointToLine(testPoint, polygon[0], polygon[1]);
+                if (dist < 0.1f) return true;
+                return false;
+            }
+            int j = polygon.Count() - 1;
+            if (polygon.Contains(testPoint)) return true;
+            for (int i = 0; i < polygon.Count(); i++)
+            {
+                if (polygon[i].Y < testPoint.Y && polygon[j].Y >= testPoint.Y || polygon[j].Y < testPoint.Y && polygon[i].Y >= testPoint.Y)
+                {
+                    if (polygon[i].X + (testPoint.Y - polygon[i].Y) / (polygon[j].Y - polygon[i].Y) * (polygon[j].X - polygon[i].X) < testPoint.X)
+                    {
+                        result = !result;
+                    }
+                }
+                j = i;
+            }
+            return result;
+        }
+
+
+
+        /// <summary>
+        /// Method to compute the centroid of a polygon. This does NOT work for a complex polygon.
+        /// </summary>
+        /// <param name="poly">points that define the polygon</param>
+        /// <returns>centroid point, or PointF.Empty if something wrong</returns>
+        public static Point GetCentroid(List<Point> poly)
+        {
+            double accumulatedArea = 0.0f;
+            double centerX = 0.0f;
+            double centerY = 0.0f;
+
+            if (poly.Count == 2)
+            {
+                return new Point((poly[0].X + poly[1].X) / 2f, (poly[0].Y + poly[1].Y) / 2f);
+            }
+
+
+            for (int i = 0, j = poly.Count - 1; i < poly.Count; j = i++)
+            {
+                double temp = poly[i].X * poly[j].Y - poly[j].X * poly[i].Y;
+                accumulatedArea += temp;
+                centerX += (poly[i].X + poly[j].X) * temp;
+                centerY += (poly[i].Y + poly[j].Y) * temp;
+            }
+
+            if (Math.Abs(accumulatedArea) < 1E-7f)
+                return new Point(0, 0);  // Avoid division by zero
+
+            accumulatedArea *= 3f;
+            return new Point(centerX / accumulatedArea, centerY / accumulatedArea);
+        }
+
+
 
         //This textbox has a special action to cope with peculiar focus issues when a textbox is placed on a context menu
         public static TextBox ContextMenuTextBox(string content, string name, float width)

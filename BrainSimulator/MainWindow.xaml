@@ -93,6 +93,7 @@
                     <MenuItem Header="Sallie" Click="buttonLoad_Click"/>
                     <MenuItem Header="CameraTest" Click="buttonLoad_Click"/>
                     <MenuItem Header="SpeechTest" Click="buttonLoad_Click"/>
+                    <MenuItem Header="Recognition" Click="buttonLoad_Click"/>
                     <MenuItem Header="3DSim" Click="buttonLoad_Click"/>
                     <MenuItem Header="NeuralGraph" Click="buttonLoad_Click"/>
                     <MenuItem Header="ObjectMotion" Click="buttonLoad_Click"/>

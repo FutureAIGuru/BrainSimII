@@ -196,6 +196,8 @@ namespace BrainSimulator
                     Label moduleLabel = new Label();
                     moduleLabel.Content = nr.Label;
                     moduleLabel.Background = new SolidColorBrush(Colors.White);
+                    if (!nr.TheModule.isEnabled)
+                        moduleLabel.Background = new SolidColorBrush(Colors.LightGray);
                     moduleLabel.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
                     Canvas.SetLeft(moduleLabel, Canvas.GetLeft(r));
                     Canvas.SetTop(moduleLabel, Canvas.GetTop(r)-moduleLabel.DesiredSize.Height);

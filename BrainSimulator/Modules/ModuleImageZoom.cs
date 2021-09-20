@@ -36,7 +36,7 @@ namespace BrainSimulator.Modules
         }
 
         float scale = 1.0f;
-        Bitmap oldBitmap = null;
+        string oldFilePath;
         bool refreshNeeded = true;
 
         //fill this method in with code which will execute
@@ -47,19 +47,25 @@ namespace BrainSimulator.Modules
             if (GetNeuron("Enable").CurrentCharge < 1) return;
             ModuleImageFile mif = (ModuleImageFile)FindModuleByName("ImageFile");
             if (mif == null) return;
-            Bitmap bitmap1 = mif.GetBitMap();
-            if (bitmap1 == null) return;
+            string newFilePath = mif.GetFilePath();
             //TODO need to actually check if neuron values changes (pan/zoom/rot) instead of refreshNeeded
-            if (bitmap1 == oldBitmap && !refreshNeeded) 
+            if (newFilePath == oldFilePath && !refreshNeeded) 
                 return;
-            oldBitmap = bitmap1;
+            oldFilePath = newFilePath;
+            Bitmap bitmap1 = null;
+            try
+            {
+                bitmap1 = new Bitmap(newFilePath);
+            }
+            catch {}
+            if (bitmap1 == null) return;
 
             Angle rotation = 0;
             if (GetNeuron("Rot") is Neuron n1)
                 rotation = n1.currentCharge; //range (0,1)
             rotation = rotation * 2 * (float)PI; //range (0,2Pi)
 
-            bitmap1 = RotateBitmap(bitmap1, rotation.ToDegrees());
+            //bitmap1 = RotateBitmap(bitmap1, rotation.ToDegrees());
 
             System.Windows.Point offset = new System.Windows.Point
             {
@@ -70,8 +76,7 @@ namespace BrainSimulator.Modules
             if (scale > 1) scale = 1;
             if (scale < 0) scale = 0;
             float minScale = (float)bitmap1.Width / (float)na.Width;
-            minScale = minScale + 1;
-            scale = 1 + (1 - scale) * (minScale - 1);
+            scale =  scale + minScale;
 
             for (int i = 0; i < na.Height - 1; i++)
                 for (int j = 0; j < na.Width; j++)
@@ -174,6 +179,7 @@ namespace BrainSimulator.Modules
         //or when the engine restart button is pressed
         public override void Initialize()
         {
+            if (na == null) return;
             for (int i = 1; i < na.Height; i++)
                 for (int j = 0; j < na.Width; j++)
                 {
@@ -198,12 +204,12 @@ namespace BrainSimulator.Modules
             n1 = na.GetNeuronAt(3, 0);
             n1.Model = Neuron.modelType.FloatValue;
             n1.Label = "Scale";
-            n1.SetValue(1);
+            n1.SetValue(0);
 
             n1 = na.GetNeuronAt(4, 0);
             n1.Model = Neuron.modelType.FloatValue;
             n1.Label = "Rot";
-            n1.SetValue(1);
+            n1.SetValue(0);
 
 
         }

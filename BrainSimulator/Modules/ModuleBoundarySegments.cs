@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Serialization;
+using static System.Math;
 
 namespace BrainSimulator.Modules
 {
@@ -50,12 +51,15 @@ namespace BrainSimulator.Modules
             {
                 get
                 {
-                    Angle angle = Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
-                    if (angle < 0) angle += Math.PI;
+                    Angle angle = Atan2(p2.Y - p1.Y, p2.X - p1.X);
+                    if (angle < 0) angle += PI;
                     return angle;
                     ;
                 }
             }
+            public Point MidPoint { get => new Point((p1.X + p2.X) / 2, (p1.Y + p2.Y) / 2); }
+            public Point MidPointI { get => new Point(Round((p1.X + p2.X) / 2), Round((p1.Y + p2.Y) / 2)); }
+
 
             public override string ToString()
             {
@@ -74,6 +78,8 @@ namespace BrainSimulator.Modules
         public List<Arc> tList2 = new List<Arc>();
         [XmlIgnore]
         public List<Arc> tList3 = new List<Arc>();
+        [XmlIgnore]
+        public List<Arc> segments = new List<Arc>();
 
         float angleStep = 90f;
         [XmlIgnore]
@@ -87,20 +93,18 @@ namespace BrainSimulator.Modules
         {
             Init();  //be sure to leave this here
                      //return;
-            naSource = theNeuronArray.FindModuleByLabel("Boundary2");
+            naSource = theNeuronArray.FindModuleByLabel("Boundary");
             if (naSource == null) return;
-
-            //FindFavoredPoints();
 
             DeleteBoundariesFromUKS();
             boundaries.Clear();
 
-            FindHorizBoundaries();
-            CloneList(tList1, horizBoundaries);
-            JoinHorizSegmentsWhichMissBy1();
+            FindSegments();
 
-            JoinColinearSegments(boundaries);
-            JoinEndsWhichMissBy1(-1);
+            //JoinHorizSegmentsWhichMissBy1();
+
+            //JoinColinearSegments(boundaries);
+            //JoinEndsWhichMissBy1(-1);
 
             //delete zero-length segments
             for (int i = 0; i < boundaries.Count; i++)
@@ -128,22 +132,30 @@ namespace BrainSimulator.Modules
             if (naSource == null) return;
             ModuleUKS uks = (ModuleUKS)naSource.TheModule;
             Thing segmentParent = uks.Labeled("Segment");
-            if (segmentParent == null) 
-                segmentParent= uks.AddThing("Segment", "Shape");
+            if (segmentParent == null)
+                segmentParent = uks.AddThing("Segment", "Shape");
             Thing pointParent = uks.Labeled("ModelThing"); //TODO: this modelthing is a 2D and we're now in 3D
             if (pointParent == null) return;
 
             uks.DeleteAllChilden(segmentParent);
             //uks.DeleteAllChilden(pointParent);
-            
-            for (int i = 0; i < boundaries.Count; i++)
+
+            for (int i = 0; i < segments.Count; i++)
             {
-                if (boundaries[i].Length > 0)
+                if (segments[i].Length > 0)
                 {
-                    Thing pt1 = uks.AddThing("BndryPt" + bndryPtCt++, new Thing[] { pointParent, segmentParent });
-                    pt1.V = (PointPlus)boundaries[i].p1;
-                    Thing pt2 = uks.AddThing("BndryPt" + bndryPtCt++, new Thing[] { pointParent, segmentParent });
-                    pt2.V = (PointPlus)boundaries[i].p2;
+                    Thing pt1 = uks.Valued((PointPlus)segments[i].p1, segmentParent.Children);
+                    if (pt1 == null)
+                    {
+                        pt1 = uks.AddThing("BndryPt" + bndryPtCt++, new Thing[] { segmentParent /*,pointParent*/});
+                        pt1.V = (PointPlus)segments[i].p1;
+                    }
+                    Thing pt2 = uks.Valued((PointPlus)segments[i].p2, segmentParent.Children);
+                    if (pt2 == null)
+                    {
+                        pt2 = uks.AddThing("BndryPt" + bndryPtCt++, new Thing[] { segmentParent /*,pointParent*/ });
+                        pt2.V = (PointPlus)segments[i].p2;
+                    }
                     Thing seg = uks.AddThing("BndrySeg" + bndryCt++, "Segment");
                     seg.AddChild(pt1);
                     seg.AddChild(pt2);
@@ -152,43 +164,449 @@ namespace BrainSimulator.Modules
         }
 
 
-        void FindHorizBoundaries()
+        //HERE BEGINS AN EXPERIMENT in improved boundary-finding by 
+        //finding line segments which cross nearest the most boundary pixels
+        Point[] CreateRectangle(Point pt, Angle a, float length, float width)
         {
+            //points layout
+            //     1          3
+            //  0                5
+            //     2          4
+            PointPlus pt0 = pt;
+            PointPlus pt1 = new PointPlus(width, width);
+            pt1.Theta += a;
+            pt1 += pt0;
+            PointPlus pt2 = new PointPlus(width, -width);
+            pt2.Theta += a;
+            pt2 += pt0;
+            PointPlus pt3 = new PointPlus(length - 2 * width, 0f);
+            pt3.Theta += a;
+            pt3 += pt1;
+            PointPlus pt4 = new PointPlus(length - 2 * width, 0f);
+            pt4.Theta += a;
+            pt4 += pt2;
+            PointPlus pt5 = new PointPlus(length, 0f);
+            pt5.Theta += a;
+            pt5 += pt0;
+
+            Point[] corners = new Point[6];
+            corners[0] = pt0;
+            corners[1] = pt1;
+            corners[2] = pt3;
+            corners[3] = pt5;
+            corners[4] = pt4;
+            corners[5] = pt2;
+            return corners;
+        }
+        public class AngleVal
+        {
+            public Angle a; public float len; public int count;
+            public override string ToString()
+            {
+                return a.ToString() + len + ":" + count;
+            }
+        }
+        void FindSegments()
+        {
+            //read the neurons in the bit map and get the boundary and corner points
+            segments.Clear();
             favoredPoints.Clear();
-            horizBoundaries.Clear();
+            List<Point> firingPoints = new List<Point>();
+            List<Point> pointsToSearch = new List<Point>();
+            float rectWidth = 0.4f;
             for (int j = 0; j < naSource.Height; j++)
             {
                 for (int i = 0; i < naSource.Width; i++)
                 {
-                    if (i == 4 && j == 36)
-                    { }
-                    if (naSource.GetNeuronAt(i, j) is Neuron n)
+                    int index = naSource.GetNeuronIndexAt(i, j);
+                    float lastCharge = MainWindow.theNeuronArray.GetNeuronLastCharge(index);
+                    if (lastCharge > 0.1f)
                     {
-                        if (n.LastCharge > 0.9f && n.LastCharge < 1)
-                        {
+                        firingPoints.Add(new Point(i, j));
+                        pointsToSearch.Add(new Point(i, j));
+                        if (lastCharge == .99f)
                             favoredPoints.Add(new Point(i, j));
-                        }
-                        if (n.LastCharge > 0.9f)
+                    }
+                }
+            }
+            for (int k = 0; k < favoredPoints.Count; k++)
+                for (int l = k + 1; l < favoredPoints.Count; l++)
+                {
+                    PointPlus p1 = favoredPoints[k];
+                    PointPlus p2 = favoredPoints[l];
+                    float estDist = (p1 - p2).R;
+                    float actDist = NeuronsInRectangle(firingPoints, p1, (p2 - p1).Theta, 1, out int hitCount);
+                    float diff = Abs(estDist - actDist);
+                    if (diff < 4)
+                    {
+                        segments.Add(new Arc { p1 = p1, p2 = p2 });
+                    }
+                }
+
+            return;
+
+#pragma warning disable 162
+            //work from the corner points to find all the segments
+            for (int k = 0; k < favoredPoints.Count; k++)
+            {
+                Point start = favoredPoints[k];
+                pointsToSearch.Remove(start);
+                Angle angleStep = Angle.FromDegrees(1f);
+                List<AngleVal> angleVals = new List<AngleVal>();
+                for (Angle a = Angle.FromDegrees(-5); a < Angle.FromDegrees(180); a += angleStep)
+                {
+                    //get the longest rectangle from this neuron and angle
+                    float bestLength = NeuronsInRectangle(firingPoints, start, a, rectWidth, out int hitCount);
+                    angleVals.Add(new AngleVal { a = a, len = bestLength - 1, count = hitCount, });
+                }
+                //find local maxima and add to segments
+                float curLength = 0;
+                int startOfRange = 0;
+                for (int i = 0; i < angleVals.Count; i++)
+                {
+                    Angle x = Atan2(1, 5);
+                    if (angleVals[i].len > curLength)
+                    {
+                        //increasing value
+                        startOfRange = i;
+                        curLength = angleVals[i].len;
+                    }
+                    else if (angleVals[i].len < curLength - 2) //the -2 eliminates some noise
+                    {
+                        //value has started decreasing...find the midpoint of the maximum
+                        if (startOfRange == -1) continue;
+                        int centerOfRange = (int)Round((startOfRange + i - 1) / 2f);
+                        startOfRange = -1;
+                        PointPlus p1 = start;
+                        PointPlus p2 = new PointPlus(angleVals[centerOfRange].len, angleVals[centerOfRange].a);
+                        p2 += p1;
+                        //if (Abs((p2 - p1).R) > 2)
                         {
-                            if (GetNeuronAndValue(i - 1, j) == 0)
+                            //p2 is the calculated point... is it near a favored pt?
+                            for (int j = 0; j < favoredPoints.Count; j++)
                             {
-                                int ex = i;
-                                //start is i,j
-                                while (GetNeuronAndValue(ex + 1, j) > 0.9f)
+                                if ((((PointPlus)favoredPoints[j]) - p2).R < 2)
                                 {
-                                    ex++;
-                                    if (GetNeuronAndValue(ex, j) < 1)
-                                        favoredPoints.Add(new Point(ex, j));
+                                    p2 = favoredPoints[j];
+                                    break;
                                 }
-                                horizBoundaries.Add(new Arc { p1 = new Point(i, j), p2 = new Point(ex, j) });
-                                i = ex;
+                            }
+
+                            segments.Add(new Arc { p1 = p1, p2 = p2 });
+
+                            //remove points from pointsToSearch
+                            Point[] startingRectangle = CreateRectangle(start, angleVals[centerOfRange].a, (float)angleVals[centerOfRange].len, rectWidth + 2);
+                            for (int j = 0; j < pointsToSearch.Count; j++)
+                            {
+                                if (Utils.IsPointInPolygon(startingRectangle, pointsToSearch[j]))
+                                {
+                                    pointsToSearch.RemoveAt(j);
+                                    j--;
+                                }
+                            }
+                        }
+                        curLength = angleVals[i].len;
+                    }
+                }
+
+            }
+
+            return;
+#pragma warning restore 162
+
+            //THIS METHOD builds every segment at every location and then merges them into groups
+            //segments.Clear();
+            ////try every boundary
+            //for (int i = 0; i < horizBoundaries.Count; i++)
+            //{
+            //    float curLength = 1;
+
+            //    Angle a = new Angle(0);
+            //    //try every point in every boundary
+            //    for (int j = (int)horizBoundaries[i].p1.X; j <= (int)horizBoundaries[i].p2.X; j++)
+            //    {
+            //        Arc bestArc = new Arc(); 
+            //        float bestError = 0;
+            //        Point start = new Point(j, horizBoundaries[i].p1.Y);
+            //        //try most angles at every point
+            //        for (a = Angle.FromDegrees(0); a < Angle.FromDegrees(180); a += Angle.FromDegrees(15))
+            //        {
+            //            FindSegmentThroughPoint(start, a, out Point p1, out Point p2);
+
+            //            float length = (float)(p1 - p2).Length;
+            //            float error = FindSegmentError(p1, p2);
+            //            if (length > curLength + 1 || error < bestError && length > curLength-1)
+            //            {
+            //                //float error = FindSegmentError(p1, p2);
+            //                bestArc.p1 = p1;
+            //                bestArc.p2 = p2;
+            //                curLength = length;
+            //                bestError = error;
+            //            }
+            //            if (length < curLength && bestArc.Length > 3)
+            //            {
+            //                AddSegmentToList(bestArc);
+            //                bestArc = new Arc();
+            //                bestError = 0;
+            //            }
+            //            if (length < curLength && length > 0)
+            //                curLength = length;
+            //        }
+            //    }
+            //}
+            //GroupSegments();
+        }
+
+        private float NeuronsInRectangle(List<Point> firingPoints, Point start, Angle a, float rectWidth, out int bestFiringCount)
+        {
+            //find the length for this angle
+            float length;
+            float bestLength = 0;
+            bestFiringCount = 0;
+            float lengthStep = (float)Abs(1 / Sin(a));
+            if (lengthStep > 1.414) lengthStep = (float)Abs(1 / Cos(a));
+            lengthStep = 1f;
+            bestLength = 0;
+            for (length = 1; length < 100; length += lengthStep)
+            {
+                Point[] startingRectangle = CreateRectangle(start, a, (float)length, rectWidth);
+                int firingCount = 0;
+                for (int i = 0; i < firingPoints.Count; i++)
+                {
+                    if (Utils.IsPointInPolygon(startingRectangle, firingPoints[i]))
+                    {
+                        firingCount++;
+                    }
+                }
+                for (int i = 0; i < favoredPoints.Count; i++)
+                {
+                    if (Utils.IsPointInPolygon(startingRectangle, favoredPoints[i]))
+                    {
+                        firingCount += 5;
+                    }
+                }
+                if (firingCount <= bestFiringCount)
+                {
+                    if (length > bestLength + 2) break;
+                }
+                else //new firing count is greater
+                    bestLength = length;
+                bestFiringCount = firingCount;
+            }
+
+            return bestLength;
+        }
+
+        void AddSegmentToList(Arc theArc)
+        {
+            if (theArc == null) return;
+            if (theArc.Length == 0) return;
+            for (int i = 0; i < segments.Count; i++)
+            {
+                if (segments[i].p1 == theArc.p1 && segments[i].p2 == theArc.p2) return;
+            }
+            segments.Add(theArc);
+        }
+
+        [XmlIgnore]
+        public List<List<Arc>> clusters = new List<List<Arc>>();
+        void GroupSegments()
+        {
+            clusters.Clear();
+            List<Arc> similarArcs = new List<Arc>();
+            for (Angle a = 0; a < Angle.FromDegrees(180); a += Angle.FromDegrees(15))
+            {
+                //find group of segments with similar angles
+                similarArcs.Clear();
+                for (int i = 0; i < segments.Count; i++)
+                {
+                    if (Abs(segments[i].Angle - a) < Angle.FromDegrees(15f))
+                    {
+                        similarArcs.Add(segments[i]);
+                    }
+                }
+
+                //within this set, find subsets which overlap/intersect
+                for (int i = 0; i < similarArcs.Count; i++)
+                {
+                    List<Arc> cluster = new List<Arc>();
+                    clusters.Add(cluster);
+                    cluster.Add(similarArcs[i]); //find mesh of all segments which intersect with this one
+                    bool itemAdded = true;
+                    while (itemAdded)
+                    {
+                        itemAdded = false;
+                        for (int j = 0; j < similarArcs.Count; j++)
+                        {
+                            for (int k = 0; k < cluster.Count; k++)
+                            {
+                                //replace this with closeness measure
+                                //                                if (Utils.SegmentsIntersect(similarArcs[j].p1, similarArcs[j].p2, cluster[k].p1, cluster[k].p2))
+                                if (Utils.DistanceBetweenTwoSegments(similarArcs[j].p1, similarArcs[j].p2, cluster[k].p1, cluster[k].p2) < 2)
+                                {
+                                    if (!cluster.Contains(similarArcs[j]))
+                                    {
+                                        cluster.Add(similarArcs[j]);
+                                        similarArcs.Remove(similarArcs[j]);
+                                        j--;
+                                        itemAdded = true;
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
+            //process the clusters in order from most complex to least
+            for (int i = 0; i < clusters.Count; i++)
+            {
+                Angle avgSlope = clusters[i].Average(x => x.Angle);
+                double maxX = clusters[i].Max(x => x.p1.X);
+                maxX = Max(maxX, clusters[i].Max(x => x.p2.X));
+                double maxY = clusters[i].Max(x => x.p1.Y);
+                maxY = Max(maxY, clusters[i].Max(x => x.p2.Y));
+                double minX = clusters[i].Min(x => x.p1.X);
+                minX = Min(minX, clusters[i].Min(x => x.p2.X));
+                double minY = clusters[i].Min(x => x.p1.Y);
+                minY = Min(minY, clusters[i].Min(x => x.p2.Y));
+
+                Point p1, p2;
+                if (avgSlope < Angle.FromDegrees(90))
+                {
+                    p1 = new Point(minX, minY);
+                    p2 = new Point(maxX, maxY);
+                }
+                else
+                {
+                    p1 = new Point(minX, maxY);
+                    p2 = new Point(maxX, minY);
+                }
+                clusters[i].Clear();
+                clusters[i].Add(new Arc { p1 = p1, p2 = p2 });
+            }
+            clusters = clusters.OrderBy(x => x[0].Length).ToList(); ;
         }
 
+
+
+        void FindSegmentThroughPoint(Point pt, Angle a, out Point p1, out Point p2)
+        {
+            float deltaX = 1 / (float)Math.Tan(a);
+            float deltaY = 1;
+            if (Abs(deltaX) > 1)
+            {
+                deltaY = 1 / deltaX;
+                deltaX = 1;
+            }
+            float curX = (float)(pt.X);
+            float curY = (float)pt.Y;
+            float sx = curX;
+            float sy = curY;
+            float ex = curX;
+            float ey = curY;
+
+            Neuron n1 = naSource.GetNeuronAt((int)Round(curX), (int)Round(curY));
+            while (n1 != null && n1.lastCharge != 0)
+            {
+                ex = curX;
+                ey = curY;
+                curX += deltaX;
+                curY += deltaY;
+                n1 = naSource.GetNeuronAt((int)Round(curX), (int)Round(curY));
+            }
+            curX = (float)(pt.X);
+            curY = (float)pt.Y;
+            deltaX = -deltaX;
+            deltaY = -deltaY;
+
+            n1 = naSource.GetNeuronAt((int)Round(curX), (int)Round(curY));
+            while (n1 != null && n1.lastCharge != 0)
+            {
+                sx = curX;
+                sy = curY;
+                curX += deltaX;
+                curY += deltaY;
+                n1 = naSource.GetNeuronAt((int)Round(curX), (int)Round(curY));
+            }
+
+            p1 = new Point(sx, sy);
+            p2 = new Point(ex, ey);
+        }
+
+        float FindSegmentError(Point p1, Point p2)
+        {
+            float error = 0;
+            float curX = (float)p1.X;
+            float curY = (float)p1.Y;
+            float deltaX = (float)(p2.X - p1.X);
+            float deltaY = (float)(p2.Y - p1.Y);
+            if (deltaX == 0 && deltaY == 0) return 0;
+
+            if (Abs(deltaX) > Abs(deltaY))
+            {
+                deltaY /= deltaX;
+                deltaX = 1;
+                Neuron n1 = naSource.GetNeuronAt((int)Round(curX), (int)Round(curY));
+                Neuron n2 = naSource.GetNeuronAt((int)Round(curX), (int)Round(curY + Ceiling(deltaY)));
+                while (n1 != null && n2 != null && curY <= p2.Y)
+                {
+                    if (n1.LastCharge != 0 && n2.LastCharge == 0)
+                    {
+                        error += Abs(curY - (float)Round(curY));
+                    }
+                    else if (n1.LastCharge == 0 && n2.LastCharge != 0)
+                    {
+                        error += Abs(curY - (float)Round(curY + 1));
+                    }
+                    curX += deltaX;
+                    curY += deltaY;
+                    n1 = naSource.GetNeuronAt((int)Round(curX), (int)Round(curY));
+                    n2 = naSource.GetNeuronAt((int)Round(curX), (int)Round(curY + Ceiling(deltaY)));
+                }
+            }
+            else
+            {
+                //deltaX = 1 / deltaY;
+                //deltaY = 1;
+                Neuron n1 = naSource.GetNeuronAt((int)Round(curX), (int)Round(curY));
+                Neuron n2 = naSource.GetNeuronAt((int)Round(curX + Ceiling(deltaX)), (int)Round(curY));
+                while (n1 != null && n2 != null && curX <= p2.X)
+                {
+                    if (n1.LastCharge != 0 && n2.LastCharge == 0)
+                    {
+                        error += Abs(curX - (float)Round(curX));
+                    }
+                    else if (n1.LastCharge == 0 && n2.LastCharge != 0)
+                    {
+                        error += Abs(curX - (float)Round(curX + 1));
+                    }
+                    curX += deltaX;
+                    curY += deltaY;
+                    n1 = naSource.GetNeuronAt((int)Round(curX), (int)Round(curY));
+                    n2 = naSource.GetNeuronAt((int)Round(curX + Ceiling(deltaX)), (int)Round(curY));
+                }
+            }
+            return error;
+        }
+
+        //do these two ranges overlap or miss by 1? (x0,x1) (x2,x3)
+        bool InRange(double x0, double x1, double x2, double x3)
+        {
+            if (x0 > x2 - 1 && x0 < x3 + 1) return true;
+            if (x1 > x2 - 1 && x1 < x3 + 1) return true;
+            if (x2 > x0 - 1 && x2 < x1 + 1) return true;
+            if (x3 > x0 - 1 && x3 < x1 + 1) return true;
+            return false;
+        }
+
+        //given two points of a segment, how closely does it match pixels of the boundary
+        //how much longer 
+        float TraceLine(Point p1, Angle a)
+        {
+
+            float error = 0;
+            return error;
+        }
 
         //TODO These should migrate to the base of NA
         float GetNeuronAndValue(int i, int j)
@@ -626,7 +1044,7 @@ namespace BrainSimulator.Modules
             int y = (int)pt.Y;
             //a point is favored if it has 5 consecutive adjoining nonboundary points
             //that means it's a corner or peninsula
-            ModuleView naSource = theNeuronArray.FindModuleByLabel("Boundary2");
+            ModuleView naSource = theNeuronArray.FindModuleByLabel("Boundary");
             if (naSource == null) return 0;
 
             if (naSource.GetNeuronAt(x, y) is Neuron n0)
@@ -636,7 +1054,7 @@ namespace BrainSimulator.Modules
             int consecutiveCount = 0;
             for (int i = 0; i < 15; i++)
             {
-                ModuleBoundary2.GetDeltasFromDirection(i, out int dx, out int dy);
+                ModuleBoundary.GetDeltasFromDirection(i, out int dx, out int dy);
                 if (naSource.GetNeuronAt(x + dx, y + dy) is Neuron n)
                 {
                     if (n.LastCharge != 1)
@@ -656,7 +1074,7 @@ namespace BrainSimulator.Modules
         float GetNeuronValue(Point p)
         {
             float retVal = 0;
-            ModuleView naSource = theNeuronArray.FindModuleByLabel("Boundary2");
+            ModuleView naSource = theNeuronArray.FindModuleByLabel("Boundary");
             if (naSource == null) return retVal;
             if (naSource.GetNeuronAt((int)p.X, (int)p.Y) is Neuron n)
                 retVal = n.LastCharge;
@@ -698,7 +1116,7 @@ namespace BrainSimulator.Modules
         }
         void ClearArcNeurons(Arc a) //except endpoints
         {
-            ModuleView naSource = theNeuronArray.FindModuleByLabel("Boundary2");
+            ModuleView naSource = theNeuronArray.FindModuleByLabel("Boundary");
             if (naSource == null) return;
             float dx = (float)(a.p2.X - a.p1.X);
             float dy = (float)(a.p2.Y - a.p1.Y);
@@ -747,7 +1165,7 @@ namespace BrainSimulator.Modules
             Arc retVal = null;
             if (na.GetNeuronAt(x, y) is Neuron n2 && n2.LastCharge != 1 && n2.LastCharge != 0.5f) return retVal;
 
-            ModuleView naSource = theNeuronArray.FindModuleByLabel("Boundary2");
+            ModuleView naSource = theNeuronArray.FindModuleByLabel("Boundary");
             if (naSource == null) return retVal;
 
             float curx = x;
@@ -854,6 +1272,42 @@ namespace BrainSimulator.Modules
             }
         }
 
+        void FindHorizBoundaries()
+        {
+            favoredPoints.Clear();
+            horizBoundaries.Clear();
+            for (int j = 0; j < naSource.Height; j++)
+            {
+                for (int i = 0; i < naSource.Width; i++)
+                {
+                    if (i == 4 && j == 36)
+                    { }
+                    if (naSource.GetNeuronAt(i, j) is Neuron n)
+                    {
+                        if (n.LastCharge > 0.9f && n.LastCharge < 1)
+                        {
+                            favoredPoints.Add(new Point(i, j));
+                        }
+                        if (n.LastCharge > 0.9f)
+                        {
+                            if (GetNeuronAndValue(i - 1, j) == 0)
+                            {
+                                int ex = i;
+                                //start is i,j
+                                while (GetNeuronAndValue(ex + 1, j) > 0.9f)
+                                {
+                                    ex++;
+                                    if (GetNeuronAndValue(ex, j) < 1)
+                                        favoredPoints.Add(new Point(ex, j));
+                                }
+                                horizBoundaries.Add(new Arc { p1 = new Point(i, j), p2 = new Point(ex, j) });
+                                i = ex;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
 
         //fill this method in with code which will execute once
@@ -861,6 +1315,8 @@ namespace BrainSimulator.Modules
         //or when the engine restart button is pressed
         public override void Initialize()
         {
+            bndryPtCt = 0;
+            bndryCt = 0;
         }
 
         //the following can be used to massage public data to be different in the xml file

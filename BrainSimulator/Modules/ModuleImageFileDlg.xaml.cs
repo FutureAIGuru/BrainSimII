@@ -18,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.IO;
 
 namespace BrainSimulator.Modules
 {
@@ -34,6 +35,7 @@ namespace BrainSimulator.Modules
             if (!base.Draw(checkDrawTimer)) return false;
             ModuleImageFile parent = (ModuleImageFile)base.ParentModule;
             textBoxPath.Text = parent.filePath;
+            cbNameIsDescription.IsChecked = parent.useDescription;
 
             //use a line like this to gain access to the parent's public variables
             //ModuleEmpty parent = (ModuleEmpty)base.Parent1;
@@ -57,19 +59,47 @@ namespace BrainSimulator.Modules
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog
             {
-                Filter = "Image Files|*.bmp;*.png",
-                Title = "Select a Brain Simulator Command File",
+                Filter = "Image Files| *.png",
+                Title = "Select an image file",
+                Multiselect = true,
             };
             // Show the Dialog.  
             // If the user clicked OK in the dialog  
             DialogResult result = openFileDialog1.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.OK)
             {
-                textBoxPath.Text = openFileDialog1.FileName;
                 ModuleImageFile parent = (ModuleImageFile)base.ParentModule;
-                parent.SetNewPath(textBoxPath.Text, false);
+
+                textBoxPath.Text = openFileDialog1.FileName;
+                List<string> fileList;
+                string curPath;
+                if (openFileDialog1.FileNames.Length > 1)
+                {
+                    fileList = openFileDialog1.FileNames.ToList();
+                    curPath = fileList[0];
+                }
+                else
+                {
+                    fileList = GetFileList(openFileDialog1.FileName);
+                    curPath = openFileDialog1.FileName;
+                }
+
+                parent.SetParameters(fileList, curPath, (bool)cbAutoCycle.IsChecked, (bool)cbNameIsDescription.IsChecked);
             }
         }
+
+        private List<string> GetFileList(string filePath)
+        {
+            SearchOption subFolder = SearchOption.AllDirectories;
+            if (!(bool)cbUseSubfolders.IsChecked)
+                subFolder = SearchOption.TopDirectoryOnly;
+            string dir = filePath;
+            FileAttributes attr = File.GetAttributes(filePath);
+            if ((attr & FileAttributes.Directory) != FileAttributes.Directory)
+                dir = System.IO.Path.GetDirectoryName(filePath);
+            return new List<string>(Directory.EnumerateFiles(dir, "*.png", subFolder));
+        }
+
 
         private void Button_Cancel_Click(object sender, RoutedEventArgs e)
         {
@@ -79,19 +109,33 @@ namespace BrainSimulator.Modules
         private void Button_OK_Click(object sender, RoutedEventArgs e)
         {
             ModuleImageFile parent = (ModuleImageFile)base.ParentModule;
-            parent.SetNewPath(textBoxPath.Text, (bool)cbEntireFolder.IsChecked);
+            parent.SetParameters(null,textBoxPath.Text, (bool)cbAutoCycle.IsChecked, (bool)cbNameIsDescription.IsChecked);
         }
 
         private void Button_Click_Next(object sender, RoutedEventArgs e)
         {
             ModuleImageFile parent = (ModuleImageFile)base.ParentModule;
+            cbAutoCycle.IsChecked = false;
             parent.NextFile();
         }
 
         private void Button_Click_Prev(object sender, RoutedEventArgs e)
         {
             ModuleImageFile parent = (ModuleImageFile)base.ParentModule;
+            cbAutoCycle.IsChecked = false;
             parent.PrevFile();
+        }
+
+        private void CheckBoxChanged(object sender, RoutedEventArgs e)
+        {
+            ModuleImageFile parent = (ModuleImageFile)base.ParentModule;
+            parent.SetParameters(null,"", (bool)cbAutoCycle.IsChecked, (bool)cbNameIsDescription.IsChecked);
+        }
+
+        private void ButtonDescr_Click(object sender, RoutedEventArgs e)
+        {
+            ModuleImageFile parent = (ModuleImageFile)base.ParentModule;
+            parent.ResendDescription();
         }
     }
 }

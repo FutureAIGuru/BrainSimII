@@ -161,6 +161,13 @@ namespace BrainSimulator
             int index = firstNeuron + Y + X * Rows;
             return MainWindow.theNeuronArray.GetNeuron(index);
         }
+
+        public int GetNeuronIndexAt(int x,int y)
+        {
+            int index = firstNeuron + y + x * Rows;
+            return index;
+        }
+
         public int GetAbsNeuronIndexAt(int X, int Y)
         {
             int index = Y + X * Rows;

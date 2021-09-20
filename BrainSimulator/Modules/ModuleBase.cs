@@ -7,6 +7,7 @@ using System;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Collections.Generic;
 
 namespace BrainSimulator.Modules
 {
@@ -31,11 +32,13 @@ namespace BrainSimulator.Modules
         public int MaxHeight => maxHeight;
         public bool isEnabled = true;
 
+
         protected ModuleBaseDlg dlg = null;
         public Point dlgPos;
         public Point dlgSize;
         public bool dlgIsOpen = false;
-
+        protected bool allowMultipleDialogs = false;
+        private List<ModuleBaseDlg> dlgList = null;
 
         public ModuleBase() { }
 
@@ -84,6 +87,14 @@ namespace BrainSimulator.Modules
 
         public void CloseDlg()
         {
+            if (dlgList != null)
+            for (int i = dlgList.Count-1 ; i >= 0; i--)
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    dlgList[i].Close();
+                });
+            }
             if (dlg != null)
             {
                 Application.Current.Dispatcher.Invoke((Action)delegate
@@ -117,7 +128,15 @@ namespace BrainSimulator.Modules
                 t1 = Type.GetType(t.ToString() + "Dlg");
             }
             if (t1 == null) return;
-            if (dlg != null) dlg.Close();
+            //if (dlg != null) dlg.Close();
+            if (!allowMultipleDialogs && dlg != null) dlg.Close();
+            if (allowMultipleDialogs && dlg != null)
+            {
+                if (dlgList == null) dlgList = new List<ModuleBaseDlg>();
+                dlgList.Add(dlg);
+                dlgPos.X += 10;
+                dlgPos.Y += 10;
+            }
             dlg = (ModuleBaseDlg)Activator.CreateInstance(t1);
             if (dlg == null) return;
             dlg.ParentModule = (ModuleBase)this;
@@ -189,12 +208,26 @@ namespace BrainSimulator.Modules
 
         private void Dlg_Closed(object sender, EventArgs e)
         {
-            dlgIsOpen = false;
+           if (dlg == null) 
+                dlgIsOpen = false;
         }
 
         private void Dlg_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            dlg = null;
+            if (dlgList != null && dlgList.Count > 0)
+            {
+                if (dlgList.Contains((ModuleBaseDlg)sender))
+                {
+                    dlgList.Remove((ModuleBaseDlg)sender);
+                }
+                else
+                {
+                    dlg = dlgList[0];
+                    dlgList.RemoveAt(0);
+                }
+            }
+            else
+                dlg = null;
         }
 
 

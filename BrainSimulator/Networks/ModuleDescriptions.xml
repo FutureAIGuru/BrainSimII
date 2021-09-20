@@ -276,7 +276,8 @@
             Within the Knowledge Store, everything is a 'Thing' (see the source code for the 'Thing' object). Things may have parents, children, references to other Things, and a 'value' which can be any .NET object (with Color and Point being implemented). It can search by value with an optional tolerance. A reference to another thing is done with a 'Link' which is a thing with an attached weight which can be examined and/or modified.
 
             Note that the Knowledge store is a bit like a neural network its own right if we consider a node to be a neuron and a link to be a synapse.
-        </description>
+        
+The dialog box shows the content of the UKS at a tree. You can expand children of the tree by clicking the open arrows and also show references and referencedBy links. The dialog can be set to automatically refresh. When the mouse enters the dialog, automatic refreshing is paused and the background is changed to light blue as a reminder that the display is no longer current.</description>
   </ModuleDescription>
   <ModuleDescription>
     <moduleName>ModuleUKS2</moduleName>
@@ -315,5 +316,86 @@ Neuron values in the top row set the x, y, scale, and rotation values. There are
 Minimum scale shows the tnere image in the neuron area of the module. Maximum scale shows one pixel per neuron. Rotation is about the center of the image.
 
 It is intended that an attention module will control the various parameters so the system can focus in on areas of intereest.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleAssociation</moduleName>
+    <toolTip>Create associations between words and properties and relationships</toolTip>
+    <description>The association updates links by setting hits between nodes which have fired recently and adding misses to links for which only one end has fired recently.
+
+The dialog shows the current associations as a grid with words across the top.
+
+Associations are stored as hits or misses and when the dialog "Raw Values" option is checked, these are shown as hits/misses. Otherwise, the value is the ratio of hits to misses. The highes value in each row or column is highlighted.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleBoundaryDescription</moduleName>
+    <toolTip>Handles verbal descriptions of the current view</toolTip>
+    <description>1. This module accepts an input string from either a dialog or programmaticaly via a SetDescription() method which is called from the ImageFile module. It then adds words one at a time to the Attention node.
+2. It also processes the current attention to create a verbal description, sort of an internal monologue.,</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleBoundarySegments</moduleName>
+    <toolTip>Find corners and segments in an image</toolTip>
+    <description>This module reads an input image from the ImageZoom module and searches from boundary segments and corners. It outputs these as neuron firings.
+
+The Context Menu lets you adjust the thresholds for the minimum delta for Hue, Saturation, and Luminance.
+
+THIS IS PLACEHOLDER CODE. it works with simple objects made of straight segments only.  It is eaily confused by anti-aliasing .</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleBoundaryAreas</moduleName>
+    <toolTip>Assembles segments and corners into areas</toolTip>
+    <description>Assuming there or multiple shapes in the visual field processed by Boundary Areas, this module clusters connected segments and corners into areas. Areas can be complex.
+
+Areas are written into the UKS under the location "Sense | Visual | CurrentlyVisible".
+
+It also calculates the center of each area and its color at the center.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleBoundaryColor</moduleName>
+    <toolTip>Match detected colors agains stored colors</toolTip>
+    <description>This module determins if the detect color (in HSL format) is already in the UKS and adds it if not. 
+
+Using the HSL representation allows for easy determiniation if colors are similar because their hue will be similar whereas the saturation and luminatnce could have much greater variation and still be the same color.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleBoundaryShapes</moduleName>
+    <toolTip>Determines if visible areas represent known shapes</toolTip>
+    <description>Each area in the visible field is matched against library the stored shapes in the UKS. If it is not found, and new shape entry is made. Then the visible objects are updated with the known shape.
+
+Because shapes are based on corners and relative distances between them, shape detection is independent of scale, rotation, or position.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleBoundaryKnown</moduleName>
+    <toolTip>Determines if this object has been seen before</toolTip>
+    <description>This module etermines if areas in the visual field have been seen before based on their current shape and color. 
+
+Future development will allow known shapes to be as complex as desired consisting of numerout shapes.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleBoundaryMotion</moduleName>
+    <toolTip>Detects object motion and updates the Mental Model</toolTip>
+    <description>This module detecs motion of objects in the visual field by comparing the current visual field content with the current mental model. It  detects if object have appeared or disappeared and if objects have moved. 
+
+It then assumes that if all objects are in motion, it is more likely that the point of view has changed and the objects are actually static. It can then determine the motion of the POV.
+
+Finally, it updates the mental model. </description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleAttention</moduleName>
+    <toolTip>Determines which inputs are the current focus of attention</toolTip>
+    <description>Based on the idea the the mind can only pat attention to a few things at a time, this module selects which one to pay attentiaon to. Currently the module supports a single visual stream and a single audible stream.
+
+Audible Attention: Incoming words are processed one at a time in sequence. I
+Visual Attentiaon: f an object has moved, it becomes a focus of attention. Absent any other input, attention skips randomly among the visible objects. Visual attention can also be controlled by the dialog box or key-words in the imageFile desciptions.
+
+The dialog box shows the current visual attention in color and the other objects in the mental model in outline. Note that because the display is a reconstruction from the corners in the mental model, it can be at a higher resolution than the original input.
+WHen the mouse cursor enters the dialog, it stops changes in attentaion and inticates this with a blue bakcground.  You can direct attention to a particula object by clicking on it.</description>
+  </ModuleDescription>
+  <ModuleDescription>
+    <moduleName>ModuleBoundaryRelationship</moduleName>
+    <toolTip>Builds the relationships between objects in the mental model</toolTip>
+    <description>This module scans the properties of the objects in the mental model and builds relationship linkages between them. 
+
+A relationship is like a UKS Link but ALSO has a relationship type. That way, we can represent that Area0 is related to Area1 by &gt;size (meaning that one is larger than the other). Relationships are automatically created for any properties which exist.  Properties with values have comparisionts of &lt;&gt;= while properties like color or shape are simply shows as = or !=.</description>
   </ModuleDescription>
 </ArrayOfModuleDescription>

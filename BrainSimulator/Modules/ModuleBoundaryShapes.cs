@@ -32,9 +32,6 @@ namespace BrainSimulator.Modules
         }
 
         ModuleUKS uks = null;
-        public int cornerCt = 0;
-        public int shapeCt = 0;
-        public int relationshipCount = 0;
 
         //fill this method in with code which will execute
         //once for each cycle of the engine
@@ -46,9 +43,10 @@ namespace BrainSimulator.Modules
             ModuleView naSource = theNeuronArray.FindModuleByLabel("UKS");
             if (naSource == null) return;
             uks = (ModuleUKS)naSource.TheModule;
+            Thing x = uks.Labeled("CurrentlyVisible"); 
+            Thing currentlyVisibleParent = uks.GetOrAddThing("CurrentlyVisible", "Visual");
 
-
-            foreach (Thing t in uks.Labeled("VisibleArea").Children)
+            foreach (Thing t in currentlyVisibleParent.Children)
             {
                 Thing tempShape = CreateTempShapeFromArea(t);
                 if (tempShape == null) continue;
@@ -61,7 +59,7 @@ namespace BrainSimulator.Modules
                 else
                 {
                     AddShapeFromArea(tempShape);
-                    tempShape.Label = "Shape'" + shapeCt++;
+                    tempShape.Label = "SavedShape'*";
                     t.AddReference(tempShape);
                 }
             }
@@ -71,16 +69,17 @@ namespace BrainSimulator.Modules
             // UpdateDialog();
         }
 
+
         Thing MatchAreaToStoredShapes(Thing t, out float score)
         {
             score = float.MaxValue;
             Thing bestMatch = null;
             float bestScore = float.MaxValue;
-            Thing areaParent = uks.GetOrAddThing("Area","Shape");
+            Thing areaParent = uks.GetOrAddThing("Area", "Shape");
             if (areaParent == null) return null;
             foreach (Thing t1 in areaParent.Children)
             {
-                if (t1.Label.IndexOf("Shape") == 0)
+                if (t1.Label.IndexOf("SavedShape") == 0)
                 {
                     float matchScore = GetMatchScore(t1, t);
                     if (matchScore < bestScore)
@@ -119,7 +118,7 @@ namespace BrainSimulator.Modules
                 float errorTot = 0;
                 for (int i = 0; i < count; i++)
                 {
-                    errorTot += (shapeList1[(i+offset)%shapeList1.Count] - shapeList2[i]).R;
+                    errorTot += (shapeList1[(i + offset) % shapeList1.Count] - shapeList2[i]).R;
                 }
                 if (errorTot < bestError)
                     bestError = errorTot;
@@ -133,19 +132,21 @@ namespace BrainSimulator.Modules
         {
             List<PointPlus> retVal = new List<PointPlus>();
             if (!theShape.Label.Contains("Shape")) return retVal;
+            if (theShape.Children.Count == 0) return retVal;
 
             Thing firstCorner = theShape.Children[0];
             Thing curCorner = theShape.Children[0];
             do
             { //TODO what if the references are out of order?
                 Thing theAngle = curCorner.References[0].T;
-                Thing theLength = curCorner.References[1].T.Parents[0];
+
+                Thing theLength = ((Relationship)curCorner.References[1]).relationshipType;
                 float.TryParse(theAngle.Label.Substring(3), out float theAngle1);
                 float.TryParse(theLength.Label.Substring(3), out float theLength1);
 
-                PointPlus pp = new PointPlus { R = theLength1, Theta = new Angle(0).FromDegrees(theAngle1) };
+                PointPlus pp = new PointPlus { R = theLength1, Theta = Angle.FromDegrees(theAngle1) };
                 retVal.Add(pp);
-                curCorner = curCorner.References[1].T.References[0].T;
+                curCorner = curCorner.References[1].T;
             } while (curCorner != firstCorner);
 
             return retVal;
@@ -154,7 +155,7 @@ namespace BrainSimulator.Modules
         //Areas have absolute coordinates, Shapes are completely relative
         Thing CreateTempShapeFromArea(Thing theArea)
         {
-            foreach(Thing t in theArea.Children)
+            foreach (Thing t in theArea.Children)
             {
                 if (t.Children.Count == 0)
                     return null;
@@ -172,11 +173,10 @@ namespace BrainSimulator.Modules
             for (int i = 0; i < theArea.Children.Count; i++)
             {
                 Thing corner = theArea.Children[i];
-                if (corner.Parents.Contains(uks.Labeled("Corner")))
+                //if (corner.Parents.Contains(uks.Labeled("Corner")))
                 {
                     if (topLeft == null) topLeft = corner;
                     Point p1 = (Point)corner.References[0].T.Children[0].V;
-                    Point p2 = (Point)corner.References[1].T.Children[0].V;
 
                     if (p1.Y < ((Point)topLeft.Children[0].V).Y ||
                        (p1.Y == ((Point)topLeft.Children[0].V).Y && p1.X < ((Point)topLeft.Children[0].V).X))
@@ -190,18 +190,17 @@ namespace BrainSimulator.Modules
             Thing nextAreaCorner = topLeft.References[0].T;
             Thing prevAreaCorner = topLeft;
 
-            Thing newShapeCorner = uks.AddThing("nCrnr" + cornerCt++, "Corner");
+            //these are for the shape
+            Thing newShapeCorner = uks.AddThing("Cnr*", theShape);
             Thing firstShapeCorner = newShapeCorner;
-            
+
             while (nextAreaCorner != topLeft)
             {
-                theShape.AddChild(newShapeCorner);
-
                 //which area reference points to the next corner (not the previous)
                 int refIndex = 0;
-                if (nextAreaCorner.References[0].T == prevAreaCorner)
+                if (nextAreaCorner.References.Count > 1 &&  nextAreaCorner.References[0].T == prevAreaCorner)
                     refIndex = 1;
-                Thing nextShapeCorner = AddAngleandRelationship(greatestLength, nextAreaCorner, newShapeCorner, refIndex);
+                Thing nextShapeCorner = AddAngleandRelationship(greatestLength, nextAreaCorner, newShapeCorner, refIndex,theShape);
 
                 newShapeCorner = nextShapeCorner;
 
@@ -209,29 +208,41 @@ namespace BrainSimulator.Modules
                 nextAreaCorner = nextAreaCorner.References[refIndex].T; //which way do we go?
             }
 
-            theShape.AddChild(newShapeCorner);
             int refIndex1 = 0;
-            if (nextAreaCorner.References[0].T == prevAreaCorner)
+            if (nextAreaCorner.References.Count > 1 && nextAreaCorner.References[0].T == prevAreaCorner)
                 refIndex1 = 1;
-            AddAngleandRelationship(greatestLength, nextAreaCorner, newShapeCorner, refIndex1,firstShapeCorner);
+            AddAngleandRelationship(greatestLength, nextAreaCorner, newShapeCorner, refIndex1, theShape, firstShapeCorner);
 
             return theShape;
         }
 
-        private Thing AddAngleandRelationship(float greatestLength, Thing nextAreaCorner, Thing newShapeCorner, int refIndex,Thing nextShapeCorner = null)
+        private Thing AddAngleandRelationship(float greatestLength, Thing nextAreaCorner, Thing newShapeCorner, int refIndex, Thing theShape, Thing nextShapeCorner = null)
         {
 
             //find the angle
-            Point cnrPt = (Point)nextAreaCorner.Children[0].V;
-            Point p1 = (Point)nextAreaCorner.References[0].T.Children[0].V;
-            Point p2 = (Point)nextAreaCorner.References[1].T.Children[0].V;
-            ModuleBoundarySegments.Arc seg1 = new ModuleBoundarySegments.Arc { p1 = cnrPt, p2 = p1 };
-            ModuleBoundarySegments.Arc seg2 = new ModuleBoundarySegments.Arc { p1 = cnrPt, p2 = p2 };
-            Angle a = Math.Abs(seg1.Angle - seg2.Angle);
-            a = a.FromDegrees((float)(Math.Round(a.ToDegrees() / 15) * 15));
+            Angle a;
+            ModuleBoundarySegments.Arc seg1;
+            ModuleBoundarySegments.Arc seg2;
+            if (nextAreaCorner.References.Count == 1)
+            {
+                a = 0;
+                seg1 = new ModuleBoundarySegments.Arc { p1 = (Point)nextAreaCorner.Children[0].V, p2 = (Point)nextAreaCorner.Children[0].V };
+                seg2 = new ModuleBoundarySegments.Arc { p1 = (Point)nextAreaCorner.Children[0].V, p2 = (Point)nextAreaCorner.Children[0].V };
+            }
+            else
+            {
+                Point cnrPt = (Point)nextAreaCorner.Children[0].V;
+                Point p1 = (Point)nextAreaCorner.References[0].T.Children[0].V;
+                Point p2 = (Point)nextAreaCorner.References[1].T.Children[0].V;
+                seg1 = new ModuleBoundarySegments.Arc { p1 = cnrPt, p2 = p1 };
+                seg2 = new ModuleBoundarySegments.Arc { p1 = cnrPt, p2 = p2 };
+                a = Math.Abs(seg1.Angle - seg2.Angle);
+                a = Angle.FromDegrees((float)(Math.Round(a.ToDegrees() / 15) * 15));
+            }
             string s = "Ang" + (int)a.ToDegrees();
             Thing value = uks.GetOrAddThing("Value", "Thing");
-            newShapeCorner.AddReference(uks.GetOrAddThing(s,value));
+            newShapeCorner.AddReference(uks.GetOrAddThing(s, value));
+
 
             float lenToNextCorner;
             if (refIndex == 0)
@@ -241,30 +252,23 @@ namespace BrainSimulator.Modules
             lenToNextCorner = (float)Math.Round(lenToNextCorner, 1);
             s = "Len" + lenToNextCorner.ToString("f1");
             if (nextShapeCorner == null)
-                nextShapeCorner = uks.AddThing("nCrnr" + cornerCt++, "Corner");
+            {
+                nextShapeCorner = uks.AddThing("Cnr*",theShape);
+            }
 
-            uks.AddRelationship(newShapeCorner, nextShapeCorner, uks.GetOrAddThing(s,value));
+            newShapeCorner.AddRelationship(nextShapeCorner, uks.GetOrAddThing(s, value));
             return nextShapeCorner;
         }
 
         void DeleteTempShape(Thing theTempShape)
         {
-            foreach (Thing corner in theTempShape.Children)
-            {
-                for (int i = 0; i < corner.References.Count; i++)
-                {
-                    Link L = corner.References[i];
-                    if (!L.T.Parents.Contains(uks.Labeled("Value"))) //only delete relationships
-                        uks.DeleteThing(L.T);
-                }
-            }
             uks.DeleteAllChilden(theTempShape);
             uks.DeleteThing(theTempShape);
         }
 
         void AddShapeFromArea(Thing area)
         {
-            area.AddParent(uks.GetOrAddThing("Area","Shape"));
+            area.AddParent(uks.GetOrAddThing("Area", "Shape"));
         }
 
         //fill this method in with code which will execute once

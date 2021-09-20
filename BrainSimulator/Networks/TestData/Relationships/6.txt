@@ -1,0 +1,2 @@
+Area0 Area1 right 
+Area1 Area0 left 

@@ -1,0 +1,13 @@
+﻿<local:ModuleBaseDlg x:Class="BrainSimulator.Modules.ModuleAssociationDlg"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BrainSimulator.Modules"
+        mc:Ignorable="d"
+        Title="Association Module Dialog" Height="450" Width="800" Background="Gray" ShowInTaskbar="False" >
+    <Grid >
+        <DataGrid x:Name="theGrid" MouseEnter="theGrid_MouseEnter" MouseLeave="theGrid_MouseLeave" Margin="0,27,0,0"></DataGrid>
+        <CheckBox Content="Raw Values" x:Name="cbRawValues"  HorizontalAlignment="Left" Height="24" Margin="32,3,0,0" VerticalAlignment="Top" Checked="cbRawValues_Checked" Unchecked="cbRawValues_Checked" />
+    </Grid>
+</local:ModuleBaseDlg>

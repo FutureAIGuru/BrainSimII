@@ -5,11 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Xml.Serialization;
 
 namespace BrainSimulator.Modules
 {
@@ -32,11 +27,15 @@ namespace BrainSimulator.Modules
         }
 
         ModuleUKS uks = null;
+        Thing prevAttnTarget = null;
+        Thing attnVisualTarget = null;
+
 
         //fill this method in with code which will execute
         //once for each cycle of the engine
         public override void Fire()
         {
+            bool visualTargetChanged = false;
             Init();  //be sure to leave this here
 
             ModuleView naSource = theNeuronArray.FindModuleByLabel("UKS");
@@ -45,53 +44,81 @@ namespace BrainSimulator.Modules
 
             DeleteUnusedRelationships();
 
-            foreach (Thing t1 in uks.Labeled("VisibleArea").Children)
-            {
-                var vals1 = uks.GetValues(t1);
-                foreach (Thing t2 in uks.Labeled("VisibleArea").Children)
-                {
-                    if (t1 == t2) continue;
+            Thing attn = uks.GetOrAddThing("ATTN", "Thing");
+            Thing mentalModel = uks.GetOrAddThing("MentalModel", "Visual");
 
-                    var vals2 = uks.GetValues(t2);
-                    foreach (var pair1 in vals1)
-                    {
-                        var val2 = vals2[pair1.Key];
-                        //hue is special because is an angle which wraps around so <&> not really defined
-                        if (pair1.Key == "Hue+")
-                        {
-                            Angle diff = pair1.Value - val2;
-                            diff = (diff.ToDegrees() + 180) % 360 - 180;
-                            diff = diff.FromDegrees(diff);
-                            if (Math.Abs(diff) < 10)
-                                uks.AddRelationship(t1, t2, "=" + pair1.Key);
-                            else
-                                uks.AddRelationship(t1, t2, "!" + pair1.Key);
-                        }
-                        else if (pair1.Key.EndsWith("+"))
-                        {
-                            //TODO add tolerances
-                            //value comparison
-                            if (pair1.Value == val2)
-                                uks.AddRelationship(t1, t2, "=" + pair1.Key);
-                            else if (pair1.Value > val2)
-                                uks.AddRelationship(t1, t2, ">" + pair1.Key);
-                            else
-                                uks.AddRelationship(t1, t2, "<" + pair1.Key);
-                        }
-                        else
-                        {
-                            //equality comparison
-                            if (pair1.Value == val2)
-                                uks.AddRelationship(t1, t2, "=" + pair1.Key);
-                            else
-                                uks.AddRelationship(t1, t2, "!" + pair1.Key);
-                        }
-                    }
+            if (attn.References.Count == 0) return;
+
+            
+            Thing newVisualTarget = attn.GetReferenceWithAncestor(mentalModel);
+            if (newVisualTarget != attnVisualTarget)
+            {
+                visualTargetChanged = true;
+            }
+            if (visualTargetChanged)
+            {
+                prevAttnTarget = attnVisualTarget;
+                attnVisualTarget = newVisualTarget;
+            }
+
+            if (prevAttnTarget != null && attnVisualTarget != null)
+            {
+                if (visualTargetChanged && mentalModel.Children.Count > 1)
+                {
+                    //add all the relationships to the uks
+                    AddRelationshipsToUKS(prevAttnTarget, attnVisualTarget);
                 }
             }
 
-            //if you want the dlg to update, use the following code whenever any parameter changes
-            // UpdateDialog();
+            UpdateDialog();
+            return;
+        }
+
+        private void DeletePreviousRelationships(Thing t1, Thing t2)
+        {
+            t1.RemoveReference(t2);
+            t2.RemoveReference(t1);
+        }
+        private void AddRelationshipsToUKS(Thing t1, Thing t2)
+        {
+            if (t1 == null || t2 == null) return;
+            //DeletePreviousRelationships(t1, t2);
+            var vals1 = uks.GetValues(t1);
+            var vals2 = uks.GetValues(t2);
+            foreach (var pair1 in vals1)
+            {
+                //if (!pair1.Key.Contains("Siz")) continue;
+                var val2 = vals2[pair1.Key];
+                //hue is special because it is an angle which wraps around so < & > are not really defined
+                if (pair1.Key == "Hue+")
+                {
+                    Angle diff = (pair1.Value - val2) * 2 * Math.PI;
+                    diff = (diff.ToDegrees() + 180) % 360 - 180;
+                    diff = Angle.FromDegrees(diff);
+                    if (Math.Abs(diff) < Angle.FromDegrees(10))
+                        t1.AddRelationship(t2, uks.GetOrAddThing("=" + pair1.Key, "Relationship"));
+                    else
+                        t1.AddRelationship(t1, uks.GetOrAddThing("!" + pair1.Key, "Relationship"));
+                }
+                else if (pair1.Key.EndsWith("+"))
+                {
+                    //value comparison
+                    if (Math.Abs(pair1.Value-val2) ==0) //TODO make this tolerance a parameter
+                        t1.AddRelationship(t2, uks.GetOrAddThing("=" + pair1.Key, "Relationship"));
+                    else if (pair1.Value > val2)
+                        t1.AddRelationship(t2, uks.GetOrAddThing("<" + pair1.Key, "Relationship"));
+                    else
+                        t1.AddRelationship(t2, uks.GetOrAddThing(">" + pair1.Key, "Relationship"));
+                }
+                else
+                {
+                    //equality comparison
+                    if (pair1.Value == val2)
+                        t1.AddRelationship(t2, uks.GetOrAddThing("=" + pair1.Key.Replace("Saved", ""), "Relationship"));
+                    else
+                        t1.AddRelationship(t2, uks.GetOrAddThing("!" + pair1.Key.Replace("Saved",""), "Relationship"));
+                }
+            }
         }
 
         void DeleteUnusedRelationships()
@@ -117,6 +144,8 @@ namespace BrainSimulator.Modules
         //or when the engine restart button is pressed
         public override void Initialize()
         {
+            prevAttnTarget = null;
+            attnVisualTarget = null;
         }
 
         //the following can be used to massage public data to be different in the xml file

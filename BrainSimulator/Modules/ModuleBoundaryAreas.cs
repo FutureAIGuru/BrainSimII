@@ -49,9 +49,9 @@ namespace BrainSimulator.Modules
             ConnectCorners();
             FindAreas();
 
-            GetAreaColors();
             GetAreaGreatesLengths();
             GetAreaCentroids();
+            GetAreaColors();
 
             SetAreasToUKS();
 
@@ -74,7 +74,6 @@ namespace BrainSimulator.Modules
                     p1 = (PointPlus)seg.Children[0].V,
                     p2 = (PointPlus)seg.Children[1].V,
                 });
-                uks.DeleteThing(seg);
             }
         }
 
@@ -104,6 +103,21 @@ namespace BrainSimulator.Modules
         private void FindCorners()
         {
             corners.Clear();
+            if (boundaries.Count == 1)
+            {
+                corners.Add(new Corner
+                {
+                    loc = boundaries[0].p1,
+                    seg1 = boundaries[0],
+                    seg2 = boundaries[0]
+                });
+                corners.Add(new Corner
+                {
+                    loc = boundaries[0].p2,
+                    seg1 = boundaries[0],
+                    seg2 = boundaries[0]
+                });
+            }
             for (int i = 0; i < boundaries.Count - 1; i++)
             {
                 for (int j = i + 1; j < boundaries.Count; j++)
@@ -249,6 +263,7 @@ namespace BrainSimulator.Modules
         }
         private void GetAreaColors()
         {
+             
             foreach (Area a in areas)
             {
                 a.avgColor = GetAreaColor(a);
@@ -259,7 +274,7 @@ namespace BrainSimulator.Modules
             foreach (Area a in areas)
             {
                 List<Point> pts = a.areaCorners.Select(x => x.loc).Distinct().ToList();
-                a.centroid = GetCentroid(pts);
+                a.centroid = Utils.GetCentroid(pts);
             }
         }
         private void GetAreaGreatesLengths()
@@ -280,6 +295,25 @@ namespace BrainSimulator.Modules
             ModuleView source = theNeuronArray.FindModuleByLabel("ImageZoom");
             if (source == null) return retVal;
 
+            if (a.areaCorners.Count == 2)
+            {
+                if (source.GetNeuronAt((int)a.areaCorners[0].loc.X, (int)a.areaCorners[0].loc.Y) is Neuron n0)
+                {
+                    System.Drawing.Color c2 = Utils.IntToDrawingColor(n0.LastChargeInt);
+                    retVal = new HSLColor(c2.GetHue(), c2.GetSaturation(), c2.GetBrightness());
+                }
+            }
+            else
+            {
+                if(source.GetNeuronAt((int)a.centroid.X, (int)a.centroid.Y) is Neuron n1)
+                {
+                    System.Drawing.Color c2 = Utils.IntToDrawingColor(n1.LastChargeInt);
+                    retVal = new HSLColor(c2.GetHue(), c2.GetSaturation(), c2.GetBrightness());
+                }
+            }
+            return retVal;
+
+#pragma warning disable 162
             //Get the bounds of the area
             List<Point> pts = new List<Point>();
             foreach (var x in a.areaCorners)
@@ -289,8 +323,8 @@ namespace BrainSimulator.Modules
                     pts.Add(x.loc);
                 }
             }
-//            a.areaCorners.Where(x => x.loc.X != double.NaN && x.loc.Y != double.NaN).Select(x => x.loc).Distinct().ToList();
-            if (pts.Count < 3) return retVal;
+            //            a.areaCorners.Where(x => x.loc.X != double.NaN && x.loc.Y != double.NaN).Select(x => x.loc).Distinct().ToList();
+            //if (pts.Count < 3) return retVal;
 
             int minx = (int)pts.Min(x => x.X);
             int miny = (int)pts.Min(x => x.Y);
@@ -306,11 +340,12 @@ namespace BrainSimulator.Modules
             for (int i = minx; i < maxx; i++)
                 for (int j = miny; j < maxy; j++)
                 {
-                    if (IsPointInPolygon(pts.ToArray(), new Point(i, j)))
+                    if (Utils.IsPointInPolygon(pts.ToArray(), new Point(i, j)))
                     {
                         if (source.GetNeuronAt(i, j) is Neuron n)
                         {
                             System.Drawing.Color c1 = Utils.IntToDrawingColor(n.LastChargeInt);
+                            //System.Drawing.Color c1 =System.Drawing.Color.FromArgb(255,255,0,1);
                             pointCount++;
                             hueTot += c1.GetHue();
                             brightTot += c1.GetBrightness();
@@ -324,101 +359,54 @@ namespace BrainSimulator.Modules
             satTot /= pointCount;
             retVal = new HSLColor(hueTot, satTot, brightTot);
             return retVal;
+#pragma warning restore 162
         }
 
-        /// <summary>
-        /// Determines if the given point is inside the polygon
-        /// </summary>
-        /// <param name="polygon">the vertices of polygon</param>
-        /// <param name="testPoint">the given point</param>
-        /// <returns>true if the point is inside the polygon; otherwise, false</returns>
-        public static bool IsPointInPolygon(Point[] polygon, Point testPoint)
-        {
-            bool result = false;
-            int j = polygon.Count() - 1;
-            for (int i = 0; i < polygon.Count(); i++)
-            {
-                if (polygon[i].Y < testPoint.Y && polygon[j].Y >= testPoint.Y || polygon[j].Y < testPoint.Y && polygon[i].Y >= testPoint.Y)
-                {
-                    if (polygon[i].X + (testPoint.Y - polygon[i].Y) / (polygon[j].Y - polygon[i].Y) * (polygon[j].X - polygon[i].X) < testPoint.X)
-                    {
-                        result = !result;
-                    }
-                }
-                j = i;
-            }
-            return result;
-        }
-
-
-
-        /// <summary>
-        /// Method to compute the centroid of a polygon. This does NOT work for a complex polygon.
-        /// </summary>
-        /// <param name="poly">points that define the polygon</param>
-        /// <returns>centroid point, or PointF.Empty if something wrong</returns>
-        public static Point GetCentroid(List<Point> poly)
-        {
-            double accumulatedArea = 0.0f;
-            double centerX = 0.0f;
-            double centerY = 0.0f;
-
-            for (int i = 0, j = poly.Count - 1; i < poly.Count; j = i++)
-            {
-                double temp = poly[i].X * poly[j].Y - poly[j].X * poly[i].Y;
-                accumulatedArea += temp;
-                centerX += (poly[i].X + poly[j].X) * temp;
-                centerY += (poly[i].Y + poly[j].Y) * temp;
-            }
-
-            if (Math.Abs(accumulatedArea) < 1E-7f)
-                return new Point(0, 0);  // Avoid division by zero
-
-            accumulatedArea *= 3f;
-            return new Point(centerX / accumulatedArea, centerY / accumulatedArea);
-        }
-
-        public int areaCount = 0;
-        public int ptCount = 0;
-        public int cornerCount = 0;
 
         private void SetAreasToUKS()
         {
-            Thing areaParent = uks.GetOrAddThing("VisibleArea", "Visual");
-            Thing cornerParent = uks.GetOrAddThing("Corner", "Shape");
+            //            Thing areaParent = uks.GetOrAddThing("KnownObject", "Visual");
+            Thing currentlyVisibleParent = uks.GetOrAddThing("CurrentlyVisible", "Visual");
+            uks.DeleteAllChilden(currentlyVisibleParent);
             Thing valueParent = uks.GetOrAddThing("Value", "Thing");
 
             //TODO: implement internal model which stores things out of current visual field
-            uks.DeleteAllChilden(areaParent);
+            //TODO: keep track of things changed slightly, moved, appeared, disappeared 
+            //List<Thing> currentlyVisible= new List<Thing>();//[areaParent.Children.Count]; //keeps track of things which were found so we can delete the others
 
-            foreach (Area a in areas)
+            foreach (Area a in areas)//all the areas currently visible
             {
-                Thing theArea = uks.AddThing("Area" + areaCount++, areaParent);
 
-                uks.SetValue(theArea, a.greatestLength, "Siz");
-                uks.SetValue(theArea, (float)a.centroid.X, "CtrX");
-                uks.SetValue(theArea, (float)a.centroid.Y, "CtrY");
-                uks.SetValue(theArea, (float)a.avgColor.hue, "Hue");
-                uks.SetValue(theArea, (float)a.avgColor.saturation, "Sat");
-                uks.SetValue(theArea, (float)a.avgColor.luminance, "Lum");
+                Thing theArea = uks.AddThing("Area*", currentlyVisibleParent);
+
+                uks.SetValue(theArea, a.greatestLength, "Siz",0);
+                uks.SetValue(theArea, (float)a.centroid.X, "CtrX",0);
+                uks.SetValue(theArea, (float)a.centroid.Y, "CtrY",0);
+                uks.SetValue(theArea, (float)a.avgColor.hue/360f, "Hue",2);
+                uks.SetValue(theArea, (float)a.avgColor.saturation, "Sat",2);
+                uks.SetValue(theArea, (float)a.avgColor.luminance, "Lum",2);
 
 
                 List<Thing> theCorners = new List<Thing>();
                 foreach (Corner c in a.areaCorners)
                 {
-                    theCorners.Add(uks.AddThing("Cnr:" + cornerCount++, cornerParent));
-                    theCorners.Last().AddParent(theArea);
-                    //if the location is not already in the store, add it
+                    theCorners.Add(uks.AddThing("Cnr*", theArea));
+
                     Thing theLocation = uks.Valued(c.loc, uks.Labeled("Point").Children);
                     if (theLocation == null)
                     {
-                        theLocation = uks.AddThing("p:" + ptCount++, "Point");
+                        theLocation = uks.AddThing("p*", "Point");
                         theLocation.V = c.loc;
                     }
                     theLocation.AddParent(theCorners.Last());
                 }
                 //add the reference links
-                for (int i = 0; i < theCorners.Count; i++)
+                if (theCorners.Count == 2)
+                {
+                    theCorners[0].AddReference(theCorners[1]); //add lengths to these?
+                    theCorners[1].AddReference(theCorners[0]);
+                }
+                else for (int i = 0; i < theCorners.Count; i++)
                 {
                     int j = a.areaCorners.IndexOf(a.areaCorners[i].c1);
                     int k = a.areaCorners.IndexOf(a.areaCorners[i].c2);
@@ -432,9 +420,6 @@ namespace BrainSimulator.Modules
                     theCorners[i].AddReference(theCorners[k]);
                 }
             }
-        }
-        private void FindStrokes()
-        {
 
         }
 
@@ -443,7 +428,6 @@ namespace BrainSimulator.Modules
         //or when the engine restart button is pressed
         public override void Initialize()
         {
-
         }
 
 

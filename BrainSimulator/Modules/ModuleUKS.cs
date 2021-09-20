@@ -18,6 +18,10 @@ namespace BrainSimulator.Modules
         //break circular links by storing index values instead of actual links Note the use of SThing instead of Thing
         public List<SThing> UKSTemp = new List<SThing>();
 
+        public ModuleUKS()
+        {
+            allowMultipleDialogs = true;
+        }
 
         public override void Fire()
         {
@@ -25,7 +29,7 @@ namespace BrainSimulator.Modules
         }
 
         //this is needed for the dialog treeview
-        public List<Thing> GetTheKB()
+        public List<Thing> GetTheUKS()
         {
             return UKS;
         }
@@ -74,35 +78,74 @@ namespace BrainSimulator.Modules
         public virtual Thing AddThing(string label, Thing[] parents, object value = null, Thing[] references = null)
         {
             //Debug.WriteLine("AddThing: " + label + " (" + ArrayToString(parents) + ") (" + ArrayToString(references) + ")");
-            Thing newThing = new Thing { Label = label, V = value };
+            Thing newThing = new Thing { V = value };
             references = references ?? new Thing[0];
             for (int i = 0; i < parents.Length; i++)
             {
                 if (parents[i] == null) return null;
                 newThing.ParentsWriteable.Add(parents[i]);
                 parents[i].ChildrenWriteable.Add(newThing);
+                //parents[i].SetFired();
             }
 
             for (int i = 0; i < references.Length; i++)
             {
                 if (references[i] == null) return null;
                 newThing.AddReference(references[i]);
+                //references[i].SetFired();
             }
 
+            newThing.Label = label;
             UKS.Add(newThing);
+            //newThing.SetFired();
             return newThing;
         }
 
         public virtual void DeleteThing(Thing t)
         {
-            Debug.Assert(UKS.Contains(t)); //if the thing is not in the UKS, it is free floating. Just let it go out of scope
-            if (t.Children.Count != 0) return; //can't delete something with children...must delete all children first.
+            //Debug.Assert(UKS.Contains(t)); //if the thing is not in the UKS, it is free floating. Just let it go out of scope
+            if (t.Children.Count != 0)
+                return; //can't delete something with children...must delete all children first.
             foreach (Thing t1 in t.Parents)
+            {
                 t1.ChildrenWriteable.Remove(t);
+            }
             foreach (Link l1 in t.References)
+            {
+                if (l1 is Relationship r)
+                {
+                    List<Link> reverseRefs = r.relationshipType.ReferencedByWriteable;
+                    for (int i = reverseRefs.Count-1; i >= 0; i--)
+                    {
+                        if (reverseRefs[i] is Relationship rr1)
+                        {
+                            if (rr1.source == t && rr1.T == r.T)
+                            {
+                                reverseRefs.RemoveAt(i);
+                            }
+                        }
+                    }
+                }
                 l1.T.ReferencedByWriteable.RemoveAll(v => v.T == t);
+            }
             foreach (Link l1 in t.ReferencedBy)
+            {
+                if (l1 is Relationship r)
+                {
+                    List<Link> reverseRefs = r.relationshipType.ReferencedByWriteable;
+                    for (int i = reverseRefs.Count - 1; i >= 0; i--)
+                    {
+                        if (reverseRefs[i] is Relationship rr1)
+                        {
+                            if (rr1.source == r.T && rr1.T == r.source)
+                            {
+                                reverseRefs.RemoveAt(i);
+                            }
+                        }
+                    }
+                }
                 l1.T.ReferencesWriteable.RemoveAll(v => v.T == t);
+            }
             UKS.Remove(t);
         }
 
@@ -112,10 +155,12 @@ namespace BrainSimulator.Modules
         {
             UKSt = UKSt ?? UKS; //if UKSt is null, search the entire UKS
             Thing retVal = null;
-            //            retVal = UKSt.Find(t => t.Label == label);
-            foreach (Thing t in UKSt)
+            for (int i = 0; i < UKSt.Count; i++)
+            {
+                Thing t = UKSt[i];
                 if (t.Label == label)
                     return t;
+            }
             return retVal;
         }
 
@@ -144,7 +189,7 @@ namespace BrainSimulator.Modules
             return null;
         }
 
-        public virtual Thing ReferenceMatch(List<Thing> refs, List<Thing> UKSt = null)
+        public virtual Thing ReferenceMatch(List<Thing> refs, IList<Thing> UKSt = null)
         {
             UKSt = UKSt ?? UKS;
             foreach (Thing t in UKSt)
@@ -241,10 +286,12 @@ namespace BrainSimulator.Modules
             {
                 foreach (int p in UKSTemp[i].parents)
                 {
-                    UKS[i].ParentsWriteable.Add(UKS[p]);
+                    if (p >= 0)
+                        UKS[i].ParentsWriteable.Add(UKS[p]);
                 }
                 foreach (Point p in UKSTemp[i].references)
                 {
+                    if (p.X < 0) break;
                     int hits = 0;
                     int misses = 0;
                     float weight = (float)p.Y;
@@ -291,8 +338,15 @@ namespace BrainSimulator.Modules
         {
             while (t.Children.Count > 0)
             {
-                DeleteAllChilden(t.Children[0]);
-                DeleteThing(t.Children[0]);
+                if (t.Children[0].Parents.Count == 1)
+                {
+                    DeleteAllChilden(t.Children[0]);
+                    DeleteThing(t.Children[0]);
+                }
+                else
+                {//this thing has multiple parents.
+                    t.RemoveChild(t.Children[0]);
+                }
             }
         }
 
@@ -339,23 +393,51 @@ namespace BrainSimulator.Modules
             {
                 if (parent == null || l.T.Parents[0] == parent)
                 {
-                    if (l.weight > bestWeight)
+                    if (l.Value1 > bestWeight)
                     {
                         retVal = l.T;
-                        bestWeight = l.weight;
+                        bestWeight = l.Value1;
                     }
                 }
             }
             return retVal;
         }
 
-        int relationshipCount = 0;
-        public Thing SetValue(Thing t1, float value, string valueName)
+        public Thing SetValue(Thing t1, float value, string valueName, int digits)
         {
             Thing valueParent = GetOrAddThing("Value", "Thing");
-            string valueString = value.ToString("f1");
-            Thing retVal = GetOrAddThing(valueName + "'" + valueString, valueParent);
+            if (digits > 0)
+                value = Utils.RoundToSignificantDigits(value, digits);
+            for (int i = t1.References.Count - 1; i >= 0; i--)
+            {
+                if (t1.References[i].T.Label.StartsWith(valueName))
+                    t1.RemoveReference(t1.References[i].T);
+            }
+            Thing retVal = GetOrAddThing(valueName + "'" + value, valueParent);
             t1.AddReference(retVal);
+            return retVal;
+        }
+        public float GetValue(Thing t1, string valueName)
+        {
+            var values = GetValues(t1);
+            if (values.ContainsKey(valueName))
+                return values[valueName];
+            return -1;
+        }
+        public Dictionary<string, float> GetChangedValues(Thing t1, Thing t2)
+        {
+            Dictionary<string, float> retVal = new Dictionary<string, float>();
+            var values1 = GetValues(t1);
+            var values2 = GetValues(t2);
+            foreach (var v1 in values1)
+            {
+                if (values2.ContainsKey(v1.Key))
+                {
+                    float delta = values1[v1.Key] - values2[v1.Key];
+                    if (delta != 0)
+                        retVal.Add(v1.Key, delta);
+                }
+            }
             return retVal;
         }
 
@@ -368,7 +450,7 @@ namespace BrainSimulator.Modules
                 if (splitPoint != -1)
                 {
                     string name = l.T.Label.Substring(0, splitPoint);
-                    if (l.T.Parents[0].Label == "Value")
+                    if (l.T.HasAncestorLabeled("Value"))
                         name += "+";
                     if (float.TryParse(l.T.Label.Substring(splitPoint + 1), out float value))
                         retVal.Add(name, value);
@@ -377,29 +459,12 @@ namespace BrainSimulator.Modules
             return retVal;
         }
 
-        public void AddRelationship(Thing t1, Thing t2, string relationshipName)
-        {
-            Thing relationshipParent = GetOrAddThing("Relationship", "Thing");
-            Thing relationshipType = GetOrAddThing(relationshipName, relationshipParent);
-            AddRelationship(t1, t2, relationshipType);
-        }
-        public void AddRelationship(Thing t1, Thing t2, Thing relationshipType)
-        {
-            Thing theRelationship = AddThing("rel" + relationshipCount++, relationshipType);
-            t1.AddReference(theRelationship);
-            theRelationship.AddReference(t2);
-        }
-        public void DeleteRelationship(Thing t1, Thing t2, Thing relationshipType)
-        {
-            IList<Link> relationships = t1.References.FindAll(t => t.T.Parents.Contains(relationshipType));
-            Link l = relationships.FindFirst(a => a.T.References[0].T == t2);
-            DeleteThing(l.T);
-        }
 
 
 
         public override void Initialize()
         {
+
             //create an intial structure with some test data
             UKS.Clear();
             UKSTemp.Clear();
@@ -434,7 +499,6 @@ namespace BrainSimulator.Modules
             AddThing("Phrase", "Audible");
             AddThing("ShortTerm", "Phrase");
             AddThing("phTemp", "ShortTerm");
-            AddThing("NoWord", "Word");
             AddThing("Event", "Thing");
             AddThing("Outcome", "Thing");
             AddThing("Positive", "Outcome");

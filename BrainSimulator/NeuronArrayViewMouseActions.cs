@@ -444,7 +444,10 @@ namespace BrainSimulator
                     {
                         //move all the neurons
                         List<int> neuronsToMove = new List<int>();
-                        foreach (Neuron n in theCurrentModule.Neurons1) neuronsToMove.Add(n.id);
+                        foreach (Neuron n in theCurrentModule.Neurons1)
+                        {
+                            neuronsToMove.Add(n.id);
+                        }
                         if (!IsDestinationClear(neuronsToMove, delta))
                         {
                             MessageBoxResult result1 = MessageBox.Show("Some destination neurons are in use and will be overwritten, continue?", "Continue", MessageBoxButton.YesNo);
@@ -527,8 +530,8 @@ namespace BrainSimulator
                             {
                                 //force this move to be vertical only
                                 int newLoc = theCurrentModule.GetAbsNeuronIndexAt(Xf, Yc);
-                                theCurrentModule.Height = newHeight;
                                 MoveModule(theShape, newLoc);
+                                theCurrentModule.Height = newHeight;
                             }
                             Update();
                         }
@@ -553,8 +556,8 @@ namespace BrainSimulator
                             {
                                 //force this move to be vertical only
                                 int newLoc = theCurrentModule.GetAbsNeuronIndexAt(Xc, Yf);
-                                theCurrentModule.Width = newWidth;
                                 MoveModule(theShape, newLoc);
+                                theCurrentModule.Width = newWidth;
                             }
                             Update();
                         }

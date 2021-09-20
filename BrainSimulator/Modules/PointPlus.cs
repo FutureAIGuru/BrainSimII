@@ -37,6 +37,11 @@ namespace BrainSimulator.Modules
             P = new Point(x, y);
             Conf = 0;
         }
+        public PointPlus(float R1, Angle theta1)
+        {
+            R = R1;
+            theta = theta1;
+        }
         public PointPlus(PointPlus pp)
         {
             R = pp.R;
@@ -97,10 +102,7 @@ namespace BrainSimulator.Modules
         }
         public bool Near(PointPlus PP, float toler)
         {
-            //if ((Abs(PP.R - R) < 1 && Abs(PP.Theta - Theta) < .1) ||
-            //    ((Abs(PP.X - X) < toler && Abs(PP.Y - Y) < toler)))
-            if (Abs(PP.X - X) <= toler && Abs(PP.Y - Y) <= toler)
-                return true;
+            if ((this - PP).R < toler) return true;
             return false;
         }
         public override string ToString()
@@ -124,9 +126,10 @@ namespace BrainSimulator.Modules
         }
         public static PointPlus operator +(PointPlus a, PointPlus b)
         {
+            Point p = new Point(a.P.X + b.P.X, a.P.Y + b.P.Y);
             PointPlus retVal = new PointPlus
             {
-                P = new Point(a.P.X + b.P.X, a.P.Y + b.P.Y)
+                P = p,
             };
             return retVal;
         }
@@ -239,6 +242,12 @@ namespace BrainSimulator.Modules
         public static implicit operator float(Angle a) => a.theAngle;
         public static implicit operator Angle(float a) => new Angle(a);
         public static implicit operator Angle(double a) => new Angle((float)a);
+        public static  Angle operator -(Angle a, Angle b) 
+        {
+            Angle c = (float)a - (float)b;
+            c = ((float)c + PI) % (2 * PI) - PI;
+            return c;
+        }
         public override string ToString()
         {
             float degrees = theAngle * 180 / (float)PI;
@@ -259,7 +268,7 @@ namespace BrainSimulator.Modules
         {
             return theAngle * 180 / (float)PI;
         }
-        public float FromDegrees(float degrees)
+        public static float FromDegrees(float degrees)
         {
             return (float)(degrees * PI / 180.0);
         }

@@ -42,6 +42,7 @@ namespace BrainSimulator
 
             mi = new MenuItem();
             mi.Header = new CheckBox {Name="Enabled", Content = "Enabled",IsChecked=nr.TheModule.isEnabled, };
+            mi.StaysOpenOnClick = true;
             cm.Items.Add(mi);
 
             sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };

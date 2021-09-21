@@ -52,7 +52,7 @@ namespace BrainSimulator.Modules
 
 
 
-            //Things which disappeared need special treatment to remove from mental model & relationships but not the known object
+            //Things which disappeared in the last cycle need special treatment to remove from mental model & relationships but not the known object
             foreach (Thing t in motionParent.Children)
             {
                 if (t.Label.Contains("Disappeared"))
@@ -69,6 +69,7 @@ namespace BrainSimulator.Modules
 
             uks.DeleteAllChilden(motionParent);
 
+            //build little lists of things which moved or appeared so we can also be left with things which things which disappeared
             List<Thing> matchedThings = new List<Thing>();
             List<Thing> movedThings = new List<Thing>();
             List<Thing> movedThingsNew = new List<Thing>();
@@ -188,7 +189,6 @@ namespace BrainSimulator.Modules
                                 Thing t = motionParent.Children[i];
                                 uks.DeleteAllChilden(t);
                                 uks.DeleteThing(t);
-                                //                                motionParent.RemoveChild(motionParent.Children[i]);
                                 i--;
                             }
                             else
@@ -267,6 +267,7 @@ namespace BrainSimulator.Modules
             }
 
             //This hack puts predictable labels on things in the mental model so we can select them more easily in the description
+            //Area0-n from top->bottom, left->right
             List<sortable> vals = new List<sortable>();
             foreach (Thing storedArea in mentalModel.Children)
             {

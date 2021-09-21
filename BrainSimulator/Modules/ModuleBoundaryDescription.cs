@@ -135,42 +135,14 @@ namespace BrainSimulator.Modules
                         newDescriptionString += word.Label + " ";
                 }
             }
-            //    if (l is Relationship r)
-            //    {
-            //    }
-            //    else
-            //    {
-            //        List<Link> ll = l.T.GetReferencedByWithAncestor(uks.Labeled("Word"));
-            //        if (ll.Count > 0)
-            //        {
-            //            newDescriptionString += " " + ll[0].T.Label;
-            //        }
-            //    }
-            //}
-            //if (prevAttn != null)
-            //{
-            //    newDescriptionString += "\r";
-            //    var relationShips = prevAttn.GetRelationshipsByTarget(curAttn);
-            //    foreach (Thing relationshipType in relationShips)
-            //    {
-            //        if (relationshipType.Label.Contains("=")) continue;
-            //        List<Link> ll = relationshipType.GetReferencedByWithAncestor(uks.Labeled("Word"));
-            //        if (ll.Count == 1 || ll.Count > 1 && ll[0].Value1 != ll[1].Value1)
-            //        {
-            //            List<Link> l2 = ll[0].T.GetReferencesWithAncestor(uks.Labeled("Relationship"));
-            //            //DEBUGif (l2.Count > 0 && l2[0].T == relationshipType)
-            //            {
-            //                newDescriptionString += " " + ll[0].T.Label;
-            //            }
-            //        }
-            //    }
-            //}
+
             if (newDescriptionString != "" && newDescriptionString != descriptionString)
                 descriptionString = newDescriptionString;
             prevAttn = curAttn;
         }
 
 
+        //commented-out code can add phrases to the UKS
         //Thing recentPhrase = null;
         public void SetDescription(string description)
         {

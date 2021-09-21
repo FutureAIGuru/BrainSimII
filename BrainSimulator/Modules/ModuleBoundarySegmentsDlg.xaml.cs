@@ -51,11 +51,6 @@ namespace BrainSimulator.Modules
 
             double scale = (float)Math.Min(windowSize.X, windowSize.Y) / largest;
             if (scale == 0) return false;
-            //TransformGroup tg = new TransformGroup();
-            ////  tg.Children.Add(new RotateTransform(180));
-            //tg.Children.Add(new ScaleTransform(scale/2, scale/2, 0, 0)); ;
-            //tg.Children.Add(new TranslateTransform(windowCenter.X, windowCenter.Y));
-            //theCanvas.RenderTransform = tg;
 
             //draw an origin point
             theCanvas.Children.Add(new Line
@@ -95,40 +90,6 @@ namespace BrainSimulator.Modules
                         Stroke = new SolidColorBrush(Colors.Pink)
                     });
                 }
-                foreach (List<ModuleBoundarySegments.Arc> cluster in parent.clusters)
-                {
-                    Color c = Color.FromArgb(0xff, (byte)rnd.Next(256), (byte)rnd.Next(256), (byte)rnd.Next(256));
-                    foreach (ModuleBoundarySegments.Arc t in cluster)
-                    {
-                            theCanvas.Children.Add(new Line
-                            {
-                                X1 = t.p1.X * scale,
-                                X2 = t.p2.X * scale,
-                                Y1 = t.p1.Y * scale,
-                                Y2 = t.p2.Y * scale,
-                                StrokeThickness = 6,
-                                StrokeEndLineCap = PenLineCap.Round,
-                                StrokeStartLineCap = PenLineCap.Round,
-                                Stroke = new SolidColorBrush(c),
-                                ToolTip = cluster.IndexOf(t)
-                            }); ;
-                    }
-                }
-                //foreach (ModuleBoundarySegments.Arc t in parent.tList1)
-                //{
-                //    theCanvas.Children.Add(new Line
-                //    {
-                //        X1 = t.p1.X * scale,
-                //        X2 = t.p2.X * scale,
-                //        Y1 = t.p1.Y * scale,
-                //        Y2 = t.p2.Y * scale,
-                //        StrokeThickness = 3,
-                //        StrokeEndLineCap = PenLineCap.Round,
-                //        StrokeStartLineCap = PenLineCap.Round,
-                //        // Stroke = new SolidColorBrush(P1.TheColor)
-                //        Stroke = new SolidColorBrush(Colors.Red)
-                //    });
-                //}
                 foreach (ModuleBoundarySegments.Arc t in parent.segments)
                 {
                     theCanvas.Children.Add(new Line
@@ -144,36 +105,6 @@ namespace BrainSimulator.Modules
                         Stroke = new SolidColorBrush(Colors.Blue)
                     });
                 }
-                //foreach (ModuleBoundarySegments.Arc t in parent.tList3)
-                //{
-                //    theCanvas.Children.Add(new Line
-                //    {
-                //        X1 = t.p1.X * scale,
-                //        X2 = t.p2.X * scale,
-                //        Y1 = t.p1.Y * scale,
-                //        Y2 = t.p2.Y * scale,
-                //        StrokeThickness = 1,
-                //        StrokeEndLineCap = PenLineCap.Round,
-                //        StrokeStartLineCap = PenLineCap.Round,
-                //        // Stroke = new SolidColorBrush(P1.TheColor)
-                //        Stroke = new SolidColorBrush(Colors.Orange)
-                //    });
-                //}
-                //foreach (ModuleBoundarySegments.Arc t in parent.segments)
-                //{
-                //    theCanvas.Children.Add(new Line
-                //    {
-                //        X1 = t.p1.X * scale,
-                //        X2 = t.p2.X * scale,
-                //        Y1 = t.p1.Y * scale,
-                //        Y2 = t.p2.Y * scale,
-                //        StrokeThickness = 1,
-                //        StrokeEndLineCap = PenLineCap.Round,
-                //        StrokeStartLineCap = PenLineCap.Round,
-                //        // Stroke = new SolidColorBrush(P1.TheColor)
-                //        Stroke = new SolidColorBrush(Colors.White)
-                //    });
-                //}
             }
             catch { }
             return true;

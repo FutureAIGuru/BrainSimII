@@ -15,11 +15,6 @@ namespace BrainSimulator.Modules
 
     public class ModuleBoundaryAreas : ModuleBase
     {
-        //any public variable you create here will automatically be saved and restored  with the network
-        //unless you precede it with the [XmlIgnore] directive
-        //[XlmIgnore] 
-        //public theStatus = 1;
-
 
         //set size parameters as needed in the constructor
         //set max to be -1 if unlimited
@@ -314,6 +309,7 @@ namespace BrainSimulator.Modules
             return retVal;
 
 #pragma warning disable 162
+            //this code works but is too slow to be useful...replace it with some OPENCV code
             //Get the bounds of the area
             List<Point> pts = new List<Point>();
             foreach (var x in a.areaCorners)
@@ -365,14 +361,9 @@ namespace BrainSimulator.Modules
 
         private void SetAreasToUKS()
         {
-            //            Thing areaParent = uks.GetOrAddThing("KnownObject", "Visual");
             Thing currentlyVisibleParent = uks.GetOrAddThing("CurrentlyVisible", "Visual");
             uks.DeleteAllChilden(currentlyVisibleParent);
             Thing valueParent = uks.GetOrAddThing("Value", "Thing");
-
-            //TODO: implement internal model which stores things out of current visual field
-            //TODO: keep track of things changed slightly, moved, appeared, disappeared 
-            //List<Thing> currentlyVisible= new List<Thing>();//[areaParent.Children.Count]; //keeps track of things which were found so we can delete the others
 
             foreach (Area a in areas)//all the areas currently visible
             {

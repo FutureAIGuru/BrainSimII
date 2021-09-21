@@ -61,7 +61,8 @@ namespace BrainSimulator.Modules
             }
 
         }
-        //if a file name contains at least one space, it is treated as the description of the content
+        //check to see if there is a description and if not 
+        //if a file name contains at least one space, it is treated as the description of the content 
         void SetDescription(string fileName)
         {
             if (!useDescription) return;

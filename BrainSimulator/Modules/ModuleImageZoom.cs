@@ -19,11 +19,6 @@ namespace BrainSimulator.Modules
 {
     public class ModuleImageZoom : ModuleBase
     {
-        //any public variable you create here will automatically be saved and restored  with the network
-        //unless you precede it with the [XmlIgnore] directive
-        //[XlmIgnore] 
-        //public theStatus = 1;
-
 
         //set size parameters as needed in the constructor
         //set max to be -1 if unlimited

@@ -315,7 +315,6 @@ namespace BrainSimulator
             Relationship rRev = new Relationship { T = this, source = t2, relationshipType = relationshipType };
             t2.ReferencedByWriteable.Add(rRev);
             relationshipType.ReferencedByWriteable.Add(r);
-            this.useCount = this.useCount; //so you use the debugger to mouseover "this"
             return r;
         }
 

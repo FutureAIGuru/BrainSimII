@@ -49,7 +49,6 @@ namespace BrainSimulator.Modules
             Thing attnVisualTarget = attn.GetReferenceWithAncestor(mentalModel);
             Thing attnAudibleTarget = attn.GetReferenceWithAncestor(wordParent);
 
-            // OptimizeWordReferences(attnAudibleTarget);
             AssociateWordsWithVisuals(attnAudibleTarget);
 
             //if you want the dlg to update, use the following code whenever any parameter changes
@@ -135,30 +134,6 @@ namespace BrainSimulator.Modules
                         }
                     }
                 }
-            }
-        }
-
-        private void OptimizeWordReferences(Thing attnAudibleTarget)
-        {
-            if (attnAudibleTarget == null) return;
-            if (attnAudibleTarget.References.Count < 3) return;
-            //find the reference with the best ratio
-            IList<Link> likelyTargets = GetBestReferences(attnAudibleTarget);
-            if (likelyTargets.Count < 1) return;
-            IList<Link> likelySources = null;
-            Thing bestReference = null;
-            foreach (Link l in likelyTargets)
-            {
-                likelySources = GetBestReferences(l.T, true);
-                foreach (Link l1 in likelySources)
-                {
-                    if (l1.T == attnAudibleTarget)
-                    {
-                        bestReference = l.T;
-                        break;
-                    }
-                }
-                if (bestReference != null) break;
             }
         }
 
@@ -251,28 +226,6 @@ namespace BrainSimulator.Modules
                 row++;
             }
             return values;
-        }
-
-
-        void ProcessRelationshipWords()
-        {
-            foreach (Thing relationshipType in uks.Labeled("Relationship").Children)
-            {
-                List<Link> theWords = relationshipType.ReferencedBy.ToList();
-                theWords = theWords.OrderBy(x => -x.Value1).ToList();
-                int i = 0;
-                for (i = 1; i < theWords.Count; i++)
-                {
-                    Link l = theWords[i];
-                    Link prevLink = theWords[0];
-                    if (prevLink.Value1 - l.Value1 >= 0.1)
-                        break;
-                }
-                for (; i < theWords.Count; i++)
-                {
-                    relationshipType.RemoveReferencedBy(theWords[i].T);
-                }
-            }
         }
 
 

@@ -62,8 +62,10 @@
   </ModuleDescription>
   <ModuleDescription>
     <moduleName>ModuleBoundary</moduleName>
-    <toolTip>Finds the boundaries in an imagefile module image.</toolTip>
-    <description>Creates a simple convoultional network to detect boundaries in an image.</description>
+    <toolTip>Finds the boundaries in an imageZoom module image.</toolTip>
+    <description>Detects boundaries and corners in an image.
+
+Consider this as placeholder code to be replaced with some more robuse libray such as OPENCV in the near future.</description>
   </ModuleDescription>
   <ModuleDescription>
     <moduleName>ModuleBoundary1</moduleName>
@@ -313,9 +315,11 @@ The dialog box shows the content of the UKS at a tree. You can expand children o
 
 Neuron values in the top row set the x, y, scale, and rotation values. There are mirrored in sliders which appear in the module context folder 
 
-Minimum scale shows the tnere image in the neuron area of the module. Maximum scale shows one pixel per neuron. Rotation is about the center of the image.
+Minimum scale shows the image in the neuron area of the module. Maximum scale shows one pixel per neuron. Rotation is about the center of the image.
 
-It is intended that an attention module will control the various parameters so the system can focus in on areas of intereest.</description>
+It is intended that an attention module will control the various parameters so the system can focus in on areas of intereest.
+
+Becauses changes in scale, position, or rotation use an antialiasing algorithm, these can have an adverse impact on subsequent processing.</description>
   </ModuleDescription>
   <ModuleDescription>
     <moduleName>ModuleAssociation</moduleName>

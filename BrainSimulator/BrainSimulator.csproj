@@ -140,7 +140,6 @@
     <Compile Include="ModuleDescription.xaml.cs">
       <DependentUpon>ModuleDescription.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\ModuleArea.cs" />
     <Compile Include="Modules\ModuleAssociation.cs" />
     <Compile Include="Modules\ModuleAttention.cs" />
     <Compile Include="Modules\ModuleBoundaryByNeurons.cs" />

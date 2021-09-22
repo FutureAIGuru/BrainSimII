@@ -325,10 +325,10 @@
                     <!--<Image Source="/resources/Rewind.png" Height="20"></Image>-->
                 </Button>
 
-                <Button x:Name="buttonPause" VerticalAlignment="Top" Click="PlayPause_Click" ToolTip="Pause the neural engine" >
+                <Button x:Name="buttonPause" VerticalAlignment="Top" Click="PlayPause_Click" ToolTip="Pause the neuron engine" >
                     <Image Source="/resources/icons/pause_16x.png" Height="20"></Image>
                 </Button>
-                <Button x:Name="buttonPlay" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE768;" Foreground="#FF00539C" VerticalAlignment="Top" Click="PlayPause_Click" ToolTip="Resume the neural engine" Grid.Column="2" >
+                <Button x:Name="buttonPlay" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE768;" Foreground="#FF00539C" VerticalAlignment="Top" Click="PlayPause_Click" ToolTip="Resume the neuron engine" Grid.Column="2" >
                     <!--<Image Source="/resources/play.png" Height="20"></Image>-->
                 </Button>
                 <RepeatButton  x:Name="buttonSingle" Delay="500" Interval="500" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE893;" Foreground="#FF00539C" Click="ButtonSingle_Click" VerticalAlignment="Top" ToolTip="Run the engine one cycle" Grid.Column="2" >

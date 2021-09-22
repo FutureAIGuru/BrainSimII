@@ -49,10 +49,13 @@ namespace BrainSimulator.Modules
 
             if (countDown == 0 && cycleThroughFolder)
             {
-                filePath = fileList[fileCounter++];
-                LoadImage(filePath);
-                countDown = 3; //minimum cycles to show a file
-                SetDescription(filePath);
+                if (fileList.Count > fileCounter)
+                {
+                    filePath = fileList[fileCounter++];
+                    LoadImage(filePath);
+                    countDown = 3; //minimum cycles to show a file
+                    SetDescription(filePath);
+                }
             }
             else
             {
@@ -78,7 +81,6 @@ namespace BrainSimulator.Modules
                 countDown = words.Length + 1;
                 return;
             }
-
 
             string name = Path.GetFileNameWithoutExtension(fileName);
 
@@ -223,6 +225,8 @@ namespace BrainSimulator.Modules
             fileCounter = 0;
             countDown = -1;
         }
+
+       
         public override void SetUpAfterLoad()
         {
             Init();
@@ -231,6 +235,18 @@ namespace BrainSimulator.Modules
                 n.Model = Neuron.modelType.Color;
                 n.LastChargeInt = 0;
             }
+
+            //check to see if the filelist is legit
+            foreach (string path in fileList)
+            {
+                if (!File.Exists(path))
+                {
+                    fileList.Clear();
+                    filePath = "";
+                    break;
+                }
+            }
+
 
             if (fileList.Count > 0)
                 LoadImage(fileList[fileCounter]);

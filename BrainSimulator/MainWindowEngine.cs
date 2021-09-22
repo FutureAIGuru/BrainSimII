@@ -48,7 +48,6 @@ namespace BrainSimulator
             string engineStatus = "Running, Speed: " + thisWindow.slider.Value + "  Cycle: " + theNeuronArray.Generation.ToString("N0") +
             "  " + firedCount.ToString("N0") + " Neurons Fired  " + (engineTimerMovingAverage.Average() / 10000f).ToString("F2") + "ms";
             thisWindow.SetStatus(3, engineStatus, 0);
-            //thisWindow.SetPlayPauseButtonImage(false);
         }
 
         private void EngineLoop()

@@ -319,8 +319,6 @@ namespace BrainSimulator.Modules
                     pts.Add(x.loc);
                 }
             }
-            //            a.areaCorners.Where(x => x.loc.X != double.NaN && x.loc.Y != double.NaN).Select(x => x.loc).Distinct().ToList();
-            //if (pts.Count < 3) return retVal;
 
             int minx = (int)pts.Min(x => x.X);
             int miny = (int)pts.Min(x => x.Y);
@@ -341,7 +339,6 @@ namespace BrainSimulator.Modules
                         if (source.GetNeuronAt(i, j) is Neuron n)
                         {
                             System.Drawing.Color c1 = Utils.IntToDrawingColor(n.LastChargeInt);
-                            //System.Drawing.Color c1 =System.Drawing.Color.FromArgb(255,255,0,1);
                             pointCount++;
                             hueTot += c1.GetHue();
                             brightTot += c1.GetBrightness();

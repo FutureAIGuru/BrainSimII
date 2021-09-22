@@ -7,17 +7,17 @@
         mc:Ignorable="d"
         Title="Image File Module Dialog" Height="220" Width="338.5" Background="Gray" ShowInTaskbar="False">
     <Grid Name="theCanvas" SizeChanged="TheCanvas_SizeChanged" Margin="0,0,0,-2" >
-        <TextBox x:Name="textBoxPath" Height="44" TextWrapping="Wrap" Margin="10,25,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="274"/>
+        <TextBox x:Name="textBoxPath" Height="86" TextWrapping="Wrap" Margin="10,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="274"/>
         <Button Content="..." Height="26" Click="Button_Browse_Click" Margin="289,34,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="34"/>
-        <CheckBox Content="Auto Cycle all files in folder" x:Name="cbAutoCycle" Height="19" Margin="94,83,0,0" HorizontalAlignment="Left" Width="208" VerticalAlignment="Top" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
-        <Button Margin="24,78,0,0" Click="Button_Click_Prev" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="30">
+        <CheckBox Content="Auto Cycle all files in folder" x:Name="cbAutoCycle" Height="19" Margin="97,106,0,0" HorizontalAlignment="Left" Width="208" VerticalAlignment="Top" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
+        <Button Margin="27,101,0,0" Click="Button_Click_Prev" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="30">
             <TextBlock Text="←" FontSize="28"  VerticalAlignment="Center" Height="42" Width="40" />
         </Button>
-        <Button Height="24" Margin="54,78,0,0" VerticalAlignment="Top" Width="30" Click="Button_Click_Next" HorizontalAlignment="Left">
+        <Button Height="24" Margin="57,101,0,0" VerticalAlignment="Top" Width="30" Click="Button_Click_Next" HorizontalAlignment="Left">
             <TextBlock Text="&#x2192;" FontSize="28" VerticalAlignment="Center" Height="42" Width="40" />
         </Button>
-        <CheckBox Content="Use file name or .txt for description" x:Name="cbNameIsDescription" HorizontalAlignment="Left" Margin="94,130,0,0" Width="208" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged" Height="19" VerticalAlignment="Top"/>
-        <CheckBox Content="Include subfolders" x:Name="cbUseSubfolders" HorizontalAlignment="Left" Height="21" Margin="94,107,0,0" VerticalAlignment="Top" Width="178" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
-        <Button Content="Desc" HorizontalAlignment="Left" Height="25" Margin="46,124,0,0" VerticalAlignment="Top" Width="38" Click="ButtonDescr_Click"/>
+        <CheckBox Content="Use file name or .txt for description" x:Name="cbNameIsDescription" HorizontalAlignment="Left" Margin="97,153,0,0" Width="208" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged" Height="19" VerticalAlignment="Top"/>
+        <CheckBox Content="Include subfolders" x:Name="cbUseSubfolders" HorizontalAlignment="Left" Height="21" Margin="97,130,0,0" VerticalAlignment="Top" Width="178" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
+        <Button Content="Desc" HorizontalAlignment="Left" Height="25" Margin="49,147,0,0" VerticalAlignment="Top" Width="38" Click="ButtonDescr_Click"/>
     </Grid>
 </local:ModuleBaseDlg>

@@ -136,12 +136,16 @@ namespace BrainSimulator.Modules
             { //TODO what if the references are out of order?
                 Thing theAngle = curCorner.References[0].T;
 
-                Thing theLength = ((Relationship)curCorner.References[1]).relationshipType;
-                float.TryParse(theAngle.Label.Substring(3), out float theAngle1);
-                float.TryParse(theLength.Label.Substring(3), out float theLength1);
+                Link l = curCorner.References[1];
+                if (l is Relationship r)
+                {
+                    Thing theLength = r.relationshipType;
+                    float.TryParse(theAngle.Label.Substring(3), out float theAngle1);
+                    float.TryParse(theLength.Label.Substring(3), out float theLength1);
 
-                PointPlus pp = new PointPlus { R = theLength1, Theta = Angle.FromDegrees(theAngle1) };
-                retVal.Add(pp);
+                    PointPlus pp = new PointPlus { R = theLength1, Theta = Angle.FromDegrees(theAngle1) };
+                    retVal.Add(pp);
+                }
                 curCorner = curCorner.References[1].T;
             } while (curCorner != firstCorner);
 

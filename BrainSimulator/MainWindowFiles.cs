@@ -122,6 +122,10 @@ namespace BrainSimulator
                 }
             }
 
+            //If the path contains "bin\64\debug" change the path to the actual development location instead
+            fileName = fileName.ToLower();
+            fileName = fileName.Replace("bin\\x64\\debug\\","");
+
             theNeuronArray.displayParams = theNeuronArrayView.Dp;
             if (XmlFile.Save(theNeuronArray, fileName))
             {

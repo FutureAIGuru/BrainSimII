@@ -266,12 +266,6 @@ namespace BrainSimulator.Modules
         }
 
 
-
-        private Point PointCopy(Point p)
-        {
-            return new Point { X = p.X, Y = p.Y };
-        }
-
         //fill this method in with code which will execute once
         //when the module is added, when "initialize" is selected from the context menu,
         //or when the engine restart button is pressed

@@ -5,19 +5,12 @@
 
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Threading;
-using System.Runtime.InteropServices;
 
 namespace BrainSimulator
 {
@@ -45,7 +38,6 @@ namespace BrainSimulator
             {
                 Debug.WriteLine("Left Shift released in display timer");
                 shiftPressed = false;
-                //theNeuronArrayView.theCanvas.Cursor = Cursors.Cross;
             }
         }
 
@@ -169,7 +161,6 @@ namespace BrainSimulator
             SaveAs();
         }
 
-
         private void NeuronMenu_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuItem mi)
@@ -257,6 +248,7 @@ namespace BrainSimulator
                 //TODO: the following line unconditionally clobbers the current network
                 //so the cancel button in the dialog won't work properly
                 //CreateEmptyNetwork(); // to avoid keeping too many bytes occupied...
+
                 // and make sure we have maximum memory free...
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
@@ -456,6 +448,7 @@ namespace BrainSimulator
         }
 
         //this reloads the file which was being used on the previous run of the program
+        //or creates a new one
         private void Window_ContentRendered(object sender, EventArgs e)
         {
             progressDialog = new ProgressDialog();
@@ -485,6 +478,7 @@ namespace BrainSimulator
                     else //force a new file creation on startup if no file name set
                     {
                         CreateEmptyNetwork();
+                        SetPlayPauseButtonImage(false);
                     }
                 }
                 //various errors might have happened so we'll just ignore them all and start with a fresh file 

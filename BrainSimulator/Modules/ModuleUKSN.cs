@@ -114,21 +114,23 @@ namespace BrainSimulator.Modules
 
         private void UpdateNeuronLabels()
         {
-            if (na == null) return;
-            for (int i = 0; i < na.NeuronCount && i < UKS.Count; i++)
-            {
-                if (UKS[i] == null) continue;
-                if (na.GetNeuronAt(i).Label != UKS[i].Label)
-                {
-                    na.GetNeuronAt(i).Label = UKS[i].Label;
-                    SetNeuronValue("KBOut", i, 0f, UKS[i].Label);
-                }
-            }
-            for (int i = UKS.Count; i < na.NeuronCount; i++)
-            {
-                na.GetNeuronAt(i).Label = "";
-                SetNeuronValue("KBOut", i, 0f, "");
-            }
+            return;
+            //the following code works but is too slow
+            //if (na == null) return;
+            //for (int i = 0; i < na.NeuronCount && i < UKS.Count; i++)
+            //{
+            //    if (UKS[i] == null) continue;
+            //    if (na.GetNeuronAt(i).Label != UKS[i].Label)
+            //    {
+            //        na.GetNeuronAt(i).Label = UKS[i].Label;
+            //        SetNeuronValue("KBOut", i, 0f, UKS[i].Label);
+            //    }
+            //}
+            //for (int i = UKS.Count; i < na.NeuronCount; i++)
+            //{
+            //    na.GetNeuronAt(i).Label = "";
+            //    SetNeuronValue("KBOut", i, 0f, "");
+            //}
         }
 
 
@@ -152,7 +154,7 @@ namespace BrainSimulator.Modules
                 {
                     Neuron targetNeuron = na.GetNeuronAt(j - 1);
                     Neuron sourceNeuron = na.GetNeuronAt(j);
-                    MainWindow.thisWindow.theNeuronArrayView.MoveOneNeuron(sourceNeuron, targetNeuron);
+                    MainWindow.thisWindow.theNeuronArrayView.MoveOneNeuron(sourceNeuron, targetNeuron,false);
                 }
                 //repeat this process for the output array
                 ModuleView naModule = theNeuronArray.FindModuleByLabel("KBOut");
@@ -162,7 +164,7 @@ namespace BrainSimulator.Modules
                     {
                         Neuron targetNeuron = naModule.GetNeuronAt(j - 1);
                         Neuron sourceNeuron = naModule.GetNeuronAt(j);
-                        MainWindow.thisWindow.theNeuronArrayView.MoveOneNeuron(sourceNeuron, targetNeuron);
+                        MainWindow.thisWindow.theNeuronArrayView.MoveOneNeuron(sourceNeuron, targetNeuron,false);
                     }
                 }
             }
@@ -444,7 +446,7 @@ namespace BrainSimulator.Modules
                 {
                     Forget(Labeled("PhraseISpoke"), 10);
                     shortTermMemoryList.Clear();
-                    shortTerm.References.Clear();
+                    shortTerm.ReferencesWriteable.Clear();
                     return;
                 }
 
@@ -525,7 +527,7 @@ namespace BrainSimulator.Modules
                 }
 
                 shortTermMemoryList.Clear();
-                shortTerm.References.Clear();
+                shortTerm.ReferencesWriteable.Clear();
                 Fire(Labeled("Say"));
             }
         }

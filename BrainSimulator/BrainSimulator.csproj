@@ -178,6 +178,7 @@
     <Compile Include="Modules\ModuleRateDecoder.cs" />
     <Compile Include="Modules\ModuleRateDecoder3.cs" />
     <Compile Include="Modules\ModuleRobot.cs" />
+    <Compile Include="Modules\ModuleRobotCamera.cs" />
     <Compile Include="Modules\ModuleShortTermMemory.cs" />
     <Compile Include="Modules\ModuleEvent.cs" />
     <Compile Include="Modules\ModuleFireOldest.cs" />

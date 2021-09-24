@@ -222,6 +222,7 @@ namespace BrainSimulator
             mv.TheModule.SetModuleView();
             mv.TheModule.Initialize();
             MainWindow.ResumeEngine();
+            MainWindow.Update();
             return;
         }
 

@@ -92,7 +92,10 @@ namespace BrainSimulator.Modules
                         {
                             //these are probably the same object...is motion detected?
                             var changes = uks.GetChangedValues(visibleArea, storedArea);
-                            if (changes.ContainsKey("Siz+") || changes.ContainsKey("CtrX+") || changes.ContainsKey("CtrY+"))
+                            if (changes.ContainsKey("Siz+") ||
+                                changes.ContainsKey("CtrX+") ||
+                                changes.ContainsKey("CtrY+") ||
+                                changes.ContainsKey("Ang+"))
                             {
                                 Thing t1 = uks.AddThing("Moved", motionParent);
                                 t1.AddChild(storedArea);
@@ -258,7 +261,7 @@ namespace BrainSimulator.Modules
                 uks.SetValue(movedThings[i], uks.GetValue(movedThingsNew[i], "CtrX+"), "CtrX", 0);
                 uks.SetValue(movedThings[i], uks.GetValue(movedThingsNew[i], "CtrY+"), "CtrY", 0);
                 uks.SetValue(movedThings[i], uks.GetValue(movedThingsNew[i], "Siz+"), "Siz", 0);
-
+                uks.SetValue(movedThings[i], uks.GetValue(movedThingsNew[i], "Ang+"), "Ang", 0);
             }
 
             foreach (var t in newThings)

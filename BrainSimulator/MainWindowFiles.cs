@@ -107,6 +107,18 @@ namespace BrainSimulator
         private bool SaveFile(string fileName)
         {
             SuspendEngine();
+            //If the path contains "bin\64\debug" change the path to the actual development location instead
+            //because file in bin..debug can be clobbered on every rebuild.
+            if (fileName.ToLower().Contains("bin\\x64\\debug"))
+            {
+                MessageBoxResult mbResult = System.Windows.MessageBox.Show(this, "Save to source folder instead?", "Save", MessageBoxButton.YesNoCancel,
+                MessageBoxImage.Asterisk, MessageBoxResult.No);
+                if (mbResult == MessageBoxResult.Yes)
+                    fileName = fileName.Replace("bin\\x64\\debug\\", "");
+                if (mbResult == MessageBoxResult.Cancel)
+                    return false;
+            }
+
             foreach (ModuleView na in theNeuronArray.modules)
             {
                 if (na.TheModule != null)
@@ -122,16 +134,13 @@ namespace BrainSimulator
                 }
             }
 
-            //If the path contains "bin\64\debug" change the path to the actual development location instead
-            fileName = fileName.ToLower();
-            fileName = fileName.Replace("bin\\x64\\debug\\","");
-
             theNeuronArray.displayParams = theNeuronArrayView.Dp;
             if (XmlFile.Save(theNeuronArray, fileName))
             {
                 currentFileName = fileName;
                 SetCurrentFileNameToProperties();
                 ResumeEngine();
+                undoCountAtLastSave = theNeuronArray.GetUndoCount();
                 return true;
             }
             else
@@ -174,12 +183,16 @@ namespace BrainSimulator
             Properties.Settings.Default.Save();
         }
 
+        int undoCountAtLastSave = 0;
         private bool PromptToSaveChanges()
         {
             if (IsArrayEmpty()) return false;
-            if (!XmlFile.CanWriteTo(currentFileName, out string message)) return false;
             MainWindow.theNeuronArray.GetCounts(out long synapseCount, out int neuronInUseCount);
             if (neuronInUseCount == 0) return false;
+            if (theNeuronArray.GetUndoCount() == undoCountAtLastSave) return false; //no changes have been made
+
+            bool canWrite = !XmlFile.CanWriteTo(currentFileName, out string message);
+
             SuspendEngine();
 
             bool retVal = false;
@@ -187,12 +200,20 @@ namespace BrainSimulator
             MessageBoxImage.Asterisk, MessageBoxResult.No);
             if (mbResult == MessageBoxResult.Yes)
             {
-                if (currentFileName != "")
-                    SaveFile(currentFileName);
+                if (currentFileName != "" && canWrite)
+                {
+                    if (SaveFile(currentFileName))
+                        undoCountAtLastSave = theNeuronArray.GetUndoCount();
+                }
                 else
                 {
-                    if (!SaveAs())
+                    if (SaveAs())
+                    {
+                    }
+                    else
+                    {
                         retVal = true;
+                    }
                 }
             }
             if (mbResult == MessageBoxResult.Cancel)

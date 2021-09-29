@@ -48,11 +48,8 @@ namespace BrainSimulator.Modules
         {
             timer.Stop();
             if (Application.Current == null) return;
-            Application.Current.Dispatcher.Invoke((Action)delegate
-            {
-                if (this != null)
-                    Draw(false);
-            });
+            if (this != null)
+                Draw(false);
         }
 
         public Bitmap theBitMap1 = null;

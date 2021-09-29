@@ -158,7 +158,8 @@ namespace BrainSimulator
 
         private void buttonSaveAs_Click(object sender, RoutedEventArgs e)
         {
-            SaveAs();
+            if (SaveAs())
+                SaveButton.IsEnabled = true;
         }
 
         private void NeuronMenu_Click(object sender, RoutedEventArgs e)
@@ -363,6 +364,11 @@ namespace BrainSimulator
                 engineThread.Start();
             EngineSpeed.Text = slider.Value.ToString();
             displayUpdateTimer.Start();
+            if (engineSpeedStack.Count > 0)
+            {//if there is a stack entry, the engine is paused...put the new value on the stack
+                engineSpeedStack.Pop();
+                engineSpeedStack.Push(engineDelay);
+            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

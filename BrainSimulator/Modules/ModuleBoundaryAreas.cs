@@ -98,23 +98,9 @@ namespace BrainSimulator.Modules
         private void FindCorners()
         {
             corners.Clear();
-            if (boundaries.Count == 1)
+            for (int i = 0; i < boundaries.Count; i++)
             {
-                corners.Add(new Corner
-                {
-                    loc = boundaries[0].p1,
-                    seg1 = boundaries[0],
-                    seg2 = boundaries[0]
-                });
-                corners.Add(new Corner
-                {
-                    loc = boundaries[0].p2,
-                    seg1 = boundaries[0],
-                    seg2 = boundaries[0]
-                });
-            }
-            for (int i = 0; i < boundaries.Count - 1; i++)
-            {
+                bool boundaryIntersection = false;
                 for (int j = i + 1; j < boundaries.Count; j++)
                 {
                     if (
@@ -133,8 +119,24 @@ namespace BrainSimulator.Modules
                                 seg1 = boundaries[i],
                                 seg2 = boundaries[j]
                             });
+                            boundaryIntersection = true;
                         }
                     }
+                }
+                if (!boundaryIntersection) //didn't intersect anything must be a lone segment
+                {
+                    corners.Add(new Corner
+                    {
+                        loc = boundaries[i].p1,
+                        seg1 = boundaries[i],
+                        seg2 = boundaries[i]
+                    });
+                    corners.Add(new Corner
+                    {
+                        loc = boundaries[i].p2,
+                        seg1 = boundaries[i],
+                        seg2 = boundaries[i]
+                    });
                 }
             }
         }
@@ -232,6 +234,7 @@ namespace BrainSimulator.Modules
         {
             public HSLColor avgColor;
             public float greatestLength;
+            public Angle orientation;
             public Point centroid;
             public List<Corner> areaCorners = new List<Corner>();
         }
@@ -276,12 +279,21 @@ namespace BrainSimulator.Modules
         {
             foreach (Area a in areas)
             {
-                float greatestLength = 0;
+                a.greatestLength = 0;
+                a.orientation = 0;
                 foreach (Corner c in a.areaCorners)
                 {
-                    greatestLength = new float[] { c.dist1, c.dist2, greatestLength }.Max();
+                    if (c.dist1 > a.greatestLength)
+                    {
+                        a.greatestLength = c.dist1;
+                        a.orientation = c.seg1.Angle;
+                    }
+                    if (c.dist2 > a.greatestLength)
+                    {
+                        a.greatestLength = c.dist2;
+                        a.orientation = c.seg2.Angle;
+                    }
                 }
-                a.greatestLength = greatestLength;
             }
         }
         private HSLColor GetAreaColor(Area a)
@@ -368,12 +380,12 @@ namespace BrainSimulator.Modules
                 Thing theArea = uks.AddThing("Area*", currentlyVisibleParent);
 
                 uks.SetValue(theArea, a.greatestLength, "Siz",0);
+                uks.SetValue(theArea, (float)a.orientation, "Ang", 2);
                 uks.SetValue(theArea, (float)a.centroid.X, "CtrX",0);
                 uks.SetValue(theArea, (float)a.centroid.Y, "CtrY",0);
                 uks.SetValue(theArea, (float)a.avgColor.hue/360f, "Hue",2);
                 uks.SetValue(theArea, (float)a.avgColor.saturation, "Sat",2);
-                uks.SetValue(theArea, (float)a.avgColor.luminance, "Lum",2);
-
+                uks.SetValue(theArea, (float)a.avgColor.luminance, "Lum", 2);
 
                 List<Thing> theCorners = new List<Thing>();
                 foreach (Corner c in a.areaCorners)

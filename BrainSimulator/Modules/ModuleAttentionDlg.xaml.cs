@@ -96,11 +96,15 @@ namespace BrainSimulator.Modules
                     PointPlus pShapeCtr = new PointPlus(shapeValues["CtrX+"], shapeValues["CtrY+"]);
                     float areaSize = areaValues["Siz+"];
                     float shapeSize = shapeValues["Siz+"];
+                    Angle areaAngle = areaValues["Ang+"];
+                    Angle shapeAngle = shapeValues["Ang+"];
+                    Angle rotation = areaAngle - shapeAngle;
 
                     foreach (Thing corner in theShape.Children)
                     {
                         PointPlus p = new PointPlus((Point)corner.Children[0].V);
                         p = p-pShapeCtr;
+                        p.Theta += rotation;
                         float ratio = areaSize / shapeSize;
                         p.X *= ratio;
                         p.Y *= ratio;

@@ -52,7 +52,8 @@ namespace BrainSimulator.Modules
             AssociateWordsWithVisuals(attnAudibleTarget);
 
             //if you want the dlg to update, use the following code whenever any parameter changes
-            UpdateDialog();
+            if (dlg != null && !((ModuleAssociationDlg)dlg).busy)
+                UpdateDialog();
         }
 
 

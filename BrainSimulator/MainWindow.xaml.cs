@@ -474,7 +474,7 @@ namespace BrainSimulator
             {
                 EnableMenuItem(MainMenu.Items, " Paste", true);
             }
-            if (theNeuronArray != null && theNeuronArray.UndoPossible())
+            if (theNeuronArray != null && theNeuronArray.GetUndoCount() > 0)
             {
                 EnableMenuItem(MainMenu.Items, " Undo", true);
             }

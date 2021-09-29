@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrainSimulator"
         mc:Ignorable="d"
+        Background="LightGray"
         Title="Module Description" Height="400" Width="600">
     <Grid >
         <TextBox x:Name="ToolTipText" Margin="20,36,58,0" Text="ToolTip Text" Height="20" VerticalAlignment="Top" ></TextBox>

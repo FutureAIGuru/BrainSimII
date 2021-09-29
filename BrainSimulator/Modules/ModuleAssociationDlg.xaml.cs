@@ -23,8 +23,11 @@ namespace BrainSimulator.Modules
         }
 
         ModuleUKS uks = null;
+        public bool busy = false;
         public override bool Draw(bool checkDrawTimer)
         {
+            if (busy) return false;
+            //the datagridview is so slow, always wait for the timer
             if (!base.Draw(checkDrawTimer)) return false;
             
             if (mouseInWindow) return true;
@@ -39,6 +42,7 @@ namespace BrainSimulator.Modules
             Thing attn = uks.Labeled("ATTN");
             if (attn == null || attn.References.Count == 0) return false;
 
+            busy = true;
             Thing attnTarget = attn.GetReferenceWithAncestor(uks.Labeled("Visual"));
 
 
@@ -53,9 +57,9 @@ namespace BrainSimulator.Modules
 
             List<Thing> properties = uks.Labeled("Color").Children.ToList();
             properties.AddRange(uks.Labeled("Area").Children.ToList());
-            properties = properties.OrderBy(x => x.Label).ToList();
+            //properties = properties.OrderBy(x => x.Label).ToList();
             IList<Thing> relationships = uks.Labeled("Relationship").Children;
-            relationships = relationships.OrderBy(x => x.Label.Substring(1)).ToList();
+            //relationships = relationships.OrderBy(x => x.Label.Substring(1)).ToList();
 
 
             //collect all the values in a single spot
@@ -126,18 +130,18 @@ namespace BrainSimulator.Modules
             for (int j = 0; j < values.GetLength(1); j++)
                 for (int i = 0; i < values.GetLength(0); i++)
                 {
-                    if (values[i, j] == maxInRow[i] && values[i,j] == maxInCol[j])
-                        SetCellBackground(i, j+1, Colors.LightGreen);
-                    else if(values[i, j] == maxInRow[i])
-                        SetCellBackground(i, j+1, Colors.LightGoldenrodYellow);
-                    else if(values[i, j] == maxInCol[j])
-                        SetCellBackground(i, j+1, Colors.Yellow);
+                    if (values[i, j] == maxInRow[i] && values[i, j] == maxInCol[j])
+                        SetCellBackground(i, j + 1, Colors.LightGreen);
+                    else if (values[i, j] == maxInRow[i])
+                        SetCellBackground(i, j + 1, Colors.LightGoldenrodYellow);
+                    else if (values[i, j] == maxInCol[j])
+                        SetCellBackground(i, j + 1, Colors.Yellow);
                     else
                         SetCellBackground(i, j + 1, Colors.White);
                 }
 
-            theGrid.CanUserSortColumns = true;
-
+            theGrid.FrozenColumnCount = 1;
+            busy = false;
             return true;
         }
 

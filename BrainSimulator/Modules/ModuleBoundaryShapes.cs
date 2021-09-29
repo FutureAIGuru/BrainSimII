@@ -39,7 +39,7 @@ namespace BrainSimulator.Modules
             ModuleView naSource = theNeuronArray.FindModuleByLabel("UKS");
             if (naSource == null) return;
             uks = (ModuleUKS)naSource.TheModule;
-            Thing x = uks.Labeled("CurrentlyVisible"); 
+            Thing x = uks.Labeled("CurrentlyVisible");
             Thing currentlyVisibleParent = uks.GetOrAddThing("CurrentlyVisible", "Visual");
 
             foreach (Thing t in currentlyVisibleParent.Children)
@@ -170,21 +170,22 @@ namespace BrainSimulator.Modules
             Thing topLeft = null;
 
             float greatestLength = uks.GetValues(theArea)["Siz+"];
+            Angle ang = uks.GetValues(theArea)["Ang+"];
+            uks.SetValue(theShape, ang, "PrefAng", 2);
+
             for (int i = 0; i < theArea.Children.Count; i++)
             {
                 Thing corner = theArea.Children[i];
-                //if (corner.Parents.Contains(uks.Labeled("Corner")))
-                {
-                    if (topLeft == null) topLeft = corner;
-                    Point p1 = (Point)corner.References[0].T.Children[0].V;
+                if (topLeft == null) topLeft = corner;
+                Point p1 = (Point)corner.References[0].T.Children[0].V;
 
-                    if (p1.Y < ((Point)topLeft.Children[0].V).Y ||
-                       (p1.Y == ((Point)topLeft.Children[0].V).Y && p1.X < ((Point)topLeft.Children[0].V).X))
-                    {
-                        topLeft = theArea.Children[i];
-                    }
+                if (p1.Y < ((Point)topLeft.Children[0].V).Y ||
+                   (p1.Y == ((Point)topLeft.Children[0].V).Y && p1.X < ((Point)topLeft.Children[0].V).X))
+                {
+                    topLeft = theArea.Children[i];
                 }
             }
+
 
             //these both are for the area
             Thing nextAreaCorner = topLeft.References[0].T;
@@ -198,9 +199,9 @@ namespace BrainSimulator.Modules
             {
                 //which area reference points to the next corner (not the previous)
                 int refIndex = 0;
-                if (nextAreaCorner.References.Count > 1 &&  nextAreaCorner.References[0].T == prevAreaCorner)
+                if (nextAreaCorner.References.Count > 1 && nextAreaCorner.References[0].T == prevAreaCorner)
                     refIndex = 1;
-                Thing nextShapeCorner = AddAngleandRelationship(greatestLength, nextAreaCorner, newShapeCorner, refIndex,theShape);
+                Thing nextShapeCorner = AddAngleandRelationship(greatestLength, nextAreaCorner, newShapeCorner, refIndex, theShape);
 
                 newShapeCorner = nextShapeCorner;
 
@@ -236,7 +237,8 @@ namespace BrainSimulator.Modules
                 Point p2 = (Point)nextAreaCorner.References[1].T.Children[0].V;
                 seg1 = new ModuleBoundarySegments.Arc { p1 = cnrPt, p2 = p1 };
                 seg2 = new ModuleBoundarySegments.Arc { p1 = cnrPt, p2 = p2 };
-                a = Math.Abs(seg1.Angle - seg2.Angle);
+                a = Angle.FromDegrees((float)Vector.AngleBetween(cnrPt - p1, cnrPt - p2));
+                a = Math.Abs(a);
                 a = Angle.FromDegrees((float)(Math.Round(a.ToDegrees() / 15) * 15));
             }
             string s = "Ang" + (int)a.ToDegrees();
@@ -253,7 +255,7 @@ namespace BrainSimulator.Modules
             s = "Len" + lenToNextCorner.ToString("f1");
             if (nextShapeCorner == null)
             {
-                nextShapeCorner = uks.AddThing("Cnr*",theShape);
+                nextShapeCorner = uks.AddThing("Cnr*", theShape);
             }
 
             newShapeCorner.AddRelationship(nextShapeCorner, uks.GetOrAddThing(s, value));

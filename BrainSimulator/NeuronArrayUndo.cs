@@ -60,9 +60,9 @@ namespace BrainSimulator
                 modulePoint = moduleUndoInfo.Count
             });
         }
-        public bool UndoPossible()
+        public int GetUndoCount()
         {
-            return undoList.Count != 0;
+            return undoList.Count;
         }
         struct SynapseUndo
         {

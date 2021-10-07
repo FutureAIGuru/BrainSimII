@@ -53,7 +53,7 @@ namespace BrainSimulator.Modules
                 {
                     filePath = fileList[fileCounter++];
                     LoadImage(filePath);
-                    countDown = 3; //minimum cycles to show a file
+                    countDown = 1; //minimum cycles to show a file
                     SetDescription(filePath);
                 }
             }

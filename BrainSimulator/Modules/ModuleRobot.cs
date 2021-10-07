@@ -11,6 +11,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Serialization;
+using System.Diagnostics;
+using System.Windows.Threading;
 
 namespace BrainSimulator.Modules
 {
@@ -26,9 +28,9 @@ namespace BrainSimulator.Modules
         //set max to be -1 if unlimited
         public ModuleRobot()
         {
-            minHeight = 8;
+            minHeight = 5;
             maxHeight = 12;
-            minWidth = 15;
+            minWidth = 5;
             maxWidth = 20;
         }
 
@@ -39,111 +41,114 @@ namespace BrainSimulator.Modules
         int[] curPos = new int[] { 500, 500, 500, 500, 500, 500 };
         int[,] savedPos = new int[11, 6];
 
+
+        string comPort = "COM11";
+        DispatcherTimer dt = null;
+        SerialPort sp = null;
+        float[] sensorValues = new float[100];
+        //fill this method in with code which will execute
+        //once for each cycle of the engine
         public override void Fire()
         {
-            Init();
-            if (!na.GetNeuronAt(0, 0).InUse())
-            {
-                for (int j = 0; j < labels.Length; j++)
-                    na.GetNeuronAt(0, j).Label = labels[j];
-                na.GetNeuronAt(0, 6).Label = "Home";
-                Home();
-            }
-            if (na.GetNeuronAt(0, 6).LastCharge > .9)
-                Home();
+            Init();  //be sure to leave this here
 
-            for (int i = 0; i < 6; i++)
+            if (!sp.IsOpen)
             {
-                for (int j = 0; j < 11; j++)
-                {
-
-                    Neuron n = na.GetNeuronAt(j, i);
-                    if (n != null && n.LastCharge > .9)
-                    {
-                        MoveRobot(i, j * 200 + 500);
-                        break;
-                    }
-                }
-            }
-            for (int j = 0; j < 11; j++)
-            {
-                Neuron n = na.GetNeuronAt(j, 8);
-                if (n != null && n.LastCharge > .9)
-                {
-                    MoveRobot(8, j * 200 + 500);
-                    break;
-                }
-            }
-            for (int j = 0; j < 11; j++)
-            {
-                Neuron n = na.GetNeuronAt(j, 9);
-                if (n != null && n.LastCharge > .9)
-                {
-                    MoveRobot(9, j * 200 + 500);
-                    break;
-                }
+                Initialize();
+                if (!sp.IsOpen)
+                    return;
             }
 
 
-            for (int i = 0; i < 6; i++)
+            if (sensorValues[6] == 0 && near(sensorValues[7], .5f))
             {
-                int nudge = 0;
-                if (na.GetNeuronAt(11, i).LastCharge > .9) nudge = 20;
-                if (na.GetNeuronAt(12, i).LastCharge > .9) nudge = -20;
-                if (nudge != 0)
-                    MoveRobot(i, curPos[i] + nudge);
+                MoveRobot(6, 180);
+                MoveRobot(7, 180);
             }
-            for (int i = 1; i < 11; i++)
+            else if (sensorValues[7] == 1 && sensorValues[7] == 1)
             {
-                if (na.GetNeuronAt(i, 6).LastCharge > .9)
-                {
-                    if (savedPos[i, 0] == 0)
-                    {
-                        for (int j = 0; j < curPos.Length; j++)
-                            savedPos[i, j] = curPos[j];
-                    }
-                    else
-                    {
-                        for (int j = 0; j < curPos.Length; j++)
-                        {
-                            if (j == 4) continue;  //don't change the gripper state
-                            MoveRobot(j, savedPos[i, j]);
-                        }
-                    }
-                }
+                MoveRobot(7, 90);
             }
+            else if (sensorValues[6] == 1 && near(sensorValues[7],.5f))
+            {
+                MoveRobot(6, 0);
+            }
+            na.GetNeuronAt(0, 0).SetValue(sensorValues[6]);
+            na.GetNeuronAt(0, 1).SetValue(sensorValues[7]);
+
+            //if you want the dlg to update, use the following code whenever any parameter changes
+            // UpdateDialog();
         }
-        void Home()
+
+        bool near (float f1, float f2, float tolerance = 0.05f)
         {
-            for (int i = 0; i < home.Length; i++)
-            { MoveRobot(i, home[i] * 200 + 500); }
+            return Math.Abs(f2 - f1) < tolerance;
+
         }
-        //position is pulse-width ranging 500-2500
-        void MoveRobot(int port, int position)
-        {
-            //curPos[port] = position;
-            SerialPort sp = new SerialPort("COM5");
-
-            string commandString = "#" + port + " P" + position + "T2000\r\n";// S100\r\n";
-            try
-            {
-                sp.Open();
-                sp.Write(commandString);
-                sp.Close();
-            }
-            catch (Exception e) 
-            {
-                string x = e.Message; 
-            }
-        }
-
-
 
         //fill this method in with code which will execute once
         //when the module is added, when "initialize" is selected from the context menu,
         //or when the engine restart button is pressed
         public override void Initialize()
         {
+            Init();
+            if (na == null) return;
+
+            string[] portNames = SerialPort.GetPortNames();
+
+            if (sp == null || !sp.IsOpen)
+            {
+                try
+                {
+                    sp = new SerialPort(comPort);
+                    if (!sp.IsOpen)
+                        sp.Open();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("ModuleRobot port open failed because: " + e.Message);
+                    return;
+                }
+            }
+            sp.BaudRate = 115200;
+            sp.DataReceived += Sp_DataReceived;
+
+            //set up timeout
+            if (dt == null)
+            {
+                dt = new DispatcherTimer();
+                dt.Tick += sp_Timeout;
+            }
+            dt.Interval = new TimeSpan(0, 0, 10);
+
+            //init test sensore
+            SendCommand("s6 100 s7 100 \n");
+            MoveRobot(6, 180);
+            MoveRobot(7, 180);
+        }
+
+        void SendCommand(string theCommand)
+        {
+            dt.Stop();
+            dt.Start();
+
+            try
+            {
+                if (sp != null && !sp.IsOpen) sp.Open();
+                sp.Write(theCommand);
+                Debug.WriteLine("ModuleRobot sent: " + theCommand.Trim());
+            }
+            catch (Exception e)
+            {
+                string s = e.Message;
+                Debug.WriteLine("ModuleRobot:SendCommand failed because:" + s);
+            }
+        }
+        private void sp_Timeout(object sender, EventArgs e)
+        {
+            dt.Stop();
+            Debug.WriteLine("Port timed out");
+            if (sp.IsOpen) sp.Close();
         }
 
         //the following can be used to massage public data to be different in the xml file
@@ -153,7 +158,42 @@ namespace BrainSimulator.Modules
         }
         public override void SetUpAfterLoad()
         {
+            Initialize();
         }
+
+        //data incoming from the robot...  handle sense values
+        private void Sp_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            SerialPort sp = (SerialPort)sender;
+            dt.Stop();
+            dt.Start();  //reset the watchdog timer
+            if (!sp.IsOpen) sp.Open();
+            string indata = sp.ReadExisting();
+            string[] commands = indata.Split(new char[] { '\n', }, StringSplitOptions.RemoveEmptyEntries); //multiple commands in input string
+            foreach (string s in commands)
+            {
+                Debug.WriteLine(s.Trim());
+                // sX:Y where X is the sensor number and Y is the value
+                if (s.Contains(":") && s[0] == 's')
+                {
+                    string s1 = s.Trim();
+                    string[] parameters = s1.Split(':');
+                    int.TryParse(parameters[0].Substring(1), out int senseNumber);
+                    int.TryParse(parameters[1], out int senseValue);
+                    float newVal = senseValue / 180.0f; //for servos with range 0-180
+                    if (senseNumber < sensorValues.Length)
+                        sensorValues[senseNumber] = newVal;
+                }
+            }
+        }
+
+        void MoveRobot(int servo, int position)
+        {
+            string commandString = "t 2000 m" + servo + " " + position + " \n";
+            SendCommand(commandString);
+            sensorValues[servo] = -1;
+        }
+
 
         //called whenever the size of the module rectangle changes
         //for example, you may choose to reinitialize whenever size changes

@@ -114,7 +114,7 @@ namespace BrainSimulator
                 MessageBoxResult mbResult = System.Windows.MessageBox.Show(this, "Save to source folder instead?", "Save", MessageBoxButton.YesNoCancel,
                 MessageBoxImage.Asterisk, MessageBoxResult.No);
                 if (mbResult == MessageBoxResult.Yes)
-                    fileName = fileName.Replace("bin\\x64\\debug\\", "");
+                    fileName = fileName.ToLower().Replace("bin\\x64\\debug\\", "");
                 if (mbResult == MessageBoxResult.Cancel)
                     return false;
             }

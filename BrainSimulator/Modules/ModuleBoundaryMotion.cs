@@ -148,6 +148,8 @@ namespace BrainSimulator.Modules
                 //if all objects moved in same direction, it's becaue POV turned
                 //if all objects moved in directions radiating to or from a point, POV is moving toward or away from that point.
                 //TODO if all objects moved in same direction but varying magnitudes, POV has moved sideways...further objects move less
+
+                //calculate the motion vector for all associated objects
                 List<Segment> motions = new List<Segment>();
                 foreach (Thing t in motionParent.Children)
                 {
@@ -174,8 +176,10 @@ namespace BrainSimulator.Modules
 
                 if (motions.Count > 1)
                 {
-                    //do most move the same?  ROTATION
+                    //do most move the same?  ANGULAR POV MOTION
+                    //TODO: use clustering to get most likely motions
                     PointPlus pMotion = new PointPlus(motions[0].P1);
+
                     int count = 0;
                     foreach (Segment s in motions)
                     {
@@ -224,6 +228,15 @@ namespace BrainSimulator.Modules
                                 Utils.FindIntersection(motions[i].P1, motions[i].P2, motions[j].P1, motions[j].P2, out Point intersection);
                                 intersections.Add(intersection);
                             }
+
+                        //testing clustering...
+                        //TODO try all this with points of interest rather than centers
+                        double[][] rawData = new double[intersections.Count][];
+                        for (int i = 0; i < intersections.Count; i++)
+                                rawData[i] = new double[2] { intersections[i].X, intersections[i].Y };
+                        int[] clusters = KMeansClustering.Cluster(rawData, 2);
+                        //now ask if there is a single cluster with most of the data
+
                         PointPlus aveIntersection = new PointPlus();
                         for (int i = 0; i < intersections.Count; i++)
                         {

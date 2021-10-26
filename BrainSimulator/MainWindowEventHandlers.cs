@@ -614,7 +614,7 @@ namespace BrainSimulator
         bool mouseInWindow = false;
         private void Window_MouseEnter(object sender, MouseEventArgs e)
         {
-            Debug.WriteLine("MainWindow MouseEnter");
+            //Debug.WriteLine("MainWindow MouseEnter");
             Keyboard.ClearFocus();
             Keyboard.Focus(this);
             this.Focus();
@@ -622,7 +622,7 @@ namespace BrainSimulator
         }
         private void Window_MouseLeave(object sender, MouseEventArgs e)
         {
-            Debug.WriteLine("MainWindow MouseLeave");
+            //Debug.WriteLine("MainWindow MouseLeave");
             mouseInWindow = false;
         }
 

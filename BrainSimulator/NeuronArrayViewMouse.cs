@@ -215,7 +215,7 @@ namespace BrainSimulator
         //TODO THIS DOESN'T WORK if other app is in front
         private void theCanvas_MouseEnter(object sender, MouseEventArgs e)
         {
-            Debug.WriteLine("theCanvas MouseEnter");
+            //Debug.WriteLine("theCanvas MouseEnter");
             Keyboard.ClearFocus();
             Keyboard.Focus(MainWindow.thisWindow.SynapseUpdate);
             MainWindow.thisWindow.SynapseUpdate.Focus();
@@ -229,7 +229,7 @@ namespace BrainSimulator
 
             if (MainWindow.theNeuronArray == null) return;
             MainWindow.theNeuronArray.SetUndoPoint();
-            Debug.WriteLine("theCanvas_MouseDown" + MainWindow.theNeuronArray.Generation + theShape + theShapeType);
+            //Debug.WriteLine("theCanvas_MouseDown" + MainWindow.theNeuronArray.Generation + theShape + theShapeType);
             Point currentPosition = e.GetPosition(theCanvas);
             LimitMousePostion(ref currentPosition);
             mouseDownNeuronIndex = dp.NeuronFromPoint(currentPosition);
@@ -373,8 +373,8 @@ namespace BrainSimulator
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 string oString = (theShape == null) ? "null" : theShape.ToString();
-                Debug.WriteLine("MouseMove  currentNeuron: " + currentNeuron
-                    + " Shape type: " + theShapeType.ToString() + " theShape: " + oString);
+                //Debug.WriteLine("MouseMove  currentNeuron: " + currentNeuron
+                //    + " Shape type: " + theShapeType.ToString() + " theShape: " + oString);
 
                 //are we dragging a synapse? rubber-band it
                 if ((theCanvas.Cursor == Cursors.Arrow || theCanvas.Cursor == Cursors.UpArrow)

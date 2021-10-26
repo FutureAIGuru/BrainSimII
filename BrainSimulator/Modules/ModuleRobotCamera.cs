@@ -37,10 +37,8 @@ namespace BrainSimulator.Modules
             maxWidth = 500;
         }
 
-        //TODO input IP address
+        //TODO gte IP from UDP broadcast
 
-        //fill this method in with code which will execute
-        //once for each cycle of the engine
         Bitmap bitmap1 = null;
         Object bitmapLock = new Object();
         WebClient wc = new WebClient();
@@ -51,9 +49,8 @@ namespace BrainSimulator.Modules
         public override void Fire()
         {
             Init();  //be sure to leave this here
-
             if (wc.IsBusy) return;
-            if (theIP.Equals(new IPAddress(new byte[]{ 0, 0, 0, 0 }))) return;
+            if (theIP.Equals(new IPAddress(new byte[] { 0, 0, 0, 0 }))) return;
 
             lock (bitmapLock)
             {
@@ -69,7 +66,6 @@ namespace BrainSimulator.Modules
             if (bitmap1 == null)
             {
                 wc.DownloadDataAsync(new Uri("http://" + theIP.ToString()));
-
                 dt.Stop();
                 dt.Start();
             }
@@ -80,7 +76,8 @@ namespace BrainSimulator.Modules
 
         private void webRequest_Timeout(object sender, EventArgs e)
         {
-            (sender as DispatcherTimer).Stop();
+            //            (sender as DispatcherTimer).Stop();
+            System.Diagnostics.Debug.WriteLine("ModuleRobotCamera:WebClient Request timed out.");
             if (wc.IsBusy)
                 wc.CancelAsync();
             bitmap1 = null;
@@ -113,8 +110,10 @@ namespace BrainSimulator.Modules
             foreach (Neuron n in na.Neurons1)
                 n.Model = Neuron.modelType.Color;
 
-            dt.Interval = TimeSpan.FromSeconds(1);
+            dt = new DispatcherTimer();
+            dt.Interval = new TimeSpan(0, 0, 1);// TimeSpan.FromSeconds(1);
             dt.Tick += webRequest_Timeout;
+            dt.Start();
 
             wc.DownloadDataCompleted += Wc_DownloadDataCompleted;
 
@@ -126,11 +125,12 @@ namespace BrainSimulator.Modules
 
         private void Wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
-            if (e.Error == null)
+            dt.Stop();
+            lock (bitmapLock)
             {
-                using (MemoryStream mem = new MemoryStream(e.Result))
+                if (e.Error == null && !e.Cancelled)
                 {
-                    lock (bitmapLock)
+                    using (MemoryStream mem = new MemoryStream(e.Result))
                     {
                         try
                         {//you may have gotten to a website which isn't an image...just ignore it
@@ -141,6 +141,8 @@ namespace BrainSimulator.Modules
                         }
                     }
                 }
+                else
+                { }
             }
         }
         //the following can be used to massage public data to be different in the xml file

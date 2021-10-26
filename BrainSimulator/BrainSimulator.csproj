@@ -140,6 +140,7 @@
     <Compile Include="ModuleDescription.xaml.cs">
       <DependentUpon>ModuleDescription.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\KMeansClustering.cs" />
     <Compile Include="Modules\ModuleAssociation.cs" />
     <Compile Include="Modules\ModuleAttention.cs" />
     <Compile Include="Modules\ModuleBoundaryByNeurons.cs" />
@@ -506,9 +507,18 @@
     <Content Include="Networks\TestData\ColorVariation\White triangle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Resource Include="Networks\TestData\Motion\1 One Triangle.png" />
-    <Resource Include="Networks\TestData\Motion\2 two triangles .png" />
-    <Resource Include="Networks\TestData\Motion\3 Three triangle.png" />
+    <Content Include="Networks\TestData\Motion\1 One Triangle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Motion\2 two triangles .png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Motion\3 Three triangle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\Motion\4 Three triangle Center Moved.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Networks\TestData\Motion\Three triangle %28R1%29.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

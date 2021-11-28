@@ -9,13 +9,18 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using System.Xml.Serialization;
+using System.Diagnostics;
 
 namespace BrainSimulator.Modules
 {
@@ -37,51 +42,48 @@ namespace BrainSimulator.Modules
             maxWidth = 500;
         }
 
-        //TODO gte IP from UDP broadcast
 
-        Bitmap bitmap1 = null;
-        Object bitmapLock = new Object();
-        WebClient wc = new WebClient();
-        DispatcherTimer dt = new DispatcherTimer();
+
+        //needed to get the IP address of the ESP32 Camera device
+        UdpClient serverClient = null; //listen only
+        UdpClient clientServer; //send/broadcast only
+        IPAddress broadCastAddress;
+        int clientServerPort = 3333;
+        int serverClientPort = 3333;
         IPAddress theIP = null;
-        public string theIPString = "";
+
+
+        HttpClient theHttpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(2), };
+        bool httpClientBusy = false;
+
+        [XmlIgnore]
+        public BitmapImage theBitmap = null;
 
         public override void Fire()
         {
-            Init();  //be sure to leave this here
-            if (wc.IsBusy) return;
-            if (theIP.Equals(new IPAddress(new byte[] { 0, 0, 0, 0 }))) return;
-
-            lock (bitmapLock)
+            if (theIP == null)
             {
-                //the intent here is that the bitmap is either null or contains a complete image
-                //if the test is performed while the callback is in process, this lock should cause this to wait for the write to bitmap to complete
-                if (bitmap1 != null)
-                {
-                    LoadImage(bitmap1);
-                    bitmap1 = null;
-                }
+                Broadcast("DevicePoll");
+                theIP = new IPAddress(new byte[] { 10, 0, 0, 214 });
             }
 
-            if (bitmap1 == null)
+            try
             {
-                wc.DownloadDataAsync(new Uri("http://" + theIP.ToString()));
-                dt.Stop();
-                dt.Start();
+                Init();  //be sure to leave this here
+
+                GetCameraImage(); //only issues request if not currently busy
+
+
+                //if you want the dlg to update, use the following code whenever any parameter changes
+                UpdateDialog();
+
             }
-
-            //if you want the dlg to update, use the following code whenever any parameter changes
-            // UpdateDialog();
+            catch (Exception e)
+            {
+                MessageBox.Show("RobotCameraModule encountered an exception: " + e.Message);
+            }
         }
 
-        private void webRequest_Timeout(object sender, EventArgs e)
-        {
-            //            (sender as DispatcherTimer).Stop();
-            System.Diagnostics.Debug.WriteLine("ModuleRobotCamera:WebClient Request timed out.");
-            if (wc.IsBusy)
-                wc.CancelAsync();
-            bitmap1 = null;
-        }
 
         private void LoadImage(Bitmap bitmap1)
         {
@@ -101,6 +103,7 @@ namespace BrainSimulator.Modules
                 }
         }
 
+
         //fill this method in with code which will execute once
         //when the module is added, when "initialize" is selected from the context menu,
         //or when the engine restart button is pressed
@@ -110,52 +113,119 @@ namespace BrainSimulator.Modules
             foreach (Neuron n in na.Neurons1)
                 n.Model = Neuron.modelType.Color;
 
-            dt = new DispatcherTimer();
-            dt.Interval = new TimeSpan(0, 0, 1);// TimeSpan.FromSeconds(1);
-            dt.Tick += webRequest_Timeout;
-            dt.Start();
-
-            wc.DownloadDataCompleted += Wc_DownloadDataCompleted;
-
-            if (theIP == null)
+            //This gets the wifi IP address
+            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
             {
-                theIP = new IPAddress(new byte[] { 0, 0, 0, 0 });
-            }
-        }
-
-        private void Wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
-        {
-            dt.Stop();
-            lock (bitmapLock)
-            {
-                if (e.Error == null && !e.Cancelled)
+                if (item.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 && item.OperationalStatus == OperationalStatus.Up)
                 {
-                    using (MemoryStream mem = new MemoryStream(e.Result))
+                    foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
                     {
-                        try
-                        {//you may have gotten to a website which isn't an image...just ignore it
-                            bitmap1 = (Bitmap)System.Drawing.Image.FromStream(mem);
-                        }
-                        catch
+                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
                         {
+                            byte[] ips = ip.Address.GetAddressBytes();
+                            broadCastAddress = IPAddress.Parse(ips[0] + "." + ips[1] + "." + ips[2] + ".255");
                         }
                     }
+                }
+            }
+
+            serverClient = new UdpClient(serverClientPort);
+            serverClient.Client.ReceiveBufferSize = 10000000;
+
+            clientServer = new UdpClient();
+            clientServer.EnableBroadcast = true;
+
+            Task.Run(() =>
+            {
+                ReceiveFromServer();
+            });
+
+
+        }
+
+        async void GetCameraImage()
+        {
+            if (theIP == null)
+                return;
+
+            if (httpClientBusy)
+                return;
+            try
+            {
+                httpClientBusy = true;
+                var response = await theHttpClient.GetAsync("http://" + theIP);
+                if (response.IsSuccessStatusCode)
+                {
+                    try
+                    {
+                        var theStream = await response.Content.ReadAsByteArrayAsync();
+                        using (var mem = new MemoryStream(theStream))
+                        using (Bitmap bitmap1 = (Bitmap)System.Drawing.Image.FromStream(mem))
+                        {
+                            bitmap1.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                            LoadImage(bitmap1);
+
+                            //for the dialog box display
+                            mem.Position = 0;
+                            theBitmap = new BitmapImage();
+                            theBitmap.BeginInit();
+                            theBitmap.Rotation = Rotation.Rotate270;
+                            theBitmap.StreamSource = mem;
+                            theBitmap.CacheOption = BitmapCacheOption.OnLoad;
+                            theBitmap.EndInit();
+                            theBitmap.Freeze();
+                        }
+                        debugMsgCount = 0;
+                    }
+                    catch
+                    { }
                 }
                 else
                 { }
             }
+            catch (Exception e)
+            {
+                if (debugMsgCount++ < 5)
+                    Debug.WriteLine("ModuleRobotCamera:GetCameraImage encountered exception: " + e.Message);
+                na.GetNeuronAt(0, 0).SetValueInt(0xff0000);
+                theHttpClient.CancelPendingRequests();
+            }
+            httpClientBusy = false;
         }
+        int debugMsgCount = 0;
+        public void ReceiveFromServer()
+        {
+            while (true)
+            {
+                string incomingMessage = "";
+                var from = new IPEndPoint(IPAddress.Any, serverClientPort);
+                var recvBuffer = serverClient.Receive(ref from);
+                incomingMessage += Encoding.UTF8.GetString(recvBuffer);
+                if (incomingMessage == "Camera")
+                {
+                    theIP = from.Address;
+                }
+                Debug.WriteLine("Received from Device: " + from.Address + " " + incomingMessage);
+            }
+        }
+        public void Broadcast(string message)
+        {
+            //Debug.WriteLine("Broadcast: " + message);
+            byte[] datagram = Encoding.UTF8.GetBytes(message);
+            IPEndPoint ipEnd = new IPEndPoint(broadCastAddress, clientServerPort);
+            clientServer.SendAsync(datagram, datagram.Length, ipEnd);
+        }
+
+
         //the following can be used to massage public data to be different in the xml file
         //delete if not needed
         public override void SetUpBeforeSave()
         {
-            theIPString = theIP.ToString();
         }
         public override void SetUpAfterLoad()
         {
+            Init();
             Initialize();
-            if (theIPString != "")
-                theIP = IPAddress.Parse(theIPString);
         }
 
         //called whenever the size of the module rectangle changes
@@ -166,36 +236,6 @@ namespace BrainSimulator.Modules
             if (na == null) return; //this is called the first time before the module actually exists
             foreach (Neuron n in na.Neurons1)
                 n.Model = Neuron.modelType.Color;
-        }
-
-        public override MenuItem GetCustomMenuItems()
-        {
-            StackPanel s2 = new StackPanel { Orientation = Orientation.Vertical };
-
-            StackPanel s = new StackPanel { Orientation = Orientation.Horizontal };
-            s.Children.Add(new Label { Content = "IP:", Width = 60, HorizontalContentAlignment = HorizontalAlignment.Right });
-            TextBox tb1 = new TextBox { Name = "x", Width = 100, Height = 20, Text = theIP.ToString() };
-            tb1.TextChanged += Tb1_TextChanged;
-            s.Children.Add(tb1);
-            s2.Children.Add(s);
-
-            return new MenuItem { Header = s2, StaysOpenOnClick = true };
-        }
-
-        private void Tb1_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (sender is TextBox tb)
-            {
-                try
-                {
-                    theIP = IPAddress.Parse(tb.Text);
-                    tb.Background = new SolidColorBrush(Colors.LightGreen);
-                }
-                catch
-                {
-                    tb.Background = new SolidColorBrush(Colors.Pink);
-                }
-            }
         }
     }
 }

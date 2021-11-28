@@ -310,6 +310,7 @@ namespace BrainSimulator
                                 {
                                     if (l is Shape s && s.Fill is SolidColorBrush b && b.Color == Colors.White)
                                         lbl.Foreground = new SolidColorBrush(Colors.Black);
+                                    lbl.SetValue(ShapeType, shapeType.Neuron);
                                     labelCanvas.Children.Add(lbl);
                                 }
 

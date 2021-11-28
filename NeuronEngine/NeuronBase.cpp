@@ -309,7 +309,7 @@ namespace NeuronEngine
 			NeuronArrayBase::AddNeuronToFireList1(id);
 			return true;
 		}
-		if (model == modelType::FloatValue) return false;
+		//if (model == modelType::FloatValue) return false;
 		if (model == modelType::Always)
 		{
 			nextFiring--;
@@ -360,7 +360,7 @@ namespace NeuronEngine
 		}
 
 		//check for firing
-		if (currentCharge < 0)currentCharge = 0;
+		if (model != modelType::FloatValue && currentCharge < 0)currentCharge = 0;
 		if (currentCharge != lastCharge)
 		{
 			lastCharge = currentCharge;
@@ -403,8 +403,9 @@ namespace NeuronEngine
 				if (newNormal < 1) newNormal = 1;
 				nextFiring = (int)newNormal;
 			}
+			if (model != modelType::FloatValue)
+				currentCharge = 0;
 			lastFired = cycle;
-			currentCharge = 0;
 			return true;
 		}
 		if (model == modelType::LIF)

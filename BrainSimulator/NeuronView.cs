@@ -127,7 +127,7 @@ namespace BrainSimulator
             float value = n.LastCharge;
             Color c = Utils.RainbowColorFromValue(value);
             SolidColorBrush s1 = new SolidColorBrush(c);
-            if (!n.inUse && n.Model == Neuron.modelType.IF)
+            if (!n.inUse && n.Model == Neuron.modelType.IF && n.Label =="")
                 s1.Opacity = .50;
             if ((n.leakRate < 0) || float.IsNegativeInfinity(1.0f / n.leakRate))
                 s1 = new SolidColorBrush(Colors.LightSalmon);

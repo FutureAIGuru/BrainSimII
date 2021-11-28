@@ -20,9 +20,9 @@ using System.Windows.Threading;
 
 namespace BrainSimulator.Modules
 {
-    public partial class $safeitemname$ : ModuleBaseDlg
+    public partial class ModuleRobotCameraDlg : ModuleBaseDlg
     {
-        public $safeitemname$()
+        public ModuleRobotCameraDlg()
         {
             InitializeComponent();
         }
@@ -34,7 +34,7 @@ namespace BrainSimulator.Modules
             //only updates 10x per second
 
             //use a line like this to gain access to the parent's public variables
-            //ModuleEmpty parent = (ModuleEmpty)base.ParentModule;
+            ModuleRobotCamera parent = (ModuleRobotCamera)base.ParentModule;
 
             //here are some other possibly-useful items
             //theCanvas.Children.Clear();
@@ -42,6 +42,13 @@ namespace BrainSimulator.Modules
             //Point windowCenter = new Point(windowSize.X / 2, windowSize.Y / 2);
             //float scale = (float)Math.Min(windowSize.X, windowSize.Y) / 12;
             //if (scale == 0) return false;
+
+
+            try
+            {
+                theImage.Source = parent.theBitmap;
+            }
+            catch { }
 
             return true;
         }

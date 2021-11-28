@@ -88,7 +88,11 @@ namespace BrainSimulator
                             Application.Current.Dispatcher.Invoke((Action)delegate
                             {
                                 long dStart = Utils.GetPreciseTime();
-                                theNeuronArrayView.UpdateNeuronColors();
+                                if (!fullUpdateNeeded)
+                                    theNeuronArrayView.UpdateNeuronColors();
+                                else
+                                    theNeuronArrayView.Update();
+                                fullUpdateNeeded = false;
                                 long dEnd = Utils.GetPreciseTime();
                                 displayElapsed = dEnd - dStart;
                             });

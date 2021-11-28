@@ -140,6 +140,7 @@
     <Compile Include="ModuleDescription.xaml.cs">
       <DependentUpon>ModuleDescription.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\ModuleRobotManual.cs" />
     <Compile Include="Modules\KMeansClustering.cs" />
     <Compile Include="Modules\ModuleAssociation.cs" />
     <Compile Include="Modules\ModuleAttention.cs" />
@@ -178,8 +179,23 @@
     <Compile Include="Modules\ModuleRateDecoder2.cs" />
     <Compile Include="Modules\ModuleRateDecoder.cs" />
     <Compile Include="Modules\ModuleRateDecoder3.cs" />
+    <Compile Include="Modules\ModuleRobotOLD.cs" />
     <Compile Include="Modules\ModuleRobot.cs" />
+    <Compile Include="Modules\ModuleRobotAction.cs" />
+    <Compile Include="Modules\ModuleRobotActionDlg.xaml.cs">
+      <DependentUpon>ModuleRobotActionDlg.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\ModuleRobotPoseDlg.xaml.cs">
+      <DependentUpon>ModuleRobotPoseDlg.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\ModuleRobotDlg.xaml.cs">
+      <DependentUpon>ModuleRobotDlg.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\ModuleRobotCamera.cs" />
+    <Compile Include="Modules\ModuleRobotCameraDlg.xaml.cs">
+      <DependentUpon>ModuleRobotCameraDlg.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\ModuleRobotPose.cs" />
     <Compile Include="Modules\ModuleShortTermMemory.cs" />
     <Compile Include="Modules\ModuleEvent.cs" />
     <Compile Include="Modules\ModuleFireOldest.cs" />
@@ -330,6 +346,22 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Modules\ModuleImageFileDlg.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\ModuleRobotActionDlg.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\ModuleRobotPoseDlg.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\ModuleRobotDlg.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\ModuleRobotCameraDlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

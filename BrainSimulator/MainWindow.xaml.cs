@@ -515,12 +515,20 @@ namespace BrainSimulator
             thisWindow.SetStatus(2, displayStatus, 0);
         }
 
+        static bool fullUpdateNeeded = false;
         public static void Update()
         {
-            Application.Current.Dispatcher.Invoke((Action)delegate
+            if (thisWindow.IsEngineSuspended())
             {
-                arrayView.Update();
-            });
+                Application.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    arrayView.Update();
+                });
+            }
+            else
+            {
+                fullUpdateNeeded = true;
+            }
         }
 
         public static void CloseAllModuleDialogs()

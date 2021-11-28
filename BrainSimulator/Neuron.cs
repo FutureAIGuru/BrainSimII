@@ -76,6 +76,7 @@ namespace BrainSimulator
             get
             {
                 string theLabel = ownerArray.GetLabelFromCache(Id);
+                if (theLabel == null) theLabel = "";
                 if (theLabel != "")
                 {
                     int tooltipStart = theLabel.IndexOf(toolTipSeparator);
@@ -102,10 +103,7 @@ namespace BrainSimulator
                 //changing a label forces a neuron to update on the screen even if it is not inUse
                 if (label != "")
                 {
-                    Application.Current.Dispatcher.Invoke((Action)delegate
-                       {
-                           MainWindow.arrayView.AddNeuronToUpdateList(id);
-                       });
+                    MainWindow.Update();
                 }
             }
         }
@@ -114,6 +112,7 @@ namespace BrainSimulator
             get
             {
                 string theToolTip = ownerArray.GetLabelFromCache(Id);
+                if (theToolTip == null) theToolTip = "";
                 int tooltipStart = theToolTip.IndexOf(toolTipSeparator);
                 if (tooltipStart != -1)
                     theToolTip = theToolTip.Substring(tooltipStart + toolTipSeparator.Length);

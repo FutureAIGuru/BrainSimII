@@ -38,12 +38,13 @@ namespace SetupFirewall
             {
                 if (!Confirm("Administrative privelage is needed")) return;
 
+
                 var proc = new ProcessStartInfo();
                 proc.UseShellExecute = true;
                 proc.WorkingDirectory = Environment.CurrentDirectory;
-                proc.FileName = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                proc.FileName = System.Reflection.Assembly.GetExecutingAssembly().Location.Replace("dll","exe");
                 proc.Verb = "runas";
-
+                
                 try
                 {
                     Process.Start(proc);
@@ -77,7 +78,7 @@ namespace SetupFirewall
                             theRule = firewallPolicy.Rules.Item(theName[i]);
                         }
                     }
-                    catch 
+                    catch
                     {
                         //get here if the rule doesn't exist
                     }
@@ -114,7 +115,7 @@ namespace SetupFirewall
             }
             catch (Exception e)
             {
-                Console.Write("Failed because: "+e.Message +"press any key");
+                Console.Write("Failed because: " + e.Message + "press any key");
                 Console.ReadKey();
             }
         }

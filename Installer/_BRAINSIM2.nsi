@@ -113,8 +113,9 @@ Section
 	# Set the INSTALLSIZE constant (!defined at the top of this script) so Add/Remove Programs can accurately report the size
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANY_NAME} ${APP_NAME}" "EstimatedSize" ${INSTALLSIZE}  
     createShortCut "$SMPROGRAMS\${COMPANY_NAME}\Uninstall Brain Simulator II.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\unicon.ico"
-    File /oname=$INSTDIR\SetupFirewall.exe "..\BrainSimulator\bin\x64\${BUILD_TYPE}\SetupFirewall.exe"
-    File /oname=$INSTDIR\SetupFirewall.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\SetupFirewall.pdb"
+    File /oname=$INSTDIR\SetupFirewall.exe "..\BrainSimulator\bin\release\net6.0-windows\SetupFirewall.exe"
+    File /oname=$INSTDIR\SetupFirewall.dll "..\BrainSimulator\bin\release\net6.0-windows\SetupFirewall.dll"
+    File /oname=$INSTDIR\SetupFirewall.runtimeconfig.json "..\BrainSimulator\bin\release\net6.0-windows\SetupFirewall.runtimeconfig.json"
     createShortCut "$SMPROGRAMS\${COMPANY_NAME}\Setup Firewall.lnk" "$INSTDIR\SetupFirewall.exe" "" "$INSTDIR\bsicon.ico"
 SectionEnd
 
@@ -122,16 +123,17 @@ Section    "Brain Simulator II" BRAINSIM2
 	SetShellVarContext current
 
     File /oname=$INSTDIR\bsicon.ico "bsicon.ico"
-    File /oname=$INSTDIR\BrainSimulator.exe "..\BrainSimulator\bin\x64\${BUILD_TYPE}\BrainSimulator.exe"
-    File /oname=$INSTDIR\BrainSimulator.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\BrainSimulator.pdb"
-    File /oname=$INSTDIR\NeuronEngine.dll "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngine.dll"
-    File /oname=$INSTDIR\NeuronEngine.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngine.pdb"
-    File /oname=$INSTDIR\NeuronEngineWrapper.dll "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngineWrapper.dll"
-    File /oname=$INSTDIR\NeuronEngineWrapper.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngineWrapper.pdb"
-    File /oname=$INSTDIR\WebCamLib.dll "..\BrainSimulator\bin\x64\${BUILD_TYPE}\WebCamLib.dll"
-    File /oname=$INSTDIR\WebCamLib.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\WebCamLib.pdb"
-    File /oname=$INSTDIR\Touchless.Vision.dll "..\BrainSimulator\bin\x64\${BUILD_TYPE}\Touchless.Vision.dll"
-    File /oname=$INSTDIR\Touchless.Vision.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\Touchless.Vision.pdb"
+    File /oname=$INSTDIR\BrainSimulator.exe "..\BrainSimulator\bin\release\net6.0-windows\BrainSimulator.exe"
+    File /oname=$INSTDIR\BrainSimulator.dll "..\BrainSimulator\bin\release\net6.0-windows\BrainSimulator.dll"
+    File /oname=$INSTDIR\BrainSimulator.runtimeconfig.json "..\BrainSimulator\bin\release\net6.0-windows\BrainSimulator.runtimeconfig.json"
+    File /oname=$INSTDIR\NeuronEngine.dll "..\BrainSimulator\bin\release\net6.0-windows\NeuronEngine.dll"
+#    File /oname=$INSTDIR\NeuronEngine.pdb "..\BrainSimulator\bin\release\net6.0-windows\NeuronEngine.pdb"
+    File /oname=$INSTDIR\NeuronEngineWrapper.dll "..\BrainSimulator\bin\release\net6.0-windows\NeuronEngineWrapper.dll"
+#    File /oname=$INSTDIR\NeuronEngineWrapper.pdb "..\BrainSimulator\bin\release\net6.0-windows\NeuronEngineWrapper.pdb"
+#    File /oname=$INSTDIR\WebCamLib.dll "..\BrainSimulator\bin\release\net6.0-windows\WebCamLib.dll"
+#    File /oname=$INSTDIR\WebCamLib.pdb "..\BrainSimulator\bin\release\net6.0-windows\WebCamLib.pdb"
+#    File /oname=$INSTDIR\Touchless.Vision.dll "..\BrainSimulator\bin\release\net6.0-windows\Touchless.Vision.dll"
+#    File /oname=$INSTDIR\Touchless.Vision.pdb "..\BrainSimulator\bin\release\net6.0-windows\Touchless.Vision.pdb"
     createShortCut "$DESKTOP\Brain Simulator.lnk" "$INSTDIR\BrainSimulator.exe" "" "$INSTDIR\bsicon.ico"
     createShortCut "$SMPROGRAMS\${COMPANY_NAME}\Brain Simulator.lnk" "$INSTDIR\BrainSimulator.exe" "" "$INSTDIR\bsicon.ico"
 	${registerExtension} "$INSTDIR\BrainSimulator.exe" ".xml" "XML File"
@@ -140,24 +142,24 @@ SectionEnd
 Section "NeuronServer" NEURONSERVER
 	SetShellVarContext current
     File /oname=$INSTDIR\nsicon.ico "nsicon.ico"
-    File /oname=$INSTDIR\NeuronServer.exe "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronServer.exe"
-    File /oname=$INSTDIR\NeuronEngine.dll "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngine.dll"
-    File /oname=$INSTDIR\NeuronEngine.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngine.pdb"
-    File /oname=$INSTDIR\NeuronEngineWrapper.dll "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngineWrapper.dll"
-    File /oname=$INSTDIR\NeuronEngineWrapper.pdb "..\BrainSimulator\bin\x64\${BUILD_TYPE}\NeuronEngineWrapper.pdb"
+    File /oname=$INSTDIR\NeuronServer.exe "..\BrainSimulator\bin\release\net6.0-windows\NeuronServer.exe"
+    File /oname=$INSTDIR\NeuronServer.dll "..\BrainSimulator\bin\release\net6.0-windows\NeuronServer.dll"
+    File /oname=$INSTDIR\NeuronServer.runtimeconfig.json "..\BrainSimulator\bin\release\net6.0-windows\NeuronServer.runtimeconfig.json"
+    File /oname=$INSTDIR\NeuronEngine.dll "..\BrainSimulator\bin\release\net6.0-windows\NeuronEngine.dll"
+    File /oname=$INSTDIR\SetupFirewall.exe "..\BrainSimulator\bin\release\net6.0-windows\SetupFirewall.exe"
+    File /oname=$INSTDIR\SetupFirewall.dll "..\BrainSimulator\bin\release\net6.0-windows\SetupFirewall.dll"
+    File /oname=$INSTDIR\SetupFirewall.runtimeconfig.json "..\BrainSimulator\bin\release\net6.0-windows\SetupFirewall.runtimeconfig.json"
+#    File /oname=$INSTDIR\NeuronEngine.pdb "..\BrainSimulator\bin\release\net6.0-windows\NeuronEngine.pdb"
+    File /oname=$INSTDIR\NeuronEngineWrapper.dll "..\BrainSimulator\bin\release\net6.0-windows\NeuronEngineWrapper.dll"
+#    File /oname=$INSTDIR\NeuronEngineWrapper.pdb "..\BrainSimulator\bin\release\net6.0-windows\NeuronEngineWrapper.pdb"
     createShortCut "$DESKTOP\Neuron Server.lnk" "$INSTDIR\NeuronServer.exe" "" "$INSTDIR\nsicon.ico"
     createShortCut "$SMPROGRAMS\${COMPANY_NAME}\Neuron Server.lnk" "$INSTDIR\NeuronServer.exe" "" "$INSTDIR\nsicon.ico"
 SectionEnd
 
-Section "EngineTest" ENGINETEST
-	SetShellVarContext current
-
-SectionEnd
 
 Section "Network Examples" NETWORKEXAMPLES
 	SetShellVarContext current
-
-    File /r /x /oname=$INSTDIR\Networks ..\BrainSimulator\bin\x64\${BUILD_TYPE}\Networks
+    File /r /x /oname=$INSTDIR\Networks ..\BrainSimulator\bin\release\net6.0-windows\Networks
 SectionEnd
 
 !macro VerifyUserIsAdmin
@@ -178,9 +180,6 @@ Function ComponentsLeave
     ${If} ${SectionIsSelected} ${NEURONSERVER}
         StrCpy $R1 1
     ${EndIf}
-    ${If} ${SectionIsSelected} ${ENGINETEST}
-        StrCpy $R1 1
-    ${EndIf}
     ${Unless} $R1 == 1	
         MessageBox MB_OK "Please select at least one component"
         Abort
@@ -198,26 +197,30 @@ section "uninstall"
 	# Remove files
     delete $INSTDIR\bsicon.ico
     delete $INSTDIR\SetupFirewall.exe
-    delete $INSTDIR\SetupFirewall.pdb
+    delete $INSTDIR\SetupFirewall.dll
+    delete $INSTDIR\SetupFirewall.runtimeconfig.json
     delete $INSTDIR\BrainSimulator.exe
-    delete $INSTDIR\BrainSimulator.pdb
+    delete $INSTDIR\BrainSimulator.dll
+    delete $INSTDIR\BrainSimulator.runtimeconfig.json
     delete $INSTDIR\NeuronEngine.dll
-    delete $INSTDIR\NeuronEngine.pdb
+#    delete $INSTDIR\NeuronEngine.pdb
     delete $INSTDIR\NeuronEngineWrapper.dll
-    delete $INSTDIR\NeuronEngineWrapper.pdb
+#    delete $INSTDIR\NeuronEngineWrapper.pdb
     delete $INSTDIR\nsicon.ico
     delete $INSTDIR\NeuronServer.exe
+    delete $INSTDIR\NeuronServer.dll
+    delete $INSTDIR\NeuronServer.runtimeconfig.json
     delete $INSTDIR\NeuronEngine.dll
-    delete $INSTDIR\NeuronEngine.pdb
+#    delete $INSTDIR\NeuronEngine.pdb
     delete $INSTDIR\NeuronEngineWrapper.dll
-    delete $INSTDIR\NeuronEngineWrapper.pdb
-    delete $INSTDIR\WebCamLib.dll
-    delete $INSTDIR\WebCamLib.pdb
-    delete $INSTDIR\Touchless.Vision.dll
-    delete $INSTDIR\Touchless.Vision.pdb
+#    delete $INSTDIR\NeuronEngineWrapper.pdb
+#    delete $INSTDIR\WebCamLib.dll
+#    delete $INSTDIR\WebCamLib.pdb
+#    delete $INSTDIR\Touchless.Vision.dll
+#    delete $INSTDIR\Touchless.Vision.pdb
     delete $INSTDIR\unicon.ico
     delete $INSTDIR\Networks\*.*
-    RMDIR $INSTDIR\Networks
+    RMDIR /r $INSTDIR\Networks
 
 	# Remove Start Menu launchers
 	delete "$DESKTOP\Brain Simulator.lnk"

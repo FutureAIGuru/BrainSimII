@@ -119,10 +119,7 @@ namespace BrainSimulator
         public static bool Load()
         {
             Stream file;
-            RegistryKey regKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\FutureAI Brain Simulator II");
-            string location = regKey.GetValue("InstallLocation").ToString();
-            location = location.Substring(1, location.Length - 2);
-            location = AppDomain.CurrentDomain.BaseDirectory;
+            string location = AppDomain.CurrentDomain.BaseDirectory;
             location += "\\Networks\\ModuleDescriptions.xml";
             file = File.Open(location, FileMode.Open, FileAccess.Read);
             try

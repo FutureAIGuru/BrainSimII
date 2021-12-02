@@ -75,6 +75,8 @@ namespace BrainSimulator.Modules
             // Add a handler for the speech recognized event.  
             recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(Recognizer_SpeechRecognized);
 
+            recognizer.SpeechDetected += Recognizer_SpeechDetected;
+
             // Configure input to the speech recognizer.  
             try
             {
@@ -87,6 +89,11 @@ namespace BrainSimulator.Modules
             }
             //// Start asynchronous, continuous speech recognition.  
             recognizer.RecognizeAsync(RecognizeMode.Multiple);
+        }
+
+        private void Recognizer_SpeechDetected(object sender, SpeechDetectedEventArgs e)
+        {
+            //throw new NotImplementedException();
         }
 
         private void CreateGrammar()
@@ -139,8 +146,8 @@ namespace BrainSimulator.Modules
 
             GrammarBuilder a = new GrammarBuilder();
             a.Append(attentionWord, 1, 1);
-            a.Append(commands);
-            a.Append(digit);
+            //a.Append(commands);
+            a.Append(digit,0,5);
 
 
             //some words we might need some day
@@ -242,17 +249,17 @@ namespace BrainSimulator.Modules
                 if (word.ToLower() != "sallie" && word.ToLower() != "computer")
                     words.Add(word.ToLower());
             }
-            ModuleHearWords nmHear = (ModuleHearWords)FindModuleByType(typeof(ModuleHearWords));
-            if (nmHear != null)
-            {
-                String phrase = e.Result.Text;
-                if (e.Result.Words.Count != 1)
-                {
-                    int i = phrase.IndexOf(' ');
-                    phrase = phrase.Substring(i + 1);
-                }
-                nmHear.HearPhrase(phrase);
-            }
+            //ModuleHearWords nmHear = (ModuleHearWords)FindModuleByType(typeof(ModuleHearWords));
+            //if (nmHear != null)
+            //{
+            //    String phrase = e.Result.Text;
+            //    if (e.Result.Words.Count != 1)
+            //    {
+            //        int i = phrase.IndexOf(' ');
+            //        phrase = phrase.Substring(i + 1);
+            //    }
+            //    nmHear.HearPhrase(phrase);
+            //}
         }
 
         public void PauseRecognition()

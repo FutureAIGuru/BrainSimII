@@ -1,520 +1,130 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A9535788-CE97-43CE-90E3-964A1704C0F2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BrainSimulator</RootNamespace>
-    <AssemblyName>BrainSimulator</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>disable</Nullable>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>True</UseWindowsForms>
     <PlatformTarget>x64</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
+    <BaseOutputPath>bin\</BaseOutputPath>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <Version>$(VersionPrefix)</Version>
+    <AssemblyVersion>1.6.0</AssemblyVersion>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>true</Prefer32Bit>
-    <Optimize>false</Optimize>
-    <DocumentationFile>
-    </DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignManifests>false</SignManifests>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ManifestCertificateThumbprint>320590AD04C77B9C9CCD9AD954F16385701CC3A5</ManifestCertificateThumbprint>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ManifestTimestampUrl>http://timestamp.comodoca.com</ManifestTimestampUrl>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="IListExtension, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\IListExtension.1.0.2\lib\netstandard2.0\IListExtension.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.Entity" />
-    <Reference Include="System.Data.Entity.Design" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Speech" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="UIAutomationProvider" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="WindowsFormsIntegration" />
+    <Compile Remove="Tools\**" />
+    <EmbeddedResource Remove="Tools\**" />
+    <None Remove="Tools\**" />
+    <Page Remove="Tools\**" />
   </ItemGroup>
+
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="DisplayParams.cs" />
-    <Compile Include="FiringHistoryWindow.xaml.cs">
-      <DependentUpon>FiringHistoryWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="FiringHistory.cs" />
-    <Compile Include="GetUpdateDialog.xaml.cs">
-      <DependentUpon>GetUpdateDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Help.xaml.cs">
-      <DependentUpon>Help.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="HelpAbout.xaml.cs">
-      <DependentUpon>HelpAbout.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MainWindowEngine.cs" />
-    <Compile Include="MainWindowEventHandlers.cs" />
-    <Compile Include="MainWindowExtension.cs" />
-    <Compile Include="MainWindowFiles.cs" />
-    <Compile Include="ModuleDescription.xaml.cs">
-      <DependentUpon>ModuleDescription.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\ModuleRobotManual.cs" />
-    <Compile Include="Modules\KMeansClustering.cs" />
-    <Compile Include="Modules\ModuleAssociation.cs" />
-    <Compile Include="Modules\ModuleAttention.cs" />
-    <Compile Include="Modules\ModuleBoundaryByNeurons.cs" />
-    <Compile Include="Modules\ModuleBoundary.cs" />
-    <Compile Include="Modules\ModuleBoundaryAreas.cs" />
-    <Compile Include="Modules\ModuleBoundaryColor.cs" />
-    <Compile Include="Modules\ModuleBoundaryDescriptionDlg.xaml.cs">
-      <DependentUpon>ModuleBoundaryDescriptionDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\ModuleBoundaryDescription.cs" />
-    <Compile Include="Modules\ModuleBoundaryKnown.cs" />
-    <Compile Include="Modules\ModuleBoundaryMotion.cs" />
-    <Compile Include="Modules\ModuleBoundaryRelationship.cs" />
-    <Compile Include="Modules\ModuleAssociationDlg.xaml.cs">
-      <DependentUpon>ModuleAssociationDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\ModuleBoundarySegments.cs" />
-    <Compile Include="Modules\ModuleAttentionDlg.xaml.cs">
-      <DependentUpon>ModuleAttentionDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\ModuleBoundarySegmentsDlg.xaml.cs">
-      <DependentUpon>ModuleBoundarySegmentsDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\ModuleBoundaryShapes.cs" />
-    <Compile Include="Modules\ModuleCamera.cs" />
-    <Compile Include="Modules\ModuleCameraDlg.xaml.cs">
-      <DependentUpon>ModuleCameraDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\ModuleChain.cs" />
-    <Compile Include="Modules\ModuleChainCounter.cs" />
-    <Compile Include="Modules\ModuleColorComponent.cs" />
-    <Compile Include="Modules\ModuleImageZoom.cs" />
-    <Compile Include="Modules\ModulePatternRecognizer.cs" />
-    <Compile Include="Modules\ModulePatternGenerator.cs" />
-    <Compile Include="Modules\ModuleRateDecoder2.cs" />
-    <Compile Include="Modules\ModuleRateDecoder.cs" />
-    <Compile Include="Modules\ModuleRateDecoder3.cs" />
-    <Compile Include="Modules\ModuleRobotOLD.cs" />
-    <Compile Include="Modules\ModuleRobot.cs" />
-    <Compile Include="Modules\ModuleRobotAction.cs" />
-    <Compile Include="Modules\ModuleRobotActionDlg.xaml.cs">
-      <DependentUpon>ModuleRobotActionDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\ModuleRobotPoseDlg.xaml.cs">
-      <DependentUpon>ModuleRobotPoseDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\ModuleRobotDlg.xaml.cs">
-      <DependentUpon>ModuleRobotDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\ModuleRobotCamera.cs" />
-    <Compile Include="Modules\ModuleRobotCameraDlg.xaml.cs">
-      <DependentUpon>ModuleRobotCameraDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\ModuleRobotPose.cs" />
-    <Compile Include="Modules\ModuleShortTermMemory.cs" />
-    <Compile Include="Modules\ModuleEvent.cs" />
-    <Compile Include="Modules\ModuleFireOldest.cs" />
-    <Compile Include="Modules\ModuleImageFileDlg.xaml.cs">
-      <DependentUpon>ModuleImageFileDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\ModuleLife.cs" />
-    <Compile Include="Modules\ModuleStrokeCenter.cs" />
-    <Compile Include="Modules\ModuleUKSTest.cs" />
-    <Compile Include="Modules\ModuleWords.cs" />
-    <Compile Include="Modules\ModuleSpeakPhonemes.cs" />
-    <Compile Include="Modules\ModuleSpeakPhonemesDlg.xaml.cs" />
-    <Compile Include="Modules\ModuleUKSN.cs" />
-    <Compile Include="Modules\ModuleUKSDlg.xaml.cs">
-      <DependentUpon>ModuleUKSDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\Module2DModel.cs" />
-    <Compile Include="Modules\Module3DSim.cs" />
-    <Compile Include="Modules\Module3DSimDlg.xaml.cs">
-      <DependentUpon>Module3DSimDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\ModuleArm.cs" />
-    <Compile Include="Modules\Module2DModelDlg.xaml.cs">
-      <DependentUpon>Module2DModelDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\Module2DSimDlg.xaml.cs">
-      <DependentUpon>Module2DSimDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\ModuleBase.cs" />
-    <Compile Include="Modules\ModuleBaseDlg.cs" />
-    <Compile Include="Modules\ModuleCommand.cs" />
-    <Compile Include="Modules\ModuleCommandDlg.xaml.cs">
-      <DependentUpon>ModuleCommandDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\Module2DSim.cs" />
-    <Compile Include="Modules\Module2DSmell.cs" />
-    <Compile Include="Modules\Module2DTouch.cs" />
-    <Compile Include="Modules\Module2DVision.cs" />
-    <Compile Include="Modules\ModuleBehavior.cs" />
-    <Compile Include="Modules\ModuleUKS.cs" />
-    <Compile Include="Modules\ModuleMoveObject.cs" />
-    <Compile Include="Modules\ModuleNavigate.cs" />
-    <Compile Include="Modules\ModuleHearWords.cs" />
-    <Compile Include="Modules\ModuleImageFile.cs" />
-    <Compile Include="Modules\ModuleKBDebug.cs" />
-    <Compile Include="Modules\ModuleKBDebugDlg.xaml.cs">
-      <DependentUpon>ModuleKBDebugDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\ModuleMotor.cs" />
-    <Compile Include="Modules\ModuleNull.cs" />
-    <Compile Include="Modules\ModuleRealityModel.cs" />
-    <Compile Include="Modules\ModuleSpeakWords.cs" />
-    <Compile Include="NeuronArrayViewMouseActions.cs" />
-    <Compile Include="SelectionView.cs" />
-    <Compile Include="ModuleViewMenu.cs" />
-    <Compile Include="Modules\ModuleGoToDest.cs" />
-    <Compile Include="Modules\ModuleGraph.cs" />
-    <Compile Include="Modules\ModuleMove.cs" />
-    <Compile Include="Modules\ModuleSpeechIn.cs" />
-    <Compile Include="Modules\ModuleSpeechOut.cs" />
-    <Compile Include="Modules\ModuleTurn.cs" />
-    <Compile Include="Modules\PointPlus.cs" />
-    <Compile Include="Modules\Thing.cs" />
-    <Compile Include="NeuronArrayUndo.cs" />
-    <Compile Include="NeuronArrayViewClipBoard.cs" />
-    <Compile Include="ModuleView.cs" />
-    <Compile Include="NeuronArray.cs" />
-    <Compile Include="NeuronArrayView.xaml.cs">
-      <DependentUpon>NeuronArrayView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="NeuronArrayViewMouse.cs" />
-    <Compile Include="NeuronArrayViewZoomPan.cs" />
-    <Compile Include="NeuronClient.cs" />
-    <Compile Include="NeuronHandler.cs" />
-    <Compile Include="Selection.cs" />
-    <Compile Include="SelectionRectangle.cs" />
-    <Compile Include="NeuronViewMenu.cs" />
-    <Compile Include="NeuronView.cs" />
-    <Compile Include="NewArrayDlg.xaml.cs">
-      <DependentUpon>NewArrayDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="NotesDialog.xaml.cs">
-      <DependentUpon>NotesDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ProgressDialog.xaml.cs">
-      <DependentUpon>ProgressDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="PropertiesDlg.xaml.cs">
-      <DependentUpon>PropertiesDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SplashScreen.xaml.cs">
-      <DependentUpon>SplashScreen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Synapse.cs" />
-    <Compile Include="SynapseView.cs" />
-    <Compile Include="Utils.cs" />
-    <Compile Include="XmlFile.cs" />
-    <Page Include="FiringHistoryWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GetUpdateDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Help.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="HelpAbout.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="ModuleDescription.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Modules\ModuleAttentionDlg.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Modules\ModuleBoundaryDescriptionDlg.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Modules\ModuleAssociationDlg.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Modules\ModuleBoundarySegmentsDlg.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Modules\ModuleCameraDlg.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Modules\ModuleImageFileDlg.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Modules\ModuleRobotActionDlg.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Modules\ModuleRobotPoseDlg.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Modules\ModuleRobotDlg.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Modules\ModuleRobotCameraDlg.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Modules\ModuleSpeakPhonemesDlg.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Modules\ModuleUKSDlg.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Modules\Module3DSimDlg.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Modules\Module2DModelDlg.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Modules\Module2DSimDlg.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Modules\ModuleCommandDlg.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Modules\ModuleKBDebugDlg.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="NeuronArrayView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="NewArrayDlg.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="NotesDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ProgressDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="PropertiesDlg.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="SplashScreen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <None Remove="Networks\3DSim.xml" />
+    <None Remove="Networks\BabyTalk.xml" />
+    <None Remove="Networks\BasicNeurons.xml" />
+    <None Remove="Networks\ColorIdentifier.xml" />
+    <None Remove="Networks\Commands.txt" />
+    <None Remove="Networks\GameOfLife.xml" />
+    <None Remove="Networks\HebbianSynapses.xml" />
+    <None Remove="Networks\Imagination.xml" />
+    <None Remove="Networks\Maze.xml" />
+    <None Remove="Networks\ModuleDescriptions.xml" />
+    <None Remove="Networks\NeuralGraph.xml" />
+    <None Remove="Networks\ObjectMotion.xml" />
+    <None Remove="Networks\Perception.xml" />
+    <None Remove="Networks\Sallie.xml" />
+    <None Remove="Networks\SimVision.xml" />
+    <None Remove="Networks\SpeechTest.xml" />
+    <None Remove="Networks\TestData\Blank.png" />
+    <None Remove="Networks\TestData\ColorVariation\Blue rectangle.png" />
+    <None Remove="Networks\TestData\ColorVariation\Red rectangle 1.png" />
+    <None Remove="Networks\TestData\ColorVariation\Red rectangle 2.png" />
+    <None Remove="Networks\TestData\ColorVariation\White triangle.png" />
+    <None Remove="Networks\TestData\Motion\1 One Triangle.png" />
+    <None Remove="Networks\TestData\Motion\2 two triangles .png" />
+    <None Remove="Networks\TestData\Motion\3 Three triangle.png" />
+    <None Remove="Networks\TestData\Motion\4 Three triangle Center Moved.png" />
+    <None Remove="Networks\TestData\Motion\Three triangle %28R1%29.png" />
+    <None Remove="Networks\TestData\Motion\Three triangle %28Z1%29.png" />
+    <None Remove="Networks\TestData\Relationships\1.png" />
+    <None Remove="Networks\TestData\Relationships\1.txt" />
+    <None Remove="Networks\TestData\Relationships\2.png" />
+    <None Remove="Networks\TestData\Relationships\2.txt" />
+    <None Remove="Networks\TestData\Relationships\3.png" />
+    <None Remove="Networks\TestData\Relationships\3.txt" />
+    <None Remove="Networks\TestData\Relationships\4.png" />
+    <None Remove="Networks\TestData\Relationships\4.txt" />
+    <None Remove="Networks\TestData\Relationships\5.png" />
+    <None Remove="Networks\TestData\Relationships\5.txt" />
+    <None Remove="Networks\TestData\Relationships\6.png" />
+    <None Remove="Networks\TestData\Relationships\6.txt" />
+    <None Remove="Networks\TestData\Relationships\8.png" />
+    <None Remove="Networks\TestData\Relationships\8.txt" />
+    <None Remove="Networks\TestData\Relationships\9.png" />
+    <None Remove="Networks\TestData\Relationships\9.txt" />
+    <None Remove="Networks\TestData\Relationships\two triangles %28blue%29.png" />
+    <None Remove="Networks\TestData\Relationships\two triangles %28blue%29.txt" />
+    <None Remove="Networks\TestData\Relationships\two triangles.png" />
+    <None Remove="Networks\TestData\Relationships\two triangles.txt" />
+    <None Remove="Networks\TestData\ShapeTest\1.png" />
+    <None Remove="Networks\TestData\ShapeTest\2.png" />
+    <None Remove="Networks\TestData\ShapeTest\3.png" />
+    <None Remove="Networks\TestData\ShapeTest\4.png" />
+    <None Remove="Networks\TestData\ShapeTest\5.png" />
+    <None Remove="Networks\TestData\SingleShapes\Blue Line.png" />
+    <None Remove="Networks\TestData\SingleShapes\Blue rectangle.png" />
+    <None Remove="Networks\TestData\SingleShapes\Blue square.png" />
+    <None Remove="Networks\TestData\SingleShapes\Blue triangle.png" />
+    <None Remove="Networks\TestData\SingleShapes\Red Line.png" />
+    <None Remove="Networks\TestData\SingleShapes\Red rectangle.png" />
+    <None Remove="Networks\TestData\SingleShapes\Red square.png" />
+    <None Remove="Networks\TestData\SingleShapes\Red triangle.png" />
+    <None Remove="Networks\TestData\SingleShapes\Yellow Line.png" />
+    <None Remove="Networks\TestData\SingleShapes\Yellow rectangle.png" />
+    <None Remove="Networks\TestData\SingleShapes\Yellow square.png" />
+    <None Remove="Networks\TestData\SingleShapes\Yellow triangle.png" />
+    <None Remove="Resources\charactergrowfont.png" />
+    <None Remove="Resources\charactershrinkfont.png" />
+    <None Remove="Resources\ClearHistory.png" />
+    <None Remove="Resources\Close.png" />
+    <None Remove="Resources\diskette.png" />
+    <None Remove="Resources\Entity.png" />
+    <None Remove="Resources\facebook-3-24.ico" />
+    <None Remove="Resources\FullScreen.png" />
+    <None Remove="Resources\github-9-24.ico" />
+    <None Remove="Resources\Hand.png" />
+    <None Remove="Resources\Icons\Copy_16x.png" />
+    <None Remove="Resources\Icons\Cut_16x.png" />
+    <None Remove="Resources\Icons\Hand.png" />
+    <None Remove="Resources\Icons\NewFile_16x.png" />
+    <None Remove="Resources\Icons\OpenFile_16x.png" />
+    <None Remove="Resources\Icons\Paste_16x.png" />
+    <None Remove="Resources\Icons\Pause_16x.png" />
+    <None Remove="Resources\Icons\QuickFind_16x.png" />
+    <None Remove="Resources\Icons\SaveAs_16x.png" />
+    <None Remove="Resources\Icons\Save_16x.png" />
+    <None Remove="Resources\Icons\SelectAll_16x.png" />
+    <None Remove="Resources\Icons\Undo_16x.png" />
+    <None Remove="Resources\Icons\ZoomIn_16x.png" />
+    <None Remove="Resources\Icons\ZoomOriginalSize_16x.png" />
+    <None Remove="Resources\Icons\ZoomOut_16x.png" />
+    <None Remove="Resources\mailing-list-icon-17.jpg" />
+    <None Remove="Resources\Pause.png" />
+    <None Remove="Resources\Play.png" />
+    <None Remove="Resources\Record.png" />
+    <None Remove="Resources\Rewind.png" />
+    <None Remove="Resources\Step.png" />
+    <None Remove="Resources\youtube-24.ico" />
+    <None Remove="Resources\ZoomIn.png" />
+    <None Remove="Resources\ZoomOut.png" />
+    <None Remove="Smoothed_Splash.bmp" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Neuron.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <AppDesigner Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="favicon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Pause.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Step.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Play.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Rewind.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Hand.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\FullScreen.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NeuronEngineWrapper\NeuronEngineWrapper.vcxproj">
-      <Project>{958ded44-be0d-429c-8957-042bbffa5096}</Project>
-      <Name>NeuronEngineWrapper</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NeuronServer\NeuronServer.csproj">
-      <Project>{1a69ebdd-f997-436e-a21e-b536050c5221}</Project>
-      <Name>NeuronServer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WebCamWrapper\WebCamWrapper.csproj">
-      <Project>{cc5d5149-0092-4508-ac34-2abe1468a1c9}</Project>
-      <Name>WebCamWrapper</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Entity.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Record.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Close.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\ClearHistory.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\ZoomIn.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\ZoomOut.png" />
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="favicon.ico" />
     <Content Include="Networks\3DSim.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -524,19 +134,46 @@
     <Content Include="Networks\BasicNeurons.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Networks\ColorIdentifier.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\Commands.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\GameOfLife.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\HebbianSynapses.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\Imagination.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\Maze.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\ModuleDescriptions.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\NeuralGraph.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\ObjectMotion.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\Perception.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\Sallie.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\SimVision.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\SpeechTest.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Networks\TestData\Blank.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\ColorVariation\Blue rectangle.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\ColorVariation\Red rectangle 1.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\ColorVariation\Red rectangle 2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\ColorVariation\White triangle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Networks\TestData\Motion\1 One Triangle.png">
@@ -551,10 +188,10 @@
     <Content Include="Networks\TestData\Motion\4 Three triangle Center Moved.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Networks\TestData\Motion\Three triangle %28R1%29.png">
+    <Content Include="Networks\TestData\Motion\Three triangle (R1).png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Networks\TestData\Motion\Three triangle %28Z1%29.png">
+    <Content Include="Networks\TestData\Motion\Three triangle (Z1).png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Networks\TestData\Relationships\1.png">
@@ -605,31 +242,16 @@
     <Content Include="Networks\TestData\Relationships\9.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Networks\TestData\Relationships\two triangles %28blue%29.png">
+    <Content Include="Networks\TestData\Relationships\two triangles (blue).png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Networks\TestData\Relationships\two triangles %28blue%29.txt">
+    <Content Include="Networks\TestData\Relationships\two triangles (blue).txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Networks\TestData\Relationships\two triangles.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Networks\TestData\Relationships\two triangles.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\ShapeTest\1.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\ShapeTest\2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\ShapeTest\3.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\ShapeTest\4.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\ShapeTest\5.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Networks\TestData\SingleShapes\Blue Line.png">
@@ -668,100 +290,113 @@
     <Content Include="Networks\TestData\SingleShapes\Yellow triangle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Resource Include="Resources\youtube-24.ico" />
-    <Resource Include="Resources\github-9-24.ico" />
-    <Resource Include="Smoothed_Splash.bmp" />
-    <Resource Include="Resources\Icons\ZoomOriginalSize_16x.png" />
-    <Resource Include="Resources\Icons\QuickFind_16x.png" />
-    <Resource Include="Resources\Icons\SelectAll_16x.png" />
-    <Resource Include="Resources\Icons\Paste_16x.png" />
-    <Resource Include="Resources\Icons\Copy_16x.png" />
-    <Resource Include="Resources\Icons\Cut_16x.png" />
-    <Resource Include="Resources\Icons\Hand.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Icons\NewFile_16x.png" />
-    <Resource Include="Resources\Icons\OpenFile_16x.png" />
-    <Resource Include="Resources\Icons\Undo_16x.png" />
-    <Resource Include="Resources\Icons\Save_16x.png" />
-    <Resource Include="Resources\Icons\ZoomOut_16x.png" />
-    <Resource Include="Resources\Icons\ZoomIn_16x.png" />
-    <Resource Include="Resources\Icons\Pause_16x.png" />
-    <Resource Include="Resources\Icons\SaveAs_16x.png" />
-    <Resource Include="Resources\mailing-list-icon-17.jpg" />
   </ItemGroup>
+
   <ItemGroup>
-    <Content Include="Networks\ColorIdentifier.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\Commands.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <ProjectReference Include="..\NeuronEngineWrapper\NeuronEngineWrapper.vcxproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Networks\CameraTest.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Networks\HebbianSynapses.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\Imagination.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\ModuleDescriptions.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\NeuralGraph.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\ObjectMotion.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\Perception.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\SimVision.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\SpeechTest.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Networks\Sallie.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Networks\Maze.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+
   <ItemGroup>
     <Resource Include="Resources\charactergrowfont.png" />
     <Resource Include="Resources\charactershrinkfont.png" />
+    <Resource Include="Resources\ClearHistory.png" />
+    <Resource Include="Resources\Close.png" />
     <Resource Include="Resources\diskette.png" />
+    <Resource Include="Resources\Entity.png" />
     <Resource Include="Resources\facebook-3-24.ico" />
+    <Resource Include="Resources\FullScreen.png" />
+    <Resource Include="Resources\github-9-24.ico" />
+    <Resource Include="Resources\Hand.png" />
+    <Resource Include="Resources\Icons\Copy_16x.png" />
+    <Resource Include="Resources\Icons\Cut_16x.png" />
+    <Resource Include="Resources\Icons\Hand.png" />
+    <Resource Include="Resources\Icons\NewFile_16x.png" />
+    <Resource Include="Resources\Icons\OpenFile_16x.png" />
+    <Resource Include="Resources\Icons\Paste_16x.png" />
+    <Resource Include="Resources\Icons\Pause_16x.png" />
+    <Resource Include="Resources\Icons\QuickFind_16x.png" />
+    <Resource Include="Resources\Icons\SaveAs_16x.png" />
+    <Resource Include="Resources\Icons\Save_16x.png" />
+    <Resource Include="Resources\Icons\SelectAll_16x.png" />
+    <Resource Include="Resources\Icons\Undo_16x.png" />
+    <Resource Include="Resources\Icons\ZoomIn_16x.png" />
+    <Resource Include="Resources\Icons\ZoomOriginalSize_16x.png" />
+    <Resource Include="Resources\Icons\ZoomOut_16x.png" />
+    <Resource Include="Resources\mailing-list-icon-17.jpg" />
+    <Resource Include="Resources\Pause.png" />
+    <Resource Include="Resources\Play.png" />
+    <Resource Include="Resources\Record.png" />
+    <Resource Include="Resources\Rewind.png" />
+    <Resource Include="Resources\Step.png" />
+    <Resource Include="Resources\youtube-24.ico" />
+    <Resource Include="Resources\ZoomIn.png" />
+    <Resource Include="Resources\ZoomOut.png" />
+    <Resource Include="Smoothed_Splash.bmp" />
   </ItemGroup>
+
   <ItemGroup>
-    <COMReference Include="NetFwTypeLib">
-      <Guid>{58FBCF7C-E7A9-467C-80B3-FC65E8FCCA08}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
+    <Content Include="Networks\TestData\ColorVariation\Blue rectangle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\ColorVariation\Red rectangle 1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\ColorVariation\Red rectangle 2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\ColorVariation\White triangle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <ItemGroup>
+    <Content Include="Networks\TestData\ShapeTest\1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\ShapeTest\2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\ShapeTest\3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\ShapeTest\4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Networks\TestData\ShapeTest\5.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IO.Ports" Version="6.0.0" />
+    <PackageReference Include="System.Speech" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
 </Project>

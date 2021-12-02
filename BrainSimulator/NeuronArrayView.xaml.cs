@@ -193,8 +193,9 @@ namespace BrainSimulator
                     r.SetValue(ModuleView.AreaNumberProperty, i);
                     theCanvas.Children.Add(r);
 
-                    Label moduleLabel = new Label();
-                    moduleLabel.Content = nr.Label;
+                    //Label moduleLabel = new Label();
+                    TextBlock moduleLabel = new();
+                    moduleLabel.Text = nr.Label;
                     moduleLabel.Background = new SolidColorBrush(Colors.White);
                     if (!nr.TheModule.isEnabled)
                         moduleLabel.Background = new SolidColorBrush(Colors.LightGray);

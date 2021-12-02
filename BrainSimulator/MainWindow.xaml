@@ -92,7 +92,6 @@
                     <MenuItem Header="BabyTalk" Click="buttonLoad_Click"/>
                     <MenuItem Header="Maze" Click="buttonLoad_Click"/>
                     <MenuItem Header="Sallie" Click="buttonLoad_Click"/>
-                    <MenuItem Header="CameraTest" Click="buttonLoad_Click"/>
                     <MenuItem Header="SpeechTest" Click="buttonLoad_Click"/>
                     <MenuItem Header="3DSim" Click="buttonLoad_Click"/>
                     <MenuItem Header="NeuralGraph" Click="buttonLoad_Click"/>
@@ -294,7 +293,7 @@
             <!--The Toolbar-->
             <DockPanel x:Name="MainToolBar" Grid.ColumnSpan="2" Height="30" Margin="7,5,0,0" VerticalAlignment="Top">
                 <Button x:Name="NewButton" VerticalAlignment="Top" Click="button_FileNew_Click" ToolTip="New File">
-                    <Image Source="/resources/icons/NewFile_16x.png" Height="20"></Image>
+                    <Image Source="/resources/icons/NewFile_16x.png" Height="20"  ></Image>
                 </Button>
                 <Button x:Name="OpenButton" VerticalAlignment="Top" Click="buttonLoad_Click" ToolTip="Open File">
                     <Image Source="/resources/icons/OpenFile_16x.png" Height="20"></Image>

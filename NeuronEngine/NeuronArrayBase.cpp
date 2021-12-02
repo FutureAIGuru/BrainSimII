@@ -1,8 +1,11 @@
-﻿#include "NeuronArrayBase.h"
+﻿#include "pch.h"
+
+#include "NeuronArrayBase.h"
 #include <windows.h>
 #include <ppl.h>
 #include <iostream>
 #include <random>
+
 
 using namespace concurrency;
 using namespace std;

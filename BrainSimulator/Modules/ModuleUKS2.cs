@@ -72,15 +72,6 @@ namespace BrainSimulator.Modules
             return retVal;
         }
 
-        public override Thing Valued(object value, List<Thing> KBt = null, float toler = 0)
-        {
-            Thing retVal = base.Valued(value, KBt, toler);
-            if (retVal != null)
-            {
-                Fire(retVal);
-            }
-            return retVal;
-        }
 
 
         private void UpdateNeuronLabels()
@@ -266,12 +257,12 @@ namespace BrainSimulator.Modules
         //this learns associations between words and Events
         private void LearnWordLinks()
         {
-            List<Thing> words = GetChildren(Labeled("Word"));
+            IList<Thing> words = GetChildren(Labeled("Word"));
             foreach (Thing word in words)
             {
                 if (Fired(word, immediateMemory))
                 {
-                    List<Thing> colors = GetChildren(Labeled("Color"));
+                    IList<Thing> colors = GetChildren(Labeled("Color"));
                     foreach (Thing t in colors)
                     {
                         if (Fired(t, immediateMemory))

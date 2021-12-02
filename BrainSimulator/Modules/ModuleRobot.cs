@@ -25,6 +25,7 @@ namespace BrainSimulator.Modules
             maxWidth = 3;
         }
 
+
         SerialPort sp = null;
         string serialPortName = "COM11";
         bool robotInitialized = false;

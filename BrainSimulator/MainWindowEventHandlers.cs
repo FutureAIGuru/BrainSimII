@@ -262,7 +262,7 @@ namespace BrainSimulator
                     ButtonZoomToOrigin_Click(null, null);
                     currentFileName = "";
                     SetCurrentFileNameToProperties();
-                    setTitleBar();
+                    SetTitleBar();
                     if (theNeuronArray.networkNotes != "")
                         MenuItemNotes_Click(null, null);
                 }
@@ -403,13 +403,14 @@ namespace BrainSimulator
                 else
                 {
                     SuspendEngine();
-                    engineThread.Abort();
+
+                    engineIsCancelled = true; 
                     CloseAllModuleDialogs();
                 }
             }
             else
             {
-                engineThread.Abort();
+                engineIsCancelled = true;
             }
         }
         private void MenuItem_MoveNeurons(object sender, RoutedEventArgs e)
@@ -472,8 +473,8 @@ namespace BrainSimulator
                 try
                 {
                     string fileName = ""; //if the load is successful, currentfile will be set by the load process
-                    if (App.startupString != "")
-                        fileName = App.startupString;
+                    if (App.StartupString != "")
+                        fileName = App.StartupString;
                     if (fileName == "")
                         fileName = (string)Properties.Settings.Default["CurrentFile"];
                     if (fileName != "")
@@ -708,11 +709,9 @@ namespace BrainSimulator
 
         private void MenuItemHelp_Click(object sender, RoutedEventArgs e)
         {
-            // remove if new code is OK...
-            // Help p;
-
             Uri theUri = new Uri("https://futureAI.guru/help/getting started.htm");
 
+            //first check to see if help is already open
             Process[] theProcesses1 = Process.GetProcesses();
             Process latestProcess = null;
             for (int i = 1; i < theProcesses1.Length; i++)
@@ -734,12 +733,9 @@ namespace BrainSimulator
 
             if (latestProcess == null)
             {
-                Process p = new Process();
-                p.StartInfo.FileName = "https://futureai.guru/BrainSimHelp/gettingstarted.html";
-                p.Start();
+                OpenApp("https://futureai.guru/BrainSimHelp/gettingstarted.html");
 
                 //gotta wait for the page to render before it shows in the processes list
-
                 DateTime starttTime = DateTime.Now;
 
                 while (latestProcess == null && DateTime.Now < starttTime + new TimeSpan(0, 0, 3))
@@ -783,29 +779,38 @@ namespace BrainSimulator
             }
         }
 
+        //This opens an app depending on the assignments of the file extensions in Windows
+        public static void OpenApp(string fileName)
+        {
+            Process p = new Process();
+            p.StartInfo.FileName = fileName;
+            p.StartInfo.UseShellExecute = true;
+            p.Start();
+        }
+
         private void MenuItemOnlineHelp_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://futureai.guru/BrainSimHelp/ui.html");
+            OpenApp("https://futureai.guru/BrainSimHelp/ui.html");
         }
 
         private void MenuItemOnlineBugs_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://github.com/FutureAIGuru/BrainSimII/issues");
+            OpenApp("https://github.com/FutureAIGuru/BrainSimII/issues");
         }
 
         private void MenuItemRegister_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://futureai.guru/BrainSimRegister.aspx");
+            OpenApp("https://futureai.guru/BrainSimRegister.aspx");
         }
 
         private void MenuItemOnlineDiscussions_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://facebook.com/groups/BrainSim");
+            OpenApp("https://facebook.com/groups/BrainSim");
         }
 
         private void MenuItemYouTube_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://www.youtube.com/c/futureai");
+            OpenApp("https://www.youtube.com/c/futureai");
         }
 
         private void ThreadCount_TextChanged(object sender, TextChangedEventArgs e)

@@ -1,4 +1,5 @@
-﻿
+﻿#include "pch.h"
+
 #include "NeuronBase.h"
 #include "SynapseBase.h"
 #include "NeuronArrayBase.h"
@@ -549,7 +550,7 @@ namespace NeuronEngine
 
 	float NeuronBase::NewHebbianWeight(float weight, float offset, SynapseBase::modelType model, int numberOfSynapses1) //sign of float is all that's presently used
 	{
-		float numberOfSynapses = numberOfSynapses1 / 2.0;
+		float numberOfSynapses = numberOfSynapses1 / 2.0f;
 		float y = weight * numberOfSynapses;
 		if (model == SynapseBase::modelType::Binary)
 		{

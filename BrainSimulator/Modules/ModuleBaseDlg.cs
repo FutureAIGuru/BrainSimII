@@ -9,6 +9,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 
 namespace BrainSimulator.Modules
@@ -17,7 +18,7 @@ namespace BrainSimulator.Modules
     {
         public ModuleBase ParentModule;
         private DateTime dt;
-        private System.Timers.Timer timer;
+        private DispatcherTimer timer;
         public int UpdateMS = 100;
         virtual public bool Draw(bool checkDrawTimer)
         {
@@ -30,9 +31,9 @@ namespace BrainSimulator.Modules
                 //after a 1/4 second of inactivity
                 if (timer == null)
                 {
-                    timer = new System.Timers.Timer(250);
-                    timer.Elapsed += Timer_Elapsed;
-                    timer.AutoReset = false;
+                    timer = new DispatcherTimer();
+                    timer.Interval = new TimeSpan(0, 0, 0, 0, 250);
+                    timer.Tick += Timer_Tick;
                 }
                 timer.Stop();
                 timer.Start();
@@ -41,6 +42,14 @@ namespace BrainSimulator.Modules
             dt = DateTime.Now;
             if (timer != null) timer.Stop();
             return true;
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            timer.Stop();
+            if (Application.Current == null) return;
+            if (this != null)
+                Draw(false);
         }
 
         //this picks up a final draw after 1/4 second 
@@ -80,7 +89,7 @@ namespace BrainSimulator.Modules
                 theBitMap1 = new Bitmap(stream);
             else if (theBitMap2 == null)
                 theBitMap2 = new Bitmap(stream);
-            ((Module3DSim)ParentModule).renderDone = true;
+            //((Module3DSim)ParentModule).renderDone = true;
         }
 
     }

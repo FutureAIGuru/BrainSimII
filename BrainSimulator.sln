@@ -1,134 +1,40 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30204.135
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrainSimulator", "BrainSimulator\BrainSimulator.csproj", "{A9535788-CE97-43CE-90E3-964A1704C0F2}"
-	ProjectSection(ProjectDependencies) = postProject
-		{FD48314A-9615-4BA6-913A-03787FB2DD30} = {FD48314A-9615-4BA6-913A-03787FB2DD30}
-		{ED5BEA74-23FD-496D-87A7-88CB42D1E051} = {ED5BEA74-23FD-496D-87A7-88CB42D1E051}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NeuronEngine", "NeuronEngine\NeuronEngine.vcxproj", "{E7E63D8A-1C35-47C9-A19F-2BA549D230AF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WebCamLib", "WebCamLib\WebCamLib.vcxproj", "{FD48314A-9615-4BA6-913A-03787FB2DD30}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NeuronEngineWrapper", "NeuronEngineWrapper\NeuronEngineWrapper.vcxproj", "{8A980E58-4395-44F4-A506-DA2988F6AC0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebCamWrapper", "WebCamWrapper\WebCamWrapper.csproj", "{CC5D5149-0092-4508-AC34-2ABE1468A1C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrainSimulator", "BrainSimulator\BrainSimulator.csproj", "{C08F318A-B8E6-4187-9ED4-0A126B3B63A9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NeuronEngine", "NeuronEngine\NeuronEngine.vcxproj", "{ED5BEA74-23FD-496D-87A7-88CB42D1E051}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeuronServer", "NeuronServer\NeuronServer.csproj", "{46D6A725-51A4-4849-B8AB-8C44B23B9D44}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppEngineTest", "CppEngineTest\CppEngineTest.vcxproj", "{00D43CB0-D4E5-49F5-A822-02582529C5CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSEngineTest", "CSEngineTest\CSEngineTest.csproj", "{5D0C73AE-3866-47A3-A11A-CF0347D1B07C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NeuronEngineWrapper", "NeuronEngineWrapper\NeuronEngineWrapper.vcxproj", "{958DED44-BE0D-429C-8957-042BBFFA5096}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppEngineTest", "CppEngineTest\CppEngineTest.vcxproj", "{C060D1A5-1DBD-4FD1-9B82-53478B4D8298}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsEngineTest", "CsEngineTest\CsEngineTest.csproj", "{9969A573-1206-4B2B-81AA-605503429DCD}"
-	ProjectSection(ProjectDependencies) = postProject
-		{ED5BEA74-23FD-496D-87A7-88CB42D1E051} = {ED5BEA74-23FD-496D-87A7-88CB42D1E051}
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SetupFirewall", "SetupFirewall\SetupFirewall.csproj", "{7BF0771F-574D-4DAC-90BD-C8978A579C36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuronServer", "NeuronServer\NeuronServer.csproj", "{1A69EBDD-F997-436E-A21E-B536050C5221}"
-	ProjectSection(ProjectDependencies) = postProject
-		{ED5BEA74-23FD-496D-87A7-88CB42D1E051} = {ED5BEA74-23FD-496D-87A7-88CB42D1E051}
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer", "Installer", "{17040604-C861-4301-A4FC-2DEDD0241501}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AutomatedTests", "AutomatedTests", "{23F38505-3BF9-44D4-B138-F7E57837D466}"
 	ProjectSection(SolutionItems) = preProject
-		Installer\_BRAINSIM2.nsi = Installer\_BRAINSIM2.nsi
-		Installer\bsicon.ico = Installer\bsicon.ico
-		Installer\build_installer.cmd = Installer\build_installer.cmd
-		Installer\BuildAndSign.bat = Installer\BuildAndSign.bat
-		Installer\licdata.txt = Installer\licdata.txt
-		Installer\nsicon.ico = Installer\nsicon.ico
-		Installer\SPLASH.bmp = Installer\SPLASH.bmp
-		Installer\SPLASH.wav = Installer\SPLASH.wav
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SetupFirewall", "SetupFirewall\SetupFirewall.csproj", "{7F4D726B-F893-4E8D-BC2F-41AE41A6BAD0}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AutomatedTests", "AutomatedTests", "{A8AC78AC-3547-4430-94FE-853FB14F243B}"
-	ProjectSection(SolutionItems) = preProject
-		AutomatedTests\_run_automated_test.cmd = AutomatedTests\_run_automated_test.cmd
+		AutomatedTests\_run_complete_test.cmd = AutomatedTests\_run_complete_test.cmd
+		AutomatedTests\_run_set_1.cmd = AutomatedTests\_run_set_1.cmd
+		AutomatedTests\_run_set_2.cmd = AutomatedTests\_run_set_2.cmd
+		AutomatedTests\_run_set_3.cmd = AutomatedTests\_run_set_3.cmd
+		AutomatedTests\_run_set_4.cmd = AutomatedTests\_run_set_4.cmd
 		AutomatedTests\_run_wip_tests.cmd = AutomatedTests\_run_wip_tests.cmd
-		AutomatedTests\automatedtests.resource = AutomatedTests\automatedtests.resource
-		AutomatedTests\testkeywords.resource = AutomatedTests\testkeywords.resource
+		AutomatedTests\keywords.resource = AutomatedTests\keywords.resource
 		AutomatedTests\testset_1.robot = AutomatedTests\testset_1.robot
 		AutomatedTests\testset_2.robot = AutomatedTests\testset_2.robot
+		AutomatedTests\testset_3.robot = AutomatedTests\testset_3.robot
+		AutomatedTests\testset_4.robot = AutomatedTests\testset_4.robot
 		AutomatedTests\teststeps.py = AutomatedTests\teststeps.py
 		AutomatedTests\testtoolkit.py = AutomatedTests\testtoolkit.py
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ScreenFrags", "ScreenFrags", "{59BA341C-6E0D-4E9E-AB29-644769F87857}"
-	ProjectSection(SolutionItems) = preProject
-		AutomatedTests\screenfrags\brainsim_splash.png = AutomatedTests\screenfrags\brainsim_splash.png
-		AutomatedTests\screenfrags\brainsim_start.png = AutomatedTests\screenfrags\brainsim_start.png
-		AutomatedTests\screenfrags\brainsim_started.png = AutomatedTests\screenfrags\brainsim_started.png
-		AutomatedTests\screenfrags\brainsim_title.png = AutomatedTests\screenfrags\brainsim_title.png
-		AutomatedTests\screenfrags\bs2_edit_clear_selection_item.png = AutomatedTests\screenfrags\bs2_edit_clear_selection_item.png
-		AutomatedTests\screenfrags\bs2_edit_cut_item_disabled.png = AutomatedTests\screenfrags\bs2_edit_cut_item_disabled.png
-		AutomatedTests\screenfrags\bs2_edit_delete_item_disabled.png = AutomatedTests\screenfrags\bs2_edit_delete_item_disabled.png
-		AutomatedTests\screenfrags\bs2_edit_find_module_item_disabled.png = AutomatedTests\screenfrags\bs2_edit_find_module_item_disabled.png
-		AutomatedTests\screenfrags\bs2_edit_find_neuron_item_disabled.png = AutomatedTests\screenfrags\bs2_edit_find_neuron_item_disabled.png
-		AutomatedTests\screenfrags\bs2_edit_load_clipboard_item.png = AutomatedTests\screenfrags\bs2_edit_load_clipboard_item.png
-		AutomatedTests\screenfrags\bs2_edit_menu.png = AutomatedTests\screenfrags\bs2_edit_menu.png
-		AutomatedTests\screenfrags\bs2_edit_move_item_disabled.png = AutomatedTests\screenfrags\bs2_edit_move_item_disabled.png
-		AutomatedTests\screenfrags\bs2_edit_notes_item.png = AutomatedTests\screenfrags\bs2_edit_notes_item.png
-		AutomatedTests\screenfrags\bs2_edit_paste_item_disabled.png = AutomatedTests\screenfrags\bs2_edit_paste_item_disabled.png
-		AutomatedTests\screenfrags\bs2_edit_save_clipboard_item_disabled.png = AutomatedTests\screenfrags\bs2_edit_save_clipboard_item_disabled.png
-		AutomatedTests\screenfrags\bs2_edit_undo_item_disabled.png = AutomatedTests\screenfrags\bs2_edit_undo_item_disabled.png
-		AutomatedTests\screenfrags\bs2_engine_menu.png = AutomatedTests\screenfrags\bs2_engine_menu.png
-		AutomatedTests\screenfrags\bs2_engine_pause_item.png = AutomatedTests\screenfrags\bs2_engine_pause_item.png
-		AutomatedTests\screenfrags\bs2_engine_refractory_item.png = AutomatedTests\screenfrags\bs2_engine_refractory_item.png
-		AutomatedTests\screenfrags\bs2_engine_reset_item.png = AutomatedTests\screenfrags\bs2_engine_reset_item.png
-		AutomatedTests\screenfrags\bs2_engine_run_item_disabled.png = AutomatedTests\screenfrags\bs2_engine_run_item_disabled.png
-		AutomatedTests\screenfrags\bs2_engine_speed_item.png = AutomatedTests\screenfrags\bs2_engine_speed_item.png
-		AutomatedTests\screenfrags\bs2_engine_step_item.png = AutomatedTests\screenfrags\bs2_engine_step_item.png
-		AutomatedTests\screenfrags\bs2_engine_threads_item.png = AutomatedTests\screenfrags\bs2_engine_threads_item.png
-		AutomatedTests\screenfrags\bs2_file_exit_item.png = AutomatedTests\screenfrags\bs2_file_exit_item.png
-		AutomatedTests\screenfrags\bs2_file_library_item.png = AutomatedTests\screenfrags\bs2_file_library_item.png
-		AutomatedTests\screenfrags\bs2_file_menu.png = AutomatedTests\screenfrags\bs2_file_menu.png
-		AutomatedTests\screenfrags\bs2_file_new_item.png = AutomatedTests\screenfrags\bs2_file_new_item.png
-		AutomatedTests\screenfrags\bs2_file_open_item.png = AutomatedTests\screenfrags\bs2_file_open_item.png
-		AutomatedTests\screenfrags\bs2_file_properties_item.png = AutomatedTests\screenfrags\bs2_file_properties_item.png
-		AutomatedTests\screenfrags\bs2_file_recent_item.png = AutomatedTests\screenfrags\bs2_file_recent_item.png
-		AutomatedTests\screenfrags\bs2_file_save_item_disabled.png = AutomatedTests\screenfrags\bs2_file_save_item_disabled.png
-		AutomatedTests\screenfrags\bs2_file_saveas_item.png = AutomatedTests\screenfrags\bs2_file_saveas_item.png
-		AutomatedTests\screenfrags\bs2_help_about_item.png = AutomatedTests\screenfrags\bs2_help_about_item.png
-		AutomatedTests\screenfrags\bs2_help_contents_item.png = AutomatedTests\screenfrags\bs2_help_contents_item.png
-		AutomatedTests\screenfrags\bs2_help_facebook_item.png = AutomatedTests\screenfrags\bs2_help_facebook_item.png
-		AutomatedTests\screenfrags\bs2_help_getting_started_item.png = AutomatedTests\screenfrags\bs2_help_getting_started_item.png
-		AutomatedTests\screenfrags\bs2_help_menu.png = AutomatedTests\screenfrags\bs2_help_menu.png
-		AutomatedTests\screenfrags\bs2_help_register_item.png = AutomatedTests\screenfrags\bs2_help_register_item.png
-		AutomatedTests\screenfrags\bs2_help_report_bugs_item.png = AutomatedTests\screenfrags\bs2_help_report_bugs_item.png
-		AutomatedTests\screenfrags\bs2_help_show_at_startup_checked.png = AutomatedTests\screenfrags\bs2_help_show_at_startup_checked.png
-		AutomatedTests\screenfrags\bs2_help_show_at_startup_unchecked.png = AutomatedTests\screenfrags\bs2_help_show_at_startup_unchecked.png
-		AutomatedTests\screenfrags\bs2_help_watch_youtube_item.png = AutomatedTests\screenfrags\bs2_help_watch_youtube_item.png
-		AutomatedTests\screenfrags\bs2_view_menu.png = AutomatedTests\screenfrags\bs2_view_menu.png
-		AutomatedTests\screenfrags\bs2_view_origin_item.png = AutomatedTests\screenfrags\bs2_view_origin_item.png
-		AutomatedTests\screenfrags\bs2_view_show_all_item.png = AutomatedTests\screenfrags\bs2_view_show_all_item.png
-		AutomatedTests\screenfrags\bs2_view_show_synapses_checked.png = AutomatedTests\screenfrags\bs2_view_show_synapses_checked.png
-		AutomatedTests\screenfrags\bs2_view_show_synapses_unchecked.png = AutomatedTests\screenfrags\bs2_view_show_synapses_unchecked.png
-		AutomatedTests\screenfrags\bs2_view_start_pan_item.png = AutomatedTests\screenfrags\bs2_view_start_pan_item.png
-		AutomatedTests\screenfrags\bs2_view_zoom_in_item.png = AutomatedTests\screenfrags\bs2_view_zoom_in_item.png
-		AutomatedTests\screenfrags\bs2_view_zoom_out_item.png = AutomatedTests\screenfrags\bs2_view_zoom_out_item.png
-		AutomatedTests\screenfrags\bws2_edit_copy_item_disabled.png = AutomatedTests\screenfrags\bws2_edit_copy_item_disabled.png
-		AutomatedTests\screenfrags\cancel_button.png = AutomatedTests\screenfrags\cancel_button.png
-		AutomatedTests\screenfrags\close_icon.png = AutomatedTests\screenfrags\close_icon.png
-		AutomatedTests\screenfrags\emptyone_loaded.png = AutomatedTests\screenfrags\emptyone_loaded.png
-		AutomatedTests\screenfrags\minimize_icon.png = AutomatedTests\screenfrags\minimize_icon.png
-		AutomatedTests\screenfrags\neuronserver_start.png = AutomatedTests\screenfrags\neuronserver_start.png
-		AutomatedTests\screenfrags\neuronserver_started.png = AutomatedTests\screenfrags\neuronserver_started.png
-		AutomatedTests\screenfrags\neuronserver_title.png = AutomatedTests\screenfrags\neuronserver_title.png
-		AutomatedTests\screenfrags\no_button_default.png = AutomatedTests\screenfrags\no_button_default.png
-		AutomatedTests\screenfrags\restore_icon.png = AutomatedTests\screenfrags\restore_icon.png
-		AutomatedTests\screenfrags\save_question.png = AutomatedTests\screenfrags\save_question.png
-		AutomatedTests\screenfrags\testnet_emptyone.png = AutomatedTests\screenfrags\testnet_emptyone.png
-		AutomatedTests\screenfrags\yes_button.png = AutomatedTests\screenfrags\yes_button.png
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "testnets", "testnets", "{B48F32C5-4EAE-4B6F-B8F7-4397978D8B92}"
-	ProjectSection(SolutionItems) = preProject
-		AutomatedTests\testnets\EmptyOne.xml = AutomatedTests\testnets\EmptyOne.xml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5787F61C-7099-4728-A0D1-F723CFAD40CD}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{1C458A63-D394-4406-9465-01FA35263D9E}"
 	ProjectSection(SolutionItems) = preProject
 		BrainSimulator\Tools\BrainSimulator Module Dlg.zip = BrainSimulator\Tools\BrainSimulator Module Dlg.zip
 		BrainSimulator\Tools\BrainSimulator Module.zip = BrainSimulator\Tools\BrainSimulator Module.zip
@@ -138,60 +44,137 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5787F61C
 		BrainSimulator\Tools\VS Templates Readme.txt = BrainSimulator\Tools\VS Templates Readme.txt
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetVersionInfo", "GetVersionInfo\GetVersionInfo.csproj", "{5AD1A3FF-CAFA-4A20-B4C6-DC72C1A933B2}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer", "Installer", "{A2928C3B-AE3F-4E47-9094-39ECEC5D3183}"
+	ProjectSection(SolutionItems) = preProject
+		Installer\_BRAINSIM2.nsi = Installer\_BRAINSIM2.nsi
+		Installer\bsicon.ico = Installer\bsicon.ico
+		Installer\build_installer.cmd = Installer\build_installer.cmd
+		Installer\BuildAndSign.bat = Installer\BuildAndSign.bat
+		Installer\BuildOnly.bat = Installer\BuildOnly.bat
+		Installer\FileAssociation.nsh = Installer\FileAssociation.nsh
+		Installer\licdata.txt = Installer\licdata.txt
+		Installer\nsicon.ico = Installer\nsicon.ico
+		Installer\SPLASH.bmp = Installer\SPLASH.bmp
+		Installer\SPLASH.wav = Installer\SPLASH.wav
+		Installer\unicon.ico = Installer\unicon.ico
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetVersionInfo", "GetVersionInfo\GetVersionInfo.csproj", "{853FC713-7A7F-4995-95E0-1396A82CA2B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A9535788-CE97-43CE-90E3-964A1704C0F2}.Debug|x64.ActiveCfg = Debug|x64
-		{A9535788-CE97-43CE-90E3-964A1704C0F2}.Debug|x64.Build.0 = Debug|x64
-		{A9535788-CE97-43CE-90E3-964A1704C0F2}.Release|x64.ActiveCfg = Release|x64
-		{A9535788-CE97-43CE-90E3-964A1704C0F2}.Release|x64.Build.0 = Release|x64
-		{FD48314A-9615-4BA6-913A-03787FB2DD30}.Debug|x64.ActiveCfg = Debug|x64
-		{FD48314A-9615-4BA6-913A-03787FB2DD30}.Debug|x64.Build.0 = Debug|x64
-		{FD48314A-9615-4BA6-913A-03787FB2DD30}.Release|x64.ActiveCfg = Release|x64
-		{FD48314A-9615-4BA6-913A-03787FB2DD30}.Release|x64.Build.0 = Release|x64
-		{CC5D5149-0092-4508-AC34-2ABE1468A1C9}.Debug|x64.ActiveCfg = Debug|x64
-		{CC5D5149-0092-4508-AC34-2ABE1468A1C9}.Debug|x64.Build.0 = Debug|x64
-		{CC5D5149-0092-4508-AC34-2ABE1468A1C9}.Release|x64.ActiveCfg = Release|x64
-		{CC5D5149-0092-4508-AC34-2ABE1468A1C9}.Release|x64.Build.0 = Release|x64
-		{ED5BEA74-23FD-496D-87A7-88CB42D1E051}.Debug|x64.ActiveCfg = Debug|x64
-		{ED5BEA74-23FD-496D-87A7-88CB42D1E051}.Debug|x64.Build.0 = Debug|x64
-		{ED5BEA74-23FD-496D-87A7-88CB42D1E051}.Release|x64.ActiveCfg = Release|x64
-		{ED5BEA74-23FD-496D-87A7-88CB42D1E051}.Release|x64.Build.0 = Release|x64
-		{00D43CB0-D4E5-49F5-A822-02582529C5CD}.Debug|x64.ActiveCfg = Debug|x64
-		{00D43CB0-D4E5-49F5-A822-02582529C5CD}.Release|x64.ActiveCfg = Release|x64
-		{958DED44-BE0D-429C-8957-042BBFFA5096}.Debug|x64.ActiveCfg = Debug|x64
-		{958DED44-BE0D-429C-8957-042BBFFA5096}.Debug|x64.Build.0 = Debug|x64
-		{958DED44-BE0D-429C-8957-042BBFFA5096}.Release|x64.ActiveCfg = Release|x64
-		{958DED44-BE0D-429C-8957-042BBFFA5096}.Release|x64.Build.0 = Release|x64
-		{9969A573-1206-4B2B-81AA-605503429DCD}.Debug|x64.ActiveCfg = Debug|x64
-		{9969A573-1206-4B2B-81AA-605503429DCD}.Release|x64.ActiveCfg = Release|x64
-		{1A69EBDD-F997-436E-A21E-B536050C5221}.Debug|x64.ActiveCfg = Debug|x64
-		{1A69EBDD-F997-436E-A21E-B536050C5221}.Debug|x64.Build.0 = Debug|x64
-		{1A69EBDD-F997-436E-A21E-B536050C5221}.Release|x64.ActiveCfg = Release|x64
-		{1A69EBDD-F997-436E-A21E-B536050C5221}.Release|x64.Build.0 = Release|x64
-		{7F4D726B-F893-4E8D-BC2F-41AE41A6BAD0}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{7F4D726B-F893-4E8D-BC2F-41AE41A6BAD0}.Debug|x64.Build.0 = Debug|Any CPU
-		{7F4D726B-F893-4E8D-BC2F-41AE41A6BAD0}.Release|x64.ActiveCfg = Release|Any CPU
-		{7F4D726B-F893-4E8D-BC2F-41AE41A6BAD0}.Release|x64.Build.0 = Release|Any CPU
-		{5AD1A3FF-CAFA-4A20-B4C6-DC72C1A933B2}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{5AD1A3FF-CAFA-4A20-B4C6-DC72C1A933B2}.Debug|x64.Build.0 = Debug|Any CPU
-		{5AD1A3FF-CAFA-4A20-B4C6-DC72C1A933B2}.Release|x64.ActiveCfg = Release|Any CPU
-		{5AD1A3FF-CAFA-4A20-B4C6-DC72C1A933B2}.Release|x64.Build.0 = Release|Any CPU
+		{E7E63D8A-1C35-47C9-A19F-2BA549D230AF}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{E7E63D8A-1C35-47C9-A19F-2BA549D230AF}.Debug|Any CPU.Build.0 = Debug|x64
+		{E7E63D8A-1C35-47C9-A19F-2BA549D230AF}.Debug|x64.ActiveCfg = Debug|x64
+		{E7E63D8A-1C35-47C9-A19F-2BA549D230AF}.Debug|x64.Build.0 = Debug|x64
+		{E7E63D8A-1C35-47C9-A19F-2BA549D230AF}.Debug|x86.ActiveCfg = Debug|Win32
+		{E7E63D8A-1C35-47C9-A19F-2BA549D230AF}.Debug|x86.Build.0 = Debug|Win32
+		{E7E63D8A-1C35-47C9-A19F-2BA549D230AF}.Release|Any CPU.ActiveCfg = Release|x64
+		{E7E63D8A-1C35-47C9-A19F-2BA549D230AF}.Release|Any CPU.Build.0 = Release|x64
+		{E7E63D8A-1C35-47C9-A19F-2BA549D230AF}.Release|x64.ActiveCfg = Release|x64
+		{E7E63D8A-1C35-47C9-A19F-2BA549D230AF}.Release|x64.Build.0 = Release|x64
+		{E7E63D8A-1C35-47C9-A19F-2BA549D230AF}.Release|x86.ActiveCfg = Release|Win32
+		{E7E63D8A-1C35-47C9-A19F-2BA549D230AF}.Release|x86.Build.0 = Release|Win32
+		{8A980E58-4395-44F4-A506-DA2988F6AC0D}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{8A980E58-4395-44F4-A506-DA2988F6AC0D}.Debug|Any CPU.Build.0 = Debug|x64
+		{8A980E58-4395-44F4-A506-DA2988F6AC0D}.Debug|x64.ActiveCfg = Debug|x64
+		{8A980E58-4395-44F4-A506-DA2988F6AC0D}.Debug|x64.Build.0 = Debug|x64
+		{8A980E58-4395-44F4-A506-DA2988F6AC0D}.Debug|x86.ActiveCfg = Debug|Win32
+		{8A980E58-4395-44F4-A506-DA2988F6AC0D}.Debug|x86.Build.0 = Debug|Win32
+		{8A980E58-4395-44F4-A506-DA2988F6AC0D}.Release|Any CPU.ActiveCfg = Release|x64
+		{8A980E58-4395-44F4-A506-DA2988F6AC0D}.Release|Any CPU.Build.0 = Release|x64
+		{8A980E58-4395-44F4-A506-DA2988F6AC0D}.Release|x64.ActiveCfg = Release|x64
+		{8A980E58-4395-44F4-A506-DA2988F6AC0D}.Release|x64.Build.0 = Release|x64
+		{8A980E58-4395-44F4-A506-DA2988F6AC0D}.Release|x86.ActiveCfg = Release|Win32
+		{8A980E58-4395-44F4-A506-DA2988F6AC0D}.Release|x86.Build.0 = Release|Win32
+		{C08F318A-B8E6-4187-9ED4-0A126B3B63A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C08F318A-B8E6-4187-9ED4-0A126B3B63A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C08F318A-B8E6-4187-9ED4-0A126B3B63A9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C08F318A-B8E6-4187-9ED4-0A126B3B63A9}.Debug|x64.Build.0 = Debug|Any CPU
+		{C08F318A-B8E6-4187-9ED4-0A126B3B63A9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C08F318A-B8E6-4187-9ED4-0A126B3B63A9}.Debug|x86.Build.0 = Debug|Any CPU
+		{C08F318A-B8E6-4187-9ED4-0A126B3B63A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C08F318A-B8E6-4187-9ED4-0A126B3B63A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C08F318A-B8E6-4187-9ED4-0A126B3B63A9}.Release|x64.ActiveCfg = Release|Any CPU
+		{C08F318A-B8E6-4187-9ED4-0A126B3B63A9}.Release|x64.Build.0 = Release|Any CPU
+		{C08F318A-B8E6-4187-9ED4-0A126B3B63A9}.Release|x86.ActiveCfg = Release|Any CPU
+		{C08F318A-B8E6-4187-9ED4-0A126B3B63A9}.Release|x86.Build.0 = Release|Any CPU
+		{46D6A725-51A4-4849-B8AB-8C44B23B9D44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46D6A725-51A4-4849-B8AB-8C44B23B9D44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46D6A725-51A4-4849-B8AB-8C44B23B9D44}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{46D6A725-51A4-4849-B8AB-8C44B23B9D44}.Debug|x64.Build.0 = Debug|Any CPU
+		{46D6A725-51A4-4849-B8AB-8C44B23B9D44}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{46D6A725-51A4-4849-B8AB-8C44B23B9D44}.Debug|x86.Build.0 = Debug|Any CPU
+		{46D6A725-51A4-4849-B8AB-8C44B23B9D44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46D6A725-51A4-4849-B8AB-8C44B23B9D44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46D6A725-51A4-4849-B8AB-8C44B23B9D44}.Release|x64.ActiveCfg = Release|Any CPU
+		{46D6A725-51A4-4849-B8AB-8C44B23B9D44}.Release|x64.Build.0 = Release|Any CPU
+		{46D6A725-51A4-4849-B8AB-8C44B23B9D44}.Release|x86.ActiveCfg = Release|Any CPU
+		{46D6A725-51A4-4849-B8AB-8C44B23B9D44}.Release|x86.Build.0 = Release|Any CPU
+		{5D0C73AE-3866-47A3-A11A-CF0347D1B07C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D0C73AE-3866-47A3-A11A-CF0347D1B07C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D0C73AE-3866-47A3-A11A-CF0347D1B07C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5D0C73AE-3866-47A3-A11A-CF0347D1B07C}.Debug|x64.Build.0 = Debug|Any CPU
+		{5D0C73AE-3866-47A3-A11A-CF0347D1B07C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5D0C73AE-3866-47A3-A11A-CF0347D1B07C}.Debug|x86.Build.0 = Debug|Any CPU
+		{5D0C73AE-3866-47A3-A11A-CF0347D1B07C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D0C73AE-3866-47A3-A11A-CF0347D1B07C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D0C73AE-3866-47A3-A11A-CF0347D1B07C}.Release|x64.ActiveCfg = Release|Any CPU
+		{5D0C73AE-3866-47A3-A11A-CF0347D1B07C}.Release|x64.Build.0 = Release|Any CPU
+		{5D0C73AE-3866-47A3-A11A-CF0347D1B07C}.Release|x86.ActiveCfg = Release|Any CPU
+		{5D0C73AE-3866-47A3-A11A-CF0347D1B07C}.Release|x86.Build.0 = Release|Any CPU
+		{C060D1A5-1DBD-4FD1-9B82-53478B4D8298}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{C060D1A5-1DBD-4FD1-9B82-53478B4D8298}.Debug|Any CPU.Build.0 = Debug|x64
+		{C060D1A5-1DBD-4FD1-9B82-53478B4D8298}.Debug|x64.ActiveCfg = Debug|x64
+		{C060D1A5-1DBD-4FD1-9B82-53478B4D8298}.Debug|x64.Build.0 = Debug|x64
+		{C060D1A5-1DBD-4FD1-9B82-53478B4D8298}.Debug|x86.ActiveCfg = Debug|Win32
+		{C060D1A5-1DBD-4FD1-9B82-53478B4D8298}.Debug|x86.Build.0 = Debug|Win32
+		{C060D1A5-1DBD-4FD1-9B82-53478B4D8298}.Release|Any CPU.ActiveCfg = Release|x64
+		{C060D1A5-1DBD-4FD1-9B82-53478B4D8298}.Release|Any CPU.Build.0 = Release|x64
+		{C060D1A5-1DBD-4FD1-9B82-53478B4D8298}.Release|x64.ActiveCfg = Release|x64
+		{C060D1A5-1DBD-4FD1-9B82-53478B4D8298}.Release|x64.Build.0 = Release|x64
+		{C060D1A5-1DBD-4FD1-9B82-53478B4D8298}.Release|x86.ActiveCfg = Release|Win32
+		{C060D1A5-1DBD-4FD1-9B82-53478B4D8298}.Release|x86.Build.0 = Release|Win32
+		{7BF0771F-574D-4DAC-90BD-C8978A579C36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BF0771F-574D-4DAC-90BD-C8978A579C36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BF0771F-574D-4DAC-90BD-C8978A579C36}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7BF0771F-574D-4DAC-90BD-C8978A579C36}.Debug|x64.Build.0 = Debug|Any CPU
+		{7BF0771F-574D-4DAC-90BD-C8978A579C36}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7BF0771F-574D-4DAC-90BD-C8978A579C36}.Debug|x86.Build.0 = Debug|Any CPU
+		{7BF0771F-574D-4DAC-90BD-C8978A579C36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BF0771F-574D-4DAC-90BD-C8978A579C36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BF0771F-574D-4DAC-90BD-C8978A579C36}.Release|x64.ActiveCfg = Release|Any CPU
+		{7BF0771F-574D-4DAC-90BD-C8978A579C36}.Release|x64.Build.0 = Release|Any CPU
+		{7BF0771F-574D-4DAC-90BD-C8978A579C36}.Release|x86.ActiveCfg = Release|Any CPU
+		{7BF0771F-574D-4DAC-90BD-C8978A579C36}.Release|x86.Build.0 = Release|Any CPU
+		{853FC713-7A7F-4995-95E0-1396A82CA2B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{853FC713-7A7F-4995-95E0-1396A82CA2B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{853FC713-7A7F-4995-95E0-1396A82CA2B5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{853FC713-7A7F-4995-95E0-1396A82CA2B5}.Debug|x64.Build.0 = Debug|Any CPU
+		{853FC713-7A7F-4995-95E0-1396A82CA2B5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{853FC713-7A7F-4995-95E0-1396A82CA2B5}.Debug|x86.Build.0 = Debug|Any CPU
+		{853FC713-7A7F-4995-95E0-1396A82CA2B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{853FC713-7A7F-4995-95E0-1396A82CA2B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{853FC713-7A7F-4995-95E0-1396A82CA2B5}.Release|x64.ActiveCfg = Release|Any CPU
+		{853FC713-7A7F-4995-95E0-1396A82CA2B5}.Release|x64.Build.0 = Release|Any CPU
+		{853FC713-7A7F-4995-95E0-1396A82CA2B5}.Release|x86.ActiveCfg = Release|Any CPU
+		{853FC713-7A7F-4995-95E0-1396A82CA2B5}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{59BA341C-6E0D-4E9E-AB29-644769F87857} = {A8AC78AC-3547-4430-94FE-853FB14F243B}
-		{B48F32C5-4EAE-4B6F-B8F7-4397978D8B92} = {A8AC78AC-3547-4430-94FE-853FB14F243B}
-		{5AD1A3FF-CAFA-4A20-B4C6-DC72C1A933B2} = {17040604-C861-4301-A4FC-2DEDD0241501}
+		{853FC713-7A7F-4995-95E0-1396A82CA2B5} = {A2928C3B-AE3F-4E47-9094-39ECEC5D3183}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {5BA1730C-CB74-487C-8891-72E18E8B28B7}
+		SolutionGuid = {EEF78631-3989-4EA0-9833-239BCC7F58B6}
 	EndGlobalSection
 EndGlobal

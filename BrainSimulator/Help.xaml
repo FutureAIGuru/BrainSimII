@@ -9,7 +9,7 @@
     <Grid>
         <WebBrowser Name="theBrowser" Margin="48,40,55,75"/>
         <Button Name="theButton" Content="OK" Height="29" Width="120" Margin="339,0,0,21" IsCancel="True" VerticalAlignment="Bottom" Click="Button_Click" HorizontalAlignment="Left"/>
-        <Button Name="registerButton" Content="Register" Height="29" Width="120" Margin="502,0,0,21" IsCancel="True" VerticalAlignment="Bottom" Click="registerButton_Click" HorizontalAlignment="Left"/>
+        <Button Name="registerButton" Content="Register" Height="29" Width="120" Margin="502,0,0,21" IsCancel="True" VerticalAlignment="Bottom" Click="RegisterButton_Click" HorizontalAlignment="Left"/>
         <CheckBox Name="theCheckBox" Content="Don't show this at startup" HorizontalAlignment="Left" Margin="158,0,0,26" Width="163" Height="17" VerticalAlignment="Bottom"/>
     </Grid>
 </Window>

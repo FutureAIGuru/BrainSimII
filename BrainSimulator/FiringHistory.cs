@@ -14,9 +14,9 @@ namespace BrainSimulator
         public class NeuronHistory
         {
             public int NeuronID;
-            public List<Sample> Samples = new List<Sample>();
+            public List<Sample> Samples = new();
         }
-        public static List<NeuronHistory> history = new List<NeuronHistory>();
+        public static List<NeuronHistory> history = new ();
 
         public static long EarliestValue()
         {
@@ -43,7 +43,7 @@ namespace BrainSimulator
         public static void AddNeuronToHistoryWindow(int id)
         {
             if (NeuronIsInFiringHistory(id)) return;
-            NeuronHistory entry = new NeuronHistory();
+            NeuronHistory entry = new();
             entry.NeuronID = id;
             history.Add(entry);
         }
@@ -61,6 +61,7 @@ namespace BrainSimulator
 
         public static void UpdateFiringHistory()
         {
+            if (MainWindow.theNeuronArray == null) return;
             for (int i = 0; i < history.Count; i++)
             {
                 NeuronHistory active = history[i];

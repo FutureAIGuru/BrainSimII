@@ -27,9 +27,11 @@ namespace BrainSimulator
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             if (e.Args.Length == 1)
-                startupString = e.Args[0];
+                StartupString = e.Args[0];
         }
-        public static string startupString = "";
+        private static string startupString = "";
+
+        public static string StartupString { get => startupString; set => startupString = value; }
     }
     public partial class MainWindow : Window
     {
@@ -42,14 +44,14 @@ namespace BrainSimulator
         public static FiringHistoryWindow fwWindow = null;
         public static NotesDialog notesWindow = null;
 
-        Thread engineThread;
+        readonly Thread engineThread;
 
         public static bool useServers = false;
 
         private static int engineDelay = 500; //wait after each cycle of the engine, 0-1000
 
         //timer to update the neuron values 
-        private DispatcherTimer displayUpdateTimer = new DispatcherTimer();
+        readonly private DispatcherTimer displayUpdateTimer = new DispatcherTimer();
 
         // if the control key is pressed...used for adding multiple selection areas
         public static bool ctrlPressed = false;
@@ -59,7 +61,7 @@ namespace BrainSimulator
         public static string currentFileName = "";
 
         public static MainWindow thisWindow;
-        Window splashScreen = new SplashScreeen();
+        readonly Window splashScreen = new SplashScreeen();
 
         public ProgressDialog progressDialog;
 
@@ -90,7 +92,7 @@ namespace BrainSimulator
             //throw new FileNotFoundException();
 
             InitializeComponent();
-
+            
             engineThread.Priority = ThreadPriority.Lowest;
 
             displayUpdateTimer.Tick += DisplayUpdate_TimerTick;
@@ -191,6 +193,7 @@ namespace BrainSimulator
                 MRUList = new StringCollection();
             foreach (string fileItem in MRUList)
             {
+                if (fileItem == null) continue;
                 string shortName = Path.GetFileNameWithoutExtension(fileItem);
                 MenuItem mi = new MenuItem() { Header = shortName };
                 mi.Click += MRUListItem_Click;
@@ -271,7 +274,7 @@ namespace BrainSimulator
             KBStatus.Text = kbString;
         }
 
-        private void setTitleBar()
+        private void SetTitleBar()
         {
             Title = "Brain Simulator II " + System.IO.Path.GetFileNameWithoutExtension(currentFileName);
         }

@@ -80,7 +80,7 @@ namespace BrainSimulator.Modules
         {
             synth = new SpeechSynthesizer();
 
-            // Configure the audio output.   
+            // Configure the audio output.
             synth.SetOutputToDefaultAudioDevice();
             synth.SpeakCompleted += Synth_SpeakCompleted;
             synth.SelectVoice("Microsoft Zira Desktop");

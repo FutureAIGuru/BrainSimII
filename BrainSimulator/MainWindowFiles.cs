@@ -5,18 +5,10 @@
 
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Threading;
 
 namespace BrainSimulator
 {
@@ -51,7 +43,7 @@ namespace BrainSimulator
             else
                 SaveButton.IsEnabled = false;
 
-            setTitleBar();
+            SetTitleBar();
             await Task.Delay(1000).ContinueWith(t => ShowDialogs());
             foreach (ModuleView na in theNeuronArray.modules)
             {
@@ -191,7 +183,7 @@ namespace BrainSimulator
             if (neuronInUseCount == 0) return false;
             if (theNeuronArray.GetUndoCount() == undoCountAtLastSave) return false; //no changes have been made
 
-            bool canWrite = !XmlFile.CanWriteTo(currentFileName, out string message);
+            bool canWrite = XmlFile.CanWriteTo(currentFileName, out string message);
 
             SuspendEngine();
 
@@ -252,7 +244,7 @@ namespace BrainSimulator
                 if (SaveFile(saveFileDialog1.FileName))
                 {
                     AddFileToMRUList(currentFileName);
-                    setTitleBar();
+                    SetTitleBar();
                     return true;
                 }
             }

@@ -124,6 +124,7 @@ namespace BrainSimulator
                 theShape = theShape0;
 
                 //Get the type of the hit...
+                
                 shapeType st = (shapeType)theShape.GetValue(ShapeType);
 
                 //Set the cursor shape based on the type of object the mouse is over

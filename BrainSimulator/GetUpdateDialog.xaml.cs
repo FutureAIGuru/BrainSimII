@@ -26,9 +26,9 @@ namespace BrainSimulator
 
         private void ButtonGetUpdate_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://futureai.guru/BrainSimDownload.aspx");
+            MainWindow.OpenApp("https://futureai.guru/BrainSimDownload.aspx");
             this.Close();
-            MainWindow.thisWindow.Close();
+            MainWindow.thisWindow?.Close();
         }
 
         private void ButtonIgnore_Click(object sender, RoutedEventArgs e)

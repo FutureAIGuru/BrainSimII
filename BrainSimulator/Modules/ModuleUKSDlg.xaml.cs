@@ -46,7 +46,8 @@ namespace BrainSimulator.Modules
                 theTreeView.FlowDirection,
                 typeFace,
                 theTreeView.FontSize,
-                theTreeView.Foreground);
+                theTreeView.Foreground,
+                VisualTreeHelper.GetDpi(this).PixelsPerDip);
             charsPerLine = (int)( 10 * theTreeView.ActualWidth / ft.Width);
             charsPerLine -= 10; //leave a little margin...the indent is calculated for individual entries
             

@@ -1,18 +1,22 @@
 #define CompilingNeuronWrapper
 #pragma once
+
 #include <Windows.h> 
 #include <vector>
-#include<string>
+#include <string>
 #include <tuple>
+#include <array>
+
 
 using namespace std;
-
 
 namespace NeuronEngine
 {
 	class NeuronArrayBase;
 	class NeuronBase;
 	class SynapseBase;
+
+	typedef unsigned char byte;
 
 	namespace CLI
 	{

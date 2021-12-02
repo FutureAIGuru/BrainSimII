@@ -27,7 +27,7 @@ namespace BrainSimulator
 
         private void TheBrowser_Navigating(object sender, System.Windows.Navigation.NavigatingCancelEventArgs e)
         {
-            System.Diagnostics.Process.Start(e.Uri.ToString());
+            MainWindow.OpenApp(e.Uri.ToString());
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -45,9 +45,9 @@ namespace BrainSimulator
 
         }
 
-        private void registerButton_Click(object sender, RoutedEventArgs e)
+        private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://futureai.guru/BrainSimRegister.aspx");
+            MainWindow.OpenApp("https://futureai.guru/BrainSimRegister.aspx");
         }
     }
 }

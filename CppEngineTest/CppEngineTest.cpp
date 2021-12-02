@@ -1,5 +1,9 @@
+// CppEngineTest.cpp : This file contains the 'main' function. Program execution begins and ends there.
+//
 
-#include "main.h"
+#include "..\NeuronEngine\NeuronBase.h"
+#include "..\NeuronEngine\NeuronArrayBase.h"
+
 
 #include<execution>
 #include <stddef.h>
@@ -15,6 +19,9 @@ using namespace NeuronEngine;
 using namespace std::chrono;
 using namespace std;
 using namespace Concurrency;
+
+void outputElapsedTime(string msg);
+
 
 chrono::steady_clock::time_point start_time;
 typedef chrono::high_resolution_clock my_clock;
@@ -102,18 +109,18 @@ int main(int argc, char* argv[], char* envp[])
 	}
 	*/
 
-	long long neuronCount; 
+	long long neuronCount;
 	int threadCount;
 	long long synapsesPerDot;
 	int cyclesPerFiring;
 #if _DEBUG
-	neuronCount = 10'000;
+	neuronCount = 10'240;
 	synapsesPerNeuron = 100;
 	threadCount = 1;
 	synapsesPerDot = 1000;
 	cyclesPerFiring = 10;
 #else
-	neuronCount = 1'000'000;
+	neuronCount = 10'000'000;
 	synapsesPerNeuron = 100;
 	threadCount = 124;
 	synapsesPerDot = 1'000'000;
@@ -138,11 +145,11 @@ int main(int argc, char* argv[], char* envp[])
 		neuronArray->GetBounds(value, start, end);
 		for (int i = start; i < end; i++)
 		{
-			NeuronBase* n = neuronArray->GetNeuron(i+1);
+			NeuronBase* n = neuronArray->GetNeuron(i);
 			//n->AddSynapse(n, 1, false, true);
 			for (int j = 1; j < synapsesPerNeuron; j++)
 			{
-				int target = i+ rd() % 1'000;
+				int target = i + rd() % 1'000;
 				//int target = j;
 				if (target >= neuronArray->GetArraySize()) target -= neuronArray->GetArraySize();
 				if (target < 0) target += neuronArray->GetArraySize();

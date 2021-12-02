@@ -1,4 +1,7 @@
-﻿#include "SynapseBase.h"
+﻿#include "pch.h"
+
+
+#include "SynapseBase.h"
 #include "NeuronBase.h"
 
 namespace NeuronEngine

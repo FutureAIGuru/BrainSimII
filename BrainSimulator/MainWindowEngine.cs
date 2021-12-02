@@ -50,9 +50,10 @@ namespace BrainSimulator
             thisWindow.SetStatus(3, engineStatus, 0);
         }
 
+        static bool engineIsCancelled = false;
         private void EngineLoop()
         {
-            while (true)
+            while (!engineIsCancelled)
             {
                 if (IsArrayEmpty())
                 {
@@ -131,7 +132,8 @@ namespace BrainSimulator
         public static void ResumeEngine()
         {
             // first pop the top to make sure we balance the suspends and resumes
-            engineDelay = engineSpeedStack.Pop();
+            if (engineSpeedStack.Count > 0)
+                engineDelay = engineSpeedStack.Pop();
             if (theNeuronArray == null)
                 return;
 

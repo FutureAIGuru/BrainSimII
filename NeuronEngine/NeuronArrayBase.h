@@ -1,9 +1,12 @@
 ﻿#pragma once
 
+
 #include "NeuronBase.h"
 #include "SynapseBase.h"
 #include <vector>
 #include <atomic>
+
+
 #ifndef CompilingNeuronWrapper
 #include <concurrent_queue.h>
 #endif

@@ -270,3 +270,4 @@ AutomatedTests/report.html
 AutomatedTests/output.xml
 AutomatedTests/*.png
 /Installer/LatestBrainSimVersion.txt
+/BrainSimulator.backup

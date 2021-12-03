@@ -33,14 +33,28 @@ namespace BrainSimulator
             int modulePoint = undoList.Last().modulePoint;
             undoList.RemoveAt(undoList.Count - 1);
 
+            int undoCounter = 0;
             while (moduleUndoInfo.Count > modulePoint)
+            {
+                undoCounter++;
                 UndoModule();
+            } 
             while (selectionUndoInfo.Count > selectionPoint)
+            {
+                undoCounter++;
                 UndoSelection();
+            }
             while (neuronUndoInfo.Count > neuronPoint)
+            {
+                undoCounter++;
                 UndoNeuron();
+            }
             while (synapseUndoInfo.Count > synapsePoint)
+            {
+                undoCounter++;
                 UndoSynapse();
+            }
+            if (undoCounter == 0) Undo();
         }
 
         public void SetUndoPoint()
@@ -94,7 +108,7 @@ namespace BrainSimulator
             public int modulePoint;
         }
 
- 
+
         public void AddSynapseUndo(int source, int target, float weight, Synapse.modelType model, bool newSynapse, bool delSynapse)
         {
             SynapseUndo s;
@@ -123,7 +137,8 @@ namespace BrainSimulator
                 SelectionRectangle nsr1 = new SelectionRectangle(nsr.FirstSelectedNeuron, nsr.Height, nsr.Width);
                 s1.selectionState.selectedRectangles.Add(nsr1);
             }
-            selectionUndoInfo.Add(s1);
+            if (s1.selectionState.selectedRectangles.Count > 0)
+                selectionUndoInfo.Add(s1);
         }
         public void AddModuleUndo(int index, ModuleView currentModule)
         {
@@ -179,7 +194,7 @@ namespace BrainSimulator
                 }
                 else
                 {
-                    //if (m1.index == -1) //the module was just deleted
+                    if (m1.index == -1) //the module was just deleted
                     {
                         ModuleView mv = new ModuleView
                         {
@@ -193,15 +208,15 @@ namespace BrainSimulator
                         // modules.Add(mv);
                         ModuleView.CreateModule(mv.Label, mv.CommandLine, Utils.IntToColor(mv.Color), mv.FirstNeuron, mv.Width, mv.Height);
                     }
-                    //else
-                    //{
-                    //    modules[m1.index].FirstNeuron = m1.moduleState.FirstNeuron;
-                    //    modules[m1.index].Width = m1.moduleState.Width;
-                    //    modules[m1.index].Height = m1.moduleState.Height;
-                    //    modules[m1.index].Color = m1.moduleState.Color;
-                    //    modules[m1.index].CommandLine = m1.moduleState.CommandLine;
-                    //    modules[m1.index].Label = m1.moduleState.Label;
-                    //}
+                    else
+                    {
+                        modules[m1.index].FirstNeuron = m1.moduleState.FirstNeuron;
+                        modules[m1.index].Width = m1.moduleState.Width;
+                        modules[m1.index].Height = m1.moduleState.Height;
+                        modules[m1.index].Color = m1.moduleState.Color;
+                        modules[m1.index].CommandLine = m1.moduleState.CommandLine;
+                        modules[m1.index].Label = m1.moduleState.Label;
+                    }
                 }
                 moduleUndoInfo.RemoveAt(moduleUndoInfo.Count - 1);
             }

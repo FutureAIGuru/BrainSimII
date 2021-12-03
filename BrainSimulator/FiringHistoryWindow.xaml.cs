@@ -239,14 +239,11 @@ namespace BrainSimulator
         double wheelScale = 0;
         private void TheCanvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            wheelScale = theCanvas.Width / scroller.ActualWidth;
-            Debug.WriteLine("Old WheelScale: " + wheelScale);
+            //Debug.WriteLine("Old WheelScale: " + wheelScale);
             wheelScale += e.Delta / 120;
-            Debug.WriteLine("New WheelScale: " + wheelScale);
+            //Debug.WriteLine("New WheelScale: " + wheelScale);
             if (wheelScale < 0) wheelScale = 0;
-            Debug.WriteLine("Positive WheelScale: " + wheelScale);
             theCanvas.Width = scroller.ActualWidth * (1 + wheelScale);
-            Debug.WriteLine("New CanvasWidth: " + wheelScale);
             theCanvas.Children.Clear();
             ReallyDraw();
         }

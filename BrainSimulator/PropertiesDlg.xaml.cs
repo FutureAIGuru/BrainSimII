@@ -38,11 +38,12 @@ namespace BrainSimulator
                 txtNeuronsInUse.Text = neuronInUseCount.ToString("N0");
                 txtSynapses.Text = synapseCount.ToString("N0");
             }
-//            Owner = MainWindow.thisWindow;
+            //            Owner = MainWindow.thisWindow;
         }
 
         private void btnDialogOk_Click(object sender, RoutedEventArgs e)
         {
+            MainWindow.SuspendEngine();
             int.TryParse(txtColumns.Text, out int newCols);
             int.TryParse(txtRows.Text, out int newRows);
             int oldCols = MainWindow.theNeuronArray.arraySize / MainWindow.theNeuronArray.rows;
@@ -55,12 +56,12 @@ namespace BrainSimulator
             if (newCols != oldCols || newRows != oldRows)
             {
                 MainWindow.arrayView.ClearSelection();
-                SelectionRectangle rr = new SelectionRectangle(0, oldCols,oldRows);
+                SelectionRectangle rr = new SelectionRectangle(0, oldCols, oldRows);
                 MainWindow.arrayView.theSelection.selectedRectangles.Add(rr);
                 MainWindow.arrayView.CopyNeurons();
                 MainWindow.arrayView.ClearSelection();
                 MainWindow.theNeuronArray = new NeuronArray();
-                MainWindow.theNeuronArray.Initialize(newRows * newCols,newRows);
+                MainWindow.theNeuronArray.Initialize(newRows * newCols, newRows);
                 MainWindow.theNeuronArray.rows = newRows;
                 MainWindow.arrayView.targetNeuronIndex = 0;
                 MainWindow.arrayView.PasteNeurons();
@@ -72,6 +73,7 @@ namespace BrainSimulator
                 MainWindow.CloseHistoryWindow();
             }
             this.Close();
+            MainWindow.ResumeEngine();
         }
         private void btnDialogCancel_Click(object sender, RoutedEventArgs e)
         {

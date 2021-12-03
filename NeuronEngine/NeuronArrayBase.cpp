@@ -105,11 +105,11 @@ namespace NeuronEngine
 			});
 		return count;;
 	}
+
 	long NeuronArrayBase::GetNeuronsInUseCount()
 	{
 		std::atomic<long> count = 0;
 		parallel_for(0, threadCount, [&](int value) {
-			ProcessNeurons1(value);
 			int start, end;
 			GetBounds(value, start, end);
 			for (int i = start; i < end; i++)

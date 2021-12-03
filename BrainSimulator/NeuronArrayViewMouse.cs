@@ -224,7 +224,7 @@ namespace BrainSimulator
 
             if (MainWindow.theNeuronArray == null) return;
             MainWindow.theNeuronArray.SetUndoPoint();
-            //Debug.WriteLine("theCanvas_MouseDown" + MainWindow.theNeuronArray.Generation + theShape + theShapeType);
+            Debug.WriteLine("theCanvas_MouseDown" + MainWindow.theNeuronArray.Generation + theShape + theShapeType);
             Point currentPosition = e.GetPosition(theCanvas);
             LimitMousePostion(ref currentPosition);
             mouseDownNeuronIndex = dp.NeuronFromPoint(currentPosition);

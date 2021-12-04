@@ -53,6 +53,7 @@ namespace BrainSimulator
                 destNeuron.Id = destId;
                 destNeuron.Label = sourceNeuron.Label;
                 destNeuron.ToolTip= sourceNeuron.ToolTip;
+                destNeuron.ShowSynapses = sourceNeuron.ShowSynapses;
                 myClipBoard.SetNeuron(destId, destNeuron);
             }
 
@@ -252,6 +253,7 @@ namespace BrainSimulator
                     sourceNeuron.Owner = MainWindow.theNeuronArray;
                     sourceNeuron.Label = sourceNeuron.label;
                     sourceNeuron.ToolTip = n.ToolTip;
+                    sourceNeuron.ShowSynapses = n.ShowSynapses;
                     MainWindow.theNeuronArray.SetNeuron(destID, sourceNeuron);
 
 

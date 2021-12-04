@@ -294,10 +294,14 @@ namespace BrainSimulator
             ContextMenu cm = sender as ContextMenu;
             if (e.Key == Key.Delete)
             {
-                MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).DeleteSynapse((int)cm.GetValue(TargetIDProperty));
-                MainWindow.Update();
-                cmCancelled = true;
-                cm.IsOpen = false;
+                var focussedControl = FocusManager.GetFocusedElement(cm);
+                if (focussedControl.GetType() != typeof(TextBox))
+                {
+                    MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).DeleteSynapse((int)cm.GetValue(TargetIDProperty));
+                    MainWindow.Update();
+                    cmCancelled = true;
+                    cm.IsOpen = false;
+                }
             }
             if (e.Key == Key.Enter)
             {

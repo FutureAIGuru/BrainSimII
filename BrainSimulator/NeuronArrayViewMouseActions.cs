@@ -422,7 +422,7 @@ namespace BrainSimulator
 
         private void MoveModule(FrameworkElement theShape, int currentNeuron)
         {
-            //Debug.WriteLine("currentNeuron: " + currentNeuron + " prevModuleMouseLocation:" + prevModuleMouseLocation);
+            Debug.WriteLine("currentNeuron: " + currentNeuron + " prevModuleMouseLocation:" + prevModuleMouseLocation);
             lock (MainWindow.theNeuronArray.modules)
             {
                 if (currentNeuron != prevModuleMouseLocation)

@@ -329,7 +329,7 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("ModuleRobot port open failed because: " + e.Message);
+                    MessageBox.Show(MainWindow.thisWindow,"ModuleRobot port open failed because: " + e.Message);
                     return;
                 }
             }

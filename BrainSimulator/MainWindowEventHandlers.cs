@@ -69,14 +69,7 @@ namespace BrainSimulator
                     theNeuronArrayView.ClearSelection();
                     Update();
                 }
-                else
-                {
-                    if (theNeuronArray != null)
-                    {
-                        theNeuronArray.Undo();
-                        theNeuronArrayView.Update();
-                    }
-                }
+                //TODO here is where we'd add deleting the last-clicked module (issue #160) should we choose to implement it
             }
             if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
             {
@@ -662,9 +655,7 @@ namespace BrainSimulator
             PropertiesDlg p = new PropertiesDlg();
             try
             {
-                SuspendEngine();
                 p.ShowDialog();
-                ResumeEngine();
             }
             catch
             {

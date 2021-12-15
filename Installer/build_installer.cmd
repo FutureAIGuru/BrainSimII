@@ -12,17 +12,28 @@ SET ORGDIR=%CD%
 
 CD %ORGDIR%
 CD ..
-SET BINDIR=%CD%\BrainSimulator\bin\x64\release
-CD ..
-
-IF EXIST [%1] (
-	SET CERTFILE=%1
-) ELSE (
-	SET CERTFILE="%CD%\Certificate\FutureAIEV.cer"
-)
+SET BINDIR=%CD%\BrainSimulator\bin\\release\net6.0-windows
 CD %ORGDIR%
 
-SET WEBDIR=C:\Users\c_sim\source\repos\FutureAI\FutureAI
+:CERTFILERETRY
+SET CERTFILE=
+set /p CERTFILE="Enter Certificate Path: "
+
+IF NOT DEFINED CERTFILE ( GOTO CERTFILEDONE)
+
+REM check for existance and retry if not
+IF NOT EXIST %CERTFILE% (
+	ECHO "Certificate path does not exist"
+
+	GOTO  CERTFILERETRY
+)
+
+:CERTFILEDONE
+
+CD %ORGDIR%
+
+SET WEBDIR=C:\Users\c_sim\source\repos\FutureAIWebsite\FutureAI
+
 IF NOT EXIST %WEBDIR% (
 	SET WEBDIR=C:\Users\c_sim\source\repos\FutureAIGuru\FutureAIWebsite\FutureAI
 )
@@ -45,39 +56,42 @@ del "%ORGDIR%\Step*.log""
 
 ECHO Setting up the developer path. . .
 IF NOT DEFINED DevEnvDir (
-    call vcvarsall.bat amd64 >"%ORGDIR%\Step1Setup.log"
+    call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
 )
+
 REM NSIS doesn't create its own path
 path|find /i "NSIS" > nul || SET PATH=%PATH%;C:\Program Files (x86)\NSIS\
 REM this is some secret stuff which only adds to the path if necessary
 
+
 ECHO Building the program. . .
-msbuild -p:Configuration=Release "..\BrainSimulator.sln" >"%ORGDIR%\Step2Build.log"
+msbuild -p:Configuration=Release -maxCpuCount:16 -t:rebuild "..\BrainSimulator.sln" >"%ORGDIR%\Step2Build.log"
 PAUSE
 
 
-IF EXIST %CERTFILE% (
-ECHO Signing the program binaries. . .
-signtool sign /f %CERTFILE% /p FutureAI /t http://timestamp.comodoca.com "%BINDIR%\brainsimulator.exe" "%BINDIR%\webcamlib.dll" "%BINDIR%\touchless.vision.dll" "%BINDIR%\NeuronEngine.dll" "%BINDIR%\NeuronEngineWrapper.dll" "%BINDIR%\NeuronServer.exe" >"%ORGDIR%\Step3SignExecutables.log"
+IF DEFINED CERTFILE (
+	ECHO Signing the program binaries. . .
+	signtool sign /f %CERTFILE% /p FutureAI /t http://timestamp.comodoca.com "%BINDIR%\brainsimulator.exe" "%BINDIR%\brainsimulator.dll" "%BINDIR%\NeuronEngine.dll" "%BINDIR%\NeuronEngineWrapper.dll" "%BINDIR%\NeuronServer.exe" "%BINDIR%\NeuronServer.dll" >"%ORGDIR%\Step3SignExecutables.log"
+	PAUSE
 )
-PAUSE
 
 ECHO Creating the Installer. . .
 makensis _BRAINSIM2.nsi >"%ORGDIR%\Step4BuildInstaller.log"
 PAUSE
 
-IF EXIST %CERTFILE% (
-ECHO Signing the install.exe. . .
-signtool sign /f %CERTFILE% /p FutureAI /t http://timestamp.comodoca.com "%ORGDIR%\Brain Simulator II Setup.exe" >"%ORGDIR%\Step5SignInstaller.log"
+IF DEFINED CERTFILE (
+	ECHO Signing the install.exe. . .
+	signtool sign /f %CERTFILE% /p FutureAI /t http://timestamp.comodoca.com "%ORGDIR%\Brain Simulator II Setup.exe" >"%ORGDIR%\Step5SignInstaller.log"
 )
 
 :COPYFILES    
 
 ECHO Create the version file 
-..\GetVersionInfo\bin\Debug\netcoreapp3.1\GetVersionInfo "%BINDIR%\brainsimulator.exe" > "%ORGDIR%\LatestBrainSimVersion.txt"
+..\GetVersionInfo\bin\Debug\net6.0\GetVersionInfo "%BINDIR%\brainsimulator.exe" > "%ORGDIR%\LatestBrainSimVersion.txt"
 
-ECHO Copy files to %WEBDIR%
+IF NOT DEFINED CERTFILE (GOTO DONE)
 IF EXIST "%WEBDIR%" (
+	ECHO Copy files to %WEBDIR%
 	ECHO Copy the installer exe file to the website upload folder
 	copy "Brain Simulator II Setup.exe" %WEBDIR%
 
@@ -85,6 +99,6 @@ IF EXIST "%WEBDIR%" (
 	copy "LatestBrainSimVersion.txt" %WEBDIR%
 )
 
+:DONE
 ECHO Done!
-REM copy "T:\REPOSITORY\BrainSimII\Installer\Brain Simulator II Setup.exe" T:\MK_INSTALLER
 PAUSE

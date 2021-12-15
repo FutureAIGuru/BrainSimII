@@ -2,7 +2,7 @@
   "profiles": {
     "GetVersionInfo": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\Users\\c_sim\\Documents\\Visual Studio 2015\\Projects\\BrainSimulator\\BrainSimulator\\bin\\x64\\Release\\brainsimulator.exe\""
+      "commandLineArgs": "\"C:\\Users\\c_sim\\source\\repos\\FutureAIGuru\\BrainSimII\\Installer\\Brain Simulator II Setup.exe\""
     }
   }
 }

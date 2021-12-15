@@ -54,7 +54,7 @@ namespace BrainSimulator.Modules
             }
             OpenFileDialog openFileDialog1 = new OpenFileDialog
             {
-                Filter = "Image Files| *.png",
+                Filter = "Image Files| *.png;*.jpg",
                 Title = "Select an image file",
                 Multiselect = true,
                 InitialDirectory = defaultDirectory,

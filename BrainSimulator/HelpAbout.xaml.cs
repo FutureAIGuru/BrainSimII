@@ -42,11 +42,17 @@ namespace BrainSimulator
         public HelpAbout()
         {
             InitializeComponent();
+            string displayableVersion = GetBuildString();
+            labelVersion.Content = "Version: " + displayableVersion;
+            labelContributors.Content = "Charles J. Simon\nAndré Slabber\n\n\n";
+        }
+
+        public static string GetBuildString()
+        {
             Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             DateTime buildDate = GetBuildDate(System.Reflection.Assembly.GetExecutingAssembly());
             string displayableVersion = $"{version.Major}.{version.Minor}.{version.Build}   ({buildDate})";
-            labelVersion.Content = "Version: " + displayableVersion;
-            labelContributors.Content = "Charles J. Simon\nAndré Slabber\n\n\n";
+            return displayableVersion;
         }
 
         private void ButtonOK_Click(object sender, RoutedEventArgs e)

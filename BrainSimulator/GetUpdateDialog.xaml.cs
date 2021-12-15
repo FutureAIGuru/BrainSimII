@@ -26,6 +26,8 @@ namespace BrainSimulator
 
         private void ButtonGetUpdate_Click(object sender, RoutedEventArgs e)
         {
+            Properties.Settings.Default.CheckForUpdates = cbDontAsk.IsChecked == false;
+            Properties.Settings.Default.Save();
             MainWindow.OpenApp("https://futureai.guru/BrainSimDownload.aspx");
             this.Close();
             MainWindow.thisWindow?.Close();

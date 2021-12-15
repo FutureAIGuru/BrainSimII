@@ -41,6 +41,8 @@ namespace BrainSimulator
                 var response = await theHttpClient.GetAsync("https://futureai.guru/LatestBrainSimVersion.txt");
                 if (response.IsSuccessStatusCode)
                 {
+                    DateTime? fileDate = response.Content.Headers.LastModified?.DateTime;
+                    
                     var theStream = await response.Content.ReadAsByteArrayAsync();
                     using (var contentStream = new MemoryStream(theStream))
                     {
@@ -51,17 +53,9 @@ namespace BrainSimulator
                     Version runningVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
                     if (onlineVersion > runningVersion || alwaysShow)
                     {
-                        //                        DateTime runningBuildDate = new DateTime(2000, 1, 1)
-                        //                            .AddDays(runningVersion.Build).AddSeconds(runningVersion.Revision * 2);
-                        //                        DateTime onlineBuildDate = new DateTime(2000, 1, 1)
-                        //                            .AddDays(onlineVersion.Build).AddSeconds(onlineVersion.Revision * 2);
+                        string displayableOnlineVersion = onlineVersion.ToString() + "    (" + fileDate.ToString() + ")";
 
-                        //string displayableRunningVersion = $"{runningVersion.Major}.{runningVersion.Minor}.{runningVersion.Build}   ({runningBuildDate})";
-                        //string displayableOnlineVersion = $"{onlineVersion.Major}.{onlineVersion.Minor}.{onlineVersion.Build}   ({onlineBuildDate})";
-                        string displayableRunningVersion = runningVersion.ToString();// $"{runningVersion.Major}.{runningVersion.Minor}.{runningVersion.Build}   ({runningBuildDate})";
-                        string displayableOnlineVersion = onlineVersion.ToString();// $"{onlineVersion.Major}.{onlineVersion.Minor}.{onlineVersion.Build}   ({onlineBuildDate})";
-
-                        string s = "Currently Running:\n " + displayableRunningVersion;
+                        string s = "Currently Running:\n " + HelpAbout.GetBuildString();
                         s += "\n\nAvailable for Download: \n" + displayableOnlineVersion;
                         if (onlineVersion <= runningVersion)
                             s += "\nYou have the latest version";

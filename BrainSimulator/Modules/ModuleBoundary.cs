@@ -88,8 +88,8 @@ namespace BrainSimulator.Modules
         }
 
         public int hueLimit = 10; // minimum hue difference for boundary (in degrees)
-        public float brightLimit = .5f; // minimum hue difference for boundary (in degrees)
-        public float satLimit = .5f; // minimum hue difference for boundary (in degrees)
+        public float brightLimit = .5f; // minimum brightness difference for boundary (0-1)
+        public float satLimit = .5f; // minimum saturation difference for boundary (0-1)
 
 
         int backgroundColor;
@@ -111,9 +111,9 @@ namespace BrainSimulator.Modules
                 for (int i = 0; i < source.Width; i++)
                 {
                     int index = source.GetNeuronIndexAt(i, j);
-                    neuronValues[i,j] =  MainWindow.theNeuronArray.GetNeuronLastCharge(index);
+                    neuronValues[i, j] = MainWindow.theNeuronArray.GetNeuronLastCharge(index);
                     neuronValuesI[i, j] = (int)neuronValues[i, j];
-                                   }
+                }
 
             //find all the points which have different color values than their neighbors
             Array2D boundaryValues = new Array2D(na.Width, na.Height);
@@ -147,7 +147,7 @@ namespace BrainSimulator.Modules
                 for (int j = 0; j < na.Height; j++)
                 {
                     int index = na.GetNeuronIndexAt(i, j);
-                    float lastCharge = boundaryValues[i,j];
+                    float lastCharge = boundaryValues[i, j];
                     if (cornerValues[i, j] != 0) lastCharge = 0.99f;
                     MainWindow.theNeuronArray.SetNeuronLastCharge(index, lastCharge);
                 }
@@ -157,6 +157,89 @@ namespace BrainSimulator.Modules
         }
 
 
+
+
+        bool IsBoundary(int x, int y, Array2D neuronValues)
+        {
+            //if (neuronValues[x, y] == backgroundColor) return false;
+            Color c = Utils.IntToDrawingColor(neuronValues[x, y]);
+            float hue2 = c.GetHue();
+            float bright2 = c.GetBrightness();
+            float sat2 = c.GetSaturation();
+
+            //Color background = Utils.IntToDrawingColor(backgroundColor);
+            //float backHue = background.GetHue();
+            //float backSat = background.GetSaturation();
+            //float backBrightness = background.GetBrightness();
+            //if (Math.Abs(backHue - hue2) < hueLimit &&
+            //    Math.Abs(backSat - sat2) < satLimit &&
+            //    Math.Abs(backBrightness - bright2) < brightLimit) 
+            //    return false;
+
+            for (int i = 0; i < 3; i++)
+            {
+                GetDeltasFromDirection(i, out int dx, out int dy);
+                int x1 = x + dx;
+                int y1 = y + dy;
+
+                Color c1 = Utils.IntToDrawingColor(neuronValues[x1, y1]);
+
+                float hue1 = c1.GetHue();
+                float bright1 = c1.GetBrightness();
+                float sat1 = c1.GetSaturation();
+
+                if (Math.Abs(hue1 - hue2) > hueLimit || Math.Abs(bright1 - bright2) > brightLimit || Math.Abs(sat1 - sat2) > satLimit)
+                    return true;
+            }
+            return false;
+        }
+        public static void GetDeltasFromDirection(int dir, out int dx, out int dy)
+        {
+            switch (dir)
+            {
+                case 0: dx = 1; dy = 0; break;
+                case 1: dx = 1; dy = 1; break;
+                case 2: dx = 0; dy = 1; break;
+                case 3: dx = -1; dy = 1; break;
+                case 4: dx = -1; dy = 0; break;
+                case 5: dx = -1; dy = -1; break;
+                case 6: dx = 0; dy = -1; break;
+                case 7: dx = 1; dy = -1; break;
+                default: dx = 0; dy = 0; break;
+            }
+            //while (dir < 0) dir += 8;
+            //while (dir > 7) dir -= 8;
+            //switch (dir)
+            //{
+            //    case 0: dx = 1; dy = 0; break;
+            //    case 1: dx = 1; dy = -1; break;
+            //    case 2: dx = 0; dy = -1; break;
+            //    case 3: dx = -1; dy = -1; break;
+            //    case 4: dx = -1; dy = 0; break;
+            //    case 5: dx = -1; dy = 1; break;
+            //    case 6: dx = 0; dy = 1; break;
+            //    case 7: dx = 1; dy = 1; break;
+            //    default: dx = 0; dy = 0; break;
+            //}
+        }
+
+        bool IsCorner(int x, int y, Array2D boundaryValues)
+        {
+            if (boundaryValues[x, y] == 0) return false;
+            //does it have 5 cosecutive immediate neighbors?
+            int consecutive = 0;
+            for (int i = 0; i < 12; i++)
+            {
+                GetDeltasFromDirection(i, out int dx, out int dy);
+                int x1 = x + dx;
+                int y1 = y + dy;
+                if (boundaryValues[x1, y1] == 0) consecutive++;
+                else consecutive = 0;
+                if (consecutive == 5) return true;
+            }
+            if (CornerMatchPattern(x, y, boundaryValues)) return true;
+            return false;
+        }
 
         private float GetArrayValue(int k, int orientation, int i1, int j1, float[,,] matchPatterns)
         {
@@ -194,58 +277,6 @@ namespace BrainSimulator.Modules
 
             return arrayVal;
         }
-
-        bool IsBoundary(int x, int y, Array2D neuronValues)
-        {
-            if (neuronValues[x, y] == backgroundColor) return false;
-            Color c = Utils.IntToDrawingColor(neuronValues[x, y]);
-            float hue2 = c.GetHue();
-            float bright2 = c.GetBrightness();
-            float sat2 = c.GetSaturation();
-
-            Color background = Utils.IntToDrawingColor(backgroundColor);
-            float backHue = background.GetHue();
-            float backSat = background.GetSaturation();
-            float backBrightness = background.GetBrightness();
-            if (Math.Abs(backHue - hue2) < hueLimit &&
-                Math.Abs(backSat - sat2) < satLimit &&
-                Math.Abs(backBrightness - bright2) < brightLimit) return false;
-
-            for (int i = 0; i < 8; i++)
-            {
-                GetDeltasFromDirection(i, out int dx, out int dy);
-                int x1 = x + dx;
-                int y1 = y + dy;
-
-                Color c1 = Utils.IntToDrawingColor(neuronValues[x1, y1]);// n1.LastChargeInt);
-
-                float hue1 = c1.GetHue();
-                float bright1 = c1.GetBrightness();
-                float sat1 = c1.GetSaturation();
-
-                if (Math.Abs(hue1 - hue2) > hueLimit || Math.Abs(bright1 - bright2) > brightLimit || Math.Abs(sat1 - sat2) > satLimit)
-                    return true;
-            }
-            return false;
-        }
-        bool IsCorner(int x, int y, Array2D boundaryValues)
-        {
-            if (boundaryValues[x, y] == 0) return false;
-            //does it have 5 cosecutive immediate neighbors?
-            int consecutive = 0;
-            for (int i = 0; i < 12; i++)
-            {
-                GetDeltasFromDirection(i, out int dx, out int dy);
-                int x1 = x + dx;
-                int y1 = y + dy;
-                if (boundaryValues[x1, y1] == 0) consecutive++;
-                    else consecutive = 0;
-                if (consecutive == 5) return true;
-            }
-            if (CornerMatchPattern(x, y, boundaryValues)) return true;
-            return false;
-        }
-
         bool CornerMatchPattern(int x, int y, Array2D boundaryValues)
         {
             float[,,] matchPatternsCorner = new float[,,]
@@ -297,23 +328,6 @@ namespace BrainSimulator.Modules
         }
 
 
-        public static void GetDeltasFromDirection(int dir, out int dx, out int dy)
-        {
-            while (dir < 0) dir += 8;
-            while (dir > 7) dir -= 8;
-            switch (dir)
-            {
-                case 0: dx = 1; dy = 0; break;
-                case 1: dx = 1; dy = -1; break;
-                case 2: dx = 0; dy = -1; break;
-                case 3: dx = -1; dy = -1; break;
-                case 4: dx = -1; dy = 0; break;
-                case 5: dx = -1; dy = 1; break;
-                case 6: dx = 0; dy = 1; break;
-                case 7: dx = 1; dy = 1; break;
-                default: dx = 0; dy = 0; break;
-            }
-        }
 
         //fill this method in with code which will execute once
         //when the module is added, when "initialize" is selected from the context menu,
@@ -348,7 +362,7 @@ namespace BrainSimulator.Modules
             s2.Children.Add(new Label { Content = "Thresholds:" });
 
             StackPanel s = new StackPanel { Orientation = Orientation.Horizontal };
-            s.Children.Add(new Label { Content = "Hue (0-360):", Width = 70 });
+            s.Children.Add(new Label { Content = "Hue (0-360): " + (int)hueLimit, Width = 110 });
             Slider sl1 = new Slider { Name = "Hue", Maximum = 1, Width = 100, Height = 20, Value = hueLimit / 360f };
             sl1.ValueChanged += Sl1_ValueChanged;
             s.Children.Add(sl1);
@@ -356,14 +370,14 @@ namespace BrainSimulator.Modules
 
 
             s = new StackPanel { Orientation = Orientation.Horizontal };
-            s.Children.Add(new Label { Content = "Bright (0-1):", Width = 70 });
+            s.Children.Add(new Label { Content = "Bright (0-1): " + brightLimit.ToString("f2"), Width = 110 });
             sl1 = new Slider { Name = "Brt", Maximum = 1, Width = 100, Height = 20, Value = brightLimit };
             sl1.ValueChanged += Sl1_ValueChanged;
             s.Children.Add(sl1);
             s2.Children.Add(s);
 
             s = new StackPanel { Orientation = Orientation.Horizontal };
-            s.Children.Add(new Label { Content = "Sat. (0-1):", Width = 70 });
+            s.Children.Add(new Label { Content = "Sat. (0-1): " + satLimit, Width = 110 });
             sl1 = new Slider { Name = "Sat", Maximum = 1, Width = 100, Height = 20, Value = satLimit };
             sl1.ValueChanged += Sl1_ValueChanged;
             s.Children.Add(sl1);
@@ -372,14 +386,36 @@ namespace BrainSimulator.Modules
             return new MenuItem { Header = s2, StaysOpenOnClick = true };
         }
 
+
         private void Sl1_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (sender is Slider sl)
             {
-                if (sl.Name == "Hue") hueLimit = (int)(sl.Value * 360);
-                if (sl.Name == "Brt") brightLimit = (float)sl.Value;
-                if (sl.Name == "Sat") satLimit = (float)sl.Value;
+                string newLabelText = "";
+                switch (sl.Name)
+                {
+                    case "Hue":
+                        hueLimit = (int)(sl.Value * 360);
+                        newLabelText = "Hue (0-360): " + (int)hueLimit;
+                        break;
+                    case "Brt":
+                        brightLimit = (float)sl.Value;
+                        newLabelText = "Bright (0-1): " + brightLimit.ToString("f2");
+                        break;
+                    case "Sat":
+                        satLimit = (float)sl.Value;
+                        newLabelText = "Sat. (0-1): " + satLimit;
+                        break;
+                }
 
+                //set the value in the label
+                if (sl.Parent is StackPanel sp)
+                {
+                    if (sp.Children[0] is Label l)
+                    {
+                        l.Content = newLabelText;
+                    }
+                }
             }
         }
     }

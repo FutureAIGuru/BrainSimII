@@ -125,7 +125,7 @@ namespace BrainSimulator
                         Height = mv.Height,
                         Width = mv.Width,
                         Label = mv.Label,
-                        CommandLine = mv.CommandLine,
+                        ModuleTypeStr = mv.ModuleTypeStr,
                     };
 
                     myClipBoard.modules.Add(newMV);
@@ -292,7 +292,7 @@ namespace BrainSimulator
                     Height = mv.Height,
                     Width = mv.Width,
                     Label = mv.Label,
-                    CommandLine = mv.CommandLine,
+                    ModuleTypeStr = mv.ModuleTypeStr,
                 };
 
                 MainWindow.theNeuronArray.modules.Add(newMV);

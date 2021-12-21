@@ -19,8 +19,7 @@ namespace BrainSimulator.Modules
             if (words.Count > 0)
             {
                 string word = words[0];
-                na.BeginEnum();
-                for (Neuron n = na.GetNextNeuron(); n != null; n = na.GetNextNeuron())
+                foreach (Neuron n in mv.Neurons)
                 {
                     if (n.Label == word)
                     {
@@ -34,7 +33,7 @@ namespace BrainSimulator.Modules
                         n.Label = word;
                         n.CurrentCharge = 1;
                         //connection to UKS 
-                        ModuleUKSN nmUKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+                        ModuleUKSN nmUKS = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
                         if (nmUKS != null)
                         {
                             IList<Thing> words = nmUKS.Labeled("Word").Children;
@@ -71,19 +70,18 @@ namespace BrainSimulator.Modules
         //or when the engine restart button is pressed
         public override void Initialize()
         {
-            na.BeginEnum();
-            for (Neuron n = na.GetNextNeuron(); n != null; n = na.GetNextNeuron())
+            foreach (Neuron n in mv.Neurons)
             {
                 n.Label = "";
                 n.DeleteAllSynapes();
             }
 
-            Neuron n1 = na.GetNeuronAt(0);
+            Neuron n1 = mv.GetNeuronAt(0);
             n1.Label = "good";
             Neuron n1Target = GetNeuron("Module2DUKS", "Positive");
             if (n1Target != null)
                 n1.AddSynapse(n1Target.Id, 1);
-            Neuron n2 = na.GetNeuronAt(1);
+            Neuron n2 = mv.GetNeuronAt(1);
             n2.Label = "no";
             Neuron n2Target = GetNeuron("Module2DUKS", "Negative");
             if (n2Target != null)

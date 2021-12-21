@@ -67,7 +67,7 @@ namespace BrainSimulator.Modules
             set
             {
                 poses.Clear();
-                for (int i = 2; i < na.NeuronCount; i++) na.GetNeuronAt(i).Label = "";
+                for (int i = 2; i < mv.NeuronCount; i++) mv.GetNeuronAt(i).Label = "";
                 string[] theLines = value.Split(new char[] { '\n' });
                 Pose theNewPose = new Pose();
                 foreach (string line in theLines)
@@ -100,7 +100,7 @@ namespace BrainSimulator.Modules
                         if (theNewPose.name != "")
                         {
                             poses.Add(theNewPose);
-                            na.GetNeuronAt(poses.Count+1).Label = theNewPose.name;
+                            mv.GetNeuronAt(poses.Count+1).Label = theNewPose.name;
                         }
                         theNewPose = new Pose();
                     }
@@ -128,12 +128,12 @@ namespace BrainSimulator.Modules
             }
 
             //see if a pose request has been fired
-            for (int i = 2; i < na.NeuronCount; i++)
+            for (int i = 2; i < base.mv.NeuronCount; i++)
             {
-                Neuron n = na.GetNeuronAt(i);
+                Neuron n = base.mv.GetNeuronAt(i);
                 if (n == null || n.Label == "") break;
                 //update internal labels in case they are changed
-                poses[i - 2].name = na.GetNeuronAt(i).Label;
+                poses[i - 2].name = base.mv.GetNeuronAt(i).Label;
                 if (n.Fired())
                 {
                     Pose thePose = poses[i - 2];
@@ -155,7 +155,7 @@ namespace BrainSimulator.Modules
             if (GetNeuron("Save").Fired() || GetNeuron("Move").Fired())
             {
                 Neuron n = null;
-                foreach (Neuron n1 in na.Neurons1)
+                foreach (Neuron n1 in base.mv.Neurons)
                 {
                     if (n1.Label == "")
                     {
@@ -197,8 +197,8 @@ namespace BrainSimulator.Modules
         {
             Init();
             previousPositionValues = null;
-            na.GetNeuronAt(0, 0).Label = "Save";
-            na.GetNeuronAt(0, 1).Label = "Move";
+            mv.GetNeuronAt(0, 0).Label = "Save";
+            mv.GetNeuronAt(0, 1).Label = "Move";
         }
 
         //the following can be used to massage public data to be different in the xml file
@@ -212,7 +212,7 @@ namespace BrainSimulator.Modules
             Initialize();
             for (int i = 0; i < poses.Count; i++)
             {
-                na.GetNeuronAt(i + 2).Label = poses[i].name;
+                mv.GetNeuronAt(i + 2).Label = poses[i].name;
             }
         }
 
@@ -221,7 +221,7 @@ namespace BrainSimulator.Modules
         //delete if not needed
         public override void SizeChanged()
         {
-            if (na == null) return; //this is called the first time before the module actually exists
+            if (mv == null) return; //this is called the first time before the module actually exists
         }
     }
 }

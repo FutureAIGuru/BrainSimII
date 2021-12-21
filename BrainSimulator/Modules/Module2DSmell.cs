@@ -47,9 +47,9 @@ namespace BrainSimulator.Modules
         }
         public override void Initialize()
         {
-            na.GetNeuronAt(0, 0).Model = Neuron.modelType.FloatValue;
-            na.GetNeuronAt(1, 0).Model = Neuron.modelType.FloatValue;
-            na.GetNeuronAt(3, 0).Model = Neuron.modelType.FloatValue;
+            mv.GetNeuronAt(0, 0).Model = Neuron.modelType.FloatValue;
+            mv.GetNeuronAt(1, 0).Model = Neuron.modelType.FloatValue;
+            mv.GetNeuronAt(3, 0).Model = Neuron.modelType.FloatValue;
         }
 
     }

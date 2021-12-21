@@ -88,14 +88,14 @@ namespace BrainSimulator.Modules
         private void LoadImage(Bitmap bitmap1)
         {
 
-            float vRatio = bitmap1.Height / (float)na.Height;
-            float hRatio = bitmap1.Width / (float)na.Width;
-            for (int i = 0; i < na.Height; i++)
-                for (int j = 0; j < na.Width; j++)
+            float vRatio = bitmap1.Height / (float)mv.Height;
+            float hRatio = bitmap1.Width / (float)mv.Width;
+            for (int i = 0; i < mv.Height; i++)
+                for (int j = 0; j < mv.Width; j++)
                 {
-                    Neuron n = na.GetNeuronAt(j, i);
-                    int x = (int)(j * (bitmap1.Width - 1) / (float)(na.Width - 1));
-                    int y = (int)(i * (bitmap1.Height - 1) / (float)(na.Height - 1));
+                    Neuron n = mv.GetNeuronAt(j, i);
+                    int x = (int)(j * (bitmap1.Width - 1) / (float)(mv.Width - 1));
+                    int y = (int)(i * (bitmap1.Height - 1) / (float)(mv.Height - 1));
 
                     System.Drawing.Color c = bitmap1.GetPixel(x, y);
                     int val = Utils.ColorToInt(c);
@@ -109,8 +109,8 @@ namespace BrainSimulator.Modules
         //or when the engine restart button is pressed
         public override void Initialize()
         {
-            if (na == null) return; //this is called the first time before the module actually exists
-            foreach (Neuron n in na.Neurons1)
+            if (mv == null) return; //this is called the first time before the module actually exists
+            foreach (Neuron n in mv.Neurons)
                 n.Model = Neuron.modelType.Color;
 
             //This gets the wifi IP address
@@ -187,7 +187,7 @@ namespace BrainSimulator.Modules
             {
                 if (debugMsgCount++ < 5)
                     Debug.WriteLine("ModuleRobotCamera:GetCameraImage encountered exception: " + e.Message);
-                na.GetNeuronAt(0, 0).SetValueInt(0xff0000);
+                mv.GetNeuronAt(0, 0).SetValueInt(0xff0000);
                 theHttpClient.CancelPendingRequests();
             }
             httpClientBusy = false;
@@ -233,8 +233,8 @@ namespace BrainSimulator.Modules
         //delete if not needed
         public override void SizeChanged()
         {
-            if (na == null) return; //this is called the first time before the module actually exists
-            foreach (Neuron n in na.Neurons1)
+            if (mv == null) return; //this is called the first time before the module actually exists
+            foreach (Neuron n in mv.Neurons)
                 n.Model = Neuron.modelType.Color;
         }
     }

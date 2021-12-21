@@ -30,18 +30,18 @@ namespace BrainSimulator.Modules
         public override void Initialize()
         {
             ClearNeurons();
-            for (int x = 0; x < na.Width; x += 2)
+            for (int x = 0; x < mv.Width; x += 2)
             {
-                for (int y = 0; y < na.Height; y += 2)
+                for (int y = 0; y < mv.Height; y += 2)
                 {
                     //three internal neurons 
-                    Neuron valueNeuron = na.GetNeuronAt(x + 1, y);
+                    Neuron valueNeuron = mv.GetNeuronAt(x + 1, y);
                     if (valueNeuron == null) continue;
                     valueNeuron.Label = "#";
-                    Neuron liveNeuron = na.GetNeuronAt(x, y);
+                    Neuron liveNeuron = mv.GetNeuronAt(x, y);
                     if (liveNeuron == null) continue;
                     liveNeuron.Label = "+";
-                    Neuron dieNeuron = na.GetNeuronAt(x, y + 1);
+                    Neuron dieNeuron = mv.GetNeuronAt(x, y + 1);
                     if (dieNeuron == null) continue;
                     dieNeuron.Label = "-";
                     liveNeuron.Model = Neuron.modelType.LIF;
@@ -63,26 +63,26 @@ namespace BrainSimulator.Modules
                     // add live & die synapses to the 8 surrounding neurons
                     // may be better to rewrite this without relying on try catch blocks. 
                     // bottom row
-                    try { valueNeuron.AddSynapse(na.GetNeuronAt(x + 2, y).Id, .4f); } catch { }
-                    try { valueNeuron.AddSynapse(na.GetNeuronAt(x + 2, y + 1).Id, .3f); } catch { }
-                    try { valueNeuron.AddSynapse(na.GetNeuronAt(x + 2, y + 2).Id, .4f); } catch { }
-                    try { valueNeuron.AddSynapse(na.GetNeuronAt(x + 2, y + 2 + 1).Id, .3f); } catch { }
-                    try { valueNeuron.AddSynapse(na.GetNeuronAt(x + 2, y - 2).Id, .4f); } catch { }
-                    try { valueNeuron.AddSynapse(na.GetNeuronAt(x + 2, y - 2 + 1).Id, .3f); } catch { }
+                    try { valueNeuron.AddSynapse(mv.GetNeuronAt(x + 2, y).Id, .4f); } catch { }
+                    try { valueNeuron.AddSynapse(mv.GetNeuronAt(x + 2, y + 1).Id, .3f); } catch { }
+                    try { valueNeuron.AddSynapse(mv.GetNeuronAt(x + 2, y + 2).Id, .4f); } catch { }
+                    try { valueNeuron.AddSynapse(mv.GetNeuronAt(x + 2, y + 2 + 1).Id, .3f); } catch { }
+                    try { valueNeuron.AddSynapse(mv.GetNeuronAt(x + 2, y - 2).Id, .4f); } catch { }
+                    try { valueNeuron.AddSynapse(mv.GetNeuronAt(x + 2, y - 2 + 1).Id, .3f); } catch { }
 
                     // middle row
-                    try { valueNeuron.AddSynapse(na.GetNeuronAt(x, y + 2).Id, .4f); } catch { }
-                    try { valueNeuron.AddSynapse(na.GetNeuronAt(x, y + 2 + 1).Id, .3f); } catch { }
-                    try { valueNeuron.AddSynapse(na.GetNeuronAt(x, y - 2).Id, .4f); } catch { }
-                    try { valueNeuron.AddSynapse(na.GetNeuronAt(x, y - 2 + 1).Id, .3f); } catch { }
+                    try { valueNeuron.AddSynapse(mv.GetNeuronAt(x, y + 2).Id, .4f); } catch { }
+                    try { valueNeuron.AddSynapse(mv.GetNeuronAt(x, y + 2 + 1).Id, .3f); } catch { }
+                    try { valueNeuron.AddSynapse(mv.GetNeuronAt(x, y - 2).Id, .4f); } catch { }
+                    try { valueNeuron.AddSynapse(mv.GetNeuronAt(x, y - 2 + 1).Id, .3f); } catch { }
 
                     // top row
-                    try { valueNeuron.AddSynapse(na.GetNeuronAt(x - 2, y).Id, .4f); } catch { }
-                    try { valueNeuron.AddSynapse(na.GetNeuronAt(x - 2, y + 1).Id, .3f); } catch { }
-                    try { valueNeuron.AddSynapse(na.GetNeuronAt(x - 2, y + 2).Id, .4f); } catch { }
-                    try { valueNeuron.AddSynapse(na.GetNeuronAt(x - 2, y + 2 + 1).Id, .3f); } catch { }
-                    try { valueNeuron.AddSynapse(na.GetNeuronAt(x - 2, y - 2).Id, .4f); } catch { }
-                    try { valueNeuron.AddSynapse(na.GetNeuronAt(x - 2, y - 2 + 1).Id, .3f); } catch { }
+                    try { valueNeuron.AddSynapse(mv.GetNeuronAt(x - 2, y).Id, .4f); } catch { }
+                    try { valueNeuron.AddSynapse(mv.GetNeuronAt(x - 2, y + 1).Id, .3f); } catch { }
+                    try { valueNeuron.AddSynapse(mv.GetNeuronAt(x - 2, y + 2).Id, .4f); } catch { }
+                    try { valueNeuron.AddSynapse(mv.GetNeuronAt(x - 2, y + 2 + 1).Id, .3f); } catch { }
+                    try { valueNeuron.AddSynapse(mv.GetNeuronAt(x - 2, y - 2).Id, .4f); } catch { }
+                    try { valueNeuron.AddSynapse(mv.GetNeuronAt(x - 2, y - 2 + 1).Id, .3f); } catch { }
                 }
             }
         }

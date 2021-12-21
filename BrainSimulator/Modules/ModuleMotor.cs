@@ -20,26 +20,26 @@ namespace BrainSimulator.Modules
 
         public override void Initialize()
         {
-            Neuron nEnable = na.GetNeuronAt(0);
+            Neuron nEnable = mv.GetNeuronAt(0);
             nEnable.Label = "Enable";
-            Neuron nDisable = na.GetNeuronAt(1);
+            Neuron nDisable = mv.GetNeuronAt(1);
             nDisable.Label = "Disable";
             nEnable.AddSynapse(nDisable.Id, -1);
             nDisable.AddSynapse(nDisable.Id, 1);
             //nDisable.CurrentCharge = 1;
-            for (int i = 2; i < na.NeuronCount; i++)
+            for (int i = 2; i < mv.NeuronCount; i++)
             {
-                Neuron n = na.GetNeuronAt(i);
+                Neuron n = mv.GetNeuronAt(i);
                 nDisable.AddSynapse(n.Id, -1);
             }
 
-            Neuron nStop = na.GetNeuronAt(2);
+            Neuron nStop = mv.GetNeuronAt(2);
             nStop.Label = "Stop";
-            Neuron nGo = na.GetNeuronAt(3);
+            Neuron nGo = mv.GetNeuronAt(3);
             nGo.Label = "Go";
-            Neuron nLeft = na.GetNeuronAt(4);
+            Neuron nLeft = mv.GetNeuronAt(4);
             nLeft.Label = "Left";
-            Neuron nRight = na.GetNeuronAt(5);
+            Neuron nRight = mv.GetNeuronAt(5);
             nRight.Label = "Right";
             nStop.AddSynapse(nGo.Id, -1);
             nGo.AddSynapse(nGo.Id, 1);

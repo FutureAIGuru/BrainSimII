@@ -40,11 +40,11 @@ namespace BrainSimulator.Modules
             ModuleView mv = MainWindow.theNeuronArray.FindModuleByLabel("Robot");
             if (mv == null) return;
 
-            for (int i = 0; i < na.Height; i++)
+            for (int i = 0; i < base.mv.Height; i++)
             {
                 for (int j = 0; j < 6; j++)
                 {
-                    if (na.GetNeuronAt(j,i).Fired())
+                    if (base.mv.GetNeuronAt(j, i).Fired())
                     {
                         Neuron nTarget = mv.GetNeuronAt(0, i);
                         switch (j)
@@ -73,19 +73,19 @@ namespace BrainSimulator.Modules
         {
             ModuleView mv = MainWindow.theNeuronArray.FindModuleByLabel("Robot");
             if (mv == null) return;
-            na.Height = mv.Height;
+            base.mv.Height = mv.Height;
             if (mv != null)
             {
                 for (int i = 0; i < mv.Height; i++)
                 {
-                    na.GetNeuronAt(0, i).Label = mv.GetNeuronAt(0, i).Label;
-                    if (na.GetNeuronAt(0, i).Label != ".")
+                    base.mv.GetNeuronAt(0, i).Label = mv.GetNeuronAt(0, i).Label;
+                    if (base.mv.GetNeuronAt(0, i).Label != ".")
                     {
-                        na.GetNeuronAt(1, i).Label = "  <<";
-                        na.GetNeuronAt(2, i).Label = "   <";
-                        na.GetNeuronAt(3, i).Label = "   --";
-                        na.GetNeuronAt(4, i).Label = "   >";
-                        na.GetNeuronAt(5, i).Label = "  >>";
+                        base.mv.GetNeuronAt(1, i).Label = "  <<";
+                        base.mv.GetNeuronAt(2, i).Label = "   <";
+                        base.mv.GetNeuronAt(3, i).Label = "   --";
+                        base.mv.GetNeuronAt(4, i).Label = "   >";
+                        base.mv.GetNeuronAt(5, i).Label = "  >>";
                     }
                 }
             }
@@ -106,7 +106,7 @@ namespace BrainSimulator.Modules
         //delete if not needed
         public override void SizeChanged()
         {
-            if (na == null) return; //this is called the first time before the module actually exists
+            if (mv == null) return; //this is called the first time before the module actually exists
         }
     }
 }

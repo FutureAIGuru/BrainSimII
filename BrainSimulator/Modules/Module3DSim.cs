@@ -40,8 +40,8 @@ namespace BrainSimulator.Modules
         //or when the engine restart button is pressed
         public override void Initialize()
         {
-            for (int i = 0; i < na.NeuronCount; i++)
-                na.GetNeuronAt(i).Model = Neuron.modelType.Color;
+            for (int i = 0; i < mv.NeuronCount; i++)
+                mv.GetNeuronAt(i).Model = Neuron.modelType.Color;
             SetNeuronValues();
         }
         void SetNeuronValues()
@@ -71,16 +71,16 @@ namespace BrainSimulator.Modules
 
             if (bitmap1 == null) return;
 
-            if (na.Height == 0 || na.Width == 0) return;
-            float ratio = bitmap1.Width / na.Width;
-            float ratio2 = bitmap1.Height / na.Height;
+            if (mv.Height == 0 || mv.Width == 0) return;
+            float ratio = bitmap1.Width / mv.Width;
+            float ratio2 = bitmap1.Height / mv.Height;
             if (ratio2 < ratio) ratio = ratio2;
 
-            for (int i = 0; i < na.Width; i++)
+            for (int i = 0; i < mv.Width; i++)
             {
-                for (int j = 0; j < na.Height; j++)
+                for (int j = 0; j < mv.Height; j++)
                 {
-                    Neuron n = na.GetNeuronAt(i, j);
+                    Neuron n = mv.GetNeuronAt(i, j);
                     int x = (int)(i * ratio);
                     int y = (int)(j * ratio);
                     if (x >= bitmap1.Width) break;

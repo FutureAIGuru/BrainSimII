@@ -17,22 +17,17 @@ namespace BrainSimulator
 
     public partial class ModuleView
     {
-        int firstNeuron = 0;//, lastNeuron = 0;
+        int firstNeuron = 0;
         string label;
-        string commandLine;
+        string moduleTypeStr;
         int color;
         Modules.ModuleBase theModule = null;
         int width = 0;
         int height = 0;
-        [XmlIgnore]
+        [XmlIgnore] //used when displaying the module at small scales
         public System.Windows.Media.Imaging.WriteableBitmap bitmap = null;
 
-        public IEnumerable<Neuron> Neurons()
-        {
-            for (int i = 0; i < NeuronCount; i++)
-                yield return GetNeuronAt(i);
-        }
-        public IEnumerable<Neuron> Neurons1
+        public IEnumerable<Neuron> Neurons
         {
             get
             {
@@ -42,17 +37,15 @@ namespace BrainSimulator
         }
 
 
-        public ModuleView(int firstNeuron1, int width, int height, string theLabel, string theCommandLine, int theColor)
+        public ModuleView(int firstNeuron1, int width, int height, string theLabel, string theModuleTypeStr, int theColor)
         {
             FirstNeuron = firstNeuron1;
             Width = width;
             Height = height;
             Label = theLabel;
-            CommandLine = theCommandLine;
+            ModuleTypeStr = theModuleTypeStr;
             color = theColor;
-            string[] Params = CommandLine.Split(' ');
-
-            Type t = Type.GetType("BrainSimulator.Modules." + Params[0]);
+            Type t = Type.GetType("BrainSimulator.Modules." + theModuleTypeStr);
             theModule = (Modules.ModuleBase)Activator.CreateInstance(t);
         }
 
@@ -89,25 +82,13 @@ namespace BrainSimulator
         }
         public int Color { get => color; set => color = value; }
 
-        public string CommandLine { get => commandLine; set => commandLine = value; }
+        public string ModuleTypeStr { get => moduleTypeStr; set => moduleTypeStr = value; }
         private int Rows { get { return MainWindow.theNeuronArray.rows; } }
 
         public int NeuronCount { get { return Width * Height; } }
         public Modules.ModuleBase TheModule { get => theModule; set => theModule = value; }
         public int LastNeuron { get { return firstNeuron + (height - 1) + Rows * (Width - 1); } }
 
-
-        //these two emulate a foreach which might be implemented some day
-        int currentNeuronInArea = 0;
-        public void BeginEnum()
-        { currentNeuronInArea = 0; }
-        public Neuron GetNextNeuron()
-        {
-            int neuronIndex = (currentNeuronInArea % Height) + (currentNeuronInArea / Height) * Rows + firstNeuron;
-            if (currentNeuronInArea >= Height * Width) return null;
-            currentNeuronInArea++;
-            return MainWindow.theNeuronArray.GetNeuron(neuronIndex);
-        }
         public int GetNeuronOffset(Neuron n)
         {
             return GetNeuronOffset(n.Id);
@@ -138,8 +119,7 @@ namespace BrainSimulator
 
         public Neuron GetFreeNeuron()
         {
-            BeginEnum();
-            for (Neuron n = GetNextNeuron(); n != null; n = GetNextNeuron())
+            foreach (Neuron n in Neurons)
                 if (!n.InUse())
                     return n;
             return null;
@@ -211,49 +191,5 @@ namespace BrainSimulator
             X = X1 - X2;
             Y = Y1 - Y2;
         }
-
-
-        public int NeuronsInUseInArea()
-        {
-            int count = 0;
-            BeginEnum();
-            for (Neuron n = GetNextNeuron(); n != null; n = GetNextNeuron())
-                if (n.InUse())
-                    count++;
-            return count;
-        }
-
-        public int NeuronsFiredInArea()
-        {
-            int count = 0;
-            BeginEnum();
-            for (Neuron n = GetNextNeuron(); n != null; n = GetNextNeuron())
-                if (n.LastCharge > .9)
-                    count++;
-            return count;
-        }
-        public void ClearNeuronChargeInArea(bool CurrentToo = true)
-        {
-            BeginEnum();
-            for (Neuron n = GetNextNeuron(); n != null; n = GetNextNeuron())
-            {
-                if (CurrentToo) n.CurrentCharge = 0;
-                n.LastCharge = 0;
-            }
-        }
-        public string GetParam(string key)
-        {
-            string[] parameters = CommandLine.Split(' ');
-            for (int i = 0; i < parameters.Length - 1; i++)
-            {
-                string param = parameters[i];
-                if (param == key)
-                {
-                    return parameters[i + 1];
-                }
-            }
-            return "";
-        }
     }
-
 }

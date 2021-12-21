@@ -132,11 +132,11 @@ namespace BrainSimulator.Modules
 
         public override void Initialize()
         {
-            na.GetNeuronAt(0, 0).Label = "Go";
-            na.GetNeuronAt(1, 0).Model = Neuron.modelType.FloatValue;
-            na.GetNeuronAt(1, 0).Label = "Theta";
-            na.GetNeuronAt(2, 0).Label = "R";
-            na.GetNeuronAt(2, 0).Model = Neuron.modelType.FloatValue;
+            mv.GetNeuronAt(0, 0).Label = "Go";
+            mv.GetNeuronAt(1, 0).Model = Neuron.modelType.FloatValue;
+            mv.GetNeuronAt(1, 0).Label = "Theta";
+            mv.GetNeuronAt(2, 0).Label = "R";
+            mv.GetNeuronAt(2, 0).Model = Neuron.modelType.FloatValue;
         }
     }
 }

@@ -36,7 +36,7 @@ namespace BrainSimulator.Modules
         {
             Init();  //be sure to leave this here
 
-            int theColor = na.GetNeuronAt(0, 0).LastChargeInt;
+            int theColor = mv.GetNeuronAt(0, 0).LastChargeInt;
             float r = (theColor & 0xff0000) >> 16;
             float g = (theColor & 0xff00) >> 8;
             float b = (theColor & 0x000ff) >> 0;
@@ -61,10 +61,10 @@ namespace BrainSimulator.Modules
             b = min + b * steps;
             i = min + i * steps;
 
-            Neuron nR = na.GetNeuronAt("Red");
-            Neuron nG = na.GetNeuronAt("Grn");
-            Neuron nB = na.GetNeuronAt("Blu");
-            Neuron nI = na.GetNeuronAt("Int");
+            Neuron nR = mv.GetNeuronAt("Red");
+            Neuron nG = mv.GetNeuronAt("Grn");
+            Neuron nB = mv.GetNeuronAt("Blu");
+            Neuron nI = mv.GetNeuronAt("Int");
             if (nR == null) return;
             if (nG == null) return;
             if (nB == null) return;
@@ -84,18 +84,18 @@ namespace BrainSimulator.Modules
         //or when the engine restart button is pressed
         public override void Initialize()
         {
-            na.GetNeuronAt(0, 1).Label = "Blu";
-            na.GetNeuronAt(0, 2).Label = "Grn";
-            na.GetNeuronAt(0, 3).Label = "Red";
-            na.GetNeuronAt(0, 4).Label = "Int";
-            na.GetNeuronAt(0, 0).Model = Neuron.modelType.Color;
-            na.GetNeuronAt(0, 1).Model = Neuron.modelType.Random;
-            na.GetNeuronAt(0, 2).Model = Neuron.modelType.Random;
-            na.GetNeuronAt(0, 3).Model = Neuron.modelType.Random;
-            na.GetNeuronAt(0, 4).Model = Neuron.modelType.Random;
+            mv.GetNeuronAt(0, 1).Label = "Blu";
+            mv.GetNeuronAt(0, 2).Label = "Grn";
+            mv.GetNeuronAt(0, 3).Label = "Red";
+            mv.GetNeuronAt(0, 4).Label = "Int";
+            mv.GetNeuronAt(0, 0).Model = Neuron.modelType.Color;
+            mv.GetNeuronAt(0, 1).Model = Neuron.modelType.Random;
+            mv.GetNeuronAt(0, 2).Model = Neuron.modelType.Random;
+            mv.GetNeuronAt(0, 3).Model = Neuron.modelType.Random;
+            mv.GetNeuronAt(0, 4).Model = Neuron.modelType.Random;
         }
 
-        public override MenuItem GetCustomMenuItems()
+        public override MenuItem CustomContextMenuItems()
         {
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
             sp.Children.Add(new Label { Content = "Steps:" });

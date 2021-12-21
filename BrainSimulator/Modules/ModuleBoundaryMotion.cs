@@ -298,7 +298,7 @@ namespace BrainSimulator.Modules
 
             //for debugging:
             //if there is a new image, cancel the existing relationships
-            ModuleImageFile mif = (ModuleImageFile)FindModuleByName("ImageFile");
+            ModuleImageFile mif = (ModuleImageFile)FindModule("ImageFile");
             if (mif == null) return;
             string curPath = mif.GetFilePath();
             if (curPath != prevPath)
@@ -339,7 +339,7 @@ namespace BrainSimulator.Modules
         //delete if not needed
         public override void SizeChanged()
         {
-            if (na == null) return; //this is called the first time before the module actually exists
+            if (mv == null) return; //this is called the first time before the module actually exists
         }
     }
 }

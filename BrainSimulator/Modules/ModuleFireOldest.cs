@@ -26,21 +26,21 @@ namespace BrainSimulator.Modules
         public override void Fire()
         {
             Init();  //be sure to leave this here
-            Neuron n = na.GetNeuronAt(0);
+            Neuron n = mv.GetNeuronAt(0);
             if (n.Fired())
             {
                 long oldestTime = n.LastFired;
                 int oldestNeuron = n.id;
-                foreach(Neuron n1 in na.Neurons())
+                foreach(Neuron n1 in mv.Neurons)
                 {
                     if (n1 == n) continue;
                     if (n1.lastFired < oldestTime)
                     {
-                        oldestNeuron = na.GetNeuronOffset(n1.id);
+                        oldestNeuron = mv.GetNeuronOffset(n1.id);
                         oldestTime = n1.lastFired;
                     }
                 }
-                na.GetNeuronAt(oldestNeuron).SetValue(1);
+                mv.GetNeuronAt(oldestNeuron).SetValue(1);
             }
 
             //if you want the dlg to update, use the following code 

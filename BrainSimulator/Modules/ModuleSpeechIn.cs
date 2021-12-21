@@ -34,26 +34,27 @@ namespace BrainSimulator.Modules
             if (words.Count > 0)
             {
                 string word = words[0].ToLower();
-                na.BeginEnum();
                 int found = -1;
-                Neuron n = null;
-                for (n = na.GetNextNeuron(); n != null; n = na.GetNextNeuron())
+                Neuron n1 = null;
+                foreach (Neuron n in mv.Neurons)
                 {
                     if (n.Label == word)
                     {
                         found = n.Id;
+                        n1 = n;
                         break;
                     }
                     if (n.Label == "") //neuron isn't used yet
                     {
                         n.Label = word;
+                        n1 = n;
                         found = n.Id;
                         break;
                     }
                 }
                 if (found != -1) //perhaps the array was full
                 {
-                    n.SetValue(1);
+                    n1.SetValue(1);
                     //Debug.WriteLine("Fired Neuron for word: " + word);
                 }
 

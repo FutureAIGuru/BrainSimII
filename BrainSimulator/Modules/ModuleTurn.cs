@@ -24,47 +24,43 @@ namespace BrainSimulator.Modules
 
             float direction = 0;
 
-            for (int i = 0; i < na.Width; i++)
+            for (int i = 0; i < mv.Width; i++)
             {
-                if (na.GetNeuronAt(i, 0).LastCharge > 0.9 || na.GetNeuronAt(i, 0).LastCharge > 0.9 && i < rotation.Length)
+                if (mv.GetNeuronAt(i, 0).LastCharge > 0.9 || mv.GetNeuronAt(i, 0).LastCharge > 0.9 && i < rotation.Length)
                 {
                     direction = (float)rotation[i];
                 }
             }
-            if (na.GetNeuronAt(2, 0).LastCharge != 0)
+            if (mv.GetNeuronAt(2, 0).LastCharge != 0)
             {
-                direction = na.GetNeuronAt(2, 0).LastCharge;
-                na.GetNeuronAt(2, 0).SetValue(0);
+                direction = mv.GetNeuronAt(2, 0).LastCharge;
+                mv.GetNeuronAt(2, 0).SetValue(0);
             }
 
-            ModuleRealityModel mrm = (ModuleRealityModel)FindModuleByType(typeof(ModuleRealityModel));
-            if (mrm != null && direction != 0)
-                mrm.Rotate(20);
-
-            Module2DSim m2D = (Module2DSim)FindModuleByType(typeof(Module2DSim));
+            Module2DSim m2D = (Module2DSim)FindModleu(typeof(Module2DSim));
             if (m2D != null && direction != 0)
                 m2D.Rotate(direction);
 
-            Module3DSim m3D = (Module3DSim)FindModuleByType(typeof(Module3DSim));
+            Module3DSim m3D = (Module3DSim)FindModleu(typeof(Module3DSim));
             if (m3D != null && direction != 0)
                 m3D.Rotate(direction);
 
-            Module2DModel m2DModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
+            Module2DModel m2DModel = (Module2DModel)FindModleu(typeof(Module2DModel));
             if (m2DModel != null && direction != 0)
                 m2DModel.Rotate(direction);
 
-            Module2DVision m2DVision = (Module2DVision)FindModuleByType(typeof(Module2DVision));
+            Module2DVision m2DVision = (Module2DVision)FindModleu(typeof(Module2DVision));
             if (m2DVision != null && direction != 0) m2DVision.ViewChanged();
 
         }
 
         public override void Initialize()
         {
-            na.GetNeuronAt(2, 0).Model = Neuron.modelType.FloatValue;
-            na.GetNeuronAt(0, 0).Label = "<<";
-            na.GetNeuronAt(1, 0).Label = "<";
-            na.GetNeuronAt(3, 0).Label = ">";
-            na.GetNeuronAt(4, 0).Label = ">>";
+            mv.GetNeuronAt(2, 0).Model = Neuron.modelType.FloatValue;
+            mv.GetNeuronAt(0, 0).Label = "<<";
+            mv.GetNeuronAt(1, 0).Label = "<";
+            mv.GetNeuronAt(3, 0).Label = ">";
+            mv.GetNeuronAt(4, 0).Label = ">>";
         }
     }
 }

@@ -241,7 +241,7 @@ namespace BrainSimulator
                         Width = theSelection.selectedRectangles[i1].Width,
                         Height = theSelection.selectedRectangles[i1].Height,
                         Color = Utils.ColorToInt(Colors.Aquamarine),
-                        CommandLine = ""
+                        ModuleTypeStr = ""
                     };
                     img.ContextMenu = new ContextMenu();
                     ModuleView.CreateContextMenu(i, nr, img, img.ContextMenu);

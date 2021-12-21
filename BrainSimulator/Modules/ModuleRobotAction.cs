@@ -65,7 +65,7 @@ namespace BrainSimulator.Modules
             set
             {
                 actions.Clear();
-                for (int i = 1; i < na.NeuronCount; i++) na.GetNeuronAt(i).Label = "";
+                for (int i = 1; i < mv.NeuronCount; i++) mv.GetNeuronAt(i).Label = "";
                 string[] theLines = value.Split(new char[] { '\n' });
                 Action theNewAction = new Action();
                 foreach (string line in theLines)
@@ -88,7 +88,7 @@ namespace BrainSimulator.Modules
                         if (theNewAction.name != "")
                         {
                             actions.Add(theNewAction);
-                            na.GetNeuronAt(actions.Count).Label = theNewAction.name;
+                            mv.GetNeuronAt(actions.Count).Label = theNewAction.name;
                         }
                         theNewAction = new Action();
                     }
@@ -106,7 +106,7 @@ namespace BrainSimulator.Modules
             ModuleView moduleRobot = MainWindow.theNeuronArray.FindModuleByLabel("Robot");
             if (moduleRobot == null) return;
 
-            Neuron nRecStop = na.GetNeuronAt(0, 0);
+            Neuron nRecStop = mv.GetNeuronAt(0, 0);
             if (nRecStop.Fired())
             {
                 if (nRecStop.Label == "Record")
@@ -123,7 +123,7 @@ namespace BrainSimulator.Modules
                     recording = false;
                     actions.Add(currentAction);
                     currentAction = null;
-                    na.GetNeuronAt(actions.Count).Label = "A" + actions.Count;
+                    mv.GetNeuronAt(actions.Count).Label = "A" + actions.Count;
                     MainWindow.Update();
                 }
             }
@@ -144,9 +144,9 @@ namespace BrainSimulator.Modules
             { //playback
                 if (currentAction == null)
                 {
-                    for (int i = 1; i < na.NeuronCount && i < actions.Count+1; i++)
+                    for (int i = 1; i < mv.NeuronCount && i < actions.Count+1; i++)
                     {
-                        Neuron n = na.GetNeuronAt(i);
+                        Neuron n = mv.GetNeuronAt(i);
                         if (n == null || n.Label == "") break;
                         actions[i - 1].name = n.label;
                         if (n.Fired())
@@ -181,7 +181,7 @@ namespace BrainSimulator.Modules
         public override void Initialize()
         {
             Init();
-            na.GetNeuronAt(0, 0).Label = "Record";
+            mv.GetNeuronAt(0, 0).Label = "Record";
         }
 
         //the following can be used to massage public data to be different in the xml file
@@ -199,7 +199,7 @@ namespace BrainSimulator.Modules
         //delete if not needed
         public override void SizeChanged()
         {
-            if (na == null) return; //this is called the first time before the module actually exists
+            if (mv == null) return; //this is called the first time before the module actually exists
         }
     }
 }

@@ -114,10 +114,10 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
                         switch (theParams[0])
                         {
                             case "Sensor":
-                                while (sensorCount >= na.Height - 1)
-                                    na.Height++;
-                                n = na.GetNeuronAt(2, 1 + sensorCount);
-                                nPrev = na.GetNeuronAt(3, 1 + sensorCount);
+                                while (sensorCount >= mv.Height - 1)
+                                    mv.Height++;
+                                n = mv.GetNeuronAt(2, 1 + sensorCount);
+                                nPrev = mv.GetNeuronAt(3, 1 + sensorCount);
 
                                 if (n != null)
                                 {
@@ -131,10 +131,10 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
                                 {
                                     //allow for reference by name (back ref only)
                                     string theName = theParams[3].Substring(1);
-                                    Neuron n1 = na.GetNeuronAt(theName);
+                                    Neuron n1 = mv.GetNeuronAt(theName);
                                     if (n1 != null)
                                     {
-                                        na.GetNeuronLocation(n1, out int x, out int y);
+                                        mv.GetNeuronLocation(n1, out int x, out int y);
                                         theParams[3] = "p" + (y - 1);
                                     }
                                     else
@@ -147,12 +147,12 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
                                 sensorCount++;
                                 break;
                             case "Actuator":
-                                n = na.GetNeuronAt(0, 1 + actuatorCount);
-                                nPrev = na.GetNeuronAt(1, 1 + actuatorCount);
+                                n = mv.GetNeuronAt(0, 1 + actuatorCount);
+                                nPrev = mv.GetNeuronAt(1, 1 + actuatorCount);
                                 if (theParams[1] != ".")
                                     value = 0.5f;
-                                while (actuatorCount >= na.Height - 1)
-                                    na.Height++;
+                                while (actuatorCount >= mv.Height - 1)
+                                    mv.Height++;
                                 if (n != null)
                                 {
                                     n.Label = theParams[1];
@@ -191,9 +191,9 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
             }
 
             //limit all motor neuron values
-            for (int j = 0; j < na.Height; j++)
+            for (int j = 0; j < mv.Height; j++)
             {
-                Neuron n = na.GetNeuronAt(0, j);
+                Neuron n = mv.GetNeuronAt(0, j);
                 if (n != null)
                 {
                     if (n.LastCharge < 0) n.SetValue(0);
@@ -203,19 +203,19 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
 
 
             //send action to robot
-            Neuron nTiming = na.GetNeuronAt(0, 0);
-            for (int i = 0; i < na.Width - 1; i += 2)
+            Neuron nTiming = mv.GetNeuronAt(0, 0);
+            for (int i = 0; i < mv.Width - 1; i += 2)
             {
-                for (int j = 1; j < na.Height; j++)
+                for (int j = 1; j < mv.Height; j++)
                 {
-                    Neuron nCurrent = na.GetNeuronAt(i, j);
-                    Neuron nPrevious = na.GetNeuronAt(i + 1, j);
+                    Neuron nCurrent = mv.GetNeuronAt(i, j);
+                    Neuron nPrevious = mv.GetNeuronAt(i + 1, j);
                     if (nCurrent.LastCharge != nPrevious.LastCharge)
                     {
                         if (i == 0)
                         {
                             SendActuatorValueToRobot(j - 1, nCurrent.LastCharge, nTiming.LastCharge);
-                            na.GetNeuronAt("Busy").SetValue(na.GetNeuronAt("Timing").LastCharge);
+                            mv.GetNeuronAt("Busy").SetValue(mv.GetNeuronAt("Timing").LastCharge);
                         }
                         nPrevious.SetValue(nCurrent.LastCharge);
                     }
@@ -230,7 +230,7 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
             }
 
             TimeSpan elapsed = DateTime.Now - lastCycleTime;
-            Neuron nBusy = na.GetNeuronAt("Busy");
+            Neuron nBusy = mv.GetNeuronAt("Busy");
             float newValue = nBusy.LastCharge;
             newValue -= (float)elapsed.TotalMilliseconds / 10000f;
             if (newValue < 0) newValue = 0;
@@ -259,7 +259,7 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
                     string[] parameters = inputLine.Split(':');
                     int.TryParse(parameters[0].Substring(1), out int senseNumber);
                     int.TryParse(parameters[1], out int senseValue);
-                    Neuron n = na.GetNeuronAt(2, senseNumber + 1);
+                    Neuron n = mv.GetNeuronAt(2, senseNumber + 1);
                     if (n != null)
                         n.SetValue(senseValue / 180f);
                 }
@@ -304,16 +304,16 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
         //or when the engine restart button is pressed
         public override void Initialize()
         {
-            foreach (Neuron n in na.Neurons1)
+            foreach (Neuron n in mv.Neurons)
             {
                 n.Label = "";
             }
-            if (na.GetNeuronAt(0, 0) != null)
-                na.GetNeuronAt(0, 0).Label = "Timing";
-            if (na.GetNeuronAt(1, 0) != null)
-                na.GetNeuronAt(1, 0).Label = "Busy";
-            if (na.GetNeuronAt(2, 0) != null)
-                na.GetNeuronAt(2, 0).Label = "Sensor";
+            if (mv.GetNeuronAt(0, 0) != null)
+                mv.GetNeuronAt(0, 0).Label = "Timing";
+            if (mv.GetNeuronAt(1, 0) != null)
+                mv.GetNeuronAt(1, 0).Label = "Busy";
+            if (mv.GetNeuronAt(2, 0) != null)
+                mv.GetNeuronAt(2, 0).Label = "Sensor";
 
             sensorCount = 0;
             actuatorCount = 0;
@@ -361,7 +361,7 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
         //delete if not needed
         public override void SizeChanged()
         {
-            if (na == null) return; //this is called the first time before the module actually exists
+            if (mv == null) return; //this is called the first time before the module actually exists
         }
     }
 }

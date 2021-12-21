@@ -116,10 +116,10 @@ namespace BrainSimulator.Modules
                 }
 
             //find all the points which have different color values than their neighbors
-            Array2D boundaryValues = new Array2D(na.Width, na.Height);
-            for (int i = 0; i < source.Width && i < na.Width; i++)
+            Array2D boundaryValues = new Array2D(mv.Width, mv.Height);
+            for (int i = 0; i < source.Width && i < mv.Width; i++)
             {
-                for (int j = 1; j < source.Height && i < na.Height; j++)
+                for (int j = 1; j < source.Height && i < mv.Height; j++)
                 {
                     if (IsBoundary(i, j, neuronValuesI))
                         boundaryValues[i, j] = 1;
@@ -129,7 +129,7 @@ namespace BrainSimulator.Modules
             }
 
             //seach for corner points
-            Array2D cornerValues = new Array2D(na.Width, na.Height);
+            Array2D cornerValues = new Array2D(mv.Width, mv.Height);
             for (int i = 0; i < source.Width; i++)
             {
                 for (int j = 1; j < source.Height; j++)
@@ -142,11 +142,11 @@ namespace BrainSimulator.Modules
             }
 
             //set the neuron values from the internal array
-            for (int i = 0; i < na.Width; i++)
+            for (int i = 0; i < mv.Width; i++)
             {
-                for (int j = 0; j < na.Height; j++)
+                for (int j = 0; j < mv.Height; j++)
                 {
-                    int index = na.GetNeuronIndexAt(i, j);
+                    int index = mv.GetNeuronIndexAt(i, j);
                     float lastCharge = boundaryValues[i, j];
                     if (cornerValues[i, j] != 0) lastCharge = 0.99f;
                     MainWindow.theNeuronArray.SetNeuronLastCharge(index, lastCharge);
@@ -335,7 +335,7 @@ namespace BrainSimulator.Modules
         public override void Initialize()
         {
             Init();
-            foreach (Neuron n in na.Neurons1)
+            foreach (Neuron n in mv.Neurons)
                 n.Model = Neuron.modelType.FloatValue;
         }
 
@@ -353,10 +353,10 @@ namespace BrainSimulator.Modules
         //delete if not needed
         public override void SizeChanged()
         {
-            if (na == null) return; //this is called the first time before the module actually exists
+            if (mv == null) return; //this is called the first time before the module actually exists
         }
 
-        public override MenuItem GetCustomMenuItems()
+        public override MenuItem CustomContextMenuItems()
         {
             StackPanel s2 = new StackPanel { Orientation = Orientation.Vertical };
             s2.Children.Add(new Label { Content = "Thresholds:" });

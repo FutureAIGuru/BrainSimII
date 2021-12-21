@@ -40,7 +40,7 @@ namespace BrainSimulator.Modules
         {
             Init();  //be sure to leave this here
             if (GetNeuron("Enable").CurrentCharge < 1) return;
-            ModuleImageFile mif = (ModuleImageFile)FindModuleByName("ImageFile");
+            ModuleImageFile mif = (ModuleImageFile)FindModule("ImageFile");
             if (mif == null) return;
             string newFilePath = mif.GetFilePath();
             //TODO need to actually check if neuron values changes (pan/zoom/rot) instead of refreshNeeded
@@ -70,13 +70,13 @@ namespace BrainSimulator.Modules
             scale = GetNeuron("Scale").CurrentCharge;
             if (scale > 1) scale = 1;
             if (scale < 0) scale = 0;
-            float minScale = (float)bitmap1.Width / (float)na.Width;
+            float minScale = (float)bitmap1.Width / (float)mv.Width;
             scale =  scale + minScale;
 
-            for (int i = 0; i < na.Height - 1; i++)
-                for (int j = 0; j < na.Width; j++)
+            for (int i = 0; i < mv.Height - 1; i++)
+                for (int j = 0; j < mv.Width; j++)
                 {
-                    Neuron n = na.GetNeuronAt(j, i + 1);
+                    Neuron n = mv.GetNeuronAt(j, i + 1);
                     int x = (int)(offset.X * bitmap1.Width + j * scale);
                     int y = (int)(offset.Y * bitmap1.Height + i * scale);
 
@@ -174,34 +174,34 @@ namespace BrainSimulator.Modules
         //or when the engine restart button is pressed
         public override void Initialize()
         {
-            if (na == null) return;
-            for (int i = 1; i < na.Height; i++)
-                for (int j = 0; j < na.Width; j++)
+            if (mv == null) return;
+            for (int i = 1; i < mv.Height; i++)
+                for (int j = 0; j < mv.Width; j++)
                 {
-                    na.GetNeuronAt(j, i).Model = Neuron.modelType.Color;
+                    mv.GetNeuronAt(j, i).Model = Neuron.modelType.Color;
                 }
-            Neuron n1 = na.GetNeuronAt(0, 0);
+            Neuron n1 = mv.GetNeuronAt(0, 0);
             n1.Model = Neuron.modelType.IF;
             n1.Label = "Enable";
             n1.AddSynapse(n1.id, 1);
             n1.SetValue(1);
 
-            n1 = na.GetNeuronAt(1, 0);
+            n1 = mv.GetNeuronAt(1, 0);
             n1.Model = Neuron.modelType.FloatValue;
             n1.Label = "X";
             n1.SetValue(0);
 
-            n1 = na.GetNeuronAt(2, 0);
+            n1 = mv.GetNeuronAt(2, 0);
             n1.Model = Neuron.modelType.FloatValue;
             n1.Label = "Y";
             n1.SetValue(0);
 
-            n1 = na.GetNeuronAt(3, 0);
+            n1 = mv.GetNeuronAt(3, 0);
             n1.Model = Neuron.modelType.FloatValue;
             n1.Label = "Scale";
             n1.SetValue(0);
 
-            n1 = na.GetNeuronAt(4, 0);
+            n1 = mv.GetNeuronAt(4, 0);
             n1.Model = Neuron.modelType.FloatValue;
             n1.Label = "Rot";
             n1.SetValue(0);
@@ -223,11 +223,11 @@ namespace BrainSimulator.Modules
         //delete if not needed
         public override void SizeChanged()
         {
-            if (na == null) return; //this is called the first time before the module actually exists
+            if (mv == null) return; //this is called the first time before the module actually exists
         }
 
 
-        public override MenuItem GetCustomMenuItems()
+        public override MenuItem CustomContextMenuItems()
         {
             StackPanel s2 = new StackPanel { Orientation = Orientation.Vertical };
 

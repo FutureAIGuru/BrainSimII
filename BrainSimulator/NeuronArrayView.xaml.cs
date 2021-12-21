@@ -222,7 +222,7 @@ namespace BrainSimulator
                     Width = theSelection.selectedRectangles[i].Width,
                     Height = theSelection.selectedRectangles[i].Height,
                     Color = Utils.ColorToInt(Colors.Aquamarine),
-                    CommandLine = ""
+                    ModuleTypeStr = ""
                 };
 
                 if (!dp.ShowNeurons())
@@ -540,7 +540,7 @@ namespace BrainSimulator
                     Width = theSelection.selectedRectangles[i].Width,
                     Height = theSelection.selectedRectangles[i].Height,
                     Color = Utils.ColorToInt(Colors.Aquamarine),
-                    CommandLine = ""
+                    ModuleTypeStr = ""
                 };
 
                 if (!dp.ShowNeurons())

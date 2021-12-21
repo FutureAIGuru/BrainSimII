@@ -126,7 +126,7 @@ namespace BrainSimulator
                 }
             }
 
-            if (nr.TheModule.GetCustomMenuItems() is MenuItem miCustom)
+            if (nr.TheModule.CustomContextMenuItems() is MenuItem miCustom)
             {
                 cm.Items.Add(miCustom);
             }
@@ -246,7 +246,7 @@ namespace BrainSimulator
 
                 int i = (int)cm.GetValue(AreaNumberProperty);
                 string label = "";
-                string commandLine = "";
+                string theModuleTypeStr = "";
                 Color color = Colors.Wheat;
                 int width = 1, height = 1;
 
@@ -267,32 +267,31 @@ namespace BrainSimulator
                 cc = Utils.FindByName(cm, "AreaType");
                 if (cc is ComboBox cb && cb.SelectedValue != null)
                 {
-                    commandLine = "Module" + (string)cb.SelectedValue;
-                    if (commandLine == "") return;//something went wrong
+                    theModuleTypeStr = "Module" + (string)cb.SelectedValue;
+                    if (theModuleTypeStr == "") return;//something went wrong
                     label = (string)cb.SelectedValue;
                 }
 
                 cc = Utils.FindByName(cm, "AreaColor");
                 if (cc is ComboBox cb1)
                     color = ((SolidColorBrush)((ComboBoxItem)cb1.SelectedValue).Background).Color;
-                if (label == "" && commandLine == "") return;
+                if (label == "" && theModuleTypeStr == "") return;
 
                 ModuleView theModuleView = MainWindow.theNeuronArray.modules[i];
                 MainWindow.theNeuronArray.SetUndoPoint();
                 MainWindow.theNeuronArray.AddModuleUndo(i, theModuleView);
                 //update the existing module
                 theModuleView.Label = label;
-                theModuleView.CommandLine = commandLine;
+                theModuleView.ModuleTypeStr = theModuleTypeStr;
                 theModuleView.Color = Utils.ColorToInt(color);
                 theModuleView.TheModule.isEnabled = isEnabled;
 
                 //did we change the module type?
-                string[] Params = commandLine.Split(' ');
-                Type t1x = Type.GetType("BrainSimulator.Modules." + Params[0]);
+                Type t1x = Type.GetType("BrainSimulator.Modules." + theModuleTypeStr);
                 if (t1x != null && (MainWindow.theNeuronArray.modules[i].TheModule == null || MainWindow.theNeuronArray.modules[i].TheModule.GetType() != t1x))
                 {
                     MainWindow.theNeuronArray.modules[i].TheModule = (ModuleBase)Activator.CreateInstance(t1x);
-                    MainWindow.theNeuronArray.modules[i].label = Params[0];
+                    MainWindow.theNeuronArray.modules[i].label = theModuleTypeStr;
                 }
 
                 MainWindow.theNeuronArray.GetNeuronLocation(MainWindow.theNeuronArray.modules[i].firstNeuron, out int col, out int row);
@@ -466,7 +465,7 @@ namespace BrainSimulator
         {
             ModuleView mv = MainWindow.theNeuronArray.Modules[i];
             mv.theModule.CloseDlg();
-            foreach (Neuron n in mv.Neurons())
+            foreach (Neuron n in mv.Neurons)
             {
                 n.Reset();
                 n.DeleteAllSynapes();

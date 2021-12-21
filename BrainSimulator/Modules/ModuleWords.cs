@@ -34,7 +34,7 @@ namespace BrainSimulator.Modules
         List<int> GetNeuronsWhichFired()
         {
             List<int> retVal = new List<int>();
-            foreach(Neuron n in na.Neurons())
+            foreach(Neuron n in mv.Neurons)
             {
                 if (n.lastCharge >= 1)
                     retVal.Add(n.Id);
@@ -55,7 +55,7 @@ namespace BrainSimulator.Modules
             {
                 wordDictionary.Add(word, nextFreeNeuron);
                 wordNeuronID = nextFreeNeuron++;
-                if (na.GetNeuronAt(wordNeuronID) is Neuron n1)
+                if (mv.GetNeuronAt(wordNeuronID) is Neuron n1)
                     n1.Label = word; //useful someday
             }
             wordDictionary.TryGetValue(nextWord, out int nextWordNeuronID);
@@ -63,11 +63,11 @@ namespace BrainSimulator.Modules
             {
                 wordDictionary.Add(nextWord, nextFreeNeuron);
                 nextWordNeuronID = nextFreeNeuron++;
-                if (na.GetNeuronAt(nextWordNeuronID) is Neuron n1)
+                if (mv.GetNeuronAt(nextWordNeuronID) is Neuron n1)
                     n1.Label = nextWord; //useful someday
             }
-            Neuron n = na.GetNeuronAt(wordNeuronID);
-            Neuron nNext = na.GetNeuronAt(nextWordNeuronID);
+            Neuron n = mv.GetNeuronAt(wordNeuronID);
+            Neuron nNext = mv.GetNeuronAt(nextWordNeuronID);
             if (n != null && nNext != null)
             {
                 Synapse s = n.FindSynapse(nNext.id);

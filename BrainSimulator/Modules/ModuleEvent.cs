@@ -21,7 +21,7 @@ namespace BrainSimulator.Modules
 
         public Thing CreateEvent(Thing newLandmark)
         {
-            ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            ModuleUKSN UKS = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
             if (UKS is null) return null;
             Thing retVal = UKS.AddThing("E" + eventCount++.ToString(), "Event");
             retVal.AddReference(newLandmark);
@@ -30,7 +30,7 @@ namespace BrainSimulator.Modules
 
         public void AddOutcomePair(Thing Event, Thing theAction, Thing theOutcome)
         {
-            ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            ModuleUKSN UKS = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
             if (UKS is null) return;
             Thing newOutcomePair = UKS.AddThing("x" + pairCount++, Event); //creates new thing as it as a child 
             newOutcomePair.AddReference(theAction);
@@ -41,7 +41,7 @@ namespace BrainSimulator.Modules
         {
             //a landmark is a collection of nearby segments
             //these must be cloned so they can be fixed in position rather than being adjusted relative to Sallie's position
-            ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            ModuleUKSN UKS = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
             if (UKS is null) return null;
             Thing newLandmark = UKS.AddThing("Lm" + landmarkCount++.ToString(), "Landmark");
             foreach (Thing t in near)

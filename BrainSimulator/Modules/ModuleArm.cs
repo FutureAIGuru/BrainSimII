@@ -27,8 +27,7 @@ namespace BrainSimulator.Modules
         public override void Fire()
         {
             Init();
-            na.BeginEnum();
-            for (Neuron n = na.GetNextNeuron(); n != null; n = na.GetNextNeuron())
+            foreach (Neuron n in mv.Neurons)
             {
                 if (n.Fired())
                 {
@@ -49,7 +48,7 @@ namespace BrainSimulator.Modules
                     }
                     if (GetNeuronValue(null, "X") < 0) SetNeuronValue(null, "X", 0);
                     if (GetNeuronValue(null, "X") > 0.8) SetNeuronValue(null, "X", 0.8f);
-                    if (na.Label.Contains("L"))
+                    if (mv.Label.Contains("L"))
                     {
                         if (GetNeuronValue(null, "Y") < 0) SetNeuronValue(null, "Y", 0);
                         if (GetNeuronValue(null, "Y") > 0.8) SetNeuronValue(null, "Y", 0.8f);
@@ -65,8 +64,8 @@ namespace BrainSimulator.Modules
 
         public override void Initialize()
         {
-            na.GetNeuronAt(0, 0).Model = Neuron.modelType.FloatValue;
-            na.GetNeuronAt(1, 0).Model = Neuron.modelType.FloatValue;
+            mv.GetNeuronAt(0, 0).Model = Neuron.modelType.FloatValue;
+            mv.GetNeuronAt(1, 0).Model = Neuron.modelType.FloatValue;
             AddLabels(new string[] { "X", "Y", "<", ">", "^", "V" });
         }
     }

@@ -18,23 +18,23 @@ namespace BrainSimulator.Modules
         public override void Fire()
         {
             Init();  //be sure to leave this here to enable use of the na variable
-            Module2DModel naModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
+            Module2DModel naModel = (Module2DModel)FindModleu(typeof(Module2DModel));
             if (naModel == null) return;
 
-            for (int i = 0; i < na.Height; i++)
+            for (int i = 0; i < mv.Height; i++)
             {
                 //neurons:  0:touch   1:antAngle  2:antDistance 3: sensedLineAngle 4: conf1 5: len1 6: conf2 7: len2 8: touch-ended 9: modelchanged
-                if (na.GetNeuronAt(0, i).CurrentCharge == 0) continue;
-                float antDist = na.GetNeuronAt(1, i).CurrentCharge;
-                float antAngle = na.GetNeuronAt(2, i).CurrentCharge;
-                float lineAngle = na.GetNeuronAt(3, i).CurrentCharge;
-                float p1IsEndpt = na.GetNeuronAt(4, i).CurrentCharge;
-                float l1 = na.GetNeuronAt(5, i).CurrentCharge;
-                float p2IsEndpt = na.GetNeuronAt(6, i).CurrentCharge;
-                float l2 = na.GetNeuronAt(7, i).CurrentCharge;
-                float mR = na.GetNeuronAt(9, i).CurrentCharge;
-                float mTheta = na.GetNeuronAt(10, i).CurrentCharge;
-                float mPhi = na.GetNeuronAt(11, i).CurrentCharge;
+                if (mv.GetNeuronAt(0, i).CurrentCharge == 0) continue;
+                float antDist = mv.GetNeuronAt(1, i).CurrentCharge;
+                float antAngle = mv.GetNeuronAt(2, i).CurrentCharge;
+                float lineAngle = mv.GetNeuronAt(3, i).CurrentCharge;
+                float p1IsEndpt = mv.GetNeuronAt(4, i).CurrentCharge;
+                float l1 = mv.GetNeuronAt(5, i).CurrentCharge;
+                float p2IsEndpt = mv.GetNeuronAt(6, i).CurrentCharge;
+                float l2 = mv.GetNeuronAt(7, i).CurrentCharge;
+                float mR = mv.GetNeuronAt(9, i).CurrentCharge;
+                float mTheta = mv.GetNeuronAt(10, i).CurrentCharge;
+                float mPhi = mv.GetNeuronAt(11, i).CurrentCharge;
 
                 PointPlus motion = new PointPlus() { R = mR, Theta = mTheta, Conf = mPhi };
                 //create the line segment (all coordinates relative to self)
@@ -58,20 +58,20 @@ namespace BrainSimulator.Modules
         public override void Initialize()
         {
             ClearNeurons();
-            na.GetNeuronAt(0, 0).Label = "Right";
-            na.GetNeuronAt(0, 1).Label = "Left";
-            na.GetNeuronAt(1, 0).Label = "R";
-            na.GetNeuronAt(2, 0).Label = "θ";
-            na.GetNeuronAt(3, 0).Label = "Collθ";
-            na.GetNeuronAt(4, 0).Label = "P1";
-            na.GetNeuronAt(5, 0).Label = "L1";
-            na.GetNeuronAt(6, 0).Label = "P2";
-            na.GetNeuronAt(7, 0).Label = "L2";
-            na.GetNeuronAt(8, 0).Label = "Done►";
-            na.GetNeuronAt(9, 0).Label = "mR";
-            na.GetNeuronAt(10, 0).Label = "mθ";
-            na.GetNeuronAt(11, 0).Label = "mф";
-            foreach (Neuron n in na.Neurons())
+            mv.GetNeuronAt(0, 0).Label = "Right";
+            mv.GetNeuronAt(0, 1).Label = "Left";
+            mv.GetNeuronAt(1, 0).Label = "R";
+            mv.GetNeuronAt(2, 0).Label = "θ";
+            mv.GetNeuronAt(3, 0).Label = "Collθ";
+            mv.GetNeuronAt(4, 0).Label = "P1";
+            mv.GetNeuronAt(5, 0).Label = "L1";
+            mv.GetNeuronAt(6, 0).Label = "P2";
+            mv.GetNeuronAt(7, 0).Label = "L2";
+            mv.GetNeuronAt(8, 0).Label = "Done►";
+            mv.GetNeuronAt(9, 0).Label = "mR";
+            mv.GetNeuronAt(10, 0).Label = "mθ";
+            mv.GetNeuronAt(11, 0).Label = "mф";
+            foreach (Neuron n in mv.Neurons)
                 n.Model = Neuron.modelType.FloatValue;
         }
     }

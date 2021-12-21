@@ -19,9 +19,9 @@ namespace BrainSimulator.Modules
             Init();  //be sure to leave this here
             if (synth == null) return;
 
-            if (!na.GetNeuronAt(0).Fired()) return;
+            if (!mv.GetNeuronAt(0).Fired()) return;
 
-            ModuleUKSN nmKB = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            ModuleUKSN nmKB = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
             if (nmKB == null) return;
             IList<Thing> words = nmKB.GetChildren(nmKB.Labeled("Word"));
             bool paused = true;
@@ -36,7 +36,7 @@ namespace BrainSimulator.Modules
             }
             if (paused && phraseToSpeak != "")
             {
-                ModuleSpeechIn msi = (ModuleSpeechIn)FindModuleByType(typeof(ModuleSpeechIn));
+                ModuleSpeechIn msi = (ModuleSpeechIn)FindModleu(typeof(ModuleSpeechIn));
                 if (msi != null)
                     msi.PauseRecognition(); //if there is a recognizer active
                 synth.SpeakAsync(phraseToSpeak + ".");
@@ -47,7 +47,7 @@ namespace BrainSimulator.Modules
         private void Synth_SpeakCompleted(object sender, SpeakCompletedEventArgs e)
         {
             // Restart speech recognition.  
-            ModuleSpeechIn msi = (ModuleSpeechIn)FindModuleByType(typeof(ModuleSpeechIn));
+            ModuleSpeechIn msi = (ModuleSpeechIn)FindModleu(typeof(ModuleSpeechIn));
             if (msi != null)
                 msi.ResumeRecognition();
         }
@@ -65,8 +65,8 @@ namespace BrainSimulator.Modules
         public override void Initialize()
         {
 
-            na.GetNeuronAt(0).Label = "Enable";
-            na.GetNeuronAt(0).AddSynapse(na.GetNeuronAt(0).Id, 1);
+            mv.GetNeuronAt(0).Label = "Enable";
+            mv.GetNeuronAt(0).AddSynapse(mv.GetNeuronAt(0).Id, 1);
 
             synth = new SpeechSynthesizer();
             if (synth == null)

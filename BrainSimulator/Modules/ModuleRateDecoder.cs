@@ -51,39 +51,39 @@ namespace BrainSimulator.Modules
         public override void Initialize()
         {
             Init();
-            SetUpNeurons(na.Height - 1);
+            SetUpNeurons(mv.Height - 1);
         }
 
         private void SetUpNeurons(int levelCount)
         {
-            Neuron nIn = na.GetNeuronAt(1,0 );
+            Neuron nIn = mv.GetNeuronAt(1,0 );
             nIn.Label = "In";
-            Neuron nRd = na.GetNeuronAt(0, 0);
+            Neuron nRd = mv.GetNeuronAt(0, 0);
             nRd.Label = "Rd";
-            Neuron nClr = na.GetNeuronAt(2, 0);
+            Neuron nClr = mv.GetNeuronAt(2, 0);
             nClr.Label = "Clr";
 
             nRd.AddSynapse(nClr.id, 1);
-            Neuron nLast = na.GetNeuronAt(0, na.Height - 1);
+            Neuron nLast = mv.GetNeuronAt(0, mv.Height - 1);
 
 
             for (int i = 0; i < levelCount; i++)
             {
-                Neuron ni = na.GetNeuronAt(0, i + 1);
+                Neuron ni = mv.GetNeuronAt(0, i + 1);
                 ni.Clear();
-                Neuron nm = na.GetNeuronAt(1, i + 1);
+                Neuron nm = mv.GetNeuronAt(1, i + 1);
                 ni.Clear();
-                Neuron no = na.GetNeuronAt(2, i + 1);
+                Neuron no = mv.GetNeuronAt(2, i + 1);
                 no.Clear();
             }
 
             for (int i = 0; i < levelCount; i++)
             {
-                Neuron ni = na.GetNeuronAt(0, i + 1);
+                Neuron ni = mv.GetNeuronAt(0, i + 1);
                 ni.Model = Neuron.modelType.LIF;
                 ni.LeakRate = theLeakRate;
-                Neuron nm = na.GetNeuronAt(1, i + 1);
-                Neuron no = na.GetNeuronAt(2, i + 1);
+                Neuron nm = mv.GetNeuronAt(1, i + 1);
+                Neuron no = mv.GetNeuronAt(2, i + 1);
                 no.Label = "O" + i;
 
                 ni.AddSynapse(nm.id, 1);
@@ -100,12 +100,12 @@ namespace BrainSimulator.Modules
 
                 for (int j = i + 1; j < levelCount; j++)
                 {
-                    ni.AddSynapse(na.GetNeuronAt(1, j + 1).id, -1f);
+                    ni.AddSynapse(mv.GetNeuronAt(1, j + 1).id, -1f);
                 }
                 for (int j = 0; j < levelCount; j++)
                 {
                     if (j != i)
-                        ni.AddSynapse(na.GetNeuronAt(0, j + 1).id, -1f);
+                        ni.AddSynapse(mv.GetNeuronAt(0, j + 1).id, -1f);
                 }
             }
         }
@@ -123,8 +123,8 @@ namespace BrainSimulator.Modules
         //delete if not needed
         public override void SizeChanged()
         {
-            if (na == null) return; //things aren't initialized yet
-            SetUpNeurons(na.Height - 1);
+            if (mv == null) return; //things aren't initialized yet
+            SetUpNeurons(mv.Height - 1);
         }
     }
 }

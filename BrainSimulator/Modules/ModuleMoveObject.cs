@@ -27,13 +27,13 @@ namespace BrainSimulator.Modules
             if (GetNeuronValue("Auto") == 0) return;
             goToGoal = GetNeuronValue("Goal") == 1;
 
-            ModuleBehavior mBehavior = (ModuleBehavior)FindModuleByType(typeof(ModuleBehavior));
+            ModuleBehavior mBehavior = (ModuleBehavior)FindModleu(typeof(ModuleBehavior));
             if (mBehavior == null) return;
-            Module2DModel mModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
+            Module2DModel mModel = (Module2DModel)FindModleu(typeof(Module2DModel));
             if (mModel is null) return;
-            ModuleEvent mEvent = (ModuleEvent)FindModuleByType(typeof(ModuleEvent));
+            ModuleEvent mEvent = (ModuleEvent)FindModleu(typeof(ModuleEvent));
             if (mEvent == null) return;
-            ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            ModuleUKSN UKS = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
             if (UKS == null) return;
 
             if (GetNeuronValue("ModuleBehavior", "Done") == 0) return;
@@ -94,7 +94,7 @@ namespace BrainSimulator.Modules
                 lastPosition.Label = "LastPosition";
                 lastPosition.RemoveParent(UKS.Labeled("Segment"));
                 lastPosition.AddParent(UKS.Labeled("SSegment"));
-                Module2DSim mSim = (Module2DSim)FindModuleByType(typeof(Module2DSim));
+                Module2DSim mSim = (Module2DSim)FindModleu(typeof(Module2DSim));
                 if (mSim is null) return;
                 Segment motionTarget = mSim.GetMotionTarget();
                 if (motionTarget == null)
@@ -188,12 +188,12 @@ namespace BrainSimulator.Modules
             }
             else
             {
-                ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+                ModuleUKSN UKS = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
                 Thing bestEvent = null;
                 if (neededMotion.R > .2f)
                 {
                     //create a temp distination which is slightly offset
-                    ModuleBehavior mBehavior = (ModuleBehavior)FindModuleByType(typeof(ModuleBehavior));
+                    ModuleBehavior mBehavior = (ModuleBehavior)FindModleu(typeof(ModuleBehavior));
                     Seg tempTarget = new Seg() { P = sTarget.MidPoint.P + new PointPlus { R = .15f, Theta = sTarget.Angle - PI / 2 }.V, rotation = 0 };
                     neededMotion = DistanceFromTarget(tempTarget, pCurrent);
                     bestEvent = UKS.Labeled("E0");
@@ -343,7 +343,7 @@ namespace BrainSimulator.Modules
 
         void MoveTo(PointPlus target, float offset)
         {
-            ModuleBehavior mBehavior = (ModuleBehavior)FindModuleByType(typeof(ModuleBehavior));
+            ModuleBehavior mBehavior = (ModuleBehavior)FindModleu(typeof(ModuleBehavior));
             target.X -= offset; //body radius
             mBehavior.TurnTo(-target.Theta);
             mBehavior.MoveTo(target.R);
@@ -351,7 +351,7 @@ namespace BrainSimulator.Modules
         }
         void Push(Segment s)
         {
-            ModuleBehavior mBehavior = (ModuleBehavior)FindModuleByType(typeof(ModuleBehavior));
+            ModuleBehavior mBehavior = (ModuleBehavior)FindModleu(typeof(ModuleBehavior));
             float dist = (float)Utils.FindDistanceToSegment(s, out Point closest);
             PointPlus closestPP = new PointPlus { P = closest };
             mBehavior.TurnTo(-closestPP.Theta);
@@ -359,19 +359,19 @@ namespace BrainSimulator.Modules
         }
         void FaceMidPoint(Segment s)
         {
-            ModuleBehavior mBehavior = (ModuleBehavior)FindModuleByType(typeof(ModuleBehavior));
+            ModuleBehavior mBehavior = (ModuleBehavior)FindModleu(typeof(ModuleBehavior));
             mBehavior.TurnTo(-s.MidPoint.Theta);
         }
         void DoFaceSegment(Segment s)
         {
-            ModuleBehavior mBehavior = (ModuleBehavior)FindModuleByType(typeof(ModuleBehavior));
+            ModuleBehavior mBehavior = (ModuleBehavior)FindModleu(typeof(ModuleBehavior));
             Utils.FindDistanceToSegment(s, out Point closest);
             PointPlus closestPP = new PointPlus { P = closest };
             mBehavior.TurnTo(-closestPP.Theta);
         }
         void DoBackOff(Segment s)
         {
-            ModuleBehavior mBehavior = (ModuleBehavior)FindModuleByType(typeof(ModuleBehavior));
+            ModuleBehavior mBehavior = (ModuleBehavior)FindModleu(typeof(ModuleBehavior));
             PointPlus target = new PointPlus(s.MidPoint + new PointPlus { R = 2f, Theta = s.Angle - PI / 2 });
             mBehavior.TurnTo(-target.Theta);
             mBehavior.MoveTo(target.R);
@@ -381,7 +381,7 @@ namespace BrainSimulator.Modules
         Thing MostLikelyEvent(Thing currentEvent)
         {
             Thing retVal = null;
-            ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            ModuleUKSN UKS = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
             if (UKS == null) return retVal;
 
             Segment s1 = Module2DModel.SegmentFromUKSThing(currentEvent.References[0].T);

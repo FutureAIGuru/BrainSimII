@@ -55,39 +55,39 @@ namespace BrainSimulator.Modules
         {
             Init();
             ClearNeurons(false);
-            na.GetNeuronAt(0, 0).Label = "In";
+            mv.GetNeuronAt(0, 0).Label = "In";
 
             int chainWidth = 0;
             int chainHeight = 0;
 
             int theCount = 0;
 
-            if (na.Height > na.Width)
+            if (mv.Height > mv.Width)
             {
-                chainWidth = na.Width - 2;
-                chainHeight = na.Height;
+                chainWidth = mv.Width - 2;
+                chainHeight = mv.Height;
                 //add the count neuron labels
-                theCount = na.Height;
+                theCount = mv.Height;
                 for (int j = 0; j < theCount; j++)
                 {
-                    na.GetNeuronAt(na.Width - 1, j).Label = (j + 1).ToString();
-                    na.GetNeuronAt(na.Width - 2, j).Label = "i" + (j + 1).ToString();
-                    na.GetNeuronAt(na.Width-2,j).Model = Neuron.modelType.LIF;
-                    na.GetNeuronAt(na.Width- 2,j).LeakRate = 1f;
+                    mv.GetNeuronAt(mv.Width - 1, j).Label = (j + 1).ToString();
+                    mv.GetNeuronAt(mv.Width - 2, j).Label = "i" + (j + 1).ToString();
+                    mv.GetNeuronAt(mv.Width-2,j).Model = Neuron.modelType.LIF;
+                    mv.GetNeuronAt(mv.Width- 2,j).LeakRate = 1f;
                 }
             }
             else
             {
-                chainHeight = na.Height - 2;
-                chainWidth = na.Width;
+                chainHeight = mv.Height - 2;
+                chainWidth = mv.Width;
                 //add the count neuron labels
-                theCount = na.Width;
+                theCount = mv.Width;
                 for (int j = 0; j < theCount; j++)
                 {
-                    na.GetNeuronAt(j, na.Height - 1).Label = (j + 1).ToString();
-                    na.GetNeuronAt(j, na.Height - 2).Label = "i" + (j + 1).ToString();
-                    na.GetNeuronAt(j, na.Height - 2).Model = Neuron.modelType.LIF;
-                    na.GetNeuronAt(j, na.Height - 2).LeakRate = 1f;
+                    mv.GetNeuronAt(j, mv.Height - 1).Label = (j + 1).ToString();
+                    mv.GetNeuronAt(j, mv.Height - 2).Label = "i" + (j + 1).ToString();
+                    mv.GetNeuronAt(j, mv.Height - 2).Model = Neuron.modelType.LIF;
+                    mv.GetNeuronAt(j, mv.Height - 2).LeakRate = 1f;
                 }
             }
 
@@ -96,11 +96,11 @@ namespace BrainSimulator.Modules
             {
                 for (int j = 0; j < chainWidth - 1; j++)
                 {
-                    na.GetNeuronAt(j, i).AddSynapse(na.GetNeuronAt(j + 1, i).id, 1);
+                    mv.GetNeuronAt(j, i).AddSynapse(mv.GetNeuronAt(j + 1, i).id, 1);
                 }
                 if (i < chainHeight - 1)
                 {
-                    na.GetNeuronAt(chainWidth - 1, i).AddSynapse(na.GetNeuronAt(0, i + 1).id, 1);
+                    mv.GetNeuronAt(chainWidth - 1, i).AddSynapse(mv.GetNeuronAt(0, i + 1).id, 1);
                 }
             }
 
@@ -113,7 +113,7 @@ namespace BrainSimulator.Modules
                 {
                     for (int j = 0; j < chainWidth; j++)
                     {
-                        na.GetNeuronAt(j, i).AddSynapse(target.id, theWeight);
+                        mv.GetNeuronAt(j, i).AddSynapse(target.id, theWeight);
                     }
                 }
             }
@@ -146,7 +146,7 @@ namespace BrainSimulator.Modules
         //delete if not needed
         public override void SizeChanged()
         {
-            if (na == null) return;
+            if (mv == null) return;
             AddSynapses();
         }
     }

@@ -37,13 +37,13 @@ namespace BrainSimulator.Modules
             Init();  //be sure to leave this here
 
             //get the external references
-            ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            ModuleUKSN UKS = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
             if (UKS == null) return;
-            Module2DModel nmModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
+            Module2DModel nmModel = (Module2DModel)FindModleu(typeof(Module2DModel));
             if (nmModel == null) return;
-            ModuleBehavior nmBehavior = (ModuleBehavior)FindModuleByType(typeof(ModuleBehavior));
+            ModuleBehavior nmBehavior = (ModuleBehavior)FindModleu(typeof(ModuleBehavior));
             if (nmBehavior == null) return;
-            ModuleEvent mEvent = (ModuleEvent)FindModuleByType(typeof(ModuleEvent));
+            ModuleEvent mEvent = (ModuleEvent)FindModleu(typeof(ModuleEvent));
             if (mEvent == null) return;
 
 
@@ -170,7 +170,7 @@ namespace BrainSimulator.Modules
                 }
 
                 Neuron n1 = null;
-                if (currentTargetReached != null) n1 = na.GetNeuronAt(currentTargetReached.Label);
+                if (currentTargetReached != null) n1 = mv.GetNeuronAt(currentTargetReached.Label);
 
                 //color a new goal neuron
                 if (n1 == null && currentTargetReached != null)
@@ -178,8 +178,8 @@ namespace BrainSimulator.Modules
                     n1 = AddLabel(currentTargetReached.Label + " ");
                     n1.Model = Neuron.modelType.Color;
                     n1.SetValueInt((int)currentTargetReached.V);
-                    na.GetNeuronLocation(n1, out int X, out int Y);
-                    Neuron n2 = na.GetNeuronAt(X + 1, Y);
+                    mv.GetNeuronLocation(n1, out int X, out int Y);
+                    Neuron n2 = mv.GetNeuronAt(X + 1, Y);
                     if (n2 != null)
                         n2.Label = currentTargetReached.Label;
                 }
@@ -259,7 +259,7 @@ namespace BrainSimulator.Modules
             auto = (GetNeuronValue(null, "Auto") == 1) ? true : false;
 
             //check for a goal selection
-            foreach (Neuron n in na.Neurons())
+            foreach (Neuron n in mv.Neurons)
             {
                 if (n.Fired() && n.Label.IndexOf("c") == 0 && n.Model == Neuron.modelType.IF)
                 {
@@ -385,7 +385,7 @@ namespace BrainSimulator.Modules
         private List<Thing> FindGoal(Thing target)
         {
             if (target == null) return null;
-            ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            ModuleUKSN UKS = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
 
             return UKS.Labeled("Event").ChildrenWriteable.FindAll(
                 t => t.Children.FindFirst(u => u.References[1].T == target) != null);
@@ -395,7 +395,7 @@ namespace BrainSimulator.Modules
         public Thing GoToGoal(Thing goal)
         {
             if (goal == null) return null;
-            ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            ModuleUKSN UKS = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
 
             //trivial case, you can go straight to goal
             Thing pair = currentEvent.Children.FindFirst(t => t.References[1].T == goal);
@@ -438,7 +438,7 @@ namespace BrainSimulator.Modules
             AddLabel("Found");
 
             //this is the first test of building a sequence of behaviors
-            ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            ModuleUKSN UKS = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
             if (UKS != null)
             {
                 Thing t = UKS.AddThing("LTurnS", "Action");

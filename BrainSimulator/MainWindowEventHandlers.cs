@@ -500,7 +500,7 @@ namespace BrainSimulator
                 foreach (ModuleView na in theNeuronArray.Modules)
                 {
                     if (na.TheModule != null)
-                        na.TheModule.Init(true);
+                        na.TheModule.Initialize();
                 }
             }
             //TODO: doing this messes up because LastFired is not reset

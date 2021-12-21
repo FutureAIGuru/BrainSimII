@@ -54,17 +54,17 @@ namespace BrainSimulator.Modules
         {
             Init();
             ClearNeurons();
-            na.GetNeuronAt(0, 0).Label = "In";
+            mv.GetNeuronAt(0, 0).Label = "In";
 
-            for (int i = 0; i < na.Height; i++)
+            for (int i = 0; i < mv.Height; i++)
             {
-                for (int j = 0; j < na.Width-1; j++)
+                for (int j = 0; j < mv.Width-1; j++)
                 {
-                    na.GetNeuronAt(j, i).AddSynapse(na.GetNeuronAt(j + 1, i).id, 1);
+                    mv.GetNeuronAt(j, i).AddSynapse(mv.GetNeuronAt(j + 1, i).id, 1);
                 }
-                if (i < na.Height-1)
+                if (i < mv.Height-1)
                 {
-                    na.GetNeuronAt(na.Width - 1, i).AddSynapse(na.GetNeuronAt(0, i + 1).id, 1);
+                    mv.GetNeuronAt(mv.Width - 1, i).AddSynapse(mv.GetNeuronAt(0, i + 1).id, 1);
                 }
             }
 
@@ -75,7 +75,7 @@ namespace BrainSimulator.Modules
         //delete if not needed
         public override void SizeChanged()
         {
-            if (na != null)
+            if (mv != null)
             {
                 AddSynapses();
             }

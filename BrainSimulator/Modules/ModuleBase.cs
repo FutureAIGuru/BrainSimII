@@ -14,9 +14,7 @@ namespace BrainSimulator.Modules
     abstract public class ModuleBase
     {
         protected NeuronArray theNeuronArray { get => MainWindow.theNeuronArray; }
-        protected ModuleView na = null;
-        protected ModuleView naIn = null;
-        protected ModuleView naOut = null;
+        protected ModuleView mv = null;
 
         //this is public so it will be included in the saved xml file.  That way
         //initialized data content can be preserved from run to run and only reinitialized when requested.
@@ -42,16 +40,11 @@ namespace BrainSimulator.Modules
 
         public ModuleBase() { }
 
-        virtual public void Fire()
-        {
-            Init();
-        }
+        abstract public void Fire();
 
-        virtual public void Initialize()
-        {
-        }
+        abstract public void Initialize();
 
-        public void Init(bool forceInit = false)
+        protected void Init(bool forceInit = false)
         {
             SetModuleView();
 
@@ -71,14 +64,14 @@ namespace BrainSimulator.Modules
 
         public void SetModuleView()
         {
-            if (na == null)
+            if (mv == null)
             {
                 //figure out which area is this one
                 foreach (ModuleView na1 in theNeuronArray.modules)
                 {
                     if (na1.TheModule == this)
                     {
-                        na = na1;
+                        mv = na1;
                         break;
                     }
                 }
@@ -249,12 +242,12 @@ namespace BrainSimulator.Modules
         public virtual void SizeChanged()
         { }
 
-        public virtual MenuItem GetCustomMenuItems()
+        public virtual MenuItem CustomContextMenuItems()
         {
             return null;
         }
 
-        public ModuleBase FindModuleByType(Type t)
+        public ModuleBase FindModleu(Type t)
         {
             foreach (ModuleView na1 in theNeuronArray.modules)
             {
@@ -266,7 +259,7 @@ namespace BrainSimulator.Modules
             return null;
         }
 
-        public ModuleBase FindModuleByName(string name)
+        public ModuleBase FindModule(string name)
         {
             foreach (ModuleView na1 in theNeuronArray.modules)
             {
@@ -289,7 +282,7 @@ namespace BrainSimulator.Modules
             if (moduleName != null)
                 naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
-                naModule = na;
+                naModule = mv;
             if (naModule != null)
             {
                 Neuron n = naModule.GetNeuronAt(neuronLabel);
@@ -313,7 +306,7 @@ namespace BrainSimulator.Modules
             if (moduleName != null)
                 naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
-                naModule = na;
+                naModule = mv;
             if (naModule != null)
             {
                 Neuron n = naModule.GetNeuronAt(neuronLabel);
@@ -346,7 +339,7 @@ namespace BrainSimulator.Modules
             if (moduleName != null)
                 naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
-                naModule = na;
+                naModule = mv;
             if (naModule != null)
             {
                 Neuron n = naModule.GetNeuronAt(neuronLabel);
@@ -368,7 +361,7 @@ namespace BrainSimulator.Modules
             if (moduleName != null)
                 naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
-                naModule = na;
+                naModule = mv;
             if (naModule != null)
             {
                 Neuron n1 = naModule.GetNeuronAt(n);
@@ -390,7 +383,7 @@ namespace BrainSimulator.Modules
             if (moduleName != null)
                 naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
-                naModule = na;
+                naModule = mv;
             if (naModule != null)
             {
                 Neuron n = naModule.GetNeuronAt(x, y);
@@ -413,7 +406,7 @@ namespace BrainSimulator.Modules
             if (moduleName != null)
                 naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
-                naModule = na;
+                naModule = mv;
             if (naModule != null)
             {
                 Neuron n = naModule.GetNeuronAt(x, y);
@@ -432,7 +425,7 @@ namespace BrainSimulator.Modules
             if (moduleName != null)
                 naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
-                naModule = na;
+                naModule = mv;
             if (naModule != null)
             {
                 Neuron n = naModule.GetNeuronAt(x, y);
@@ -451,7 +444,7 @@ namespace BrainSimulator.Modules
             if (moduleName != null)
                 naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
-                naModule = na;
+                naModule = mv;
             if (naModule != null)
             {
                 for (int i = 0; i < values.Length; i++)
@@ -477,7 +470,7 @@ namespace BrainSimulator.Modules
             if (moduleName != null)
                 naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
-                naModule = na;
+                naModule = mv;
             if (naModule != null)
             {
                 if (isHoriz)
@@ -507,7 +500,7 @@ namespace BrainSimulator.Modules
             if (moduleName != null)
                 naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
-                naModule = na;
+                naModule = mv;
             if (naModule != null)
             {
                 for (int i = 0; i < values.Length; i++)
@@ -533,7 +526,7 @@ namespace BrainSimulator.Modules
             if (moduleName != null)
                 naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
-                naModule = na;
+                naModule = mv;
             if (naModule != null) retVal = naModule.Width;
             return retVal;
         }
@@ -545,16 +538,16 @@ namespace BrainSimulator.Modules
             if (moduleName != null)
                 naModule = theNeuronArray.FindModuleByLabel(moduleName);
             else
-                naModule = na;
+                naModule = mv;
             if (naModule != null) retVal = naModule.Height;
             return retVal;
         }
 
         protected void ClearNeurons(bool deleteIncoming = true)
         {
-            if (na == null)
+            if (mv == null)
                 return;
-            foreach (Neuron n in na.Neurons())
+            foreach (Neuron n in mv.Neurons)
             {
                 n.DeleteAllSynapes(true,deleteIncoming);
                 n.Label = "";
@@ -565,7 +558,7 @@ namespace BrainSimulator.Modules
         }
         protected Neuron AddLabel(string newLabel)
         {
-            foreach (Neuron n in na.Neurons())
+            foreach (Neuron n in mv.Neurons)
             {
                 if (n == null) return null;
                 if (n.Label == newLabel) return n;

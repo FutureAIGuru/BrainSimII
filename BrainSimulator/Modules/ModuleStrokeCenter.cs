@@ -33,18 +33,18 @@ namespace BrainSimulator.Modules
         {
             Init();  //be sure to leave this here
             ModuleView naSource = theNeuronArray.FindModuleByLabel("ModuleImageFile");
-            foreach (Neuron n in na.Neurons())
+            foreach (Neuron n in mv.Neurons)
                 n.SetValueInt(0);
 
             if (naSource != null)
             {
                 backgroundColor = naSource.GetNeuronAt(0, 0).LastChargeInt;
                 List<CenterPoint> ptList = new List<CenterPoint>();
-                foreach (Neuron n in na.Neurons())
+                foreach (Neuron n in mv.Neurons)
                 {
                     if (n.LastChargeInt != 0) continue;
 
-                    na.GetNeuronLocation(n.id, out int x2, out int y2);
+                    mv.GetNeuronLocation(n.id, out int x2, out int y2);
                     MapToSource(naSource, x2, y2, out int x1, out int y1);
                     Neuron nSource = naSource.GetNeuronAt(x1, y1);
 
@@ -75,13 +75,13 @@ namespace BrainSimulator.Modules
                             {
                                 ptList.Add(new CenterPoint { loc = newPt, angle = bestDir, length = bestLength });
                                 int value = 0xf00000 | bestDirNum << 12 | (int)bestLength;
-                                na.GetNeuronAt((int)newPt.X, (int)newPt.Y).SetValueInt(value);
+                                mv.GetNeuronAt((int)newPt.X, (int)newPt.Y).SetValueInt(value);
                             }
                             else if (ptList[index].length > bestLength)
                             {
                                 ptList[index] = new CenterPoint { loc = newPt, angle = bestDir, length = bestLength };
                                 int value = 0xf00000 | bestDirNum << 12 | (int)bestLength;
-                                na.GetNeuronAt((int)newPt.X, (int)newPt.Y).SetValueInt(value);
+                                mv.GetNeuronAt((int)newPt.X, (int)newPt.Y).SetValueInt(value);
                             }
                         }
                     }
@@ -106,13 +106,13 @@ namespace BrainSimulator.Modules
 
         private void MapToSource(ModuleView naSource, int x2, int y2, out int x1, out int y1)
         {
-            x1 = (int)Round((x2 * (naSource.Width - 1) / (float)(na.Width - 1)));
-            y1 = (int)Round((y2 * (naSource.Height - 1) / (float)(na.Height - 1)));
+            x1 = (int)Round((x2 * (naSource.Width - 1) / (float)(mv.Width - 1)));
+            y1 = (int)Round((y2 * (naSource.Height - 1) / (float)(mv.Height - 1)));
         }
         private void MapToDest(ModuleView naSource, int x2, int y2, out int x1, out int y1)
         {
-            x1 = (int)Round((x2 * (na.Width - 1) / (float)(naSource.Width - 1)));
-            y1 = (int)Round((y2 * (na.Height - 1) / (float)(naSource.Height - 1)));
+            x1 = (int)Round((x2 * (mv.Width - 1) / (float)(naSource.Width - 1)));
+            y1 = (int)Round((y2 * (mv.Height - 1) / (float)(naSource.Height - 1)));
         }
 
         Point GetStrokeMiddle(int x1, int y1, double direction, out float length)
@@ -167,7 +167,7 @@ namespace BrainSimulator.Modules
 
         public override void Initialize()
         {
-            foreach (Neuron n in na.Neurons())
+            foreach (Neuron n in mv.Neurons)
             {
                 n.Model = Neuron.modelType.Color;
                 n.SetValue(0);

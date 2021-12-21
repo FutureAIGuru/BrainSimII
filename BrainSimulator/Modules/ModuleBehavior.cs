@@ -74,26 +74,26 @@ namespace BrainSimulator.Modules
         public override void Initialize()
         {
             pending.Clear();
-            na.GetNeuronAt(0, 0).Label = "Stop";
-            na.GetNeuronAt(1, 0).Label = "Done";
-            na.GetNeuronAt(2, 0).Label = "TurnTo";
-            na.GetNeuronAt(3, 0).Model = Neuron.modelType.FloatValue;
-            na.GetNeuronAt(3, 0).Label = "Theta";
-            na.GetNeuronAt(4, 0).Label = "MoveTo";
-            na.GetNeuronAt(5, 0).Model = Neuron.modelType.FloatValue;
-            na.GetNeuronAt(5, 0).Label = "R";
-            na.GetNeuronAt(6, 0).Label = "Scan";
-            na.GetNeuronAt(9, 0).Label = "Coll";
-            na.GetNeuronAt(10, 0).Label = "CollAngle";
-            na.GetNeuronAt(10, 0).Model = Neuron.modelType.FloatValue;
+            mv.GetNeuronAt(0, 0).Label = "Stop";
+            mv.GetNeuronAt(1, 0).Label = "Done";
+            mv.GetNeuronAt(2, 0).Label = "TurnTo";
+            mv.GetNeuronAt(3, 0).Model = Neuron.modelType.FloatValue;
+            mv.GetNeuronAt(3, 0).Label = "Theta";
+            mv.GetNeuronAt(4, 0).Label = "MoveTo";
+            mv.GetNeuronAt(5, 0).Model = Neuron.modelType.FloatValue;
+            mv.GetNeuronAt(5, 0).Label = "R";
+            mv.GetNeuronAt(6, 0).Label = "Scan";
+            mv.GetNeuronAt(9, 0).Label = "Coll";
+            mv.GetNeuronAt(10, 0).Label = "CollAngle";
+            mv.GetNeuronAt(10, 0).Model = Neuron.modelType.FloatValue;
 
             //Connect Neurons to the UKS
             Neuron nUKSDone = GetNeuron("Module2DUKS", "Done");
             if (nUKSDone != null)
-                na.GetNeuronAt("Done").AddSynapse(nUKSDone.Id, 1);
+                mv.GetNeuronAt("Done").AddSynapse(nUKSDone.Id, 1);
             Neuron nUKSStop = GetNeuron("UKSOut", "Stop");
             if (nUKSStop != null)
-                nUKSStop.AddSynapse(na.GetNeuronAt("Stop").Id, 1);
+                nUKSStop.AddSynapse(mv.GetNeuronAt("Stop").Id, 1);
 
         }
 
@@ -206,7 +206,7 @@ namespace BrainSimulator.Modules
         //MoveTo
         private void MoveTo()
         {
-            float dist = na.GetNeuronAt("R").CurrentCharge;
+            float dist = mv.GetNeuronAt("R").CurrentCharge;
             SetNeuronValue(null, "MoveTo", 0);
             if (dist <= 0) return;
             MoveTo(dist);

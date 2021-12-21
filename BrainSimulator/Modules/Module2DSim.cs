@@ -576,10 +576,10 @@ namespace BrainSimulator.Modules
         private void CheckForTrainingResult()
         {
             if (actionTrainingState == -1) return;
-            ModuleUKSN nmUKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            ModuleUKSN nmUKS = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
             if (nmUKS == null) return;
             actionTrainingState--;
-            if (actionTrainingState <= 4 || !na.GetNeuronAt("Train").Fired()) return;
+            if (actionTrainingState <= 4 || !mv.GetNeuronAt("Train").Fired()) return;
             IList<Thing> actions = nmUKS.GetChildren(nmUKS.Labeled("Action"));
             bool bResponded = false;
             foreach (Thing action in actions)
@@ -615,7 +615,7 @@ namespace BrainSimulator.Modules
 
         private void SimulatePhrase(string Phrase)
         {
-            ModuleHearWords nmWords = (ModuleHearWords)FindModuleByType(typeof(ModuleHearWords));
+            ModuleHearWords nmWords = (ModuleHearWords)FindModleu(typeof(ModuleHearWords));
             if (nmWords != null)
                 nmWords.HearPhrase(Phrase);
         }
@@ -637,15 +637,15 @@ namespace BrainSimulator.Modules
         }
         public Segment GetMotionTarget()
         {
-            foreach (Neuron n in na.Neurons())
+            foreach (Neuron n in mv.Neurons)
             {
-                na.GetNeuronLocation(n, out int x1, out int y1);
+                mv.GetNeuronLocation(n, out int x1, out int y1);
                 TransformPoint(ref x1, ref y1);
                 foreach (Synapse s in n.Synapses)
                 {
                     if (s.Weight == 10)
                     {
-                        na.GetNeuronLocation(s.TargetNeuron, out int x2, out int y2);
+                        mv.GetNeuronLocation(s.TargetNeuron, out int x2, out int y2);
                         TransformPoint(ref x2, ref y2);
                         Segment retVal = new Segment()
                         {
@@ -664,7 +664,7 @@ namespace BrainSimulator.Modules
         {
             MainWindow.SuspendEngine();
             Initialize();
-            Module2DModel nmModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
+            Module2DModel nmModel = (Module2DModel)FindModleu(typeof(Module2DModel));
             if (nmModel == null) return;
             //clear out any existing 
             nmModel.Initialize();
@@ -684,7 +684,7 @@ namespace BrainSimulator.Modules
         void TransformPoint(ref int x, ref int y)
         {
             //the middle of the area
-            int mx = na.Width / 2; int my = na.Height / 2;
+            int mx = mv.Width / 2; int my = mv.Height / 2;
             x -= mx;
             y -= my;
             int temp = x;
@@ -717,9 +717,9 @@ namespace BrainSimulator.Modules
             entityTrack.Add(entityPosition);
             entityDirection1 = 0;
 
-            na.GetNeuronAt(0).Label = "Actions";
-            na.GetNeuronAt(1).Label = "Colors";
-            na.GetNeuronAt(2).Label = "Train";
+            mv.GetNeuronAt(0).Label = "Actions";
+            mv.GetNeuronAt(1).Label = "Colors";
+            mv.GetNeuronAt(2).Label = "Train";
 
             armRelative = new Vector[] { new Vector(.4, .4), new Vector(.4, -.4) };
             armActual = new Point[2];
@@ -769,15 +769,15 @@ namespace BrainSimulator.Modules
                 }
             }
 
-            foreach (Neuron n in na.Neurons())
+            foreach (Neuron n in mv.Neurons)
             {
-                na.GetNeuronLocation(n, out int x1, out int y1);
+                mv.GetNeuronLocation(n, out int x1, out int y1);
                 TransformPoint(ref x1, ref y1);
                 foreach (Synapse s in n.Synapses)
                 {
                     if (s.TargetNeuron != n.Id)// && s.Weight != 10)
                     {
-                        na.GetNeuronLocation(s.TargetNeuron, out int x2, out int y2);
+                        mv.GetNeuronLocation(s.TargetNeuron, out int x2, out int y2);
                         TransformPoint(ref x2, ref y2);
                         physObject newObject = new physObject
                         {

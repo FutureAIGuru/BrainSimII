@@ -39,9 +39,9 @@ namespace BrainSimulator.Modules
             //Do any hebbian synapse adjustment
             if (GetNeuron("Learning") is Neuron nlearing && nlearing.Fired())
             {
-                for (int i = 0; i < na.Height; i++)
+                for (int i = 0; i < mv.Height; i++)
                 {
-                    if (na.GetNeuronAt(0, i) is Neuron n)
+                    if (mv.GetNeuronAt(0, i) is Neuron n)
                     {
                         if (n.LastFired > MainWindow.theNeuronArray.Generation - 4)
                         {
@@ -83,9 +83,9 @@ namespace BrainSimulator.Modules
                             }
 
                             //clear partial charges from others
-                            for (int k = 0; k < na.Height; k++)
+                            for (int k = 0; k < mv.Height; k++)
                             {
-                                if (na.GetNeuronAt(0, k) is Neuron n5)
+                                if (mv.GetNeuronAt(0, k) is Neuron n5)
                                 {
                                     n5.currentCharge = 0;
                                     n5.Update();
@@ -119,9 +119,9 @@ namespace BrainSimulator.Modules
 
                     long oldestFired = long.MaxValue;
                     Neuron oldestNeuron = null;
-                    for (int i = 0; i < na.Height; i++)
+                    for (int i = 0; i < mv.Height; i++)
                     {
-                        if (na.GetNeuronAt(0, i) is Neuron n2)
+                        if (mv.GetNeuronAt(0, i) is Neuron n2)
                         {
                             if (n2.LastFired < oldestFired)
                             {
@@ -155,9 +155,9 @@ namespace BrainSimulator.Modules
             else //not learning
             {
                 Neuron nRdOut = GetNeuron("RdOut");
-                for (int i = 0; i < na.Height; i++)
+                for (int i = 0; i < mv.Height; i++)
                 {
-                    if (na.GetNeuronAt(0, i) is Neuron n)
+                    if (mv.GetNeuronAt(0, i) is Neuron n)
                     {
                         if (n.LastFired > MainWindow.theNeuronArray.Generation - 4)
                         {
@@ -247,14 +247,14 @@ namespace BrainSimulator.Modules
 
         private void AddIncomingSynapses()
         {
-            Neuron nLearning = na.GetNeuronAt(2, 1);
+            Neuron nLearning = mv.GetNeuronAt(2, 1);
             nLearning.Label = "Learning";
             nLearning.AddSynapse(nLearning.id, 1);
-            Neuron nRdOut = na.GetNeuronAt(2, 0);
+            Neuron nRdOut = mv.GetNeuronAt(2, 0);
             nRdOut.Label = "RdOut";
-            for (int i = 0; i < na.Height; i++)
+            for (int i = 0; i < mv.Height; i++)
             {
-                Neuron n1 = na.GetNeuronAt(0, i);
+                Neuron n1 = mv.GetNeuronAt(0, i);
                 if (i != 0)
                     n1.Clear();
                 n1.Label = "P" + i;
@@ -266,9 +266,9 @@ namespace BrainSimulator.Modules
                     Neuron nSource = MainWindow.theNeuronArray.GetNeuron(s.TargetNeuron);
                     if (nSource.Label != "")
                     {
-                        for (int j = 0; j < na.Height; j++)
+                        for (int j = 0; j < mv.Height; j++)
                         {
-                            Neuron nTarget = na.GetNeuronAt(0, j);
+                            Neuron nTarget = mv.GetNeuronAt(0, j);
                             nSource.AddSynapse(nTarget.id, 0f, Synapse.modelType.Hebbian3);
                             MainWindow.theNeuronArray.GetNeuronLocation(nSource.id, out int col, out int row);
                             while (MainWindow.theNeuronArray.GetNeuron(col, ++row).Label != "")
@@ -280,22 +280,22 @@ namespace BrainSimulator.Modules
                 }
             }
             //add mutual suppression
-            for (int i = 0; i < na.Height; i++)
-                for (int j = 0; j < na.Height; j++)
+            for (int i = 0; i < mv.Height; i++)
+                for (int j = 0; j < mv.Height; j++)
                 {
                     if (j != i)
                     {
-                        Neuron nSource = na.GetNeuronAt(0, i);
-                        Neuron nTarget = na.GetNeuronAt(0, j);
+                        Neuron nSource = mv.GetNeuronAt(0, i);
+                        Neuron nTarget = mv.GetNeuronAt(0, j);
                         nSource.AddSynapse(nTarget.id, -1);
                     }
                 }
 
             //add latch column
-            for (int i = 0; i < na.Height; i++)
+            for (int i = 0; i < mv.Height; i++)
             {
-                Neuron nSource = na.GetNeuronAt(0, i);
-                Neuron nTarget = na.GetNeuronAt(1, i);
+                Neuron nSource = mv.GetNeuronAt(0, i);
+                Neuron nTarget = mv.GetNeuronAt(1, i);
                 nSource.AddSynapse(nTarget.id, .9f);
                 nRdOut.AddSynapse(nTarget.id, -1);                
             }
@@ -310,7 +310,7 @@ namespace BrainSimulator.Modules
         //delete if not needed
         public override void SizeChanged()
         {
-            if (na == null) return;
+            if (mv == null) return;
             AddIncomingSynapses();
         }
 

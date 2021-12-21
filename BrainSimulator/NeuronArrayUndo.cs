@@ -153,7 +153,7 @@ namespace BrainSimulator
                     Height = currentModule.Height,
                     FirstNeuron = currentModule.FirstNeuron,
                     Color = currentModule.Color,
-                    CommandLine = currentModule.TheModule.GetType().Name,
+                    ModuleTypeStr = currentModule.TheModule.GetType().Name,
                     Label = currentModule.Label
                 };
             moduleUndoInfo.Add(m1);
@@ -202,11 +202,11 @@ namespace BrainSimulator
                             Height = m1.moduleState.Height,
                             FirstNeuron = m1.moduleState.FirstNeuron,
                             Color = m1.moduleState.Color,
-                            CommandLine = m1.moduleState.CommandLine,
+                            ModuleTypeStr = m1.moduleState.ModuleTypeStr,
                             Label = m1.moduleState.Label,
                         };
                         // modules.Add(mv);
-                        ModuleView.CreateModule(mv.Label, mv.CommandLine, Utils.IntToColor(mv.Color), mv.FirstNeuron, mv.Width, mv.Height);
+                        ModuleView.CreateModule(mv.Label, mv.ModuleTypeStr, Utils.IntToColor(mv.Color), mv.FirstNeuron, mv.Width, mv.Height);
                     }
                     else
                     {
@@ -214,7 +214,7 @@ namespace BrainSimulator
                         modules[m1.index].Width = m1.moduleState.Width;
                         modules[m1.index].Height = m1.moduleState.Height;
                         modules[m1.index].Color = m1.moduleState.Color;
-                        modules[m1.index].CommandLine = m1.moduleState.CommandLine;
+                        modules[m1.index].ModuleTypeStr = m1.moduleState.ModuleTypeStr;
                         modules[m1.index].Label = m1.moduleState.Label;
                     }
                 }

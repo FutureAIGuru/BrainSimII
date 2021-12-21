@@ -46,7 +46,7 @@ namespace BrainSimulator.Modules
             if (UKSPoints == null || UKSPoints.Count == 0)
                 GetSegmentsFromUKS();
 
-            ModuleBehavior nmBehavior = (ModuleBehavior)FindModuleByType(typeof(ModuleBehavior));
+            ModuleBehavior nmBehavior = (ModuleBehavior)FindModleu(typeof(ModuleBehavior));
             Thing obstacle = NearestThingAhead();
             if (obstacle != null)
             {
@@ -64,7 +64,7 @@ namespace BrainSimulator.Modules
 
         public void GetSegmentsFromUKS()
         {
-            ModuleUKSN nmUKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            ModuleUKSN nmUKS = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
             if (nmUKS is ModuleUKS UKS)
             {
                 UKSSegments = UKS.Labeled("Segment").Children;
@@ -106,7 +106,7 @@ namespace BrainSimulator.Modules
         }
         public Thing AddSegmentToUKS(PointPlus P1, PointPlus P2, int theColor, PointPlus motion = null, bool addToModel = true)
         {
-            ModuleUKS nmUKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            ModuleUKS nmUKS = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
             if (nmUKS is ModuleUKS UKS)
             {
                 Thing t1, t2;
@@ -222,7 +222,7 @@ namespace BrainSimulator.Modules
             //FUTURE: detect motion
             if (theColor == 0) return null;
             Segment newSegment = new Segment() { P1 = P1, P2 = P2, theColor = theColor };
-            ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            ModuleUKSN UKS = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
             GetSegmentsFromUKS();
             if (UKS != null)
             {
@@ -347,7 +347,7 @@ namespace BrainSimulator.Modules
         public bool AddSegmentFromTouch(PointPlus P1, PointPlus P2, PointPlus motion, int arm)
         {
             //if conf=0, it's a known endpoint. conf=1, not an endpoint
-            ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            ModuleUKSN UKS = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
             if (UKS is null) return false;
             if (UKSSegments is null) return false;
             if (imagining) return false;
@@ -639,7 +639,7 @@ namespace BrainSimulator.Modules
         {
             obstacle = null;
             float closestDistance = 100;
-            ModuleUKSN UKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            ModuleUKSN UKS = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
             if (UKS == null) return null;
             bool ok = true;
             foreach (Thing t in UKSSegments)
@@ -800,7 +800,7 @@ namespace BrainSimulator.Modules
 
             GetSegmentsFromUKS();
 
-            ModuleUKSN UKSn = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            ModuleUKSN UKSn = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
             if (UKSn == null) return;
             while (UKSSegments.Count > 0)
             {
@@ -812,8 +812,8 @@ namespace BrainSimulator.Modules
                 UKSn.DeleteThing(UKSPoints[0]);
             }
 
-            na.GetNeuronAt(0, 0).Label = "New";
-            na.GetNeuronAt(1, 0).Label = "Change";
+            mv.GetNeuronAt(0, 0).Label = "New";
+            mv.GetNeuronAt(1, 0).Label = "Change";
             AddLabel("Obstacle");
             UpdateDialog();
         }

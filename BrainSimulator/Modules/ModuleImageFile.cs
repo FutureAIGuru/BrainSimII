@@ -69,7 +69,7 @@ namespace BrainSimulator.Modules
         void SetDescription(string fileName)
         {
             if (!useDescription) return;
-            ModuleBoundaryDescription mbd = (ModuleBoundaryDescription)FindModuleByName("BoundaryDescription");
+            ModuleBoundaryDescription mbd = (ModuleBoundaryDescription)FindModule("BoundaryDescription");
             if (mbd == null) return;
 
             string textFilePath = Path.ChangeExtension(fileName, "txt");
@@ -138,14 +138,14 @@ namespace BrainSimulator.Modules
                 {
                     return;
                 }
-                float vRatio = bitmap1.Height / (float)na.Height;
-                float hRatio = bitmap1.Width / (float)na.Width;
-                for (int i = 0; i < na.Height; i++)
-                    for (int j = 0; j < na.Width; j++)
+                float vRatio = bitmap1.Height / (float)mv.Height;
+                float hRatio = bitmap1.Width / (float)mv.Width;
+                for (int i = 0; i < mv.Height; i++)
+                    for (int j = 0; j < mv.Width; j++)
                     {
-                        Neuron n = na.GetNeuronAt(j, i);
-                        int x = (int)(j * (bitmap1.Width - 1) / (float)(na.Width - 1));
-                        int y = (int)(i * (bitmap1.Height - 1) / (float)(na.Height - 1));
+                        Neuron n = mv.GetNeuronAt(j, i);
+                        int x = (int)(j * (bitmap1.Width - 1) / (float)(mv.Width - 1));
+                        int y = (int)(i * (bitmap1.Height - 1) / (float)(mv.Height - 1));
 
                         int val = GetAveragePixel(bitmap1, x, y, vRatio, hRatio);
                         n.LastChargeInt = val;
@@ -216,7 +216,7 @@ namespace BrainSimulator.Modules
         public override void Initialize()
         {
             Init();
-            foreach (Neuron n in na.Neurons())
+            foreach (Neuron n in mv.Neurons)
             {
                 n.Model = Neuron.modelType.Color;
                 n.LastChargeInt = 0;
@@ -230,7 +230,7 @@ namespace BrainSimulator.Modules
         public override void SetUpAfterLoad()
         {
             Init();
-            foreach (Neuron n in na.Neurons())
+            foreach (Neuron n in mv.Neurons)
             {
                 n.Model = Neuron.modelType.Color;
                 n.LastChargeInt = 0;

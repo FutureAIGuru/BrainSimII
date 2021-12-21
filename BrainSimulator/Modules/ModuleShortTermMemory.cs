@@ -54,17 +54,17 @@ namespace BrainSimulator.Modules
         {
             Init();
             ClearNeurons(false);
-            na.GetNeuronAt(0, 0).Label = "Rd";
-            na.GetNeuronAt(1, 0).Label = "Clr";
-            na.GetNeuronAt(0, 0).AddSynapse(na.GetNeuronAt(1,0).id,1);
+            mv.GetNeuronAt(0, 0).Label = "Rd";
+            mv.GetNeuronAt(1, 0).Label = "Clr";
+            mv.GetNeuronAt(0, 0).AddSynapse(mv.GetNeuronAt(1,0).id,1);
 
 
-            for (int i = 1; i < na.Height; i++)
+            for (int i = 1; i < mv.Height; i++)
             {
-                Neuron n0 = na.GetNeuronAt(0, i);
+                Neuron n0 = mv.GetNeuronAt(0, i);
                 n0.Label = "I" + (i - 1).ToString();
-                Neuron n1 = na.GetNeuronAt(1, i);
-                Neuron n2 = na.GetNeuronAt(2, i);
+                Neuron n1 = mv.GetNeuronAt(1, i);
+                Neuron n2 = mv.GetNeuronAt(2, i);
                 n2.Label = "O" + (i - 1).ToString();
                 n2.Model = Neuron.modelType.LIF;
                 n2.LeakRate = 0.9f;
@@ -93,7 +93,7 @@ namespace BrainSimulator.Modules
         //delete if not needed
         public override void SizeChanged()
         {
-            if (na == null) return;
+            if (mv == null) return;
             AddSynapses();
         }
     }

@@ -28,17 +28,16 @@ namespace BrainSimulator.Modules
         {
             Init();
             if (synth == null) Initialize();
-            na.BeginEnum();
-            for (Neuron n = na.GetNextNeuron(); n != null; n = na.GetNextNeuron())
+            foreach (Neuron n in mv.Neurons)
             {
                 if (n.LastCharge > .9)
                 {
                     if (n.Label == "")
                     {
                         ModuleView msi = theNeuronArray.FindModuleByLabel("ModuleSpeechIn");
-                        int i = na.GetNeuronOffset(n);
+                        int i = mv.GetNeuronOffset(n);
                         if (msi != null)
-                            na.GetNeuronAt(i).Label = msi.GetNeuronAt(i).Label;
+                            mv.GetNeuronAt(i).Label = msi.GetNeuronAt(i).Label;
                     }
                     toSpeak += prePend + n.Label + " ";
                     prePend = "";
@@ -55,7 +54,7 @@ namespace BrainSimulator.Modules
                     if (toSpeak.IndexOf(' ') != -1)
                         toSpeak = toSpeak.Insert(toSpeak.Trim().LastIndexOf(' '), " " + insertAnd);
                     toSpeak = toSpeak + " " + postPend;
-                    ModuleSpeechIn msi = (ModuleSpeechIn)FindModuleByType(typeof(ModuleSpeechIn));
+                    ModuleSpeechIn msi = (ModuleSpeechIn)FindModleu(typeof(ModuleSpeechIn));
                     if (msi != null)
                         msi.PauseRecognition(); //if there is a recognizer active
                     synth.SpeakAsync(toSpeak + ".");
@@ -91,10 +90,10 @@ namespace BrainSimulator.Modules
             ModuleView msi = theNeuronArray.FindModuleByLabel("ModuleSpeechIn");
             if (msi != null)
             {
-                for (int i = 0; i < na.NeuronCount && i < msi.NeuronCount; i++)
+                for (int i = 0; i < mv.NeuronCount && i < msi.NeuronCount; i++)
                 {
-                    na.GetNeuronAt(i).Label = msi.GetNeuronAt(i).Label;
-                    msi.GetNeuronAt(i).AddSynapse(na.GetNeuronAt(i).Id, 1);
+                    mv.GetNeuronAt(i).Label = msi.GetNeuronAt(i).Label;
+                    msi.GetNeuronAt(i).AddSynapse(mv.GetNeuronAt(i).Id, 1);
                 }
             }
         }
@@ -103,7 +102,7 @@ namespace BrainSimulator.Modules
         private void Synth_SpeakCompleted(object sender, SpeakCompletedEventArgs e)
         {
             // Restart speech recognition.  
-            ModuleSpeechIn msi = (ModuleSpeechIn)FindModuleByType(typeof(ModuleSpeechIn));
+            ModuleSpeechIn msi = (ModuleSpeechIn)FindModleu(typeof(ModuleSpeechIn));
             if (msi != null)
                 msi.ResumeRecognition();
         }

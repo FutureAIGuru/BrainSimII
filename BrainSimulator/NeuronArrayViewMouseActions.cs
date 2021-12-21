@@ -444,7 +444,7 @@ namespace BrainSimulator
                     {
                         //move all the neurons
                         List<int> neuronsToMove = new List<int>();
-                        foreach (Neuron n in theCurrentModule.Neurons1)
+                        foreach (Neuron n in theCurrentModule.Neurons)
                         {
                             neuronsToMove.Add(n.id);
                         }

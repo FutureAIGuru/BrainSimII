@@ -56,7 +56,7 @@ namespace BrainSimulator.Modules
         // did a neuron fire?
         private bool NeuronFired(string label)
         {
-            Neuron n = na.GetNeuronAt(label);
+            Neuron n = mv.GetNeuronAt(label);
             if (n == null) return false;
             return n.Fired();
         }
@@ -72,7 +72,7 @@ namespace BrainSimulator.Modules
             foreach (Thing child in t.Children)
             {
                 int i = UKS.IndexOf(child);
-                Neuron n = na.GetNeuronAt(i);
+                Neuron n = mv.GetNeuronAt(i);
                 if (n != null)
                 {
                     if (n.LastFired > firedAt)
@@ -150,10 +150,10 @@ namespace BrainSimulator.Modules
             //on any neurons which might have shifted.
             if (i > -1)
             {
-                for (int j = i + 1; j < na.NeuronCount; j++)
+                for (int j = i + 1; j < mv.NeuronCount; j++)
                 {
-                    Neuron targetNeuron = na.GetNeuronAt(j - 1);
-                    Neuron sourceNeuron = na.GetNeuronAt(j);
+                    Neuron targetNeuron = mv.GetNeuronAt(j - 1);
+                    Neuron sourceNeuron = mv.GetNeuronAt(j);
                     MainWindow.thisWindow.theNeuronArrayView.MoveOneNeuron(sourceNeuron, targetNeuron,false);
                 }
                 //repeat this process for the output array
@@ -177,13 +177,13 @@ namespace BrainSimulator.Modules
         public override void Initialize()
         {
             base.Initialize();
-            foreach (Neuron n in na.Neurons())
+            foreach (Neuron n in mv.Neurons)
             {
                 n.DeleteAllSynapes();
             }
             ModuleView na1 = theNeuronArray.FindModuleByLabel("KBOut");
             if (na1 != null)
-                foreach (Neuron n in na1.Neurons())
+                foreach (Neuron n in na1.Neurons)
                 {
                     n.DeleteAllSynapes();
                 }
@@ -207,7 +207,7 @@ namespace BrainSimulator.Modules
                 if (n2 != null && n3 != null)
                     n3.AddSynapse(n2.Id, 1);
                 Thing parent = Labeled("Vowel");
-                foreach (Neuron n in naPhonemes.Neurons())
+                foreach (Neuron n in naPhonemes.Neurons)
                 {
 
                     if (n.Label == "Conson.") parent = Labeled("Consonant");
@@ -235,7 +235,7 @@ namespace BrainSimulator.Modules
             if (i == -1) return null;
             if (input)
             {
-                return na.GetNeuronAt(i);
+                return mv.GetNeuronAt(i);
             }
             else
             {
@@ -267,7 +267,7 @@ namespace BrainSimulator.Modules
         public bool Fired(Thing t, long maxPastCycles = 1, bool firedInput = true, long minPastCycles = 0)
         {
             int i = UKS.IndexOf(t);
-            ModuleView naModule = na;
+            ModuleView naModule = mv;
             if (!firedInput)
             {
                 naModule = GetOutputModule();
@@ -355,9 +355,9 @@ namespace BrainSimulator.Modules
         //execute the debugging commands if the associated neuron fired
         private void ShowReferences()
         {
-            for (int i = firstThing; i < na.NeuronCount && i < UKS.Count; i++)
+            for (int i = firstThing; i < mv.NeuronCount && i < UKS.Count; i++)
             {
-                Neuron n = na.GetNeuronAt(i);
+                Neuron n = mv.GetNeuronAt(i);
                 if (NeuronFired("Parent"))
                 {
                     if (n.Fired())
@@ -556,7 +556,7 @@ namespace BrainSimulator.Modules
                             //if the link is to a phoneme, add it
                             newUtterance.AddReference(l.T);
                     }
-                    ModuleSpeakPhonemes nm = (ModuleSpeakPhonemes)FindModuleByType(typeof(ModuleSpeakPhonemes));
+                    ModuleSpeakPhonemes nm = (ModuleSpeakPhonemes)FindModleu(typeof(ModuleSpeakPhonemes));
 
                     //what's the closest phrase we can say based on the phonemes we've learned to say so we can speak the phrase
                     foreach (Link l in newUtterance.References)

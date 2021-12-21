@@ -50,14 +50,14 @@ namespace BrainSimulator.Modules
             Init();  //be sure to leave this here to enable use of the na variable
             //if (depthValues.Count == 0) Initialize();
             bool retinaChanged = false;
-            if (lastValuesL == null || lastValuesL.Count != na.Width)
+            if (lastValuesL == null || lastValuesL.Count != mv.Width)
             {
                 lastValuesL = new List<int>();
                 lastValuesR = new List<int>();
                 curValuesL = new List<int>();
                 curValuesR = new List<int>();
                 textureValues = new List<int>();
-                for (int i = 0; i < na.Width; i++)
+                for (int i = 0; i < mv.Width; i++)
                 {
                     lastValuesL.Add(-1);
                     lastValuesR.Add(-1);
@@ -67,10 +67,10 @@ namespace BrainSimulator.Modules
                 }
                 retinaChanged = true;
             }
-            for (int i = 0; i < na.Width; i++)
+            for (int i = 0; i < mv.Width; i++)
             {
-                curValuesL[i] = na.GetNeuronAt(i, 1).LastChargeInt;
-                curValuesR[i] = na.GetNeuronAt(i, 0).LastChargeInt;
+                curValuesL[i] = mv.GetNeuronAt(i, 1).LastChargeInt;
+                curValuesR[i] = mv.GetNeuronAt(i, 0).LastChargeInt;
                 textureValues[i] = curValuesL[i];
             }
 
@@ -109,9 +109,9 @@ namespace BrainSimulator.Modules
 
         void SetCenterColor()
         {
-            int c1 = GetNeuronValueInt(null, na.Width / 2, 0);
-            int c2 = GetNeuronValueInt(null, na.Width / 2, 1);
-            ModuleUKSN nmUKS = (ModuleUKSN)FindModuleByType(typeof(ModuleUKSN));
+            int c1 = GetNeuronValueInt(null, mv.Width / 2, 0);
+            int c2 = GetNeuronValueInt(null, mv.Width / 2, 1);
+            ModuleUKSN nmUKS = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
             if (nmUKS != null && nmUKS.Labeled("Color") != null)
             {
                 IList<Thing> colors = nmUKS.Labeled("Color").Children;
@@ -179,7 +179,7 @@ namespace BrainSimulator.Modules
                     };
                     //aa.angleFromTexture = GetAngleFromTexture(aa);
                     Segment s = new Segment() { P1 = aa.PL, P2 = aa.PR, theColor = aa.theColor, };
-                    Module2DModel nmModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
+                    Module2DModel nmModel = (Module2DModel)FindModleu(typeof(Module2DModel));
                     if (nmModel != null)
                         aa.t = nmModel.MostLikelySegment(s);
                     areas.Add(aa);
@@ -190,15 +190,15 @@ namespace BrainSimulator.Modules
 
         float GetAngleFromTexture(Area a)
         {
-            int start = (int)GetNeuronFromDirection(a.PL.Theta, na.Width);
-            int end = (int)GetNeuronFromDirection(a.PR.Theta, na.Width);
+            int start = (int)GetNeuronFromDirection(a.PL.Theta, mv.Width);
+            int end = (int)GetNeuronFromDirection(a.PR.Theta, mv.Width);
             int first = 0;
             int last = 0;
             int lCount = 0;
             int rCount = 0;
             for (int i = start; i < end; i++)
             {
-                ColorInt color = na.GetNeuronAt(i, 0).LastChargeInt;
+                ColorInt color = mv.GetNeuronAt(i, 0).LastChargeInt;
                 if (color != a.theColor && first == 0)
                     continue;
                 if (first == 0) first = i;
@@ -210,7 +210,7 @@ namespace BrainSimulator.Modules
             }
             for (int i = end - 1; i >= start; i--)
             {
-                ColorInt color = na.GetNeuronAt(i, 0).LastChargeInt;
+                ColorInt color = mv.GetNeuronAt(i, 0).LastChargeInt;
                 if (color != a.theColor && last == 0)
                     continue;
                 if (last == 0) last = i;
@@ -287,8 +287,8 @@ namespace BrainSimulator.Modules
             List<int> values = curValuesL;
             if (eye == 0) values = curValuesR;
 
-            ColorInt color1 = na.GetNeuronAt(0, eye).LastChargeInt;
-            for (int i = 1; i < na.Width; i++)
+            ColorInt color1 = mv.GetNeuronAt(0, eye).LastChargeInt;
+            for (int i = 1; i < mv.Width; i++)
             {
                 ColorInt color = values[i];
                 if (color == System.Windows.Media.Colors.AliceBlue)
@@ -313,7 +313,7 @@ namespace BrainSimulator.Modules
             int prevColor1 = prevValues[0];
             int color2 = color1;
             int prevColor2 = prevColor1;
-            for (int i = 1; i < na.Width; i++)
+            for (int i = 1; i < mv.Width; i++)
             {
                 color2 = values[i];
                 prevColor2 = prevValues[i];
@@ -339,7 +339,7 @@ namespace BrainSimulator.Modules
 
         private void FindPointsOfInterest()
         {
-            Module2DModel nmModel = (Module2DModel)FindModuleByType(typeof(Module2DModel));
+            Module2DModel nmModel = (Module2DModel)FindModleu(typeof(Module2DModel));
             if (nmModel == null) return;
 
             LBoundaries.Clear();
@@ -418,9 +418,9 @@ namespace BrainSimulator.Modules
         private PointPlus FindDepth(int l, int r)
         {
             //calculation using trig
-            Angle thetaA = GetDirectionFromNeuron(r - 0.5f, na.Width);
+            Angle thetaA = GetDirectionFromNeuron(r - 0.5f, mv.Width);
             thetaA = PI / 2 - thetaA; //get angle to axis
-            Angle thetaB = GetDirectionFromNeuron(l - 0.5f, na.Width);
+            Angle thetaB = GetDirectionFromNeuron(l - 0.5f, mv.Width);
             thetaB = PI / 2 - thetaB;
             thetaB = PI - thetaB; //to get an inside angle
             Angle thetaC = PI - thetaA - thetaB;
@@ -432,11 +432,11 @@ namespace BrainSimulator.Modules
             //alternate using vectors
             PointPlus p1L = new PointPlus() { Y = -eyeOffset, X = 0 };
             PointPlus p1R = new PointPlus() { Y = +eyeOffset, X = 0 };
-            Angle thetaL = (float)GetDirectionFromNeuron(r, na.Width);
+            Angle thetaL = (float)GetDirectionFromNeuron(r, mv.Width);
             PointPlus p2L = new PointPlus() { R = 20, Theta = thetaL };
             p2L.P = p2L.P + (Vector)p1L.P;
 
-            Angle thetaR = (float)GetDirectionFromNeuron(l, na.Width);
+            Angle thetaR = (float)GetDirectionFromNeuron(l, mv.Width);
             PointPlus p2R = new PointPlus() { R = 20, Theta = thetaR };
             p2R.P = p2R.P + (Vector)p1R.P;
 
@@ -449,18 +449,18 @@ namespace BrainSimulator.Modules
         public override void Initialize()
         {
             ClearNeurons();
-            for (int i = 0; i < na.Width; i++)
+            for (int i = 0; i < mv.Width; i++)
             {
-                na.GetNeuronAt(i, 0).Model = Neuron.modelType.Color;
-                na.GetNeuronAt(i, 1).Model = Neuron.modelType.Color;
+                mv.GetNeuronAt(i, 0).Model = Neuron.modelType.Color;
+                mv.GetNeuronAt(i, 1).Model = Neuron.modelType.Color;
             }
-            na.GetNeuronAt(0, 0).Label = "Left";
-            na.GetNeuronAt(0, 1).Label = "Right";
-            na.GetNeuronAt(na.Width / 2, 0).Label = "  ||";
+            mv.GetNeuronAt(0, 0).Label = "Left";
+            mv.GetNeuronAt(0, 1).Label = "Right";
+            mv.GetNeuronAt(mv.Width / 2, 0).Label = "  ||";
             lastValuesL = null;
             lastValuesR = null;
 
-            angularResolution = (float)(GetDirectionFromNeuron(0, na.Width) - GetDirectionFromNeuron(1, na.Width));
+            angularResolution = (float)(GetDirectionFromNeuron(0, mv.Width) - GetDirectionFromNeuron(1, mv.Width));
         }
     }
 }

@@ -17,7 +17,7 @@ namespace BrainSimulator.Modules
         //once for each cycle of the engine
         public override void Fire()
         {
-            base.Fire();  //be sure to leave this here
+            Init();
             Neuron n = GetNeuron("FirstNeuron");
             if (n != null)
             {

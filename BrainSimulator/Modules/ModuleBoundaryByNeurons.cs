@@ -37,27 +37,27 @@ namespace BrainSimulator.Modules
                 MessageBox.Show("Boundary module requires ImageFile module for input.");
                 return;
             }
-            foreach (Neuron n in naSource.Neurons1)
+            foreach (Neuron n in naSource.Neurons)
             {
                 n.Clear();
                 n.Model = Neuron.modelType.Color;
             }
-            foreach (Neuron n in na.Neurons1)
+            foreach (Neuron n in mv.Neurons)
             {
                 n.Clear();
                 n.Model = Neuron.modelType.LIF;
                 n.LeakRate = 1f;
             }
 
-            theNeuronArray.GetNeuronLocation(na.FirstNeuron, out int col, out int row);
+            theNeuronArray.GetNeuronLocation(mv.FirstNeuron, out int col, out int row);
 
-            na.Width = naSource.Width * 6;
-            na.Height = naSource.Height;
+            mv.Width = naSource.Width * 6;
+            mv.Height = naSource.Height;
 
-            if (col + na.Width >= theNeuronArray.Cols ||
-                row + na.Height >= theNeuronArray.rows)
+            if (col + mv.Width >= theNeuronArray.Cols ||
+                row + mv.Height >= theNeuronArray.rows)
             {
-                MessageBox.Show(na.Label + " would exceed neuron array boundaries.");
+                MessageBox.Show(mv.Label + " would exceed neuron array boundaries.");
                 return;
             }
 
@@ -73,12 +73,12 @@ namespace BrainSimulator.Modules
 
                     //the letter indicates which side is white...WB = L BW = R
                     int x1 = x * 6;
-                    Neuron nL = na.GetNeuronAt(x1, y);
-                    Neuron nR = na.GetNeuronAt(x1 + 1, y);
-                    Neuron nU = na.GetNeuronAt(x1 + 2, y);
-                    Neuron nD = na.GetNeuronAt(x1 + 3, y);
-                    Neuron nXU = na.GetNeuronAt(x1 + 4, y); //angle up
-                    Neuron nXD = na.GetNeuronAt(x1 + 5, y); //angle down
+                    Neuron nL = mv.GetNeuronAt(x1, y);
+                    Neuron nR = mv.GetNeuronAt(x1 + 1, y);
+                    Neuron nU = mv.GetNeuronAt(x1 + 2, y);
+                    Neuron nD = mv.GetNeuronAt(x1 + 3, y);
+                    Neuron nXU = mv.GetNeuronAt(x1 + 4, y); //angle up
+                    Neuron nXD = mv.GetNeuronAt(x1 + 5, y); //angle down
                     /*
                      * L:   10
                      *      10

@@ -30,7 +30,7 @@ namespace BrainSimulator.Modules
         // did a neuron fire?
         private bool NeuronFired(string label)
         {
-            Neuron n = na.GetNeuronAt(label);
+            Neuron n = mv.GetNeuronAt(label);
             if (n == null) return false;
             return n.Fired();
         }
@@ -76,13 +76,13 @@ namespace BrainSimulator.Modules
 
         private void UpdateNeuronLabels()
         {
-            if (na == null) return;
-            for (int i = 0; i < na.NeuronCount / 2 && i < UKS.Count; i++)
+            if (mv == null) return;
+            for (int i = 0; i < mv.NeuronCount / 2 && i < UKS.Count; i++)
             {
                 if (UKS[i] == null) continue;
                 GetNeuron(i).Label = UKS[i].Label;
             }
-            for (int i = UKS.Count; i < na.NeuronCount / 2; i++)
+            for (int i = UKS.Count; i < mv.NeuronCount / 2; i++)
             {
                 GetNeuron(i).Label = "";
             }
@@ -102,14 +102,14 @@ namespace BrainSimulator.Modules
 
         private Neuron PrevNeuron(Neuron n)
         {
-            na.GetNeuronLocation(n, out int col, out int row);
+            mv.GetNeuronLocation(n, out int col, out int row);
             row--;
             if (row < 0)
             {
                 col -= 2;
-                row += na.Height;
+                row += mv.Height;
             }
-            return na.GetNeuronAt(col, row);
+            return mv.GetNeuronAt(col, row);
         }
 
         public override void DeleteThing(Thing t)
@@ -140,7 +140,7 @@ namespace BrainSimulator.Modules
         {
             base.Initialize();
             ClearNeurons();
-            foreach (Neuron n in na.Neurons())
+            foreach (Neuron n in mv.Neurons)
             {
                 n.DeleteAllSynapes();
             }
@@ -161,11 +161,11 @@ namespace BrainSimulator.Modules
 
         Neuron GetNeuron(int i, bool input = true)
         {
-            int col = i / na.Height;
-            int row = i % na.Height;
+            int col = i / mv.Height;
+            int row = i % mv.Height;
             col = col * 2;
             if (!input) col++;
-            return na.GetNeuronAt(col, row);
+            return mv.GetNeuronAt(col, row);
         }
 
 

@@ -4,6 +4,7 @@
 //  
 
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,13 +28,39 @@ namespace BrainSimulator.Modules
 
 
         SerialPort sp = null;
-        string serialPortName = "COM11";
+        string serialPortName = RetrieveSerialPort();
         bool robotInitialized = false;
 
         DateTime lastCycleTime = DateTime.Now;
 
-        public string configString =
-@"
+        public string configString = RetrieveConfigString();
+
+        int configStringLinePointer = -1;
+        string[] configStringLines = new string[] { };
+
+        int sensorCount = 0;
+        int actuatorCount = 0;
+
+        public static string RetrieveSerialPort()
+        {
+            string result = Environment.GetEnvironmentVariable("BS2_ROBOT_COMPORT");
+            if (result == null)
+            {
+                // Default is as before...
+                result = "COM11";
+            }
+            return result;
+        }
+
+        public static string RetrieveConfigString()
+        {
+            string configFilename = Environment.GetEnvironmentVariable("BS2_ROBOT_CONFIG");
+            string configString = "";
+            if (configFilename == null)
+            {
+                configFilename = "DEFAULT";
+                // Default is as before...
+                configString = @"
 //Here's a sample configuration file
 //This is what you'll get when you first instantiate this module
 
@@ -85,11 +112,14 @@ Sensor Yaw x4 p5 t100 T200 e1 m1
 //Pitch sensor (x-axis rotation)
 Sensor Pitch x4 p3 t100 T200 e1 m1 
 ";
-        int configStringLinePointer = -1;
-        string[] configStringLines = new string[] { };
-
-        int sensorCount = 0;
-        int actuatorCount = 0;
+            }
+            else
+            {
+                Console.WriteLine("Reading robot config {0}", configFilename);
+                configString = File.ReadAllText(configFilename);
+            }
+            return configString;
+        }
 
         public override void Fire()
         {

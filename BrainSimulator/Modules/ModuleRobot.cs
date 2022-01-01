@@ -36,10 +36,9 @@ namespace BrainSimulator.Modules
         IPAddress broadCastAddress;
         int clientServerPort = 4444;
         int serverClientPort = 4444;
+        int tcpClientPort   = 44444;
         IPAddress theIP = null;
-
-        HttpClient theHttpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(2), };
-        bool httpClientBusy = false;
+        TcpClient theTcpClient = new TcpClient { };
 
         SerialPort sp = null;
         string serialPortName = RetrieveSerialPort();
@@ -54,6 +53,17 @@ namespace BrainSimulator.Modules
 
         int sensorCount = 0;
         int actuatorCount = 0;
+
+        public static string RetrieveWifiRobotIdentifier()
+        {
+            string result = Environment.GetEnvironmentVariable("BS2_ROBOT_IDENTIFIER");
+            if (result == null)
+            {
+                // Default is empty...
+                result = "";
+            }
+            return result;
+        }
 
         public static string RetrieveSerialPort()
         {
@@ -140,7 +150,7 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
             if (theIP == null)
             {
                 Broadcast("RobotPoll");
-                theIP = new IPAddress(new byte[] { 10, 0, 0, 214 });
+                theIP = new IPAddress(new byte[] { 127, 0, 0, 1 });
             }
 
             Init();  //be sure to leave this here
@@ -297,9 +307,10 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
                 var from = new IPEndPoint(IPAddress.Any, serverClientPort);
                 var recvBuffer = serverClient.Receive(ref from);
                 incomingMessage += Encoding.UTF8.GetString(recvBuffer);
-                if (incomingMessage == "Camera")
+                if (incomingMessage == RetrieveWifiRobotIdentifier())
                 {
                     theIP = from.Address;
+                    theTcpClient.Connect(theIP, tcpClientPort);
                 }
                 Debug.WriteLine("Received from Device: " + from.Address + " " + incomingMessage);
             }

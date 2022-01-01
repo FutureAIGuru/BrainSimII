@@ -43,7 +43,6 @@ namespace BrainSimulator.Modules
         }
 
 
-
         //needed to get the IP address of the ESP32 Camera device
         UdpClient serverClient = null; //listen only
         UdpClient clientServer; //send/broadcast only
@@ -51,7 +50,6 @@ namespace BrainSimulator.Modules
         int clientServerPort = 3333;
         int serverClientPort = 3333;
         IPAddress theIP = null;
-
 
         HttpClient theHttpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(2), };
         bool httpClientBusy = false;

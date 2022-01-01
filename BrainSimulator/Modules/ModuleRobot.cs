@@ -13,6 +13,10 @@ using System.Windows;
 using System.Xml.Serialization;
 using System.Diagnostics;
 using System.IO.Ports;
+using System.Net;
+using System.Net.Sockets;
+using System.Net.Http;
+using System.Net.NetworkInformation;
 
 namespace BrainSimulator.Modules
 {
@@ -26,6 +30,16 @@ namespace BrainSimulator.Modules
             maxWidth = 3;
         }
 
+        // needed to get the IP address of the ESP8266 device
+        UdpClient serverClient = null; //listen only
+        UdpClient clientServer; //send/broadcast only
+        IPAddress broadCastAddress;
+        int clientServerPort = 4444;
+        int serverClientPort = 4444;
+        IPAddress theIP = null;
+
+        HttpClient theHttpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(2), };
+        bool httpClientBusy = false;
 
         SerialPort sp = null;
         string serialPortName = RetrieveSerialPort();
@@ -115,7 +129,7 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
             }
             else
             {
-                Console.WriteLine("Reading robot config {0}", configFilename);
+                Console.WriteLine("Reading robot config" + configFilename);
                 configString = File.ReadAllText(configFilename);
             }
             return configString;
@@ -123,6 +137,12 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
 
         public override void Fire()
         {
+            if (theIP == null)
+            {
+                Broadcast("RobotPoll");
+                theIP = new IPAddress(new byte[] { 10, 0, 0, 214 });
+            }
+
             Init();  //be sure to leave this here
 
             HandleMessagesFromRobot();
@@ -269,6 +289,30 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
             lastCycleTime = DateTime.Now;
         }
 
+        public void ReceiveFromServer()
+        {
+            while (true)
+            {
+                string incomingMessage = "";
+                var from = new IPEndPoint(IPAddress.Any, serverClientPort);
+                var recvBuffer = serverClient.Receive(ref from);
+                incomingMessage += Encoding.UTF8.GetString(recvBuffer);
+                if (incomingMessage == "Camera")
+                {
+                    theIP = from.Address;
+                }
+                Debug.WriteLine("Received from Device: " + from.Address + " " + incomingMessage);
+            }
+        }
+
+        public void Broadcast(string message)
+        {
+            //Debug.WriteLine("Broadcast: " + message);
+            byte[] datagram = Encoding.UTF8.GetBytes(message);
+            IPEndPoint ipEnd = new IPEndPoint(broadCastAddress, clientServerPort);
+            clientServer.SendAsync(datagram, datagram.Length, ipEnd);
+        }
+
         string inputBuffer = "";
         void HandleMessagesFromRobot()
         {
@@ -334,6 +378,34 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
         //or when the engine restart button is pressed
         public override void Initialize()
         {
+
+            //This gets the wifi IP address
+            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (item.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 && item.OperationalStatus == OperationalStatus.Up)
+                {
+                    foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
+                    {
+                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            byte[] ips = ip.Address.GetAddressBytes();
+                            broadCastAddress = IPAddress.Parse(ips[0] + "." + ips[1] + "." + ips[2] + ".255");
+                        }
+                    }
+                }
+            }
+
+            serverClient = new UdpClient(serverClientPort);
+            serverClient.Client.ReceiveBufferSize = 10000000;
+
+            clientServer = new UdpClient();
+            clientServer.EnableBroadcast = true;
+
+            Task.Run(() =>
+            {
+                ReceiveFromServer();
+            });
+            
             foreach (Neuron n in mv.Neurons)
             {
                 n.Label = "";

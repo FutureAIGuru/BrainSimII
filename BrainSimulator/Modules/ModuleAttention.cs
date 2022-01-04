@@ -96,7 +96,7 @@ namespace BrainSimulator.Modules
         {
             Thing attn = uks.GetOrAddThing("ATTN", "Thing");
             Thing parent = t.Parents[t.Parents.Count - 1];
-            attn.RemveReferencesWithAncestor(uks.Labeled("Visual"));
+            attn.RemoveReferencesWithAncestor(uks.Labeled("Visual"));
             attn.AddReference(t);
             currentAttention = t;
             UpdateDialog();

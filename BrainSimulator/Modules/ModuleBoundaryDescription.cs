@@ -59,7 +59,7 @@ namespace BrainSimulator.Modules
             {
                 if (currentWord != "")
                 {
-                    attn.RemveReferencesWithAncestor(wordParent);
+                    attn.RemoveReferencesWithAncestor(wordParent);
                 }
                 currentWord = words[0];
                 //is this a reference to a visible object? does it contain a digit?
@@ -88,7 +88,7 @@ namespace BrainSimulator.Modules
             {
                 if (attn.HasReferenceWithParent(wordParent) != null)
                 {
-                    attn.RemveReferencesWithAncestor(wordParent);
+                    attn.RemoveReferencesWithAncestor(wordParent);
                     m.SetAttention(null, 0);
                 }
             }

@@ -4,6 +4,7 @@
 //  
 
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,10 @@ using System.Windows;
 using System.Xml.Serialization;
 using System.Diagnostics;
 using System.IO.Ports;
+using System.Net;
+using System.Net.Sockets;
+using System.Net.Http;
+using System.Net.NetworkInformation;
 
 namespace BrainSimulator.Modules
 {
@@ -25,15 +30,64 @@ namespace BrainSimulator.Modules
             maxWidth = 3;
         }
 
-
+        // needed to get the IP address of the ESP8266 device
+        UdpClient serverClient = null; //listen only
+        UdpClient clientServer; //send/broadcast only
+        IPAddress broadCastAddress;
+        int clientServerPort = 4444;
+        int serverClientPort = 4444;
+        int tcpClientPort   = 44444;
+        IPAddress theIP = null;
+        TcpClient theTcpClient = new TcpClient { };
+        NetworkStream theTcpStream = null;
+        static bool robotOnWiFi = false;
         SerialPort sp = null;
-        string serialPortName = "COM11";
+        string serialPortName = RetrieveSerialPort();
         bool robotInitialized = false;
 
         DateTime lastCycleTime = DateTime.Now;
 
-        public string configString =
-@"
+        public string configString = RetrieveConfigString();
+
+        int configStringLinePointer = -1;
+        string[] configStringLines = new string[] { };
+
+        int sensorCount = 0;
+        int actuatorCount = 0;
+
+        public static string RetrieveWifiRobotIdentifier()
+        {
+            string result = Environment.GetEnvironmentVariable("BS2_ROBOT_IDENTIFIER");
+            if (result == null)
+            {
+                // robot NOT on WiFi but Serial if environment variable not set...
+                robotOnWiFi = false;
+                return "";
+            }
+            robotOnWiFi = true;
+            return result;
+        }
+
+        public static string RetrieveSerialPort()
+        {
+            string result = Environment.GetEnvironmentVariable("BS2_ROBOT_COMPORT");
+            if (result == null)
+            {
+                // Default is as before...
+                result = "COM11";
+            }
+            return result;
+        }
+
+        public static string RetrieveConfigString()
+        {
+            string configFilename = Environment.GetEnvironmentVariable("BS2_ROBOT_CONFIG");
+            string configString = "";
+            if (configFilename == null)
+            {
+                configFilename = "DEFAULT";
+                // Default is as before...
+                configString = @"
 //Here's a sample configuration file
 //This is what you'll get when you first instantiate this module
 
@@ -85,14 +139,23 @@ Sensor Yaw x4 p5 t100 T200 e1 m1
 //Pitch sensor (x-axis rotation)
 Sensor Pitch x4 p3 t100 T200 e1 m1 
 ";
-        int configStringLinePointer = -1;
-        string[] configStringLines = new string[] { };
-
-        int sensorCount = 0;
-        int actuatorCount = 0;
+            }
+            else
+            {
+                Console.WriteLine("Reading robot config" + configFilename);
+                configString = File.ReadAllText(configFilename);
+            }
+            return configString;
+        }
 
         public override void Fire()
         {
+            if (theIP == null)
+            {
+                Broadcast("RobotPoll");
+                theIP = new IPAddress(new byte[] { 127, 0, 0, 1 });
+            }
+
             Init();  //be sure to leave this here
 
             HandleMessagesFromRobot();
@@ -239,11 +302,47 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
             lastCycleTime = DateTime.Now;
         }
 
+        public void ReceiveFromServer()
+        {
+            while (true)
+            {
+                string incomingMessage = "";
+                var from = new IPEndPoint(IPAddress.Any, serverClientPort);
+                var recvBuffer = serverClient.Receive(ref from);
+                incomingMessage += Encoding.UTF8.GetString(recvBuffer);
+                if (incomingMessage == RetrieveWifiRobotIdentifier())
+                {
+                    theIP = from.Address;
+                    theTcpClient.Connect(theIP, tcpClientPort);
+                    theTcpStream = theTcpClient.GetStream();
+                }
+                Debug.WriteLine("Received from Device: " + from.Address + " " + incomingMessage);
+            }
+        }
+
+        public void Broadcast(string message)
+        {
+            Debug.WriteLine("Broadcast: " + message);
+            byte[] datagram = Encoding.UTF8.GetBytes(message);
+            IPEndPoint ipEnd = new IPEndPoint(broadCastAddress, clientServerPort);
+            clientServer.SendAsync(datagram, datagram.Length, ipEnd);
+        }
+
         string inputBuffer = "";
         void HandleMessagesFromRobot()
         {
-            if (sp == null || !sp.IsOpen) return;
-            inputBuffer += sp.ReadExisting();
+            if (robotOnWiFi)
+            {
+                if (theTcpStream == null) return;
+                while (theTcpStream.DataAvailable)
+                {
+                    inputBuffer += theTcpStream.ReadByte();
+                }
+            }
+            else
+            {
+                inputBuffer += sp.ReadExisting();
+            }
             int lineBreak = inputBuffer.IndexOf('\n');
             while (lineBreak != -1)
             {
@@ -264,7 +363,7 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
                         n.SetValue(senseValue / 180f);
                 }
 
-                if (inputLine.Contains("Initialization Complete"))
+                if (inputLine.Contains("Heartbeat Active"))
                 {
                     robotInitialized = true;
                 }
@@ -273,7 +372,6 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
 
         void SendActuatorValueToRobot(int actuator, float value, float timing)
         {
-            if (!sp.IsOpen) sp.Open();
             int intTiming = (int)(timing * 10000);
             int intValue = (int)(value * 180);
             string commandString = "A" + actuator + " t" + intTiming + " T" + intValue + " \n";
@@ -290,7 +388,17 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
             try
             {
                 str = str.Trim() + " \n";
-                sp.Write(str);
+                if (robotOnWiFi)
+                {
+                    for (int i = 0; i < str.Length; i++)
+                    {
+                        theTcpStream.WriteByte((byte)(str[i]));
+                    }
+                }
+                else
+                {
+                    sp.Write(str);
+                }
                 Debug.Write("SEND: " + str);
             }
             catch (Exception e)
@@ -304,6 +412,35 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
         //or when the engine restart button is pressed
         public override void Initialize()
         {
+            RetrieveWifiRobotIdentifier(); // make sure we know if the Robot works over WiFi or Serial
+
+            //This gets the wifi IP address
+            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (item.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 && item.OperationalStatus == OperationalStatus.Up)
+                {
+                    foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
+                    {
+                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            byte[] ips = ip.Address.GetAddressBytes();
+                            broadCastAddress = IPAddress.Parse(ips[0] + "." + ips[1] + "." + ips[2] + ".255");
+                        }
+                    }
+                }
+            }
+
+            serverClient = new UdpClient(serverClientPort);
+            serverClient.Client.ReceiveBufferSize = 10000000;
+
+            clientServer = new UdpClient();
+            clientServer.EnableBroadcast = true;
+
+            Task.Run(() =>
+            {
+                ReceiveFromServer();
+            });
+            
             foreach (Neuron n in mv.Neurons)
             {
                 n.Label = "";
@@ -318,7 +455,7 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
             sensorCount = 0;
             actuatorCount = 0;
 
-            if (sp?.IsOpen != true)
+            if (!robotOnWiFi && sp?.IsOpen != true)
             {
                 try
                 {
@@ -326,6 +463,12 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
                         sp = new SerialPort(serialPortName);
                     if (!sp.IsOpen)
                         sp.Open();
+                    sp.BaudRate = 115200;
+                    sp.Handshake = Handshake.None;
+
+                    //reset the arduino processor
+                    sp.DtrEnable = true;
+                    sp.DtrEnable = false;
                 }
                 catch (Exception e)
                 {
@@ -333,12 +476,7 @@ Sensor Pitch x4 p3 t100 T200 e1 m1
                     return;
                 }
             }
-            sp.BaudRate = 115200;
-            sp.Handshake = Handshake.None;
 
-            //reset the arduino processor
-            sp.DtrEnable = true;
-            sp.DtrEnable = false;
             robotInitialized = false;
 
             configStringLines = configString.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);

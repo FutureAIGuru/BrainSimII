@@ -412,7 +412,7 @@ namespace BrainSimulator
             return false;
         }
 
-        public void RemveReferencesWithAncestor(Thing t)
+        public void RemoveReferencesWithAncestor(Thing t)
         {
             if (t == null) return;
             for (int i = 0; i < references.Count; i++)

@@ -167,9 +167,11 @@ namespace BrainSimulator.Modules
             myGeometryModel.Geometry = myMeshGeometry3D;
 
             SolidColorBrush theBrush = new SolidColorBrush(theColor);
+            
+            //ImageBrush theImageBrush = new ImageBrush (new System.Windows.Media.Imaging.BitmapImage(new Uri(@"C:\Users\c_sim\Pictures\Img_7837.jpg"))) ;
             // Define material and apply to the mesh geometries.
-            //DiffuseMaterial myMaterial = new DiffuseMaterial(myHorizontalGradient);
             DiffuseMaterial myMaterial = new DiffuseMaterial(theBrush);
+            //SpecularMaterial myMaterial = new SpecularMaterial(theBrush,50);
             myGeometryModel.Material = myMaterial;
             myGeometryModel.BackMaterial = myMaterial;
             return myGeometryModel;

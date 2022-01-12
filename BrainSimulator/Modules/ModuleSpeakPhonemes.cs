@@ -291,7 +291,7 @@ namespace BrainSimulator.Modules
         }
 
         //BELOW CAN BE USED TO GET PHONEMES FROM A WORD so the test phrases can be input as text and fed to Sallie as phonemes
-        //It was pulled in from the web but seems to work for most cases.  
+        //It was pulled in from the web but seems to work for most cases.   https://stackoverflow.com/questions/49519428/how-to-get-pronunciation-phonemes-corresponding-to-a-word-using-c
         public static string recoPhonemes;
 
         public static string GetPronunciationFromText(string MyWord, string Pron = null)

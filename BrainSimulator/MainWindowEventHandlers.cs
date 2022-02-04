@@ -397,7 +397,7 @@ namespace BrainSimulator
                 {
                     SuspendEngine();
 
-                    engineIsCancelled = true; 
+                    engineIsCancelled = true;
                     CloseAllModuleDialogs();
                 }
             }
@@ -773,10 +773,17 @@ namespace BrainSimulator
         //This opens an app depending on the assignments of the file extensions in Windows
         public static void OpenApp(string fileName)
         {
-            Process p = new Process();
-            p.StartInfo.FileName = fileName;
-            p.StartInfo.UseShellExecute = true;
-            p.Start();
+            try
+            {
+                Process p = new Process();
+                p.StartInfo.FileName = fileName;
+                p.StartInfo.UseShellExecute = true;
+                p.Start();
+            }
+            catch (Exception e)
+            {
+                MainWindow.thisWindow.SetStatus(0, "OpenApp: "+e.Message, 1);
+            }
         }
 
         private void MenuItemOnlineHelp_Click(object sender, RoutedEventArgs e)

@@ -10,7 +10,7 @@
     <BaseOutputPath>bin\</BaseOutputPath>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <Version>$(VersionPrefix)</Version>
-    <AssemblyVersion>1.6.3</AssemblyVersion>
+    <AssemblyVersion>1.6.4</AssemblyVersion>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
     <SourceRevisionId>build$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
   </PropertyGroup>

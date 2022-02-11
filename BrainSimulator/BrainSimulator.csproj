@@ -10,7 +10,7 @@
     <BaseOutputPath>bin\</BaseOutputPath>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <Version>$(VersionPrefix)</Version>
-    <AssemblyVersion>1.6.4</AssemblyVersion>
+    <AssemblyVersion>1.6.5</AssemblyVersion>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
     <SourceRevisionId>build$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
   </PropertyGroup>
@@ -105,6 +105,7 @@
     <None Remove="Resources\Icons\Paste_16x.png" />
     <None Remove="Resources\Icons\Pause_16x.png" />
     <None Remove="Resources\Icons\QuickFind_16x.png" />
+    <None Remove="Resources\Icons\Refresh_16x.png" />
     <None Remove="Resources\Icons\SaveAs_16x.png" />
     <None Remove="Resources\Icons\Save_16x.png" />
     <None Remove="Resources\Icons\SelectAll_16x.png" />
@@ -316,6 +317,7 @@
     <Resource Include="Resources\Icons\Paste_16x.png" />
     <Resource Include="Resources\Icons\Pause_16x.png" />
     <Resource Include="Resources\Icons\QuickFind_16x.png" />
+    <Resource Include="Resources\Icons\Refresh_16x.png" />
     <Resource Include="Resources\Icons\SaveAs_16x.png" />
     <Resource Include="Resources\Icons\Save_16x.png" />
     <Resource Include="Resources\Icons\SelectAll_16x.png" />

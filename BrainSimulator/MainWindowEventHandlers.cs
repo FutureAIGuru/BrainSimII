@@ -154,7 +154,19 @@ namespace BrainSimulator
             if (SaveAs())
                 SaveButton.IsEnabled = true;
         }
+        private void buttonReloadNetwork_click(object sender, RoutedEventArgs e)
+        {
 
+            if (PromptToSaveChanges())
+                return;
+            else
+            {
+                if (currentFileName != "")
+                {
+                    LoadCurrentFile();
+                }
+            }
+        }
         private void NeuronMenu_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuItem mi)
@@ -243,6 +255,9 @@ namespace BrainSimulator
                 //so the cancel button in the dialog won't work properly
                 //CreateEmptyNetwork(); // to avoid keeping too many bytes occupied...
 
+                //Set buttons
+                ReloadNetwork.IsEnabled = false;
+                Reload_network.IsEnabled = false;
                 // and make sure we have maximum memory free...
                 GC.Collect();
                 GC.WaitForPendingFinalizers();

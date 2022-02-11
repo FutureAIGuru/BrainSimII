@@ -73,6 +73,12 @@
                         <Image Source="resources/icons/saveAs_16x.png"></Image>
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem x:Name="Reload_network" Header="Reload _Network" Click="buttonReloadNetwork_click" IsEnabled="False">
+                    <MenuItem.Icon>
+                        <!--<Image Source="resources/diskette.png"></Image>-->
+                        <Image Source="resources/icons/refresh_16x.png"></Image>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator />
                 <MenuItem Header="_Properties" Click="MenuItemProperties_Click">
                     <MenuItem.Icon>
@@ -303,6 +309,9 @@
                 </Button>
                 <Button x:Name="SaveAsButton" VerticalAlignment="Top" Click="buttonSaveAs_Click" ToolTip="Save File As"  >
                     <Image Source="/resources/icons/SaveAs_16x.png" Height="20"></Image>
+                </Button>
+                <Button x:Name="ReloadNetwork" VerticalAlignment="Top" Click="buttonReloadNetwork_click" ToolTip="Reload Current Network" IsEnabled="False" >
+                    <Image Source="/resources/icons/Refresh_16x.png" Height="20"></Image>
                 </Button>
                 <Label Visibility="Hidden" Width="30"></Label>
                 <Button x:Name="buttonPan" VerticalAlignment="Top" Click="ButtonPan_Click" ToolTip="Pan the display with the mouse (Shift+mouse move)" >

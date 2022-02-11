@@ -38,6 +38,8 @@ namespace BrainSimulator
             }
             currentFileName = fileName;
 
+            ReloadNetwork.IsEnabled = true;
+            Reload_network.IsEnabled = true;
             if (XmlFile.CanWriteTo(currentFileName))
                 SaveButton.IsEnabled = true;
             else

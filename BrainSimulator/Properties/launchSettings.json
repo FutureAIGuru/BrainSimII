@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BrainSimulator": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

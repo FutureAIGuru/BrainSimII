@@ -83,6 +83,7 @@ namespace NeuronEngine
 
 		__declspec(dllexport)  bool Fire1(long long generation);
 		void Fire2();
+		void Fire3();
 
 		float NewHebbianWeight(float y, float offset, SynapseBase::modelType model, int numberOfSynapses);
 

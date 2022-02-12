@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="100" Background="Gray"  MouseWheel="theCanvas_MouseWheel" MouseEnter="theCanvas_MouseEnter" >
     <Grid >
-        <Canvas HorizontalAlignment="Stretch" Background="Gray" VerticalAlignment="Stretch" Name="theCanvas" 
+        <Canvas HorizontalAlignment="Stretch" Background="DimGray" VerticalAlignment="Stretch" Name="theCanvas" 
                 MouseWheel="theCanvas_MouseWheel" MouseDown="theCanvas_MouseDown" MouseUp="theCanvas_MouseUp" MouseMove="theCanvas_MouseMove" 
                 SizeChanged="theCanvas_SizeChanged" Margin="0,0,17,17">
         </Canvas>

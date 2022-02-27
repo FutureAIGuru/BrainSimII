@@ -101,12 +101,12 @@ namespace BrainSimulator
             SuspendEngine();
             //If the path contains "bin\64\debug" change the path to the actual development location instead
             //because file in bin..debug can be clobbered on every rebuild.
-            if (fileName.ToLower().Contains("bin\\x64\\debug"))
+            if (fileName.ToLower().Contains("bin\\debug\\net6.0-windows"))
             {
                 MessageBoxResult mbResult = System.Windows.MessageBox.Show(this, "Save to source folder instead?", "Save", MessageBoxButton.YesNoCancel,
                 MessageBoxImage.Asterisk, MessageBoxResult.No);
                 if (mbResult == MessageBoxResult.Yes)
-                    fileName = fileName.ToLower().Replace("bin\\x64\\debug\\", "");
+                    fileName = fileName.ToLower().Replace("bin\\debug\\net6.0-windows\\", "");
                 if (mbResult == MessageBoxResult.Cancel)
                     return false;
             }

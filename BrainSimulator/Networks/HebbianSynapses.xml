@@ -1,18 +1,18 @@
-<?xml version="1.0"?>
-<NeuronArray xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<NeuronArray xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <networkNotes>&lt;Section xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve" TextAlignment="Left" LineHeight="Auto" IsHyphenationEnabled="False" xml:lang="en-us" FlowDirection="LeftToRight" NumberSubstitution.CultureSource="Text" NumberSubstitution.Substitution="AsCulture" FontFamily="Segoe UI" FontStyle="Normal" FontWeight="Normal" FontStretch="Normal" FontSize="12" Foreground="#FF000000" Typography.StandardLigatures="True" Typography.ContextualLigatures="True" Typography.DiscretionaryLigatures="False" Typography.HistoricalLigatures="False" Typography.AnnotationAlternates="0" Typography.ContextualAlternates="True" Typography.HistoricalForms="False" Typography.Kerning="True" Typography.CapitalSpacing="False" Typography.CaseSensitiveForms="False" Typography.StylisticSet1="False" Typography.StylisticSet2="False" Typography.StylisticSet3="False" Typography.StylisticSet4="False" Typography.StylisticSet5="False" Typography.StylisticSet6="False" Typography.StylisticSet7="False" Typography.StylisticSet8="False" Typography.StylisticSet9="False" Typography.StylisticSet10="False" Typography.StylisticSet11="False" Typography.StylisticSet12="False" Typography.StylisticSet13="False" Typography.StylisticSet14="False" Typography.StylisticSet15="False" Typography.StylisticSet16="False" Typography.StylisticSet17="False" Typography.StylisticSet18="False" Typography.StylisticSet19="False" Typography.StylisticSet20="False" Typography.Fraction="Normal" Typography.SlashedZero="False" Typography.MathematicalGreek="False" Typography.EastAsianExpertForms="False" Typography.Variants="Normal" Typography.Capitals="Normal" Typography.NumeralStyle="Normal" Typography.NumeralAlignment="Normal" Typography.EastAsianWidths="Normal" Typography.EastAsianLanguage="Normal" Typography.StandardSwashes="0" Typography.ContextualSwashes="0" Typography.StylisticAlternates="0"&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span FontWeight="Bold"&gt;&lt;Run&gt;Purpose:&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   This Network demonstrates the use of three different synapse models with spike-timing-dependent plasticity which is referred to generically as Hebbian learning. This involves synapses whose weight can be changed by the firing timing of the neurons they connect. The change in synapse weights is generally accepted as the principal mechanism which underlies learning.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   There are a number of parameters which can contribute to synapses plasticity. &lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;List MarkerStyle="Disc" Margin="0,0,0,0" Padding="0,0,0,0"&gt;&lt;ListItem Margin="72,0,0,0"&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;The current weight of the synapse.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;/ListItem&gt;&lt;ListItem Margin="72,0,0,0"&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;The relative spike-timing of the neurons it connects.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;/ListItem&gt;&lt;ListItem Margin="72,0,0,0"&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;The range of weights the synapse can take on, for example [0,1] or [-1,1].&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;/ListItem&gt;&lt;ListItem Margin="72,0,0,0"&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;The rate of variation of the synapse weight.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;/ListItem&gt;&lt;ListItem Margin="72,0,0,0"&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;Whether the variation is linear or follows some other algorithm.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;/ListItem&gt;&lt;/List&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   The algorithm for weight variation in biological synapses is not known and the experimental variation is large. Accordingly, the Brain Simulator II supports any number of experimental models for synapse variation. The ones currently implemented are:&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;List MarkerStyle="Disc" Margin="0,0,0,0" Padding="0,0,0,0"&gt;&lt;ListItem Margin="72,0,0,0"&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;Fixed—the weight cannot be modified by the Neuron Engine.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;/ListItem&gt;&lt;ListItem Margin="72,0,0,0"&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;Binary—the weight is either 0 or 1 and changes in a single engine cycle.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;/ListItem&gt;&lt;ListItem Margin="72,0,0,0"&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;Hebbian1—the weight range is [0,1] and varies via a lookup table so that intermediate weights are stable when connecting two neurons. For example, a synapse with weight 0.25 will cause the target neuron to fire every fourth cycle so the amount of increase is 4 times the amount of decrease.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;/ListItem&gt;&lt;ListItem Margin="72,0,0,0"&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;Hebbian2—the weight range is [-1,1] and the weight varies so that weights will effect pattern recognition. When there are four incoming synapses, the maximum weight is .25 so that all 4 must fire to cause the target to fire. The weight follows a tanh function so that it is most stable at its maximum and minimum values.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;/ListItem&gt;&lt;/List&gt;&lt;Paragraph FontWeight="Bold" Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;The Complexity of Synapse Plasticity:&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   One of the points of this network is to show the complexity of building a system with variable synapses. In the BasicNeurons network, all the synapse weights were fixed and the function of the various clusters was completely predictable. In the cluster in this network, if there were no fixed-weight synapses, the clusters would quickly degrade and not function. &lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   It’s easy to say that “Neurons which fire together, wire together.” But when thinking about biologically plausible neuron and synapse models, this is easier said than done. The binary synapse model is the simplest possible implementation and in cluster #1, it takes multiple control neurons and fixed synapses to control the weights of a few synapses. With the more complex models, it is obvious that it is impossible to precisely control synapse weights. Further, if you could set them to precise weights, they would not maintain those weights and there is no way (plausibly) to determine with the weights are.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   That said, variable synapses can be an extremely powerful tool and clusters #3 and #4 show how they can be harnessed to recognize patterns and store structured knowledge.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span FontWeight="Bold"&gt;&lt;Run&gt;Things to try:&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   There are four demonstrations in this Network demonstrating the three variable synapse models.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   In cluster #1, single binary synapses connect inputs to outputs. By clicking “Enable,” the synapse weight is set to 1 and the signal passes through. By clicking “Disable,” the synapse weight is set to 0 and the signals are blocked. This shows some of the difficulties of using variable synapses. To set the synapse weight to 1, both the input and output neurons must fire. To set the weight to 0, just the output must fire. In principle, the Enable neuron fires both neurons simultaneously, the Disable neuron fires just the target while inhibiting the source. D0 and D1 are needed for timing. The Out1 and Out2 are used to suppress spurious output spikes which would otherwise occur with Enable and Disable actions because both require firing the target neuron in order to function.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   Cluster #2 demonstrates a single Hebbian1-model neuron. Because its weight varies between 0 and 1, it will act as a frequency divider depending on its current weight. By pressing and holding “Enhance”, the target neuron will be fired and the weight will slowly increase. The Suppress neuron prevents the target neuron from firing and thus the weight will decrease. If you show the recorded firing history of the I, O, Enhance, and Suppress neurons, you can see how the frequency of the output spiking can be controlled by the Enhance and Suppress neurons.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   Cluster #3 is a circuit which can recognize patterns of four input neurons. All of the “meat” of this network is in the diagonal synapses between the O, -O and P columns. The inputs (i0-i3) are latched by M0-M3 using the short-term memory circuit from the BasicNeurons network. This way, you can click them in any order and the input timing is not critical. &lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   When you press “Start,” the pattern is spiked on O0-O3 and its inverse is spiked on -O0- -O4. By using inverses, this circuit provides equal value to single-bit errors whether it is a 0 which should be a 1 or a 1 which should be a zero. The pattern is presented to the array of Hebbian2 synapses and the output pattern which most closely matched the stored pattern will fire first. &lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   The patterns which are stored in the network as saved are: P0:0000 P1:1111 P2:1100 P3:0011 P4:1010. When a match is found, the “Match” neuron will fire and cause the cycle to stop. If no match is found “No Match” will fire. The closer the input pattern is to exactly matching the stored pattern, the faster it will be recognized.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   To store new information, start by clearing all the stored information by selecting all the O neurons, right-clicking, and clicking “Reset Hebbian Weights.” You can store new patterns by firing “Clear”, then inputting your pattern, and then firing one of S0-S4 to store your pattern in the synapses targeting P0-P4 respectively. This will cause repeated firings of the P neuron just after the O neurons and will cause the synapses to adjust their weights to match the pattern. After a pattern is learned, you can repeat the original process of clicking a pattern into the i0-i3 neurons, pressing Start, and seeing the pattern recognized (or not) on a P0-4 neuron. If the data is not cleared before storing a new pattern, it may take many store cycles in order to store a new pattern. Each of the “L” neurons fires a burst which adjusts the synapses.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   Cluster #4 shows how structured knowledge can be stored in plastic synapses, This closely follows the explanation given in Chapter 10 of the companion book with the simplest example of a three node graph. The example is to consider that if you know that “red is a color” and “blue is a color” then you can use the structure to answer the “what are colors” and the “red and blue” as an answer. &lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   In the cluster, there are three nodes and the relationships Parent, Child, and This. Once data is loaded, if you fire Node1 followed by Parent, the output will fire the parent nodes of Node1. Likewise for Child. The process of getting information into the network requires a few steps. As above, start by resetting the Hebbian synapse weights. To say that Mode1 is a parent of Node2:&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;List MarkerStyle="Decimal" Margin="0,0,0,0" Padding="0,0,0,0"&gt;&lt;ListItem Margin="48,0,0,0"&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;First, fire Node1. &lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;/ListItem&gt;&lt;ListItem Margin="48,0,0,0"&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;Fire This to transfer it to the desired output. &lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;/ListItem&gt;&lt;ListItem Margin="48,0,0,0"&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;Fire Reset then Node2 to set the new input. &lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;/ListItem&gt;&lt;ListItem Margin="48,0,0,0"&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;Fire the Learn neuron to put the network in a learning mode. &lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;/ListItem&gt;&lt;ListItem Margin="48,0,0,0"&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;Finally, repeatedly fire Parent to strengthen the appropriate Hebbian synapse. &lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;/ListItem&gt;&lt;/List&gt;&lt;Paragraph FontWeight="Bold" Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;Current state of development:&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;Paragraph Margin="0,0,0,8"&gt;&lt;Span&gt;&lt;Run&gt;   This is early-stage development and many other capabilities are being experimented with. Of particular interest is how the synapse weights might adjust to compensate for errors and which pattern neuron should be selected to store a new pattern. Methods have been developed which detect a no-match pattern and store it in the least-recently-accessed pattern. As an alternative, it can also be stored in the least-often-used pattern. Further, there are experiments underway which reset Hebbian2 synapses toward a zero weight if the target fires but no input has fired for a long time. In this way, memories will gradually weaken over time.&lt;/Run&gt;&lt;/Span&gt;&lt;/Paragraph&gt;&lt;/Section&gt;</networkNotes>
   <hideNotes>false</hideNotes>
-  <Generation>4742</Generation>
+  <Generation>243</Generation>
   <EngineSpeed>500</EngineSpeed>
   <EngineIsPaused>false</EngineIsPaused>
   <arraySize>450</arraySize>
   <rows>15</rows>
-  <lastFireCount>10</lastFireCount>
+  <lastFireCount>7</lastFireCount>
   <displayParams>
-    <NeuronDisplaySize>62</NeuronDisplaySize>
+    <NeuronDisplaySize>55.257557</NeuronDisplaySize>
     <DisplayOffset>
-      <X>0</X>
-      <Y>0</Y>
+      <X>-6.5318924983344</X>
+      <Y>13.91120521227515</Y>
     </DisplayOffset>
     <NeuronRows>15</NeuronRows>
   </displayParams>
@@ -89,7 +89,7 @@
     </Neuron>
     <Neuron>
       <Id>50</Id>
-      <LastCharge>0.34</LastCharge>
+      <LastCharge>1.02</LastCharge>
       <ShowSynapses>True</ShowSynapses>
       <Synapses>
         <Synapse>
@@ -144,7 +144,6 @@
     </Neuron>
     <Neuron>
       <Id>65</Id>
-      <LastCharge>1</LastCharge>
       <ShowSynapses>True</ShowSynapses>
       <Synapses>
         <Synapse>
@@ -172,7 +171,7 @@
       <Label>I</Label>
       <Synapses>
         <Synapse>
-          <Weight>0.1482277</Weight>
+          <Weight>0.1522272</Weight>
           <TargetNeuron>85</TargetNeuron>
           <Model>Hebbian1</Model>
         </Synapse>
@@ -182,6 +181,7 @@
       <Id>77</Id>
       <LeakRate>0</LeakRate>
       <Label>Disable</Label>
+      <ShowSynapses>True</ShowSynapses>
       <Synapses>
         <Synapse>
           <Weight>-1</Weight>
@@ -262,7 +262,7 @@
     </Neuron>
     <Neuron>
       <Id>85</Id>
-      <LastCharge>0.6169109</LastCharge>
+      <LastCharge>0.1562272</LastCharge>
       <LeakRate>0</LeakRate>
       <Label>O</Label>
       <Synapses>
@@ -285,6 +285,7 @@
     </Neuron>
     <Neuron>
       <Id>100</Id>
+      <LastCharge>1</LastCharge>
       <LeakRate>0</LeakRate>
       <Label>Out</Label>
     </Neuron>
@@ -512,6 +513,7 @@
       <Id>183</Id>
       <LeakRate>0</LeakRate>
       <Label>O0</Label>
+      <ShowSynapses>True</ShowSynapses>
       <Synapses>
         <Synapse>
           <Weight>-0.2154308</Weight>
@@ -543,6 +545,7 @@
     <Neuron>
       <Id>184</Id>
       <Label>O1</Label>
+      <ShowSynapses>True</ShowSynapses>
       <Synapses>
         <Synapse>
           <Weight>-0.2154308</Weight>
@@ -1136,9 +1139,11 @@
       <Id>302</Id>
       <LeakRate>0</LeakRate>
       <Label>#4 Structured knowledge with synapses</Label>
+      <ShowSynapses>True</ShowSynapses>
     </Neuron>
     <Neuron>
       <Id>304</Id>
+      <LeakRate>0</LeakRate>
       <Label>Read1</Label>
       <Synapses>
         <Synapse>
@@ -1256,7 +1261,6 @@
     </Neuron>
     <Neuron>
       <Id>322</Id>
-      <LastCharge>0.9</LastCharge>
       <Synapses>
         <Synapse>
           <TargetNeuron>307</TargetNeuron>
@@ -1280,7 +1284,7 @@
       <Model>Burst</Model>
       <LeakRate>1</LeakRate>
       <AxonDelay>3</AxonDelay>
-      <Label>Parent</Label>
+      <Label>Parent1</Label>
       <Synapses>
         <Synapse>
           <TargetNeuron>304</TargetNeuron>
@@ -1359,7 +1363,7 @@
       <Model>Burst</Model>
       <LeakRate>1</LeakRate>
       <AxonDelay>3</AxonDelay>
-      <Label>Child</Label>
+      <Label>Child1</Label>
       <Synapses>
         <Synapse>
           <TargetNeuron>304</TargetNeuron>
@@ -1491,6 +1495,60 @@
       </Synapses>
     </Neuron>
     <Neuron>
+      <Id>379</Id>
+      <Model>Burst</Model>
+      <LeakRate>0</LeakRate>
+      <AxonDelay>3</AxonDelay>
+      <Label>Recur</Label>
+      <Synapses>
+        <Synapse>
+          <Weight>0.9</Weight>
+          <TargetNeuron>380</TargetNeuron>
+        </Synapse>
+        <Synapse>
+          <Weight>0.9</Weight>
+          <TargetNeuron>381</TargetNeuron>
+        </Synapse>
+        <Synapse>
+          <Weight>0.9</Weight>
+          <TargetNeuron>382</TargetNeuron>
+        </Synapse>
+        <Synapse>
+          <TargetNeuron>394</TargetNeuron>
+        </Synapse>
+      </Synapses>
+    </Neuron>
+    <Neuron>
+      <Id>380</Id>
+      <Model>LIF</Model>
+      <LeakRate>1</LeakRate>
+      <Synapses>
+        <Synapse>
+          <TargetNeuron>305</TargetNeuron>
+        </Synapse>
+      </Synapses>
+    </Neuron>
+    <Neuron>
+      <Id>381</Id>
+      <Model>LIF</Model>
+      <LeakRate>1</LeakRate>
+      <Synapses>
+        <Synapse>
+          <TargetNeuron>306</TargetNeuron>
+        </Synapse>
+      </Synapses>
+    </Neuron>
+    <Neuron>
+      <Id>382</Id>
+      <Model>LIF</Model>
+      <LeakRate>1</LeakRate>
+      <Synapses>
+        <Synapse>
+          <TargetNeuron>307</TargetNeuron>
+        </Synapse>
+      </Synapses>
+    </Neuron>
+    <Neuron>
       <Id>393</Id>
       <Label>Learn</Label>
       <Synapses>
@@ -1532,9 +1590,8 @@
     </Neuron>
     <Neuron>
       <Id>395</Id>
-      <LastCharge>2</LastCharge>
       <LeakRate>0</LeakRate>
-      <Label>O1</Label>
+      <Label>O4</Label>
       <Synapses>
         <Synapse>
           <Weight>0.9</Weight>
@@ -1545,7 +1602,7 @@
     <Neuron>
       <Id>396</Id>
       <LeakRate>0</LeakRate>
-      <Label>O4</Label>
+      <Label>O5</Label>
       <Synapses>
         <Synapse>
           <Weight>0.9</Weight>
@@ -1556,7 +1613,8 @@
     <Neuron>
       <Id>397</Id>
       <LeakRate>0</LeakRate>
-      <Label>O5</Label>
+      <Label>O6</Label>
+      <ShowSynapses>True</ShowSynapses>
       <Synapses>
         <Synapse>
           <Weight>0.9</Weight>
@@ -1588,30 +1646,42 @@
     </Neuron>
     <Neuron>
       <Id>410</Id>
-      <LastCharge>0.9</LastCharge>
       <LeakRate>0</LeakRate>
-      <Label>Out1</Label>
+      <Label>Out3</Label>
       <Synapses>
         <Synapse>
           <TargetNeuron>395</TargetNeuron>
+        </Synapse>
+        <Synapse>
+          <Weight>0.9</Weight>
+          <TargetNeuron>380</TargetNeuron>
         </Synapse>
       </Synapses>
     </Neuron>
     <Neuron>
       <Id>411</Id>
-      <Label>Out3</Label>
+      <Label>Out4</Label>
+      <ShowSynapses>True</ShowSynapses>
       <Synapses>
         <Synapse>
           <TargetNeuron>396</TargetNeuron>
+        </Synapse>
+        <Synapse>
+          <Weight>0.9</Weight>
+          <TargetNeuron>381</TargetNeuron>
         </Synapse>
       </Synapses>
     </Neuron>
     <Neuron>
       <Id>412</Id>
-      <Label>Out4</Label>
+      <Label>Out5</Label>
       <Synapses>
         <Synapse>
           <TargetNeuron>397</TargetNeuron>
+        </Synapse>
+        <Synapse>
+          <Weight>0.9</Weight>
+          <TargetNeuron>382</TargetNeuron>
         </Synapse>
       </Synapses>
     </Neuron>

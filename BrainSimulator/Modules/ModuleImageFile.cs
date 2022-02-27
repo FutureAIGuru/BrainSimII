@@ -216,6 +216,7 @@ namespace BrainSimulator.Modules
         public override void Initialize()
         {
             Init();
+            if (mv == null) return;
             foreach (Neuron n in mv.Neurons)
             {
                 n.Model = Neuron.modelType.Color;

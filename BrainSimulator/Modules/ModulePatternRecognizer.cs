@@ -269,11 +269,11 @@ namespace BrainSimulator.Modules
                         for (int j = 0; j < mv.Height; j++)
                         {
                             Neuron nTarget = mv.GetNeuronAt(0, j);
-                            nSource.AddSynapse(nTarget.id, 0f, Synapse.modelType.Hebbian3);
+                            nSource.AddSynapse(nTarget.id, 0f, Synapse.modelType.Hebbian2);
                             MainWindow.theNeuronArray.GetNeuronLocation(nSource.id, out int col, out int row);
                             while (MainWindow.theNeuronArray.GetNeuron(col, ++row).Label != "")
                             {
-                                MainWindow.theNeuronArray.GetNeuron(col, row).AddSynapse(nTarget.id, 0f, Synapse.modelType.Hebbian3);
+                                MainWindow.theNeuronArray.GetNeuron(col, row).AddSynapse(nTarget.id, 0f, Synapse.modelType.Hebbian2);
                             }
                         }
                     }
@@ -301,7 +301,7 @@ namespace BrainSimulator.Modules
             }
 
             if (GetNeuron("P0") is Neuron nP0)
-                GetTargetWeights(nP0.synapsesFrom.Count(x => x.model == Synapse.modelType.Hebbian3) / 2);
+                GetTargetWeights(nP0.synapsesFrom.Count(x => x.model == Synapse.modelType.Hebbian2) / 2);
             MainWindow.Update();
         }
 

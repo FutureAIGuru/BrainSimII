@@ -16,6 +16,7 @@ namespace NeuronEngine
 	Concurrency::concurrent_queue<NeuronBase*> NeuronArrayBase::fire2Queue;
 	std::vector<unsigned long long> NeuronArrayBase::fireList1;
 	std::vector<unsigned long long> NeuronArrayBase::fireList2;
+
 	bool NeuronArrayBase::clearFireListNeeded;
 	int NeuronArrayBase::refractoryDelay = 0;
 
@@ -54,8 +55,8 @@ namespace NeuronEngine
 	{
 		arraySize = theSize;
 		int expandedSize = arraySize;
-		if (expandedSize % 64 != 0) 
-			expandedSize = ((expandedSize / 64)+1) * 64;
+		if (expandedSize % 64 != 0)
+			expandedSize = ((expandedSize / 64) + 1) * 64;
 		arraySize = expandedSize;
 		neuronArray.reserve(expandedSize);
 		for (int i = 0; i < expandedSize; i++)
@@ -66,11 +67,13 @@ namespace NeuronEngine
 		}
 		fireList1.reserve(expandedSize / 64);
 		fireList2.reserve(expandedSize / 64);
+
 		int fireListCount = expandedSize / 64;
 		for (int i = 0; i < fireListCount; i++)
 		{
 			fireList1.push_back(0xffffffffffffffff);
 			fireList2.push_back(0);
+
 		}
 	}
 	long long NeuronArrayBase::GetGeneration()
@@ -182,7 +185,7 @@ namespace NeuronEngine
 	}
 	void NeuronArrayBase::Fire()
 	{
-		if (clearFireListNeeded) 
+		if (clearFireListNeeded)
 			ClearFireLists();
 		clearFireListNeeded = false;
 		cycle++;
@@ -194,6 +197,9 @@ namespace NeuronEngine
 		parallel_for(0, threadCount, [&](int value) {
 			ProcessNeurons2(value);
 			});
+		
+			ProcessNeurons3(0);
+			
 	}
 	int NeuronArrayBase::GetFiredCount()
 	{
@@ -221,7 +227,7 @@ namespace NeuronEngine
 		int offset = id % 64;
 		unsigned long long bitMask = 0x1;
 		bitMask = bitMask << offset;
-		fireList1[index] |= bitMask;  
+		fireList1[index] |= bitMask;
 	}
 	void NeuronArrayBase::ClearFireLists()
 	{
@@ -229,6 +235,7 @@ namespace NeuronEngine
 		{
 			fireList1[i] = 0xffffffffffffffff;
 			fireList2[i] = 0;
+
 		}
 	}
 
@@ -281,6 +288,16 @@ namespace NeuronEngine
 				}
 				bitMask = bitMask << 1;
 			}
+
+		}
+	}
+
+	void NeuronArrayBase::ProcessNeurons3(int taskID)
+	{
+		for (int i = 0; i < arraySize; i++)
+		{
+			NeuronBase* theNeuron = GetNeuron(i);
+			theNeuron->Fire3();
 		}
 	}
 }

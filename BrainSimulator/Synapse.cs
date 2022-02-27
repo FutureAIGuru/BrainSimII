@@ -10,7 +10,7 @@ namespace BrainSimulator
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class Synapse
     {
-        public enum modelType { Fixed, Binary, Hebbian1, Hebbian2 ,Hebbian3 };
+        public enum modelType { Fixed, Binary, Hebbian1, Hebbian2 };
 
         public int targetNeuron;
         public float weight;

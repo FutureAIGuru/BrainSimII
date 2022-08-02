@@ -71,7 +71,7 @@ PAUSE
 
 IF DEFINED CERTFILE (
 	ECHO Signing the program binaries. . .
-	signtool sign /f %CERTFILE% /p FutureAI /t http://timestamp.comodoca.com "%BINDIR%\brainsimulator.exe" "%BINDIR%\brainsimulator.dll" "%BINDIR%\NeuronEngine.dll" "%BINDIR%\NeuronEngineWrapper.dll" "%BINDIR%\NeuronServer.exe" "%BINDIR%\NeuronServer.dll" >"%ORGDIR%\Step3SignExecutables.log"
+	signtool sign /f %CERTFILE% /p FutureAI /t http://timestamp.comodoca.com "%BINDIR%\brainsimulator.exe" "%BINDIR%\brainsimulator.dll" "%BINDIR%\NeuronEngine.dll" "%BINDIR%\NeuronEngineWrapper.dll" "%BINDIR%\NeuronServer.exe" "%BINDIR%\NeuronServer.dll" "%BINDIR%\system.speech.dll" "%BINDIR%\system.IO.ports.dll" "%BINDIR%\runtimes\win\lib\net6.0\system.IO.ports.dll"  "%BINDIR%\runtimes\win\lib\net6.0\system.speech.dll" > "%ORGDIR%\Step3SignExecutables.log"
 	PAUSE
 )
 

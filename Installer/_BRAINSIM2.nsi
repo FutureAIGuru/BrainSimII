@@ -127,7 +127,14 @@ Section    "Brain Simulator II" BRAINSIM2
     File /oname=$INSTDIR\BrainSimulator.dll "..\BrainSimulator\bin\release\net6.0-windows\BrainSimulator.dll"
     File /oname=$INSTDIR\BrainSimulator.runtimeconfig.json "..\BrainSimulator\bin\release\net6.0-windows\BrainSimulator.runtimeconfig.json"
     File /oname=$INSTDIR\NeuronEngine.dll "..\BrainSimulator\bin\release\net6.0-windows\NeuronEngine.dll"
-#    File /oname=$INSTDIR\NeuronEngine.pdb "..\BrainSimulator\bin\release\net6.0-windows\NeuronEngine.pdb"
+
+
+  File  ..\BrainSimulator\bin\release\net6.0-windows\system.speech.dll
+  File  ..\BrainSimulator\bin\release\net6.0-windows\system.IO.Ports.dll
+    File  ..\BrainSimulator\bin\release\net6.0-windows\BrainSimulator.deps.json
+
+   File /r /x /oname=$INSTDIR\runtimes ..\BrainSimulator\bin\release\net6.0-windows\runtimes
+    
     File /oname=$INSTDIR\NeuronEngineWrapper.dll "..\BrainSimulator\bin\release\net6.0-windows\NeuronEngineWrapper.dll"
 #    File /oname=$INSTDIR\NeuronEngineWrapper.pdb "..\BrainSimulator\bin\release\net6.0-windows\NeuronEngineWrapper.pdb"
 #    File /oname=$INSTDIR\WebCamLib.dll "..\BrainSimulator\bin\release\net6.0-windows\WebCamLib.dll"

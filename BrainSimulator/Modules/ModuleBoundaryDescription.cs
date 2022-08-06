@@ -141,13 +141,15 @@ namespace BrainSimulator.Modules
             prevAttn = curAttn;
         }
 
-
+        [XmlIgnore]
+        public string descriptionStringIn { get; set; }
         //commented-out code can add phrases to the UKS
         //Thing recentPhrase = null;
         public void SetDescription(string description)
         {
             if (uks == null) return;
 
+            descriptionStringIn = description;
             ModuleView naImage = theNeuronArray.FindModuleByLabel("ImageFile");
             if (naImage == null) return;
             ModuleImageFile mif = (ModuleImageFile)naImage.TheModule;

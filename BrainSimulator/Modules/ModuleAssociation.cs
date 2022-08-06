@@ -195,7 +195,7 @@ namespace BrainSimulator.Modules
             properties.AddRange(uks.Labeled("Area").Children.ToList());
             properties = properties.OrderBy(x => x.Label).ToList();
             IList<Thing> relationships = uks.Labeled("Relationship").Children;
-            relationships = relationships.OrderBy(x => x.Label.Substring(1)).ToList();
+            //relationships = relationships.OrderBy(x => x.Label.Substring(1)).ToList();
 
 
             //collect all the values in a single spot

@@ -29,7 +29,7 @@ namespace BrainSimulator.Modules
             if (busy) return false;
             //the datagridview is so slow, always wait for the timer
             if (!base.Draw(checkDrawTimer)) return false;
-            
+
             if (mouseInWindow) return true;
 
             ModuleView naSource = MainWindow.theNeuronArray.FindModuleByLabel("UKS");
@@ -147,6 +147,8 @@ namespace BrainSimulator.Modules
 
         private void SetCellBackground(int rowIndex, int colIndex, Color theBackgroundColor)
         {
+            if (colIndex == 7)
+            { }
             theGrid.EnableRowVirtualization = false;
             theGrid.EnableColumnVirtualization = false;
             object item = theGrid.Items[rowIndex];

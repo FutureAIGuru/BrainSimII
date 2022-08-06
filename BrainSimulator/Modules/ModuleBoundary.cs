@@ -117,7 +117,7 @@ namespace BrainSimulator.Modules
 
             //find all the points which have different color values than their neighbors
             Array2D boundaryValues = new Array2D(mv.Width, mv.Height);
-            for (int i = 0; i < source.Width && i < mv.Width; i++)
+            for (int i = 0; i < source.Width-1 && i < mv.Width-1; i++)
             {
                 for (int j = 1; j < source.Height && i < mv.Height; j++)
                 {
@@ -134,10 +134,26 @@ namespace BrainSimulator.Modules
             {
                 for (int j = 1; j < source.Height; j++)
                 {
+                    bool adjacentCorner = false;
                     if (IsCorner(i, j, boundaryValues))
-                        cornerValues[i, j] = 1;
+                    {
+                        for (int k = 0; k < 8;k++)
+                        {
+                            GetDeltasFromDirection(k, out int dx, out int dy);
+                            if (cornerValues[i + dx, j + dy] != 0)
+                            {
+                                adjacentCorner = true;
+                            }
+                        }
+                        if (!adjacentCorner)
+                            cornerValues[i, j] = 1;
+                        else
+                            cornerValues[i, j] = 0;
+                    }
                     else
+                    {
                         cornerValues[i, j] = 0;
+                    }
                 }
             }
 
@@ -195,6 +211,8 @@ namespace BrainSimulator.Modules
         }
         public static void GetDeltasFromDirection(int dir, out int dx, out int dy)
         {
+            while (dir < 0) dir += 8;
+            while (dir > 7) dir -= 8;
             switch (dir)
             {
                 case 0: dx = 1; dy = 0; break;
@@ -207,8 +225,6 @@ namespace BrainSimulator.Modules
                 case 7: dx = 1; dy = -1; break;
                 default: dx = 0; dy = 0; break;
             }
-            //while (dir < 0) dir += 8;
-            //while (dir > 7) dir -= 8;
             //switch (dir)
             //{
             //    case 0: dx = 1; dy = 0; break;
@@ -235,7 +251,10 @@ namespace BrainSimulator.Modules
                 int y1 = y + dy;
                 if (boundaryValues[x1, y1] == 0) consecutive++;
                 else consecutive = 0;
-                if (consecutive == 5) return true;
+                if (consecutive == 5)
+                {
+                    return true;
+                }
             }
             if (CornerMatchPattern(x, y, boundaryValues)) return true;
             return false;

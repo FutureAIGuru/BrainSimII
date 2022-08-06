@@ -45,6 +45,7 @@ namespace BrainSimulator.Modules
 
             ModuleBoundaryDescription mbd = (ModuleBoundaryDescription)ParentModule;
             currentDescription.Text = mbd.descriptionString;
+            theTextBox.Text = mbd.descriptionStringIn;
             return true;
         }
 

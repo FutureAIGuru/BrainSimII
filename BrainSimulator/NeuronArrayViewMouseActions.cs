@@ -54,7 +54,7 @@ namespace BrainSimulator
             {
                 //double-click detected
                 n = MainWindow.theNeuronArray.GetNeuron(mouseDownNeuronIndex);
-                n.leakRate = -n.leakRate;
+                //n.leakRate = -n.leakRate;
                 n.Update();
             }
 

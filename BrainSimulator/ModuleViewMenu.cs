@@ -1,5 +1,7 @@
 ﻿using BrainSimulator.Modules;
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -32,6 +34,11 @@ namespace BrainSimulator
 
             mi = new MenuItem();
             mi.Header = "Initialize";
+            mi.Click += Mi_Click;
+            cm.Items.Add(mi);
+
+            mi = new MenuItem();
+            mi.Header = "View Source";
             mi.Click += Mi_Click;
             cm.Items.Add(mi);
 
@@ -410,6 +417,23 @@ namespace BrainSimulator
 
                     }
                 }
+                if ((string)mi.Header == "View Source")
+                {
+                    int i = (int)mi.Parent.GetValue(AreaNumberProperty);
+                    ModuleView m = MainWindow.theNeuronArray.Modules[i];
+                    ModuleBase m1 = m.TheModule;
+                    string theModuleType = m1.GetType().Name.ToString();
+                    string cwd = System.IO.Directory.GetCurrentDirectory();
+                    cwd = cwd.ToLower().Replace("bin\\debug\\net6.0-windows", "");
+                    string fileName = cwd + @"modules\" + theModuleType + ".cs";
+                    if (File.Exists(fileName))
+                        OpenSource(fileName);
+                    else
+                    {
+                        fileName = cwd + @"BrainSim2modules\" + theModuleType + ".cs";
+                        OpenSource(fileName);
+                    }
+                }
                 if ((string)mi.Header == "Show Dialog")
                 {
                     int i = (int)mi.Parent.GetValue(AreaNumberProperty);
@@ -460,7 +484,14 @@ namespace BrainSimulator
                 }
             }
         }
-
+        public static void OpenSource(string fileName)
+        {
+            Process process = new Process();
+            string taskFile = @"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe";
+            ProcessStartInfo startInfo = new ProcessStartInfo(taskFile, "/edit " + fileName);
+            process.StartInfo = startInfo;
+            process.Start();
+        }
         public static void DeleteModule(int i)
         {
             ModuleView mv = MainWindow.theNeuronArray.Modules[i];

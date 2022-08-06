@@ -40,9 +40,10 @@ namespace BrainSimulator
         public void Draw()
         {
             //if you are not full-width or at end, don't repaint because it makes the image move around
-            bool atRightEnd = scroller.HorizontalOffset + scroller.RenderSize.Width == scroller.ExtentWidth;
+            bool atRightEnd = (int)(scroller.HorizontalOffset + scroller.RenderSize.Width) == (int)scroller.ExtentWidth;
             bool fullWidth = scroller.RenderSize.Width == scroller.ExtentWidth;
-            if (theCanvas.Children.Count != 0 && !atRightEnd && !fullWidth) return;
+            if (theCanvas.Children.Count != 0 && !atRightEnd && !fullWidth) 
+                return;
             if (dragging) return;
             ReallyDraw();
         }

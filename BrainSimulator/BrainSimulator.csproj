@@ -10,9 +10,10 @@
     <BaseOutputPath>bin\</BaseOutputPath>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <Version>$(VersionPrefix)</Version>
-    <AssemblyVersion>1.6.8</AssemblyVersion>
-    <ApplicationIcon>favicon.ico</ApplicationIcon>
+    <AssemblyVersion>1.7.6</AssemblyVersion>
+    <ApplicationIcon>Iconsmall.ico</ApplicationIcon>
     <SourceRevisionId>build$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
+    <PackageIcon>iconsmall.ico</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="bsicon.ico" />
+    <None Remove="favicon.ico" />
     <None Remove="Networks\3DSim.xml" />
     <None Remove="Networks\BabyTalk.xml" />
     <None Remove="Networks\BasicNeurons.xml" />
@@ -118,15 +121,17 @@
     <None Remove="Resources\Play.png" />
     <None Remove="Resources\Record.png" />
     <None Remove="Resources\Rewind.png" />
+    <None Remove="Resources\SplashScreen2.png" />
     <None Remove="Resources\Step.png" />
     <None Remove="Resources\youtube-24.ico" />
     <None Remove="Resources\ZoomIn.png" />
     <None Remove="Resources\ZoomOut.png" />
-    <None Remove="Smoothed_Splash.bmp" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="bsicon.ico" />
     <Content Include="favicon.ico" />
+    <Content Include="Iconsmall.ico" />
     <Content Include="Networks\3DSim.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -330,11 +335,11 @@
     <Resource Include="Resources\Play.png" />
     <Resource Include="Resources\Record.png" />
     <Resource Include="Resources\Rewind.png" />
+    <Resource Include="Resources\SplashScreen2.png" />
     <Resource Include="Resources\Step.png" />
     <Resource Include="Resources\youtube-24.ico" />
     <Resource Include="Resources\ZoomIn.png" />
     <Resource Include="Resources\ZoomOut.png" />
-    <Resource Include="Smoothed_Splash.bmp" />
   </ItemGroup>
 
   <ItemGroup>
@@ -396,6 +401,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Iconsmall.ico">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

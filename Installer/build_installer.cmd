@@ -3,7 +3,7 @@ ECHO **********************************************************************
 ECHO * BrainSimII Build and Make Installer with or without signing        *
 ECHO **********************************************************************
 ECHO * Just execute to build project and make installer for local use     *
-ECHO * or drop a signing certificate on the CMD file for the creation     *
+ECHO * or use a signing certificate for the creation                      *
 ECHO * of a signed installer that can be put on the Web for distribution  *
 ECHO **********************************************************************
 
@@ -17,38 +17,13 @@ CD %ORGDIR%
 
 :CERTFILERETRY
 SET CERTFILE=
-set /p CERTFILE="Enter Certificate Path: "
-
-IF NOT DEFINED CERTFILE ( GOTO CERTFILEDONE)
-
-REM check for existance and retry if not
-IF NOT EXIST %CERTFILE% (
-	ECHO "Certificate path does not exist"
-
-	GOTO  CERTFILERETRY
-)
-
-:CERTFILEDONE
+set /p CERTFILE="Enter 'y' to digitally sign, anything else  to skip: "
 
 CD %ORGDIR%
-
-SET WEBDIR=C:\Users\c_sim\source\repos\FutureAIWebsite\FutureAI
-
-IF NOT EXIST %WEBDIR% (
-	SET WEBDIR=C:\Users\c_sim\source\repos\FutureAIGuru\FutureAIWebsite\FutureAI
-)
-
-REM ECHO ON
-
-IF NOT EXIST %WEBDIR% (SET WEBDIR="")
 
 ECHO Current folder:  %ORGDIR%
 ECHO Certificate file: %CERTFILE%
 ECHO Binary folder: %BINDIR%
-ECHO Website folder: %WEBDIR%
-
-REM GOTO:COPYFILES
-
 
 PAUSE
 ECHO Delete old log files. . .
@@ -69,36 +44,34 @@ msbuild -p:Configuration=Release -maxCpuCount:16 -t:rebuild "..\BrainSimulator.s
 PAUSE
 
 
-IF DEFINED CERTFILE (
-	ECHO Signing the program binaries. . .
-	signtool sign /f %CERTFILE% /p FutureAI /t http://timestamp.comodoca.com "%BINDIR%\brainsimulator.exe" "%BINDIR%\brainsimulator.dll" "%BINDIR%\NeuronEngine.dll" "%BINDIR%\NeuronEngineWrapper.dll" "%BINDIR%\NeuronServer.exe" "%BINDIR%\NeuronServer.dll" "%BINDIR%\system.speech.dll" "%BINDIR%\system.IO.ports.dll" "%BINDIR%\runtimes\win\lib\net6.0\system.IO.ports.dll"  "%BINDIR%\runtimes\win\lib\net6.0\system.speech.dll" > "%ORGDIR%\Step3SignExecutables.log"
+IF "%CERTFILE%"=="y" (
+	ECHO Signing the program binaries. . .Enter password [NewPassword] in popup window
+	signtool sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /a "%BINDIR%\brainsimulator.exe" "%BINDIR%\brainsimulator.dll" "%BINDIR%\NeuronEngine.dll" "%BINDIR%\NeuronEngineWrapper.dll" "%BINDIR%\NeuronServer.exe" "%BINDIR%\NeuronServer.dll" "%BINDIR%\system.speech.dll" "%BINDIR%\system.IO.ports.dll" "%BINDIR%\runtimes\win\lib\net6.0\system.IO.ports.dll"  "%BINDIR%\runtimes\win\lib\net6.0\system.speech.dll" > "%ORGDIR%\Step3SignExecutables.log"
 	PAUSE
+) else (
+ECHO Signing skipped
 )
 
 ECHO Creating the Installer. . .
 makensis _BRAINSIM2.nsi >"%ORGDIR%\Step4BuildInstaller.log"
 PAUSE
 
-IF DEFINED CERTFILE (
-	ECHO Signing the install.exe. . .
-	signtool sign /f %CERTFILE% /p FutureAI /t http://timestamp.comodoca.com "%ORGDIR%\Brain Simulator II Setup.exe" >"%ORGDIR%\Step5SignInstaller.log"
+IF "%CERTFILE%"=="y" (
+	ECHO Signing the install.exe . . .Enter password [NewPassword] in popup window
+	signtool sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /a "%ORGDIR%\BrainSimII_Setup.exe" >"%ORGDIR%\Step5SignInstaller.log"
+	PAUSE
+) else (
+ECHO Signing skipped
 )
 
-:COPYFILES    
+
 
 ECHO Create the version file 
 ..\GetVersionInfo\bin\Debug\net6.0\GetVersionInfo "%BINDIR%\brainsimulator.exe" > "%ORGDIR%\LatestBrainSimVersion.txt"
 
-IF NOT DEFINED CERTFILE (GOTO DONE)
-IF EXIST "%WEBDIR%" (
-	ECHO Copy files to %WEBDIR%
-	ECHO Copy the installer exe file to the website upload folder
-	copy "Brain Simulator II Setup.exe" %WEBDIR%
+ECHO Creating the .zip file
+powershell compress-archive -Update -Path %ORGDIR%\BrainSimII_Setup.exe -DestinationPath %ORGDIR%\BrainSimII_Setup.zip
 
-	ECHO Copy the version file to the website upload folder
-	copy "LatestBrainSimVersion.txt" %WEBDIR%
-)
 
-:DONE
 ECHO Done!
 PAUSE

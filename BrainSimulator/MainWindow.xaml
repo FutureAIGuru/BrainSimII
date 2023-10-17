@@ -264,11 +264,11 @@
                         </StackPanel>
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem Header="Register" Click="MenuItemRegister_Click" >
+                <!--<MenuItem Header="Register" Click="MenuItemRegister_Click" >
                     <MenuItem.Icon>
                         <Image Source="/resources/mailing-list-icon-17.jpg"></Image>
                     </MenuItem.Icon>
-                </MenuItem>
+                </MenuItem>-->
                 <MenuItem Header="Help Contents" Click="MenuItemOnlineHelp_Click" >
                     <MenuItem.Icon>
                         <TextBlock FontSize="16" FontFamily="Segoe MDL2 Assets" Foreground="#FF00539C" >&#xE897;</TextBlock>

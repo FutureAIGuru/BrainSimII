@@ -5,7 +5,7 @@
 
 !define LIC_NAME "licdata.txt"
 !define COMPANY_NAME  "FutureAI"
-!define APP_NAME "Brain Simulator II"
+!define APP_NAME "BrainSimII"
 
 !define INSTALLSIZE  10000
 !define VERSIONMAJOR 1
@@ -21,7 +21,7 @@
 !define BUILD_TYPE Release
 
 Name "${APP_NAME}"
-OutFile "${APP_NAME} Setup.exe"
+OutFile "${APP_NAME}_Setup.exe"
 
 !include "MUI.nsh"
 !define MUI_ICON "bsicon.ico"
@@ -69,7 +69,7 @@ Function .onInit
 	InitPluginsDir
 	File /oname=$PLUGINSDIR\splash.bmp "SPLASH.bmp"
 	File /oname=$PLUGINSDIR\splash.wav "SPLASH.wav"
-	advsplash::show 1000 600 400 -1 $PLUGINSDIR\splash
+	advsplash::show 7000 600 400 -1 $PLUGINSDIR\splash
 	Pop $0
 	Delete $PLUGINSDIR\splash.bmp
 	Delete $PLUGINSDIR\splash.wav

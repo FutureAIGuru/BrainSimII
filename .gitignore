@@ -272,3 +272,6 @@ AutomatedTests/*.png
 /Installer/LatestBrainSimVersion.txt
 /BrainSimulator.backup
 /Installer/LatestBrainSimVersion.zip
+/BrainSimII.zip
+/Installer/BrainSimII_Setup.exe
+/Installer/BrainSimII_Setup.zip

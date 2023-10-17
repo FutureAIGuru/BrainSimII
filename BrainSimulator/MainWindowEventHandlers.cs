@@ -382,25 +382,7 @@ namespace BrainSimulator
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             //close any help window which was open.
-            Process[] theProcesses1 = Process.GetProcesses();
-            for (int i = 1; i < theProcesses1.Length; i++)
-            {
-                try
-                {
-                    if (theProcesses1[i].MainWindowTitle != "")
-                    {
-                        if (theProcesses1[i].MainWindowTitle.Contains("GettingStarted"))
-                        {
-                            theProcesses1[i].CloseMainWindow(); ;
-                        }
-                    }
-                }
-                catch (Exception e1)
-                {
-                    MessageBox.Show("Window Clopsing Failed, Message: " + e1.Message);
-                }
-            }
-
+            CloseHelpWindow();
 
             if (theNeuronArray != null)
             {
@@ -713,63 +695,52 @@ namespace BrainSimulator
         [DllImport("User32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
+        public static string webURL = "https://futureai.guru";
+        //public static string webURL = "https://futureai1stg.wpenginepowered.com";
         private void MenuItemHelp_Click(object sender, RoutedEventArgs e)
         {
-            Uri theUri = new Uri("https://futureAI.guru/help/getting started.htm");
+            CloseHelpWindow();
+            string thePage = "/BrainSimHelp/GettingStartedLauncher.html";
+            OpenBrowserWindowAndRepositionIt(thePage);
+        }
 
-            //first check to see if help is already open
-            Process[] theProcesses1 = Process.GetProcesses();
-            Process latestProcess = null;
-            for (int i = 1; i < theProcesses1.Length; i++)
+        private void OpenBrowserWindowAndRepositionIt(string thePage)
+        {
+            Process helpProcessTab = null;
+
+            OpenApp(webURL + thePage);
+
+            //gotta wait for the page to render before it shows in the processes list
+            DateTime starttTime = DateTime.Now;
+
+            while (helpProcessTab == null && DateTime.Now < starttTime + new TimeSpan(0, 0, 3))
             {
-                try
+                Process[] theProcesses = Process.GetProcesses();
+                for (int i = 1; i < theProcesses.Length; i++)
                 {
-                    if (theProcesses1[i].MainWindowTitle != "")
+                    try
                     {
-                        if (theProcesses1[i].MainWindowTitle.Contains("GettingStarted"))
-                            latestProcess = theProcesses1[i];
-                    }
-                }
-                catch (Exception e1)
-                {
-                    MessageBox.Show("Opening Help Item Failed, Message: " + e1.Message);
-                }
-            }
-
-
-            if (latestProcess == null)
-            {
-                OpenApp("https://futureai.guru/BrainSimHelp/gettingstarted.html");
-
-                //gotta wait for the page to render before it shows in the processes list
-                DateTime starttTime = DateTime.Now;
-
-                while (latestProcess == null && DateTime.Now < starttTime + new TimeSpan(0, 0, 3))
-                {
-                    theProcesses1 = Process.GetProcesses();
-                    for (int i = 1; i < theProcesses1.Length; i++)
-                    {
-                        try
+                        if (theProcesses[i].MainWindowTitle != "")
                         {
-                            if (theProcesses1[i].MainWindowTitle != "")
+                            if (theProcesses[i].MainWindowTitle.Contains("BrainSimII Help"))
                             {
-                                if (theProcesses1[i].MainWindowTitle.Contains("GettingStarted"))
-                                    latestProcess = theProcesses1[i];
+                                helpProcessTab = theProcesses[i];
+                                goto found;
                             }
                         }
-                        catch (Exception e1)
-                        {
-                            MessageBox.Show("Opening Help Item Failed, Message: " + e1.Message);
-                        }
+                    }
+                    catch (Exception e1)
+                    {
+                        MessageBox.Show("Opening Help Item Failed, Message: " + e1.Message);
                     }
                 }
             }
-
+            found: ;
             try
             {
-                if (latestProcess != null)
+                if (helpProcessTab != null)
                 {
-                    IntPtr id = latestProcess.MainWindowHandle;
+                    IntPtr id = helpProcessTab.MainWindowHandle;
 
                     Rect theRect = new Rect();
                     GetWindowRect(id, ref theRect);
@@ -785,6 +756,28 @@ namespace BrainSimulator
             }
         }
 
+        private static void CloseHelpWindow()
+        {
+            //first check to see if help is already open
+            Process[] theProcesses = Process.GetProcesses();
+            for (int i = 1; i < theProcesses.Length; i++)
+            {
+                Process theProcess = theProcesses[i];
+                try
+                {
+                    if (theProcess.ProcessName.ToLower().Contains("chrome"))
+                    {
+                        if (theProcess.MainWindowTitle.Contains("BrainSimII Help"))
+                            theProcess.CloseMainWindow();
+                    }
+                }
+                catch (Exception e1)
+                {
+                    MessageBox.Show("Opening Help Item Failed, Message: " + e1.Message);
+                }
+            }
+        }
+
         //This opens an app depending on the assignments of the file extensions in Windows
         public static void OpenApp(string fileName)
         {
@@ -797,23 +790,21 @@ namespace BrainSimulator
             }
             catch (Exception e)
             {
-                MainWindow.thisWindow.SetStatus(0, "OpenApp: "+e.Message, 1);
+                MainWindow.thisWindow.SetStatus(0, "OpenApp: " + e.Message, 1);
             }
         }
 
         private void MenuItemOnlineHelp_Click(object sender, RoutedEventArgs e)
         {
-            OpenApp("https://futureai.guru/BrainSimHelp/ui.html");
+            CloseHelpWindow();
+            string thePage = "/BrainSimHelp/UILauncher.html";
+            OpenBrowserWindowAndRepositionIt(thePage);
+            //OpenApp(webURL + "/BrainSimHelp/UI.html");
         }
 
         private void MenuItemOnlineBugs_Click(object sender, RoutedEventArgs e)
         {
             OpenApp("https://github.com/FutureAIGuru/BrainSimII/issues");
-        }
-
-        private void MenuItemRegister_Click(object sender, RoutedEventArgs e)
-        {
-            OpenApp("https://futureai.guru/BrainSimRegister.aspx");
         }
 
         private void MenuItemOnlineDiscussions_Click(object sender, RoutedEventArgs e)

@@ -61,7 +61,7 @@ namespace BrainSimulator
         public static string currentFileName = "";
 
         public static MainWindow thisWindow;
-        readonly Window splashScreen = new SplashScreeen();
+        readonly Window splashScreen = new SplashScreen();
 
         public ProgressDialog progressDialog;
 

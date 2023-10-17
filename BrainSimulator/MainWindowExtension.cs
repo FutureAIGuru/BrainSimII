@@ -38,7 +38,7 @@ namespace BrainSimulator
             try
             {
                 string onlineVersionString = "";
-                var response = await theHttpClient.GetAsync("https://futureai.guru/LatestBrainSimVersion.txt");
+                var response = await theHttpClient.GetAsync(webURL+"/LatestBrainSimVersion.txt");
                 if (response.IsSuccessStatusCode)
                 {
                     DateTime? fileDate = response.Content.Headers.LastModified?.DateTime;
@@ -61,6 +61,7 @@ namespace BrainSimulator
                             s += "\nYou have the latest version";
 
                         GetUpdateDialog dlg = new GetUpdateDialog();
+                        dlg.Owner = thisWindow;
                         dlg.UpdateInfo.Content = s;
                         dlg.cbDontAsk.IsChecked = !Properties.Settings.Default.CheckForUpdates;
                         dlg.WindowStartupLocation = WindowStartupLocation.CenterScreen;

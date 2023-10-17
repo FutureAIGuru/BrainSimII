@@ -12,6 +12,6 @@
         <Label x:Name="labelContributors" HorizontalAlignment="Left" Height="158" Margin="317,47,0,0" VerticalAlignment="Top" Width="141"/>
         <Label x:Name="label" Content="Project Contributors:" HorizontalAlignment="Left" Height="28" Margin="317,19,0,0" VerticalAlignment="Top" Width="141" FontWeight="Bold"/>
         <Label x:Name ="labelVersion" HorizontalAlignment="Left" Height="46" Margin="35,0,0,66" VerticalAlignment="Bottom" Width="423"/>
-        <Image x:Name="image_Copy" Margin="19,19,168,117" Source="Smoothed_Splash.bmp"/>
+        <Image x:Name="image_Copy" Margin="19,19,168,117" Source="resources/SplashScreen2.png"/>
     </Grid>
 </Window>

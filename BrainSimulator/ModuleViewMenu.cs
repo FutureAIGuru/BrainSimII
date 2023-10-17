@@ -48,7 +48,7 @@ namespace BrainSimulator
             cm.Items.Add(mi);
 
             mi = new MenuItem();
-            mi.Header = new CheckBox { Name = "Enabled", Content = "Enabled", IsChecked = nr.TheModule.isEnabled, };
+            mi.Header = new CheckBox {Name="Enabled", Content = "Enabled",IsChecked=nr.TheModule.isEnabled, };
             mi.StaysOpenOnClick = true;
             cm.Items.Add(mi);
 
@@ -263,7 +263,7 @@ namespace BrainSimulator
                 cc = Utils.FindByName(cm, "Enabled");
                 bool isEnabled = true;
                 if (cc is CheckBox cb2)
-                    isEnabled = (bool)cb2.IsChecked;
+                    isEnabled = (bool) cb2.IsChecked;
 
                 cc = Utils.FindByName(cm, "AreaWidth");
                 if (cc is TextBox tb1)
@@ -488,13 +488,6 @@ namespace BrainSimulator
         {
             Process process = new Process();
             string taskFile = @"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe";
-            if (!File.Exists(taskFile))
-                taskFile = @"C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\devenv.exe";
-            if (!File.Exists(taskFile))
-                taskFile = @"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\devenv.exe";
-            if (!File.Exists(taskFile))
-                return;
-
             ProcessStartInfo startInfo = new ProcessStartInfo(taskFile, "/edit " + fileName);
             process.StartInfo = startInfo;
             process.Start();

@@ -45,9 +45,5 @@ namespace BrainSimulator
 
         }
 
-        private void RegisterButton_Click(object sender, RoutedEventArgs e)
-        {
-            MainWindow.OpenApp("https://futureai.guru/BrainSimRegister.aspx");
-        }
     }
 }

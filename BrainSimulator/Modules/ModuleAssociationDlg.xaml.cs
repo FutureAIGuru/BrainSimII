@@ -1,17 +1,18 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media;
+
 //to highlight grid cell
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace BrainSimulator.Modules
 {
@@ -22,8 +23,9 @@ namespace BrainSimulator.Modules
             InitializeComponent();
         }
 
-        ModuleUKS uks = null;
+        private ModuleUKS uks = null;
         public bool busy = false;
+
         public override bool Draw(bool checkDrawTimer)
         {
             if (busy) return false;
@@ -45,7 +47,6 @@ namespace BrainSimulator.Modules
             busy = true;
             Thing attnTarget = attn.GetReferenceWithAncestor(uks.Labeled("Visual"));
 
-
             DataTable dt = new DataTable();
             dt.Columns.Add("*", typeof(string));
 
@@ -61,10 +62,8 @@ namespace BrainSimulator.Modules
             IList<Thing> relationships = uks.Labeled("Relationship").Children;
             //relationships = relationships.OrderBy(x => x.Label.Substring(1)).ToList();
 
-
             //collect all the values in a single spot
             float[,] values = ((ModuleAssociation)base.ParentModule).GetAssociations();
-
 
             int row = 0;
             foreach (Thing property in properties)
@@ -106,7 +105,6 @@ namespace BrainSimulator.Modules
                 dt.Rows.Add(dr);
                 row++;
             }
-
 
             theGrid.ItemsSource = dt.DefaultView;
             theGrid.SelectionUnit = DataGridSelectionUnit.Cell;
@@ -169,6 +167,7 @@ namespace BrainSimulator.Modules
                 }
             }
         }
+
         private Color GetCellBackground(int rowIndex, int colIndex)
         {
             object item = theGrid.Items[rowIndex];
@@ -199,7 +198,7 @@ namespace BrainSimulator.Modules
                 DataGridCellsPresenter presenter = FindVisualChild<DataGridCellsPresenter>(rowContainer);
                 if (presenter == null)
                 {
-                    /* if the row has been virtualized away, call its ApplyTemplate() method 
+                    /* if the row has been virtualized away, call its ApplyTemplate() method
                      * to build its visual tree in order for the DataGridCellsPresenter
                      * and the DataGridCells to be created */
                     rowContainer.ApplyTemplate();
@@ -220,6 +219,7 @@ namespace BrainSimulator.Modules
             }
             return null;
         }
+
         public static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
         {
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
@@ -241,7 +241,9 @@ namespace BrainSimulator.Modules
         {
             Draw(false);
         }
-        bool mouseInWindow = false;
+
+        private bool mouseInWindow = false;
+
         private void theGrid_MouseEnter(object sender, MouseEventArgs e)
         {
             mouseInWindow = true;
@@ -254,7 +256,6 @@ namespace BrainSimulator.Modules
                     if (color == Colors.White)
                         SetCellBackground(i, j, Colors.LightSteelBlue);
                 }
-
         }
 
         private void theGrid_MouseLeave(object sender, MouseEventArgs e)

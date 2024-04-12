@@ -1,7 +1,7 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System;
 using System.Windows;
@@ -24,8 +24,8 @@ namespace BrainSimulator.Modules
             Focusable = false;
         }
 
-        float zoom = 1 / 12f;
-        Vector pan = new Vector(0, 0);
+        private float zoom = 1 / 12f;
+        private Vector pan = new Vector(0, 0);
 
         public override bool Draw(bool checkDrawTimer)
         {
@@ -47,7 +47,6 @@ namespace BrainSimulator.Modules
             tg.Children.Add(new ScaleTransform(scale, -scale, 0, 0));
             tg.Children.Add(new TranslateTransform(windowCenter.X, windowCenter.Y));
             theCanvas.RenderTransform = tg;
-
 
             //add a background
             Rectangle r = new Rectangle() { Height = parent.boundarySize * 2, Width = parent.boundarySize * 2, Stroke = Brushes.AliceBlue, Fill = Brushes.AliceBlue };
@@ -169,7 +168,6 @@ namespace BrainSimulator.Modules
             //draw the current field of view
             if ((bool)cbArcs.IsChecked)
             {
-
                 for (int i = 0; i < parent.currentView0.Count; i++)
                 {
                     try //TODO lock the list
@@ -238,7 +236,6 @@ namespace BrainSimulator.Modules
             Point windowCenter = new Point(windowSize.X / 2, windowSize.Y / 2);
             float scale = (float)Math.Min(windowSize.X, windowSize.Y) / 12;
 
-
             Point position = e.GetPosition(theCanvas);
 
             PointPlus v = new PointPlus { P = (Point)(position - parent.entityPosition) };
@@ -275,7 +272,8 @@ namespace BrainSimulator.Modules
             MainWindow.thisWindow.Activate();
         }
 
-        Point prevPos = new Point(0, 0);
+        private Point prevPos = new Point(0, 0);
+
         private void TheCanvas_MouseMove(object sender, MouseEventArgs e)
         {
             e.Handled = true;
@@ -290,14 +288,17 @@ namespace BrainSimulator.Modules
             prevPos = currentPosition;
             MainWindow.thisWindow.Activate();
         }
+
         public void SetHand()
         {
             theCanvas.Cursor = Cursors.Hand;
         }
+
         public void ClearHand()
         {
             theCanvas.Cursor = Cursors.Arrow;
         }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Module2DSim parent = (Module2DSim)base.ParentModule;

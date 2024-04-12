@@ -1,10 +1,11 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System.Collections.Generic;
 using System.Windows;
+
 using static BrainSimulator.Utils;
 using static System.Math;
 
@@ -14,7 +15,6 @@ namespace BrainSimulator.Modules
     {
         public static float fieldOfView = (float)(PI / 2);
         public static float eyeOffset = .2f;
-        
 
         public Module2DVision()
         {
@@ -30,6 +30,7 @@ namespace BrainSimulator.Modules
             double retVal = thetaPerPixel * i1;
             return retVal;
         }
+
         public static float GetNeuronFromDirection(float angle, int numPixels)
         {
             float thetaPerPixel = fieldOfView / (numPixels - 1);
@@ -39,11 +40,12 @@ namespace BrainSimulator.Modules
 
         //these arrays are used to determine if any data has changed
         //this is presently used to reduce computation but in future development can also be used to detect object motion
-        List<int> lastValuesL = null;
-        List<int> lastValuesR = null;
-        List<int> curValuesL = null;
-        List<int> curValuesR = null;
-        List<int> textureValues = null;
+        private List<int> lastValuesL = null;
+
+        private List<int> lastValuesR = null;
+        private List<int> curValuesL = null;
+        private List<int> curValuesR = null;
+        private List<int> textureValues = null;
 
         public override void Fire()
         {
@@ -101,13 +103,14 @@ namespace BrainSimulator.Modules
             viewChanged = 0;
         }
 
-        int viewChanged = 0;
+        private int viewChanged = 0;
+
         public void ViewChanged()
         {
             viewChanged = 1;
         }
 
-        void SetCenterColor()
+        private void SetCenterColor()
         {
             int c1 = GetNeuronValueInt(null, mv.Width / 2, 0);
             int c2 = GetNeuronValueInt(null, mv.Width / 2, 1);
@@ -126,20 +129,22 @@ namespace BrainSimulator.Modules
             }
         }
 
-        struct MonocularBoundary
+        private struct MonocularBoundary
         {
             public ColorInt colorL;
             public ColorInt colorR;
             public int direction;
             public bool changed;
         }
-        struct BinocularBoundary
+
+        private struct BinocularBoundary
         {
             public ColorInt theColor;
             public PointPlus p;
             public bool changed;
         }
-        class Area
+
+        private class Area
         {
             public PointPlus PL;
             public PointPlus PR;
@@ -151,10 +156,10 @@ namespace BrainSimulator.Modules
             public bool PRHidden;
         }
 
-        List<MonocularBoundary> LBoundaries = new List<MonocularBoundary>();
-        List<MonocularBoundary> RBoundaries = new List<MonocularBoundary>();
-        List<BinocularBoundary> boundaries = new List<BinocularBoundary>();
-        List<Area> areas = new List<Area>();
+        private List<MonocularBoundary> LBoundaries = new List<MonocularBoundary>();
+        private List<MonocularBoundary> RBoundaries = new List<MonocularBoundary>();
+        private List<BinocularBoundary> boundaries = new List<BinocularBoundary>();
+        private List<Area> areas = new List<Area>();
 
         //an area must appear in both eyes to count
         //partial areas as the edge of the field of view will have only one endpoint
@@ -188,7 +193,7 @@ namespace BrainSimulator.Modules
             }
         }
 
-        float GetAngleFromTexture(Area a)
+        private float GetAngleFromTexture(Area a)
         {
             int start = (int)GetNeuronFromDirection(a.PL.Theta, mv.Width);
             int end = (int)GetNeuronFromDirection(a.PR.Theta, mv.Width);
@@ -280,7 +285,6 @@ namespace BrainSimulator.Modules
                 }
             }
         }
-
 
         private void RemoveTextures(int eye)
         {
@@ -414,7 +418,6 @@ namespace BrainSimulator.Modules
             }
         }
 
-
         private PointPlus FindDepth(int l, int r)
         {
             //calculation using trig
@@ -445,7 +448,8 @@ namespace BrainSimulator.Modules
             return retVal;
         }
 
-        float angularResolution = 0;
+        private float angularResolution = 0;
+
         public override void Initialize()
         {
             ClearNeurons();

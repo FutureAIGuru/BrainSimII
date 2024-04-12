@@ -1,15 +1,9 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Xml.Serialization;
 
 namespace BrainSimulator.Modules
 {
@@ -17,13 +11,13 @@ namespace BrainSimulator.Modules
     {
         //any public variable you create here will automatically be saved and restored  with the network
         //unless you precede it with the [XmlIgnore] directive
-        //[XlmIgnore] 
+        //[XlmIgnore]
         //public theStatus = 1;
 
         //This module directs a ImageZoom module to intersting locations
 
-        Random rand = new Random();
-        int autoAttention = 0;
+        private Random rand = new Random();
+        private int autoAttention = 0;
 
         //set size parameters as needed in the constructor
         //set max to be -1 if unlimited
@@ -35,8 +29,8 @@ namespace BrainSimulator.Modules
             maxWidth = 5;
         }
 
-        ModuleUKS uks = null;
-        Thing currentAttention = null;
+        private ModuleUKS uks = null;
+        private Thing currentAttention = null;
 
         //fill this method in with code which will execute
         //once for each cycle of the engine
@@ -48,7 +42,6 @@ namespace BrainSimulator.Modules
             uks = (ModuleUKS)naSource.TheModule;
             Thing mentalModel = uks.GetOrAddThing("MentalModel", "Visual");
             if (mentalModel.Children.Count == 0) return;
-
 
             if (autoAttention > 0)
             {
@@ -69,7 +62,6 @@ namespace BrainSimulator.Modules
                 }
             }
 
-
             if (newAttention != null)
             {
                 currentAttention = newAttention;
@@ -89,7 +81,6 @@ namespace BrainSimulator.Modules
                 else
                     l.T.SetFired();
             }
-
         }
 
         private void AddAtttention(Thing t)
@@ -116,7 +107,7 @@ namespace BrainSimulator.Modules
             }
         }
 
-        public void SetAttention(Thing t,int delay = 10)
+        public void SetAttention(Thing t, int delay = 10)
         {
             if (t == null)
             {
@@ -132,9 +123,9 @@ namespace BrainSimulator.Modules
 
         public void SetEnable(bool enable)
         {
-            if (!enable) 
+            if (!enable)
                 autoAttention = -2;
-            else if (autoAttention == -2) 
+            else if (autoAttention == -2)
                 autoAttention = 0;
         }
 
@@ -143,6 +134,7 @@ namespace BrainSimulator.Modules
         public override void SetUpBeforeSave()
         {
         }
+
         public override void SetUpAfterLoad()
         {
         }

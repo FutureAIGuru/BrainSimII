@@ -1,7 +1,7 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System;
 using System.Windows;
@@ -14,13 +14,15 @@ namespace BrainSimulator.Modules
     {
         //any public variable you create here will automatically be stored with the network
         //unless you precede it with the [XmlIgnore] directive
-        //[XlmIgnore] 
+        //[XlmIgnore]
         //public theStatus = 1;
 
         public Point3D cameraPosition = new Point3D(0, 0, 0);
         public Vector3D cameraDirection = new Vector3D(0, 0, -1);
+
         [XmlIgnore]
         public bool renderStarted = true;
+
         [XmlIgnore]
         public bool renderDone = false;
 
@@ -30,7 +32,7 @@ namespace BrainSimulator.Modules
         {
             Init();  //be sure to leave this here
             SetNeuronValues();
-            //if you want the dlg to update, use the following code 
+            //if you want the dlg to update, use the following code
             //because the thread you are in is not the UI thread
             //UpdateDialog();
         }
@@ -44,7 +46,8 @@ namespace BrainSimulator.Modules
                 mv.GetNeuronAt(i).Model = Neuron.modelType.Color;
             SetNeuronValues();
         }
-        void SetNeuronValues()
+
+        private void SetNeuronValues()
         {
             if (dlg == null) return;
             //if (renderStarted && !renderDone)  //TODO bug which prevents drawing...now has blank frames
@@ -98,7 +101,8 @@ namespace BrainSimulator.Modules
             }
         }
 
-        double theta = 0;
+        private double theta = 0;
+
         public void Move(double x) //you can move forward/back in the direciton you are headed
         {
             cameraPosition.Z += -x * Math.Cos(theta);
@@ -106,6 +110,7 @@ namespace BrainSimulator.Modules
             renderStarted = true;
             UpdateDialog();
         }
+
         public void Rotate(double deltaTheta)
         {
             theta -= deltaTheta;

@@ -1,7 +1,7 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System;
 using System.Windows;
@@ -52,9 +52,9 @@ namespace BrainSimulator.Modules
                 PointPlus P2P = new PointPlus() { P = P2, Conf = 1 - p2IsEndpt };
 
                 bool modelChanged = naModel.AddSegmentFromTouch(P1P, P2P, motion, i);
-
             }
         }
+
         public override void Initialize()
         {
             ClearNeurons();
@@ -75,6 +75,4 @@ namespace BrainSimulator.Modules
                 n.Model = Neuron.modelType.FloatValue;
         }
     }
-
-
 }

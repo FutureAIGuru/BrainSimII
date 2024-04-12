@@ -1,10 +1,11 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System;
 using System.Collections.Generic;
+
 using static BrainSimulator.Utils;
 using static System.Math;
 
@@ -12,7 +13,6 @@ namespace BrainSimulator.Modules
 {
     public class ModuleBehavior : ModuleBase
     {
-
         public ModuleBehavior()
         {
             minWidth = 11;
@@ -28,7 +28,7 @@ namespace BrainSimulator.Modules
             public float param1;
         }
 
-        List<behavior> pending = new List<behavior>();
+        private List<behavior> pending = new List<behavior>();
 
         public bool IsIdle()
         {
@@ -53,7 +53,6 @@ namespace BrainSimulator.Modules
                 SetNeuronValue(null, "Done", 1);
             }
 
-
             if (pending.Count != 0)
             {
                 behavior currentBehavior = pending[0];
@@ -64,13 +63,14 @@ namespace BrainSimulator.Modules
                     case TheBehavior.Move:
                         SetNeuronValue("ModuleMove", 1, 2, currentBehavior.param1);
                         break;
+
                     case TheBehavior.Turn:
                         SetNeuronValue("ModuleTurn", 2, 0, currentBehavior.param1);
                         break;
                 }
             }
-
         }
+
         public override void Initialize()
         {
             pending.Clear();
@@ -94,7 +94,6 @@ namespace BrainSimulator.Modules
             Neuron nUKSStop = GetNeuron("UKSOut", "Stop");
             if (nUKSStop != null)
                 nUKSStop.AddSynapse(mv.GetNeuronAt("Stop").Id, 1);
-
         }
 
         public override void ShowDialog() //delete this function if it isn't needed
@@ -211,6 +210,7 @@ namespace BrainSimulator.Modules
             if (dist <= 0) return;
             MoveTo(dist);
         }
+
         public void MoveTo(float dist)
         {
             SetNeuronValue(null, "Done", 0);

@@ -1,15 +1,8 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Xml.Serialization;
 using static System.Math;
 
 namespace BrainSimulator.Modules
@@ -18,9 +11,8 @@ namespace BrainSimulator.Modules
     {
         //any public variable you create here will automatically be saved and restored  with the network
         //unless you precede it with the [XmlIgnore] directive
-        //[XlmIgnore] 
+        //[XlmIgnore]
         //public theStatus = 1;
-
 
         //set size parameters as needed in the constructor
         //set max to be -1 if unlimited
@@ -32,7 +24,7 @@ namespace BrainSimulator.Modules
             maxWidth = 500;
         }
 
-        ModuleUKS uks = null;
+        private ModuleUKS uks = null;
 
         //fill this method in with code which will execute
         //once for each cycle of the engine
@@ -54,7 +46,7 @@ namespace BrainSimulator.Modules
                 float lum = values["Lum+"];
 
                 Thing theColor = null;
-                foreach(Thing color in colorParent.Children)
+                foreach (Thing color in colorParent.Children)
                 {
                     var valuesc = uks.GetValues(color);
                     float huec = valuesc["Hue+"];
@@ -62,7 +54,7 @@ namespace BrainSimulator.Modules
                     float lumc = valuesc["Lum+"];
 
                     //TODO add better match algorithm
-                    if (huec == hue && Abs(satc - sat)< 0.2f && Abs(lumc - lum) < 0.2f)
+                    if (huec == hue && Abs(satc - sat) < 0.2f && Abs(lumc - lum) < 0.2f)
                     {
                         theColor = color;
                         break;
@@ -71,9 +63,9 @@ namespace BrainSimulator.Modules
                 if (theColor == null)
                 {
                     theColor = uks.AddThing("c*", colorParent);
-                    uks.SetValue(theColor, hue, "Hue",2);
-                    uks.SetValue(theColor, sat, "Sat",2);
-                    uks.SetValue(theColor, lum, "Lum",2);
+                    uks.SetValue(theColor, hue, "Hue", 2);
+                    uks.SetValue(theColor, sat, "Sat", 2);
+                    uks.SetValue(theColor, lum, "Lum", 2);
                 }
                 area.AddReference(theColor);
             }
@@ -94,6 +86,7 @@ namespace BrainSimulator.Modules
         public override void SetUpBeforeSave()
         {
         }
+
         public override void SetUpAfterLoad()
         {
         }

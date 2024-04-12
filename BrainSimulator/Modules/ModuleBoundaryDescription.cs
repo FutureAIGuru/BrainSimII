@@ -1,15 +1,11 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Xml.Serialization;
 
 namespace BrainSimulator.Modules
@@ -18,9 +14,8 @@ namespace BrainSimulator.Modules
     {
         //any public variable you create here will automatically be saved and restored  with the network
         //unless you precede it with the [XmlIgnore] directive
-        //[XlmIgnore] 
+        //[XlmIgnore]
         //public theStatus = 1;
-
 
         //set size parameters as needed in the constructor
         //set max to be -1 if unlimited
@@ -32,9 +27,9 @@ namespace BrainSimulator.Modules
             maxWidth = 500;
         }
 
-        ModuleUKS uks = null;
-        List<string> words = new List<string>();
-        string currentWord = "";
+        private ModuleUKS uks = null;
+        private List<string> words = new List<string>();
+        private string currentWord = "";
 
         //fill this method in with code which will execute
         //once for each cycle of the engine
@@ -49,7 +44,6 @@ namespace BrainSimulator.Modules
             ModuleView attnSource = theNeuronArray.FindModuleByLabel("Attention");
             if (attnSource == null) return;
             ModuleAttention m = (ModuleAttention)attnSource.TheModule;
-
 
             Thing mentalModelParent = uks.GetOrAddThing("MentalModel", "Visual");
             Thing wordParent = uks.GetOrAddThing("Word", "Audible");
@@ -84,7 +78,7 @@ namespace BrainSimulator.Modules
                 //delete the word from the top of the list
                 words.RemoveAt(0);
             }
-            else 
+            else
             {
                 if (attn.HasReferenceWithParent(wordParent) != null)
                 {
@@ -93,18 +87,17 @@ namespace BrainSimulator.Modules
                 }
             }
 
-
-
             InnerMonologue();
 
             //if you want the dlg to update, use the following code whenever any parameter changes
             UpdateDialog();
         }
 
-
         [XmlIgnore]
         public string descriptionString;
-        Thing prevAttn = null;
+
+        private Thing prevAttn = null;
+
         private void InnerMonologue()
         {
             Thing attn = uks.GetOrAddThing("ATTN", "Thing");
@@ -143,6 +136,7 @@ namespace BrainSimulator.Modules
 
         [XmlIgnore]
         public string descriptionStringIn { get; set; }
+
         //commented-out code can add phrases to the UKS
         //Thing recentPhrase = null;
         public void SetDescription(string description)
@@ -154,7 +148,6 @@ namespace BrainSimulator.Modules
             if (naImage == null) return;
             ModuleImageFile mif = (ModuleImageFile)naImage.TheModule;
 
-
             //Thing phraseParent = uks.GetOrAddThing("Phrase", "Audible");
             //Thing thePhrase = uks.AddThing("ph*", phraseParent);
 
@@ -163,7 +156,6 @@ namespace BrainSimulator.Modules
             //TODO put words into phrase objects
             //foreach (string word in words1)
             //{
-
             //    string word1 = char.ToUpper(word[0]) + word.Substring(1);
             //    words.Add(word1);
             //    Thing wordParent = uks.GetOrAddThing("Word", "Audible");
@@ -192,6 +184,7 @@ namespace BrainSimulator.Modules
         public override void SetUpBeforeSave()
         {
         }
+
         public override void SetUpAfterLoad()
         {
         }

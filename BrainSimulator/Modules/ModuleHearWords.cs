@@ -1,7 +1,7 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,6 @@ namespace BrainSimulator.Modules
     public class ModuleHearWords : ModuleBase
     {
         private List<string> words = new List<string>();
-
 
         public override void Fire()
         {
@@ -24,7 +23,7 @@ namespace BrainSimulator.Modules
                     if (n.Label == word)
                     {
                         n.SetValue(1);
-//                        n.CurrentCharge = 1;
+                        //                        n.CurrentCharge = 1;
                         break;
                     }
                     else if (n.Label == "")
@@ -32,7 +31,7 @@ namespace BrainSimulator.Modules
                         //the word has not been heard before, add it
                         n.Label = word;
                         n.CurrentCharge = 1;
-                        //connection to UKS 
+                        //connection to UKS
                         ModuleUKSN nmUKS = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
                         if (nmUKS != null)
                         {

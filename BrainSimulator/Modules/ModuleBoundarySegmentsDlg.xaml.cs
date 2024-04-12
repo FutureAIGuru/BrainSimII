@@ -1,22 +1,13 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Windows.Threading;
 
 namespace BrainSimulator.Modules
 {
@@ -27,7 +18,8 @@ namespace BrainSimulator.Modules
             InitializeComponent();
         }
 
-        Random rnd = new Random();
+        private Random rnd = new Random();
+
         public override bool Draw(bool checkDrawTimer)
         {
             if (!base.Draw(checkDrawTimer)) return false;
@@ -114,6 +106,5 @@ namespace BrainSimulator.Modules
         {
             Draw(false);
         }
-
     }
 }

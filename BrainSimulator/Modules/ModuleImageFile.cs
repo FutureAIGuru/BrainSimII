@@ -1,13 +1,11 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Windows.Media;
-using System.Xml.Serialization;
 
 namespace BrainSimulator.Modules
 {
@@ -35,7 +33,7 @@ namespace BrainSimulator.Modules
         }
 
         public int fileCounter = 0;
-        int countDown = -1;
+        private int countDown = -1;
         public List<string> fileList = new List<string>();
 
         //fill this method in with code which will execute
@@ -62,11 +60,11 @@ namespace BrainSimulator.Modules
                 if (countDown >= 0)
                     countDown--;
             }
-
         }
-        //check to see if there is a description and if not 
-        //if a file name contains at least one space, it is treated as the description of the content 
-        void SetDescription(string fileName)
+
+        //check to see if there is a description and if not
+        //if a file name contains at least one space, it is treated as the description of the content
+        private void SetDescription(string fileName)
         {
             if (!useDescription) return;
             ModuleBoundaryDescription mbd = (ModuleBoundaryDescription)FindModule("BoundaryDescription");
@@ -105,7 +103,7 @@ namespace BrainSimulator.Modules
         }
 
         //NOT IMPLEMENTED
-        int GetAveragePixel(Bitmap bitmap1, int x, int y, float vRatio, float hRatio)
+        private int GetAveragePixel(Bitmap bitmap1, int x, int y, float vRatio, float hRatio)
         {
             int average = 0;
             int x0 = (int)hRatio / 2;
@@ -182,6 +180,7 @@ namespace BrainSimulator.Modules
             else
                 countDown = -1; //setting the decrement counter to -1 suspends future file loading
         }
+
         public void NextFile()
         {
             fileCounter++;
@@ -227,7 +226,6 @@ namespace BrainSimulator.Modules
             countDown = -1;
         }
 
-       
         public override void SetUpAfterLoad()
         {
             Init();
@@ -248,10 +246,10 @@ namespace BrainSimulator.Modules
                 }
             }
 
-
             if (fileList.Count > 0)
                 LoadImage(fileList[fileCounter]);
         }
+
         public override void SizeChanged()
         {
             base.SizeChanged();

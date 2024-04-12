@@ -1,7 +1,7 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System.Collections.Generic;
 
@@ -9,10 +9,10 @@ namespace BrainSimulator.Modules
 {
     public class ModuleEvent : ModuleBase
     {
-        int pointCount = 0;
-        int eventCount = 0;
-        int landmarkCount = 0;
-        int pairCount = 0;
+        private int pointCount = 0;
+        private int eventCount = 0;
+        private int landmarkCount = 0;
+        private int pairCount = 0;
 
         public override void Fire()
         {
@@ -32,7 +32,7 @@ namespace BrainSimulator.Modules
         {
             ModuleUKSN UKS = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
             if (UKS is null) return;
-            Thing newOutcomePair = UKS.AddThing("x" + pairCount++, Event); //creates new thing as it as a child 
+            Thing newOutcomePair = UKS.AddThing("x" + pairCount++, Event); //creates new thing as it as a child
             newOutcomePair.AddReference(theAction);
             newOutcomePair.AddReference(theOutcome);
         }
@@ -61,14 +61,12 @@ namespace BrainSimulator.Modules
             return newLandmark;
         }
 
-
         public override void Initialize()
         {
             pointCount = 0;
             eventCount = 0;
             landmarkCount = 0;
             pairCount = 0;
-
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System;
 using System.Collections.Generic;
@@ -10,15 +10,15 @@ namespace BrainSimulator.Modules
 {
     public class ModuleGraph : ModuleBase
     {
-        string[] cols = { "in", "thing", "this", "parent", "child", "attrib", "allAttr", "anyAttr", "match", "next", "nMtch", "head", "alt", "recur", "out", "say", "0" };
-        string theInPhrase = "";
-
+        private string[] cols = { "in", "thing", "this", "parent", "child", "attrib", "allAttr", "anyAttr", "match", "next", "nMtch", "head", "alt", "recur", "out", "say", "0" };
+        private string theInPhrase = "";
 
         public ModuleGraph()
         {
             minHeight = 10;
             minWidth = 18;
         }
+
         public override void Fire()
         {
             HandleSequenceSearch();
@@ -26,15 +26,16 @@ namespace BrainSimulator.Modules
             HandleVoiceRequest();
         }
 
-        void AddSynapse(string source, int sourceRow, string dest, int destRow, float weight)
+        private void AddSynapse(string source, int sourceRow, string dest, int destRow, float weight)
         {
             Neuron n1 = mv.GetNeuronAt(Array.IndexOf(cols, source), sourceRow);
             Neuron n2 = mv.GetNeuronAt(Array.IndexOf(cols, dest), destRow);
             if (n1 != null && n2 != null)
             {
-                n1.AddSynapse(n2.Id, weight); 
+                n1.AddSynapse(n2.Id, weight);
             }
         }
+
         //probably a bad thing to use both attribs and sequenceItems
         public void AddNode(string parent, string name, string[] attribs = null, string[] sequenceItems = null)
         {
@@ -52,7 +53,7 @@ namespace BrainSimulator.Modules
             if (newRow == -1) return;  //the module is full
             if (name == "") name = ".";
             mv.GetNeuronAt(0, newRow).Label = name;
-            if (name != "." )
+            if (name != ".")
                 mv.GetNeuronAt(Array.IndexOf(cols, "say"), newRow).AddSynapse(GetSpokenWord(name).Id, 1, Synapse.modelType.Fixed);
 
             if (parentRow != -1)
@@ -91,7 +92,6 @@ namespace BrainSimulator.Modules
             {
                 if (i != 0)
                     mv.GetNeuronAt(Array.IndexOf(cols, "in"), curRow).Label = ".";
-
 
                 for (int j = 0; j < mv.Height; j++)
                 {
@@ -142,6 +142,7 @@ namespace BrainSimulator.Modules
                 nextRow = curRow + 1;
             }
         }
+
         public void Test()
         {
             //AddThing("Attribute", "Size");
@@ -170,8 +171,6 @@ namespace BrainSimulator.Modules
             //AddThing("Sequence", "Down", null, new string[] { "5", "4", "3", "2", "1" });
             //AddThing("Sequence", "pi", null, new string[] { "3", "point", "1", "4", "1", "5", "9" });
 
-
-
             AddNode("Attribute", "word");
             AddNode("word", "Mary");
             AddNode("word", "had");
@@ -179,12 +178,9 @@ namespace BrainSimulator.Modules
             AddNode("word", "little");
             AddNode("word", "lamb");
             AddNode("Sequence", "M1", null, new string[] { "Mary", "had", "a", "little", "lamb" });
-
         }
 
-
-
-        int FindRowByLabel(string label)
+        private int FindRowByLabel(string label)
         {
             int retVal = -1;
             for (int i = 0; i < mv.Height; i++)
@@ -194,10 +190,10 @@ namespace BrainSimulator.Modules
             return retVal;
         }
 
-        bool phraseIsComplete = false;
-        List<string> searchSequence = new List<string>();
+        private bool phraseIsComplete = false;
+        private List<string> searchSequence = new List<string>();
 
-        void HandleSequenceSearch()
+        private void HandleSequenceSearch()
         {
             if (searchSequence.Count == 0) return;
             if (searchSequence[0] == "nop")
@@ -250,8 +246,7 @@ namespace BrainSimulator.Modules
             searchSequence.RemoveAt(0);
         }
 
-
-        void HandleVoiceRequest()
+        private void HandleVoiceRequest()
         {
             if (!phraseIsComplete) return;
             for (int i = 2; i < mv.Height; i++)
@@ -268,7 +263,6 @@ namespace BrainSimulator.Modules
                 Replace("containing ", "").
                 Replace("  ", " ");
             string[] words = theInPhrase.Split(' ');
-
 
             //if (words[0] == "what")
             //{
@@ -327,7 +321,6 @@ namespace BrainSimulator.Modules
             {
                 if (words.Length == 2)
                 { //say the sequence by name
-
                 }
                 else //earch for the sequence
                 {
@@ -404,6 +397,7 @@ namespace BrainSimulator.Modules
             if (theInPhrase != "")
                 phraseIsComplete = true;
         }
+
         public Neuron GetSpokenWord(string word)
         {
             ModuleView naOut = MainWindow.theNeuronArray.FindModuleByLabel("ModuleSPeechOut");
@@ -423,6 +417,7 @@ namespace BrainSimulator.Modules
             }
             return n;
         }
+
         public override void Initialize()
         {
             ClearNeurons();
@@ -478,15 +473,12 @@ namespace BrainSimulator.Modules
                 mv.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(mv.GetNeuronAt(Array.IndexOf(cols, "child"), j).Id, 1, Synapse.modelType.Fixed);
                 mv.GetNeuronAt(Array.IndexOf(cols, "thing"), j).AddSynapse(mv.GetNeuronAt(Array.IndexOf(cols, "next"), j).Id, 1, Synapse.modelType.Fixed);
 
-
                 mv.GetNeuronAt(Array.IndexOf(cols, "this"), j).AddSynapse(mv.GetNeuronAt(Array.IndexOf(cols, "out"), j).Id, 1, Synapse.modelType.Fixed);
                 mv.GetNeuronAt(Array.IndexOf(cols, "alt"), j).AddSynapse(mv.GetNeuronAt(Array.IndexOf(cols, "out"), j).Id, 1, Synapse.modelType.Fixed);
                 //na.GetNeuronAt(Array.IndexOf(cols, "out"), j).AddSynapse(na.GetNeuronAt(Array.IndexOf(cols, "in"), j).Id, -1, false);
                 mv.GetNeuronAt(Array.IndexOf(cols, "out"), j).AddSynapse(mv.GetNeuronAt(Array.IndexOf(cols, "recur"), j).Id, 1, Synapse.modelType.Fixed);
                 mv.GetNeuronAt(Array.IndexOf(cols, "recur"), j).AddSynapse(mv.GetNeuronAt(Array.IndexOf(cols, "in"), j).Id, 2, Synapse.modelType.Fixed); //2 because the out is suppressing
                 mv.GetNeuronAt(Array.IndexOf(cols, "match"), j).AddSynapse(mv.GetNeuronAt(Array.IndexOf(cols, "thing"), j).Id, 1, Synapse.modelType.Fixed);
-
-
 
                 mv.GetNeuronAt(Array.IndexOf(cols, "out"), j).AddSynapse(mv.GetNeuronAt(Array.IndexOf(cols, "say"), j).Id, 1, Synapse.modelType.Fixed);
                 mv.GetNeuronAt(Array.IndexOf(cols, "out"), j).AddSynapse(mv.GetNeuronAt(Array.IndexOf(cols, "0"), j).Id, 1, Synapse.modelType.Fixed);
@@ -513,8 +505,5 @@ namespace BrainSimulator.Modules
             //}
             Test();
         }
-
-
-
     }
 }

@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BrainSimulator.Modules
 {
-    class KMeansClustering
+    internal class KMeansClustering
     {
         public static int[] Cluster(double[][] rawData, int numClusters)
         {
@@ -45,7 +41,7 @@ namespace BrainSimulator.Modules
             // makes sense to return the means (at the expense of some method signature uglinesss)
             //
             // another alternative is to return, as an out parameter, some measure of cluster goodness
-            // such as the average distance between cluster means, or the average distance between tuples in 
+            // such as the average distance between cluster means, or the average distance between tuples in
             // a cluster, or a weighted combination of both
             return clustering;
         }
@@ -125,7 +121,7 @@ namespace BrainSimulator.Modules
                 if (clusterCounts[k] == 0)
                     return false; // bad clustering. no change to means[][]
 
-            // update, zero-out means so it can be used as scratch matrix 
+            // update, zero-out means so it can be used as scratch matrix
             for (int k = 0; k < means.Length; ++k)
                 for (int j = 0; j < means[k].Length; ++j)
                     means[k][j] = 0.0;
@@ -216,6 +212,5 @@ namespace BrainSimulator.Modules
             }
             return indexOfMin;
         }
-
     }
 }

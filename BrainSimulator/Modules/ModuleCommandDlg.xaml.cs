@@ -1,7 +1,7 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System;
 using System.IO;
@@ -10,13 +10,13 @@ using System.Windows.Forms;
 
 namespace BrainSimulator.Modules
 {
-
     public partial class ModuleCommandDlg : ModuleBaseDlg
     {
         public ModuleCommandDlg()
         {
             InitializeComponent();
         }
+
         public override bool Draw(bool checkDrawTimer)
         {
             //this has a timer so that no matter how often you might call draw, the dialog
@@ -65,7 +65,6 @@ namespace BrainSimulator.Modules
 
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
-
             ModuleCommand parent = (ModuleCommand)base.ParentModule;
             parent.textFile = textBoxPath.Text;
             string theString = textBox.Text;
@@ -88,8 +87,8 @@ namespace BrainSimulator.Modules
                 Filter = "Command Files|*.txt",
                 Title = "Select/Create a Brain Simulator Command File"
             };
-            // Show the Dialog.  
-            // If the user clicked OK in the dialog  
+            // Show the Dialog.
+            // If the user clicked OK in the dialog
             DialogResult result = saveFileDialog1.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.OK)
             {
@@ -101,6 +100,7 @@ namespace BrainSimulator.Modules
             }
             return false;
         }
+
         private bool OpenFileName()
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog
@@ -108,8 +108,8 @@ namespace BrainSimulator.Modules
                 Filter = "Command Files|*.txt",
                 Title = "Select a Brain Simulator Command File"
             };
-            // Show the Dialog.  
-            // If the user clicked OK in the dialog  
+            // Show the Dialog.
+            // If the user clicked OK in the dialog
             DialogResult result = openFileDialog1.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.OK)
             {
@@ -118,6 +118,7 @@ namespace BrainSimulator.Modules
             }
             return false;
         }
+
         private void ButtonBrowse_Click(object sender, RoutedEventArgs e)
         {
             OpenFileName();
@@ -134,6 +135,7 @@ namespace BrainSimulator.Modules
                 Draw(true);
             }
         }
+
         private void ButtonRun_Click(object sender, RoutedEventArgs e)
         {
             ModuleCommand parent = (ModuleCommand)base.ParentModule;
@@ -142,5 +144,4 @@ namespace BrainSimulator.Modules
             Draw(true);
         }
     }
-
 }

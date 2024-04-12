@@ -1,15 +1,7 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Xml.Serialization;
+//
 
 namespace BrainSimulator.Modules
 {
@@ -17,9 +9,8 @@ namespace BrainSimulator.Modules
     {
         //any public variable you create here will automatically be saved and restored  with the network
         //unless you precede it with the [XmlIgnore] directive
-        //[XlmIgnore] 
+        //[XlmIgnore]
         //public theStatus = 1;
-
 
         //set size parameters as needed in the constructor
         //set max to be -1 if unlimited
@@ -30,7 +21,6 @@ namespace BrainSimulator.Modules
             minWidth = 3;
             maxWidth = 100;
         }
-
 
         //fill this method in with code which will execute
         //once for each cycle of the engine
@@ -49,7 +39,6 @@ namespace BrainSimulator.Modules
         {
             AddSynapses();
         }
-
 
         private void AddSynapses()
         {
@@ -72,8 +61,8 @@ namespace BrainSimulator.Modules
                 {
                     mv.GetNeuronAt(mv.Width - 1, j).Label = (j + 1).ToString();
                     mv.GetNeuronAt(mv.Width - 2, j).Label = "i" + (j + 1).ToString();
-                    mv.GetNeuronAt(mv.Width-2,j).Model = Neuron.modelType.LIF;
-                    mv.GetNeuronAt(mv.Width- 2,j).LeakRate = 1f;
+                    mv.GetNeuronAt(mv.Width - 2, j).Model = Neuron.modelType.LIF;
+                    mv.GetNeuronAt(mv.Width - 2, j).LeakRate = 1f;
                 }
             }
             else
@@ -123,12 +112,11 @@ namespace BrainSimulator.Modules
                 Neuron source = GetNeuron("i" + (k + 1).ToString());
                 Neuron target = GetNeuron((k + 1).ToString());
                 source.AddSynapse(target.id, 1);
-                for (int j = k-1; j >= 0; j--)
+                for (int j = k - 1; j >= 0; j--)
                 {
                     target = GetNeuron((j + 1).ToString());
                     source.AddSynapse(target.id, -1);
                 }
-
             }
         }
 
@@ -137,6 +125,7 @@ namespace BrainSimulator.Modules
         public override void SetUpBeforeSave()
         {
         }
+
         public override void SetUpAfterLoad()
         {
         }

@@ -1,21 +1,17 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace BrainSimulator.Modules
 {
-
     public class ModuleBoundaryAreas : ModuleBase
     {
-
         //set size parameters as needed in the constructor
         //set max to be -1 if unlimited
         public ModuleBoundaryAreas()
@@ -25,8 +21,9 @@ namespace BrainSimulator.Modules
             minWidth = 2;
             maxWidth = 500;
         }
-        ModuleUKS uks = null;
-        List<ModuleBoundarySegments.Arc> boundaries = new List<ModuleBoundarySegments.Arc>();
+
+        private ModuleUKS uks = null;
+        private List<ModuleBoundarySegments.Arc> boundaries = new List<ModuleBoundarySegments.Arc>();
 
         //fill this method in with code which will execute
         //once for each cycle of the engine
@@ -53,6 +50,7 @@ namespace BrainSimulator.Modules
             //if you want the dlg to update, use the following code whenever any parameter changes
             // UpdateDialog();
         }
+
         private void GetSegmentsFromUKS()
         {
             boundaries.Clear();
@@ -72,7 +70,8 @@ namespace BrainSimulator.Modules
             }
         }
 
-        float cornerDistLimit = 3;
+        private float cornerDistLimit = 3;
+
         public class Corner
         {
             public Point loc;
@@ -82,6 +81,7 @@ namespace BrainSimulator.Modules
             public float dist1;
             public Corner c2;
             public float dist2;
+
             public Angle Angle
             {
                 get
@@ -94,7 +94,9 @@ namespace BrainSimulator.Modules
                 }
             }
         }
-        List<Corner> corners = new List<Corner>();
+
+        private List<Corner> corners = new List<Corner>();
+
         private void FindCorners()
         {
             corners.Clear();
@@ -238,7 +240,9 @@ namespace BrainSimulator.Modules
             public Point centroid;
             public List<Corner> areaCorners = new List<Corner>();
         }
-        List<Area> areas = new List<Area>();
+
+        private List<Area> areas = new List<Area>();
+
         private void AddCornerToList(Area a, Corner c)
         {
             if (corners.Contains(c))
@@ -249,6 +253,7 @@ namespace BrainSimulator.Modules
                 AddCornerToList(a, c.c2);
             }
         }
+
         private void FindAreas()
         {
             areas.Clear();
@@ -259,14 +264,15 @@ namespace BrainSimulator.Modules
                 AddCornerToList(theArea, corners[0]);
             }
         }
+
         private void GetAreaColors()
         {
-             
             foreach (Area a in areas)
             {
                 a.avgColor = GetAreaColor(a);
             }
         }
+
         private void GetAreaCentroids()
         {
             foreach (Area a in areas)
@@ -275,6 +281,7 @@ namespace BrainSimulator.Modules
                 a.centroid = Utils.GetCentroid(pts);
             }
         }
+
         private void GetAreaGreatesLengths()
         {
             foreach (Area a in areas)
@@ -296,6 +303,7 @@ namespace BrainSimulator.Modules
                 }
             }
         }
+
         private HSLColor GetAreaColor(Area a)
         {
             HSLColor retVal = new HSLColor(0, 0, 0);
@@ -312,7 +320,7 @@ namespace BrainSimulator.Modules
             }
             else
             {
-                if(source.GetNeuronAt((int)a.centroid.X, (int)a.centroid.Y) is Neuron n1)
+                if (source.GetNeuronAt((int)a.centroid.X, (int)a.centroid.Y) is Neuron n1)
                 {
                     System.Drawing.Color c2 = Utils.IntToDrawingColor(n1.LastChargeInt);
                     retVal = new HSLColor(c2.GetHue(), c2.GetSaturation(), c2.GetBrightness());
@@ -367,7 +375,6 @@ namespace BrainSimulator.Modules
 #pragma warning restore 162
         }
 
-
         private void SetAreasToUKS()
         {
             Thing currentlyVisibleParent = uks.GetOrAddThing("CurrentlyVisible", "Visual");
@@ -376,15 +383,14 @@ namespace BrainSimulator.Modules
 
             foreach (Area a in areas)//all the areas currently visible
             {
-
                 Thing theArea = uks.AddThing("Area*", currentlyVisibleParent);
 
-                uks.SetValue(theArea, a.greatestLength, "Siz",0);
+                uks.SetValue(theArea, a.greatestLength, "Siz", 0);
                 uks.SetValue(theArea, (float)a.orientation, "Ang", 2);
-                uks.SetValue(theArea, (float)a.centroid.X, "CtrX",0);
-                uks.SetValue(theArea, (float)a.centroid.Y, "CtrY",0);
-                uks.SetValue(theArea, (float)a.avgColor.hue/360f, "Hue",2);
-                uks.SetValue(theArea, (float)a.avgColor.saturation, "Sat",2);
+                uks.SetValue(theArea, (float)a.centroid.X, "CtrX", 0);
+                uks.SetValue(theArea, (float)a.centroid.Y, "CtrY", 0);
+                uks.SetValue(theArea, (float)a.avgColor.hue / 360f, "Hue", 2);
+                uks.SetValue(theArea, (float)a.avgColor.saturation, "Sat", 2);
                 uks.SetValue(theArea, (float)a.avgColor.luminance, "Lum", 2);
 
                 List<Thing> theCorners = new List<Thing>();
@@ -407,20 +413,19 @@ namespace BrainSimulator.Modules
                     theCorners[1].AddReference(theCorners[0]);
                 }
                 else for (int i = 0; i < theCorners.Count; i++)
-                {
-                    int j = a.areaCorners.IndexOf(a.areaCorners[i].c1);
-                    int k = a.areaCorners.IndexOf(a.areaCorners[i].c2);
-                    if (k == -1 || j == -1 || j == k)
-                    { // the area is not valid, delete it
-                        uks.DeleteAllChilden(theArea);
-                        uks.DeleteThing(theArea);
-                        break;
+                    {
+                        int j = a.areaCorners.IndexOf(a.areaCorners[i].c1);
+                        int k = a.areaCorners.IndexOf(a.areaCorners[i].c2);
+                        if (k == -1 || j == -1 || j == k)
+                        { // the area is not valid, delete it
+                            uks.DeleteAllChilden(theArea);
+                            uks.DeleteThing(theArea);
+                            break;
+                        }
+                        theCorners[i].AddReference(theCorners[j]); //add lengths to these?
+                        theCorners[i].AddReference(theCorners[k]);
                     }
-                    theCorners[i].AddReference(theCorners[j]); //add lengths to these?
-                    theCorners[i].AddReference(theCorners[k]);
-                }
             }
-
         }
 
         //fill this method in with code which will execute once
@@ -430,12 +435,12 @@ namespace BrainSimulator.Modules
         {
         }
 
-
         //the following can be used to massage public data to be different in the xml file
         //delete if not needed
         public override void SetUpBeforeSave()
         {
         }
+
         public override void SetUpAfterLoad()
         {
         }

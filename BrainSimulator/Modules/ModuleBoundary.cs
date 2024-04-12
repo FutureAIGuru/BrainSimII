@@ -1,26 +1,21 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Xml.Serialization;
-
 
 namespace BrainSimulator.Modules
 {
     //The Array2D and 2DI are 2D arrays which return 0 if you reference them out of bounds
     //that way, you don't have to check bounds all the time.
-    class Array2D
+    internal class Array2D
     {
-        int[,] theArray;
+        private int[,] theArray;
+
         public Array2D(int size1, int size2)
         {
             theArray = new int[size1, size2];
@@ -41,14 +36,17 @@ namespace BrainSimulator.Modules
                 theArray[key1, key2] = value;
             }
         }
+
         public int GetLength(int index)
         {
             return theArray.GetLength(index);
         }
     }
-    class Array2DF
+
+    internal class Array2DF
     {
-        float[,] theArray;
+        private float[,] theArray;
+
         public Array2DF(int size1, int size2)
         {
             theArray = new float[size1, size2];
@@ -69,6 +67,7 @@ namespace BrainSimulator.Modules
                 theArray[key1, key2] = value;
             }
         }
+
         public int GetLength(int index)
         {
             return theArray.GetLength(index);
@@ -91,8 +90,7 @@ namespace BrainSimulator.Modules
         public float brightLimit = .5f; // minimum brightness difference for boundary (0-1)
         public float satLimit = .5f; // minimum saturation difference for boundary (0-1)
 
-
-        int backgroundColor;
+        private int backgroundColor;
 
         //fill this method in with code which will execute
         //once for each cycle of the engine
@@ -117,7 +115,7 @@ namespace BrainSimulator.Modules
 
             //find all the points which have different color values than their neighbors
             Array2D boundaryValues = new Array2D(mv.Width, mv.Height);
-            for (int i = 0; i < source.Width-1 && i < mv.Width-1; i++)
+            for (int i = 0; i < source.Width - 1 && i < mv.Width - 1; i++)
             {
                 for (int j = 1; j < source.Height && i < mv.Height; j++)
                 {
@@ -137,7 +135,7 @@ namespace BrainSimulator.Modules
                     bool adjacentCorner = false;
                     if (IsCorner(i, j, boundaryValues))
                     {
-                        for (int k = 0; k < 8;k++)
+                        for (int k = 0; k < 8; k++)
                         {
                             GetDeltasFromDirection(k, out int dx, out int dy);
                             if (cornerValues[i + dx, j + dy] != 0)
@@ -172,10 +170,7 @@ namespace BrainSimulator.Modules
             //UpdateDialog();
         }
 
-
-
-
-        bool IsBoundary(int x, int y, Array2D neuronValues)
+        private bool IsBoundary(int x, int y, Array2D neuronValues)
         {
             //if (neuronValues[x, y] == backgroundColor) return false;
             Color c = Utils.IntToDrawingColor(neuronValues[x, y]);
@@ -189,7 +184,7 @@ namespace BrainSimulator.Modules
             //float backBrightness = background.GetBrightness();
             //if (Math.Abs(backHue - hue2) < hueLimit &&
             //    Math.Abs(backSat - sat2) < satLimit &&
-            //    Math.Abs(backBrightness - bright2) < brightLimit) 
+            //    Math.Abs(backBrightness - bright2) < brightLimit)
             //    return false;
 
             for (int i = 0; i < 3; i++)
@@ -209,6 +204,7 @@ namespace BrainSimulator.Modules
             }
             return false;
         }
+
         public static void GetDeltasFromDirection(int dir, out int dx, out int dy)
         {
             while (dir < 0) dir += 8;
@@ -239,7 +235,7 @@ namespace BrainSimulator.Modules
             //}
         }
 
-        bool IsCorner(int x, int y, Array2D boundaryValues)
+        private bool IsCorner(int x, int y, Array2D boundaryValues)
         {
             if (boundaryValues[x, y] == 0) return false;
             //does it have 5 cosecutive immediate neighbors?
@@ -271,24 +267,31 @@ namespace BrainSimulator.Modules
                 case 0:
                     arrayVal = matchPatterns[k, j1, i1];
                     break;
+
                 case 1:
                     arrayVal = matchPatterns[k, width - j1, i1];
                     break;
+
                 case 2:
                     arrayVal = matchPatterns[k, j1, height - i1];
                     break;
+
                 case 3:
                     arrayVal = matchPatterns[k, width - j1, height - i1];
                     break;
+
                 case 4:
                     arrayVal = matchPatterns[k, i1, j1];
                     break;
+
                 case 5:
                     arrayVal = matchPatterns[k, width - i1, j1];
                     break;
+
                 case 6:
                     arrayVal = matchPatterns[k, i1, height - j1];
                     break;
+
                 case 7:
                     arrayVal = matchPatterns[k, width - i1, height - j1];
                     break;
@@ -296,7 +299,8 @@ namespace BrainSimulator.Modules
 
             return arrayVal;
         }
-        bool CornerMatchPattern(int x, int y, Array2D boundaryValues)
+
+        private bool CornerMatchPattern(int x, int y, Array2D boundaryValues)
         {
             float[,,] matchPatternsCorner = new float[,,]
             {
@@ -337,16 +341,12 @@ namespace BrainSimulator.Modules
                     return true;
                 noMatch:
                     {
-
                     }
-
                 }
             }
 
             return false;
         }
-
-
 
         //fill this method in with code which will execute once
         //when the module is added, when "initialize" is selected from the context menu,
@@ -363,6 +363,7 @@ namespace BrainSimulator.Modules
         public override void SetUpBeforeSave()
         {
         }
+
         public override void SetUpAfterLoad()
         {
         }
@@ -387,7 +388,6 @@ namespace BrainSimulator.Modules
             s.Children.Add(sl1);
             s2.Children.Add(s);
 
-
             s = new StackPanel { Orientation = Orientation.Horizontal };
             s.Children.Add(new Label { Content = "Bright (0-1): " + brightLimit.ToString("f2"), Width = 110 });
             sl1 = new Slider { Name = "Brt", Maximum = 1, Width = 100, Height = 20, Value = brightLimit };
@@ -405,7 +405,6 @@ namespace BrainSimulator.Modules
             return new MenuItem { Header = s2, StaysOpenOnClick = true };
         }
 
-
         private void Sl1_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (sender is Slider sl)
@@ -417,10 +416,12 @@ namespace BrainSimulator.Modules
                         hueLimit = (int)(sl.Value * 360);
                         newLabelText = "Hue (0-360): " + (int)hueLimit;
                         break;
+
                     case "Brt":
                         brightLimit = (float)sl.Value;
                         newLabelText = "Bright (0-1): " + brightLimit.ToString("f2");
                         break;
+
                     case "Sat":
                         satLimit = (float)sl.Value;
                         newLabelText = "Sat. (0-1): " + satLimit;

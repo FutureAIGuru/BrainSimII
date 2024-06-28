@@ -1,16 +1,9 @@
 ﻿//
-// Copyright (c) [Name]. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Xml.Serialization;
 
 namespace BrainSimulator.Modules
 {
@@ -18,7 +11,7 @@ namespace BrainSimulator.Modules
     {
         //any public variable you create here will automatically be stored with the network
         //unless you precede it with the [XmlIgnore] directive
-        //[XlmIgnore] 
+        //[XlmIgnore]
         //public theStatus = 1;
 
         //fill this method in with code which will execute
@@ -29,6 +22,7 @@ namespace BrainSimulator.Modules
 
             ModuleView naSource = theNeuronArray.FindModuleByLabel("ImageFile");
         }
+
         public override void Initialize()
         {
             ModuleView naSource = theNeuronArray.FindModuleByLabel("ImageFile");
@@ -70,7 +64,6 @@ namespace BrainSimulator.Modules
                     Neuron n2 = naSource.GetNeuronAt(x, y + 1);
                     Neuron n3 = naSource.GetNeuronAt(x + 1, y + 1);
 
-
                     //the letter indicates which side is white...WB = L BW = R
                     int x1 = x * 6;
                     Neuron nL = mv.GetNeuronAt(x1, y);
@@ -92,7 +85,7 @@ namespace BrainSimulator.Modules
                      *      10
                      * XD:  01
                      *      10
-                     * 
+                     *
                      * */
 
                     nL.Label = "*|";
@@ -111,7 +104,6 @@ namespace BrainSimulator.Modules
                     AddSynapse(n1, nXD, -.5f);
                     AddSynapse(n2, nXD, -.5f);
                     AddSynapse(n3, nXD, .75f);
-
 
                     AddSynapse(n0, nL, .5f);
                     AddSynapse(n1, nL, -1f);
@@ -132,17 +124,13 @@ namespace BrainSimulator.Modules
                     AddSynapse(n1, nD, -1f);
                     AddSynapse(n2, nD, .5f);
                     AddSynapse(n3, nD, .5f);
-
-
                 }
         }
 
-        void AddSynapse(Neuron source, Neuron dest, float weight)
+        private void AddSynapse(Neuron source, Neuron dest, float weight)
         {
             if (source == null || dest == null) return;
             source.AddSynapse(dest.id, weight);
         }
-
     }
 }
-

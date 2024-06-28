@@ -1,7 +1,7 @@
 ﻿//
-// Copyright (c) [Name]. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System.Collections.Generic;
 using System.IO;
@@ -13,11 +13,13 @@ namespace BrainSimulator.Modules
 {
     public partial class ModuleImageFileDlg : ModuleBaseDlg
     {
-        string defaultDirectory = "";
+        private string defaultDirectory = "";
+
         public ModuleImageFileDlg()
         {
             InitializeComponent();
         }
+
         public override bool Draw(bool checkDrawTimer)
         {
             //this has a timer so that no matter how often you might call draw, the dialog
@@ -59,8 +61,8 @@ namespace BrainSimulator.Modules
                 Multiselect = true,
                 InitialDirectory = defaultDirectory,
             };
-            // Show the Dialog.  
-            // If the user clicked OK in the dialog  
+            // Show the Dialog.
+            // If the user clicked OK in the dialog
             DialogResult result = openFileDialog1.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.OK)
             {
@@ -97,7 +99,6 @@ namespace BrainSimulator.Modules
             return new List<string>(Directory.EnumerateFiles(dir, "*.png", subFolder));
         }
 
-
         private void Button_Cancel_Click(object sender, RoutedEventArgs e)
         {
             Close();
@@ -106,7 +107,7 @@ namespace BrainSimulator.Modules
         private void Button_OK_Click(object sender, RoutedEventArgs e)
         {
             ModuleImageFile parent = (ModuleImageFile)base.ParentModule;
-            parent.SetParameters(null,textBoxPath.Text, (bool)cbAutoCycle.IsChecked, (bool)cbNameIsDescription.IsChecked);
+            parent.SetParameters(null, textBoxPath.Text, (bool)cbAutoCycle.IsChecked, (bool)cbNameIsDescription.IsChecked);
         }
 
         private void Button_Click_Next(object sender, RoutedEventArgs e)
@@ -126,7 +127,7 @@ namespace BrainSimulator.Modules
         private void CheckBoxChanged(object sender, RoutedEventArgs e)
         {
             ModuleImageFile parent = (ModuleImageFile)base.ParentModule;
-            parent.SetParameters(null,"", (bool)cbAutoCycle.IsChecked, (bool)cbNameIsDescription.IsChecked);
+            parent.SetParameters(null, "", (bool)cbAutoCycle.IsChecked, (bool)cbNameIsDescription.IsChecked);
         }
 
         private void ButtonDescr_Click(object sender, RoutedEventArgs e)

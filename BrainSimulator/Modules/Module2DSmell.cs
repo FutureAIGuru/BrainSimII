@@ -1,15 +1,15 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 namespace BrainSimulator.Modules
 {
     public class Module2DSmell : ModuleBase
     {
-        float average = 0;
-        bool increasing = false;
-        float last0, last1;
+        private float average = 0;
+        private bool increasing = false;
+        private float last0, last1;
 
         public Module2DSmell()
         {
@@ -45,14 +45,12 @@ namespace BrainSimulator.Modules
             average = ave;
             increasing = !increasing; //we might use this soon
         }
+
         public override void Initialize()
         {
             mv.GetNeuronAt(0, 0).Model = Neuron.modelType.FloatValue;
             mv.GetNeuronAt(1, 0).Model = Neuron.modelType.FloatValue;
             mv.GetNeuronAt(3, 0).Model = Neuron.modelType.FloatValue;
         }
-
     }
-
-
 }

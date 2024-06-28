@@ -1,7 +1,7 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System.Collections.Generic;
 
@@ -9,12 +9,11 @@ namespace BrainSimulator.Modules
 {
     public class ModuleGoToDest : ModuleBase
     {
-
-        List<PointPlus> pointsToTry = new List<PointPlus>();
-        PointPlus pvTry = null;
-        bool tryAgain = false;
-        PointPlus pvTarget = null;
-        int countDown = 0;
+        private List<PointPlus> pointsToTry = new List<PointPlus>();
+        private PointPlus pvTry = null;
+        private bool tryAgain = false;
+        private PointPlus pvTarget = null;
+        private int countDown = 0;
 
         public ModuleGoToDest()
         {
@@ -34,10 +33,10 @@ namespace BrainSimulator.Modules
             //Input is an object in the model
             //generate some alternate points of view (current position is the first)
             //for each points of view
-            ////can dest be seen? 
+            ////can dest be seen?
             ////record distance
             //if shortest distance > 0
-            ///1) go to pov 
+            ///1) go to pov
             ///2) go to dest
             ///else recursive?
             ///
@@ -89,7 +88,6 @@ namespace BrainSimulator.Modules
                 countDown = 15;
                 return;
             }
-
 
             if (GetNeuronValue(null, "Go") == 0 && !tryAgain) return;
             if (GetNeuronValue("ModuleBehavior", "Done") == 0) return;

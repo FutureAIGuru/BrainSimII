@@ -1,15 +1,7 @@
 ﻿//
-// Copyright (c) [Name]. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Xml.Serialization;
+//
 
 namespace BrainSimulator.Modules
 {
@@ -17,9 +9,8 @@ namespace BrainSimulator.Modules
     {
         //any public variable you create here will automatically be saved and restored  with the network
         //unless you precede it with the [XmlIgnore] directive
-        //[XlmIgnore] 
+        //[XlmIgnore]
         //public theStatus = 1;
-
 
         //set size parameters as needed in the constructor
         //set max to be -1 if unlimited
@@ -31,8 +22,8 @@ namespace BrainSimulator.Modules
             maxWidth = 500;
         }
 
+        private ModuleUKS uks = null;
 
-        ModuleUKS uks = null;
         //fill this method in with code which will execute
         //once for each cycle of the engine
         public override void Fire()
@@ -50,7 +41,7 @@ namespace BrainSimulator.Modules
             foreach (Thing area in currentlyVisibleParent.Children)
             {
                 Thing knownObject1 = null;
-                foreach(Thing knownObject in knownObjectParent.Children)
+                foreach (Thing knownObject in knownObjectParent.Children)
                 {
                     Thing knownObjectShape = knownObject.HasReferenceWithParent(uks.Labeled("Area"));
                     Thing areaShape = area.HasReferenceWithParent(uks.Labeled("Area"));
@@ -67,7 +58,7 @@ namespace BrainSimulator.Modules
                 if (knownObject1 == null)
                 {
                     //The object is unknown, add it to known objects for future reference
-                    knownObject1= area.Clone();
+                    knownObject1 = area.Clone();
                     knownObject1.AddParent(knownObjectParent);
                     knownObject1.Label = "KnownShape*";
                 }
@@ -93,6 +84,7 @@ namespace BrainSimulator.Modules
         public override void SetUpBeforeSave()
         {
         }
+
         public override void SetUpAfterLoad()
         {
         }

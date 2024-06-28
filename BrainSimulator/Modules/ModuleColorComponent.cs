@@ -1,22 +1,15 @@
 ﻿//
-// Copyright (c) [Name]. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Xml.Serialization;
 
 namespace BrainSimulator.Modules
 {
     public class ModuleColorComponent : ModuleBase
     {
-
         //PRESENT VALUES:
         //assumes that highest intensity is 4 and lowest is 28 with 8 steps
 
@@ -28,10 +21,10 @@ namespace BrainSimulator.Modules
             maxWidth = 1;
         }
 
+        private float min = 4; // replace with refractory period
+        private float steps = 4;
+        private float variation = 0.000f;// .2F;
 
-        float min = 4; // replace with refractory period
-        float steps = 4;
-        float variation = 0.000f;// .2F;
         public override void Fire()
         {
             Init();  //be sure to leave this here
@@ -54,7 +47,6 @@ namespace BrainSimulator.Modules
             g = 1 - g;
             b = 1 - b;
             i = 1 - i;
-           
 
             r = min + r * steps;
             g = min + g * steps;
@@ -99,14 +91,14 @@ namespace BrainSimulator.Modules
         {
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
             sp.Children.Add(new Label { Content = "Steps:" });
-            TextBox tbSteps = new TextBox {Name="Steps", Text = steps.ToString(), VerticalAlignment = VerticalAlignment.Center, Width = 40 };
+            TextBox tbSteps = new TextBox { Name = "Steps", Text = steps.ToString(), VerticalAlignment = VerticalAlignment.Center, Width = 40 };
             tbSteps.TextChanged += TbSteps_TextChanged;
             sp.Children.Add(tbSteps);
             sp.Children.Add(new Label { Content = "Variation:" });
-            TextBox tbVariation = new TextBox {Name="Variation", Text = variation.ToString(), VerticalAlignment = VerticalAlignment.Center, Width = 40 };
+            TextBox tbVariation = new TextBox { Name = "Variation", Text = variation.ToString(), VerticalAlignment = VerticalAlignment.Center, Width = 40 };
             tbVariation.TextChanged += TbSteps_TextChanged;
             sp.Children.Add(tbVariation);
-            MenuItem mi = new MenuItem { Header = sp,StaysOpenOnClick=true };
+            MenuItem mi = new MenuItem { Header = sp, StaysOpenOnClick = true };
             return mi;
         }
 

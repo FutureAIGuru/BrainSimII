@@ -1,15 +1,10 @@
 ﻿//
-// Copyright (c) [Name]. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Xml.Serialization;
 
 namespace BrainSimulator.Modules
 {
@@ -17,9 +12,8 @@ namespace BrainSimulator.Modules
     {
         //any public variable you create here will automatically be saved and restored  with the network
         //unless you precede it with the [XmlIgnore] directive
-        //[XlmIgnore] 
+        //[XlmIgnore]
         //public theStatus = 1;
-
 
         //set size parameters as needed in the constructor
         //set max to be -1 if unlimited
@@ -31,8 +25,7 @@ namespace BrainSimulator.Modules
             maxWidth = 500;
         }
 
-
-        ModuleUKS uks = null;
+        private ModuleUKS uks = null;
 
         //fill this method in with code which will execute
         //once for each cycle of the engine
@@ -55,8 +48,6 @@ namespace BrainSimulator.Modules
             if (dlg != null && !((ModuleAssociationDlg)dlg).busy)
                 UpdateDialog();
         }
-
-
 
         private IList<Link> GetBestReferences(Thing t, bool useRefereenceBy = false)
         {
@@ -88,7 +79,6 @@ namespace BrainSimulator.Modules
                 recentlyFiredWords.Add(attnAudibleTarget);
                 IList<Thing> recentlyFiredRelationships = uks.Labeled("Relationship").DescendentsWhichFired;
                 IList<Thing> recentlyFiredVisuals = uks.Labeled("Visual").DescendentsWhichFired;
-
 
                 //set the hits
                 foreach (Thing word in recentlyFiredWords)
@@ -197,7 +187,6 @@ namespace BrainSimulator.Modules
             IList<Thing> relationships = uks.Labeled("Relationship").Children;
             //relationships = relationships.OrderBy(x => x.Label.Substring(1)).ToList();
 
-
             //collect all the values in a single spot
             float[,] values = new float[properties.Count + relationships.Count, words.Count];
 
@@ -229,7 +218,6 @@ namespace BrainSimulator.Modules
             return values;
         }
 
-
         //fill this method in with code which will execute once
         //when the module is added, when "initialize" is selected from the context menu,
         //or when the engine restart button is pressed
@@ -242,6 +230,7 @@ namespace BrainSimulator.Modules
         public override void SetUpBeforeSave()
         {
         }
+
         public override void SetUpAfterLoad()
         {
         }

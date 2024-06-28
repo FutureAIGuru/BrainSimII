@@ -1,15 +1,12 @@
 ﻿//
-// Copyright (c) [Name]. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Serialization;
+
 using static System.Math;
 
 namespace BrainSimulator.Modules
@@ -18,9 +15,8 @@ namespace BrainSimulator.Modules
     {
         //any public variable you create here will automatically be saved and restored  with the network
         //unless you precede it with the [XmlIgnore] directive
-        //[XlmIgnore] 
+        //[XlmIgnore]
         //public theStatus = 1;
-
 
         //set size parameters as needed in the constructor
         //set max to be -1 if unlimited
@@ -32,9 +28,8 @@ namespace BrainSimulator.Modules
             maxWidth = 500;
         }
 
-        int bndryPtCt = 0;
-        int bndryCt = 0;
-
+        private int bndryPtCt = 0;
+        private int bndryCt = 0;
 
         //TODO: Add color because down-the-road, only similar-colored boundary arcs can be related
         public class Arc
@@ -47,6 +42,7 @@ namespace BrainSimulator.Modules
             {
                 get => (float)((Vector)(p1 - (Vector)p2)).Length;
             }
+
             public Angle Angle
             {
                 get
@@ -57,9 +53,9 @@ namespace BrainSimulator.Modules
                     ;
                 }
             }
+
             public Point MidPoint { get => new Point((p1.X + p2.X) / 2, (p1.Y + p2.Y) / 2); }
             public Point MidPointI { get => new Point(Round((p1.X + p2.X) / 2), Round((p1.Y + p2.Y) / 2)); }
-
 
             public override string ToString()
             {
@@ -70,22 +66,29 @@ namespace BrainSimulator.Modules
         //these are public so the dialog can get at them easily
         [XmlIgnore]
         public List<Arc> boundaries = new List<Arc>();
+
         [XmlIgnore]
         public List<Arc> horizBoundaries = new List<Arc>();
+
         [XmlIgnore]
         public List<Arc> vertBoundaries = new List<Arc>();
+
         [XmlIgnore]
         public List<Arc> tList1 = new List<Arc>();
+
         [XmlIgnore]
         public List<Arc> tList2 = new List<Arc>();
+
         [XmlIgnore]
         public List<Arc> tList3 = new List<Arc>();
+
         [XmlIgnore]
         public List<Arc> segments = new List<Arc>();
 
         [XmlIgnore]
         public List<Point> favoredPoints = new List<Point>();
-        ModuleView naSource;
+
+        private ModuleView naSource;
 
         //fill this method in with code which will execute
         //once for each cycle of the engine
@@ -116,7 +119,7 @@ namespace BrainSimulator.Modules
             UpdateDialog();
         }
 
-        void AddBoundarySegmentsToUKS()
+        private void AddBoundarySegmentsToUKS()
         {
             naSource = theNeuronArray.FindModuleByLabel("UKS");
             if (naSource == null) return;
@@ -152,9 +155,8 @@ namespace BrainSimulator.Modules
             }
         }
 
-
         //finding line segments which cross nearest the most boundary pixels
-        Point[] CreateRectangle(Point pt, Angle a, float length, float width)
+        private Point[] CreateRectangle(Point pt, Angle a, float length, float width)
         {
             //points layout
             //     1          3
@@ -187,7 +189,7 @@ namespace BrainSimulator.Modules
             return corners;
         }
 
-        void FindSegments()
+        private void FindSegments()
         {
             //read the neurons in the bit map and get the boundary and corner points
             segments.Clear();
@@ -265,7 +267,6 @@ namespace BrainSimulator.Modules
             return bestLength;
         }
 
-
         //fill this method in with code which will execute once
         //when the module is added, when "initialize" is selected from the context menu,
         //or when the engine restart button is pressed
@@ -280,6 +281,7 @@ namespace BrainSimulator.Modules
         public override void SetUpBeforeSave()
         {
         }
+
         public override void SetUpAfterLoad()
         {
         }

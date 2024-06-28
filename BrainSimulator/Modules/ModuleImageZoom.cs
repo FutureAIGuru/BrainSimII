@@ -1,25 +1,21 @@
 ﻿//
-// Copyright (c) [Name]. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Xml.Serialization;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using static System.Math;
+using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
+
+using static System.Math;
 
 namespace BrainSimulator.Modules
 {
     public class ModuleImageZoom : ModuleBase
     {
-
         //set size parameters as needed in the constructor
         //set max to be -1 if unlimited
         public ModuleImageZoom()
@@ -30,9 +26,9 @@ namespace BrainSimulator.Modules
             maxWidth = 500;
         }
 
-        float scale = 1.0f;
-        string oldFilePath;
-        bool refreshNeeded = true;
+        private float scale = 1.0f;
+        private string oldFilePath;
+        private bool refreshNeeded = true;
 
         //fill this method in with code which will execute
         //once for each cycle of the engine
@@ -44,7 +40,7 @@ namespace BrainSimulator.Modules
             if (mif == null) return;
             string newFilePath = mif.GetFilePath();
             //TODO need to actually check if neuron values changes (pan/zoom/rot) instead of refreshNeeded
-            if (newFilePath == oldFilePath && !refreshNeeded) 
+            if (newFilePath == oldFilePath && !refreshNeeded)
                 return;
             oldFilePath = newFilePath;
             Bitmap bitmap1 = null;
@@ -52,7 +48,7 @@ namespace BrainSimulator.Modules
             {
                 bitmap1 = new Bitmap(newFilePath);
             }
-            catch {}
+            catch { }
             if (bitmap1 == null) return;
 
             Angle rotation = 0;
@@ -71,7 +67,7 @@ namespace BrainSimulator.Modules
             if (scale > 1) scale = 1;
             if (scale < 0) scale = 0;
             float minScale = (float)bitmap1.Width / (float)mv.Width;
-            scale =  scale + minScale;
+            scale = scale + minScale;
 
             for (int i = 0; i < mv.Height - 1; i++)
                 for (int j = 0; j < mv.Width; j++)
@@ -79,7 +75,6 @@ namespace BrainSimulator.Modules
                     Neuron n = mv.GetNeuronAt(j, i + 1);
                     int x = (int)(offset.X * bitmap1.Width + j * scale);
                     int y = (int)(offset.Y * bitmap1.Height + i * scale);
-
 
                     if (x >= bitmap1.Width) goto NoData;
                     if (y >= bitmap1.Height) goto NoData;
@@ -95,7 +90,6 @@ namespace BrainSimulator.Modules
                     continue;
                 NoData:
                     n.LastChargeInt = 0xffffff;
-                  
                 }
             refreshNeeded = false;
             UpdateDialog();
@@ -122,7 +116,7 @@ namespace BrainSimulator.Modules
             };
 
             rotate_at_origin.TransformPoints(points);
-            GetPointBounds(points, out float xmin, out float xmax,out float ymin, out float ymax);
+            GetPointBounds(points, out float xmin, out float xmax, out float ymin, out float ymax);
 
             // Make a bitmap to hold the rotated result.
             int wid = (int)Math.Round(xmax - xmin);
@@ -161,7 +155,7 @@ namespace BrainSimulator.Modules
             return result;
         }
 
-        private void GetPointBounds (System.Drawing.PointF[] pts, out float minx, out float maxx, out float miny, out float maxy)
+        private void GetPointBounds(System.Drawing.PointF[] pts, out float minx, out float maxx, out float miny, out float maxy)
         {
             minx = pts.Min(a => a.X);
             miny = pts.Min(a => a.Y);
@@ -205,8 +199,6 @@ namespace BrainSimulator.Modules
             n1.Model = Neuron.modelType.FloatValue;
             n1.Label = "Rot";
             n1.SetValue(0);
-
-
         }
 
         //the following can be used to massage public data to be different in the xml file
@@ -214,6 +206,7 @@ namespace BrainSimulator.Modules
         public override void SetUpBeforeSave()
         {
         }
+
         public override void SetUpAfterLoad()
         {
         }
@@ -226,18 +219,16 @@ namespace BrainSimulator.Modules
             if (mv == null) return; //this is called the first time before the module actually exists
         }
 
-
         public override MenuItem CustomContextMenuItems()
         {
             StackPanel s2 = new StackPanel { Orientation = Orientation.Vertical };
 
             StackPanel s = new StackPanel { Orientation = Orientation.Horizontal };
-            s.Children.Add(new Label { Content = "X:", Width = 60, HorizontalContentAlignment = HorizontalAlignment.Right});
+            s.Children.Add(new Label { Content = "X:", Width = 60, HorizontalContentAlignment = HorizontalAlignment.Right });
             Slider sl1 = new Slider { Name = "x", Maximum = 1, Width = 100, Height = 20, Value = GetNeuronValue("X") };
             sl1.ValueChanged += Sl1_ValueChanged;
             s.Children.Add(sl1);
             s2.Children.Add(s);
-
 
             s = new StackPanel { Orientation = Orientation.Horizontal };
             s.Children.Add(new Label { Content = "Y:", Width = 60, HorizontalContentAlignment = HorizontalAlignment.Right });
@@ -255,7 +246,7 @@ namespace BrainSimulator.Modules
 
             s = new StackPanel { Orientation = Orientation.Horizontal };
             s.Children.Add(new Label { Content = "Rotation:", Width = 60, HorizontalContentAlignment = HorizontalAlignment.Right });
-            sl1 = new Slider { Name = "rotation", Maximum = 1, SmallChange = 0.00277777, LargeChange=PI/24,  Width = 100, Height = 20, Value = GetNeuronValue("Rot") };
+            sl1 = new Slider { Name = "rotation", Maximum = 1, SmallChange = 0.00277777, LargeChange = PI / 24, Width = 100, Height = 20, Value = GetNeuronValue("Rot") };
             sl1.ValueChanged += Sl1_ValueChanged;
             s.Children.Add(sl1);
             s2.Children.Add(s);
@@ -274,6 +265,5 @@ namespace BrainSimulator.Modules
                 refreshNeeded = true;
             }
         }
-
     }
 }

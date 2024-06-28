@@ -1,13 +1,12 @@
 ﻿//
-// Copyright (c) [Name]. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.NetworkInformation;
@@ -15,22 +14,17 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 using System.Xml.Serialization;
-using System.Diagnostics;
 
 namespace BrainSimulator.Modules
 {
     public class ModuleRobotCamera : ModuleBase
     {
-        //any public variable you create here will automatically be saved and restored  with the network
+        //any public variable you create here will automatically be saved and restored with the network
         //unless you precede it with the [XmlIgnore] directive
-        //[XlmIgnore] 
+        //[XlmIgnore]
         //public theStatus = 1;
-
 
         //set size parameters as needed in the constructor
         //set max to be -1 if unlimited
@@ -42,17 +36,17 @@ namespace BrainSimulator.Modules
             maxWidth = 500;
         }
 
-
         //needed to get the IP address of the ESP32 Camera device
-        UdpClient serverClient = null; //listen only
-        UdpClient clientServer; //send/broadcast only
-        IPAddress broadCastAddress;
-        int clientServerPort = 3333;
-        int serverClientPort = 3333;
-        IPAddress theIP = null;
+        private UdpClient serverClient = null; //listen only
 
-        HttpClient theHttpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(2), };
-        bool httpClientBusy = false;
+        private UdpClient clientServer; //send/broadcast only
+        private IPAddress broadCastAddress;
+        private int clientServerPort = 3333;
+        private int serverClientPort = 3333;
+        private IPAddress theIP = null;
+
+        private HttpClient theHttpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(2), };
+        private bool httpClientBusy = false;
 
         [XmlIgnore]
         public BitmapImage theBitmap = null;
@@ -71,10 +65,8 @@ namespace BrainSimulator.Modules
 
                 GetCameraImage(); //only issues request if not currently busy
 
-
                 //if you want the dlg to update, use the following code whenever any parameter changes
                 UpdateDialog();
-
             }
             catch (Exception e)
             {
@@ -82,10 +74,8 @@ namespace BrainSimulator.Modules
             }
         }
 
-
         private void LoadImage(Bitmap bitmap1)
         {
-
             float vRatio = bitmap1.Height / (float)mv.Height;
             float hRatio = bitmap1.Width / (float)mv.Width;
             for (int i = 0; i < mv.Height; i++)
@@ -100,7 +90,6 @@ namespace BrainSimulator.Modules
                     n.LastChargeInt = val;
                 }
         }
-
 
         //fill this method in with code which will execute once
         //when the module is added, when "initialize" is selected from the context menu,
@@ -137,11 +126,9 @@ namespace BrainSimulator.Modules
             {
                 ReceiveFromServer();
             });
-
-
         }
 
-        async void GetCameraImage()
+        private async void GetCameraImage()
         {
             if (theIP == null)
                 return;
@@ -190,7 +177,9 @@ namespace BrainSimulator.Modules
             }
             httpClientBusy = false;
         }
-        int debugMsgCount = 0;
+
+        private int debugMsgCount = 0;
+
         public void ReceiveFromServer()
         {
             while (true)
@@ -206,6 +195,7 @@ namespace BrainSimulator.Modules
                 Debug.WriteLine("Received from Device: " + from.Address + " " + incomingMessage);
             }
         }
+
         public void Broadcast(string message)
         {
             //Debug.WriteLine("Broadcast: " + message);
@@ -214,12 +204,12 @@ namespace BrainSimulator.Modules
             clientServer.SendAsync(datagram, datagram.Length, ipEnd);
         }
 
-
         //the following can be used to massage public data to be different in the xml file
         //delete if not needed
         public override void SetUpBeforeSave()
         {
         }
+
         public override void SetUpAfterLoad()
         {
             Init();

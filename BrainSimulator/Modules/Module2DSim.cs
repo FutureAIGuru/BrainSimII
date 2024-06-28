@@ -1,7 +1,7 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System;
 using System.Collections.Generic;
@@ -9,9 +9,9 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
+
 using static BrainSimulator.Utils;
 using static System.Math;
-
 
 namespace BrainSimulator.Modules
 {
@@ -29,6 +29,7 @@ namespace BrainSimulator.Modules
             public Vector motion = new Vector(0, 0);
             public float rotation = 0;
         }
+
         public List<physObject> objects = new List<physObject>();
 
         public Module2DSim()
@@ -37,15 +38,18 @@ namespace BrainSimulator.Modules
             minWidth = 1;
         }
 
-
         [XmlIgnore]
         public List<Point> entityTrack = new List<Point>();
+
         [XmlIgnore]
         public List<physObject> currentView0 = new List<physObject>();
+
         [XmlIgnore]
         public List<physObject> currentView1 = new List<physObject>();
+
         [XmlIgnore]
         public int inMotion = 0; //+1 move objects fwd, -1 reverse
+
         [XmlIgnore]
         public int texture = 0; //+1 move objects fwd, -1 reverse
 
@@ -57,8 +61,8 @@ namespace BrainSimulator.Modules
 
         //where we are in the world
         public Point entityPosition = new Point(0, 0);
-        public float entityDirection1 = (float)PI / 2;
 
+        public float entityDirection1 = (float)PI / 2;
 
         //the size of the universe
         public double boundarySize = 5;
@@ -66,10 +70,10 @@ namespace BrainSimulator.Modules
         [XmlIgnore]
         public float bodyRadius = .2f;
 
-        Random rand = new Random();
+        private Random rand = new Random();
 
-        float armTheta1 = 0;
-        float armTheta2 = 0;
+        private float armTheta1 = 0;
+        private float armTheta2 = 0;
 
         public override void Fire()
         {
@@ -130,9 +134,8 @@ namespace BrainSimulator.Modules
             }
         }
 
-
         //these are called to move and rotate the entity within the simulator
-        public void Rotate(double theta) //(in radian CW) 
+        public void Rotate(double theta) //(in radian CW)
         {
             entityDirection1 -= (float)theta;
             if (entityDirection1 > PI) entityDirection1 -= (float)PI * 2;
@@ -144,6 +147,7 @@ namespace BrainSimulator.Modules
         {
             return Move(motion, 0);
         }
+
         public bool Move(float motionX, float motionY) //move fwd +, rev -
         {
             Point newPosition = new Point()
@@ -166,7 +170,9 @@ namespace BrainSimulator.Modules
             }
             return !collision;
         }
-        PointPlus motion = new PointPlus();
+
+        private PointPlus motion = new PointPlus();
+
         //a collision is the intersection of the desired newPosition and an obstacle
         private bool CheckForCollisions(Point newPosition)
         {
@@ -232,7 +238,6 @@ namespace BrainSimulator.Modules
                                 MovePhysObject(objects[j], intersection, endMotion);
                             }
                         }
-
                     }
                 }
             }
@@ -285,7 +290,6 @@ namespace BrainSimulator.Modules
                 }
             }
         }
-
 
         //touch is the intersection of an arm with an obstacle
         public void HandleTouch()
@@ -472,7 +476,6 @@ namespace BrainSimulator.Modules
         //    float ratio2 = bitmap1.Height / na.Height;
         //    if (ratio2 < ratio) ratio = ratio2;
 
-
         //    int retinaWidth = GetModuleWidth("Module2DVision");
 
         //    if (row == 0)
@@ -490,7 +493,6 @@ namespace BrainSimulator.Modules
         //        Color theColor = Colors.Pink;
         //        for (int j = 0; j < 1000; j++)
         //        {
-
         //        }
         //    }
 
@@ -516,11 +518,9 @@ namespace BrainSimulator.Modules
         //    }
         //}
 
-
-
         //Training samples are triples... a spoken phrase, an anction, and an outcome (separated by colons)
         //TODO delete the outcome? It is always positive by implication
-        string[] TrainingSamples = new string[]
+        private string[] TrainingSamples = new string[]
         {
             //what color is this:Say:Positive",
             //this color is black:Say:Positive"
@@ -536,6 +536,7 @@ namespace BrainSimulator.Modules
             "This is [color]:NoAction:Positive",
             "This is [color]:NoAction:Positive"
 ,        };
+
         private void CreateRandomTrainingCase()
         {
             if (GetNeuronValue(null, "Actions") == 1 && actionTrainingState < 0)
@@ -547,9 +548,9 @@ namespace BrainSimulator.Modules
             }
         }
 
-        string trainingAction = ""; //gets the training case from the array of training samples
-        string[] trainingCase;
-        int actionTrainingState = -1;
+        private string trainingAction = ""; //gets the training case from the array of training samples
+        private string[] trainingCase;
+        private int actionTrainingState = -1;
 
         // -1: idle  15: just started 10:phrase out completed (max phrase is 5 wds)
         private void DoTrainingAction()
@@ -573,6 +574,7 @@ namespace BrainSimulator.Modules
             trainingAction = "";
             actionTrainingState -= 4 - (trainingCase[0].Length - trainingCase[0].Replace(" ", "").Length);
         }
+
         private void CheckForTrainingResult()
         {
             if (actionTrainingState == -1) return;
@@ -612,7 +614,6 @@ namespace BrainSimulator.Modules
             //}
         }
 
-
         private void SimulatePhrase(string Phrase)
         {
             ModuleHearWords nmWords = (ModuleHearWords)FindModleu(typeof(ModuleHearWords));
@@ -635,6 +636,7 @@ namespace BrainSimulator.Modules
             }
             return sum;
         }
+
         public Segment GetMotionTarget()
         {
             foreach (Neuron n in mv.Neurons)
@@ -659,6 +661,7 @@ namespace BrainSimulator.Modules
             }
             return null;
         }
+
         //for debugging it is handy to bypass the exploration to establish the internal model...just set it
         public void SetModel()
         {
@@ -666,7 +669,7 @@ namespace BrainSimulator.Modules
             Initialize();
             Module2DModel nmModel = (Module2DModel)FindModleu(typeof(Module2DModel));
             if (nmModel == null) return;
-            //clear out any existing 
+            //clear out any existing
             nmModel.Initialize();
 
             for (int i = 0; i < objects.Count; i++)
@@ -679,9 +682,7 @@ namespace BrainSimulator.Modules
             MainWindow.ResumeEngine();
         }
 
-
-
-        void TransformPoint(ref int x, ref int y)
+        private void TransformPoint(ref int x, ref int y)
         {
             //the middle of the area
             int mx = mv.Width / 2; int my = mv.Height / 2;
@@ -710,7 +711,6 @@ namespace BrainSimulator.Modules
             "This is [color]:NoAction:Positive",
             "[color]:NoAction:Positive"
         };
-
 
             entityTrack.Clear();
             entityPosition = new Point(0, 0);
@@ -803,8 +803,5 @@ namespace BrainSimulator.Modules
             HandleVision();
             UpdateDialog();
         }
-
     }
 }
-
-

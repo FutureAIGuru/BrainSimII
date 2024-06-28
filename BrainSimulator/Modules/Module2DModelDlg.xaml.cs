@@ -1,7 +1,7 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System;
 using System.Linq;
@@ -128,7 +128,6 @@ namespace BrainSimulator.Modules
                             StrokeThickness = 4 / scale,
                             Stroke = new SolidColorBrush(Colors.White),
                         });
-
                     }
                 }
             }
@@ -157,7 +156,6 @@ namespace BrainSimulator.Modules
                     });
                 }
 
-
                 LinearGradientBrush lb = new LinearGradientBrush();
                 lb.StartPoint = new Point(0, 1);
                 lb.EndPoint = new Point(0, 0);
@@ -175,7 +173,6 @@ namespace BrainSimulator.Modules
                 Canvas.SetTop(r, -20);
                 Canvas.SetLeft(r, -20);
                 theCanvas.Children.Add(r);
-
             }
             return true;
         }
@@ -184,6 +181,5 @@ namespace BrainSimulator.Modules
         {
             Draw(true);
         }
-
     }
 }

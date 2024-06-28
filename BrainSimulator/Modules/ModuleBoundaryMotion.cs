@@ -1,16 +1,12 @@
 ﻿//
-// Copyright (c) [Name]. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Xml.Serialization;
 using System.Diagnostics;
+using System.Linq;
+using System.Windows;
 
 namespace BrainSimulator.Modules
 {
@@ -18,9 +14,8 @@ namespace BrainSimulator.Modules
     {
         //any public variable you create here will automatically be saved and restored  with the network
         //unless you precede it with the [XmlIgnore] directive
-        //[XlmIgnore] 
+        //[XlmIgnore]
         //public theStatus = 1;
-
 
         //set size parameters as needed in the constructor
         //set max to be -1 if unlimited
@@ -32,10 +27,10 @@ namespace BrainSimulator.Modules
             maxWidth = 500;
         }
 
-
         //fill this method in with code which will execute
         //once for each cycle of the engine
-        ModuleUKS uks = null;
+        private ModuleUKS uks = null;
+
         //fill this method in with code which will execute
         //once for each cycle of the engine
         public override void Fire()
@@ -49,8 +44,6 @@ namespace BrainSimulator.Modules
             Thing mentalModel = uks.GetOrAddThing("MentalModel", "Visual");
             Thing currentlyVisibleParent = uks.GetOrAddThing("CurrentlyVisible", "Visual");
             Thing motionParent = uks.GetOrAddThing("Motion", "Visual");
-
-
 
             //Things which disappeared in the last cycle need special treatment to remove from mental model & relationships but not the known object
             foreach (Thing t in motionParent.Children)
@@ -123,7 +116,6 @@ namespace BrainSimulator.Modules
                     matchedThings.Add(matchedThing);
                 }
             }
-
 
             for (int i = mentalModel.Children.Count - 1; i >= 0; i--)
             {
@@ -233,7 +225,7 @@ namespace BrainSimulator.Modules
                         //TODO try all this with points of interest rather than centers
                         double[][] rawData = new double[intersections.Count][];
                         for (int i = 0; i < intersections.Count; i++)
-                                rawData[i] = new double[2] { intersections[i].X, intersections[i].Y };
+                            rawData[i] = new double[2] { intersections[i].X, intersections[i].Y };
                         int[] clusters = KMeansClustering.Cluster(rawData, 2);
                         //now ask if there is a single cluster with most of the data
 
@@ -267,7 +259,7 @@ namespace BrainSimulator.Modules
                 }
             }
 
-            //transfer currently visible objects to previously visible 
+            //transfer currently visible objects to previously visible
             Debug.Assert(movedThings.Count == movedThingsNew.Count);
             for (int i = 0; i < movedThings.Count; i++)
             {
@@ -288,7 +280,7 @@ namespace BrainSimulator.Modules
             foreach (Thing storedArea in mentalModel.Children)
             {
                 var values = uks.GetValues(storedArea);
-                vals.Add(new sortable { t = storedArea, x = values["CtrX+"],y=values["CtrY+"], });
+                vals.Add(new sortable { t = storedArea, x = values["CtrX+"], y = values["CtrY+"], });
             }
             vals = vals.OrderBy(w => w.y * 1000 + w.x).ToList();
             for (int i = 0; i < vals.Count; i++)
@@ -305,7 +297,7 @@ namespace BrainSimulator.Modules
             {
                 foreach (Thing t in mentalModel.Children)
                 {
-                    var refs = t.GetRelationshipsByType(null,null);
+                    var refs = t.GetRelationshipsByType(null, null);
                     foreach (Link ref1 in refs)
                         t.RemoveReference(ref1.T);
                 }
@@ -315,7 +307,10 @@ namespace BrainSimulator.Modules
             //if you want the dlg to update, use the following code whenever any parameter changes
             // UpdateDialog();
         }
-        public class sortable { public Thing t; public float x, y; }
+
+        public class sortable
+        { public Thing t; public float x, y; }
+
         private string prevPath = "";
 
         //fill this method in with code which will execute once
@@ -330,6 +325,7 @@ namespace BrainSimulator.Modules
         public override void SetUpBeforeSave()
         {
         }
+
         public override void SetUpAfterLoad()
         {
         }

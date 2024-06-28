@@ -1,7 +1,7 @@
 ﻿//
-// Copyright (c) [Name]. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 namespace BrainSimulator.Modules
 {
@@ -9,9 +9,8 @@ namespace BrainSimulator.Modules
     {
         //any public variable you create here will automatically be stored with the network
         //unless you precede it with the [XmlIgnore] directive
-        //[XlmIgnore] 
+        //[XlmIgnore]
         //public theStatus = 1;
-
 
         public ModuleArm()
         {
@@ -20,7 +19,6 @@ namespace BrainSimulator.Modules
             maxHeight = 1;
             maxWidth = 6;
         }
-
 
         //fill this method in with code which will execute
         //once for each cycle of the engine
@@ -36,12 +34,15 @@ namespace BrainSimulator.Modules
                         case "^":
                             SetNeuronValue(null, "X", GetNeuronValue(null, "X") + 0.1f);
                             break;
+
                         case "V":
                             SetNeuronValue(null, "X", GetNeuronValue(null, "X") - 0.1f);
                             break;
+
                         case "<":
                             SetNeuronValue(null, "Y", GetNeuronValue(null, "Y") + 0.1f);
                             break;
+
                         case ">":
                             SetNeuronValue(null, "Y", GetNeuronValue(null, "Y") - 0.1f);
                             break;

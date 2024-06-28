@@ -1,7 +1,7 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System;
 using System.Drawing;
@@ -11,7 +11,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
-
 namespace BrainSimulator.Modules
 {
     public class ModuleBaseDlg : Window
@@ -20,7 +19,8 @@ namespace BrainSimulator.Modules
         private DateTime dt;
         private DispatcherTimer timer;
         public int UpdateMS = 100;
-        virtual public bool Draw(bool checkDrawTimer)
+
+        public virtual bool Draw(bool checkDrawTimer)
         {
             if (!checkDrawTimer) return true;
             //only actually update the screen every 100ms
@@ -52,7 +52,7 @@ namespace BrainSimulator.Modules
                 Draw(false);
         }
 
-        //this picks up a final draw after 1/4 second 
+        //this picks up a final draw after 1/4 second
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             timer.Stop();
@@ -91,6 +91,5 @@ namespace BrainSimulator.Modules
                 theBitMap2 = new Bitmap(stream);
             //((Module3DSim)ParentModule).renderDone = true;
         }
-
     }
 }

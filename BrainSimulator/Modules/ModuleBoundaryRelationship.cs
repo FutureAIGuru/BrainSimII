@@ -1,10 +1,9 @@
 ﻿//
-// Copyright (c) [Name]. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System;
-using System.Collections.Generic;
 
 namespace BrainSimulator.Modules
 {
@@ -20,10 +19,9 @@ namespace BrainSimulator.Modules
             maxWidth = 500;
         }
 
-        ModuleUKS uks = null;
-        Thing prevAttnTarget = null;
-        Thing attnVisualTarget = null;
-
+        private ModuleUKS uks = null;
+        private Thing prevAttnTarget = null;
+        private Thing attnVisualTarget = null;
 
         //fill this method in with code which will execute
         //once for each cycle of the engine
@@ -43,7 +41,6 @@ namespace BrainSimulator.Modules
 
             if (attn.References.Count == 0) return;
 
-            
             Thing newVisualTarget = attn.GetReferenceWithAncestor(mentalModel);
             if (newVisualTarget != attnVisualTarget)
             {
@@ -73,6 +70,7 @@ namespace BrainSimulator.Modules
             t1.RemoveReference(t2);
             t2.RemoveReference(t1);
         }
+
         private void AddRelationshipsToUKS(Thing t1, Thing t2)
         {
             if (t1 == null || t2 == null) return;
@@ -97,7 +95,7 @@ namespace BrainSimulator.Modules
                 else if (pair1.Key.EndsWith("+"))
                 {
                     //value comparison
-                    if (Math.Abs(pair1.Value-val2) ==0) //TODO make this tolerance a parameter
+                    if (Math.Abs(pair1.Value - val2) == 0) //TODO make this tolerance a parameter
                         t1.AddRelationship(t2, uks.GetOrAddThing("=" + pair1.Key, "Relationship"));
                     else if (pair1.Value > val2)
                         t1.AddRelationship(t2, uks.GetOrAddThing("<" + pair1.Key, "Relationship"));
@@ -110,12 +108,12 @@ namespace BrainSimulator.Modules
                     if (pair1.Value == val2)
                         t1.AddRelationship(t2, uks.GetOrAddThing("=" + pair1.Key.Replace("Saved", ""), "Relationship"));
                     else
-                        t1.AddRelationship(t2, uks.GetOrAddThing("!" + pair1.Key.Replace("Saved",""), "Relationship"));
+                        t1.AddRelationship(t2, uks.GetOrAddThing("!" + pair1.Key.Replace("Saved", ""), "Relationship"));
                 }
             }
         }
 
-        void DeleteUnusedRelationships()
+        private void DeleteUnusedRelationships()
         {
             Thing relationshipParent = uks.GetOrAddThing("Relationship", "Thing");
             for (int i = 0; i < relationshipParent.Children.Count; i++)
@@ -147,6 +145,7 @@ namespace BrainSimulator.Modules
         public override void SetUpBeforeSave()
         {
         }
+
         public override void SetUpAfterLoad()
         {
         }

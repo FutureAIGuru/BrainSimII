@@ -1,22 +1,16 @@
 ﻿//
-// Copyright (c) [Name]. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Xml.Serialization;
 
 namespace BrainSimulator.Modules
 {
     public class ModuleBoundaryShapes : ModuleBase
     {
-
-
         //set size parameters as needed in the constructor
         //set max to be -1 if unlimited
         public ModuleBoundaryShapes()
@@ -27,13 +21,13 @@ namespace BrainSimulator.Modules
             maxWidth = 500;
         }
 
-        ModuleUKS uks = null;
+        private ModuleUKS uks = null;
 
         //fill this method in with code which will execute
         //once for each cycle of the engine
         public override void Fire()
         {
-            Init();  //be sure to leave this here  
+            Init();  //be sure to leave this here
             //return;
 
             ModuleView naSource = theNeuronArray.FindModuleByLabel("UKS");
@@ -60,13 +54,11 @@ namespace BrainSimulator.Modules
                 }
             }
 
-
             //if you want the dlg to update, use the following code whenever any parameter changes
             // UpdateDialog();
         }
 
-
-        Thing MatchAreaToStoredShapes(Thing t, out float score)
+        private Thing MatchAreaToStoredShapes(Thing t, out float score)
         {
             score = float.MaxValue;
             Thing bestMatch = null;
@@ -89,7 +81,7 @@ namespace BrainSimulator.Modules
             return bestMatch;
         }
 
-        float GetMatchScore(Thing t1, Thing t2)
+        private float GetMatchScore(Thing t1, Thing t2)
         {
             float retVal = 20;
 
@@ -124,7 +116,7 @@ namespace BrainSimulator.Modules
             return retVal;
         }
 
-        List<PointPlus> GetListFromShape(Thing theShape)
+        private List<PointPlus> GetListFromShape(Thing theShape)
         {
             List<PointPlus> retVal = new List<PointPlus>();
             if (!theShape.Label.Contains("Shape")) return retVal;
@@ -153,7 +145,7 @@ namespace BrainSimulator.Modules
         }
 
         //Areas have absolute coordinates, Shapes are completely relative
-        Thing CreateTempShapeFromArea(Thing theArea)
+        private Thing CreateTempShapeFromArea(Thing theArea)
         {
             foreach (Thing t in theArea.Children)
             {
@@ -185,7 +177,6 @@ namespace BrainSimulator.Modules
                     topLeft = theArea.Children[i];
                 }
             }
-
 
             //these both are for the area
             Thing nextAreaCorner = topLeft.References[0].T;
@@ -219,7 +210,6 @@ namespace BrainSimulator.Modules
 
         private Thing AddAngleandRelationship(float greatestLength, Thing nextAreaCorner, Thing newShapeCorner, int refIndex, Thing theShape, Thing nextShapeCorner = null)
         {
-
             //find the angle
             Angle a;
             ModuleBoundarySegments.Arc seg1;
@@ -245,7 +235,6 @@ namespace BrainSimulator.Modules
             Thing value = uks.GetOrAddThing("Value", "Thing");
             newShapeCorner.AddReference(uks.GetOrAddThing(s, value));
 
-
             float lenToNextCorner;
             if (refIndex == 0)
                 lenToNextCorner = seg1.Length / greatestLength;  //normalize the lengths
@@ -262,13 +251,13 @@ namespace BrainSimulator.Modules
             return nextShapeCorner;
         }
 
-        void DeleteTempShape(Thing theTempShape)
+        private void DeleteTempShape(Thing theTempShape)
         {
             uks.DeleteAllChilden(theTempShape);
             uks.DeleteThing(theTempShape);
         }
 
-        void AddShapeFromArea(Thing area)
+        private void AddShapeFromArea(Thing area)
         {
             area.AddParent(uks.GetOrAddThing("Area", "Shape"));
         }
@@ -290,6 +279,7 @@ namespace BrainSimulator.Modules
         public override void SetUpBeforeSave()
         {
         }
+
         public override void SetUpAfterLoad()
         {
         }

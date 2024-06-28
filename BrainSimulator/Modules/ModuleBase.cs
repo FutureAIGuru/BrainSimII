@@ -1,17 +1,17 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Collections.Generic;
 
 namespace BrainSimulator.Modules
 {
-    abstract public class ModuleBase
+    public abstract class ModuleBase
     {
         protected NeuronArray theNeuronArray { get => MainWindow.theNeuronArray; }
         protected ModuleView mv = null;
@@ -30,7 +30,6 @@ namespace BrainSimulator.Modules
         public int MaxHeight => maxHeight;
         public bool isEnabled = true;
 
-
         protected ModuleBaseDlg dlg = null;
         public Point dlgPos;
         public Point dlgSize;
@@ -40,9 +39,9 @@ namespace BrainSimulator.Modules
 
         public ModuleBase() { }
 
-        abstract public void Fire();
+        public abstract void Fire();
 
-        abstract public void Initialize();
+        public abstract void Initialize();
 
         protected void Init(bool forceInit = false)
         {
@@ -81,13 +80,13 @@ namespace BrainSimulator.Modules
         public void CloseDlg()
         {
             if (dlgList != null)
-            for (int i = dlgList.Count-1 ; i >= 0; i--)
-            {
-                Application.Current.Dispatcher.Invoke((Action)delegate
+                for (int i = dlgList.Count - 1; i >= 0; i--)
                 {
-                    dlgList[i].Close();
-                });
-            }
+                    Application.Current.Dispatcher.Invoke((Action)delegate
+                    {
+                        dlgList[i].Close();
+                    });
+                }
             if (dlg != null)
             {
                 Application.Current.Dispatcher.Invoke((Action)delegate
@@ -103,6 +102,7 @@ namespace BrainSimulator.Modules
             if (dlg == null) return;
             dlg.Activate();
         }
+
         public bool IsActive()
         {
             if (dlg == null) return false;
@@ -201,7 +201,7 @@ namespace BrainSimulator.Modules
 
         private void Dlg_Closed(object sender, EventArgs e)
         {
-           if (dlg == null) 
+            if (dlg == null)
                 dlgIsOpen = false;
         }
 
@@ -223,7 +223,6 @@ namespace BrainSimulator.Modules
                 dlg = null;
         }
 
-
         public void UpdateDialog()
         {
             if (dlg != null)
@@ -236,9 +235,11 @@ namespace BrainSimulator.Modules
         //this is called to allow for any data massaging needed before saving the file
         public virtual void SetUpBeforeSave()
         { }
+
         //this is called to allow for any data massaging needed after loading the file
         public virtual void SetUpAfterLoad()
         { }
+
         public virtual void SizeChanged()
         { }
 
@@ -294,6 +295,7 @@ namespace BrainSimulator.Modules
                 return n;
             }
         }
+
         protected bool SetNeuronValue(string neuronLabel, float value)
         {
             return SetNeuronValue(null, neuronLabel, value);
@@ -327,6 +329,7 @@ namespace BrainSimulator.Modules
             }
             return retVal;
         }
+
         protected float GetNeuronValue(string neuronLabel)
         {
             return GetNeuronValue(null, neuronLabel);
@@ -376,6 +379,7 @@ namespace BrainSimulator.Modules
             }
             return retVal;
         }
+
         protected bool SetNeuronValue(string moduleName, int x, int y, float value, string label = null)
         {
             bool retVal = false;
@@ -549,13 +553,14 @@ namespace BrainSimulator.Modules
                 return;
             foreach (Neuron n in mv.Neurons)
             {
-                n.DeleteAllSynapes(true,deleteIncoming);
+                n.DeleteAllSynapes(true, deleteIncoming);
                 n.Label = "";
                 n.Model = Neuron.modelType.IF;
                 n.SetValue(0);
                 n.LastCharge = 0;
             }
         }
+
         protected Neuron AddLabel(string newLabel)
         {
             foreach (Neuron n in mv.Neurons)
@@ -570,12 +575,11 @@ namespace BrainSimulator.Modules
             }
             return null;
         }
+
         protected void AddLabels(string[] labels)
         {
             foreach (string label in labels)
                 AddLabel(label);
         }
-
-
     }
 }

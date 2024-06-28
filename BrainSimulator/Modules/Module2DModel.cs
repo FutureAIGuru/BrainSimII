@@ -1,21 +1,19 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
+
 using static BrainSimulator.Utils;
 using static System.Math;
 
-
-
 namespace BrainSimulator.Modules
 {
-
     public class Module2DModel : ModuleBase
     {
         private IList<Thing> UKSSegments;
@@ -28,11 +26,10 @@ namespace BrainSimulator.Modules
 
         //these are used to build labels for things
         //TODO make public and reset on initialize
-        int pCount = 0;
-        int sCount = 0;
-        int cCount = 0;
-        int mCount = 0;
-
+        private int pCount = 0;
+        private int sCount = 0;
+        private int cCount = 0;
+        private int mCount = 0;
 
         public Module2DModel()
         {
@@ -98,12 +95,13 @@ namespace BrainSimulator.Modules
             return s;
         }
 
-        //Segments consist of two points and a color. Optionally, a segment may have some motion. 
+        //Segments consist of two points and a color. Optionally, a segment may have some motion.
         //AddToModel determines whether or not the endpoints are to be modified as Sallie moves so static objects can be stored
         public Thing AddSegmentToUKS(Segment s)
         {
             return AddSegmentToUKS(s.P1, s.P2, s.theColor);
         }
+
         public Thing AddSegmentToUKS(PointPlus P1, PointPlus P2, int theColor, PointPlus motion = null, bool addToModel = true)
         {
             ModuleUKS nmUKS = (ModuleUKSN)FindModleu(typeof(ModuleUKSN));
@@ -132,7 +130,6 @@ namespace BrainSimulator.Modules
             }
             return null;
         }
-
 
         public Thing MostLikelySegment(Segment newSegment)
         {
@@ -211,13 +208,12 @@ namespace BrainSimulator.Modules
             }
         }
 
-
         //TODO: rewrite again
         public Thing AddSegmentFromVision(PointPlus P1, PointPlus P2, ColorInt theColor, bool moved)
         {
             Thing retVal = null;
             Debug.WriteLine("AddSegment: " + P1 + P2 + theColor);
-            //determine if the segment is already in the UKS.  
+            //determine if the segment is already in the UKS.
             //Correct it if it is there, add it if it is not.
             //FUTURE: detect motion
             if (theColor == 0) return null;
@@ -283,7 +279,6 @@ namespace BrainSimulator.Modules
             }
             return retVal;
         }
-
 
         //TODO this is not currently used but is needed
         //if the new segment extends an existing segment, merge/delete the intermediate point(s)
@@ -365,7 +360,6 @@ namespace BrainSimulator.Modules
                 //                AddSegmentToUKS(P1, P2, theColor, motion); //don't store motion with the segment (yet)
                 AddSegmentToUKS(P1, P2, theColor);
             }
-
             else if (dist1 < 1)
             {
                 Segment prevSegment = SegmentFromUKSThing(t1);
@@ -540,6 +534,7 @@ namespace BrainSimulator.Modules
             if (p.Y > -rangeAhead && p.Y < rangeAhead) retVal = true;
             return retVal;
         }
+
         public Thing NearestPoint(Angle theta, float toler = .01f)
         {
             GetSegmentsFromUKS();
@@ -561,7 +556,6 @@ namespace BrainSimulator.Modules
             }
             return retVal;
         }
-
 
         //this takes into acount the width of the entity to see if a collision might be imminent
         public Thing NearestThingAhead()
@@ -713,8 +707,9 @@ namespace BrainSimulator.Modules
          * Imagination functionality
         ******************************** */
         public bool imagining = false;
-        PointPlus imaginationOffset;
-        float imaginationDirection;
+        private PointPlus imaginationOffset;
+        private float imaginationDirection;
+
         //this will all need to be converted to run with UKS Things instead of segments
         [XmlIgnore]
         public List<Segment> imagination = new List<Segment>();
@@ -725,10 +720,12 @@ namespace BrainSimulator.Modules
             imagination.Add(obj);
             UpdateDialog();
         }
+
         public void ClearImagination()
         {
             imagination.Clear();
         }
+
         public void ImagineStart(PointPlus offset, float direction)
         {
             imagining = true;
@@ -741,6 +738,7 @@ namespace BrainSimulator.Modules
             Rotate((float)(direction - offset.Theta));
             UpdateDialog();
         }
+
         public void ImagineEnd()
         {
             if (!imagining) return;
@@ -790,10 +788,8 @@ namespace BrainSimulator.Modules
             Move(motion, 0);
         }
 
-
         public override void Initialize()
         {
-
             pCount = 0;
             sCount = 0;
             cCount = 0;
@@ -819,6 +815,3 @@ namespace BrainSimulator.Modules
         }
     }
 }
-
-
-

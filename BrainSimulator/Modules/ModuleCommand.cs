@@ -1,7 +1,7 @@
 ﻿//
-// Copyright (c) Charles Simon. All rights reserved.  
+// Copyright (c) Charles Simon. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
-//  
+//
 
 using System.IO;
 using System.Windows.Controls;
@@ -12,14 +12,15 @@ namespace BrainSimulator.Modules
     public class ModuleCommand : ModuleBase
     {
         public string textFile = ""; //path to the text file
+
         [XmlIgnore]
         public string[] commands;
 
         [XmlIgnore]
         public int line = 0;
 
-        string currentModule = "";
-        int countDown = 0;
+        private string currentModule = "";
+        private int countDown = 0;
 
         public ModuleCommand()
         {
@@ -77,7 +78,7 @@ namespace BrainSimulator.Modules
                             if (i + 1 < commandLine.Length)
                             {
                                 float param = 1;
-                                if (float.TryParse(commandLine[i+1], out param))
+                                if (float.TryParse(commandLine[i + 1], out param))
                                 {
                                     SetNeuronValue(currentModule, currentCommand, param);
                                     i++;
@@ -103,7 +104,6 @@ namespace BrainSimulator.Modules
 
         public override void Initialize()
         {
-
             if (File.Exists(textFile))
             {
                 commands = File.ReadAllLines(textFile);
@@ -120,9 +120,9 @@ namespace BrainSimulator.Modules
 
         public override MenuItem CustomContextMenuItems()
         {
-            Button runBtn = new Button {  Content = "Run",  };
+            Button runBtn = new Button { Content = "Run", };
             runBtn.Click += RunBtn_Click;
-            MenuItem mi = new MenuItem { Header = runBtn};
+            MenuItem mi = new MenuItem { Header = runBtn };
             return mi;
         }
 

@@ -83,6 +83,7 @@ namespace BrainSimulator
 
         private Canvas targetNeuronCanvas = null;
         Canvas animationCanvas = null; //used to animate synapses
+        Canvas synapseGraphCanvas = null; //used to animate synapses
 
         //refresh the display of the neuron network
         public void Update()
@@ -94,6 +95,11 @@ namespace BrainSimulator
             {
                 theCanvas.Children.Remove(animationCanvas);
                 animationCanvas = null;
+            }
+            if (synapseGraphCanvas != null)
+            {
+                theCanvas.Children.Remove(synapseGraphCanvas);
+                synapseGraphCanvas = null;
             }
             Canvas labelCanvas = new Canvas();
             Canvas.SetLeft(labelCanvas, 0);
@@ -479,13 +485,21 @@ namespace BrainSimulator
                     theCanvas.Children.Add(animationCanvas);
                 }
                 animationCanvas.Children.Clear();
+                if (synapseGraphCanvas == null)
+                {
+                    synapseGraphCanvas = new Canvas();
+                    Canvas.SetLeft(synapseGraphCanvas, 0);
+                    Canvas.SetTop(synapseGraphCanvas, 0);
+                    theCanvas.Children.Add(synapseGraphCanvas);
+                }
+                synapseGraphCanvas.Children.Clear();
 
                 for (int i = 0; i < neuronsOnScreen.Count; i++)
                 {
                     NeuronOnScreen a = neuronsOnScreen[i];
                     Neuron n = MainWindow.theNeuronArray.GetNeuronForDrawing(a.neuronIndex);
 
-                    if (MainWindow.thisWindow.checkBoxAnimate.IsChecked == true && n.lastCharge >= 1)
+                    if (MainWindow.thisWindow.checkBoxAnimate.IsChecked == true )
                     {
                         //synapse animation trial
                         float electronSize = dp.NeuronDisplaySize * .2f;
@@ -493,11 +507,21 @@ namespace BrainSimulator
                         Point pStart = dp.pointFromNeuron(n.id);
                         pStart.X += -electronSize / 2 + dp.NeuronDisplaySize / 2;
                         pStart.Y += -electronSize / 2 + dp.NeuronDisplaySize / 2;
+                        Vector vOffset = new Vector(0, electronSize/2);
                         foreach (Synapse synapse in n.synapses)
                         {
                             Point pTarget = dp.pointFromNeuron(synapse.targetNeuron);
                             pTarget.X += -electronSize / 2 + dp.NeuronDisplaySize / 2;
                             pTarget.Y += -electronSize / 2 + dp.NeuronDisplaySize / 2;
+                            //put the little bar graph in the center of hebbian3 synapses
+                            if (synapse.model == Synapse.modelType.Hebbian3 && dp.NeuronDisplaySize > 75)
+                            {
+                                var graph = SynapseView.GetWeightBargraph(pStart+vOffset, pTarget+vOffset, synapse.weight);
+                                synapseGraphCanvas.Children.Add(graph);
+                            }
+                            if (n.lastCharge != 1) continue;
+
+                            //animate charges along the axons
                             var fill = Brushes.Yellow;
                             if (synapse.weight < 0)
                                 fill = Brushes.DeepPink;

@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 using System.Windows.Shapes;
 
 namespace BrainSimulator
@@ -48,6 +49,12 @@ namespace BrainSimulator
 
             Shape l = GetSynapseShape(p1, p2, s.model);
             l.Stroke = new SolidColorBrush(Utils.RainbowColorFromValue(s.weight));
+            //if (s.weight >= 0)
+            //    l.StrokeThickness *= 4 * s.weight;
+            //l.StrokeThickness = Math.Clamp(l.StrokeThickness, 2, dp.NeuronDisplaySize / 4);
+            l.StrokeEndLineCap = PenLineCap.Round;
+            l.StrokeStartLineCap = PenLineCap.Round;
+
             if (l is Ellipse E)
             { }
             else
@@ -87,14 +94,84 @@ namespace BrainSimulator
                 Canvas.SetLeft(s, p1.X + dp.NeuronDisplaySize / 2);
             }
             s.Stroke = Brushes.Red;
-            s.StrokeThickness = 1;
+            s.StrokeThickness = 4;
             if (dp.ShowSynapseWideLines())
             {
-                s.StrokeThickness = Math.Min(4, dp.NeuronDisplaySize / 15);
+                s.StrokeThickness = Math.Min(4, dp.NeuronDisplaySize / 8);
             }
 
             return s;
         }
+
+        public static UIElement  GetWeightBargraph(Point p1, Point p2, double value)
+        {
+            Canvas canvas = new Canvas();
+            // Compute center point of the line
+            double centerX = (p1.X + p2.X) / 2;
+            double centerY = (p1.Y + p2.Y) / 2;
+
+            // Parameters for the rectangle (bar)
+            double barWidth = dp.NeuronDisplaySize * .25; // fixed width
+            double barMaxHeight = dp.NeuronDisplaySize*.5; // max height for full value
+            // Draw rectangle (centered on line midpoint)
+            Rectangle border = new Rectangle
+            {
+                Width = barWidth,
+                Height = barMaxHeight,
+                Fill = Brushes.White,
+                Stroke = Brushes.Black,
+                StrokeThickness = 1
+            };
+            border.Effect = new DropShadowEffect
+            {
+                Color = Colors.Black,
+                Direction = 315,      // angle of the shadow in degrees
+                ShadowDepth = dp.NeuronDisplaySize * 0.05,      // distance of the shadow
+                Opacity = 0.5,        // transparency of the shadow
+                BlurRadius = 10       // softness of the shadow edge
+            };
+            Canvas.SetLeft(border, centerX - barWidth / 2);
+            Canvas.SetTop(border, centerY - barMaxHeight / 2);
+            canvas.Children.Add(border);
+
+            // Height scaled to value
+            double barHeight = barMaxHeight * value;
+
+            // Draw rectangle (centered on line midpoint)
+            Rectangle bar = new Rectangle
+            {
+                Width = barWidth,
+                Height = barHeight,
+                Fill = Brushes.SteelBlue,
+                Stroke = Brushes.Black,
+                StrokeThickness = 1
+            };
+
+            // Position rectangle (centered horizontally, aligned vertically from center)
+            Canvas.SetLeft(bar, centerX - barWidth / 2);
+            Canvas.SetTop(bar, centerY - barMaxHeight / 2 +  (barMaxHeight - barHeight));
+            canvas.Children.Add(bar);
+
+            // Add value text
+            TextBlock text = new TextBlock
+            {
+                Text = $"{value:0.000}",
+                Foreground = Brushes.Black,
+                FontSize = 14,
+                FontWeight = FontWeights.Bold
+            };
+
+            // Measure text size
+            text.Measure(new Size(Double.PositiveInfinity, Double.PositiveInfinity));
+            Size textSize = text.DesiredSize;
+
+            // Position text centered on rectangle
+            Canvas.SetLeft(text, centerX - textSize.Width / 2);
+            Canvas.SetTop(text, centerY - textSize.Height / 2);
+            canvas.Children.Add(text);
+            return canvas;
+        }
+
 
         public static Shape DrawLinkArrow(Point p1, Point p2, bool canLearn) //helper to put an arrow in a synapse line
         {

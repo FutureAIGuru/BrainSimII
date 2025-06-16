@@ -228,6 +228,12 @@ namespace NeuronEngine
 		unsigned long long bitMask = 0x1;
 		bitMask = bitMask << offset;
 		fireList1[index] |= bitMask;
+		//the following will fix a race condition but requires retyping fireList to
+		// #include <atomic>
+		// //std::vector<std::atomic<unsigned long long>> fireList1(size);
+
+		// std::atomic<unsigned long long> fireList1[size];
+		//fireList1[index].fetch_or(bitMask, std::memory_order_relaxed);
 	}
 	void NeuronArrayBase::ClearFireLists()
 	{
@@ -297,7 +303,7 @@ namespace NeuronEngine
 		for (int i = 0; i < arraySize; i++)
 		{
 			NeuronBase* theNeuron = GetNeuron(i);
-			theNeuron->Fire3();
+			theNeuron->Fire3(cycle);
 		}
 	}
 }

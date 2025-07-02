@@ -641,10 +641,22 @@ namespace BrainSimulator
             theNeuronArray.ShowSynapses = false;
             Update();
         }
+        private void Animate_Unchecked(object sender, RoutedEventArgs e)
+        {
+            theNeuronArray.animateSynapses = false;
+            Update();
+        }
+
+        private void Animate_Checked(object sender, RoutedEventArgs e)
+        {
+            theNeuronArray.animateSynapses = true;
+            Update();
+        }
 
         public void SetShowSynapsesCheckBox(bool showSynapses)
         {
             checkBox.IsChecked = showSynapses;
+            checkBoxAnimate.IsChecked = theNeuronArray.animateSynapses;
         }
 
         private void MenuItemProperties_Click(object sender, RoutedEventArgs e)

@@ -106,6 +106,7 @@ namespace BrainSimulator
         public static UIElement  GetWeightBargraph(Point p1, Point p2, double value)
         {
             Canvas canvas = new Canvas();
+
             // Compute center point of the line
             double centerX = (p1.X + p2.X) / 2;
             double centerY = (p1.Y + p2.Y) / 2;
@@ -130,12 +131,15 @@ namespace BrainSimulator
                 Opacity = 0.5,        // transparency of the shadow
                 BlurRadius = 10       // softness of the shadow edge
             };
+
+            // Position the border so its center is at the midpoint
             Canvas.SetLeft(border, centerX - barWidth / 2);
             Canvas.SetTop(border, centerY - barMaxHeight / 2);
             canvas.Children.Add(border);
 
             // Height scaled to value
             double barHeight = barMaxHeight * value;
+            if (barHeight < 0) barHeight = 0;
 
             // Draw rectangle (centered on line midpoint)
             Rectangle bar = new Rectangle
@@ -157,7 +161,7 @@ namespace BrainSimulator
             {
                 Text = $"{value:0.000}",
                 Foreground = Brushes.Black,
-                FontSize = 14,
+                FontSize = dp.NeuronDisplaySize * .09,
                 FontWeight = FontWeights.Bold
             };
 

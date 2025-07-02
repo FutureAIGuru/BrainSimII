@@ -459,7 +459,7 @@ namespace BrainSimulator
         static List<float> stdDevValues = new List<float>() { 0, 1, 4, 10 };
         static List<float> currentChargeValues = new List<float>() { 0, 1, };
         static List<float> colorValues = new List<float>() { 0x00, 0xff0000, 0xff00, 0xff, 0xffff00, 0xff00ff, 0xffff, 0xffa500, 0xffffff };
-        static List<float> alwaysDelayValues = new List<float>() { 0, 1, 2, 3 };
+        static List<float> alwaysDelayValues = new List<float>() { 0, 1, 2, 3, 4 };
 
         const string intFormatString = "F0";
         const string floatFormatString = "F2";

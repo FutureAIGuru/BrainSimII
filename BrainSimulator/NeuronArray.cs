@@ -21,6 +21,8 @@ namespace BrainSimulator
         public bool EngineIsPaused = false;
         public int arraySize;
         public int rows;
+        public int refractoryDelay = 0;
+        public bool animateSynapses = false;
 
         public int lastFireCount = 0;
         internal List<ModuleView> modules = new List<ModuleView>();
@@ -85,8 +87,6 @@ namespace BrainSimulator
             return labelCache.Keys.ToList();
         }
 
-
-        private int refractoryDelay = 0;
         public int RefractoryDelay
         { get => refractoryDelay; set { refractoryDelay = value; SetRefractoryDelay(refractoryDelay); } }
 

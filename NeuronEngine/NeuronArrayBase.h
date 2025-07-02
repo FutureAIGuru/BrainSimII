@@ -47,6 +47,8 @@ namespace NeuronEngine
 		static int refractoryDelay;
 
 		static std::vector<unsigned long long> fireList1;
+		//static std::vector<std::atomic<unsigned long long>> fireList1;
+
 		static std::vector<unsigned long long> fireList2;
 
 	private:

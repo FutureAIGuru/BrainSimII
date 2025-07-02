@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Documents;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Media.Effects;
@@ -131,20 +132,27 @@ namespace BrainSimulator
                 if (n.Label != "" || n.model != Neuron.modelType.IF)
                 {
                     tb = new TextBlock();
-                    //l.Content = n.Label;
-                    tb.FontSize = dp.NeuronDisplaySize * .25;
-                    tb.FontWeight = FontWeights.Bold;
-                    tb.Foreground = Brushes.White;
-
-                    string theLabel = GetNeuronLabel(n);
+                    //handle the tooltip first
                     string theToolTip = n.ToolTip;
                     if (theToolTip != "")
                     {
                         fillableCircle.ToolTip = new ToolTip { Content = theToolTip };
                         tb.ToolTip = new ToolTip { Content = theToolTip };
                     }
-                    tb.Text = theLabel;
-                    tb.HorizontalAlignment = HorizontalAlignment.Center;
+
+                    //now set up the label(s)
+                    string theLabel = GetNeuronLabel(n);
+                    tb.Foreground = Brushes.White;
+
+                    string[] labelParts = theLabel.Split("\r");
+                    //labelParts[0] = labelParts[0].Replace("\\r","\r");  to enable the user to type in \r
+                    tb.Inlines.Add(new Run(labelParts[0]) {FontWeight=FontWeights.Bold,FontSize= dp.NeuronDisplaySize * .185 });
+                    if (labelParts.Length > 1)
+                    {
+                        tb.Inlines.Add(new Run("\n\u200B") { FontSize = dp.NeuronDisplaySize * .3, });
+                        tb.Inlines.Add(new Run(labelParts[1]) { FontSize = dp.NeuronDisplaySize * .125, });
+                    }
+                    tb.TextAlignment = TextAlignment.Center;
                     tb.SetValue(NeuronIDProperty, n.id);
                     tb.SetValue(NeuronArrayView.ShapeType, NeuronArrayView.shapeType.Neuron);
                     tb.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
@@ -229,8 +237,10 @@ namespace BrainSimulator
                 retVal += "\rB=" + n.axonDelay.ToString();
             if (n.model == Neuron.modelType.Random)
                 retVal += "\rR=" + n.axonDelay.ToString();
-            if (n.model == Neuron.modelType.Always)
+            if (n.model == Neuron.modelType.Always && n.LeakRate >= 0)
                 retVal += "\rA=" + n.axonDelay.ToString();
+            if (n.model == Neuron.modelType.Always && n.LeakRate < 0)
+                retVal += "\r•A=" + n.axonDelay.ToString();
             return retVal;
         }
 

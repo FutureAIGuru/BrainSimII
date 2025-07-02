@@ -329,7 +329,7 @@
                 <Label Visibility="Hidden" Width="5"></Label>
                 <CheckBox x:Name="checkBox" Content="All Synapses" Height="18" VerticalAlignment="Center" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"  />
                 <Label Visibility="Hidden" Width="30"></Label>
-                <CheckBox x:Name="checkBoxAnimate" Content="Animate" Height="18" VerticalAlignment="Center"  />
+                <CheckBox x:Name="checkBoxAnimate" Content="Animate Synapses" Height="18" VerticalAlignment="Center" Checked="Animate_Checked" Unchecked="Animate_Unchecked"  />
                 <Label Visibility="Hidden" Width="30"></Label>
                 <Button x:Name="buttonInit" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xEB9E;" Foreground="#FF00539C" VerticalAlignment="Top" Click="ButtonInit_Click" ToolTip="Reset all modules" Grid.Column="2" >
                     <!--<Image Source="/resources/Rewind.png" Height="20"></Image>-->

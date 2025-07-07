@@ -10,8 +10,10 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Documents;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Windows.Media.Effects;
 
 
 namespace BrainSimulator
@@ -31,6 +33,80 @@ namespace BrainSimulator
         }
         private static float ellipseSize = 0.7f;
 
+        /*****************************************************
+         * Testing of filling disk neuron
+         * ***********************************************/
+        public class FillableDisc : Canvas
+        {
+            private Ellipse borderCircle;
+            private Rectangle fillRect;
+            private Grid fillContainer;
+            private double size;
+
+            public FillableDisc(double diameter, int neuronID)
+            {
+                size = diameter;
+                Width = Height = diameter;
+                InitializeDisc(neuronID);
+            }
+
+            private void InitializeDisc(int neuronID)
+            {
+                // Border circle
+                borderCircle = new Ellipse
+                {
+                    Width = size,
+                    Height = size,
+                    Stroke = Brushes.White,
+                    StrokeThickness = 1,
+                    Fill = Brushes.Gray, 
+                };
+                borderCircle.SetValue(NeuronIDProperty, neuronID);
+                borderCircle.SetValue(NeuronArrayView.ShapeType, NeuronArrayView.shapeType.Neuron);
+                Children.Add(borderCircle);
+
+                // Fill container with clipping
+                fillRect = new Rectangle
+                {
+                    Width = size,
+                    Fill = Brushes.DodgerBlue,
+                    VerticalAlignment = VerticalAlignment.Bottom,
+                    Height = 0 // Start empty
+                };
+                fillRect.SetValue(NeuronIDProperty, neuronID);
+                fillRect.SetValue(NeuronArrayView.ShapeType, NeuronArrayView.shapeType.Neuron);
+
+                fillContainer = new Grid
+                {
+                    Width = size,
+                    Height = size,
+                    Clip = new EllipseGeometry(new Point(size / 2, size / 2), size / 2, size / 2)
+                };
+
+                fillContainer.Children.Add(fillRect);
+                Children.Add(fillContainer);
+            }
+
+            /// <summary>
+            /// Sets the fill level from 0.0 (empty) to 1.0 (full).
+            /// </summary>
+            public void SetValue(double value)
+            {
+                value = Math.Clamp(value, 0, 1);
+                fillRect.Height = value * size;
+                if (value == 1)
+                    fillRect.Fill = Brushes.White;
+                else
+                    fillRect.Fill = Brushes.DodgerBlue;
+
+                // Force alignment from bottom (WPF default is top)
+                fillRect.VerticalAlignment = VerticalAlignment.Bottom;
+            }
+        }
+        /*****************************************************
+         * Testing of filling disk neuron
+         * ***********************************************/
+
         public static UIElement GetNeuronView(Neuron n, NeuronArrayView theNeuronArrayViewI, out TextBlock tb)
         {
             tb = null;
@@ -38,6 +114,56 @@ namespace BrainSimulator
 
             Point p = dp.pointFromNeuron(n.id);
 
+            if (dp.ShowNeuronCircles())
+            {
+                var fillableCircle = new FillableDisc(dp.NeuronDisplaySize * ellipseSize, n.id);
+                fillableCircle.SetValue(n.currentCharge);
+                float offset1 = (1 - ellipseSize) / 2f;
+                Canvas.SetLeft(fillableCircle, p.X + dp.NeuronDisplaySize * offset1);
+                Canvas.SetTop(fillableCircle, p.Y + dp.NeuronDisplaySize * offset1);
+                fillableCircle.Effect = new DropShadowEffect
+                {
+                    Color = Colors.Black,
+                    Direction = 315,      // angle of the shadow in degrees
+                    ShadowDepth = dp.NeuronDisplaySize * ellipseSize * 0.1,      // distance of the shadow
+                    Opacity = 0.5,        // transparency of the shadow
+                    BlurRadius = 10       // softness of the shadow edge
+                };
+                if (n.Label != "" || n.model != Neuron.modelType.IF)
+                {
+                    tb = new TextBlock();
+                    //handle the tooltip first
+                    string theToolTip = n.ToolTip;
+                    if (theToolTip != "")
+                    {
+                        fillableCircle.ToolTip = new ToolTip { Content = theToolTip };
+                        tb.ToolTip = new ToolTip { Content = theToolTip };
+                    }
+
+                    //now set up the label(s)
+                    string theLabel = GetNeuronLabel(n);
+                    tb.Foreground = Brushes.White;
+
+                    string[] labelParts = theLabel.Split("\r");
+                    //labelParts[0] = labelParts[0].Replace("\\r","\r");  to enable the user to type in \r
+                    tb.Inlines.Add(new Run(labelParts[0]) {FontWeight=FontWeights.Bold,FontSize= dp.NeuronDisplaySize * .185 });
+                    if (labelParts.Length > 1)
+                    {
+                        tb.Inlines.Add(new Run("\n\u200B") { FontSize = dp.NeuronDisplaySize * .3, });
+                        tb.Inlines.Add(new Run(labelParts[1]) { FontSize = dp.NeuronDisplaySize * .125, });
+                    }
+                    tb.TextAlignment = TextAlignment.Center;
+                    tb.SetValue(NeuronIDProperty, n.id);
+                    tb.SetValue(NeuronArrayView.ShapeType, NeuronArrayView.shapeType.Neuron);
+                    tb.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+                    Size textSize = tb.DesiredSize;
+
+                    Canvas.SetLeft(tb, p.X + (dp.NeuronDisplaySize - textSize.Width) / 2);
+                    Canvas.SetTop(tb, p.Y + dp.NeuronDisplaySize * offset1);
+                    Canvas.SetZIndex(tb, 100);
+                }
+                return fillableCircle;
+            }
             SolidColorBrush s1 = GetNeuronColor(n);
 
             Shape r = null;
@@ -111,8 +237,10 @@ namespace BrainSimulator
                 retVal += "\rB=" + n.axonDelay.ToString();
             if (n.model == Neuron.modelType.Random)
                 retVal += "\rR=" + n.axonDelay.ToString();
-            if (n.model == Neuron.modelType.Always)
+            if (n.model == Neuron.modelType.Always && n.LeakRate >= 0)
                 retVal += "\rA=" + n.axonDelay.ToString();
+            if (n.model == Neuron.modelType.Always && n.LeakRate < 0)
+                retVal += "\r•A=" + n.axonDelay.ToString();
             return retVal;
         }
 

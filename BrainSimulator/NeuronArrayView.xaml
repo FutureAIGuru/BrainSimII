@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BrainSimulator"
              mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="100" Background="Gray"  MouseWheel="theCanvas_MouseWheel" MouseEnter="theCanvas_MouseEnter" >
+             d:DesignHeight="100" d:DesignWidth="100" Background="DimGray"  MouseWheel="theCanvas_MouseWheel" MouseEnter="theCanvas_MouseEnter" >
     <Grid >
         <Canvas HorizontalAlignment="Stretch" Background="DimGray" VerticalAlignment="Stretch" Name="theCanvas" 
                 MouseWheel="theCanvas_MouseWheel" MouseDown="theCanvas_MouseDown" MouseUp="theCanvas_MouseUp" MouseMove="theCanvas_MouseMove" 

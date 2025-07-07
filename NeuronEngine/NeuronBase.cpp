@@ -304,7 +304,12 @@ namespace NeuronEngine
 	//When you call this, the neuron is added to fireList2 by the caller.
 	bool NeuronBase::Fire1(long long cycle)
 	{
-		if (signbit(leakRate))return false;
+		//a negative leakrate means "disabled"
+		if (leakRate == -1 && currentCharge == 0)
+		{
+			lastCharge = currentCharge;
+			return false;
+		}
 		if (model == modelType::Color)
 		{
 			NeuronArrayBase::AddNeuronToFireList1(id);
@@ -313,17 +318,17 @@ namespace NeuronEngine
 		//if (model == modelType::FloatValue) return false;
 		if (model == modelType::Always)
 		{
-			nextFiring--;
-			if (leakRate >= 0 && nextFiring <= 0) //leakrate is the std.deviation
-			{
+			if (leakRate >= 0)
+				nextFiring--;
+			if (leakRate >= 0 && nextFiring <= 0) 
 				currentCharge = currentCharge + threshold;
-			}
-			if (leakRate >= 0) //a negative leakrate means "disabled"
+			//if (leakRate >= 0)
 				NeuronArrayBase::AddNeuronToFireList1(id);
 		}
 		if (model == modelType::Random)
 		{
-			nextFiring--;
+			if (leakRate >= 0)
+				nextFiring--;
 			if (leakRate >= 0 && nextFiring <= 0) //leakrate is the std.deviation
 			{
 				currentCharge = currentCharge + threshold;
@@ -397,6 +402,7 @@ namespace NeuronEngine
 			if (model == modelType::Always)
 			{
 				nextFiring = axonDelay;
+				currentCharge = 0;
 			}
 			if (model == modelType::Random)
 			{
@@ -450,110 +456,78 @@ namespace NeuronEngine
 					//if (desired >= threshold) //this conditional improves performance but 
 					//introduces a potental bug where accumulated charge might be negative
 					NeuronArrayBase::AddNeuronToFireList1(nTarget->id);
-					/*
-					if (s.GetModel() == SynapseBase::modelType::Hebbian1)
-					{
-						//did the target neuron fire after this stimulation?
-						float weight = s.GetWeight();
-						if (desired >= threshold)
-						{
-							//strengthen the synapse
-							//weight = NewHebbianWeight(weight, .1f, s.GetModel(), 1);
-						}
-						else
-						{
-							//weaken the synapse
-							weight = NewHebbianWeight(weight, -.1f, s.GetModel(), 1);
-						}
-						synapses->at(i).SetWeight(weight);
-					}
-				}
-				vectorLock = 0;
-			}
-		}
-		if (synapsesFrom != NULL)
-		{
-			int numHebbian = 0;
-			int numPosHebbian = 0;
-			while (vectorLock.exchange(1) == 1) {} //prevent the vector of synapses from changing while we're looking at it
-			for (int i = 0; i < synapsesFrom->size(); i++) //process all the synapses sourced by this neuron
-			{
-				SynapseBase s = synapsesFrom->at(i);
-				if (s.GetModel() != SynapseBase::modelType::Fixed)
-				{
-					numHebbian++;
-					if (s.GetWeight() >= 0) numPosHebbian++;
-				}
-			}
-			for (int i = 0; i < synapsesFrom->size(); i++) //process all the synapses sourced by this neuron
-			{
-				SynapseBase s = synapsesFrom->at(i);
-				if (s.GetModel() == SynapseBase::modelType::Hebbian2 || s.GetModel() == SynapseBase::modelType::Hebbian1 || s.GetModel() == SynapseBase::modelType::Binary)
-				{
-					NeuronBase* nTarget = s.GetTarget();
-					//did this neuron fire coincident or just after the target (the source since these are FROM synapses)
-					float weight = s.GetWeight();
-					int delay = 1;
-					if (s.GetModel() == SynapseBase::modelType::Hebbian2 || s.GetModel() == SynapseBase::modelType::Hebbian1) delay = 6;
-								//	if (s.GetModel() == SynapseBase::modelType::Hebbian2 && nTarget->lastFired <= lastFired - 100)
-								//		{
-							//				weight = NewHebbianWeight(weight, 0, s.GetModel(), numHebbian);
-						//				}
-					//					else
-					if (s.GetModel() == SynapseBase::modelType::Hebbian2 ||
-						s.GetModel() == SynapseBase::modelType::Hebbian1 ||
-						s.GetModel() == SynapseBase::modelType::Binary)
-					{
-						if (nTarget->lastFired >= lastFired - delay)
-						{
-							//strengthen the synapse
-							weight = NewHebbianWeight(weight, .1f, s.GetModel(), numHebbian);
-						}
-						else
-						{
-							//weaken the synapse
-							weight = NewHebbianWeight(weight, -.1f, s.GetModel(), numHebbian);
-						}
-						//update the synapse in "From"
-						synapsesFrom->at(i).SetWeight(weight);
-						//update the synapse in "To"
-						for (int i = 0; i < nTarget->synapses->size(); i++)
-						{
-							if (nTarget->synapses->at(i).GetTarget() == this)
-							{
-								while (nTarget->vectorLock.exchange(1) == 1) {}
-								nTarget->synapses->at(i).SetWeight(weight);
-								nTarget->vectorLock = 0;
-							}
-						}
-				}
-				*/
 				}
 			}
 			vectorLock = 0;
 		}
 	}
-	//This is table handles synapse weight learning
-	//It is called if a Hebbian synapse fires and either DOES or DOES NOT cause firing in the target
-	//Consider it to be a lookup table until we figure out how weights actually vary
-	const int ranges1 = 7;
-	double cutoffs1[ranges1] = { 1,    .5,  .34,   .25,     .2,  .15,    0 };
-	double posIncr1[ranges1] = { 0,    .1,   .05,  .025,   .01,  .012,   .01 };
-	double negIncr1[ranges1] = { -.01,-.1, -.017, -.00625,-.002, -.002,  -.001 };
 
-	//play with this for experimentation
-	const int ranges2 = 7;
-	double cutoffs2[ranges2] = { .5,   .25,    .1,  0,   -.1 ,-.25, -1 };
-	double posIncr2[ranges2] = { .2,    .1,   .05,  .05,  .05,  .1,   .5 };
-	//	double negIncr2[ranges2] = { -.5, -.1, -.05, -.05,  -.05, -.1,  -.2 };
-	double negIncr2[ranges2] = { -.25, -.05, -.025, -.025,  -.025, -.05,  -.1 };
-	//	double negIncr2[ranges2] = { -.125, -.025, -.0125, -.0125,  -.0125, -.025,  -.05 };
+	void NeuronBase::HandleHebbian2Synapses()
+	{
+		//go through all the synapses targetd by this neuron and update the weights of Hebbian2 synapses
+		if (synapsesFrom == NULL) return;
 
-	void NeuronBase::Fire3()
+		while (vectorLock.exchange(1) == 1) {} //prevent the vector of synapses from changing while we're looking at it
+
+		//max value is 1 over the number of incoming Hebbian2 synapses which come from neurons which are recently firing 
+		float maxValue = 1;
+		int numFiring = 0;
+		for (int i = 0; i < synapsesFrom->size(); i++) //process all the synapses sourced by this neuron
+		{
+			SynapseBase s = synapsesFrom->at(i);
+			NeuronBase* nTarget = s.GetTarget();
+			if (s.GetModel() == SynapseBase::modelType::Hebbian2)
+			{
+				int deltaFiring = GetLastFired() - nTarget->GetLastFired();
+				if (deltaFiring < 5)
+					numFiring++;
+			}
+		}
+		if (numFiring > 0)
+		{
+			maxValue = 1 / (float)numFiring;
+			for (int i = 0; i < synapsesFrom->size(); i++) //process all the synapses sourced by this neuron
+			{
+				SynapseBase s = synapsesFrom->at(i);
+				NeuronBase* nTarget = s.GetTarget();
+				float newWeight = 0;
+				if (s.GetModel() == SynapseBase::modelType::Hebbian2)
+				{
+					int deltaFiring = GetLastFired() - nTarget->GetLastFired();
+					if (deltaFiring < 5)
+					{
+						newWeight = (s.GetWeight() + maxValue) / 2.0f;
+						if (newWeight * 1.01 > maxValue) newWeight = maxValue;
+						synapsesFrom->at(i).SetWeight(newWeight);
+					}
+					else
+					{
+						newWeight = (s.GetWeight() - maxValue) / 2.0f;
+						if (newWeight * 1.01 < -maxValue) newWeight = -maxValue;
+						synapsesFrom->at(i).SetWeight(newWeight);
+					}
+					//update the synapse in "To"
+					for (int i = 0; i < nTarget->synapses->size(); i++)
+					{
+						if (nTarget->synapses->at(i).GetTarget() == this)
+						{
+							while (nTarget->vectorLock.exchange(1) == 1) {}
+							nTarget->synapses->at(i).SetWeight(newWeight);
+							nTarget->vectorLock = 0;
+						}
+					}
+				}
+			}
+		}
+		vectorLock = 0;
+	}
+
+	void NeuronBase::Fire3(long long cycle)
 	{
 		if (model == modelType::FloatValue) return;
 		if (model == modelType::Color && lastCharge != 0)
 			return;
+		if (cycle != GetLastFired()) return;
 		if (synapses != NULL)
 		{
 			while (vectorLock.exchange(1) == 1) {} //prevent the vector of synapses from changing while we're looking at it
@@ -561,160 +535,62 @@ namespace NeuronEngine
 			{
 				SynapseBase s = synapses->at(i);
 				NeuronBase* nTarget = s.GetTarget();
-
-				if (s.GetModel() == SynapseBase::modelType::Hebbian1)
+				if (s.GetModel() == SynapseBase::modelType::Hebbian3)
 				{
-					//did the target neuron fire after this stimulation?
-					float weight = s.GetWeight();
-					if (nTarget->currentCharge >= 1 && currentCharge >= 1)
+					int deltaFiring = GetLastFired() - nTarget->GetLastFired();
+					if (deltaFiring > 0 && deltaFiring < 4)
 					{
-						//strengthen the synapse
-						weight = NewHebbianWeight(weight, .1f, s.GetModel(), 1);
+						//target fired first, decrease the weight
+						float currentWeight = s.GetWeight();
+						float pctChange = .5f / deltaFiring;
+						float newWeight = currentWeight - currentWeight * pctChange;
+						if (newWeight < .001) newWeight = .001;
+						synapses->at(i).SetWeight(newWeight);
+						//update the reverse entry
+						for (int j = 0; j < nTarget->synapsesFrom->size(); j++)
+						{
+							if (nTarget->synapsesFrom->at(j).GetTarget() == this)
+								nTarget->synapsesFrom->at(j).SetWeight(newWeight);
+						}
 					}
-					if (nTarget->currentCharge >= 1 && currentCharge < 1 ||
-						nTarget->currentCharge < 1 && currentCharge >= 1)
-					{
-						//weaken the synapse
-						weight = NewHebbianWeight(weight, -.1f, s.GetModel(), 1);
-					}
-					synapses->at(i).SetWeight(weight);
 				}
+
 			}
 			vectorLock = 0;
 		}
-		if (synapsesFrom != NULL && currentCharge >= threshold)
+		if (synapsesFrom != NULL)
 		{
-			int numHebbian = 0;
-			int numPosHebbian = 0;
+			HandleHebbian2Synapses();
 			while (vectorLock.exchange(1) == 1) {} //prevent the vector of synapses from changing while we're looking at it
 			for (int i = 0; i < synapsesFrom->size(); i++) //process all the synapses sourced by this neuron
 			{
 				SynapseBase s = synapsesFrom->at(i);
-				if (s.GetModel() != SynapseBase::modelType::Fixed)
+				NeuronBase* nTarget = s.GetTarget();
+				if (s.GetModel() == SynapseBase::modelType::Hebbian3)
 				{
-					numHebbian++;
-					if (s.GetWeight() >= 0) numPosHebbian++;
-				}
-			}
-			for (int i = 0; i < synapsesFrom->size(); i++) //process all the synapses sourced by this neuron
-			{
-				SynapseBase s = synapsesFrom->at(i);
-				if (s.GetModel() == SynapseBase::modelType::Hebbian2 || s.GetModel() == SynapseBase::modelType::Binary)
-				{
-					NeuronBase* nTarget = s.GetTarget();
-					//did this neuron fire coincident or just after the target (the source since these are FROM synapses)
-					float weight = s.GetWeight();
-					int delay = 0;
-					if (s.GetModel() == SynapseBase::modelType::Hebbian2) delay = 6;
-
-					if (s.GetModel() == SynapseBase::modelType::Hebbian2 ||
-						s.GetModel() == SynapseBase::modelType::Binary)
+					int deltaFiring = GetLastFired() - nTarget->GetLastFired();
+					if (deltaFiring > 0 && deltaFiring < 4)
 					{
-						if (nTarget->lastFired >= lastFired - delay)
+						//Source fired first, increase the weight
+						float currentWeight = s.GetWeight();
+						float pctChange = .5f / deltaFiring;
+						float newWeight = currentWeight / (1 - pctChange);
+						if (newWeight > 1) newWeight = 1;
+						synapsesFrom->at(i).SetWeight(newWeight);
+						//update the reverse entry
+						for (int j = 0; j < nTarget->synapses->size(); j++)
 						{
-							//strengthen the synapse
-							weight = NewHebbianWeight(weight, .1f, s.GetModel(), numHebbian);
-						}
-						else
-						{
-							//weaken the synapse
-							weight = NewHebbianWeight(weight, -.1f, s.GetModel(), numHebbian);
-						}
-						//update the synapse in "From"
-						synapsesFrom->at(i).SetWeight(weight);
-						//update the synapse in "To"
-						for (int i = 0; i < nTarget->synapses->size(); i++)
-						{
-							if (nTarget->synapses->at(i).GetTarget() == this)
-							{
-								while (nTarget->vectorLock.exchange(1) == 1) {}
-								nTarget->synapses->at(i).SetWeight(weight);
-								nTarget->vectorLock = 0;
-							}
+							if (nTarget->synapses->at(j).GetTarget() == this)
+								nTarget->synapses->at(j).SetWeight(newWeight);
 						}
 					}
-
 				}
 			}
 			vectorLock = 0;
 		}
+
 	}
 
-	float NeuronBase::NewHebbianWeight(float weight, float offset, SynapseBase::modelType model, int numberOfSynapses1) //sign of float is all that's presently used
-	{
-		float numberOfSynapses = numberOfSynapses1 / 2.0f;
-		float y = weight * numberOfSynapses;
-		if (model == SynapseBase::modelType::Binary)
-		{
-			if (offset > 0)return 1.0f / (float)numberOfSynapses;
-			return 0;
-		}
-		else if (model == SynapseBase::modelType::Hebbian1)
-		{
-			int i = 0;
-			y = weight;
-			for (i = 0; i < ranges1; i++)
-			{
-				if (y >= cutoffs1[i])
-				{
-					if (offset > 0)
-						y += (float)posIncr1[i];
-					else
-						y += (float)negIncr1[i];
-					if (y < 0)y = 0;
-					if (y > 1) y = 1;
-					break;
-				}
-			}
-		}
-		else if (model == SynapseBase::modelType::Hebbian2)
-		{
-
-			float maxVal = 1.0f / numberOfSynapses;
-			float curWeight = weight * numberOfSynapses;
-			float x = 0;
-			if (curWeight >= 1)
-			{
-				curWeight = 1;
-			}
-			else if (curWeight <= -1)
-			{
-				curWeight = -1;
-			}
-			//			else
-			x = atanh(curWeight);
-
-			if (offset != 0)
-			{
-				x += offset;
-				curWeight = tanh(x);
-			}
-			else
-			{
-				x *= 0.5;
-				curWeight = tanh(x);
-			}
-			y = curWeight / numberOfSynapses;
-			if (y < -maxVal)y = -maxVal;
-			if (y > maxVal) y = maxVal;
-			//int i = 0;
-			//for (i = 0; i < ranges2; i++)
-			//{
-			//	if (y >= cutoffs2[i])
-			//	{
-			//		if (offset > 0)
-			//			y += (float)posIncr2[i];
-			//		else
-			//			y += (float)negIncr2[i];
-			//		y = y / numberOfSynapses;
-			//		if (y < -maxVal)y = -maxVal;
-			//		if (y > maxVal) y = maxVal;
-			//		break;
-			//	}
-			//}
-		}
-		return y;
-	}
 
 
 }

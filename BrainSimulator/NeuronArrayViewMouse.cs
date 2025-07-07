@@ -459,7 +459,7 @@ namespace BrainSimulator
             //we clicked on a neuron...was it a fire or a synapse drag?
             if (theCanvas.Cursor == Cursors.UpArrow)
             {
-                //if no synapseshape exists, then were just clicking in a nueron
+                //if no synapseshape exists, then we're just clicking in a nueron
                 if (synapseShape == null)
                 {
                     NeuronMouseUp(e);

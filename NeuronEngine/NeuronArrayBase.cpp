@@ -5,6 +5,7 @@
 #include <ppl.h>
 #include <iostream>
 #include <random>
+#include <atomic>
 
 
 using namespace concurrency;
@@ -15,6 +16,7 @@ namespace NeuronEngine
 	Concurrency::concurrent_queue<SynapseBase> NeuronArrayBase::remoteQueue;
 	Concurrency::concurrent_queue<NeuronBase*> NeuronArrayBase::fire2Queue;
 	std::vector<unsigned long long> NeuronArrayBase::fireList1;
+	//std::vector<std::atomic<unsigned long long>> NeuronArrayBase::fireList1;
 	std::vector<unsigned long long> NeuronArrayBase::fireList2;
 
 	bool NeuronArrayBase::clearFireListNeeded;
@@ -65,15 +67,16 @@ namespace NeuronEngine
 			//n.SetModel(NeuronBase::modelType::LIF);  /for testing
 			neuronArray.push_back(n);
 		}
-		fireList1.reserve(expandedSize / 64);
+		//fireList1.reserve(expandedSize / 64);
+		//fireList1.resize(expandedSize / 64);
 		fireList2.reserve(expandedSize / 64);
 
 		int fireListCount = expandedSize / 64;
 		for (int i = 0; i < fireListCount; i++)
 		{
 			fireList1.push_back(0xffffffffffffffff);
+			//fireList1.emplace_back(0xffffffffffffffff);
 			fireList2.push_back(0);
-
 		}
 	}
 	long long NeuronArrayBase::GetGeneration()
@@ -124,8 +127,7 @@ namespace NeuronEngine
 		return count;;
 	}
 
-	void NeuronArrayBase::
-		GetBounds(int taskID, int& start, int& end)
+	void NeuronArrayBase::GetBounds(int taskID, int& start, int& end)
 	{
 		int numberToProcess = arraySize / threadCount;
 		int remainder = arraySize % threadCount;
@@ -227,7 +229,10 @@ namespace NeuronEngine
 		int offset = id % 64;
 		unsigned long long bitMask = 0x1;
 		bitMask = bitMask << offset;
-		fireList1[index] |= bitMask;
+		//fireList1[index] |= bitMask;
+		//the following fixes a race condition by performing an atomic OR operation
+		std::atomic_ref<unsigned long long> atomic_element(fireList1[index]); // Create atomic_ref to the first element
+		atomic_element.fetch_or(bitMask, std::memory_order_relaxed);
 	}
 	void NeuronArrayBase::ClearFireLists()
 	{
@@ -297,7 +302,7 @@ namespace NeuronEngine
 		for (int i = 0; i < arraySize; i++)
 		{
 			NeuronBase* theNeuron = GetNeuron(i);
-			theNeuron->Fire3();
+			theNeuron->Fire3(cycle);
 		}
 	}
 }

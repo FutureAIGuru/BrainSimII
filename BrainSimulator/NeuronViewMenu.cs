@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 
 namespace BrainSimulator
@@ -169,7 +170,8 @@ namespace BrainSimulator
             mi.Header = "Synapses Out";
             mi.Width = 250;
             mi.HorizontalAlignment = HorizontalAlignment.Left;
-            foreach (Synapse s in n.Synapses)
+            List<Synapse> sortedSynapseList = n.synapses.OrderBy(x => x.TargetNeuron).ToList();
+            foreach (Synapse s in sortedSynapseList)
             {
                 AddSynapseEntryToMenu(mi, s);
             }
@@ -179,11 +181,17 @@ namespace BrainSimulator
             mi.Header = "Synapses In";
             mi.Width = 250;
             mi.HorizontalAlignment = HorizontalAlignment.Left;
-            foreach (Synapse s in n.SynapsesFrom)
+            sortedSynapseList = n.synapsesFrom.OrderBy(x => x.TargetNeuron).ToList();
+            foreach (Synapse s in sortedSynapseList)
             {
                 AddSynapseEntryToMenu(mi, s);
             }
             cm.Items.Add(mi);
+
+            //temporary hack for 7-segment display demo
+            //mi = new MenuItem { Header = "7 Segment Synapses" };
+            //mi.Click += Mi_Click;
+            //cm.Items.Add(mi);
 
             mi = new MenuItem { Header = "Paste Here" };
             if (!XmlFile.WindowsClipboardContainsNeuronArray()) mi.IsEnabled = false;
@@ -451,7 +459,7 @@ namespace BrainSimulator
         static List<float> stdDevValues = new List<float>() { 0, 1, 4, 10 };
         static List<float> currentChargeValues = new List<float>() { 0, 1, };
         static List<float> colorValues = new List<float>() { 0x00, 0xff0000, 0xff00, 0xff, 0xffff00, 0xff00ff, 0xffff, 0xffa500, 0xffffff };
-        static List<float> alwaysDelayValues = new List<float>() { 0, 1, 2, 3 };
+        static List<float> alwaysDelayValues = new List<float>() { 0, 1, 2, 3, 4 };
 
         const string intFormatString = "F0";
         const string floatFormatString = "F2";
@@ -920,6 +928,30 @@ namespace BrainSimulator
             }
             int i = (int)cm.GetValue(NeuronIDProperty);
             Neuron n = MainWindow.theNeuronArray.GetNeuron(i);
+
+            //this is a temporary hack for a demo of a 7-segment disoplay
+            if ((string)mi.Header == "7 Segment Synapses")
+            {
+                int firingCount = 0;
+                string segmentNames = "ABCDEFG";
+                //first loop just to count the number of active synapses to calculate the weight
+                foreach (char c in segmentNames)
+                {
+                    Neuron n1 = MainWindow.theNeuronArray.GetNeuron(c.ToString());
+                    if (n1 != null && n1.Fired())
+                        firingCount++;
+                }
+                float synapseWeight = 1.0f / (float)firingCount;
+                //secont loop to add the synapses
+                foreach (char c in segmentNames)
+                {
+                    Neuron n1 = MainWindow.theNeuronArray.GetNeuron(c.ToString());
+                    if (n1 != null && n1.Fired())
+                        n1.AddSynapse(n.id, synapseWeight);
+                    else if (n1 != null)
+                        n1.AddSynapse(n.id, -synapseWeight);
+                }
+            }
 
             if ((string)mi.Header == "Paste Here")
             {

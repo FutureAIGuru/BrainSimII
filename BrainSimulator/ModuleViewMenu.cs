@@ -474,7 +474,7 @@ namespace BrainSimulator
                                 {
                                     //TODO: Add some UI for this:
                                     //s.model = Synapse.modelType.Hebbian2;
-                                    n.AddSynapseWithUndo(s.targetNeuron, 0, s.model);
+                                    n.AddSynapseWithUndo(s.targetNeuron, 0.2f, s.model);
                                     s.Weight = 0;
                                 }
                             }

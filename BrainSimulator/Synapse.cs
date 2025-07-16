@@ -10,7 +10,7 @@ namespace BrainSimulator
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class Synapse
     {
-        public enum modelType { Fixed, Binary, Hebbian1, Hebbian2, Hebbian3 };
+        public enum modelType { Fixed, Binary, Hebbian1, Hebbian2, Hebbian3, Gate };
 
         public int targetNeuron;
         public float weight;
@@ -23,6 +23,7 @@ namespace BrainSimulator
             "Hebbian w/ range [0,1]",
             "Hebbian w/ range [-1,1]",
             "UNDER DEVELOPMENT, Do not use! Hebbian w/ range [-1/n,1/n] where n is number of synapses",
+            "GATE Under Development"
         };
 
         //a synapse connects two neurons and has a weight

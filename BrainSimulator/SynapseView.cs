@@ -49,9 +49,9 @@ namespace BrainSimulator
 
             Shape l = GetSynapseShape(p1, p2, s.model);
             l.Stroke = new SolidColorBrush(Utils.RainbowColorFromValue(s.weight));
-            //if (s.weight >= 0)
-            //    l.StrokeThickness *= 4 * s.weight;
-            //l.StrokeThickness = Math.Clamp(l.StrokeThickness, 2, dp.NeuronDisplaySize / 4);
+            if (s.model == Synapse.modelType.Gate)
+                l.Stroke = new SolidColorBrush(Colors.LightCoral);
+            
             l.StrokeEndLineCap = PenLineCap.Round;
             l.StrokeStartLineCap = PenLineCap.Round;
 
@@ -103,17 +103,21 @@ namespace BrainSimulator
             return s;
         }
 
-        public static UIElement  GetWeightBargraph(Point p1, Point p2, double value)
+   
+
+        public static UIElement  GetWeightBargraph(Point p1, Point p2, int source, int target, float weight,Synapse.modelType model)
         {
             Canvas canvas = new Canvas();
 
-            // Compute center point of the line
-            double centerX = (p1.X + p2.X) / 2;
+            // Compute center point of the graph
+            double centerX = (p1.X + p2.X) / 2;  
             double centerY = (p1.Y + p2.Y) / 2;
+            Modules.PointPlus pt = Utils.ExtendSegment(p1, p2, -dp.NeuronDisplaySize * .5f, false);
+            centerX = pt.X; centerY = pt.Y;
 
             // Parameters for the rectangle (bar)
-            double barWidth = dp.NeuronDisplaySize * .25; // fixed width
-            double barMaxHeight = dp.NeuronDisplaySize*.5; // max height for full value
+            double barWidth = dp.NeuronDisplaySize * .20; // fixed width
+            double barMaxHeight = dp.NeuronDisplaySize * .5; // max height for full value
             // Draw rectangle (centered on line midpoint)
             Rectangle border = new Rectangle
             {
@@ -131,6 +135,7 @@ namespace BrainSimulator
                 Opacity = 0.5,        // transparency of the shadow
                 BlurRadius = 10       // softness of the shadow edge
             };
+            SetElementValues(border, source, target, weight, model);
 
             // Position the border so its center is at the midpoint
             Canvas.SetLeft(border, centerX - barWidth / 2);
@@ -138,7 +143,7 @@ namespace BrainSimulator
             canvas.Children.Add(border);
 
             // Height scaled to value
-            double barHeight = barMaxHeight * value;
+            double barHeight = barMaxHeight * weight;
             if (barHeight < 0) barHeight = 0;
 
             // Draw rectangle (centered on line midpoint)
@@ -150,20 +155,23 @@ namespace BrainSimulator
                 Stroke = Brushes.Black,
                 StrokeThickness = 1
             };
+            bar.SetValue(NeuronArrayView.ShapeType, NeuronArrayView.shapeType.Synapse);
 
             // Position rectangle (centered horizontally, aligned vertically from center)
             Canvas.SetLeft(bar, centerX - barWidth / 2);
-            Canvas.SetTop(bar, centerY - barMaxHeight / 2 +  (barMaxHeight - barHeight));
+            Canvas.SetTop(bar, centerY - barMaxHeight / 2 + (barMaxHeight - barHeight));
+            SetElementValues(bar, source, target, weight, model);
             canvas.Children.Add(bar);
 
             // Add value text
             TextBlock text = new TextBlock
             {
-                Text = $"{value:0.000}",
+                Text = $"{weight:0.000}",
                 Foreground = Brushes.Black,
-                FontSize = dp.NeuronDisplaySize * .09,
+                FontSize = dp.NeuronDisplaySize * .075,
                 FontWeight = FontWeights.Bold
             };
+            SetElementValues(text, source, target, weight, model);
 
             // Measure text size
             text.Measure(new Size(Double.PositiveInfinity, Double.PositiveInfinity));
@@ -173,9 +181,18 @@ namespace BrainSimulator
             Canvas.SetLeft(text, centerX - textSize.Width / 2);
             Canvas.SetTop(text, centerY - textSize.Height / 2);
             canvas.Children.Add(text);
+            SetElementValues(canvas,source,target,weight,model);
             return canvas;
         }
 
+        private static void SetElementValues(UIElement element,int source, int target, float weight, Synapse.modelType model)
+        {
+            element.SetValue(NeuronArrayView.ShapeType, NeuronArrayView.shapeType.Synapse);
+            element.SetValue(SourceIDProperty, source);
+            element.SetValue(TargetIDProperty, target);
+            element.SetValue(WeightValProperty, weight);
+            element.SetValue(ModelProperty, model);
+        }
 
         public static Shape DrawLinkArrow(Point p1, Point p2, bool canLearn) //helper to put an arrow in a synapse line
         {
@@ -546,7 +563,8 @@ namespace BrainSimulator
             MainWindow.theNeuronArray.SetUndoPoint();
             MenuItem mi = (MenuItem)sender;
             ContextMenu cm = mi.Parent as ContextMenu;
-            MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).DeleteSynapseWithUndo((int)cm.GetValue(TargetIDProperty));
+            MainWindow.theNeuronArray.GetNeuron((int)cm.GetValue(SourceIDProperty)).
+                DeleteSynapseWithUndo((int)cm.GetValue(TargetIDProperty));
             cm.IsOpen = false;
             cmCancelled = true;
             MainWindow.Update();

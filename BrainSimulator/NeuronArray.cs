@@ -63,7 +63,8 @@ namespace BrainSimulator
             {
                 labelCache.Remove(nID);
             }
-            catch { };
+            catch { }
+            ;
         }
         public string GetLabelFromCache(int nID)
         {
@@ -88,7 +89,10 @@ namespace BrainSimulator
         }
 
         public int RefractoryDelay
-        { get => refractoryDelay; set { refractoryDelay = value; SetRefractoryDelay(refractoryDelay); } }
+        {
+            get => refractoryDelay;
+            set { refractoryDelay = value; SetRefractoryDelay(refractoryDelay); }
+        }
 
         public void Initialize(int count, int inRows, bool clipBoard = false)
         {

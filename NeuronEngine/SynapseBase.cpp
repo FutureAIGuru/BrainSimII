@@ -1,6 +1,4 @@
 ﻿#include "pch.h"
-
-
 #include "SynapseBase.h"
 #include "NeuronBase.h"
 

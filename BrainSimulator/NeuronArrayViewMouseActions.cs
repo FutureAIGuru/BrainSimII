@@ -7,9 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -139,7 +136,7 @@ namespace BrainSimulator
         {
             int source = (int)theShape.GetValue(SynapseView.SourceIDProperty);
             int target = (int)theShape.GetValue(SynapseView.TargetIDProperty);
-            float weight = (float)theShape.GetValue(SynapseView.WeightValProperty);
+            //float weight = (float)theShape.GetValue(SynapseView.WeightValProperty);
             Neuron n1 = MainWindow.theNeuronArray.GetCompleteNeuron(source);
             n1 = MainWindow.theNeuronArray.AddSynapses(n1);
             if (n1.FindSynapse(target) is Synapse s1)
@@ -161,6 +158,17 @@ namespace BrainSimulator
             currentOperation = CurrentOperation.draggingSynapse;
             Canvas parentCanvas = (Canvas)theShape.Parent;
             parentCanvas.Children.Remove(theShape);
+
+            //to fix bug where clicking on a synapse accidently removes it
+            Shape l = SynapseView.GetSynapseShape
+                (dp.pointFromNeuron(mouseDownNeuronIndex),
+                dp.pointFromNeuron(mouseDownNeuronIndex),
+                LastSynapseModel
+                );
+            l.Stroke = new SolidColorBrush(Utils.RainbowColorFromValue(LastSynapseWeight));
+            if (!(l is Ellipse))
+                l.Fill = l.Stroke;
+            synapseShape = l;
         }
 
         private void DragSynapse(int currentNeuron)
@@ -189,7 +197,7 @@ namespace BrainSimulator
                 LimitMousePostion(ref p1);
                 int index = dp.NeuronFromPoint(p1);
                 MainWindow.theNeuronArray.SetUndoPoint();
-                MainWindow.arrayView.AddShowSynapses(mouseDownNeuronIndex);
+                //MainWindow.arrayView.AddShowSynapses(mouseDownNeuronIndex);
                 MainWindow.theNeuronArray.GetNeuron(mouseDownNeuronIndex).
                     AddSynapseWithUndo(index, LastSynapseWeight, LastSynapseModel);
             }
@@ -450,8 +458,8 @@ namespace BrainSimulator
                         }
                         if (!IsDestinationClear(neuronsToMove, delta))
                         {
-                            MessageBoxResult result1 = MessageBox.Show("Some destination neurons are in use and will be overwritten, continue?", "Continue", MessageBoxButton.YesNo);
-                            if (result1 != MessageBoxResult.Yes)
+                            MessageBoxResult result1 = MessageBox.Show("Some destination neurons are in use and will be overwritten, continue?", "Continue", MessageBoxButton.OKCancel);
+                            if (result1 != MessageBoxResult.OK)
                             {
                                 return;
                             }

@@ -52,7 +52,7 @@ namespace BrainSimulator
                     if (content.Contains("<NeuronArray"))
                     {
                         retVal = true;
-                        Load(ref MainWindow.myClipBoard, "ClipBoard");
+                        //Load(ref MainWindow.myClipBoard, "ClipBoard");
                     }
                 }
             }

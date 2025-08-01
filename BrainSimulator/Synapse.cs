@@ -10,7 +10,7 @@ namespace BrainSimulator
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class Synapse
     {
-        public enum modelType { Fixed, Binary, Hebbian1, Hebbian2, Hebbian3, Gate };
+        public enum modelType { Fixed, Binary, Hebbian1, Hebbian2, Hebbian3, Gate, Learn };
 
         public int targetNeuron;
         public float weight;
@@ -20,10 +20,11 @@ namespace BrainSimulator
         //the tooltip will automatically appear in the synapse type selector combobox
         public static string[] modelToolTip = { "Fixed Weight",
             "Binary, one-shot learning",
+            "Hebbian w/ range [0,0.6]",
+            "Hebbian w/ range [-1/n,1/n] where n is number of synapses",
             "Hebbian w/ range [0,1]",
-            "Hebbian w/ range [-1,1]",
-            "UNDER DEVELOPMENT, Do not use! Hebbian w/ range [-1/n,1/n] where n is number of synapses",
-            "GATE Under Development"
+            "GATE Under Development",
+            "LEARN Under Development"
         };
 
         //a synapse connects two neurons and has a weight

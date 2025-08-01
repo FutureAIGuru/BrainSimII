@@ -212,7 +212,7 @@ namespace BrainSimulator
             zoomRepeatTimer.Start();
 
             MainWindow.UpdateDisplayLabel(dp.NeuronDisplaySize);
-            Debug.WriteLine("Wheel-Zoom: " + scale + " " + dp.NeuronDisplaySize + " " + oldNeuronDisplaySize);
+            //Debug.WriteLine("Wheel-Zoom: " + scale + " " + dp.NeuronDisplaySize + " " + oldNeuronDisplaySize);
         }
 
         //get here if the repeat timer expires so do an Update

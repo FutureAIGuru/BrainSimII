@@ -143,6 +143,7 @@ namespace BrainSimulator
             {
                 theShape.ContextMenu = new ContextMenu();
                 SynapseView.CreateContextMenu(source, s1, theShape.ContextMenu);
+                theShape.ContextMenu.IsOpen = true;
             }
         }
 
@@ -153,7 +154,8 @@ namespace BrainSimulator
             LastSynapseWeight = (float)theShape.GetValue(SynapseView.WeightValProperty);
             LastSynapseModel = (Synapse.modelType)theShape.GetValue(SynapseView.ModelProperty);
             Neuron n = MainWindow.theNeuronArray.GetNeuron(source);
-            n.DeleteSynapse(target);
+            MainWindow.theNeuronArray.SetUndoPoint();
+            n.DeleteSynapseWithUndo(target);
             mouseDownNeuronIndex = source;
             currentOperation = CurrentOperation.draggingSynapse;
             Canvas parentCanvas = (Canvas)theShape.Parent;
@@ -196,7 +198,7 @@ namespace BrainSimulator
                 Point p1 = e.GetPosition(theCanvas);
                 LimitMousePostion(ref p1);
                 int index = dp.NeuronFromPoint(p1);
-                MainWindow.theNeuronArray.SetUndoPoint();
+                //MainWindow.theNeuronArray.SetUndoPoint();
                 //MainWindow.arrayView.AddShowSynapses(mouseDownNeuronIndex);
                 MainWindow.theNeuronArray.GetNeuron(mouseDownNeuronIndex).
                     AddSynapseWithUndo(index, LastSynapseWeight, LastSynapseModel);
@@ -430,7 +432,7 @@ namespace BrainSimulator
 
         private void MoveModule(FrameworkElement theShape, int currentNeuron)
         {
-            Debug.WriteLine("currentNeuron: " + currentNeuron + " prevModuleMouseLocation:" + prevModuleMouseLocation);
+            //Debug.WriteLine("currentNeuron: " + currentNeuron + " prevModuleMouseLocation:" + prevModuleMouseLocation);
             lock (MainWindow.theNeuronArray.modules)
             {
                 if (currentNeuron != prevModuleMouseLocation)

@@ -109,6 +109,15 @@ namespace BrainSimulator
                 }
                 NeuronArrayView.StopInsertingModule();
             }
+            if (e.Key == Key.System && e.SystemKey == Key.F10)
+            {
+                ButtonSingle_Click(null, null);
+                e.Handled = true;
+            }
+            if (e.Key == Key.F5)
+            {
+                PlayPause_Click(buttonPlay, null);
+            }
             if (e.Key == Key.F1)
             {
                 MenuItemHelp_Click(null, null);

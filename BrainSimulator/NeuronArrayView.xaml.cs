@@ -506,22 +506,24 @@ namespace BrainSimulator
                             if ((synapse.model == Synapse.modelType.Hebbian3 || 
                                 synapse.model == Synapse.modelType.Hebbian2 ||
                                 synapse.model == Synapse.modelType.Hebbian1)
-                                && dp.NeuronDisplaySize > 75)
+                                && dp.NeuronDisplaySize > 75 && synapse.weight != .2f)
                             {
                                 var graph = SynapseView.GetWeightBargraph(pStart, pTarget,
                                     n.id,synapse.targetNeuron, synapse.weight,synapse.model);
                                 synapseGraphCanvas.Children.Add(graph);
                             }
-                            if (n.lastCharge < 1 && synapse.model != Synapse.modelType.Gate) continue;
+                            if (n.lastCharge < 1 
+                                && synapse.model != Synapse.modelType.Gate 
+                                && synapse.model != Synapse.modelType.Learn) continue;
                             long lastFired = MainWindow.theNeuronArray.GetCompleteNeuron(n.id).LastFired;
-                            if (synapse.model == Synapse.modelType.Gate && 
+                            if ((synapse.model == Synapse.modelType.Gate|| synapse.model == Synapse.modelType.Learn) && 
                                  lastFired < MainWindow.theNeuronArray.Generation - 3) continue;
 
                             //animate charges along the axons
                             var fill = Brushes.Yellow;
                             if (synapse.weight < 0)
                                 fill = Brushes.DeepPink;
-                            if (synapse.model == Synapse.modelType.Gate)
+                            if (synapse.model == Synapse.modelType.Gate || synapse.model == Synapse.modelType.Learn)
                             {
                                 fill = Brushes.Blue;
                                 electronSize = dp.NeuronDisplaySize * .15f;
@@ -537,11 +539,12 @@ namespace BrainSimulator
                             Canvas.SetLeft(disk, pStart.X - electronSize / 2);
                             Canvas.SetTop(disk, pStart.Y - electronSize / 2);
                             animationCanvas.Children.Add(disk);
+                            
                             var animX = new DoubleAnimation
                             {
                                 From = pStart.X - electronSize / 2,
                                 To = pTarget.X - electronSize / 2,
-                                Duration = TimeSpan.FromMilliseconds(500)
+                                Duration = TimeSpan.FromMilliseconds(MainWindow.EngineDelay)
                             };
                             Storyboard.SetTarget(animX, disk);
                             Storyboard.SetTargetProperty(animX, new PropertyPath("(Canvas.Left)"));
@@ -549,7 +552,7 @@ namespace BrainSimulator
                             {
                                 From = pStart.Y - electronSize / 2,
                                 To = pTarget.Y - electronSize / 2,
-                                Duration = TimeSpan.FromMilliseconds(500)
+                                Duration = TimeSpan.FromMilliseconds(MainWindow.EngineDelay)
                             };
                             Storyboard.SetTarget(animY, disk);
                             Storyboard.SetTargetProperty(animY, new PropertyPath("(Canvas.Top)"));

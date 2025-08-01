@@ -423,12 +423,4 @@
         </None>
     </ItemGroup>
 
-    <Target Name="PostBuild" AfterTargets="Build">
-        <ItemGroup>
-            <NativeFiles Include="..\x64\$(Configuration)\neuronengine.*" />
-        </ItemGroup>
-        <Message Importance="high" Text="Copying native files: @(NativeFiles)" />
-        <Copy SourceFiles="@(NativeFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
-    </Target>
-
 </Project>

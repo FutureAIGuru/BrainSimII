@@ -49,6 +49,7 @@ namespace BrainSimulator
         public static bool useServers = false;
 
         private static int engineDelay = 500; //wait after each cycle of the engine, 0-1000
+        public static int EngineDelay { get => engineDelay; set => engineDelay = value; }
 
         //timer to update the neuron values 
         readonly private DispatcherTimer displayUpdateTimer = new DispatcherTimer();
@@ -519,6 +520,7 @@ namespace BrainSimulator
         }
 
         static bool fullUpdateNeeded = false;
+
         public static void Update()
         {
             if (thisWindow.IsEngineSuspended())

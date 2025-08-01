@@ -4,15 +4,16 @@
 //  
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 
 
 namespace BrainSimulator
@@ -58,7 +59,8 @@ namespace BrainSimulator
             cm.Width = 300;
 
             //The neuron label
-            MenuItem mi1 = new MenuItem { Header = "ID: " + n.id, Padding = new Thickness(0) };
+            string headerContent = "ID: " + n.id + "    Last Fired: " + n.LastFired;
+            MenuItem mi1 = new MenuItem { Header = headerContent, Padding = new Thickness(0) };
             cm.Items.Add(mi1);
 
             //apply to all in selection
@@ -159,9 +161,9 @@ namespace BrainSimulator
             cbHistory.Unchecked += CbCheckedChanged;
             cm.Items.Add(new MenuItem { StaysOpenOnClick = true, Header = cbHistory });
 
-            mi = new MenuItem { Header = "Clear Synapses" };
-            mi.Click += Mi_Click;
-            cm.Items.Add(mi);
+            //mi = new MenuItem { Header = "Clear Synapses" };
+            //mi.Click += Mi_Click;
+            //cm.Items.Add(mi);
 
             cm.Items.Add(new Separator());
             cm.Items.Add(new Separator());
@@ -243,15 +245,20 @@ namespace BrainSimulator
             tbWeight.MouseDown += SynapseEntry_MouseDown;
             tbWeight.Name = "weight";
 
-            TextBlock tbTarget = new TextBlock { Text = s.targetNeuron.ToString().PadLeft(8) + " " + targetLabel };
-            sp0.Children.Add(tbWeight);
-            sp0.Children.Add(tbTarget);
+            TextBlock tbTarget = new TextBlock { Width = 100, Text = (s.targetNeuron.ToString() + " " + targetLabel).PadLeft(20) };
             tbTarget.MouseEnter += SynapseEntry_MouseEnter;
             tbTarget.MouseLeave += SynapseEntry_MouseLeave;
             tbTarget.ToolTip = "Click to go to neuron";
             tbTarget.MouseDown += SynapseEntry_MouseDown;
             tbTarget.Name = "neuron";
+            
+            TextBlock tbModel = new TextBlock { Text = s.model.ToString() };
+
+            sp0.Children.Add(tbWeight);
+            sp0.Children.Add(tbTarget);
+            sp0.Children.Add(tbModel);
             mi.Items.Add(sp0);
+
         }
 
         //This creates or updates the portion of the context menu content which depends on the model type
@@ -315,6 +322,7 @@ namespace BrainSimulator
             }
             else if (newModel == Neuron.modelType.Always)
             {
+                n.axonDelay = 4;
                 StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 3, 3, 3) };
                 sp.Children.Add(new Label { Content = "Period: " });
                 ComboBox cb0 = (Utils.CreateComboBox("AxonDelay", n.axonDelay, alwaysDelayValues, intFormatString, 80, ComboBox_ContentChanged));
@@ -356,7 +364,7 @@ namespace BrainSimulator
                                 int sourceID = (int)cm.GetValue(NeuronIDProperty);
                                 if (sp.Children.Count > 1 && sp.Children[1] is TextBlock tb1)
                                 {
-                                    int.TryParse(tb1.Text.Substring(0, 8), out int targetID);
+                                    int.TryParse(Regex.Match(tb1.Text, @"\S+").ToString(), out int targetID);
                                     if (mi.Header.ToString().Contains("In"))
                                     {
                                         int temp = targetID;
@@ -377,7 +385,7 @@ namespace BrainSimulator
                             }
                             if (tb0.Name == "neuron")
                             {
-                                int.TryParse(tb0.Text.Substring(0, 8), out int targetID);
+                                int.TryParse(Regex.Match(tb0.Text, @"\S+").ToString(), out int targetID);
                                 Neuron n1 = MainWindow.theNeuronArray.GetNeuron(targetID);
                                 ContextMenu cm1 = NeuronView.CreateContextMenu(n1.id, n1, new ContextMenu() { IsOpen = true, });
                                 MainWindow.arrayView.targetNeuronIndex = targetID;
@@ -471,6 +479,7 @@ namespace BrainSimulator
             if (sender is ComboBox cb)
             {
                 if (!cb.IsArrangeValid) return;
+                
                 if (cb.Name == "LeakRate")
                 {
                     leakRateChanged = true;
@@ -807,6 +816,13 @@ namespace BrainSimulator
             Neuron.modelType nm = (Neuron.modelType)System.Enum.Parse(typeof(Neuron.modelType), lbi.Content.ToString());
 
             Neuron n = MainWindow.theNeuronArray.GetNeuron(neuronID);
+            if (nm == Neuron.modelType.Burst)
+            {
+                n.axonDelay = 4;
+                n.leakRate = 4;
+                leakRateChanged = true;
+                axonDelayChanged = true;
+            }
             SetCustomCMItems(cm, n, nm);
         }
         private static void SetValueInSelectedNeurons(Neuron n, string property)

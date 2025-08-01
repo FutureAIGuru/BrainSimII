@@ -82,7 +82,8 @@ namespace NeuronEngine
 		__declspec(dllexport)  void AddToCurrentValue(float weight);
 
 		__declspec(dllexport)  bool Fire1(long long generation);
-		void Fire2();
+		void Fire2(long long cycle);
+		bool IsGated(long long cycle);
 		void HandleHebbian2Synapses();
 		void Fire3(long long cycle);
 

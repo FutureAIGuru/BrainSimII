@@ -374,6 +374,7 @@
                         <ComboBoxItem>Hebbian2</ComboBoxItem>
                         <ComboBoxItem>Hebbian3</ComboBoxItem>
                         <ComboBoxItem>Gate</ComboBoxItem>
+                        <ComboBoxItem>Learn</ComboBoxItem>
                     </ComboBox>
                     <Label Width="10"></Label>
                     <CheckBox x:Name="SynapseUpdate" VerticalAlignment="Center" IsChecked="True">Update from click</CheckBox>

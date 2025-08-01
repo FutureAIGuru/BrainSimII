@@ -51,6 +51,10 @@ namespace BrainSimulator
             l.Stroke = new SolidColorBrush(Utils.RainbowColorFromValue(s.weight));
             if (s.model == Synapse.modelType.Gate)
                 l.Stroke = new SolidColorBrush(Colors.LightCoral);
+            if (s.model == Synapse.modelType.Learn)
+                l.Stroke = new SolidColorBrush(Colors.Aquamarine);
+            if ((s.model == Synapse.modelType.Learn || s.model == Synapse.modelType.Gate) && s.weight < 0)
+                l.StrokeDashArray = new DoubleCollection() { dp.NeuronDisplaySize/100, dp.NeuronDisplaySize/200 }; // make stroke dashed
             
             l.StrokeEndLineCap = PenLineCap.Round;
             l.StrokeStartLineCap = PenLineCap.Round;
@@ -103,14 +107,14 @@ namespace BrainSimulator
             return s;
         }
 
-   
 
-        public static UIElement  GetWeightBargraph(Point p1, Point p2, int source, int target, float weight,Synapse.modelType model)
+
+        public static UIElement GetWeightBargraph(Point p1, Point p2, int source, int target, float weight, Synapse.modelType model)
         {
             Canvas canvas = new Canvas();
 
             // Compute center point of the graph
-            double centerX = (p1.X + p2.X) / 2;  
+            double centerX = (p1.X + p2.X) / 2;
             double centerY = (p1.Y + p2.Y) / 2;
             Modules.PointPlus pt = Utils.ExtendSegment(p1, p2, -dp.NeuronDisplaySize * .5f, false);
             centerX = pt.X; centerY = pt.Y;
@@ -155,7 +159,6 @@ namespace BrainSimulator
                 Stroke = Brushes.Black,
                 StrokeThickness = 1
             };
-            bar.SetValue(NeuronArrayView.ShapeType, NeuronArrayView.shapeType.Synapse);
 
             // Position rectangle (centered horizontally, aligned vertically from center)
             Canvas.SetLeft(bar, centerX - barWidth / 2);
@@ -181,11 +184,11 @@ namespace BrainSimulator
             Canvas.SetLeft(text, centerX - textSize.Width / 2);
             Canvas.SetTop(text, centerY - textSize.Height / 2);
             canvas.Children.Add(text);
-            SetElementValues(canvas,source,target,weight,model);
+            SetElementValues(canvas, source, target, weight, model);
             return canvas;
         }
 
-        private static void SetElementValues(UIElement element,int source, int target, float weight, Synapse.modelType model)
+        private static void SetElementValues(UIElement element, int source, int target, float weight, Synapse.modelType model)
         {
             element.SetValue(NeuronArrayView.ShapeType, NeuronArrayView.shapeType.Synapse);
             element.SetValue(SourceIDProperty, source);
@@ -310,6 +313,7 @@ namespace BrainSimulator
                 });
             }
             cb.SelectedIndex = (int)s.model;
+            cb.SelectionChanged += Cb_SelectionChanged;
             sp.Children.Add(cb);
             cm.Items.Add(new MenuItem { Header = sp, StaysOpenOnClick = true });
 
@@ -330,6 +334,24 @@ namespace BrainSimulator
 
             cm.Items.Add(new MenuItem { Header = sp, StaysOpenOnClick = true });
 
+        }
+
+        private static void Cb_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is ComboBox cb && cb.Name == "Model")
+            {
+                if (((ListBoxItem)cb.SelectedValue).Content.ToString() == "Hebbian3")
+                {
+                    //set the weight combobox to 0.2
+                    var root = (StackPanel)cb.Parent;
+                    var root1 = (MenuItem)root.Parent;
+                    var root2 = root1.Parent;
+                    if (Utils.FindByName((Visual)root2, "SynapseWeight") is ComboBox weightCombo)
+                    {
+                        weightCombo.Text = "0.2";
+                    }
+                }
+            }
         }
 
         private static void TextChanged(object sender, TextChangedEventArgs e)
@@ -364,6 +386,7 @@ namespace BrainSimulator
             if (sender is ComboBox cb)
             {
                 if (!cb.IsArrangeValid) return;
+
                 if (cb.Name == "SynapseWeight")
                 {
                     weightChanged = true;

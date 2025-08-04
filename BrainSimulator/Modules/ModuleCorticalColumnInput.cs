@@ -73,7 +73,7 @@ namespace BrainSimulator.Modules
                 mv.GetNeuronAt(0, 0).Label = "\"Input\"";
             mv.GetNeuronAt(0, 0).Model = Neuron.modelType.Burst;
             mv.GetNeuronAt(0, 0).LeakRate= 4;
-            mv.GetNeuronAt(0, 0).AxonDelay = 10;
+            mv.GetNeuronAt(0, 0).AxonDelay = 8;
 
             Neuron nFireOut = theNeuronArray.GetNeuron("Fire-Out");
             Neuron nNewCol = theNeuronArray.GetNeuron("New-Col");

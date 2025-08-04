@@ -519,6 +519,13 @@ namespace BrainSimulator
                             if ((synapse.model == Synapse.modelType.Gate|| synapse.model == Synapse.modelType.Learn) && 
                                  lastFired < MainWindow.theNeuronArray.Generation - 3) continue;
 
+                            //hack for demo to correct display of neurons with incoming neg gate synapses
+                            if (n.Label == "Request")
+                            {
+                                Neuron nInFired = MainWindow.theNeuronArray.GetNeuron("in-fired");
+                                if (nInFired.LastCharge == 1) continue;
+                            }
+
                             //animate charges along the axons
                             var fill = Brushes.Yellow;
                             if (synapse.weight < 0)
@@ -585,6 +592,16 @@ namespace BrainSimulator
                     }
                     if (a.graphic is NeuronView.FillableDisc f)
                     {
+                        //hack for demo to correct display of neurons with incoming neg gate synapses
+                        if (a.label != null)
+                        {
+                            string lbl = MainWindow.theNeuronArray.GetNeuron(a.neuronIndex).Label;
+                            if (lbl == "Request")
+                            {
+                                Neuron nInFired = MainWindow.theNeuronArray.GetNeuron("in-fired");
+                                if (nInFired.LastCharge == 1) continue;
+                            }
+                        }
                         float x = n.lastCharge;
                         if (a.label != null && x >= 1)
                             a.label.Foreground = new SolidColorBrush(Colors.Black);
@@ -598,6 +615,7 @@ namespace BrainSimulator
                         SolidColorBrush newColor = null;
                         if (x != a.prevValue)
                         {
+
                             a.prevValue = x;
 
                             newColor = NeuronView.GetNeuronColor(n);

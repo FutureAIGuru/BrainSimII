@@ -281,11 +281,13 @@ namespace BrainSimulator
                             Neuron n = MainWindow.theNeuronArray.GetNeuron(Id);
                             foreach (Synapse s in n.Synapses)
                             {
-                                if (s.model != Synapse.modelType.Fixed)
+                                if (s.model == Synapse.modelType.Hebbian1 ||
+                                    s.model == Synapse.modelType.Hebbian2 ||
+                                    s.model == Synapse.modelType.Hebbian3)
                                 {
                                     //TODO: Add some UI for this:
                                     //s.model = Synapse.modelType.Hebbian2;
-                                    n.AddSynapseWithUndo(s.targetNeuron, 0, s.model);
+                                    n.AddSynapseWithUndo(s.targetNeuron, 0.2f, s.model);
                                     s.Weight = 0;
                                 }
                             }

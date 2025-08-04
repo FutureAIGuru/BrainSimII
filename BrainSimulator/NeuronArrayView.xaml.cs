@@ -463,19 +463,6 @@ namespace BrainSimulator
             }
             else
             {
-                //for small arrays, repaint everything so synapse weights will update
-                //if (false) //use this for testing of 
-                //if (neuronsOnScreen.Count < 451 && scale == 1)
-                //{
-                //    Update();
-                //    if (MainWindow.theNeuronArray != null)
-                //    {
-                //        MainWindow.UpdateDisplayLabel(dp.NeuronDisplaySize);
-                //        MainWindow.UpdateEngineLabel((int)MainWindow.theNeuronArray.lastFireCount);
-                //    }
-                //    return;
-                //}
-
                 SetTargetNeuronSymbol();
                 if (animationCanvas == null)
                 {
@@ -502,7 +489,6 @@ namespace BrainSimulator
                     if (MainWindow.theNeuronArray.animateSynapses)
                     {
                         //synapse animation trial
-                        float electronSize = dp.NeuronDisplaySize * .2f;
                         n.synapses = MainWindow.theNeuronArray.GetSynapsesList(n.id);
                         Point pStart = dp.pointFromNeuron(n.id);
                         //pstart is the UL corner of the neuron...adjust to the center
@@ -510,25 +496,45 @@ namespace BrainSimulator
                         pStart.Y += dp.NeuronDisplaySize / 2;
                         foreach (Synapse synapse in n.synapses)
                         {
+                            float electronSize = 3+  dp.NeuronDisplaySize * .3f * Math.Abs(synapse.weight);
                             Point pTarget = dp.pointFromNeuron(synapse.targetNeuron);
                             //pTarget is the UL corner of the neuron...adjust to the center
                             pTarget.X += dp.NeuronDisplaySize / 2;
                             pTarget.Y += dp.NeuronDisplaySize / 2;
 
                             //put the little bar graph in the center of hebbian3 synapses
-                            if ((synapse.model == Synapse.modelType.Hebbian3 || synapse.model == Synapse.modelType.Hebbian2)
-                                && dp.NeuronDisplaySize > 75)
+                            if ((synapse.model == Synapse.modelType.Hebbian3 || 
+                                synapse.model == Synapse.modelType.Hebbian2 ||
+                                synapse.model == Synapse.modelType.Hebbian1)
+                                && dp.NeuronDisplaySize > 75 && synapse.weight != .2f)
                             {
-                                var graph = SynapseView.GetWeightBargraph(pStart, pTarget, synapse.weight);
+                                var graph = SynapseView.GetWeightBargraph(pStart, pTarget,
+                                    n.id,synapse.targetNeuron, synapse.weight,synapse.model);
                                 synapseGraphCanvas.Children.Add(graph);
                             }
-                            if (n.lastCharge < 1) continue;
+                            if (n.lastCharge < 1 
+                                && synapse.model != Synapse.modelType.Gate 
+                                && synapse.model != Synapse.modelType.Learn) continue;
+                            long lastFired = MainWindow.theNeuronArray.GetCompleteNeuron(n.id).LastFired;
+                            if ((synapse.model == Synapse.modelType.Gate|| synapse.model == Synapse.modelType.Learn) && 
+                                 lastFired < MainWindow.theNeuronArray.Generation - 3) continue;
+
+                            //hack for demo to correct display of neurons with incoming neg gate synapses
+                            if (n.Label == "Request")
+                            {
+                                Neuron nInFired = MainWindow.theNeuronArray.GetNeuron("in-fired");
+                                if (nInFired.LastCharge == 1) continue;
+                            }
 
                             //animate charges along the axons
                             var fill = Brushes.Yellow;
                             if (synapse.weight < 0)
                                 fill = Brushes.DeepPink;
-
+                            if (synapse.model == Synapse.modelType.Gate || synapse.model == Synapse.modelType.Learn)
+                            {
+                                fill = Brushes.Blue;
+                                electronSize = dp.NeuronDisplaySize * .15f;
+                            }
                             // Create the disk (Ellipse)
                             Ellipse disk = new Ellipse
                             {
@@ -540,11 +546,12 @@ namespace BrainSimulator
                             Canvas.SetLeft(disk, pStart.X - electronSize / 2);
                             Canvas.SetTop(disk, pStart.Y - electronSize / 2);
                             animationCanvas.Children.Add(disk);
+                            
                             var animX = new DoubleAnimation
                             {
                                 From = pStart.X - electronSize / 2,
                                 To = pTarget.X - electronSize / 2,
-                                Duration = TimeSpan.FromMilliseconds(500)
+                                Duration = TimeSpan.FromMilliseconds(MainWindow.EngineDelay)
                             };
                             Storyboard.SetTarget(animX, disk);
                             Storyboard.SetTargetProperty(animX, new PropertyPath("(Canvas.Left)"));
@@ -552,7 +559,7 @@ namespace BrainSimulator
                             {
                                 From = pStart.Y - electronSize / 2,
                                 To = pTarget.Y - electronSize / 2,
-                                Duration = TimeSpan.FromMilliseconds(500)
+                                Duration = TimeSpan.FromMilliseconds(MainWindow.EngineDelay)
                             };
                             Storyboard.SetTarget(animY, disk);
                             Storyboard.SetTargetProperty(animY, new PropertyPath("(Canvas.Top)"));
@@ -585,6 +592,16 @@ namespace BrainSimulator
                     }
                     if (a.graphic is NeuronView.FillableDisc f)
                     {
+                        //hack for demo to correct display of neurons with incoming neg gate synapses
+                        if (a.label != null)
+                        {
+                            string lbl = MainWindow.theNeuronArray.GetNeuron(a.neuronIndex).Label;
+                            if (lbl == "Request")
+                            {
+                                Neuron nInFired = MainWindow.theNeuronArray.GetNeuron("in-fired");
+                                if (nInFired.LastCharge == 1) continue;
+                            }
+                        }
                         float x = n.lastCharge;
                         if (a.label != null && x >= 1)
                             a.label.Foreground = new SolidColorBrush(Colors.Black);
@@ -598,6 +615,7 @@ namespace BrainSimulator
                         SolidColorBrush newColor = null;
                         if (x != a.prevValue)
                         {
+
                             a.prevValue = x;
 
                             newColor = NeuronView.GetNeuronColor(n);

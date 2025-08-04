@@ -416,8 +416,8 @@ namespace BrainSimulator
 
             if (!IsDestinationClear(neuronsToMove, offset))
             {
-                MessageBoxResult result = MessageBox.Show("Some destination neurons are in use and will be overwritten, continue?\n\nYou can also right-click the final destination neuron and select 'Move Here.'", "Continue", MessageBoxButton.YesNo);
-                if (result == MessageBoxResult.No) return;
+                MessageBoxResult result = MessageBox.Show("Some destination neurons are in use and will be overwritten, continue?\n\nYou can also right-click the final destination neuron and select 'Move Here.'", "Continue", MessageBoxButton.OKCancel);
+                if (result != MessageBoxResult.OK) return;
             }
 
             if (!dragging)

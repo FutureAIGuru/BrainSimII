@@ -289,7 +289,7 @@ namespace NeuronEngine
 				if (tempVal & bitMask)
 				{
 					NeuronBase* theNeuron = GetNeuron(i * 64 + j);
-					theNeuron->Fire2();
+					theNeuron->Fire2(cycle);
 				}
 				bitMask = bitMask << 1;
 			}

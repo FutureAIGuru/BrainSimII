@@ -1,422 +1,426 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <Nullable>disable</Nullable>
-    <UseWPF>true</UseWPF>
-    <UseWindowsForms>True</UseWindowsForms>
-    <PlatformTarget>x64</PlatformTarget>
-    <BaseOutputPath>bin\</BaseOutputPath>
-    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-    <Version>$(VersionPrefix)</Version>
-    <AssemblyVersion>1.8</AssemblyVersion>
-    <ApplicationIcon>Iconsmall.ico</ApplicationIcon>
-    <SourceRevisionId>build$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
-    <PackageIcon>iconsmall.ico</PackageIcon>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net9.0-windows7.0</TargetFramework>
+        <Nullable>disable</Nullable>
+        <UseWPF>true</UseWPF>
+        <UseWindowsForms>True</UseWindowsForms>
+        <PlatformTarget>x64</PlatformTarget>
+        <BaseOutputPath>bin\</BaseOutputPath>
+        <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+        <Version>$(VersionPrefix)</Version>
+        <AssemblyVersion>1.8</AssemblyVersion>
+        <ApplicationIcon>Iconsmall.ico</ApplicationIcon>
+        <SourceRevisionId>build$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
+        <PackageIcon>iconsmall.ico</PackageIcon>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Tools\**" />
-    <EmbeddedResource Remove="Tools\**" />
-    <None Remove="Tools\**" />
-    <Page Remove="Tools\**" />
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="Tools\**" />
+        <EmbeddedResource Remove="Tools\**" />
+        <None Remove="Tools\**" />
+        <Page Remove="Tools\**" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="SplashScreenOld.xaml.cs" />
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="SplashScreenOld.xaml.cs" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="bsicon.ico" />
-    <None Remove="favicon.ico" />
-    <None Remove="Networks\3DSim.xml" />
-    <None Remove="Networks\BabyTalk.xml" />
-    <None Remove="Networks\BasicNeurons.xml" />
-    <None Remove="Networks\ColorIdentifier.xml" />
-    <None Remove="Networks\Commands.txt" />
-    <None Remove="Networks\GameOfLife.xml" />
-    <None Remove="Networks\HebbianSynapses.xml" />
-    <None Remove="Networks\Imagination.xml" />
-    <None Remove="Networks\Maze.xml" />
-    <None Remove="Networks\ModuleDescriptions.xml" />
-    <None Remove="Networks\NeuralGraph.xml" />
-    <None Remove="Networks\ObjectMotion.xml" />
-    <None Remove="Networks\Perception.xml" />
-    <None Remove="Networks\Sallie.xml" />
-    <None Remove="Networks\SimVision.xml" />
-    <None Remove="Networks\SpeechTest.xml" />
-    <None Remove="Networks\TestData\Blank.png" />
-    <None Remove="Networks\TestData\ColorVariation\Blue rectangle.png" />
-    <None Remove="Networks\TestData\ColorVariation\Red rectangle 1.png" />
-    <None Remove="Networks\TestData\ColorVariation\Red rectangle 2.png" />
-    <None Remove="Networks\TestData\ColorVariation\White triangle.png" />
-    <None Remove="Networks\TestData\Motion\1 One Triangle.png" />
-    <None Remove="Networks\TestData\Motion\2 two triangles .png" />
-    <None Remove="Networks\TestData\Motion\3 Three triangle.png" />
-    <None Remove="Networks\TestData\Motion\4 Three triangle Center Moved.png" />
-    <None Remove="Networks\TestData\Motion\Three triangle %28R1%29.png" />
-    <None Remove="Networks\TestData\Motion\Three triangle %28Z1%29.png" />
-    <None Remove="Networks\TestData\Relationships\1.png" />
-    <None Remove="Networks\TestData\Relationships\1.txt" />
-    <None Remove="Networks\TestData\Relationships\2.png" />
-    <None Remove="Networks\TestData\Relationships\2.txt" />
-    <None Remove="Networks\TestData\Relationships\3.png" />
-    <None Remove="Networks\TestData\Relationships\3.txt" />
-    <None Remove="Networks\TestData\Relationships\4.png" />
-    <None Remove="Networks\TestData\Relationships\4.txt" />
-    <None Remove="Networks\TestData\Relationships\5.png" />
-    <None Remove="Networks\TestData\Relationships\5.txt" />
-    <None Remove="Networks\TestData\Relationships\6.png" />
-    <None Remove="Networks\TestData\Relationships\6.txt" />
-    <None Remove="Networks\TestData\Relationships\8.png" />
-    <None Remove="Networks\TestData\Relationships\8.txt" />
-    <None Remove="Networks\TestData\Relationships\9.png" />
-    <None Remove="Networks\TestData\Relationships\9.txt" />
-    <None Remove="Networks\TestData\Relationships\two triangles %28blue%29.png" />
-    <None Remove="Networks\TestData\Relationships\two triangles %28blue%29.txt" />
-    <None Remove="Networks\TestData\Relationships\two triangles.png" />
-    <None Remove="Networks\TestData\Relationships\two triangles.txt" />
-    <None Remove="Networks\TestData\ShapeTest\1.png" />
-    <None Remove="Networks\TestData\ShapeTest\2.png" />
-    <None Remove="Networks\TestData\ShapeTest\3.png" />
-    <None Remove="Networks\TestData\ShapeTest\4.png" />
-    <None Remove="Networks\TestData\ShapeTest\5.png" />
-    <None Remove="Networks\TestData\SingleShapes\Blue Line.png" />
-    <None Remove="Networks\TestData\SingleShapes\Blue rectangle.png" />
-    <None Remove="Networks\TestData\SingleShapes\Blue square.png" />
-    <None Remove="Networks\TestData\SingleShapes\Blue triangle.png" />
-    <None Remove="Networks\TestData\SingleShapes\Red Line.png" />
-    <None Remove="Networks\TestData\SingleShapes\Red rectangle.png" />
-    <None Remove="Networks\TestData\SingleShapes\Red square.png" />
-    <None Remove="Networks\TestData\SingleShapes\Red triangle.png" />
-    <None Remove="Networks\TestData\SingleShapes\Yellow Line.png" />
-    <None Remove="Networks\TestData\SingleShapes\Yellow rectangle.png" />
-    <None Remove="Networks\TestData\SingleShapes\Yellow square.png" />
-    <None Remove="Networks\TestData\SingleShapes\Yellow triangle.png" />
-    <None Remove="Resources\charactergrowfont.png" />
-    <None Remove="Resources\charactershrinkfont.png" />
-    <None Remove="Resources\ClearHistory.png" />
-    <None Remove="Resources\Close.png" />
-    <None Remove="Resources\diskette.png" />
-    <None Remove="Resources\Entity.png" />
-    <None Remove="Resources\facebook-3-24.ico" />
-    <None Remove="Resources\FullScreen.png" />
-    <None Remove="Resources\github-9-24.ico" />
-    <None Remove="Resources\Hand.png" />
-    <None Remove="Resources\Icons\Copy_16x.png" />
-    <None Remove="Resources\Icons\Cut_16x.png" />
-    <None Remove="Resources\Icons\Hand.png" />
-    <None Remove="Resources\Icons\NewFile_16x.png" />
-    <None Remove="Resources\Icons\OpenFile_16x.png" />
-    <None Remove="Resources\Icons\Paste_16x.png" />
-    <None Remove="Resources\Icons\Pause_16x.png" />
-    <None Remove="Resources\Icons\QuickFind_16x.png" />
-    <None Remove="Resources\Icons\Refresh_16x.png" />
-    <None Remove="Resources\Icons\SaveAs_16x.png" />
-    <None Remove="Resources\Icons\Save_16x.png" />
-    <None Remove="Resources\Icons\SelectAll_16x.png" />
-    <None Remove="Resources\Icons\Undo_16x.png" />
-    <None Remove="Resources\Icons\ZoomIn_16x.png" />
-    <None Remove="Resources\Icons\ZoomOriginalSize_16x.png" />
-    <None Remove="Resources\Icons\ZoomOut_16x.png" />
-    <None Remove="Resources\mailing-list-icon-17.jpg" />
-    <None Remove="Resources\Pause.png" />
-    <None Remove="Resources\Play.png" />
-    <None Remove="Resources\Record.png" />
-    <None Remove="Resources\Rewind.png" />
-    <None Remove="Resources\SplashScreen2.png" />
-    <None Remove="Resources\Step.png" />
-    <None Remove="Resources\youtube-24.ico" />
-    <None Remove="Resources\ZoomIn.png" />
-    <None Remove="Resources\ZoomOut.png" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="bsicon.ico" />
+        <None Remove="favicon.ico" />
+        <None Remove="Networks\3DSim.xml" />
+        <None Remove="Networks\BabyTalk.xml" />
+        <None Remove="Networks\BasicNeurons.xml" />
+        <None Remove="Networks\ColorIdentifier.xml" />
+        <None Remove="Networks\Commands.txt" />
+        <None Remove="Networks\GameOfLife.xml" />
+        <None Remove="Networks\HebbianSynapses.xml" />
+        <None Remove="Networks\Imagination.xml" />
+        <None Remove="Networks\Maze.xml" />
+        <None Remove="Networks\ModuleDescriptions.xml" />
+        <None Remove="Networks\NeuralGraph.xml" />
+        <None Remove="Networks\ObjectMotion.xml" />
+        <None Remove="Networks\Perception.xml" />
+        <None Remove="Networks\Sallie.xml" />
+        <None Remove="Networks\SimVision.xml" />
+        <None Remove="Networks\SpeechTest.xml" />
+        <None Remove="Networks\TestData\Blank.png" />
+        <None Remove="Networks\TestData\ColorVariation\Blue rectangle.png" />
+        <None Remove="Networks\TestData\ColorVariation\Red rectangle 1.png" />
+        <None Remove="Networks\TestData\ColorVariation\Red rectangle 2.png" />
+        <None Remove="Networks\TestData\ColorVariation\White triangle.png" />
+        <None Remove="Networks\TestData\Motion\1 One Triangle.png" />
+        <None Remove="Networks\TestData\Motion\2 two triangles .png" />
+        <None Remove="Networks\TestData\Motion\3 Three triangle.png" />
+        <None Remove="Networks\TestData\Motion\4 Three triangle Center Moved.png" />
+        <None Remove="Networks\TestData\Motion\Three triangle %28R1%29.png" />
+        <None Remove="Networks\TestData\Motion\Three triangle %28Z1%29.png" />
+        <None Remove="Networks\TestData\Relationships\1.png" />
+        <None Remove="Networks\TestData\Relationships\1.txt" />
+        <None Remove="Networks\TestData\Relationships\2.png" />
+        <None Remove="Networks\TestData\Relationships\2.txt" />
+        <None Remove="Networks\TestData\Relationships\3.png" />
+        <None Remove="Networks\TestData\Relationships\3.txt" />
+        <None Remove="Networks\TestData\Relationships\4.png" />
+        <None Remove="Networks\TestData\Relationships\4.txt" />
+        <None Remove="Networks\TestData\Relationships\5.png" />
+        <None Remove="Networks\TestData\Relationships\5.txt" />
+        <None Remove="Networks\TestData\Relationships\6.png" />
+        <None Remove="Networks\TestData\Relationships\6.txt" />
+        <None Remove="Networks\TestData\Relationships\8.png" />
+        <None Remove="Networks\TestData\Relationships\8.txt" />
+        <None Remove="Networks\TestData\Relationships\9.png" />
+        <None Remove="Networks\TestData\Relationships\9.txt" />
+        <None Remove="Networks\TestData\Relationships\two triangles %28blue%29.png" />
+        <None Remove="Networks\TestData\Relationships\two triangles %28blue%29.txt" />
+        <None Remove="Networks\TestData\Relationships\two triangles.png" />
+        <None Remove="Networks\TestData\Relationships\two triangles.txt" />
+        <None Remove="Networks\TestData\ShapeTest\1.png" />
+        <None Remove="Networks\TestData\ShapeTest\2.png" />
+        <None Remove="Networks\TestData\ShapeTest\3.png" />
+        <None Remove="Networks\TestData\ShapeTest\4.png" />
+        <None Remove="Networks\TestData\ShapeTest\5.png" />
+        <None Remove="Networks\TestData\SingleShapes\Blue Line.png" />
+        <None Remove="Networks\TestData\SingleShapes\Blue rectangle.png" />
+        <None Remove="Networks\TestData\SingleShapes\Blue square.png" />
+        <None Remove="Networks\TestData\SingleShapes\Blue triangle.png" />
+        <None Remove="Networks\TestData\SingleShapes\Red Line.png" />
+        <None Remove="Networks\TestData\SingleShapes\Red rectangle.png" />
+        <None Remove="Networks\TestData\SingleShapes\Red square.png" />
+        <None Remove="Networks\TestData\SingleShapes\Red triangle.png" />
+        <None Remove="Networks\TestData\SingleShapes\Yellow Line.png" />
+        <None Remove="Networks\TestData\SingleShapes\Yellow rectangle.png" />
+        <None Remove="Networks\TestData\SingleShapes\Yellow square.png" />
+        <None Remove="Networks\TestData\SingleShapes\Yellow triangle.png" />
+        <None Remove="Resources\charactergrowfont.png" />
+        <None Remove="Resources\charactershrinkfont.png" />
+        <None Remove="Resources\ClearHistory.png" />
+        <None Remove="Resources\Close.png" />
+        <None Remove="Resources\discord_icon_24x24.ico" />
+        <None Remove="Resources\diskette.png" />
+        <None Remove="Resources\Entity.png" />
+        <None Remove="Resources\facebook-3-24.ico" />
+        <None Remove="Resources\FullScreen.png" />
+        <None Remove="Resources\github-9-24.ico" />
+        <None Remove="Resources\Hand.png" />
+        <None Remove="Resources\Icons\Copy_16x.png" />
+        <None Remove="Resources\Icons\Cut_16x.png" />
+        <None Remove="Resources\Icons\Hand.png" />
+        <None Remove="Resources\Icons\NewFile_16x.png" />
+        <None Remove="Resources\Icons\OpenFile_16x.png" />
+        <None Remove="Resources\Icons\Paste_16x.png" />
+        <None Remove="Resources\Icons\Pause_16x.png" />
+        <None Remove="Resources\Icons\QuickFind_16x.png" />
+        <None Remove="Resources\Icons\Refresh_16x.png" />
+        <None Remove="Resources\Icons\SaveAs_16x.png" />
+        <None Remove="Resources\Icons\Save_16x.png" />
+        <None Remove="Resources\Icons\SelectAll_16x.png" />
+        <None Remove="Resources\Icons\Undo_16x.png" />
+        <None Remove="Resources\Icons\ZoomIn_16x.png" />
+        <None Remove="Resources\Icons\ZoomOriginalSize_16x.png" />
+        <None Remove="Resources\Icons\ZoomOut_16x.png" />
+        <None Remove="Resources\mailing-list-icon-17.jpg" />
+        <None Remove="Resources\Pause.png" />
+        <None Remove="Resources\Play.png" />
+        <None Remove="Resources\Record.png" />
+        <None Remove="Resources\Rewind.png" />
+        <None Remove="Resources\SplashScreen2.png" />
+        <None Remove="Resources\Step.png" />
+        <None Remove="Resources\youtube-24.ico" />
+        <None Remove="Resources\ZoomIn.png" />
+        <None Remove="Resources\ZoomOut.png" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Page Remove="SplashScreenOld.xaml" />
-  </ItemGroup>
+    <ItemGroup>
+        <Page Remove="SplashScreenOld.xaml" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="bsicon.ico" />
-    <Content Include="favicon.ico" />
-    <Content Include="Iconsmall.ico" />
-    <Content Include="Networks\3DSim.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\BabyTalk.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\BasicNeurons.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\ColorIdentifier.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\Commands.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\GameOfLife.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\HebbianSynapses.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\Imagination.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\Maze.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\ModuleDescriptions.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\NeuralGraph.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\ObjectMotion.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\Perception.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\Sallie.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\SimVision.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\SpeechTest.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Blank.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Motion\1 One Triangle.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Motion\2 two triangles .png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Motion\3 Three triangle.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Motion\4 Three triangle Center Moved.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Motion\Three triangle (R1).png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Motion\Three triangle (Z1).png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Relationships\1.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Relationships\1.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Relationships\2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Relationships\2.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Relationships\3.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Relationships\3.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Relationships\4.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Relationships\4.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Relationships\5.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Relationships\5.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Relationships\6.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Relationships\6.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Relationships\8.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Relationships\8.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Relationships\9.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Relationships\9.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Relationships\two triangles (blue).png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Relationships\two triangles (blue).txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Relationships\two triangles.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\Relationships\two triangles.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\SingleShapes\Blue Line.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\SingleShapes\Blue rectangle.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\SingleShapes\Blue square.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\SingleShapes\Blue triangle.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\SingleShapes\Red Line.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\SingleShapes\Red rectangle.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\SingleShapes\Red square.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\SingleShapes\Red triangle.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\SingleShapes\Yellow Line.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\SingleShapes\Yellow rectangle.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\SingleShapes\Yellow square.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\SingleShapes\Yellow triangle.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+    <ItemGroup>
+        <Content Include="bsicon.ico" />
+        <Content Include="favicon.ico" />
+        <Content Include="Iconsmall.ico" />
+        <Content Include="Networks\3DSim.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\BabyTalk.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\BasicNeurons.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\ColorIdentifier.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\Commands.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\GameOfLife.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\HebbianSynapses.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\Imagination.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\Maze.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\ModuleDescriptions.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\NeuralGraph.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\ObjectMotion.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\Perception.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\Sallie.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\SimVision.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\SpeechTest.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Blank.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Motion\1 One Triangle.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Motion\2 two triangles .png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Motion\3 Three triangle.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Motion\4 Three triangle Center Moved.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Motion\Three triangle (R1).png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Motion\Three triangle (Z1).png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Relationships\1.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Relationships\1.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Relationships\2.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Relationships\2.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Relationships\3.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Relationships\3.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Relationships\4.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Relationships\4.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Relationships\5.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Relationships\5.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Relationships\6.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Relationships\6.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Relationships\8.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Relationships\8.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Relationships\9.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Relationships\9.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Relationships\two triangles (blue).png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Relationships\two triangles (blue).txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Relationships\two triangles.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\Relationships\two triangles.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\SingleShapes\Blue Line.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\SingleShapes\Blue rectangle.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\SingleShapes\Blue square.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\SingleShapes\Blue triangle.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\SingleShapes\Red Line.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\SingleShapes\Red rectangle.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\SingleShapes\Red square.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\SingleShapes\Red triangle.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\SingleShapes\Yellow Line.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\SingleShapes\Yellow rectangle.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\SingleShapes\Yellow square.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\SingleShapes\Yellow triangle.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\NeuronEngineWrapper\NeuronEngineWrapper.vcxproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\NeuronEngineWrapper\NeuronEngineWrapper.vcxproj">
+          <TreatAsUsed>true</TreatAsUsed>
+        </ProjectReference>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="Resources\charactergrowfont.png" />
-    <Resource Include="Resources\charactershrinkfont.png" />
-    <Resource Include="Resources\ClearHistory.png" />
-    <Resource Include="Resources\Close.png" />
-    <Resource Include="Resources\diskette.png" />
-    <Resource Include="Resources\Entity.png" />
-    <Resource Include="Resources\facebook-3-24.ico" />
-    <Resource Include="Resources\FullScreen.png" />
-    <Resource Include="Resources\github-9-24.ico" />
-    <Resource Include="Resources\Hand.png" />
-    <Resource Include="Resources\Icons\Copy_16x.png" />
-    <Resource Include="Resources\Icons\Cut_16x.png" />
-    <Resource Include="Resources\Icons\Hand.png" />
-    <Resource Include="Resources\Icons\NewFile_16x.png" />
-    <Resource Include="Resources\Icons\OpenFile_16x.png" />
-    <Resource Include="Resources\Icons\Paste_16x.png" />
-    <Resource Include="Resources\Icons\Pause_16x.png" />
-    <Resource Include="Resources\Icons\QuickFind_16x.png" />
-    <Resource Include="Resources\Icons\Refresh_16x.png" />
-    <Resource Include="Resources\Icons\SaveAs_16x.png" />
-    <Resource Include="Resources\Icons\Save_16x.png" />
-    <Resource Include="Resources\Icons\SelectAll_16x.png" />
-    <Resource Include="Resources\Icons\Undo_16x.png" />
-    <Resource Include="Resources\Icons\ZoomIn_16x.png" />
-    <Resource Include="Resources\Icons\ZoomOriginalSize_16x.png" />
-    <Resource Include="Resources\Icons\ZoomOut_16x.png" />
-    <Resource Include="Resources\mailing-list-icon-17.jpg" />
-    <Resource Include="Resources\Pause.png" />
-    <Resource Include="Resources\Play.png" />
-    <Resource Include="Resources\Record.png" />
-    <Resource Include="Resources\Rewind.png" />
-    <Resource Include="Resources\SplashScreen2.png" />
-    <Resource Include="Resources\Step.png" />
-    <Resource Include="Resources\youtube-24.ico" />
-    <Resource Include="Resources\ZoomIn.png" />
-    <Resource Include="Resources\ZoomOut.png" />
-  </ItemGroup>
+    <ItemGroup>
+        <Resource Include="Resources\charactergrowfont.png" />
+        <Resource Include="Resources\charactershrinkfont.png" />
+        <Resource Include="Resources\ClearHistory.png" />
+        <Resource Include="Resources\Close.png" />
+        <Resource Include="Resources\discord_icon_24x24.ico" />
+        <Resource Include="Resources\diskette.png" />
+        <Resource Include="Resources\Entity.png" />
+        <Resource Include="Resources\facebook-3-24.ico" />
+        <Resource Include="Resources\FullScreen.png" />
+        <Resource Include="Resources\github-9-24.ico" />
+        <Resource Include="Resources\Hand.png" />
+        <Resource Include="Resources\Icons\Copy_16x.png" />
+        <Resource Include="Resources\Icons\Cut_16x.png" />
+        <Resource Include="Resources\Icons\Hand.png" />
+        <Resource Include="Resources\Icons\NewFile_16x.png" />
+        <Resource Include="Resources\Icons\OpenFile_16x.png" />
+        <Resource Include="Resources\Icons\Paste_16x.png" />
+        <Resource Include="Resources\Icons\Pause_16x.png" />
+        <Resource Include="Resources\Icons\QuickFind_16x.png" />
+        <Resource Include="Resources\Icons\Refresh_16x.png" />
+        <Resource Include="Resources\Icons\SaveAs_16x.png" />
+        <Resource Include="Resources\Icons\Save_16x.png" />
+        <Resource Include="Resources\Icons\SelectAll_16x.png" />
+        <Resource Include="Resources\Icons\Undo_16x.png" />
+        <Resource Include="Resources\Icons\ZoomIn_16x.png" />
+        <Resource Include="Resources\Icons\ZoomOriginalSize_16x.png" />
+        <Resource Include="Resources\Icons\ZoomOut_16x.png" />
+        <Resource Include="Resources\mailing-list-icon-17.jpg" />
+        <Resource Include="Resources\Pause.png" />
+        <Resource Include="Resources\Play.png" />
+        <Resource Include="Resources\Record.png" />
+        <Resource Include="Resources\Rewind.png" />
+        <Resource Include="Resources\SplashScreen2.png" />
+        <Resource Include="Resources\Step.png" />
+        <Resource Include="Resources\youtube-24.ico" />
+        <Resource Include="Resources\ZoomIn.png" />
+        <Resource Include="Resources\ZoomOut.png" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="Networks\TestData\ColorVariation\Blue rectangle.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\ColorVariation\Red rectangle 1.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\ColorVariation\Red rectangle 2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\ColorVariation\White triangle.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+    <ItemGroup>
+        <Content Include="Networks\TestData\ColorVariation\Blue rectangle.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\ColorVariation\Red rectangle 1.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\ColorVariation\Red rectangle 2.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\ColorVariation\White triangle.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="Networks\TestData\ShapeTest\1.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\ShapeTest\2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\ShapeTest\3.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\ShapeTest\4.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Networks\TestData\ShapeTest\5.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+    <ItemGroup>
+        <Content Include="Networks\TestData\ShapeTest\1.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\ShapeTest\2.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\ShapeTest\3.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\ShapeTest\4.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\TestData\ShapeTest\5.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.IO.Ports" Version="6.0.0" />
-    <PackageReference Include="System.Speech" Version="6.0.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="System.IO.Ports" Version="6.0.0" />
+        <PackageReference Include="System.Speech" Version="6.0.0" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Properties\Resources.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Resources.resx</DependentUpon>
+        </Compile>
+        <Compile Update="Properties\Settings.Designer.cs">
+            <DesignTimeSharedInput>True</DesignTimeSharedInput>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Settings.settings</DependentUpon>
+        </Compile>
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Update="Properties\Resources.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Iconsmall.ico">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <None Update="Iconsmall.ico">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Update="Properties\Settings.settings">
+            <Generator>SettingsSingleFileGenerator</Generator>
+            <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+        </None>
+    </ItemGroup>
 
 </Project>

@@ -7,9 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -139,13 +136,14 @@ namespace BrainSimulator
         {
             int source = (int)theShape.GetValue(SynapseView.SourceIDProperty);
             int target = (int)theShape.GetValue(SynapseView.TargetIDProperty);
-            float weight = (float)theShape.GetValue(SynapseView.WeightValProperty);
+            //float weight = (float)theShape.GetValue(SynapseView.WeightValProperty);
             Neuron n1 = MainWindow.theNeuronArray.GetCompleteNeuron(source);
             n1 = MainWindow.theNeuronArray.AddSynapses(n1);
             if (n1.FindSynapse(target) is Synapse s1)
             {
                 theShape.ContextMenu = new ContextMenu();
                 SynapseView.CreateContextMenu(source, s1, theShape.ContextMenu);
+                theShape.ContextMenu.IsOpen = true;
             }
         }
 
@@ -156,11 +154,23 @@ namespace BrainSimulator
             LastSynapseWeight = (float)theShape.GetValue(SynapseView.WeightValProperty);
             LastSynapseModel = (Synapse.modelType)theShape.GetValue(SynapseView.ModelProperty);
             Neuron n = MainWindow.theNeuronArray.GetNeuron(source);
-            n.DeleteSynapse(target);
+            MainWindow.theNeuronArray.SetUndoPoint();
+            n.DeleteSynapseWithUndo(target);
             mouseDownNeuronIndex = source;
             currentOperation = CurrentOperation.draggingSynapse;
             Canvas parentCanvas = (Canvas)theShape.Parent;
             parentCanvas.Children.Remove(theShape);
+
+            //to fix bug where clicking on a synapse accidently removes it
+            Shape l = SynapseView.GetSynapseShape
+                (dp.pointFromNeuron(mouseDownNeuronIndex),
+                dp.pointFromNeuron(mouseDownNeuronIndex),
+                LastSynapseModel
+                );
+            l.Stroke = new SolidColorBrush(Utils.RainbowColorFromValue(LastSynapseWeight));
+            if (!(l is Ellipse))
+                l.Fill = l.Stroke;
+            synapseShape = l;
         }
 
         private void DragSynapse(int currentNeuron)
@@ -188,8 +198,8 @@ namespace BrainSimulator
                 Point p1 = e.GetPosition(theCanvas);
                 LimitMousePostion(ref p1);
                 int index = dp.NeuronFromPoint(p1);
-                MainWindow.theNeuronArray.SetUndoPoint();
-                MainWindow.arrayView.AddShowSynapses(mouseDownNeuronIndex);
+                //MainWindow.theNeuronArray.SetUndoPoint();
+                //MainWindow.arrayView.AddShowSynapses(mouseDownNeuronIndex);
                 MainWindow.theNeuronArray.GetNeuron(mouseDownNeuronIndex).
                     AddSynapseWithUndo(index, LastSynapseWeight, LastSynapseModel);
             }
@@ -422,7 +432,7 @@ namespace BrainSimulator
 
         private void MoveModule(FrameworkElement theShape, int currentNeuron)
         {
-            Debug.WriteLine("currentNeuron: " + currentNeuron + " prevModuleMouseLocation:" + prevModuleMouseLocation);
+            //Debug.WriteLine("currentNeuron: " + currentNeuron + " prevModuleMouseLocation:" + prevModuleMouseLocation);
             lock (MainWindow.theNeuronArray.modules)
             {
                 if (currentNeuron != prevModuleMouseLocation)
@@ -450,8 +460,8 @@ namespace BrainSimulator
                         }
                         if (!IsDestinationClear(neuronsToMove, delta))
                         {
-                            MessageBoxResult result1 = MessageBox.Show("Some destination neurons are in use and will be overwritten, continue?", "Continue", MessageBoxButton.YesNo);
-                            if (result1 != MessageBoxResult.Yes)
+                            MessageBoxResult result1 = MessageBox.Show("Some destination neurons are in use and will be overwritten, continue?", "Continue", MessageBoxButton.OKCancel);
+                            if (result1 != MessageBoxResult.OK)
                             {
                                 return;
                             }

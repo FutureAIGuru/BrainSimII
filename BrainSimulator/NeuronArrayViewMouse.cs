@@ -5,17 +5,12 @@
 
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Windows.Threading;
 
 namespace BrainSimulator
 {
@@ -136,6 +131,8 @@ namespace BrainSimulator
                         break;
                     case shapeType.Synapse:
                         theCanvas.Cursor = Cursors.Arrow;
+                        if (theShape is not Path && theShape is not Ellipse) //synapse hits might be in the bar graph
+                            theShape = (Canvas)theShape.Parent;
                         break;
                     case shapeType.Neuron:
                         theCanvas.Cursor = Cursors.UpArrow;
@@ -224,7 +221,7 @@ namespace BrainSimulator
 
             if (MainWindow.theNeuronArray == null) return;
             MainWindow.theNeuronArray.SetUndoPoint();
-            Debug.WriteLine("theCanvas_MouseDown" + MainWindow.theNeuronArray.Generation + theShape + theShapeType);
+            //Debug.WriteLine("theCanvas_MouseDown" + MainWindow.theNeuronArray.Generation + theShape + theShapeType);
             Point currentPosition = e.GetPosition(theCanvas);
             LimitMousePostion(ref currentPosition);
             mouseDownNeuronIndex = dp.NeuronFromPoint(currentPosition);
@@ -438,7 +435,7 @@ namespace BrainSimulator
 
             if (mouseRepeatTimer != null) mouseRepeatTimer.Stop();
             if (MainWindow.IsArrayEmpty()) return;
-            Debug.WriteLine("theCanvas_MouseUp" + MainWindow.theNeuronArray.Generation + currentOperation);
+            //Debug.WriteLine("theCanvas_MouseUp" + MainWindow.theNeuronArray.Generation + currentOperation);
             if (e.ChangedButton == MouseButton.Right) return;
 
             Point currentPosition = e.GetPosition(theCanvas);

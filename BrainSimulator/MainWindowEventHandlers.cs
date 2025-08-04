@@ -11,6 +11,8 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using static BrainSimulator.NeuronArrayView;
 
 namespace BrainSimulator
 {
@@ -69,7 +71,25 @@ namespace BrainSimulator
                     theNeuronArrayView.ClearSelection();
                     Update();
                 }
-                //TODO here is where we'd add deleting the last-clicked module (issue #160) should we choose to implement it
+                if (arrayView.theCanvas.Cursor == Cursors.Arrow)
+                {
+                    //if the mouse is currently on a synapse, delete it
+                    Point position = Mouse.GetPosition(arrayView.theCanvas);
+                    HitTestResult result = VisualTreeHelper.HitTest(arrayView.theCanvas, position);
+                    if (result != null && result.VisualHit is FrameworkElement theShape)
+                    {
+                        if ((shapeType)theShape.GetValue(ShapeType) == shapeType.Synapse)
+                        {
+                            int source = (int)theShape.GetValue(SynapseView.SourceIDProperty);
+                            int target = (int)theShape.GetValue(SynapseView.TargetIDProperty);
+                            //float weight = (float)theShape.GetValue(SynapseView.WeightValProperty);
+                            Neuron sourceNeuron = MainWindow.theNeuronArray.GetCompleteNeuron(source);
+                            MainWindow.theNeuronArray.SetUndoPoint();
+                            sourceNeuron.DeleteSynapseWithUndo(target);
+                            arrayView.Update();
+                        }
+                    }
+                }
             }
             if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
             {
@@ -88,6 +108,15 @@ namespace BrainSimulator
                     Update();
                 }
                 NeuronArrayView.StopInsertingModule();
+            }
+            if (e.Key == Key.System && e.SystemKey == Key.F10)
+            {
+                ButtonSingle_Click(null, null);
+                e.Handled = true;
+            }
+            if (e.Key == Key.F5)
+            {
+                PlayPause_Click(buttonPlay, null);
             }
             if (e.Key == Key.F1)
             {
@@ -747,7 +776,7 @@ namespace BrainSimulator
                     }
                 }
             }
-            found: ;
+        found:;
             try
             {
                 if (helpProcessTab != null)

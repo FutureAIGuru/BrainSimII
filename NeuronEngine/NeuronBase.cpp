@@ -456,7 +456,7 @@ namespace NeuronEngine
 				{
 					NeuronArrayBase::remoteQueue.push(s);
 				}
-				else if (s.GetWeight() > 0.2f || s.GetWeight() < 0)
+				else //if (s.GetWeight() > 0.2f || s.GetWeight() < 0)
 				{	//nTarget->currentCharge += s.GetWeight(); //not supported until C++20
 					auto current = nTarget->currentCharge.load(std::memory_order_relaxed);
 					float desired = current + s.GetWeight();

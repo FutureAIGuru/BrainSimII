@@ -56,14 +56,17 @@ namespace BrainSimulator.Modules
         private void AddSynapses()
         {
             //rows with hard-coded functionality
-            int inputRow = 6;
-            int outputRow = 8;
-            int thisCol = 9;
-            int recur = 10;
-            int isa = 11;
-            int has_inst = 12;
-            int has_a = 13;
-            int part_of = 14;
+            const int activateRow = 4;
+            const int deActivateRo2 = 5;
+            const int inputRow = 6;
+            const int desOutRow = 7; //desired output
+            const int outputRow = 8;
+            const int thisCol = 9;
+            const int recur = 10;
+            const int isa = 11;
+            const int has_inst = 12;
+            const int has_a = 13;
+            const int part_of = 14;
 
             Init();
             //ClearNeurons(false);
@@ -72,74 +75,76 @@ namespace BrainSimulator.Modules
             int colNum = 0;
             foreach (var module in theNeuronArray.modules)
             {
-                if (module.Label=="CorticalColumn" && module.FirstNeuron < mv.FirstNeuron)
+                if (module.Label == "CorticalColumn" && module.FirstNeuron < mv.FirstNeuron)
                     colNum++;
             }
 
-            mv.GetNeuronAt(0, 0).Label = "Col" + colNum;
+            mv.GetNeuronAt(0).Label = "Col" + colNum;
             Neuron n = theNeuronArray.GetNeuron("Request");
             if (n != null)
-                n.AddSynapse(mv.GetNeuronAt(0, 0).id, 1);
+                n.AddSynapse(mv.GetNeuronAt(0).id, 1);
 
-            mv.GetNeuronAt(0, 0).AddSynapse(mv.GetNeuronAt(0, 1).id, .2f, Synapse.modelType.Hebbian3);
-            mv.GetNeuronAt(0, 0).AddSynapse(mv.GetNeuronAt(0, 2).id, 1);
-            mv.GetNeuronAt(0, 1).Model = Neuron.modelType.LIF;
-            mv.GetNeuronAt(0, 1).LeakRate = 0.3f;
-            mv.GetNeuronAt(0, 1).AddSynapse(mv.GetNeuronAt(0, 2).id, -1);
-            mv.GetNeuronAt(0, 1).AddSynapse(mv.GetNeuronAt(0, 3).id, -1);
-            mv.GetNeuronAt(0, 2).AddSynapse(mv.GetNeuronAt(0, 3).id, 1);
-            mv.GetNeuronAt(0, 3).AddSynapse(mv.GetNeuronAt(0, 4).id, 1);
+            mv.GetNeuronAt(0).AddSynapse(mv.GetNeuronAt(0, 1).id, .2f, Synapse.modelType.Hebbian3);
+            mv.GetNeuronAt(0).AddSynapse(mv.GetNeuronAt(0, 2).id, 1);
+            mv.GetNeuronAt(1).Model = Neuron.modelType.LIF;
+            mv.GetNeuronAt(1).LeakRate = 0.3f;
+            mv.GetNeuronAt(1).AddSynapse(mv.GetNeuronAt(0, 2).id, -1);
+            mv.GetNeuronAt(0, 1).AddSynapse(mv.GetNeuronAt(3).id, -1);
+            mv.GetNeuronAt(0, 2).AddSynapse(mv.GetNeuronAt(3).id, 1);
+            mv.GetNeuronAt(0, 3).AddSynapse(mv.GetNeuronAt(4).id, 1);
 
             foreach (var module in theNeuronArray.modules)
             {
                 if (module.ModuleTypeStr.Contains("CorticalColumn") && module.FirstNeuron > mv.FirstNeuron)
                 {
-                    mv.GetNeuronAt(0, 3).AddSynapse(module.FirstNeuron + 4, -1);
+                    mv.GetNeuronAt(3).AddSynapse(module.FirstNeuron + 4, -1);
                 }
             }
 
-            mv.GetNeuronAt(0, 4).Label = "Act" + colNum;
-            mv.GetNeuronAt(0, 4).Model = Neuron.modelType.Burst;
-            mv.GetNeuronAt(0, 4).AxonDelay = 7;
-            mv.GetNeuronAt(0, 4).LeakRate = 4;
+            mv.GetNeuronAt(4).Label = "Act" + colNum;
+            mv.GetNeuronAt(4).Model = Neuron.modelType.Burst;
+            mv.GetNeuronAt(4).AxonDelay = 7;
+            mv.GetNeuronAt(4).LeakRate = 4;
 
-            mv.GetNeuronAt(0, 4).AddSynapse(mv.GetNeuronAt(0, 0).id, 1);
-            mv.GetNeuronAt(0, 4).AddSynapse(mv.GetNeuronAt(0, 1).id, 1);
-            mv.GetNeuronAt(0, 4).AddSynapse(mv.GetNeuronAt(0, 6).id, 1, Synapse.modelType.Learn);
-            mv.GetNeuronAt(0, 4).AddSynapse(mv.GetNeuronAt(0, 7).id, 1, Synapse.modelType.Learn);
+            mv.GetNeuronAt(4).AddSynapse(mv.GetNeuronAt(0).id, 1);
+            mv.GetNeuronAt(4).AddSynapse(mv.GetNeuronAt(1).id, 1);
+            mv.GetNeuronAt(4).AddSynapse(mv.GetNeuronAt(0, inputRow).id, 1, Synapse.modelType.Learn);
+            mv.GetNeuronAt(4).AddSynapse(mv.GetNeuronAt(0, desOutRow).id, 1, Synapse.modelType.Learn);
 
             mv.GetNeuronAt(5).Label = "De" + colNum;
             mv.GetNeuronAt(5).Model = Neuron.modelType.Burst;
             mv.GetNeuronAt(5).AxonDelay = 5;
             mv.GetNeuronAt(5).LeakRate = 4;
             mv.GetNeuronAt(5).AddSynapse(mv.GetNeuronAt(1).id, -1, Synapse.modelType.Learn);
-            mv.GetNeuronAt(5).AddSynapse(mv.GetNeuronAt(6).id, -1, Synapse.modelType.Learn);
-            mv.GetNeuronAt(5).AddSynapse(mv.GetNeuronAt(7).id, -1, Synapse.modelType.Learn);
-            mv.GetNeuronAt(5).AddSynapse(mv.GetNeuronAt(8).id, -1, Synapse.modelType.Learn);
+            mv.GetNeuronAt(5).AddSynapse(mv.GetNeuronAt(inputRow).id, -1, Synapse.modelType.Learn);
+            mv.GetNeuronAt(5).AddSynapse(mv.GetNeuronAt(desOutRow).id, -1, Synapse.modelType.Learn);
+            mv.GetNeuronAt(5).AddSynapse(mv.GetNeuronAt(outputRow).id, -1, Synapse.modelType.Learn);
+            mv.GetNeuronAt(5).AddSynapse(mv.GetNeuronAt(part_of).id, -1, Synapse.modelType.Learn);
 
-            mv.GetNeuronAt(6).Label = "In" + colNum;
-            mv.GetNeuronAt(6).Model = Neuron.modelType.LIF;
-            mv.GetNeuronAt(6).LeakRate = .3f;
+            mv.GetNeuronAt(inputRow).Label = "In" + colNum;
+            mv.GetNeuronAt(inputRow).Model = Neuron.modelType.LIF;
+            mv.GetNeuronAt(inputRow).LeakRate = .3f;
             n = theNeuronArray.GetNeuron("in-fired");
             if (n != null)
-                mv.GetNeuronAt(6).AddSynapse(n.id, 1);
+                mv.GetNeuronAt(inputRow).AddSynapse(n.id, 1);
             for (int i = thisCol; i < part_of; i++)
                 if (i != recur)
                     mv.GetNeuronAt(inputRow).AddSynapse(mv.GetNeuronAt(i).id, 1);
-            mv.GetNeuronAt(7).AddSynapse(mv.GetNeuronAt(recur).id, 1);
-            mv.GetNeuronAt(8).AddSynapse(mv.GetNeuronAt(recur).id, 1);
+            
+            mv.GetNeuronAt(outputRow).AddSynapse(mv.GetNeuronAt(recur).id, 1);
 
-            mv.GetNeuronAt(7).Label = "In" + colNum+"*";
-            mv.GetNeuronAt(7).Model = Neuron.modelType.LIF;
-            mv.GetNeuronAt(7).LeakRate = .3f;
-            mv.GetNeuronAt(7).AddSynapse(mv.GetNeuronAt(8).id, 1, Synapse.modelType.Learn);
+            mv.GetNeuronAt(desOutRow).Label = "In" + colNum + "*";
+            mv.GetNeuronAt(desOutRow).Model = Neuron.modelType.LIF;
+            mv.GetNeuronAt(desOutRow).LeakRate = .3f;
+            //mv.GetNeuronAt(desOutRow).AddSynapse(mv.GetNeuronAt(outputRow).id, 1, Synapse.modelType.Learn);
+            mv.GetNeuronAt(desOutRow).AddSynapse(mv.GetNeuronAt(part_of).id, 1, Synapse.modelType.Learn);
 
-            mv.GetNeuronAt(8).Label = "Out" + colNum;
-            mv.GetNeuronAt(8).Model = Neuron.modelType.LIF;
-            mv.GetNeuronAt(8).LeakRate = .3f;
+            mv.GetNeuronAt(outputRow).Label = "Out" + colNum;
+            mv.GetNeuronAt(outputRow).Model = Neuron.modelType.LIF;
+            mv.GetNeuronAt(outputRow).LeakRate = .3f;
             n = theNeuronArray.GetNeuron("out-fired");
             if (n != null)
-                mv.GetNeuronAt(8).AddSynapse(n.id, 1);
+                mv.GetNeuronAt(outputRow).AddSynapse(n.id, 1);
 
             //find all neurons in theNeuronArray with labels starting with "
             string labelPrefix = "\""; // Replace with desired prefix
@@ -149,26 +154,25 @@ namespace BrainSimulator.Modules
                 Neuron neuron = theNeuronArray.GetNeuron(i);
                 if (neuron != null && neuron.Label != null && neuron.Label.StartsWith(labelPrefix))
                 {
-                    neuron.AddSynapse(mv.GetNeuronAt(6).id, .2f, Synapse.modelType.Hebbian3);
-                    Neuron neuron2 = theNeuronArray.GetNeuron(i + 2*theNeuronArray.rows);
-                    neuron2.AddSynapse(mv.GetNeuronAt(7).id, .2f, Synapse.modelType.Hebbian3);
+                    neuron.AddSynapse(mv.GetNeuronAt(inputRow).id, .2f, Synapse.modelType.Hebbian3);
+                    Neuron neuron2 = theNeuronArray.GetNeuron(i + 2 * theNeuronArray.rows);
+                    neuron2.AddSynapse(mv.GetNeuronAt(desOutRow).id, .2f, Synapse.modelType.Hebbian3);
                     Neuron neuron3 = theNeuronArray.GetNeuron(i + 4 * theNeuronArray.rows);
-                    mv.GetNeuronAt(8).AddSynapse(neuron3.id, .2f, Synapse.modelType.Hebbian3);
+                    mv.GetNeuronAt(outputRow).AddSynapse(neuron3.id, .2f, Synapse.modelType.Hebbian3);
                 }
             }
-
 
             //this relationship...transfer input to output
             Neuron nThis = theNeuronArray.GetNeuron("this");
             if (nThis == null) return;
             nThis.AddSynapse(mv.GetNeuronAt(thisCol).id, 1, Synapse.modelType.Gate);
-            mv.GetNeuronAt(thisCol).AddSynapse(mv.GetNeuronAt(8).id, 1);
+            mv.GetNeuronAt(thisCol).AddSynapse(mv.GetNeuronAt(outputRow).id, 1);
 
             //recur relationship...transfer output to input
             Neuron nRecur = theNeuronArray.GetNeuron("recur");
             if (nRecur == null) return;
             nRecur.AddSynapse(mv.GetNeuronAt(recur).id, 1, Synapse.modelType.Gate);
-            mv.GetNeuronAt(recur).AddSynapse(mv.GetNeuronAt(6).id, 1);
+            mv.GetNeuronAt(recur).AddSynapse(mv.GetNeuronAt(inputRow).id, 1);
 
             //Isa Relationships
             bool flowControl = AddFixedRelationshipRow(outputRow, has_inst, "has-inst");
@@ -177,7 +181,7 @@ namespace BrainSimulator.Modules
             flowControl = AddFixedRelationshipRow(outputRow, has_a, "has-a");
             if (!flowControl)
                 return;
-             flowControl = AddFixedRelationshipRow(outputRow, isa, "is-a");
+            flowControl = AddFixedRelationshipRow(outputRow, isa, "is-a");
             if (!flowControl)
                 return;
 
@@ -186,13 +190,18 @@ namespace BrainSimulator.Modules
             if (nSource is null) return;
             nSource.AddSynapse(mv.GetNeuronAt(part_of).id, 1, Synapse.modelType.Gate);
             mv.GetNeuronAt(part_of).AddSynapse(mv.GetNeuronAt(outputRow).id, 1);
-                
+            mv.GetNeuronAt(part_of).Model = Neuron.modelType.LIF;
+            mv.GetNeuronAt(part_of).LeakRate = 0.005f;
+            mv.GetNeuronAt(part_of).Label = "Rec"+colNum;
+
+
             foreach (var module in theNeuronArray.modules)
             {
-                if (module.Label== "CorticalColumn" && module.FirstNeuron != mv.FirstNeuron)
+                if (module.Label == "CorticalColumn" && module.FirstNeuron != mv.FirstNeuron)
                 {
-                    Neuron nTest = module.GetNeuronAt(inputRow);
-                    nTest.AddSynapse(mv.GetNeuronAt(part_of).id,.2f, Synapse.modelType.Hebbian2);
+                    Neuron nInput = module.GetNeuronAt(inputRow);
+                    nInput.AddSynapse(mv.GetNeuronAt(part_of).id, 0, Synapse.modelType.Hebbian2);
+                    mv.GetNeuronAt(part_of).AddSynapse(module.GetNeuronAt(part_of).id, -1); //add mutual suppression
                 }
             }
         }

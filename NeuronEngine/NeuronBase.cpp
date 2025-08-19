@@ -450,7 +450,9 @@ namespace NeuronEngine
 				if (s.GetModel() == SynapseBase::modelType::Gate) continue;
 				if (s.GetModel() == SynapseBase::modelType::Learn) continue;
 				NeuronBase* nTarget = s.GetTarget();
-				if (nTarget->IsGated(cycle)) continue;
+				//vectorLock = 0;
+				if (nTarget != this && nTarget->IsGated(cycle)) continue; //checking a self-reference causes a deadlock
+				//while (vectorLock.exchange(1) == 1) {} 
 
 				if (((long long)nTarget >> 63) != 0) //does this synapse go to another server
 				{
@@ -479,7 +481,6 @@ namespace NeuronEngine
 		if (synapsesFrom != NULL)
 		{
 			int gated = 0;
-			while (vectorLock.exchange(1) == 1) {} //prevent the vector of synapses from changing while we're looking at it  
 			for (int i = 0; i < synapsesFrom->size(); i++) //process all the synapses sourced by this neuron  
 			{
 				SynapseBase s = synapsesFrom->at(i);
@@ -503,7 +504,6 @@ namespace NeuronEngine
 					}
 				}
 			}
-			vectorLock = 0;
 			if (gated < 0)
 			{
 				return true; //this neuron is gated, so it doesn't fire  
@@ -512,30 +512,54 @@ namespace NeuronEngine
 		return false;
 	}
 
-	void NeuronBase::HandleHebbian2Synapses()
+	void NeuronBase::HandleHebbian2Synapses(long long cycle)
 	{
 		//go through all the synapses targeting this neuron and update the weights of Hebbian2 synapses
 		if (synapsesFrom == NULL) return;
-
+		if (cycle < 5) return;
 		while (vectorLock.exchange(1) == 1) {} //prevent the vector of synapses from changing while we're looking at it
 
-		//max value is 1 over the number of incoming Hebbian2 synapses which come from neurons which are recently firing 
-		float maxValue = 0.8f;
-		int numFiring = 0;
+		int learningMode = 0;
+		int firingInputCount = 0;
 		for (int i = 0; i < synapsesFrom->size(); i++) //process all the synapses targeting this neuron
 		{
 			SynapseBase s = synapsesFrom->at(i);
 			NeuronBase* nTarget = s.GetTarget();
+			if (s.GetModel() == SynapseBase::modelType::Learn)
+			{
+				int deltaFiring = cycle - nTarget->GetLastFired();
+				if (deltaFiring < 5)
+				{
+					//a negative input weight measns reset
+					if (s.GetWeight() == 1 && learningMode == 0)
+						learningMode = 1;
+					if (s.GetWeight() == -1)
+						learningMode = -1;
+				}
+			}
 			if (s.GetModel() == SynapseBase::modelType::Hebbian2)
 			{
-				int deltaFiring = GetLastFired() - nTarget->GetLastFired();
+				int deltaFiring = cycle - nTarget->GetLastFired();
 				if (deltaFiring < 5)
-					numFiring++;
+				{
+					firingInputCount++;
+				}
 			}
 		}
-		if (numFiring > 0)
+
+		//use this "lookup table" to select the weight for the synapses based on the number of active inputs
+		float setWeight = 0.05f;
+		if (firingInputCount == 6) setWeight = 0.06f;
+		if (firingInputCount == 5) setWeight = 0.07f;
+		if (firingInputCount == 4) setWeight = 0.1f;
+		if (firingInputCount == 3) setWeight = 0.15f;
+		if (firingInputCount == 2) setWeight = 0.25f;
+		if (firingInputCount == 1) setWeight = 0.4f;
+
+		//now set the weights of the synapses
+		if (learningMode != 0)
 		{
-			maxValue = 0.8f / (float)numFiring;
+			int setCount = 0;
 			for (int i = 0; i < synapsesFrom->size(); i++) //process all the synapses targeting this neuron
 			{
 				SynapseBase s = synapsesFrom->at(i);
@@ -543,27 +567,20 @@ namespace NeuronEngine
 				float newWeight = 0;
 				if (s.GetModel() == SynapseBase::modelType::Hebbian2)
 				{
-					int deltaFiring = GetLastFired() - nTarget->GetLastFired();
-					if (deltaFiring < 5)
-					{
-						newWeight = (s.GetWeight() + maxValue) / 2.0f;
-						if (newWeight * 1.01 > maxValue) newWeight = maxValue;
-						synapsesFrom->at(i).SetWeight(newWeight);
-					}
-					else
-					{
-						newWeight = (s.GetWeight() - maxValue) / 2.0f;
-						if (newWeight * 1.01 < -maxValue) newWeight = -maxValue;
-						synapsesFrom->at(i).SetWeight(newWeight);
-					}
+					int deltaFiring = cycle - nTarget->GetLastFired();
+					if (deltaFiring < 5 && learningMode == 1)
+						newWeight = setWeight;
+					else if (learningMode == 1)
+						newWeight = -setWeight;
+					else if (deltaFiring < 5 && learningMode == -1)
+						newWeight = 0;
+					synapsesFrom->at(i).SetWeight(newWeight);
 					//update the synapse in "To"
 					for (int i = 0; i < nTarget->synapses->size(); i++)
 					{
 						if (nTarget->synapses->at(i).GetTarget() == this)
 						{
-							while (nTarget->vectorLock.exchange(1) == 1) {}
 							nTarget->synapses->at(i).SetWeight(newWeight);
-							nTarget->vectorLock = 0;
 						}
 					}
 				}
@@ -581,6 +598,7 @@ namespace NeuronEngine
 
 		//handle gating synapses
 		if (IsGated(cycle)) return;
+		HandleHebbian2Synapses(cycle);
 
 		//check to see if there is an incoming "learn" synapse and if so, 
 		//process it by forcing learning if the source has fired in the last 4 cycles
@@ -659,7 +677,6 @@ namespace NeuronEngine
 		}
 		if (synapsesFrom != NULL)
 		{
-			HandleHebbian2Synapses();
 			while (vectorLock.exchange(1) == 1) {} //prevent the vector of synapses from changing while we're looking at it
 			for (int i = 0; i < synapsesFrom->size(); i++) //process all the synapses sourced by this neuron
 			{

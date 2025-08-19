@@ -214,7 +214,7 @@ namespace BrainSimulator
                     Canvas.SetTop(moduleLabel, Canvas.GetTop(r) - moduleLabel.DesiredSize.Height);
                     moduleLabel.SetValue(ShapeType, shapeType.Module);
                     moduleLabel.SetValue(ModuleView.AreaNumberProperty, i);
-                    labelCanvas.Children.Add(moduleLabel);
+                    //labelCanvas.Children.Add(moduleLabel);
                 }
             }
             //draw any selection rectangle(s)
@@ -506,7 +506,7 @@ namespace BrainSimulator
                             if ((synapse.model == Synapse.modelType.Hebbian3 || 
                                 synapse.model == Synapse.modelType.Hebbian2 ||
                                 synapse.model == Synapse.modelType.Hebbian1)
-                                && dp.NeuronDisplaySize > 75 && synapse.weight != .2f)
+                                && dp.NeuronDisplaySize > 75 && synapse.weight != .2f && synapse.weight != 0)
                             {
                                 var graph = SynapseView.GetWeightBargraph(pStart, pTarget,
                                     n.id,synapse.targetNeuron, synapse.weight,synapse.model);

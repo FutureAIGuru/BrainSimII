@@ -282,12 +282,18 @@ namespace BrainSimulator
                             foreach (Synapse s in n.Synapses)
                             {
                                 if (s.model == Synapse.modelType.Hebbian1 ||
-                                    s.model == Synapse.modelType.Hebbian2 ||
                                     s.model == Synapse.modelType.Hebbian3)
                                 {
                                     //TODO: Add some UI for this:
                                     //s.model = Synapse.modelType.Hebbian2;
                                     n.AddSynapseWithUndo(s.targetNeuron, 0.2f, s.model);
+                                    s.Weight = 0.2f;
+                                }
+                                if (s.model == Synapse.modelType.Hebbian2)
+                                {
+                                    //TODO: Add some UI for this:
+                                    //s.model = Synapse.modelType.Hebbian2;
+                                    n.AddSynapseWithUndo(s.targetNeuron, 0, s.model);
                                     s.Weight = 0;
                                 }
                             }

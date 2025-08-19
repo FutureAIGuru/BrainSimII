@@ -5,6 +5,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace BrainSimulator
@@ -86,9 +87,12 @@ namespace BrainSimulator
                         StrokeLineJoin = PenLineJoin.Round,
                     };
                     pl.Points.Add(new Point(0, yPos0));
-                    //                    pc.Add(new Point(0, yPos0));
 
                     float lastValue = 0;
+
+                    List<float> samples = new();
+                    for (int j = 0; j < FiringHistory.history[i].Samples.Count; j++)
+                        samples.Add(FiringHistory.history[i].Samples[j].value);
                     for (int j = 0; j < FiringHistory.history[i].Samples.Count; j++)
                     {
                         double X = (FiringHistory.history[i].Samples[j].generation);
@@ -98,10 +102,11 @@ namespace BrainSimulator
                             value1 = FiringHistory.history[i].Samples[j + 1].value;
                         X -= minX;
                         X *= xScale;
-                        if (value >= 1)
+                        if (value >= 1 )
                         {
+                            //draw a spike
                             double xDelta = xScale / 10;
-                            xDelta *= refractoryPeriod;
+                            xDelta *= refractoryPeriod-1;
                             if (lastValue == 1) lastValue = 0;
                             float yPosLastValue = (float)(yPos0 - lastValue * yDelta / 3);
                             pl.Points.Add(new Point(X, yPosLastValue));
@@ -114,7 +119,7 @@ namespace BrainSimulator
                             pl.Points.Add(new Point(X + 4.2 * xDelta, yPos3));
                             pl.Points.Add(new Point(X + 6 * xDelta, yPos2));
                             pl.Points.Add(new Point(X + 9 * xDelta, yPos0));
-                            j += refractoryPeriod-1;
+                            j += refractoryPeriod-2;
                             //pc.Add(new Point(X, yPosLastValue));
                             //pc.Add(new Point(X + xDelta, yPos1));
                             //pc.Add(new Point(X + 2 * xDelta, yPos2));

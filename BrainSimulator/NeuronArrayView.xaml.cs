@@ -530,6 +530,7 @@ namespace BrainSimulator
                             var fill = Brushes.Yellow;
                             if (synapse.weight < 0)
                                 fill = Brushes.DeepPink;
+                            electronSize = dp.NeuronDisplaySize * .15f;
                             if (synapse.model == Synapse.modelType.Gate || synapse.model == Synapse.modelType.Learn)
                             {
                                 fill = Brushes.Blue;

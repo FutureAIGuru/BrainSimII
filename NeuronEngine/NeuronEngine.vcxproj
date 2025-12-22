@@ -132,7 +132,7 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)$(Platform)\$(Configuration)\ $(SolutionDir)brainsimulator\bin\$(Configuration)\net9.0-windows7.0\</Command>
+      <Command>copy "$(SolutionDir)$(Platform)\$(Configuration)\" "$(SolutionDir)brainsimulator\bin\$(Configuration)\net9.0-windows7.0\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

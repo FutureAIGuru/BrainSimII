@@ -1,4 +1,4 @@
-﻿//
+//
 // Copyright (c) Charles Simon. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
@@ -248,7 +248,9 @@ namespace BrainSimulator
             else
             {
                 //this is a file name from the File menu
-                currentFileName = Path.GetFullPath("./Networks/" + fileName + ".xml");
+                // Packaged apps may start with a working directory outside the
+                // executable folder. Bundled demos are always beside the app.
+                currentFileName = Path.Combine(AppContext.BaseDirectory, "Networks", fileName + ".xml");
                 LoadCurrentFile();
             }
         }

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
@@ -14,6 +14,8 @@
         <ApplicationIcon>Iconsmall.ico</ApplicationIcon>
         <SourceRevisionId>build$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
         <PackageIcon>iconsmall.ico</PackageIcon>
+        <Configurations>Debug;Release;Store</Configurations>
+        <Platforms>AnyCPU;x64</Platforms>
     </PropertyGroup>
 
     <ItemGroup>
@@ -421,6 +423,20 @@
             <Generator>SettingsSingleFileGenerator</Generator>
             <LastGenOutput>Settings.Designer.cs</LastGenOutput>
         </None>
+    </ItemGroup>
+
+    <!-- Consumer-only UI changes must not affect Debug or Release builds. -->
+    <PropertyGroup Condition="'$(Configuration)' == 'Store'">
+        <DefineConstants>$(DefineConstants);STORE_BUILD</DefineConstants>
+    </PropertyGroup>
+
+    <!-- The project reference copies the managed wrapper. Include its native
+         dependency in the Debug deployment layout and the Store publish output. -->
+    <ItemGroup Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Store'">
+        <Content Include="$(MSBuildProjectDirectory)\..\x64\$(Configuration)\NeuronEngine.dll"
+                 Link="NeuronEngine.dll"
+                 CopyToOutputDirectory="PreserveNewest"
+                 CopyToPublishDirectory="PreserveNewest" />
     </ItemGroup>
 
 </Project>

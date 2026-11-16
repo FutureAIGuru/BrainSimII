@@ -1,4 +1,4 @@
-﻿//
+//
 // Copyright (c) Charles Simon. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
@@ -33,7 +33,21 @@ namespace BrainSimulator
 
         public NewArrayDlg()
         {
+#if STORE_BUILD
+            // The consumer package runs networks locally; no server setup is shipped.
+            MainWindow.useServers = false;
+#endif
             InitializeComponent();
+#if STORE_BUILD
+            cbUseServers.IsEnabled = false;
+            cbUseServers.Visibility = Visibility.Collapsed;
+            ServerList.Visibility = Visibility.Collapsed;
+            buttonRefresh.Visibility = Visibility.Collapsed;
+            buttonSpeedTest.Visibility = Visibility.Collapsed;
+            PingLabel.Visibility = Visibility.Collapsed;
+            PingLabel1.Visibility = Visibility.Collapsed;
+            Height = 270;
+#endif
             bool previousShowSynapses = false;
             if (MainWindow.theNeuronArray != null)
             {

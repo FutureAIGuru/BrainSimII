@@ -1,4 +1,4 @@
-﻿//
+//
 // Copyright (c) Charles Simon. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
@@ -93,6 +93,11 @@ namespace BrainSimulator
             //throw new FileNotFoundException();
 
             InitializeComponent();
+#if STORE_BUILD
+            // Store releases use Store-managed updates and omit the Discord link.
+            menuJoinDiscord.Visibility = Visibility.Collapsed;
+            menuCheckUpdates.Visibility = Visibility.Collapsed;
+#endif
             
             engineThread.Priority = ThreadPriority.Lowest;
 
@@ -122,7 +127,9 @@ namespace BrainSimulator
                 Properties.Settings.Default.UpgradeRequired = false;
                 Properties.Settings.Default.Save();
             }
+#if !STORE_BUILD
             CheckForVersionUpdate();
+#endif
 
         }
 

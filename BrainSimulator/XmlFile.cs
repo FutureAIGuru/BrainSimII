@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Reflection;
 
 namespace BrainSimulator
 {
@@ -17,9 +18,8 @@ namespace BrainSimulator
         static private Type[] GetModuleTypes()
         {
             Type[] listOfBs = (from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
-                               from assemblyType in domainAssembly.GetTypes()
+                               from assemblyType in GetLoadableTypes(domainAssembly)
                                where assemblyType.IsSubclassOf(typeof(ModuleBase))
-                               //                               where typeof(ModuleBase).IsAssignableFrom(assemblyType)
                                select assemblyType).ToArray();
             List<Type> list = new List<Type>();
             for (int i = 0; i < listOfBs.Length; i++)
@@ -30,6 +30,17 @@ namespace BrainSimulator
             return list.ToArray();
         }
 
+        private static IEnumerable<Type> GetLoadableTypes(Assembly assembly)
+        {
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException e)
+            {
+                return e.Types.Where(t => t != null);
+            }
+        }
         public static void RemoveFileFromMRUList(string filePath)
         {
             StringCollection MRUList = (StringCollection)Properties.Settings.Default["MRUList"];
@@ -116,9 +127,9 @@ namespace BrainSimulator
             catch (Exception e)
             {
                 file.Close();
-                MessageBox.Show("Network file load failed, a blank network will be opened. \r\n\r\n"+e.InnerException,"File Load Error",
-                    MessageBoxButton.OK,MessageBoxImage.Error,MessageBoxResult.OK,MessageBoxOptions.DefaultDesktopOnly);
-                MainWindow.thisWindow.SetProgress(100,"");
+                MessageBox.Show("Network file load failed, a blank network will be opened. \r\n\r\n" + e.InnerException, "File Load Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
+                MainWindow.thisWindow.SetProgress(100, "");
                 return false;
             }
 
@@ -303,7 +314,7 @@ namespace BrainSimulator
                     MessageBox.Show("Xml file write failed because: " + e.InnerException.Message);
                 else
                     MessageBox.Show("Xml file write failed because: " + e.Message);
-                MainWindow.thisWindow.SetProgress(100,"");
+                MainWindow.thisWindow.SetProgress(100, "");
                 return false;
             }
             file.Position = 0; ;

@@ -45,6 +45,7 @@
         <None Remove="Networks\NeuralGraph.xml" />
         <None Remove="Networks\ObjectMotion.xml" />
         <None Remove="Networks\Perception.xml" />
+        <None Remove="Networks\Recognition Demo.xml" />
         <None Remove="Networks\Sallie.xml" />
         <None Remove="Networks\SimVision.xml" />
         <None Remove="Networks\SpeechTest.xml" />
@@ -181,6 +182,9 @@
         </Content>
         <Content Include="Networks\Perception.xml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Networks\Recognition Demo.xml">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
         <Content Include="Networks\Sallie.xml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -392,6 +396,7 @@
     <ItemGroup>
         <PackageReference Include="System.IO.Ports" Version="6.0.0" />
         <PackageReference Include="System.Speech" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4314.35" />
     </ItemGroup>
 
     <ItemGroup>
@@ -430,13 +435,33 @@
         <DefineConstants>$(DefineConstants);STORE_BUILD</DefineConstants>
     </PropertyGroup>
 
+    <ItemGroup Condition="'$(Configuration)' == 'Store'">
+        <UpToDateCheckInput Include="..\BrainSimulator.Store\Package.appxmanifest" />
+    </ItemGroup>
+
+    <Target Name="ReadStorePackageVersion" BeforeTargets="GetAssemblyAttributes" Condition="'$(Configuration)' == 'Store'">
+        <XmlPeek XmlInputPath="$(MSBuildProjectDirectory)\..\BrainSimulator.Store\Package.appxmanifest" Query="/*[local-name()='Package']/*[local-name()='Identity']/@Version">
+            <Output TaskParameter="Result" PropertyName="StorePackageVersion" />
+        </XmlPeek>
+        <Error Condition="'$(StorePackageVersion)' == ''" Text="The Store package manifest must specify an identity version." />
+        <ItemGroup>
+            <AssemblyMetadata Include="StorePackageVersion" Value="$(StorePackageVersion)" />
+        </ItemGroup>
+    </Target>
+
     <!-- The project reference copies the managed wrapper. Include its native
          dependency in the Debug deployment layout and the Store publish output. -->
     <ItemGroup Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Store'">
-        <Content Include="$(MSBuildProjectDirectory)\..\x64\$(Configuration)\NeuronEngine.dll"
-                 Link="NeuronEngine.dll"
+        <Content Include="$(MSBuildProjectDirectory)\..\x64\$(Configuration)\NeuronEngine.dll" Link="NeuronEngine.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Help\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="Help\**\*" />
+        <Content Include="Help\**\*"
                  CopyToOutputDirectory="PreserveNewest"
                  CopyToPublishDirectory="PreserveNewest" />
     </ItemGroup>
-
 </Project>

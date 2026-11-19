@@ -327,9 +327,9 @@
                     <Image Source="/resources/icons/ZoomoriginalSize_16x.png" Height="20"></Image>
                 </Button>
                 <Label Visibility="Hidden" Width="5"></Label>
-                <CheckBox x:Name="checkBox" Content="All Synapses" Height="18" VerticalAlignment="Center" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"  />
+                <CheckBox x:Name="cbShowSynapses" Content="All Synapses" Height="18" VerticalAlignment="Center" IsChecked="True" Checked="ShowSynapses_Checked" Unchecked="ShowSynapses_Unchecked"  />
                 <Label Visibility="Hidden" Width="30"></Label>
-                <CheckBox x:Name="checkBoxAnimate" Content="Animate Synapses" Height="18" VerticalAlignment="Center" Checked="Animate_Checked" Unchecked="Animate_Unchecked"  />
+                <CheckBox x:Name="cbAnimateSynapses" Content="Animate Synapses" Height="18" VerticalAlignment="Center" IsChecked="True" Checked="Animate_Checked" Unchecked="Animate_Unchecked"  />
                 <Label Visibility="Hidden" Width="30"></Label>
                 <Button x:Name="buttonInit" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xEB9E;" Foreground="#FF00539C" VerticalAlignment="Top" Click="ButtonInit_Click" ToolTip="Reset all modules" Grid.Column="2" >
                     <!--<Image Source="/resources/Rewind.png" Height="20"></Image>-->
@@ -344,7 +344,7 @@
                 <RepeatButton  x:Name="buttonSingle" Delay="500" Interval="500" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE893;" Foreground="#FF00539C" Click="ButtonSingle_Click" VerticalAlignment="Top" ToolTip="Run the engine one cycle" Grid.Column="2" >
                 </RepeatButton>
                 <Label x:Name="label1" Content="Speed:" Height="30" VerticalAlignment="Center" />
-                <Slider x:Name="slider" ValueChanged="slider_ValueChanged" IsSnapToTickEnabled="True" Value="5" 
+                <Slider x:Name="slider" ValueChanged="slider_ValueChanged" IsSnapToTickEnabled="True" Value="2" 
                     Width="140" ToolTip="Change the engine speed" Height="25" VerticalAlignment="Bottom"  />
                 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">

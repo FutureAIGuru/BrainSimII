@@ -66,6 +66,8 @@ namespace BrainSimulator
 
         public ProgressDialog progressDialog;
 
+        private bool initializingWindow = true;
+
         public MainWindow()
         {
             //this puts up a dialog on unhandled exceptions
@@ -130,6 +132,7 @@ namespace BrainSimulator
 #if !STORE_BUILD
             CheckForVersionUpdate();
 #endif
+            initializingWindow = false;
 
         }
 

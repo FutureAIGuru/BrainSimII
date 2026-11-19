@@ -7,7 +7,6 @@ using Microsoft.Win32;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -412,9 +411,6 @@ namespace BrainSimulator
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            //close any help window which was open.
-            CloseHelpWindow();
-
             if (theNeuronArray != null)
             {
                 if (PromptToSaveChanges())
@@ -493,11 +489,10 @@ namespace BrainSimulator
             {
                 try
                 {
-                    string fileName = ""; //if the load is successful, currentfile will be set by the load process
-                    if (App.StartupString != "")
-                        fileName = App.StartupString;
-                    if (fileName == "")
-                        fileName = (string)Properties.Settings.Default["CurrentFile"];
+                    string fileName = GetStartupNetworkPath(
+                        App.StartupString,
+                        Properties.Settings.Default.CurrentFile,
+                        AppContext.BaseDirectory);
                     if (fileName != "")
                     {
                         LoadFile(fileName);
@@ -655,18 +650,18 @@ namespace BrainSimulator
             {
                 //single menu item comes here so must be toggled
                 theNeuronArray.ShowSynapses = !theNeuronArray.ShowSynapses;
-                SetShowSynapsesCheckBox(theNeuronArray.ShowSynapses);
+                SetCheckBoxes(theNeuronArray.ShowSynapses);
             }
             Update();
         }
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        private void ShowSynapses_Checked(object sender, RoutedEventArgs e)
         {
             if (IsArrayEmpty()) return;
             theNeuronArray.ShowSynapses = true;
             Update();
         }
 
-        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        private void ShowSynapses_Unchecked(object sender, RoutedEventArgs e)
         {
             if (IsArrayEmpty()) return;
             theNeuronArray.ShowSynapses = false;
@@ -674,20 +669,23 @@ namespace BrainSimulator
         }
         private void Animate_Unchecked(object sender, RoutedEventArgs e)
         {
+            if (IsArrayEmpty()) return;
             theNeuronArray.animateSynapses = false;
             Update();
         }
 
         private void Animate_Checked(object sender, RoutedEventArgs e)
         {
+            if (IsArrayEmpty()) return;
             theNeuronArray.animateSynapses = true;
             Update();
         }
 
-        public void SetShowSynapsesCheckBox(bool showSynapses)
+        public void SetCheckBoxes(bool showSynapses)
         {
-            checkBox.IsChecked = showSynapses;
-            checkBoxAnimate.IsChecked = theNeuronArray.animateSynapses;
+            if (initializingWindow) return;
+            cbShowSynapses.IsChecked = showSynapses;
+            cbAnimateSynapses.IsChecked = theNeuronArray.animateSynapses;
         }
 
         private void MenuItemProperties_Click(object sender, RoutedEventArgs e)
@@ -729,95 +727,29 @@ namespace BrainSimulator
             }
         }
 
-        [DllImport("user32.dll", SetLastError = true)]
-        internal static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
-        [DllImport("user32.dll", SetLastError = true)]
-        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
-        [DllImport("user32.dll")]
-        public static extern bool GetWindowRect(IntPtr hwnd, ref Rect rectangle);
-        [DllImport("User32.dll")]
-        private static extern bool SetForegroundWindow(IntPtr hWnd);
-
         public static string webURL = "https://futureai.guru";
         //public static string webURL = "https://futureai1stg.wpenginepowered.com";
         private void MenuItemHelp_Click(object sender, RoutedEventArgs e)
         {
-            CloseHelpWindow();
-            string thePage = "/BrainSimHelp/GettingStartedLauncher.html";
-            OpenBrowserWindowAndRepositionIt(thePage);
+            OpenLocalHelp("GettingStarted0.html");
         }
 
-        private void OpenBrowserWindowAndRepositionIt(string thePage)
+        private Help helpWindow;
+
+        private void OpenLocalHelp(string page)
         {
-            Process helpProcessTab = null;
-
-            OpenApp(webURL + thePage);
-
-            //gotta wait for the page to render before it shows in the processes list
-            DateTime starttTime = DateTime.Now;
-
-            while (helpProcessTab == null && DateTime.Now < starttTime + new TimeSpan(0, 0, 3))
+            if (helpWindow == null)
             {
-                Process[] theProcesses = Process.GetProcesses();
-                for (int i = 1; i < theProcesses.Length; i++)
-                {
-                    try
-                    {
-                        if (theProcesses[i].MainWindowTitle != "")
-                        {
-                            if (theProcesses[i].MainWindowTitle.Contains("BrainSimII Help"))
-                            {
-                                helpProcessTab = theProcesses[i];
-                                goto found;
-                            }
-                        }
-                    }
-                    catch (Exception e1)
-                    {
-                        MessageBox.Show("Opening Help Item Failed, Message: " + e1.Message);
-                    }
-                }
+                helpWindow = new Help(page) { Owner = this };
+                helpWindow.Closed += (sender, e) => helpWindow = null;
+                helpWindow.Show();
             }
-        found:;
-            try
+            else
             {
-                if (helpProcessTab != null)
-                {
-                    IntPtr id = helpProcessTab.MainWindowHandle;
-
-                    Rect theRect = new Rect();
-                    GetWindowRect(id, ref theRect);
-
-                    bool retVal = MoveWindow(id, 300, 100, 1200, 700, true);
-                    this.Activate();
-                    SetForegroundWindow(id);
-                }
-            }
-            catch (Exception e1)
-            {
-                MessageBox.Show("Opening Help Failed, Message: " + e1.Message);
-            }
-        }
-
-        private static void CloseHelpWindow()
-        {
-            //first check to see if help is already open
-            Process[] theProcesses = Process.GetProcesses();
-            for (int i = 1; i < theProcesses.Length; i++)
-            {
-                Process theProcess = theProcesses[i];
-                try
-                {
-                    if (theProcess.ProcessName.ToLower().Contains("chrome"))
-                    {
-                        if (theProcess.MainWindowTitle.Contains("BrainSimII Help"))
-                            theProcess.CloseMainWindow();
-                    }
-                }
-                catch (Exception e1)
-                {
-                    MessageBox.Show("Opening Help Item Failed, Message: " + e1.Message);
-                }
+                helpWindow.NavigateTo(page);
+                if (helpWindow.WindowState == WindowState.Minimized)
+                    helpWindow.WindowState = WindowState.Normal;
+                helpWindow.Activate();
             }
         }
 
@@ -839,10 +771,7 @@ namespace BrainSimulator
 
         private void MenuItemOnlineHelp_Click(object sender, RoutedEventArgs e)
         {
-            CloseHelpWindow();
-            string thePage = "/BrainSimHelp/UILauncher.html";
-            OpenBrowserWindowAndRepositionIt(thePage);
-            //OpenApp(webURL + "/BrainSimHelp/UI.html");
+            OpenLocalHelp("UI.html");
         }
 
         private void MenuItemOnlineBugs_Click(object sender, RoutedEventArgs e)

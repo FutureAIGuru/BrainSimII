@@ -1,4 +1,4 @@
-﻿//
+//
 // Copyright (c) Charles Simon. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //  
@@ -17,6 +17,23 @@ namespace BrainSimulator
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static string GetStartupNetworkPath(string commandLineFile, string lastOpenedFile, string applicationFolder)
+        {
+            if (!string.IsNullOrWhiteSpace(commandLineFile))
+                return commandLineFile;
+
+            if (!string.IsNullOrWhiteSpace(lastOpenedFile))
+            {
+                string path = Path.IsPathRooted(lastOpenedFile)
+                    ? lastOpenedFile
+                    : Path.Combine(applicationFolder, lastOpenedFile);
+                if (File.Exists(path))
+                    return path;
+            }
+
+            return Path.Combine(applicationFolder, "Networks", "BasicNeurons.xml");
+        }
+
         private async void LoadFile(string fileName)
         {
             CloseAllModuleDialogs();
@@ -62,7 +79,7 @@ namespace BrainSimulator
             Properties.Settings.Default.Save();
 
             Update();
-            SetShowSynapsesCheckBox(theNeuronArray.ShowSynapses);
+            SetCheckBoxes(theNeuronArray.ShowSynapses);
             SetPlayPauseButtonImage(theNeuronArray.EngineIsPaused);
             SetSliderPosition(theNeuronArray.EngineSpeed);
 

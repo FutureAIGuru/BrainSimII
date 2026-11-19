@@ -199,7 +199,7 @@ namespace BrainSimulator
                 MainWindow.theNeuronArray.RefractoryDelay = refractory;
          
                 MainWindow.theNeuronArray.ShowSynapses = previousShowSynapses;
-                MainWindow.thisWindow.SetShowSynapsesCheckBox(previousShowSynapses);
+                MainWindow.thisWindow.SetCheckBoxes(previousShowSynapses);
                 Close();
                 returnValue = true;
             }

@@ -4,7 +4,10 @@
 //  
 
 using System;
+using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows;
 
 namespace BrainSimulator
@@ -49,11 +52,37 @@ namespace BrainSimulator
 
         public static string GetBuildString()
         {
-            Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            DateTime buildDate = GetBuildDate(System.Reflection.Assembly.GetExecutingAssembly());
-            string displayableVersion = $"{version.Major}.{version.Minor}.{version.Build}   ({buildDate})";
-            return displayableVersion;
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            Version assemblyVersion = assembly.GetName().Version;
+            string version = GetPackageVersion()
+                ?? assembly.GetCustomAttributes<AssemblyMetadataAttribute>()
+                    .FirstOrDefault(attribute => attribute.Key == "StorePackageVersion")?.Value
+                ?? assemblyVersion.ToString(3);
+            DateTime buildDate = GetBuildDate(assembly);
+            return $"{version}   ({buildDate})";
         }
+
+        private static string GetPackageVersion()
+        {
+            const int ErrorInsufficientBuffer = 122;
+            if (!OperatingSystem.IsWindowsVersionAtLeast(6, 2))
+                return null;
+
+            int length = 0;
+            if (GetCurrentPackageFullName(ref length, null) != ErrorInsufficientBuffer)
+                return null;
+
+            var packageFullName = new StringBuilder(length);
+            if (GetCurrentPackageFullName(ref length, packageFullName) != 0)
+                return null;
+
+            // Package full names use Name_Version_Architecture_ResourceId_PublisherId.
+            string[] parts = packageFullName.ToString().Split('_', 3);
+            return parts.Length == 3 ? parts[1] : null;
+        }
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
+        private static extern int GetCurrentPackageFullName(ref int length, StringBuilder packageFullName);
 
         private void ButtonOK_Click(object sender, RoutedEventArgs e)
         {

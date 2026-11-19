@@ -239,7 +239,7 @@ namespace BrainSimulator
                         {
                             MainWindow.arrayView.CreateRandomSynapses(count);
                             MainWindow.theNeuronArray.ShowSynapses = true;
-                            MainWindow.thisWindow.SetShowSynapsesCheckBox(true);
+                            MainWindow.thisWindow.SetCheckBoxes(true);
                             MainWindow.Update();
                         }
                     }
@@ -263,7 +263,7 @@ namespace BrainSimulator
                 {
                     MainWindow.arrayView.MutualSuppression();
                     MainWindow.theNeuronArray.ShowSynapses = true;
-                    MainWindow.thisWindow.SetShowSynapsesCheckBox(true);
+                    MainWindow.thisWindow.SetCheckBoxes(true);
                     MainWindow.Update();
                 }
                 if ((string)mi.Header == "Delete")

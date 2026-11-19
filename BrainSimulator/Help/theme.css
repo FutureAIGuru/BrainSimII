@@ -1,0 +1,55 @@
+:root {
+    color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+    html,
+    body {
+        background-color: #202020;
+        color: #ededed;
+    }
+
+    body p,
+    body span,
+    body div,
+    body li,
+    body td,
+    body th,
+    body h1,
+    body h2,
+    body h3,
+    body h4,
+    body h5,
+    body h6,
+    body .caption {
+        color: inherit;
+    }
+
+    body a[href],
+    body a[href] span {
+        color: #8ecbff;
+    }
+
+    body a[href]:visited,
+    body a[href]:visited span {
+        color: #d5b5ff;
+    }
+
+    .nav > a,
+    .top_nav > a,
+    .toc > a {
+        background-color: transparent;
+    }
+}
+
+@media (forced-colors: active) {
+    html,
+    body {
+        background-color: Canvas;
+        color: CanvasText;
+    }
+
+    body a[href] {
+        color: LinkText;
+    }
+}

@@ -22,14 +22,14 @@ namespace BrainSimulator
         public int arraySize;
         public int rows;
         public int refractoryDelay = 0;
-        public bool animateSynapses = false;
+        public bool animateSynapses = true;
 
         public int lastFireCount = 0;
         internal List<ModuleView> modules = new List<ModuleView>();
         public DisplayParams displayParams;
 
         //these have nothing to do with the NeuronArray but are here so it will be saved and restored with the network
-        private bool showSynapses = false;
+        private bool showSynapses = true;
         public bool ShowSynapses
         {
             get => showSynapses;

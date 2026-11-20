@@ -112,9 +112,10 @@ namespace BrainSimulator
             tb = null;
             theNeuronArrayView = theNeuronArrayViewI;
 
+            
             Point p = dp.pointFromNeuron(n.id);
 
-            if (dp.ShowNeuronCircles())
+            if (dp.ShowNeuronCircles() && n.model != Neuron.modelType.Color)
             {
                 var fillableCircle = new FillableDisc(dp.NeuronDisplaySize * ellipseSize, n.id);
                 fillableCircle.SetValue(n.currentCharge);

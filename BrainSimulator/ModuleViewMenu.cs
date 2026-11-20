@@ -424,7 +424,7 @@ namespace BrainSimulator
                     ModuleBase m1 = m.TheModule;
                     string theModuleType = m1.GetType().Name.ToString();
                     string cwd = System.IO.Directory.GetCurrentDirectory();
-                    cwd = cwd.ToLower().Replace("bin\\debug\\net6.0-windows", "");
+                    cwd = cwd.Substring(0, cwd.IndexOf("bin"));
                     string fileName = cwd + @"modules\" + theModuleType + ".cs";
                     if (File.Exists(fileName))
                         OpenSource(fileName);
@@ -488,11 +488,12 @@ namespace BrainSimulator
         }
         public static void OpenSource(string fileName)
         {
-            Process process = new Process();
-            string taskFile = @"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe";
-            ProcessStartInfo startInfo = new ProcessStartInfo(taskFile, "/edit " + fileName);
-            process.StartInfo = startInfo;
-            process.Start();
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "devenv.exe",
+                Arguments = $"\"{fileName}\"",
+                UseShellExecute = true
+            });
         }
         public static void DeleteModule(int i)
         {

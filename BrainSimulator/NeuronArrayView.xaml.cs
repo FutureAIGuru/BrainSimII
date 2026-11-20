@@ -311,6 +311,8 @@ namespace BrainSimulator
                             {
                                 n = theNeuronArray.GetCompleteNeuron(neuronID);
                             }
+                            if (n.model == Neuron.modelType.Color)
+                            { }
                             UIElement l = NeuronView.GetNeuronView(n, this, out TextBlock lbl);
                             if (l != null)
                             {

@@ -655,8 +655,9 @@ namespace NeuronEngine
 				if (s.GetModel() == SynapseBase::modelType::Hebbian3 ||
 					s.GetModel() == SynapseBase::modelType::Hebbian1)
 				{
-					int deltaFiring = nTarget->GetLastFired() - cycle;
-					if ((deltaFiring > 0 && deltaFiring < 2))
+					//
+					int deltaFiring = cycle - nTarget->GetLastFired();
+					if ((deltaFiring > 0 && deltaFiring < 4))
 					{
 						//target fired first, decrease the weight
 						float currentWeight = s.GetWeight();
@@ -677,6 +678,7 @@ namespace NeuronEngine
 		}
 		if (synapsesFrom != NULL)
 		{
+			//Increase an incoming synapse weight if this neuron fired after and the incoming synapse fired recently.
 			while (vectorLock.exchange(1) == 1) {} //prevent the vector of synapses from changing while we're looking at it
 			for (int i = 0; i < synapsesFrom->size(); i++) //process all the synapses sourced by this neuron
 			{
